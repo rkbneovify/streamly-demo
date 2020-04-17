@@ -252,5 +252,25 @@ function getUserIpAddr(){
   return $ip;
 }
 
+//working with subscription pack
+function addInterval(Carbon $date)
+{
+    switch ($this->interval) {
+        case 'yearly':
+            $date->addYear();
+            break;
+        case 'quarterly':
+            $date->addMonths(3);
+            break;
+        case 'weekly':
+            $date->addWeek();
+            break;
+        case 'monthly':
+        default:
+            $date->addMonth();
+    }
+    return $date;
+}
+
 
 ?>

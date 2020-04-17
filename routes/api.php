@@ -19,7 +19,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'APIController@login');
 Route::post('register', 'APIController@register');
-Route::post('logout/{id}', 'APIController@logout');
+Route::post('logout/{id}', 'APIController@logout');//add this later in middle ware wen viewgets created
+Route::post('channel', 'ChannelController@store');
+Route::put('channel/{id}', 'ChannelController@update');
+Route::delete('channel/{id}', 'ChannelController@destroy');
+
+Route::post('subscription', 'SubscriptionController@store');
+Route::put('subscription/{id}', 'SubscriptionController@update');
+
+
 Route::group(['middleware' => 'auth.jwt'], function () {
     
    //session table will be hidden user dosen't need access to it

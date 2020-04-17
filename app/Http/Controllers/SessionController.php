@@ -5,6 +5,8 @@ use JWTAuth;
 use App\SessionTable;
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
+
 class SessionController extends Controller
 {   
 
@@ -77,8 +79,9 @@ class SessionController extends Controller
         $task->connected_devices = 1;
        $task->logintime = $date;;
         //$task->description = $request->description;
-        $task->created_on = $date;
-        $task->modified_on = $date;
+      
+        $task->created_on = Carbon::now();
+        $task->modified_on = Carbon::now();
 
         if ($this->user->sessions()->save($task))
             return response()->json([
