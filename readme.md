@@ -1,4 +1,4 @@
-# Laravel 6.0 JWT API Skeleton
+# Streamly CMS & API 
 Streamly CMS and apis - Laravel 6.0
 
 [![GitHub license](https://img.shields.io/badge/license-GPLv2%2B-blue.svg)]()
