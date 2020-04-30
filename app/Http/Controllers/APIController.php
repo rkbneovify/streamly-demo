@@ -1,20 +1,118 @@
 <?php
 
 namespace App\Http\Controllers;
-use JWTAuth;
-use App\User;
 use App\SessionTable;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Http\Requests\RegistrationFormRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use JWTAuth;
 use Jenssegers\Agent\Agent;
+use App\Models\JwtToken;
+use Illuminate\Http\Request;
+use App\User;
+use App\Models\Role;
+use Crypt;
+use Hash;
+use Mail;
 use Carbon\Carbon;
+use Validator;
 class APIController extends Controller
 {
     /**
      * @var bool
      */
     public $loginAfterSignUp = true;
+    public function __construct()
+    {
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify']]);
+    }
+
+    public function index()
+    {
+        $users = User::all();
+        $data = $users->toArray();
+
+        $response = [
+            'success' => true,
+            'data' => $data,
+            'message' => 'User retrieved successfully.'
+        ];
+
+        return response()->json($response, 200);
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $user = User::find($id);
+        $data = $user->toArray();
+
+        if (is_null($user)) {
+            $response = [
+                'success' => false,
+                'data' => 'Empty',
+                'message' => 'User not found.'
+            ];
+            return response()->json($response, 404);
+        }
+
+
+        $response = [
+            'success' => true,
+            'data' => $data,
+            'message' => 'User retrieved successfully.'
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, User $user)
+    {
+        $input = $request->all();
+
+        $validator = Validator::make($input, [
+            'email' => 'required',
+            'first_name' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'data' => 'Validation Error.',
+                'message' => $validator->errors()
+            ];
+            return response()->json($response, 404);
+        }
+        $updated = $user->fill($request->all())->save();
+        
+
+        $data = $user->toArray();
+
+        $response = [
+            'success' => true,
+            'data' => $data,
+            'message' => 'User updated successfully.'
+        ];
+
+        return response()->json($response, 200);
+    }
+
+
+
+
+
 
     /**
      * @param Request $request
@@ -22,17 +120,27 @@ class APIController extends Controller
      */
 public function login(Request $request)
     {
-        $input = $request->only('email', 'password');
-        $token = null;
+        $credentials = request(['email', 'password']);
+        
 
-        if (!$token = JWTAuth::attempt($input)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid Email or Password',
-            ], 401);
+        if(empty(request('email')) || empty(request('password'))){
+            return response()->json(['status'=>false,'message' => 'both email and password required'], 401);
+        }
+    
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['status'=>false,'message' => 'Invalid credentials'], 401);
         }
         $user = JWTAuth::user();//all the user info
+        // if($user->email_verified_at==null){
+        //     return response()->json(['status'=>false,'message' => 'Email not verfied, verify your email first.'], 401);   
+        // }
+
+        if($user->is_active==0){
+            return response()->json(['status'=>false,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+        }
+
       $uid=  $user['id'];
+      $this->authenticated($request,$user,$token);
         
    checkLoginLimit($uid,$token);
 
@@ -45,25 +153,40 @@ public function login(Request $request)
      * @return \Illuminate\Http\JsonResponse
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function logout($id)
+    public function logout(Request $request)
     {
         // $this->validate($request, [
         //    // 'token' => 'required'
         // ]);
+        $token = $request->only( 'token');
+      
+        $acctoken = SessionTable::where([
+            ['status', '=', '1'],
+            ['access_token', '=', $token],
+             ])->get()->toArray();
+ //print_r($acctoken); exit;
 
         try {  //$user = JWTAuth::user();//all the user info
             //$uid=  $user['id'];
             //JWTAuth::invalidate($request->token);
-            if($id==''){
+            if($token==''){
              //   echo 'user cant be logout';
                 return response()->json([
                     'success' => false,
-                    'message' => 'the user cannot be logged out because reqired id is not provided',
+                    'message' => 'the user cannot be logged out because reqired token is not provided',
                    
                 ]);
+            } else   if ((count($acctoken)==0)){ 
+                $response = [
+                    'success' => false,
+                    'data' => 'Empty',
+                    'message' => 'access token not found.'
+                ];
+                return response()->json($response, 404);
+
             } else {
 
-                
+              $id=  $acctoken[0]['id'];
                 LogoutandDecrementDevice($id);
             }
             
@@ -78,36 +201,38 @@ public function login(Request $request)
         }
     }
 
-    /**
-     * @param RegistrationFormRequest $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function register(RegistrationFormRequest $request)
-    { $date = date('Y-m-d H:i:s');
-        $user = new User();
-        $user->first_name = $request->first_name;
-        $user->role_id = 1;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->last_name = $request->last_name;
-        $user->phone = $request->phone;
-        $user->address = 'adress 1';
-        $user->address2 = 'adress 2';
-        $user->postal_code = '111111';
-        $user->state = 'state';
-        $user->country = 'country';
-        $user->active = 'x';
-        $user->created_on = $date;
-        $user->modified_on = $date;
+
+
+    protected function authenticated($request, $user, $token)
+    {
+        $olduser = $user;
+        $user->last_login = date("Y-m-d H:i:s");
         $user->save();
 
-        if ($this->loginAfterSignUp) {
-            return $this->login($request);
-        }
+        $agent = new Agent();
 
-        return response()->json([
-            'success'   =>  true,
-            'data'      =>  $user
-        ], 200);
+        $isDesktop = $agent->isDesktop();
+        $isPhone = $agent->isPhone();
+        $jwtToken = new JwtToken();
+        $jwtToken->user_id = $user->id;
+        $jwtToken->token = $token;
+        $jwtToken->browser = $agent->browser();;
+        $jwtToken->platform = $agent->platform();
+        $jwtToken->device = $agent->device();
+        $mobileHeader = $request->header('x_platform');
+        if (isset($mobileHeader) && $mobileHeader == 'mobile') {
+            JwtToken::where('user_id',$user->id)->where('phone',1)->delete();
+            
+            $jwtToken->phone = 1;
+            $jwtToken->save();
+
+        } else {
+            JwtToken::where('user_id',$user->id)->where('desktop',1)->delete();
+            
+            $jwtToken->desktop = 1;
+            $jwtToken->save();
+        } 
     }
+
+    
 }

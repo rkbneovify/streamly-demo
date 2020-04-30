@@ -3,7 +3,7 @@ use Carbon\Carbon;
 use Jenssegers\Agent\Agent;
 /// check for 3 concurrent login
      function checkLoginLimit($user_id,$token){
-        $login_limit = 3; $device_limit = 5;
+        $login_limit = 5; $device_limit = 5;$userInfo = JWTAuth::user();//all the user info
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
     ['status', '=', '1'],
@@ -22,7 +22,7 @@ use Jenssegers\Agent\Agent;
         $task = new  App\SessionTable();
         //$task->users_id = $request->users_id;
         $task->users_id = $user_id;
-        $task->access_token = 'somrthing';//change this field to status
+        $task->access_token = $token;//change this field to status
         $task->user_ip = getUserIpAddr();
         $task->mac_address = 'from login entry';
         $task->connected_devices = 1;
@@ -30,17 +30,22 @@ use Jenssegers\Agent\Agent;
         $task->status = 1;
         $task->created_on = $date;
         $task->modified_on = Carbon::now();
-         
+        
+        
         if($task->save()){
         return response()->json([
       
           'success' => true,
-          'token' => $token,
-          'msg'=>'first logged in successfully \r\n ',
-          'updatedid'=>$task->id,
+          'msg'=>'logged in successfully ',
+          'response_code'=>200,
+          //'user'=>$userInfo,
+          'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            
           
           
-      ])->send();}
+        ],200)->send();}
 
         } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
 
@@ -65,7 +70,7 @@ use Jenssegers\Agent\Agent;
         $task = new App\SessionTable();
         //$task->users_id = $request->users_id;
         $task->users_id = $user_id;
-        $task->access_token = 'somrthing';//change this field to status
+        $task->access_token = $token;//change this field to status
         $task->user_ip = getUserIpAddr();
         $task->mac_address = 'from login entry with +1 in connected device';
         $task->connected_devices= $newnumofDevice;
@@ -79,11 +84,17 @@ use Jenssegers\Agent\Agent;
           return response()->json([
         
             'success' => true,
-            'token' => $token,
-            'msg'=>'2nd or 3rd login in successfully \r\n ',
-            'updatedid'=>$task->id,
+            'msg'=>'logged in successfully ',
+            'connected_device'=> $newnumofDevice.' device connected  ',
+            'response_code'=>200,
             
-        ])->send();}
+
+           // 'user'=>$userInfo,
+          'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            
+          ],200)->send();}
         
        
 
@@ -93,22 +104,26 @@ use Jenssegers\Agent\Agent;
         //echo 'you are not allowed to login as you have breeched the maximum session limit.';
         //exit;
         return response()->json([
-          'success' => true,
+          'success' => false,
+          'response_code'=>429,
           'msg'=>'Your account is in use on 5 devices. Please stop playing on other devices to continue',
           //'loggedindeviceinfointheseId'=>$myarr,
-      ])->send();
+        ],429)->send();
         
 
 
     } else {
         
-      echo 'finally logged in successfully';
-      echo 'token:'.$token;
     return response()->json([
       
         'success' => true,
-        'token' => $token,
-        'msg'=>'finally logged in successfully'
+        
+        'msg'=>'finally logged in successfully',
+        'response_code'=>200,
+        'user'=>$userInfo,
+          'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
         
         
     ])->send();
@@ -119,7 +134,7 @@ use Jenssegers\Agent\Agent;
     
 }
 function automaticLogoutWithInterval($user_id){
-  $login_limit = 3;
+  $login_limit = 5;
   //find all by user_id and and status=active
   $active_session = App\SessionTable::where([
   ['status', '=', '1'],
@@ -192,7 +207,9 @@ if (count(($active_session)) >= $login_limit) {
      
      
      if($updatedExpireConcrenteUser) {
-       
+      config([
+        'jwt.blacklist_enabled' => true
+    ]);
       return response()->json([
           'success' => true,
           'msg'=>'logged out automatically successful',
@@ -205,14 +222,9 @@ if (count(($active_session)) >= $login_limit) {
 }}
 
 function LogoutandDecrementDevice($user_id){
-  $login_limit = 3;
-  //find all by user_id and and status=active
-  $active_session = App\SessionTable::where([
-  ['status', '=', '1'],
-  ['users_id', '=', $user_id],
-   ])->get()->toArray();
-if (count(($active_session)) <= $login_limit) {
-  //automatic logout
+  
+
+  //logout
   $myarr=[];
   array_push($myarr,$user_id ); 
      
@@ -229,15 +241,20 @@ if (count(($active_session)) <= $login_limit) {
     ->update([
         'connected_devices' => DB::raw('`connected_devices` - 1 ')
     ]);
-    
+    config([
+      'jwt.blacklist_enabled' => true
+  ]);
+    JWTAuth::parseToken()->invalidate();
       return response()->json([
+        'response_code'=>200,
         'success' => true,
-        'msg'=>'logged out  successful',
-        'myid'=>$myarr,
-    ])->send();
+        'msg'=>'logged out successful',
+        
+      ],200)->send();
     
      
-}}
+}
+
 
 function getUserIpAddr(){
   if(!empty($_SERVER['HTTP_CLIENT_IP'])){
@@ -250,6 +267,26 @@ function getUserIpAddr(){
       $ip = $_SERVER['REMOTE_ADDR'];
   }
   return $ip;
+}
+
+//working with subscription pack
+function addInterval(Carbon $date)
+{
+    switch ($this->interval) {
+        case 'yearly':
+            $date->addYear();
+            break;
+        case 'quarterly':
+            $date->addMonths(3);
+            break;
+        case 'weekly':
+            $date->addWeek();
+            break;
+        case 'monthly':
+        default:
+            $date->addMonth();
+    }
+    return $date;
 }
 
 
