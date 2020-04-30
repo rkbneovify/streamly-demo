@@ -13,19 +13,62 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function (Request $request) {
+    return 'Working';
+});
+// For api Registration, confirmations and verification
+Route::get('/front', 'APIController@index')->name('front');
+Route::post('/frontlogin', 'APIController@login')->name('frontlogin');
+Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
+
+
+
+// Registration, confirmations and verification
+Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::post('auth/register', 'Auth\AuthController@register');
+Route::get('auth/verify', 'Auth\AuthController@verify');
+
+
+// Authentication Routes
+Route::group(['prefix' => 'auth'], function ($router) {
+    
+    Route::post('login', 'Auth\AuthController@login');
+    Route::post('change-password', 'Auth\AuthController@changePassword');
+    Route::post('logout', 'Auth\AuthController@logout');
+    Route::post('userlogout', 'Auth\AuthController@userlogout');
+    Route::post('userlogout2', 'Auth\AuthController@userlogout2');
+    Route::post('refresh', 'Auth\AuthController@refresh');
+    Route::get('me', 'Auth\AuthController@me');
+    Route::get('profile', 'Auth\AuthController@profile');
+    Route::put('updateprofile','Auth\AuthController@updateprofile');
 });
 
-Route::post('login', 'APIController@login');
-Route::post('register', 'APIController@register');
-Route::post('logout/{id}', 'APIController@logout');
-Route::group(['middleware' => 'auth.jwt'], function () {
+// Superadmin Routes
+Route::group(['middleware' => ['jwt.verify','role:superadmin'],'prefix' => 'sadmin','namespace'=>'Admin'], function($router)
+{	
+  
+    // User Routes
+    Route::post('user','UserAndRoleController@createUser');
+    Route::post('user/update', 'UserAndRoleController@updateUser');
+    Route::get('users', 'UserAndRoleController@getUsers');
+    Route::post('users/dt', 'UserAndRoleController@getDTUsers');
+    Route::get('user/{id}', 'UserAndRoleController@getUser');    
+    Route::delete('user/{id}/delete', 'UserAndRoleController@deleteUser');
+    Route::get('user/{id}/reset-password', 'UserAndRoleController@resetPassword');
+
+    Route::post('user/role/assign', 'UserAndRoleController@assignRole');
+    Route::get('user/role/{id}', 'UserAndRoleController@getUserRole');
+
+    // Role Routes
+    Route::post('role', 'UserAndRoleController@createRole');
+    Route::post('role/update', 'UserAndRoleController@updateRole');
+    Route::get('roles', 'UserAndRoleController@getRoles');
+    Route::post('roles/dt', 'UserAndRoleController@getDTRoles');
+    Route::get('role/{id}', 'UserAndRoleController@getRole');
+    Route::delete('role/{id}/delete', 'UserAndRoleController@deleteRole');
     
-   //session table will be hidden user dosen't need access to it
-    // Route::get('tasks', 'SessionController@index');
-    // Route::get('tasks/{id}', 'SessionController@show');
-    // Route::post('tasks', 'SessionController@store');
-    // Route::put('tasks/{id}', 'SessionController@update');
-    // Route::delete('tasks/{id}', 'SessionController@destroy');
 });
+
+
+
