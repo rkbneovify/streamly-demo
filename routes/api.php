@@ -36,22 +36,23 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('login', 'Auth\AuthController@login');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
-    Route::post('userlogout', 'Auth\AuthController@userlogout');
-    Route::post('userlogout2', 'Auth\AuthController@userlogout2');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('profile', 'Auth\AuthController@profile');
     Route::put('updateprofile','Auth\AuthController@updateprofile');
+       //zipcodes
+       Route::get('zipcode', 'ZipcodeController@zipjson');
 });
 
 // Superadmin Routes
-Route::group(['middleware' => ['jwt.verify','role:superadmin'],'prefix' => 'sadmin','namespace'=>'Admin'], function($router)
+Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' => 'sadmin','namespace'=>'Admin'], function($router)
 {	
   
     // User Routes
     Route::post('user','UserAndRoleController@createUser');
     Route::post('user/update', 'UserAndRoleController@updateUser');
     Route::get('users', 'UserAndRoleController@getUsers');
+    Route::get('channels', 'GracenoteController@getChannel');
     Route::post('users/dt', 'UserAndRoleController@getDTUsers');
     Route::get('user/{id}', 'UserAndRoleController@getUser');    
     Route::delete('user/{id}/delete', 'UserAndRoleController@deleteUser');
@@ -67,6 +68,7 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin'],'prefix' => 'sadm
     Route::post('roles/dt', 'UserAndRoleController@getDTRoles');
     Route::get('role/{id}', 'UserAndRoleController@getRole');
     Route::delete('role/{id}/delete', 'UserAndRoleController@deleteRole');
+
     
 });
 
