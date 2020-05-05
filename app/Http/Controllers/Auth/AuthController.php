@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
+use DeviceDetector\DeviceDetector;  
 use App\Models\JwtToken;
 use Illuminate\Http\Request;
 use App\User;
@@ -84,7 +85,15 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {	
-
+        $ua = $request->server('HTTP_USER_AGENT');
+       // echo $ua; 
+        $dd = new DeviceDetector($ua);//detect device
+      //print_r($dd->getClient());exit;
+        $clientInfo = $dd->getClient() ?? 'Null'; // big info  holds information about browser, feed reader, media player, ...
+        $osInfo = $dd->getOs() ?? 'Null';
+        $device = $dd->getDeviceName() ?? 'Null';
+        $brand = $dd->getBrandName() ?? 'Null';
+        $deviceDetails=$ua.'DeviceName:-'.$device.'BrandName:-'.$brand.'Os Info:-'.$osInfo.' Client Info:-'.$clientInfo;
         $credentials = request(['email', 'password']);
 
         if(empty(request('email')) || empty(request('password'))){
@@ -107,7 +116,7 @@ class AuthController extends Controller
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'){
         $uid=  $user['id'];
-        checkLoginLimit($uid,$token);
+        checkLoginLimit($uid,$token,$deviceDetails);
         exit;
         
     }
@@ -257,7 +266,7 @@ class AuthController extends Controller
    
     /**
      * Log the Adminuser out (Invalidate the token).
-     *
+     *Log the user out and decrement the device(Invalidate the token).
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
@@ -306,81 +315,6 @@ class AuthController extends Controller
     }
 }
 
-    /**
-     * Log the user out and decrement the device(Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function userlogout()
-    {   $request = request();
-        $token = $request->bearerToken();//get token from header
-        $user=JWTAuth::user();
-        $userRole= $user->roles->pluck('name');//check users role
-           if($userRole[0]=='user'){
-               //check if token exist in table
-            $acctoken = SessionTable::where([
-                ['status', '=', '1'],
-                ['access_token', '=', $token],
-                 ])->get()->toArray();
-        $uid=  $user['id'];
-        if ((count($acctoken)==0)){ 
-            $response = [
-                'success' => false,
-                'data' => 'Empty',
-                'message' => 'access token not found.',
-                'response_code'=>404,
-            ];
-            return response()->json($response, 404);
-
-        }  else {
-    
-            $id=  $acctoken[0]['id'];
-              LogoutandDecrementDevice($id);
-              exit;
-          }
-        
-        
-        
-    } else { 
-        config([
-        'jwt.blacklist_enabled' => true
-    ]);
-         JWTAuth::parseToken()->invalidate();
-        return response()->json(['status'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
-       
-    }
-     public function userlogout2()
-    {   $request = request();
-        $token = $request->bearerToken();//get token from header
-        try {
-            config([
-                'jwt.blacklist_enabled' => true
-            ]);
-            JWTAuth::parseToken()->invalidate( $token );
-
-            return response()->json( [
-                'error'   => false,
-                'message' => trans( 'auth.logged_out' )
-            ] );
-        } catch ( TokenExpiredException $exception ) {
-            return response()->json( [
-                'error'   => true,
-                'message' => trans( 'auth.token.expired' )
-
-            ], 401 );
-        } catch ( TokenInvalidException $exception ) {
-            return response()->json( [
-                'error'   => true,
-                'message' => trans( 'auth.token.invalid' )
-            ], 401 );
-
-        } catch ( JWTException $exception ) {
-            return response()->json( [
-                'error'   => true,
-                'message' => trans( 'auth.token.missing' )
-            ], 500 );
-        }
-    }
 
     /**
      * Refresh a token.
