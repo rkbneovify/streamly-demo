@@ -1,8 +1,9 @@
 <?php
 use Carbon\Carbon;
+
 use Jenssegers\Agent\Agent;
 /// check for 3 concurrent login
-     function checkLoginLimit($user_id,$token){
+     function checkLoginLimit($user_id,$token,$deviceDetails){
         $login_limit = 5; $device_limit = 5;$userInfo = JWTAuth::user();//all the user info
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
@@ -15,7 +16,7 @@ use Jenssegers\Agent\Agent;
         if ((count($active_session)==0)) {
          //new entry of sessionTable
          
-
+       
         $date = date('Y-m-d H:i:s');
         
         //Store the login info in 
@@ -24,7 +25,7 @@ use Jenssegers\Agent\Agent;
         $task->users_id = $user_id;
         $task->access_token = $token;//change this field to status
         $task->user_ip = getUserIpAddr();
-        $task->mac_address = 'from login entry';
+        $task->mac_address = $deviceDetails;
         $task->connected_devices = 1;
        $task->logintime = Carbon::now();
         $task->status = 1;
@@ -42,6 +43,7 @@ use Jenssegers\Agent\Agent;
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'device_info'=>$deviceDetails
             
           
           
@@ -72,7 +74,7 @@ use Jenssegers\Agent\Agent;
         $task->users_id = $user_id;
         $task->access_token = $token;//change this field to status
         $task->user_ip = getUserIpAddr();
-        $task->mac_address = 'from login entry with +1 in connected device';
+        $task->mac_address = $deviceDetails;
         $task->connected_devices= $newnumofDevice;
         $task->logintime = Carbon::now();
         $task->status = 1;
@@ -93,6 +95,7 @@ use Jenssegers\Agent\Agent;
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'device_info'=>$deviceDetails
             
           ],200)->send();}
         
@@ -124,6 +127,7 @@ use Jenssegers\Agent\Agent;
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'device_info'=>$deviceDetails
         
         
     ])->send();

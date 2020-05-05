@@ -80,6 +80,52 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item has-treeview">
+                <a href=" {{ url('/admin/channels') }}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Channels
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+              <a href=" {{ url('/admin/channels') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Channel manage</p>
+                </a>
+              </li><li class="nav-item">
+              <a href=" {{ url('/admin/channelstatus') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Channel status</p>
+                </a>
+              </li>
+            </ul>
+          <li class="nav-item has-treeview">
+                <a href=" {{ url('/admin/zipcode') }}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                zipcodes
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+              <a href=" {{ url('/admin/zipcode') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Zipcode manage</p>
+                </a>
+              </li>
+            </ul>
+            <!-- <ul class="nav nav-treeview">
+              <li class="nav-item">
+              <a href=" {{ url('/admin/subscriptionpack') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Subscriptionpack manage</p>
+                </a>
+              </li>
+            </ul> -->
+          </li>
           @endrole
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">

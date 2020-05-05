@@ -48,6 +48,9 @@
                       <th style="width: 20%">
                           User Name
                       </th>
+                      <th style="width: 20%">
+                          Role
+                      </th>
                       <th style="width: 30%">
                           Email
                       </th>
@@ -61,6 +64,7 @@
               </thead>
               <tbody>
                   @foreach($users as $key => $user)
+                  
                         <tr data-entry-id="{{ $user->id }}">
                         <td>
                           #
@@ -68,6 +72,11 @@
                             <td>
                                 {{ $user->name ?? '' }}
                             </td>
+                            <td> @foreach ($user->roles as $role)
+                                {{  $role->display_name}}
+                                @endforeach
+                            </td>
+                            
                             <td>
                                 {{ $user->email ?? '' }}
                             </td>
