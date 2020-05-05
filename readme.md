@@ -1,4 +1,4 @@
-# Streamly
+# Streamly CMS
 
 [![GitHub license](https://img.shields.io/badge/license-GPLv2%2B-blue.svg)]()
 
