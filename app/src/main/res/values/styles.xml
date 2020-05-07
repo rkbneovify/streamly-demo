@@ -1,0 +1,58 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!-- Customize your theme here. -->
+        <style name="AppTheme" parent="@style/Theme.Leanback" >
+            <item name="colorPrimary">@color/colorPrimary</item>
+            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+            <item name="colorAccent">@color/colorAccent</item>
+        </style>
+
+
+
+    <style name="MyCheckbox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:colorControlNormal" tools:ignore="NewApi">@color/app_blue_light</item>
+        <item name="android:colorControlActivated" tools:ignore="NewApi">@color/app_blue_dark</item>
+        <item name="android:colorControlHighlight" tools:ignore="NewApi">@color/md_white_1000</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+    </style>
+
+    <style name="MyProgressDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/appcolor</item>
+        <item name="colorPrimaryDark">@color/appcolor</item>
+        <item name="colorAccent">@color/appcolor</item>
+        <item name="android:textColor">@color/appcolor</item>
+        <item name="android:itemBackground">@color/appcolor</item>
+        <item name="android:textColorSecondary">@color/appcolor</item>
+    </style>
+
+    <style name="orangeProgress" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/appcolor</item>
+        <item name="colorPrimaryDark">@color/appcolor</item>
+        <item name="colorAccent">@color/appOrangecolor</item>
+        <item name="android:textColor">@color/appcolor</item>
+        <item name="android:itemBackground">@color/appOrangecolor</item>
+        <item name="android:textColorSecondary">@color/appOrangecolor</item>
+    </style>
+
+
+    <style name="CustomImageCardViewStyle" parent="Widget.Leanback.ImageCardViewStyle">
+        <item name="cardBackground">#F0F</item>
+        <item name="lbImageCardViewType">Title|Content</item>
+    </style>
+
+    <style name="CustomImageCardTheme" parent="Theme.Leanback">
+        <item name="imageCardViewStyle">@style/CustomImageCardViewStyle</item>
+        <item name="imageCardViewInfoAreaStyle">@color/appcolor</item>
+    </style>
+    <!--        <item name="imageCardViewTitleStyle">@color/orange</item>-->
+
+    <style name="VdoMediaButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">54dp</item>
+        <item name="android:layout_height">40dp</item>
+    </style>
+
+</resources>

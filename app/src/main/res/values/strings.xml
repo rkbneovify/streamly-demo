@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Streamly</string>
+    <string name="sign_in">Sign In</string>
+    <string name="signIn">Sign in</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="register_account">Don\'t have an account?</string>
+    <string name="remember">Remember me</string>
+    <string name="register_now">Register Now</string>
+    <string name="need_help">Need Help?</string>
+</resources>
