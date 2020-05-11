@@ -37,8 +37,9 @@ use Jenssegers\Agent\Agent;
         return response()->json([
       
           'success' => true,
-          'msg'=>'logged in successfully ',
+          'message'=>'logged in successfully ',
           'response_code'=>200,
+          'connected_device'=> '1 device connected  ',
           //'user'=>$userInfo,
           'access_token' => $token,
             'token_type' => 'bearer',
@@ -86,7 +87,7 @@ use Jenssegers\Agent\Agent;
           return response()->json([
         
             'success' => true,
-            'msg'=>'logged in successfully ',
+            'message'=>'logged in successfully ',
             'connected_device'=> $newnumofDevice.' device connected  ',
             'response_code'=>200,
             
@@ -109,7 +110,7 @@ use Jenssegers\Agent\Agent;
         return response()->json([
           'success' => false,
           'response_code'=>429,
-          'msg'=>'Your account is in use on 5 devices. Please stop playing on other devices to continue',
+          'message'=>'Your account is in use on 5 devices. Please stop playing on other devices to continue',
           //'loggedindeviceinfointheseId'=>$myarr,
         ],429)->send();
         
@@ -121,7 +122,7 @@ use Jenssegers\Agent\Agent;
       
         'success' => true,
         
-        'msg'=>'finally logged in successfully',
+        'message'=>'finally logged in successfully',
         'response_code'=>200,
         'user'=>$userInfo,
           'access_token' => $token,
@@ -216,7 +217,7 @@ if (count(($active_session)) >= $login_limit) {
     ]);
       return response()->json([
           'success' => true,
-          'msg'=>'logged out automatically successful',
+          'message'=>'logged out automatically successful',
           'myid'=>$myarr,
       ])->send();
   } 
@@ -252,7 +253,7 @@ function LogoutandDecrementDevice($user_id){
       return response()->json([
         'response_code'=>200,
         'success' => true,
-        'msg'=>'logged out successful',
+        'message'=>'logged out successful',
         
       ],200)->send();
     

@@ -27,7 +27,7 @@
                with font-awesome or any other icon font library -->
           
           <li class="nav-item ">
-            <a href=" {{ url('/home') }}"  class="nav-link">
+            <a href=" {{ url('/admin') }}"  class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
               Dashboard
@@ -92,7 +92,7 @@
               <li class="nav-item">
               <a href=" {{ url('/admin/channels') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Channel manage</p>
+                  <p>Gracenote manage</p>
                 </a>
               </li><li class="nav-item">
               <a href=" {{ url('/admin/channelstatus') }}" class="nav-link">

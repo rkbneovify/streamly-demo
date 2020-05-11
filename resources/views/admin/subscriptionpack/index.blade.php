@@ -22,7 +22,7 @@
 
     <!-- Main content -->
     <section class="content">
-    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
+    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptionpack/create') }} ">
                                         Add new subscription pack
                                     </a>
 
@@ -82,11 +82,11 @@
                                         {{ trans('edit') }}
                                     </a>
 
-                                    <!-- <form action="{{ url('admin/subscriptions/destroy', $subscriptionpack->id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/subscriptions/destroy', $subscriptionpack->id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                    </form> -->
+                                    </form>
                           
                                 
                             </td></tr>

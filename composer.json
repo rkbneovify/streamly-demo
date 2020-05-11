@@ -18,7 +18,8 @@
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
         "piwik/device-detector": "^3.12",
-        "tymon/jwt-auth": "1.0.0-rc.5"
+        "tymon/jwt-auth": "1.0.0-rc.5",
+        "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

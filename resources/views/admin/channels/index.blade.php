@@ -49,13 +49,14 @@
                       name
                       </th>
                       <th style="width: 20%">
-                      CallSign
+                      url
+                      </th>
+
+                      <th style="width: 20%">
+                      genre
                       </th>
                       <th style="width: 20%">
-                      EndaDateTime
-                      </th>
-                      <th style="width: 20%">
-                      Status
+                      status
                       </th>
                       
                       <th style="width: 20%">
@@ -69,11 +70,22 @@
               <td>#</td>
               
     <td>{{ $record->name }}</td>
-    <td>{{ $record->CallSign }}</td>
-    <td>{{ $record->Rating }}</td>
-    <td>{{ $record->EventType }}</td>
+    <td>{{ $record->url }}</td>
+    <td>{{ $record->genre['name'] }}</td>
+    
 
-
+    <td class="project-state">
+                            @if ($record->status===1)
+                            <span class="badge badge-success">Active</span>
+@elseif ($record->status===0)
+<span class="badge badge-danger">Inactive</span>
+@else
+  <span>unknown</span>  
+@endif
+                          
+                            
+                          
+                      </td>
     
     <td>
                                 

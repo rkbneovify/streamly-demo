@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Zipcode;
 
 
+use Yajra\Datatables\Datatables;
+
+
 
 
 class ZipcodeController extends Controller
@@ -19,7 +22,7 @@ class ZipcodeController extends Controller
      */
     public function index()
     { 
-        $zipcodes = Zipcode::paginate(15);
+        $zipcodes = Zipcode::paginate(10);
        
        return view('admin.zipcodes.index', compact('zipcodes'));
     }  
@@ -134,4 +137,22 @@ class ZipcodeController extends Controller
 
         return redirect()->back();
     }
+
+    public function massDestroy(Request $request)
+    {
+        Zipcode::whereIn('id', request('ids'))->delete();
+
+        return response(null, 204);
+    }
+
+    public function categoryData()
+    {
+        return Datatables::of(Zipcode::query())
+        ->addColumn('action', function($row) {
+            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })
+        ->make(true);
+    }
+    
 }
+

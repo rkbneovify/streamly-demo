@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Subscription</h1>
+            <h1>Create  Subscription pack</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create Subscription</li>
+              <li class="breadcrumb-item active">Create Subscription pack</li>
             </ol>
           </div>
         </div>
@@ -46,83 +46,64 @@
                             </div>
                         @endif
                         
-                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertquotation') }}">
-                      
-        
-        {{ csrf_field() }}
+                        <form action="{{ url("admin/subscriptionpackupdate", [$subscriptionpack->id]) }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+            @method('PUT')
             <div class="card-body">
-              <div class="form-group{{ $errors->has('subscriptionpack_id') ? ' has-error' : '' }}">
-                <label for="subscriptionpack_id">Subscription</label>
+              <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                <label for="name">Name</label>
                 
-                <select name="subscriptionpack_id" id="subscriptionpack_id" class="form-control" >
-                    @foreach($pack as $id => $pack)
-                        <option value="{{ $id }}" >
-                            {{ $pack }}
-                        </option>
-                    @endforeach
-                </select>
-                @if ($errors->has('subscriptionpack_id'))
+              <input type="text" name="name"    class="form-control"   value="package 3">
+                @if ($errors->has('name'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('subscriptionpack_id') }}</strong>
+                                        <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                     @endif
               </div>
               
-              <div class="form-group{{ $errors->has('users_id') ? ' has-error' : '' }}">
-                <label for="users_id">User</label>
+              <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
+                <label for="duration">Duration(in months)</label>
+                <input type="text" name="duration" class="form-control"  value="8">
                 
-                <select name="users_id" id="users_id" class="form-control" >
-                    @foreach($users as $id => $users)
-                        <option value="{{ $id }}" >
-                            {{ $users }}
-                        </option>
-                    @endforeach
-                </select>
-                @if ($errors->has('users_id'))
+                @if ($errors->has('duration'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('users_id') }}</strong>
+                                        <strong>{{ $errors->first('duration') }}</strong>
+                                    </span>
+                                    @endif
+              </div>
+              <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
+                <label for="rate">Rate($)</label>
+                <input type="text" name="rate" class="form-control"  value={{ $subscriptionpack->rate  }}>
+                
+                @if ($errors->has('rate'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('rate') }}</strong>
                                     </span>
                                     @endif
               </div>
               
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
-              
-                <label for="start_date">start date</label>
-                 <input type="date" name="start_date" placehoder="Start Date" class="form-control" />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('start_date'), $errors->first('dateeror') }}</strong>
-                                    </span>
-                                    @endif
-              </div>
-              
-             
-</div>
-              <div class="form-group">
-                <label for="inputProjectLeader">expiry date</label>
-                <!-- <input type="text" placehoder="End Date" name="expiry_date" id="end_date" class="form-control"/> -->
-                <input type="date" placehoder="End Date" name="expiry_date" class="form-control"/>
-              </div>
             </div>
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
         </div>
+               
+</div>
+              
       </div>
       <div class="row">
         <div class="col-12">
           
-          <button type="submit" class="btn btn-success">
-                                        Save
+        <button type="submit" class="btn btn-success">
+          Create
                                     </button>
-                                    <a href="{{ url('admin/subscriptions') }}" class="btn btn-secondary">Cancel</a>
+                                    <a href="{{ url('admin/subscriptionpack') }}" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
       </form>   
+      
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
-@endsection
+  @endsection

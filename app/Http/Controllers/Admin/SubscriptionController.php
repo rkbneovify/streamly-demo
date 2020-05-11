@@ -54,9 +54,8 @@ class SubscriptionController extends Controller
      */
     public function create()
     {    
-         $users = User::all()->pluck('name', 'id');
-         $pack = SubscriptionPack::all()->pluck('name', 'id');
-
+         $users = User::where('is_active','=','1')->pluck('name', 'id');
+         $pack = SubscriptionPack::where('is_active','=','1')->pluck('name', 'id');
          return view('admin.subscriptions.create', compact('users','pack'));
         
         

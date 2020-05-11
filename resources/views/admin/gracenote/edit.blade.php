@@ -47,7 +47,7 @@
             </ul>
           </div>
           @endif
-          <form action="{{ url("admin/userupdate", [$model->id]) }}" method="POST" enctype="multipart/form-data">
+          <form action="{{ url("admin/channelupdate", [$model->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -57,7 +57,7 @@
               <label for="StationName" class="col-md-4 control-label">StationName</label>
 
 
-              <input id="StationName" type="text" class="form-control" name="StationName" value="{{$model->StationName}}" required
+              <input id="StationName" type="text" class="form-control" name="StationName" value="{{$model->StationName}}" 
                 autofocus>
 
               @if ($errors->has('StationName'))
@@ -71,7 +71,7 @@
               <label for="CallSign" class="col-md-4 control-label">CallSign</label>
 
 
-              <input id="CallSign" type="text" class="form-control" name="CallSign" value="{{$model->CallSign}}" required
+              <input id="CallSign" type="text" class="form-control" name="CallSign" value="{{$model->CallSign}}" 
                 autofocus>
 
               @if ($errors->has('CallSign'))
@@ -85,7 +85,7 @@
               <label for="Rating" class="col-md-4 control-label">Rating</label>
 
 
-              <input id="Rating" type="text" class="form-control" name="Rating" value="{{$model->Rating}}" required
+              <input id="Rating" type="text" class="form-control" name="Rating" value="{{$model->Rating}}" 
                 autofocus>
 
               @if ($errors->has('Rating'))
@@ -100,7 +100,7 @@
               <label for="EventType" class="col-md-4 control-label">EventType</label>
 
 
-              <input id="EventType" type="text" class="form-control" name="EventType" value="{{$model->EventType}}" required
+              <input id="EventType" type="text" class="form-control" name="EventType" value="{{$model->EventType}}" 
                 autofocus>
 
               @if ($errors->has('EventType'))
@@ -114,7 +114,7 @@
               <label for="EventID" class="col-md-6 control-label">EventID</label>
 
 
-              <input id="EventID" type="text" class="form-control" name="EventID" value="{{$model->EventID}}" required
+              <input id="EventID" type="text" class="form-control" name="EventID" value="{{$model->EventID}}" 
                 autofocus>
 
               @if ($errors->has('EventID'))
@@ -128,7 +128,7 @@
               <label for="StartDate" class="col-md-4 control-label">StartDate</label>
 
 
-              <input id="StartDate" type="text" class="form-control" name="StartDate" value="{{$model->StartDate}}" required
+              <input id="StartDate" type="text" class="form-control" name="StartDate" value="{{$model->StartDate}}" 
                 autofocus>
 
               @if ($errors->has('StartDate'))
@@ -142,7 +142,7 @@
               <label for="StartDateTime" class="col-md-4 control-label">StartDateTime</label>
 
 
-              <input id="StartDateTime" type="text" class="form-control" name="StartDateTime" value="{{$model->StartDateTime}}" required
+              <input id="StartDateTime" type="text" class="form-control" name="StartDateTime" value="{{$model->StartDateTime}}" 
                 autofocus>
 
               @if ($errors->has('StartDateTime'))
@@ -156,7 +156,7 @@
               <label for="RunLenHour" class="col-md-4 control-label">RunLenHour</label>
 
 
-              <input id="RunLenHour" type="text" class="form-control" name="RunLenHour" value="{{$model->RunLenHour}}" required
+              <input id="RunLenHour" type="text" class="form-control" name="RunLenHour" value="{{$model->RunLenHour}}" 
                 autofocus>
 
               @if ($errors->has('RunLenHour'))
@@ -170,7 +170,7 @@
               <label for="RunLenMinute" class="col-md-4 control-label">RunLenMinute</label>
 
 
-              <input id="RunLenMinute" type="text" class="form-control" name="RunLenMinute" value="{{$model->RunLenMinute}}" required
+              <input id="RunLenMinute" type="text" class="form-control" name="RunLenMinute" value="{{$model->RunLenMinute}}" 
                 autofocus>
 
               @if ($errors->has('RunLenMinute'))
@@ -184,7 +184,7 @@
               <label for="EventTitle" class="col-md-4 control-label">EventTitle</label>
 
 
-              <input id="EventTitle" type="text" class="form-control" name="EventTitle" value="{{$model->EventTitle}}" required
+              <input id="EventTitle" type="text" class="form-control" name="EventTitle" value="{{$model->EventTitle}}" 
                 autofocus>
 
               @if ($errors->has('EventTitle'))
@@ -198,7 +198,7 @@
               <label for="EventDescription" class="col-md-4 control-label">EventDescription</label>
 
 
-              <input id="EventDescription" type="text" class="form-control" name="EventDescription" value="{{$model->EventDescription}}" required
+              <input id="EventDescription" type="text" class="form-control" name="EventDescription" value="{{$model->EventDescription}}" 
                 autofocus>
 
               @if ($errors->has('EventDescription'))
@@ -212,7 +212,7 @@
               <label for="UnixStartDate" class="col-md-4 control-label">UnixStartDate</label>
 
 
-              <input id="UnixStartDate" type="text" class="form-control" name="UnixStartDate" value="{{$model->UnixStartDate}}" required
+              <input id="UnixStartDate" type="text" class="form-control" name="UnixStartDate" value="{{$model->UnixStartDate}}" 
                 autofocus>
 
               @if ($errors->has('UnixStartDate'))
@@ -227,7 +227,7 @@
               <label for="TimeZoneName" class="col-md-4 control-label">TimeZoneName</label>
 
 
-              <input id="TimeZoneName" type="text" class="form-control" name="TimeZoneName" value="{{$model->TimeZoneName}}" required
+              <input id="TimeZoneName" type="text" class="form-control" name="TimeZoneName" value="{{$model->TimeZoneName}}" 
                 autofocus>
 
               @if ($errors->has('TimeZoneName'))
@@ -241,7 +241,7 @@
               <label for="EndDate" class="col-md-4 control-label">EndDate</label>
 
 
-              <input id="EndDate" type="text" class="form-control" name="EndDate" value="{{$model->EndDate}}" required
+              <input id="EndDate" type="text" class="form-control" name="EndDate" value="{{$model->EndDate}}" 
                 autofocus>
 
               @if ($errors->has('EndDate'))
@@ -256,7 +256,7 @@
               <label for="EndaDateTime" class="col-md-4 control-label">EndaDateTime</label>
 
 
-              <input id="EndaDateTime" type="text" class="form-control" name="EndaDateTime" value="{{$model->EndaDateTime}}" required
+              <input id="EndaDateTime" type="text" class="form-control" name="EndaDateTime" value="{{$model->EndaDateTime}}" 
                 autofocus>
 
               @if ($errors->has('EndaDateTime'))

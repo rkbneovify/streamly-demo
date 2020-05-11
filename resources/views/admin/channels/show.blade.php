@@ -1,6 +1,7 @@
 @extends('master')
 @section('content')
 
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -8,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>View Subscription Pack</h1>
+            <h1>User view</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">View Subscription Pack</li>
+              <li class="breadcrumb-item active">View channel</li>
             </ol>
           </div>
         </div>
@@ -33,81 +34,47 @@
                   <i class="fas fa-minus"></i></button>
               </div>
             </div>
-            <div class="panel-body">
-                        <!-- Display Validation Errors -->
-                        @if (count($errors) > 0)
-                            <div class="alert alert-danger">
-                                <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                        
-                        <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertquotation') }}">
-                      
-        
-        {{ csrf_field() }}
+          
             <div class="card-body">
-              <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                <label for="name">Name</label>
-                
-              <input type="text" name="name" disabled   class="form-control"  disabled value={{ $subscriptionpack->name }}>
-                @if ($errors->has('name'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                    @endif
+            <div class="form-group">
+                            <label for="name" class="col-md-4 control-label">Genre</label>
+                            
+                                    <label class="label label-success">{{ $channel->genre->name?? "unknown" }}</label>
+                                
+                        </div>
+              <div class="form-group">
+                <label for="inputName">Name</label>
+                <input type="text" id="inputName" class="form-control" value="{{ $channel->name }}" disabled>
               </div>
-              
-              <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
-                <label for="duration">Duration</label>
-                <input type="text" name="duration" class="form-control" disabled value={{ $subscriptionpack->duration  }}>
-                
-                @if ($errors->has('duration'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('duration') }}</strong>
-                                    </span>
-                                    @endif
+              <div class="form-group">
+                <label for="inputurl">url</label>
+                <input type="text" id="inputurl" class="form-control" value="{{ $channel->url }}" disabled>
               </div>
-              <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
-                <label for="rate">Rate($)</label>
-                <input type="text" name="rate" class="form-control" disabled value={{ $subscriptionpack->rate  }}>
+              <div class="form-group">
+                <label for="inputStatus">Status</label>
+                @if ($channel->status===1)
+                <input type="text" id="inputurl" class="form-control" value="Active " disabled>
+@elseif ($channel->status===0)
+<input type="text" id="inputurl" class="form-control" value="Inactive " disabled>
+@else
+<input type="text" id="inputurl" class="form-control" value="Unknown " disabled>
+@endif
                 
-                @if ($errors->has('rate'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('rate') }}</strong>
-                                    </span>
-                                    @endif
-              </div>
-              
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
-              
-                <label for="start_date">Created on</label>
-                 <input type="text" name="start_date" placehoder="Start Date" class="form-control" disabled value={{$subscriptionpack->created_on}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('start_date') }}</strong>
-                                    </span>
-                                    @endif
               </div>
             </div>
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
         </div>
-             
-</div>
-              
-      </div>
-      
-      </form>   
+      <!-- </div>
+      <div class="row">
+        <div class="col-12">
+          <a href="#" class="btn btn-secondary">Cancel</a>
+          <input type="submit" value="Create new Porject" class="btn btn-success float-right">
+        </div>
+      </div> -->
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
 @endsection

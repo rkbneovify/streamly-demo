@@ -97,7 +97,7 @@
                           <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/view', $user->id) }}">View</a>
                           <a class="btn btn-xs btn-info" href="{{ url('admin/users/edit', $user->id) }}">Edit</a>
                           
-                                    <form action="{{ url('admin/users/destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/users/destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="Delete">

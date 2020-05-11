@@ -5,8 +5,10 @@ use Illuminate\Database\Eloquent\Model;
 /**
    @property varchar $name name
 @property varchar $url url
+@property int $genre_id genre id
 @property timestamp $created_at created at
 @property timestamp $updated_at updated at
+@property Genre $genre belongsTo
 @property \Illuminate\Database\Eloquent\Collection $status belongsToMany
    
  */
@@ -22,7 +24,8 @@ class Channel extends Model
     * Mass assignable columns
     */
     protected $fillable=['name',
-'url'];
+'url',
+'genre_id','status'];
 
     /**
     * Date time columns.
@@ -30,15 +33,17 @@ class Channel extends Model
     protected $dates=[];
 
     /**
-    * statuses
+    * genre
     *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
     */
-    public function statuses()
+    public function genre()
     {
-        return $this->belongsToMany(Status::class,'channel_status');
+        return $this->belongsTo(Genre::class,'genre_id');
     }
 
+    
+    
 
 
 }

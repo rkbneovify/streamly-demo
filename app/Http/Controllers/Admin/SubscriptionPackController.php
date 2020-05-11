@@ -43,13 +43,10 @@ class SubscriptionPackController extends Controller
      * @param  Create  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Create $request)
-    {
-
-        return view('pages.subscription_pack.create', [
-            'model' => new SubscriptionPack,
-
-        ]);
+    public function create()
+    { $id=1;
+        $subscriptionpack = SubscriptionPack::find($id);
+        return view('admin.subscriptionpack.create', compact('subscriptionpack'));
     }    /**
      * Store a newly created resource in storage.
      *

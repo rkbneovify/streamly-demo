@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
-use App\Models\ChannelStatus;
+use App\Models\Genre;
 
 /**
  * Description of ChannelController
@@ -23,7 +23,8 @@ class ChannelController extends Controller
      */
     public function index()
     {
-        $record = Channel::all();
+        $record = Channel::with('genre')->paginate(10);
+        
         return view('admin.channels.index', compact('record'));
     }    /**
      * Display the specified resource.
@@ -34,9 +35,8 @@ class ChannelController extends Controller
      */
     public function show($id)
     {
-        return view('pages.channels.show', [
-                'record' =>$channel,
-        ]);
+        $channel = Channel::find($id); 
+        return view('admin.channels.show', compact('channel'));
 
     }    /**
      * Show the form for creating a new resource.
@@ -77,33 +77,54 @@ class ChannelController extends Controller
      * @param  Channel  $channel
      * @return \Illuminate\Http\Response
      */
+    
+    
     public function edit($id)
     {
-
-        return view('pages.channels.edit', [
-            'model' => $channel,
-
-            ]);
-    }    /**
+        $channel = Channel::find($id);
+        $genres = Genre::pluck('name', 'id'); 
+       // dd($genres);
+        return view('admin.channels.edit',compact('channel','genres','channelGenres'));
+    }
+    
+    /**
      * Update a existing resource in storage.
      *
      * @param  Update  $request
      * @param  Channel  $channel
      * @return \Illuminate\Http\Response
      */
-    public function update(Update $request,Channel $channel)
+    public function update(Request $request, $id)
     {
-        $channel->fill($request->all());
+        $request->validate([
+            'name'=>'required',
+            'url'=>'required',
+            'genre_id'=>'required'
+        ]);
+        $input = $request->only('name', 'url', 'genre_id');
+        if ($request->has('toggleswitch')) {
+            // $archived="helllo block user on";
+             $input['status'] = 0;
+            // $user->is_active=0;
+         } else{
+            // $archived="bye block off";
+             //$user->is_active=1;
+             $input['status'] = 1;
+         }
+    //            $allpost= $request->post();
+    //    dd($input);  //get all the post data
+        
+        $model = Channel::find($id);
+        
+       // dd($input);exit;
+        if(!$model){
+            return redirect('admin/channelstatus')->with('info','Channel with id ' . $id . ' cannot be found.'); 
+        }
+        else{$model->update($input); //update the subscription info
 
-        if ($channel->save()) {
-            
-            session()->flash('app_message', 'Channel successfully updated');
-            return redirect()->route('channels.index');
-            } else {
-                session()->flash('app_error', 'Something is wrong while updating Channel');
-            }
-        return redirect()->back();
-    }    /**
+            return redirect('admin/channelstatus')->with('info','Channel updated Successfully');
+       }
+        }  /**
      * Delete a  resource from  storage.
      *
      * @param  Destroy  $request

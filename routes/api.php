@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 Route::get('/', function (Request $request) {
     return 'Working';
 });
+
 // For api Registration, confirmations and verification
 Route::get('/front', 'APIController@index')->name('front');
 Route::post('/frontlogin', 'APIController@login')->name('frontlogin');
@@ -74,3 +75,8 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
 
 
 
+// Route::fallback(function(){
+//     return response()->json([
+//         'response_code'=>404,
+//         'message' => 'Page Not Found or Wrong method used in postman. If error persists, contact info@website.com'], 404);
+// });
