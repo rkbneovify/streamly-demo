@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="LoginScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/LoginScreen/LoginScreen.brs" />
+	
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	
+	
+	<interface>
+	
+	  <field id="dialog"  type="node"/>
+	</interface>
+	<children>
+	  <Poster id="LoginBackgroundImage"
+	          height="1080"
+	          width="1920"
+	          loadwidth="1280"
+	          loadheight="720"
+	          uri="pkg:/images/LoginBackgroundpng.png" 
+	           />
+      <Poster id="logo"
+              translation= "[723,68]"
+	          height="118"
+	          width="474"
+	          uri="pkg:/images/streamly_logo.png" 
+	           />
+	  
+	 <!--  <Rectangle
+	             
+	             
+	             height="779"
+	             width="873"
+	             uri = "pkg:/images/Login/backGroundBox.png" 	                
+	   > -->
+	       <Poster   
+	                  translation = "[524,227]"                    
+	                  height="779"
+	                  width="873"
+	                  uri="pkg:/images/Login/backGroundBox.png" 
+	           >
+	    
+	          <Label
+	                 id="SignInLabel"
+	                 text="Sign In"
+	                 translation= "[127,40]"
+	                 height="53"
+	                 width="0"
+	                 color="#004E92"
+	                 
+	      
+	          />
+	         
+	          <Label
+	                 id="UsernamLable"
+	                 text="Username"
+	                 translation= "[127,137]"
+	                 height="28"
+	                 width="130"
+	                 color="#0A0A0A"
+	                 
+	      
+	          />          
+	          <Poster id="UsernamPoster"
+                      translation = "[127,176]"
+	                  height="94"
+	                  width="620"
+	                  uri="pkg:/images/Login/borderof.png" 
+	           >
+	          
+	             <TextEditBox
+	                 id = "UsernamEditText"
+	                 text = "shahjad@gmail.com"
+	                 translation = "[35,30]"	                 
+	                 width = "585"
+	                 textColor="#0A0A0A"
+	                 backgroundUri="pkg:/images/Login/editTextBackground.png" 
+	                 clearOnDownKey="false"      
+	             />
+	          </Poster>
+	          <Label
+	                 id="PasswordLable"
+	                 text="Username"
+	                 translation= "[127,298]"
+	                 height="28"
+	                 width="130"
+	                 color="#0A0A0A"
+	                    
+	          />
+	           <Poster id="PasswordPoster"
+                      translation = "[127,337]"
+	                  height="94"
+	                  width="620"
+	                  uri="pkg:/images/Login/borderon.png" 
+	           >
+	              <TextEditBox
+	               
+	                 id = "PasswordEditText"
+	                 text = "123456789"
+	                 translation = "[35,30]"
+	                 secureMode="true"
+	                 width = "585"
+	                 textColor="#0A0A0A"
+	                 backgroundUri="pkg:/images/Login/editTextBackground.png"  
+	                 clearOnDownKey="false"                        
+	              />
+	          </Poster>
+	          <Button 
+	                 id="SignInButton"
+	                 
+	                 translation= "[127,528]"
+	                 height="84"
+	                 maxwidth="620"
+	                 minwidth="620"
+	                 iconuri=""
+	                 focusedIconUri=""
+	                 focusFootprintBitmapUri = "pkg:/images/Login/signfocus.png"
+	                 focusBitmapUri = "pkg:/images/Login/signfootprint.png"        
+	                 showFocusFootprint="true"
+	          
+	          />
+	  
+	  </Poster>
+	  
+	      
+	      <Poster   
+	                  id = "KeyboardPoster"
+	                  translation= "[0,670]"                  
+	                  height="779"
+	                  width="1920"
+	                  uri="pkg:/images/LoginBackgroundpng.png" 
+	                  visible="false"
+	            >
+	             <Keyboard 
+	                  id = "KeyboardInput"
+	                  translation= "[250,0]"
+	                  showTextEditBox="false"
+	             />
+	             
+	             
+	        </Poster>
+	        
+	        <Rectangle
+                id="LoaderBackground"
+                color="0x000000FF"
+                visible="false"
+                opacity="0.65"
+              />
+	        <BusySpinner 
+	 
+	    		id = "LoginBusySpinner" 
+		    	visible = "false"
+			  />   
+			 
+	  
+	             
+			 
+			        
+	  
+	            	
+	</children>
+</component>

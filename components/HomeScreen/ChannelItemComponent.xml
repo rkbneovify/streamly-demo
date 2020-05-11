@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ChannelItemComponent" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/HomeScreen/ChannelItemComponent.brs" />
+
+    <interface>
+      <field id="content" type="node"  onChange = "showcontent" />
+      <field id="width" type="float" />
+      <field id="height" type="float" />
+    </interface>
+
+   
+    <!--  --><!-- <script type="text/brightscript" uri="../../utils/utils.brs" /> -->
+
+    <children>
+       
+
+       <!--  <Rectangle 
+           translation="[0,0]"
+           height="100"
+           width="280"
+           color="#FFFFFF"
+           opacity=".2"
+        /> -->
+       
+       <Poster
+           
+           loadDisplayMode="scaleToFit"           
+           translation="[0,-5]"
+           height="110"
+           width="300"
+           
+          
+           uri="pkg:/images/home/channelinfobackgrnd.png"
+        /> 
+        
+          <Poster
+            id="poster"
+            loadDisplayMode="scaleToFit"
+            translation="[60,20]"
+            height = "60"
+            width =  "70"
+          />
+           <Label
+            id="title"
+            height="50"
+            width="200"                  
+           
+            translation="[140,45]"
+            />            
+    </children>
+</component>
+
