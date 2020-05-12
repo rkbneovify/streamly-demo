@@ -25,7 +25,7 @@ class Channel extends Model
     */
     protected $fillable=['name',
 'url',
-'genre_id','status'];
+'genre_id','status','genres'];
 
     /**
     * Date time columns.

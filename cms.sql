@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 11, 2020 at 07:36 PM
+-- Generation Time: May 12, 2020 at 11:46 PM
 -- Server version: 10.3.20-MariaDB-0ubuntu0.19.04.1
 -- PHP Version: 7.2.24-0ubuntu0.19.04.2
 
@@ -31,6 +31,7 @@ CREATE TABLE `channels` (
   `name` varchar(225) NOT NULL,
   `url` varchar(225) NOT NULL,
   `genre_id` int(11) DEFAULT NULL,
+  `genres` varchar(200) DEFAULT NULL COMMENT '1=News,2=Comedy,3=Movies,4=Family,5=Kids,6=Sports',
   `status` tinyint(1) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -40,95 +41,97 @@ CREATE TABLE `channels` (
 -- Dumping data for table `channels`
 --
 
-INSERT INTO `channels` (`id`, `name`, `url`, `genre_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'TNT', 'http://streamlytv.com/live/TNT/interlink.m3u8', 1, 1, '2020-05-10 23:33:10', '2020-05-10 22:37:13'),
-(2, 'DJCH', 'http://streamlytv.com/live/DJCH/interlink.m3u8', 2, 1, '2020-05-10 20:41:11', '2020-05-10 21:36:13'),
-(3, 'FNC', 'http://streamlytv.com/live/FNC/interlink.m3u8', 1, 1, '2020-05-11 06:23:41', '2020-05-11 13:31:51'),
-(4, 'SCIENCE', 'http://streamlytv.com/live/SCIENCE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(5, 'CARTOON', 'http://streamlytv.com/live/CARTOON/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(6, 'TBN', 'http://streamlytv.com/live/TBN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(7, 'OUTD', 'http://streamlytv.com/live/OUTD/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(8, 'Travel', 'http://streamlytv.com/live/Travel/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(9, 'BET', 'http://streamlytv.com/live/BET/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(10, 'FX', 'http://streamlytv.com/live/FX/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(11, 'TVG', 'http://streamlytv.com/live/TVG/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(12, 'E', 'http://streamlytv.com/live/E/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(13, 'FBN', 'http://streamlytv.com/live/FBN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(14, 'FOOD', 'http://streamlytv.com/live/FOOD/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(15, 'GSN', 'http://streamlytv.com/live/GSN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(16, 'TBS', 'http://streamlytv.com/live/TBS/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(17, 'DEST', 'http://streamlytv.com/live/DEST/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(18, 'BRAVO', 'http://streamlytv.com/live/BRAVO/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(19, 'HALLDRAMA', 'http://streamlytv.com/live/HALLDRAMA/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(20, 'DSCE', 'http://streamlytv.com/live/DSCE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(21, 'VH1', 'http://streamlytv.com/live/VH1/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(22, 'ESPNEWS', 'http://streamlytv.com/live/ESPNEWS/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(23, 'COMEDY', 'http://streamlytv.com/live/COMEDY/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(24, 'HLN', 'http://streamlytv.com/live/HLN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(25, 'CNBC', 'http://streamlytv.com/live/CNBC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(26, 'NICJR', 'http://streamlytv.com/live/NICJR/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(27, 'TLC-W', 'http://streamlytv.com/live/TLC-W/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(28, 'ESPNU', 'http://streamlytv.com/live/ESPNU/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(29, 'DIY', 'http://streamlytv.com/live/DIY/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(30, 'HALL', 'http://streamlytv.com/live/HALL/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(31, 'ESPN2', 'http://streamlytv.com/live/ESPN2/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(32, 'GOLF', 'http://streamlytv.com/live/GOLF/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(33, 'FREEFRM', 'http://streamlytv.com/live/FREEFRM/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(34, 'COOK', 'http://streamlytv.com/live/COOK/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(35, 'EVINE', 'http://streamlytv.com/live/EVINE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(36, 'FXX', 'http://streamlytv.com/live/FXX/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(37, 'GAC', 'http://streamlytv.com/live/GAC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(38, 'VICE', 'http://streamlytv.com/live/VICE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(39, 'CMTV', 'http://streamlytv.com/live/CMTV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(40, 'ESPND', 'http://streamlytv.com/live/ESPND/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(41, 'FXM', 'http://streamlytv.com/live/FXM/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(42, 'DFC', 'http://streamlytv.com/live/DFC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(43, 'OWN', 'http://streamlytv.com/live/OWN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(44, 'CIN', 'http://streamlytv.com/live/CIN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(45, 'ESPNA', 'http://streamlytv.com/live/ESPNA/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(46, 'SUNDANC', 'http://streamlytv.com/live/SUNDANC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(47, 'CNBCW', 'http://streamlytv.com/live/CNBCW/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(48, 'EWTN', 'http://streamlytv.com/live/EWTN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(49, 'TVLAND', 'http://streamlytv.com/live/TVLAND/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(50, 'ESPN-SEC', 'http://streamlytv.com/live/ESPN-SEC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(51, 'TELE', 'http://streamlytv.com/live/TELE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(52, 'BLOOM', 'http://streamlytv.com/live/BLOOM/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(53, 'BIGTEN', 'http://streamlytv.com/live/BIGTEN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(54, 'APL', 'http://streamlytv.com/live/APL/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(55, 'AZTECAE', 'http://streamlytv.com/live/AZTECAE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(56, 'AHC', 'http://streamlytv.com/live/AHC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(57, 'CNN', 'http://streamlytv.com/live/CNN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(58, 'WE', 'http://streamlytv.com/live/WE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(59, 'USA', 'http://streamlytv.com/live/USA/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(60, 'TLC', 'http://streamlytv.com/live/TLC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(61, 'SYFY', 'http://streamlytv.com/live/SYFY/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(62, 'QVC', 'http://streamlytv.com/live/QVC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(63, 'PAR', 'http://streamlytv.com/live/PAR/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(64, 'OXYGEN', 'http://streamlytv.com/live/OXYGEN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(65, 'OLY', 'http://streamlytv.com/live/OLY/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(66, 'NICK', 'http://streamlytv.com/live/NICK/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(67, 'NBC', 'http://streamlytv.com/live/NBC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(68, 'NBCS', 'http://streamlytv.com/live/NBCS/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(69, 'NGWILD', 'http://streamlytv.com/live/NGWILD/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(70, 'NGC', 'http://streamlytv.com/live/NGC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(71, 'MTV2', 'http://streamlytv.com/live/MTV2/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(72, 'MTV', 'http://streamlytv.com/live/MTV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(73, 'MSNBC', 'http://streamlytv.com/live/MSNBC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(74, 'MILITARY', 'http://streamlytv.com/live/MILITARY/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(75, 'MAVTV', 'http://streamlytv.com/live/MAVTV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(76, 'LRW', 'http://streamlytv.com/live/LRW/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(77, 'LIFEMOV', 'http://streamlytv.com/live/LIFEMOV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(78, 'ID', 'http://streamlytv.com/live/ID/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(79, 'IFC', 'http://streamlytv.com/live/IFC/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(80, 'HSN', 'http://streamlytv.com/live/HSN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(81, 'HIST-W', 'http://streamlytv.com/live/HIST-W/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(82, 'HGTV', 'http://streamlytv.com/live/HGTV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(83, 'FUSE', 'http://streamlytv.com/live/FUSE/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(84, 'ESPN', 'http://streamlytv.com/live/ESPN/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(85, 'DXD', 'http://streamlytv.com/live/DXD/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(86, 'WebUI', 'http://streamlytv.com/live/WebUI/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(87, 'HLS', 'http://streamlytv.com/live/HLS/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
-(88, 'AETV', 'http://streamlytv.com/live/AETV/interlink.m3u8', NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41');
+INSERT INTO `channels` (`id`, `name`, `url`, `genre_id`, `genres`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'TNT', 'http://streamlytv.com/live/TNT/interlink.m3u8', 2, NULL, 1, '2020-05-10 23:33:10', '2020-05-11 14:26:41'),
+(2, 'DJCH', 'http://streamlytv.com/live/DJCH/interlink.m3u8', 2, NULL, 1, '2020-05-10 20:41:11', '2020-05-10 21:36:13'),
+(3, 'FNC', 'http://streamlytv.com/live/FNC/interlink.m3u8', 4, NULL, 1, '2020-05-11 06:23:41', '2020-05-12 06:13:08'),
+(4, 'SCIENCE', 'http://streamlytv.com/live/SCIENCE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(5, 'CARTOON', 'http://streamlytv.com/live/CARTOON/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(6, 'TBN', 'http://streamlytv.com/live/TBN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(7, 'OUTD', 'http://streamlytv.com/live/OUTD/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(8, 'Travel', 'http://streamlytv.com/live/Travel/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(9, 'BET', 'http://streamlytv.com/live/BET/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(10, 'FX', 'http://streamlytv.com/live/FX/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(11, 'TVG', 'http://streamlytv.com/live/TVG/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(12, 'E', 'http://streamlytv.com/live/E/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(13, 'FBN', 'http://streamlytv.com/live/FBN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(14, 'FOOD', 'http://streamlytv.com/live/FOOD/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(15, 'GSN', 'http://streamlytv.com/live/GSN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(16, 'TBS', 'http://streamlytv.com/live/TBS/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(17, 'DEST', 'http://streamlytv.com/live/DEST/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(18, 'BRAVO', 'http://streamlytv.com/live/BRAVO/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(19, 'HALLDRAMA', 'http://streamlytv.com/live/HALLDRAMA/interlink.m3u8', 3, '3', 1, '2020-05-11 06:23:41', '2020-05-12 15:55:34'),
+(20, 'DSCE', 'http://streamlytv.com/live/DSCE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(21, 'VH1', 'http://streamlytv.com/live/VH1/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(22, 'ESPNEWS', 'http://streamlytv.com/live/ESPNEWS/interlink.m3u8', 1, '1', 1, '2020-05-11 06:23:41', '2020-05-12 15:57:01'),
+(23, 'COMEDY', 'http://streamlytv.com/live/COMEDY/interlink.m3u8', NULL, '2', 1, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(24, 'HLN', 'http://streamlytv.com/live/HLN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(25, 'CNBC', 'http://streamlytv.com/live/CNBC/interlink.m3u8', NULL, '1', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(26, 'NICJR', 'http://streamlytv.com/live/NICJR/interlink.m3u8', NULL, '', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(27, 'TLC-W', 'http://streamlytv.com/live/TLC-W/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(28, 'ESPNU', 'http://streamlytv.com/live/ESPNU/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(29, 'DIY', 'http://streamlytv.com/live/DIY/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(30, 'HALL', 'http://streamlytv.com/live/HALL/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(31, 'ESPN2', 'http://streamlytv.com/live/ESPN2/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(32, 'GOLF', 'http://streamlytv.com/live/GOLF/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(33, 'FREEFRM', 'http://streamlytv.com/live/FREEFRM/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(34, 'COOK', 'http://streamlytv.com/live/COOK/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(35, 'EVINE', 'http://streamlytv.com/live/EVINE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(36, 'FXX', 'http://streamlytv.com/live/FXX/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(37, 'GAC', 'http://streamlytv.com/live/GAC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(38, 'VICE', 'http://streamlytv.com/live/VICE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(39, 'CMTV', 'http://streamlytv.com/live/CMTV/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(40, 'ESPND', 'http://streamlytv.com/live/ESPND/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(41, 'FXM', 'http://streamlytv.com/live/FXM/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(42, 'DFC', 'http://streamlytv.com/live/DFC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(43, 'OWN', 'http://streamlytv.com/live/OWN/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(44, 'CIN', 'http://streamlytv.com/live/CIN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(45, 'ESPNA', 'http://streamlytv.com/live/ESPNA/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(46, 'SUNDANC', 'http://streamlytv.com/live/SUNDANC/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(47, 'CNBCW', 'http://streamlytv.com/live/CNBCW/interlink.m3u8', NULL, '1', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(48, 'EWTN', 'http://streamlytv.com/live/EWTN/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(49, 'TVLAND', 'http://streamlytv.com/live/TVLAND/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(50, 'ESPN-SEC', 'http://streamlytv.com/live/ESPN-SEC/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(51, 'TELE', 'http://streamlytv.com/live/TELE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(52, 'BLOOM', 'http://streamlytv.com/live/BLOOM/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(53, 'BIGTEN', 'http://streamlytv.com/live/BIGTEN/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(54, 'APL', 'http://streamlytv.com/live/APL/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(55, 'AZTECAE', 'http://streamlytv.com/live/AZTECAE/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(56, 'AHC', 'http://streamlytv.com/live/AHC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(57, 'CNN', 'http://streamlytv.com/live/CNN/interlink.m3u8', NULL, '1', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(58, 'WE', 'http://streamlytv.com/live/WE/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(59, 'USA', 'http://streamlytv.com/live/USA/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(60, 'TLC', 'http://streamlytv.com/live/TLC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(61, 'SYFY', 'http://streamlytv.com/live/SYFY/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(62, 'QVC', 'http://streamlytv.com/live/QVC/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(63, 'PAR', 'http://streamlytv.com/live/PAR/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(64, 'OXYGEN', 'http://streamlytv.com/live/OXYGEN/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(65, 'OLY', 'http://streamlytv.com/live/OLY/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(66, 'NICK', 'http://streamlytv.com/live/NICK/interlink.m3u8', NULL, '5', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(67, 'NBC', 'http://streamlytv.com/live/NBC/interlink.m3u8', NULL, '1', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(68, 'NBCS', 'http://streamlytv.com/live/NBCS/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(69, 'NGWILD', 'http://streamlytv.com/live/NGWILD/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(70, 'NGC', 'http://streamlytv.com/live/NGC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(71, 'MTV2', 'http://streamlytv.com/live/MTV2/interlink.m3u8', NULL, '2', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(72, 'MTV', 'http://streamlytv.com/live/MTV/interlink.m3u8', NULL, '2', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(73, 'MSNBC', 'http://streamlytv.com/live/MSNBC/interlink.m3u8', NULL, '1', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(74, 'MILITARY', 'http://streamlytv.com/live/MILITARY/interlink.m3u8', NULL, '1,2,3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(75, 'MAVTV', 'http://streamlytv.com/live/MAVTV/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(76, 'LRW', 'http://streamlytv.com/live/LRW/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(77, 'LIFEMOV', 'http://streamlytv.com/live/LIFEMOV/interlink.m3u8', NULL, '2,3,4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(78, 'ID', 'http://streamlytv.com/live/ID/interlink.m3u8', NULL, '3', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(79, 'IFC', 'http://streamlytv.com/live/IFC/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(80, 'HSN', 'http://streamlytv.com/live/HSN/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(81, 'HIST-W', 'http://streamlytv.com/live/HIST-W/interlink.m3u8', NULL, '4', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(82, 'HGTV', 'http://streamlytv.com/live/HGTV/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(83, 'FUSE', 'http://streamlytv.com/live/FUSE/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(84, 'ESPN', 'http://streamlytv.com/live/ESPN/interlink.m3u8', NULL, '6', 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(85, 'DXD', 'http://streamlytv.com/live/DXD/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(86, 'WebUI', 'http://streamlytv.com/live/WebUI/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(87, 'HLS', 'http://streamlytv.com/live/HLS/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(88, 'AETV', 'http://streamlytv.com/live/AETV/interlink.m3u8', NULL, NULL, 0, '2020-05-11 06:23:41', '2020-05-11 06:23:41'),
+(89, 'some channel', 'https://vimeo.com/154087438', 3, NULL, 1, '2020-05-12 06:21:39', '2020-05-12 06:21:39'),
+(90, 'some channel', 'https://www.scribd.com/document/174079673/Brendan-Burchard-Notes-High-Performance-Academy', 1, '2,3,4', 1, '2020-05-12 12:09:44', '2020-05-12 14:32:09');
 
 -- --------------------------------------------------------
 
@@ -149,10 +152,12 @@ CREATE TABLE `genre` (
 --
 
 INSERT INTO `genre` (`id`, `name`, `status`, `created_on`, `modified_on`) VALUES
-(1, 'genre 1', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
-(2, 'genre 2', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
-(3, 'genre 3', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
-(4, 'genre 4', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00');
+(1, 'News', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
+(2, 'Comedy', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
+(3, 'Movies', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
+(4, 'Family', 1, '2020-04-16 00:00:00', '2020-04-16 00:00:00'),
+(5, 'Kids', 1, '2020-05-12 03:00:00', '2020-05-12 03:00:00'),
+(6, 'Sports', 1, '2020-05-12 10:00:00', '2020-05-12 14:00:00');
 
 -- --------------------------------------------------------
 
@@ -395,8 +400,9 @@ CREATE TABLE `subscriptions` (
 --
 
 INSERT INTO `subscriptions` (`id`, `subscriptionpack_id`, `users_id`, `start_date`, `expiry_date`, `status`, `created_on`, `modified_on`) VALUES
-(1, 1, 9, '2020-04-01', '2020-04-30', 1, '2020-04-28 19:14:20', '2020-04-28 19:14:20'),
-(5, 2, 11, '2020-05-08', '2020-05-15', 0, '2020-05-11 18:38:54', '2020-05-11 18:49:19');
+(1, 5, 9, '2020-05-01', '2020-05-31', 1, '2020-05-12 12:56:12', '2020-05-12 14:46:56'),
+(2, 2, 12, '2020-05-01', '2020-05-31', 1, '2020-05-12 14:46:43', '2020-05-12 14:46:43'),
+(3, 2, 12, '2020-06-01', '2020-05-31', 0, '2020-05-12 14:47:32', '2020-05-12 14:55:36');
 
 -- --------------------------------------------------------
 
@@ -419,8 +425,9 @@ CREATE TABLE `subscription_pack` (
 --
 
 INSERT INTO `subscription_pack` (`id`, `name`, `duration`, `rate`, `is_active`, `created_on`, `modified_on`) VALUES
-(1, 'monthly', 1, '1000.00', 1, '2020-04-17 00:00:00', '2020-04-17 00:00:00'),
-(2, 'quaterly', 6, '6000.00', 1, '2020-04-17 00:00:00', '2020-04-17 00:00:00');
+(2, 'quaterly', 6, '6000.00', 1, '2020-04-17 00:00:00', '2020-04-17 00:00:00'),
+(4, 'yearly', 12, '12000.00', 1, '2020-05-12 11:19:14', '2020-05-12 11:19:14'),
+(5, 'monthly', 1, '2000.00', 1, '2020-05-12 11:19:40', '2020-05-12 11:20:00');
 
 -- --------------------------------------------------------
 
@@ -453,13 +460,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `contact`, `gender`, `dob`, `zipcode`, `address`, `country`, `google_id`, `last_login`, `email_verified_at`, `is_active`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@admin.com', '$2y$10$DWob9UYSqZ4aZ6NOBetovuyWo2obk8DB7ae2/fQJ3R56p2RzWsOGq', '7982219140', 'm', '2017-10-02', '11111', 'address', '', NULL, '2020-05-07 20:26:37', '2020-04-26 17:31:03', 1, 'qLP4zQxWH1jkCGGp8LuBofQBVfs8RjJmFpOuVVzCwgilIPUpTbpOBmQJEpZW', '2020-04-22 13:17:59', '2020-05-07 14:56:37'),
+(1, 'Admin', 'admin@admin.com', '$2y$10$DWob9UYSqZ4aZ6NOBetovuyWo2obk8DB7ae2/fQJ3R56p2RzWsOGq', '7982219140', 'm', '2017-10-02', '11111', 'address', '', NULL, '2020-05-07 20:26:37', '2020-04-26 17:31:03', 1, '2AtA8glhdpiLco44yXkfcKDe0Op3YdB4er5ZbU2EMYxvdth2auSaGVTsGbqL', '2020-04-22 13:17:59', '2020-05-07 14:56:37'),
 (2, 'Changed', 'sahil@gmail.com', '$2y$10$DWob9UYSqZ4aZ6NOBetovuyWo2obk8DB7ae2/fQJ3R56p2RzWsOGq', NULL, 'm', '2020-04-01', NULL, NULL, '', NULL, '2020-04-28 12:18:49', NULL, 1, 'v9M6VvJtL2SDQOSnRRVah4f4cEGXWL2ebfzrMWKtawwZnROVWSUl0HiGWUKK', '2020-04-22 13:21:24', '2020-04-28 06:48:49'),
 (3, 'demo', 'demo@gmail.com', '$2y$10$iZbCSH1A4c83QYhvx7ux1.AQRJtXdN1lcs2nrNIzRl/Ctqg5yj0LS', NULL, 'm', '2020-04-01', NULL, NULL, '', NULL, NULL, NULL, 1, NULL, '2020-04-22 13:36:52', '2020-04-27 09:05:59'),
 (5, 'sam', 'sam@gmail.com', '$2y$10$7H6Bc5HAANpG6jQALKlvHuwsvpz34WW110wmKMNGnxlieCFLtLY9u', '111111', 'M', NULL, NULL, 'block-J3,Street-5,sangam vihar,new delhi-110080', 'IndiA', NULL, '2020-04-26 23:35:50', '2020-04-26 17:31:03', 0, 'qdIaoUJ92ZEq00AIQZD5mDJXJZP9HrBPR3FGNFRSz6RIo7By7jOBI7Ne4jXp', '2020-04-26 17:20:44', '2020-04-30 15:05:53'),
 (6, 'aspire', 'aspire@gmail.com', '$2y$10$e7gnYa8IrWeDA9QGq8QT6eZ24r9kdlBbC6hON/.3yYQPgLGHZHNm6', '11111', 'm', NULL, '1111', 'nsnbnbs', 'nd', NULL, '2020-04-29 21:14:59', '2020-04-28 11:45:29', 1, NULL, '2020-04-27 18:58:35', '2020-04-29 15:45:58'),
 (9, 'Sahil', 'sahilkashyap64@gmail.com', '$2y$10$uDMWNBwFbH/qdP5YPrYLSOMZr/epndycQjgTIbf7.4Vb.YBiROBtO', '11111', 'm', NULL, '110080', 'block-J3,Street-5,sangam vihar,new delhi-110080', 'india', NULL, '2020-04-29 19:32:45', '2020-04-28 11:45:29', 1, NULL, '2020-04-28 11:45:29', '2020-04-29 14:02:45'),
-(10, 'Extra', 'extra@gmail.com', '$2y$10$bNlrRWDxRozU5a7z72TL0OnXXqrCWJ0Ps6iXZw3ZbBjJNBR7uGxly', '111111', NULL, '2020-04-09', '110080', 'block-J3,Street-5,sangam vihar,new delhi-110080', 'India', NULL, NULL, '2020-04-30 15:51:58', 1, NULL, '2020-04-30 15:51:58', '2020-04-30 15:51:58'),
+(10, 'Extra', 'extra@gmail.com', '$2y$10$bNlrRWDxRozU5a7z72TL0OnXXqrCWJ0Ps6iXZw3ZbBjJNBR7uGxly', '111111', 'm', NULL, '110080', 'block-J3,Street-5,sangam vihar,new delhi-110080', 'India', NULL, NULL, '2020-04-30 15:51:58', 0, NULL, '2020-04-30 15:51:58', '2020-05-11 14:25:02'),
 (11, 'arun', 'arun@gmail.com', '$2y$10$9MPD.B16YGnQlhmcEY/kUumsd0WFLEUsc.xMbeDK6wDnY9BIMmNwG', '11111', NULL, '2020-01-01', '110080', 'new delhi-110080', 'india', NULL, NULL, '2020-05-05 12:54:15', 1, NULL, '2020-05-05 12:54:15', '2020-05-05 12:54:15'),
 (12, 'shahjad', 'shahjad@gmail.com', '$2y$10$MHicrBcQxL0393W6Vkl7auuRl/1w/CBuBJTe48N0yavNmvvks.dCS', '3333', NULL, NULL, '110080', 'block-J3,new delhi-110080', 'India', NULL, NULL, '2020-05-06 09:40:01', 1, NULL, '2020-05-06 09:40:01', '2020-05-06 09:40:01');
 
@@ -41650,12 +41657,12 @@ ALTER TABLE `zipcodes`
 -- AUTO_INCREMENT for table `channels`
 --
 ALTER TABLE `channels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 --
 -- AUTO_INCREMENT for table `genre`
 --
 ALTER TABLE `genre`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `gracenote`
 --
@@ -41690,12 +41697,12 @@ ALTER TABLE `session_table`
 -- AUTO_INCREMENT for table `subscriptions`
 --
 ALTER TABLE `subscriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `subscription_pack`
 --
 ALTER TABLE `subscription_pack`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `users`
 --

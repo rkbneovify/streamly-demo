@@ -68,6 +68,7 @@ Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
 Route::get('/channelstatus', 'Admin\ChannelController@index');//channel
 Route::get('/channelstatus/view/{id}', 'Admin\ChannelController@show');//channel
 Route::get('/channelstatus/edit/{id}', 'Admin\ChannelController@edit');//channel
+Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');//ajax channel data
 Route::post('insertchannel','Admin\ChannelController@store')->name('insertchannel');
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
     // Zipcode Routes

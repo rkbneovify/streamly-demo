@@ -80,7 +80,7 @@
 <script>
 $(function() {
     $('#data-table').DataTable({
-      
+      pageLength: 100,
         processing: true,
         serverSide: true,
         ajax: '{!! url('admin/zipcode/category') !!}',

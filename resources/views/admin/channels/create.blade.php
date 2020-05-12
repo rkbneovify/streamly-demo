@@ -1,4 +1,8 @@
+
+  
 @extends('master')
+@section('stylesheets') 
+<link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet">@stop
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
@@ -68,12 +72,36 @@
 
             </div>
             <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
-              <label for="genres" class="col-md-4 control-label">genres</label>
+              <label for="genre_id" class="col-md-4 control-label">genres id</label>
 
 
 
               <select name="genre_id" id="genre_id" class="form-control" >
                     
+                    @foreach($genres as $id => $genre)
+                        <option value="{{ $id }}" >
+                            {{ $genre }}
+                        </option>
+                    @endforeach
+                        
+                    
+                </select>
+
+              @if ($errors->has('genres'))
+              <span class="help-block">
+                <strong>{{ $errors->first('genres') }}</strong>
+              </span>
+              @endif
+
+            </div>
+
+            <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
+              <label for="genres" class="col-md-4 control-label">genres</label>
+
+
+
+              <select name="genres[]" id="genres" class="form-control select2" multiple="multiple >
+             
                     @foreach($genres as $id => $genre)
                         <option value="{{ $id }}" >
                             {{ $genre }}
@@ -105,6 +133,22 @@
               @endif
 
             </div>
+            <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+              <label for="status" class="col-md-4 control-label">Status</label>
+              <select name="status" id="status" class="form-control">
+                    <option value="">Choose a status</option>
+                    
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                    </select>
+
+              @if ($errors->has('status'))
+              <span class="help-block">
+                <strong>{{ $errors->first('status') }}</strong>
+              </span>
+              @endif
+
+            </div>
             
           <!-- /.card-body -->
         </div>
@@ -114,7 +158,7 @@
     <div class="form-group">
           <div class="col-md-8 col-md-offset-4">
             <button type="submit" class="btn btn-primary">
-              Update
+              Add
             </button>
 
             <a class="btn btn-link" href="{{ url('admin/channelstatus') }}">
@@ -130,5 +174,10 @@
 
 @endsection
 @section('scripts')
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
+<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script>
+$('.select2').select2();
+</script>
+
+
 @stop
