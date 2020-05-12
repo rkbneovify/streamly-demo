@@ -436,7 +436,14 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 '          m.ChannelCategoryMarkuGrid.setFocus(false)
 '          m.timeGride.setFocus(true)
          
-          result = true   
+          result = true 
+         else if m.timeGride.hasFocus() = true and key="options" 
+           ?"HomeSceen:timeGride.control:";
+           
+           m.top.openProfileScreen = true
+'          m.ChannelsGroup.visible = true
+         
+           result = true    
         
         end if   
     end if

@@ -14,9 +14,11 @@
 	  <Poster id="LoginBackgroundImage"
 	          height="1080"
 	          width="1920"
+	          
 	          loadwidth="1280"
 	          loadheight="720"
-	          uri="pkg:/images/LoginBackgroundpng.png" 
+	          uri="pkg:/images/homeScreenBckgrndhd.png" 
+	          loadDisplayMode = "scaleTofill"
 	           />
       <Poster id="logo"
               translation= "[723,68]"

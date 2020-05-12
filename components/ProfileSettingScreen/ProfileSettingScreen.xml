@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ProfileSettingScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/ProfileSettingScreen/ProfileSettingScreen.brs" />
+	
+	
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	
+	<interface>	
+	  <field id="dialog"  type="node"/>
+	</interface>
+	
+	<children>
+	  
+	   <Poster id="LoginBackgroundImage"
+	          height="1080"
+	          width="1920"
+	          loadwidth="1280"
+	          loadheight="720"
+	          uri="pkg:/images/home/homeScreenBckgrndhd.png" 
+	          loadDisplayMode = "scaleTofill"
+	           />
+	           
+       
+     <Label  text="SETTINGS"
+             id="Settings"
+             translation= "[151,54]"/>
+     
+     
+      <Poster
+          uri="pkg:/images/home/profileSetting.png"
+          translation= "[1350,50]"
+          loadDisplayMode="scaletofill"
+          height="56"
+          width="56" >
+      
+        <Label  text="CHANNELS"
+             id="Channels"
+             translation= "[70,10]"/>
+      </Poster>
+      
+      <Poster
+          uri="pkg:/images/home/backNavIcon.png"
+          translation= "[1627,44]"
+          height="56"
+          width="56"
+          loadDisplayMode="scaletofill">
+      
+        <Label 
+        text="LIVE TV"
+             id="pressbackLabel" 
+             translation= "[70,10]"/>
+      </Poster>
+      
+      
+      <MarkupGrid id = "ProfileCategory"
+                 itemComponentName = "ProfileItemComponent"
+                 itemSpacing = "[ 70, 0 ]" 
+                 numColumns="7" 
+                 numRows="1" 
+                 itemSize="[280,268]" 
+                 translation= "[120,406]"
+                 drawFocusFeedback="false"/> 
+                 
+       
+     <Group id = "Dialog" visible = "false" translation = "[ 349, 224]" height="724" width="1223">
+     
+      
+       <Rectangle
+         translation = "[ 0, 0 ]"
+         width  = "1223"
+         height = "724" 
+          opacity="0.5"/>
+       <Poster
+                   
+         translation = "[ 0, 0 ]"
+         width  = "1223"
+         height = "724"
+        
+         uri="pkg:/images/profile/markupitemcomponentBackground.png"    
+         loadDisplayMode = "scaleToFill" /> 
+         
+       
+       <MarkupList id = "dialogOptions"
+                 itemComponentName = "dialogOptionsItemComponent"
+                 itemSpacing = "[ 0, 50 ]" 
+                 numRows="4"                  
+                 itemSize="[816,52]" 
+                 translation= "[203,93]"
+                 drawFocusFeedback="false"/>
+                 
+        <Button id="ok"
+                visible="true"
+                
+                translation= "[471,589]"
+                minWidth  = "280"
+                maxWidth  = "280"
+                
+                focusedTextColor="#FFFFFF"
+                height = "84"
+                focusFootprintBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+                focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                iconUri=""
+                focusedIconUri=""
+                horizAlign="center">
+                <Label  horizAlign="center"
+                        height = "84"
+                        Width  = "280"
+                        vertAlign = "center"
+                        text="OK" />
+                </Button>            
+     </Group>
+       
+       
+	</children>
+</component>

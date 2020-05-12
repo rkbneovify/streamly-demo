@@ -3,7 +3,9 @@
 
 	<script type="text/brightscript" uri="pkg:/components/HomeScreen/HomeScreen.brs" />
 
-	
+	<interface>
+	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
+	</interface>
 	<children>
 	 
 	<Group id="playerView">
@@ -23,9 +25,7 @@
              loadHeight = "50"
              loadDisplayMode = "scaleTofill"
              /> -->
-      
     
-      
       <Group id="ChannelsGroup"
              visible="false">
           
@@ -35,7 +35,8 @@
             height="1080"
             width="1920"
             loadwidth="1280"  
-            loadHeight="720"                 
+            loadHeight="720"    
+            loadDisplayMode = "scaleTofill"            
              /> 
                         
      <TimeGrid id="timeGrid"/>

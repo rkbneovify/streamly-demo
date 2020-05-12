@@ -4,4 +4,7 @@ encoding//components/HomeScreen/ChannelItemComponent.xml=UTF-8
 encoding//components/HomeScreen/HomeScreen.xml=UTF-8
 encoding//components/LoginScreen/LoginScreen.xml=UTF-8
 encoding//components/LoginScreen/LoginTask.xml=UTF-8
+encoding//components/ProfileSettingScreen/ProfileItemComponent/ProfileItemComponent.xml=UTF-8
+encoding//components/ProfileSettingScreen/ProfileSettingScreen.xml=UTF-8
+encoding//components/ProfileSettingScreen/dialogOptionsItemComponent/dialogOptionsItemComponent.xml=UTF-8
 encoding/manifest=UTF-8

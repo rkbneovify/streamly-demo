@@ -9,10 +9,9 @@
     
     <children>
     
-            <LoginScreen id="LoginScreen"
-                         visible="false"/>
-            <HomeScreen id="HomeScreen"
-                        visible="false"/>
+            <LoginScreen id="LoginScreen"  visible="false"/>
+            <HomeScreen id="HomeScreen"    visible="false"/>                        
+            <ProfileSettingScreen id="ProfileSettingScreen" visible="false"/>           
             
     </children>
 </component>
