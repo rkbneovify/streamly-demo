@@ -35,7 +35,7 @@
       <b>Version</b> 3.0.4
     </div>
   </footer>
-</div>
+
 <!-- ./wrapper -->
 <!-- jQuery -->
 <script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
