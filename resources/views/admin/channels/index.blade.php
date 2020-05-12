@@ -1,4 +1,7 @@
 @extends('master')
+@section('stylesheets')
+<link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    @stop
 @section('content')
 
   <!-- Content Wrapper. Contains page content -->
@@ -39,7 +42,7 @@
           </div>
         </div>
         <div class="card-body p-0">
-          <table class="table table-striped projects">
+          <table id="data-table" class="table table-striped projects">
               <thead>
                   <tr>
                       <th style="width: 1%">
@@ -53,7 +56,7 @@
                       </th>
 
                       <th style="width: 20%">
-                      genre
+                      genres
                       </th>
                       <th style="width: 20%">
                       status
@@ -64,52 +67,6 @@
                       </th>
                   </tr>
               </thead>
-              <tbody>
-              @forelse ($record as $record)
-              <tr>
-              <td>#</td>
-              
-    <td>{{ $record->name }}</td>
-    <td>{{ $record->url }}</td>
-    <td>{{ $record->genre['name'] }}</td>
-    
-
-    <td class="project-state">
-                            @if ($record->status===1)
-                            <span class="badge badge-success">Active</span>
-@elseif ($record->status===0)
-<span class="badge badge-danger">Inactive</span>
-@else
-  <span>unknown</span>  
-@endif
-                          
-                            
-                          
-                      </td>
-    
-    <td>
-                                
-                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/channelstatus/view', $record->id) }}">
-                                        {{ trans('view') }}
-                                    </a>
-
-                                    <a class="btn btn-xs btn-info" href="{{ url('admin/channelstatus/edit', $record->id) }}">
-                                        {{ trans('edit') }}
-                                    </a>
-
-                                    <!-- <form action="{{ url('admin/subscriptions/destroy', $record->id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                    </form> -->
-                          
-                                
-                            </td></tr>
-@empty
-    <p>No Channel </p>
-@endforelse
-                  
-                </tbody>
           </table>
         </div>
         <!-- /.card-body -->
@@ -121,3 +78,42 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
+
+@section('scripts')
+<script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+<script>
+$(function() {
+    $('#data-table').DataTable({
+      pageLength: 100,
+        processing: true,
+        serverSide: true,
+        ajax: '{!! url('admin/channelstatus/channeldata') !!}',
+    
+        columns: [
+            { data: 'id', name: 'id' },
+            { data: 'name', name: 'name' },
+            { data: 'url', name: 'url' },
+            { data: 'genres', name: 'genres' ,searchable: false},
+            { data: 'status', name: 'status' ,orderable:false},
+            {data: 'action', name: 'action', orderable: false, searchable: false}
+        ],
+        columnDefs: [
+        {       
+            "render": function(data, type, row) {
+                if (row.status==1) {
+                    return '<span class="badge badge-success">Active</span>';
+                }
+                else if (row.status==0) {
+                    return '<span class="badge badge-danger">Inactive</span>';
+                }
+                else {
+                    return '<span class="label label-default">unknown</span>';
+                }
+             }, "targets": [4]
+        }
+        
+        ]
+    });
+});
+</script>
+@stop

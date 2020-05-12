@@ -1,4 +1,7 @@
 @extends('master')
+
+@section('stylesheets') 
+<link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet">@stop
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
@@ -67,10 +70,10 @@
               @endif
 
             </div>
-            <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
-              <label for="genres" class="col-md-4 control-label">genres</label>
+            <div class="form-group{{ $errors->has('genre_id') ? ' has-error' : '' }}">
+              <label for="genre_id" class="col-md-4 control-label">genres id</label>
 
-
+            
 
               <select name="genre_id" id="genre_id" class="form-control" >
                     @foreach($genres as   $key => $value)
@@ -80,6 +83,27 @@
                         </option>
                     @endforeach
                 </select>
+
+              @if ($errors->has('genre_id'))
+              <span class="help-block">
+                <strong>{{ $errors->first('genre_id') }}</strong>
+              </span>
+              @endif
+
+            </div>
+            <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
+              <label for="genres" class="col-md-4 control-label">genres</label>
+              
+<select name="genres[]" id="genres" class="form-control select2" multiple="multiple">
+@foreach($genres as $id => $genre)
+                        @if(in_array($id, $arrVal))
+                        <option value="{{ $id }}" selected="true">{{ $genre }}</option>
+                        @else
+                        <option value="{{ $id }}">{{ $genre }}</option>
+                        @endif 
+                    @endforeach
+                </select>
+         
 
               @if ($errors->has('genres'))
               <span class="help-block">
@@ -135,4 +159,9 @@
 
 @section('scripts')
 <script type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script>
+$('.select2').select2();
+</script>
 @stop
