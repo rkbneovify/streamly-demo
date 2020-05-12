@@ -43,6 +43,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::put('updateprofile','Auth\AuthController@updateprofile');
        //zipcodes
        Route::get('zipcode', 'ZipcodeController@zipjson');
+       //channel api
+
+    Route::get('channellist', 'Admin\ChannelController@channeljson');
 });
 
 // Superadmin Routes

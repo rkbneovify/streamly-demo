@@ -71,80 +71,61 @@ class SubscriptionController extends Controller
         'start_date' => 'required',
         'users_id' => 'required',
     ]);
+    $userid=$request->input('users_id');
+    $start = Carbon::parse($request['start_date'])->format('Y-m-d 00:00:00');
+ $end = Carbon::parse($request['expiry_date'])->format('Y-m-d 23:59:59');
+ $existsActive = Subscription::where(function ($query) use ($start,$userid) {
+    $query->where('users_id', '=', $userid);
+                                      $query->where('start_date', '<=', $start);
+                                      $query->where('expiry_date', '>=', $start);
+                                  })->orWhere(function ($query) use ($end) {
+                                      $query->where('start_date', '<=', $end);
+                                      $query->where('expiry_date', '>=', $end);
+                                  })->count();
+ if($existsActive > 0 ){
+    // "Already exists"; 
+    $user = User::pluck('name', 'id'); 
+    $u=$user[$userid];
+    $start=Carbon::parse($request->input('start_date'))->format('d M Y');
+    $end=Carbon::parse($request->input('expiry_date'))->format('d M Y');
 
-    // $list=  (new Subscription())
-    // ->where([
-    //     ['status', '=', '1'],
-    //     ['users_id', '=', $request->input('users_id')],
-    //      ])
-    // ->whereDate('start_date','<=', $request->input('start_date'))
-    // ->whereDate('expiry_date','>=', $request->input('start_date'))
-    // ->get()->toArray();
-  $userid=$request->input('users_id');//user id
-//   echo $userid;
-  $startdate=Carbon::parse($request->input('start_date'))->startOfDay();;//start date
-  $expiry_date=Carbon::parse($request->input('expiry_date'))->endOfDay();;//end date
-//   echo $startdate;
-//   echo "   0000000000   "   ;
-//   echo $expiry_date;
-
-    $subscription_exists = Subscription::where([
-        ['status', '=', '1'],
-        ['users_id', '=', $userid],
-         ])
-    ->whereBetween('start_date',[$startdate, $expiry_date])
-    ->orWhereBetween('expiry_date',[$startdate, $expiry_date])->get()->toArray();
-   // print_r($subscription_exists); exit;   
-    
-      if ((count($subscription_exists)==0)){
-         //  dd($list[0]); 
-        $model=new Subscription();
+    return  back()->withErrors(["dateeror"=>"overlaping date found! ".$start." between ".$end,
+    "users"=>"For ".$u]);
+ }else{
+    //no overlapping date found
+    $model=new Subscription();
         
-        $packid=$request->input('subscriptionpack_id');
+    $packid=$request->input('subscriptionpack_id');
 
-        // if($request->has('start_date') && !empty($request->input('start_date'))) {
-        //     $startdate=Carbon::createFromFormat('Y-m-d H:i:s', $request->start_date)->format('Y/m/d');
-        // } else {
-        //     $startdate=Carbon::now();
-        // } 
 
-         // a helper function addInterval(Carbon $date)
-         
-        $model->subscriptionpack_id = $packid;
-        $model->users_id = $request->input('users_id');
-        $model->start_date = $request->input('start_date');
-        $model->expiry_date = $request->input('expiry_date');
-        
-       // $model->expiry_date = Carbon::now()->addMonths(1);;
-    //    if($packid==1){
-         
-    //         $model->expiry_date = $startdate->addMonth(1);
-    //    }else if($packid==2){
-    //         $model->expiry_date = $startdate->addMonths(6);
-    //    }else{
-    //     $model->expiry_date = Carbon::now();
-    //    }
-            
-      //echo $model->expiry_date;
-        
+     // a helper function addInterval(Carbon $date)
      
-        $model->created_on = Carbon::now();
-        $model->modified_on = Carbon::now();
-        $model->status = 1;
-        $model->save();
-        return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully');
-  
-         
-    } else{
-        $user = User::pluck('name', 'id'); 
-        $u=$user[$userid];
-        $start=Carbon::parse($request->input('start_date'))->format('d M Y');
-        $end=Carbon::parse($request->input('expiry_date'))->format('d M Y');
-
-        return  back()->withErrors(["dateeror"=>"overlaping date found! ".$start." between ".$end,
-        "users"=>"For ".$u]);
+    $model->subscriptionpack_id = $packid;
+    $model->users_id = $request->input('users_id');
+    $model->start_date = $request->input('start_date');
+    $model->expiry_date = $request->input('expiry_date');
+    
+   // $model->expiry_date = Carbon::now()->addMonths(1);;
+//    if($packid==1){
+     
+//         $model->expiry_date = $startdate->addMonth(1);
+//    }else if($packid==2){
+//         $model->expiry_date = $startdate->addMonths(6);
+//    }else{
+//     $model->expiry_date = Carbon::now();
+//    }
         
-    }
+  //echo $model->expiry_date;
+    
+ 
+    $model->created_on = Carbon::now();
+    $model->modified_on = Carbon::now();
+    $model->status = 1;
+    $model->save();
+    return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully');
+
+    
+}
     
         //return redirect()->back();
     } /**
@@ -157,14 +138,10 @@ class SubscriptionController extends Controller
     public function edit($id)
     {  
         $subscription = Subscription::find($id);
-        //$packs = SubscriptionPack::get(); //get all packs
+    
         $packs = SubscriptionPack::pluck('name', 'id');
         $subscription=$subscription->load('subscriptionpack');
         $user = User::pluck('name', 'id'); 
-        
-        
-        
-        //dd($packs);
         
 
         return view('admin.subscriptions.edit', compact('subscription','user','packs','SubscriptionPackArr','UserArr'));
@@ -184,14 +161,36 @@ class SubscriptionController extends Controller
             'start_date'=>'required',
             'users_id'=>'required'
         ]);
+        $userid=$request->input('users_id');
+        $start = Carbon::parse($request['start_date'])->format('Y-m-d 00:00:00');
+     $end = Carbon::parse($request['expiry_date'])->format('Y-m-d 23:59:59');
+     $existsActive = Subscription::where(function ($query) use ($start,$userid) {
+        $query->where('users_id', '=', $userid);
+                                          $query->where('start_date', '<=', $start);
+                                          $query->where('expiry_date', '>=', $start);
+                                      })->orWhere(function ($query) use ($end,$userid) {
+                                        $query->where('users_id', '=', $userid);
+                                          $query->where('start_date', '<=', $end);
+                                          $query->where('expiry_date', '>=', $end);
+                                      })->count();
+     if($existsActive > 0 ){
+        // "Already exists"; 
+        $user = User::pluck('name', 'id'); 
+        $u=$user[$userid];
+        $start=Carbon::parse($request->input('start_date'))->format('d M Y');
+        $end=Carbon::parse($request->input('expiry_date'))->format('d M Y');
+    
+        return  back()->withErrors(["dateeror"=>"overlaping date found! ".$start." between ".$end,
+        "users"=>"For ".$u]);
+     } else {
         $input = $request->only('subscriptionpack_id', 'start_date', 'users_id');
         if ($request->has('toggleswitch')) {
             // $archived="helllo block user on";
              $input['status'] = 0;
-            // $user->is_active=0;
+            
          } else{
             // $archived="bye block off";
-             //$user->is_active=1;
+             
              $input['status'] = 1;
          }
     //            $allpost= $request->post();
@@ -199,7 +198,7 @@ class SubscriptionController extends Controller
         
         $model = Subscription::find($id);
         
-       // dd($input);exit;
+       
         if(!$model){
             return redirect('admin/subscriptions')->with('info','subscription with id ' . $id . ' cannot be found.'); 
         }
@@ -208,6 +207,7 @@ class SubscriptionController extends Controller
             return redirect('admin/subscriptions')->with('info','Subscription updated Successfully');
        }
         }
+    }
     
     
     

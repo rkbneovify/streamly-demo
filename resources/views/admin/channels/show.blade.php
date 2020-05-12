@@ -1,4 +1,7 @@
 @extends('master')
+
+@section('stylesheets') 
+<link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet">@stop
 @section('content')
 
 
@@ -50,6 +53,27 @@
                 <label for="inputurl">url</label>
                 <input type="text" id="inputurl" class="form-control" value="{{ $channel->url }}" disabled>
               </div>
+              <div class="form-group{{ $errors->has('genres') ? ' has-error' : '' }}">
+              <label for="genres" class="col-md-4 control-label">genres</label>
+              
+<select name="genres[]" id="genres" class="form-control select2" multiple="multiple" disabled>
+@foreach($genres as $id => $genre)
+                        @if(in_array($id, $arrVal))
+                        <option value="{{ $id }}" selected="true">{{ $genre }}</option>
+                        @else
+                        <option value="{{ $id }}">{{ $genre }}</option>
+                        @endif 
+                    @endforeach
+                </select>
+         
+
+              @if ($errors->has('genres'))
+              <span class="help-block">
+                <strong>{{ $errors->first('genres') }}</strong>
+              </span>
+              @endif
+
+            </div>
               <div class="form-group">
                 <label for="inputStatus">Status</label>
                 @if ($channel->status===1)
@@ -78,3 +102,11 @@
   </div>
   <!-- /.content-wrapper -->
 @endsection
+
+@section('scripts')
+
+<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script>
+$('.select2').select2();
+</script>
+@stop

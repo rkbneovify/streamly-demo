@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Genre;
 
+use Yajra\Datatables\Datatables;
 /**
  * Description of ChannelController
  *
@@ -26,7 +27,16 @@ class ChannelController extends Controller
         $record = Channel::with('genre')->paginate(10);
         
         return view('admin.channels.index', compact('record'));
-    }    /**
+    }  
+    
+    public function channeljson() 
+    {
+        $record = Channel::paginate(10);
+        
+        return response()->json($record);
+    }
+    
+    /**
      * Display the specified resource.
      *
      * @param  Show  $request
@@ -36,7 +46,11 @@ class ChannelController extends Controller
     public function show($id)
     {
         $channel = Channel::find($id); 
-        return view('admin.channels.show', compact('channel'));
+        
+        $genres = Genre::pluck('name', 'id'); 
+        $arrVal=explode(',',$channel->genres);
+        
+        return view('admin.channels.show',compact('channel','genres','arrVal'));
 
     }    /**
      * Show the form for creating a new resource.
@@ -48,6 +62,7 @@ class ChannelController extends Controller
     {   
         $genres = Genre::where('status','=','1')->pluck('name', 'id');
         return view('admin.channels.create', compact('genres'));  
+        
        
     }    /**
      * Store a newly created resource in storage.
@@ -58,8 +73,16 @@ class ChannelController extends Controller
     public function store(Request $request)
     {
         
+        
+        $input = $request->only('name', 'genre_id', 'url','status');
         $model=new Channel;
-        $model->fill($request->all());
+        if ($request->genres!= '') {
+            $break_value = implode(",", $request->genres);
+            $input['genres'] = $break_value;
+        
+        }
+        
+        $model->fill($input);
 
         if ($model->save()) {
             
@@ -82,8 +105,9 @@ class ChannelController extends Controller
     {
         $channel = Channel::find($id);
         $genres = Genre::pluck('name', 'id'); 
-       // dd($genres);
-        return view('admin.channels.edit',compact('channel','genres','channelGenres'));
+        $arrVal=explode(',',$channel->genres);
+        
+        return view('admin.channels.edit',compact('channel','genres','channelGenres','arrVal'));
     }
     
     /**
@@ -110,6 +134,11 @@ class ChannelController extends Controller
              //$user->is_active=1;
              $input['status'] = 1;
          }
+         if ($request->genres!= '') {
+            $break_value = implode(",", $request->genres);
+            $input['genres'] = $break_value;
+        
+        }
     //            $allpost= $request->post();
     //    dd($input);  //get all the post data
         
@@ -140,5 +169,14 @@ class ChannelController extends Controller
             }
 
         return redirect()->back();
+    }
+
+    public function channelData()
+    {  
+        return Datatables::of(Channel::query())
+        ->addColumn('action', function($row) {
+            return '<a href="/admin/channelstatus/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })
+        ->make(true);
     }
 }
