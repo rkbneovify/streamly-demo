@@ -17,7 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('welcome');
+Route::get('/admin', 'Admin\AdminController@index')->name('home');
 Route::get('/admin/users', 'Admin\UsersController@index');
 Route::get('/admin/channels', 'Admin\GracenoteController@index');//gracenote
 Route::get('/admin/channelstatus', 'Admin\ChannelController@index');//channel
