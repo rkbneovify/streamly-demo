@@ -30,10 +30,10 @@ Route::post('auth/register', 'Auth\AuthController@register');
 Route::get('auth/verify', 'Auth\AuthController@verify');
 
 
+Route::post('login', 'Auth\AuthController@login');
 // Authentication Routes
 Route::group(['prefix' => 'auth'], function ($router) {
     
-    Route::post('login', 'Auth\AuthController@login');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('refresh', 'Auth\AuthController@refresh');
