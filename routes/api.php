@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
 Route::get('/', function (Request $request) {
     return 'Working';
 });
-
 // For api Registration, confirmations and verification
 Route::get('/front', 'APIController@index')->name('front');
 Route::post('/frontlogin', 'APIController@login')->name('frontlogin');
