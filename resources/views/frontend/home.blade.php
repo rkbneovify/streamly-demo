@@ -48,26 +48,26 @@
                 <h2 class="section-heading">Download Our App</h2>
             </div>
             <div class="row h-100 w-100">
-                <div class="col-sm-6 align-self-center">
+                <div class="col-sm-5 align-self-center">
                 	<h3>Now Watch Live TV any time Anywhere at your ease</h3>
                 	<p>We are available on:</p>
                 	<div class="row tv-logos">
                 		<div class="col-sm-3">
-                			<img src="{{ asset('frontend/img/appletv.png') }}">
+                			<img class="img-fluid" src="{{ asset('frontend/img/apple-tv.png') }}">
                 		</div>
                 		<div class="col-sm-3">
-                			<img src="{{ asset('frontend/img/firetv.png') }}">
+                			<img class="img-fluid" src="{{ asset('frontend/img/fire-tv.png') }}">
                 		</div>
                 		<div class="col-sm-3">
-                			<img src="{{ asset('frontend/img/android.png') }}">
+                			<img class="img-fluid" src="{{ asset('frontend/img/android-tv.png') }}">
                 		</div>
                 		<div class="col-sm-3">
-                			<img src="{{ asset('frontend/img/roku.png') }}">
+                			<img class="img-fluid" src="{{ asset('frontend/img/roku-tv.png') }}">
                 		</div>
                 	</div>
                 </div>
-                <div class="col-sm-6">
-                	<img src="{{ asset('frontend/img/ce.png') }}">
+                <div class="col-sm-7">
+                	<img class="img-fluid" src="{{ asset('frontend/img/ce_mobile.png') }}">
                 </div>
             </div>
         </div>

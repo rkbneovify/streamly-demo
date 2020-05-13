@@ -10519,6 +10519,37 @@ section#contact form#contactForm :-ms-input-placeholder {
   color: #ced4da;
 }
 
+.pos-absolute {
+  position: relative !important;
+}
+
+.pos-absolute {
+  position: absolute !important;
+}
+
+.bottom-0 {
+  bottom: 0;
+}
+
+.right-0 {
+  right: 0;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.social-list {
+  text-align: center;
+  width: 60%;
+  position: relative;
+  top: 20%;
+  border-right: 1px solid; 
+}
+
+.social-list li{
+  margin-bottom: 2rem !important;
+}
 .footer {
       background: transparent linear-gradient(113deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
       color: #fff;
