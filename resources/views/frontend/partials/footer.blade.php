@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row">
         	<div class="col-sm-3">
-        		<ul>
+        		<ul class="social-list">
                     <li><img src="{{ asset('frontend/img/facebook.svg') }}"></li>
                     <li><img src="{{ asset('frontend/img/instagram.svg') }}"></li>
                     <li><img src="{{ asset('frontend/img/twitter.svg') }}"></li>
@@ -37,8 +37,8 @@
         			<li>Privacy Policy</li>
         		</ul>
         	</div>
-        	<div class="col-sm-3">
-        		
+        	<div class="col-sm-3 pos-relative">
+        		<p class="bottom-0 right-0 align-right pos-absolute">© {{Date('Y')}} Streamly, LLC</p>
         	</div>
             <!-- <div class="col-lg-4 text-lg-left">Copyright © Your Website 2020</div>
             <div class="col-lg-4 my-3 my-lg-0">
