@@ -26,15 +26,17 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/admin';
-    // protected function redirectTo()
-    // {  $u=Auth::user();
-    //     $userRole= $u->roles->pluck('name');
+    protected function redirectTo()
+    {  $u=Auth::user();
+        $userRole= $u->roles->pluck('name');
          
-    //     if ($userRole[0]== 'admin'||$userRole[0]== 'superadmin') {
-    //         return '/admin';
-    //     }
-    //     return '/somethingForNormaluser';
-    // }
+        if ($userRole[0]== 'admin'||$userRole[0]== 'superadmin') {
+            return '/admin';
+        } else{
+        Auth::logout();
+    \Session::flush();
+        return '/';}
+    }
 
     /**
      * Create a new controller instance.
