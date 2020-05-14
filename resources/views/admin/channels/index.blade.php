@@ -98,7 +98,7 @@ $(function() {
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },
             { data: 'url', name: 'url' },
-            { data: 'fullName', name: 'fullName' ,searchable: false},
+            { data: 'fullName', name: 'fullName' ,searchable: true},
             { data: 'status', name: 'status' ,orderable:false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
