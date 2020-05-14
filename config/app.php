@@ -180,7 +180,7 @@ return [
         Barryvdh\Cors\ServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         PrettyRoutes\ServiceProvider::class,
-        Yajra\Datatables\DataTablesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
 
 
 

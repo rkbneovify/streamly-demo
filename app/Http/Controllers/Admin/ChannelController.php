@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Genre;
 
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 /**
  * Description of ChannelController
  *
@@ -198,7 +198,7 @@ class ChannelController extends Controller
 
     public function channelData()
     {   $data=1;
-        return Datatables::of(Channel::query())
+        return DataTables::of(Channel::query())
         ->addColumn('fullName',function ($data){
             $genres = Genre::pluck('name', 'id'); 
             $arrVal=explode(',',$data->genres);
