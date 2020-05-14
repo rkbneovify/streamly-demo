@@ -80,6 +80,11 @@
 @endsection
 
 @section('scripts')
+
+<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script>
+$('.select2').select2();
+</script>
 <script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
 <script>
 $(function() {
@@ -93,9 +98,9 @@ $(function() {
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },
             { data: 'url', name: 'url' },
-            { data: 'genres', name: 'genres' ,searchable: false},
+            { data: 'fullName', name: 'fullName' ,searchable: false},
             { data: 'status', name: 'status' ,orderable:false},
-            {data: 'action', name: 'action', orderable: false, searchable: false}
+            {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
         columnDefs: [
         {       
@@ -110,7 +115,16 @@ $(function() {
                     return '<span class="label label-default">unknown</span>';
                 }
              }, "targets": [4]
-        }
+        },
+        {
+    "targets": 2,
+    "data": "url",
+    "render": function ( data, type, row, meta ) {
+      return type === 'display' && data.length > 15 ?
+        '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
+        data;
+    }
+  } 
         
         ]
     });

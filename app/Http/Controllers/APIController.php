@@ -234,5 +234,21 @@ public function login(Request $request)
         } 
     }
 
+    public function connecteddevice(){
+        $user = JWTAuth::user();//all the user info
+        $uid=  $user['id'];
+        //and get the number of last connected device
+        $prevConnectDevicecount = SessionTable::select('connected_devices','mac_address')
+        ->where([
+        ['status', '=', '1'],
+        ['users_id', '=', $uid],
+         ])->orderBy('connected_devices', 'desc')->get()->toArray();
+    
+         $response = array('status' =>true ,'response_code'=>200,'message'=>$prevConnectDevicecount);
+         return response()->json($response, 200);
+         //print_r($prevConnectDevicecount);
+
+    }
+
     
 }
