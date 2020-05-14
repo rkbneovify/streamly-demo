@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Zipcode;
 
 
-use Yajra\Datatables\Datatables;
+use Yajra\DataTables\DataTables;
 
 
 
@@ -147,7 +147,7 @@ class ZipcodeController extends Controller
 
     public function categoryData()
     {
-        return Datatables::of(Zipcode::query())
+        return DataTables::of(Zipcode::query())
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
