@@ -11,7 +11,6 @@ use Yajra\DataTables\DataTables;
 /**
  * Description of ChannelController
  *
- * @author Tuhin Bepari <digitaldreams40@gmail.com>
  */
 
 class ChannelController extends Controller
@@ -185,19 +184,24 @@ class ChannelController extends Controller
      * @return \Illuminate\Http\Response
      * @throws \Exception
      */
-    public function destroy(Destroy $request, Channel $channel)
+    public function destroy( $id)
     {
-        if ($channel->delete()) {
-                session()->flash('app_message', 'Channel successfully deleted');
-            } else {
-                session()->flash('app_error', 'Error occurred while deleting Channel');
-            }
-
+        
+             
+            $user= Channel::whereId($id)->delete(); 
+            if($user){
+               return redirect('admin/channelstatus')->with('info','Channel Deleted Successfully');
+                         
+           
+           }else{
+               return redirect('admin/channelstatus')->with('info','Error occurred while deleting Channel');
+               
+           }
         return redirect()->back();
     }
 
     public function channelData()
-    {   $data=1;
+    {   
         return DataTables::of(Channel::query())
         ->addColumn('fullName',function ($data){
             $genres = Genre::pluck('name', 'id'); 

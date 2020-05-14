@@ -86,6 +86,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {	
         $ua = $request->server('HTTP_USER_AGENT');
+        $deviceid= $request->input('deviceid') ?? 'Null';;
        // echo $ua; 
         $dd = new DeviceDetector($ua);//detect device
       //print_r($dd->getClient());exit;
@@ -93,7 +94,7 @@ class AuthController extends Controller
         $osInfo = $dd->getOs() ?? 'Null';
         $device = $dd->getDeviceName() ?? 'Null';
         $brand = $dd->getBrandName() ?? 'Null';
-        $deviceDetails=$ua.'DeviceName:-'.$device.'BrandName:-'.$brand.'Os Info:-'.$osInfo.' Client Info:-'.$clientInfo;
+        $deviceDetails=$ua.' Device id:-'.$deviceid.' DeviceName:-'.$device.' BrandName:-'.$brand.' Os Info:-'.$osInfo.' Client Info:-'.$clientInfo;
         $credentials = request(['email', 'password']);
 
         if(empty(request('email')) || empty(request('password'))){

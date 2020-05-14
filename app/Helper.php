@@ -2,16 +2,13 @@
 use Carbon\Carbon;
 
 use Jenssegers\Agent\Agent;
-/// check for 3 concurrent login
      function checkLoginLimit($user_id,$token,$deviceDetails){
-        $login_limit = 5; $device_limit = 5;$userInfo = JWTAuth::user();//all the user info
+        $login_limit = 5;
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
     ['status', '=', '1'],
     ['users_id', '=', $user_id],
      ])->get()->toArray();
-    // print_r ($active_session); 
-    //echo count($active_session); exit;
         //check if there's no entry by this used id
         if ((count($active_session)==0)) {
          //new entry of sessionTable
@@ -21,9 +18,8 @@ use Jenssegers\Agent\Agent;
         
         //Store the login info in 
         $task = new  App\SessionTable();
-        //$task->users_id = $request->users_id;
         $task->users_id = $user_id;
-        $task->access_token = $token;//change this field to status
+        $task->access_token = $token;
         $task->user_ip = getUserIpAddr();
         $task->mac_address = $deviceDetails;
         $task->connected_devices = 1;
@@ -40,7 +36,6 @@ use Jenssegers\Agent\Agent;
           'message'=>'logged in successfully ',
           'response_code'=>200,
           'connected_device'=> '1 device connected  ',
-          //'user'=>$userInfo,
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
@@ -61,7 +56,6 @@ use Jenssegers\Agent\Agent;
            ])->orderBy('connected_devices', 'desc')
            ->first();
            
-         //echo $prevConnectDevicecount['connected_devices']; 
         $device=number_format($prevConnectDevicecount['connected_devices']); 
         //the number of device previously connected + 1
         
@@ -116,25 +110,8 @@ use Jenssegers\Agent\Agent;
         
 
 
-    } else {
-        
-    return response()->json([
-      
-        'success' => true,
-        
-        'message'=>'finally logged in successfully',
-        'response_code'=>200,
-        'user'=>$userInfo,
-          'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'device_info'=>$deviceDetails
-        
-        
-    ])->send();
     }
 
-    //update the logins column to equal to json_encode($logins);
 
     
 }
