@@ -23,7 +23,7 @@ class ChannelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {  
         $record = Channel::with('genre')->paginate(10);
         
         return view('admin.channels.index', compact('record'));
@@ -35,7 +35,32 @@ class ChannelController extends Controller
         
         return response()->json($record);
     }
-    
+    //search
+    public function searchapi(Request $request)
+   {
+
+ $search = request()->get('search');
+
+   /* $books = Book::when($search, function ($query, $search) {
+       return $query->where('name', 'LIKE', "%{$search}%");
+   })
+    ->orderBy('created_at', 'desc')
+    ->simplepaginate(12); */
+
+  $channel = Channel::where('name', 'LIKE', "%{$search}%")->Paginate(16);
+  //$author = Author::where('name', 'LIKE', "%{$search}%")->Paginate(16);
+  //$genre = Genre::where('name', 'LIKE', "%{$search}%")->Paginate(16);
+
+
+
+   return response()->json(array(
+    'channel' => $channel, 
+    //'author'=>$author,
+    //'genre'=>$genre,
+ ));
+
+
+}
     /**
      * Display the specified resource.
      *
@@ -107,7 +132,7 @@ class ChannelController extends Controller
         $genres = Genre::pluck('name', 'id'); 
         $arrVal=explode(',',$channel->genres);
         
-        return view('admin.channels.edit',compact('channel','genres','channelGenres','arrVal'));
+        return view('admin.channels.edit',compact('channel','genres','arrVal'));
     }
     
     /**
@@ -172,11 +197,31 @@ class ChannelController extends Controller
     }
 
     public function channelData()
-    {  
+    {   $data=1;
         return Datatables::of(Channel::query())
+        ->addColumn('fullName',function ($data){
+            $genres = Genre::pluck('name', 'id'); 
+            $arrVal=explode(',',$data->genres);
+            $options = '';
+            foreach ($genres as $id => $genre) {
+                if(in_array($id, $arrVal)){
+                                 
+                $options .= ''.$genre.' ';
+            } else{
+                $options .= '';}
+                
+            }
+            $return = 
+            '' . $options . '';
+     
+         return $return;
+    
+    
+        })
         ->addColumn('action', function($row) {
             return '<a href="/admin/channelstatus/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
+      //  >rawColumns(['fullName', 'action'])
         ->make(true);
     }
 }
