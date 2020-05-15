@@ -77,6 +77,8 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
     Route::post('zipcode/update', 'ZipcodeController@updateRole');
     Route::delete('zipcode/destroy', 'ZipcodeController@massDestroy')->name('zipcode.massDestroy');
     Route::get('zipcode/category', 'ZipcodeController@categoryData');
+
+Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
     Route::delete('zipcode/{id}/delete', 'ZipcodeController@deleteRole');
     
 

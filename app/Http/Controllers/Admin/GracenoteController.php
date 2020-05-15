@@ -9,6 +9,7 @@ use App\Models\Gracenote;
 use App\Models\Role;
 
 
+use Yajra\DataTables\DataTables;
 /**
  * Description of GracenoteController
  *
@@ -27,8 +28,9 @@ class GracenoteController extends Controller
     {  
         // $users = Gracenote::with('user')->paginate(20);//Customers::with('country')->paginate(20);
         // return view('admin.subscriptions.index', compact('users'));
-        $record = Gracenote::all();
+        $record = Gracenote::paginate(10);
         return view('admin.gracenote.index', compact('record'));
+        
     }    /**
      * Display the specified resource.
      *
@@ -174,5 +176,14 @@ class GracenoteController extends Controller
        
        $response = array('status' => true,'message'=>"users retrieved.",'data'=>$users);
             return response()->json($response, 200);
+    }
+
+    public function gracenoteData()
+    {
+        return DataTables::of(Gracenote::query())
+        ->addColumn('action', function($row) {
+            return '<a href="/admin/gracenote/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/gracenote/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })
+        ->make(true);
     }
 }
