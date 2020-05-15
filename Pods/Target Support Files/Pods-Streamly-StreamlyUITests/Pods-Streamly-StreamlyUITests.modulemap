@@ -1,0 +1,6 @@
+framework module Pods_Streamly_StreamlyUITests {
+  umbrella header "Pods-Streamly-StreamlyUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

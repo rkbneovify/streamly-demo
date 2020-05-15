@@ -1,0 +1,890 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
+		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
+		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
+		AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */; };
+		AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8B9246A700100708812 /* AppDelegate.swift */; };
+		AAC9C8BF246A700200708812 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8BD246A700200708812 /* Main.storyboard */; };
+		AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */; };
+		AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8C3246A700400708812 /* Assets.xcassets */; };
+		AAC9C8C7246A700400708812 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8C5246A700400708812 /* LaunchScreen.storyboard */; };
+		AAC9C8D2246A700400708812 /* StreamlyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8D1246A700400708812 /* StreamlyTests.swift */; };
+		AAC9C8DD246A700400708812 /* StreamlyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8DC246A700400708812 /* StreamlyUITests.swift */; };
+		AAC9C8F1246A738A00708812 /* GEVersionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */; };
+		AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8F2246A7EFC00708812 /* Gradient.swift */; };
+		AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B0246D68B80027B5DB /* LoginVC.swift */; };
+		AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B2246D6C450027B5DB /* Utility.swift */; };
+		AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B4246D770F0027B5DB /* Constant.swift */; };
+		AAFC54B7246D781A0027B5DB /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B6246D781A0027B5DB /* Enums.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AAC9C8CE246A700400708812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAC9C8AE246A700100708812 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AAC9C8B5246A700100708812;
+			remoteInfo = Streamly;
+		};
+		AAC9C8D9246A700400708812 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AAC9C8AE246A700100708812 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AAC9C8B5246A700100708812;
+			remoteInfo = Streamly;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Streamly_StreamlyUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.debug.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.debug.xcconfig"; sourceTree = "<group>"; };
+		3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Streamly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.release.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.release.xcconfig"; sourceTree = "<group>"; };
+		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
+		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AAC9C8B6246A700100708812 /* Streamly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Streamly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAC9C8B9246A700100708812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AAC9C8BE246A700200708812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		AAC9C8C1246A700200708812 /* Streamly.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Streamly.xcdatamodel; sourceTree = "<group>"; };
+		AAC9C8C3246A700400708812 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AAC9C8C6246A700400708812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		AAC9C8C8246A700400708812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAC9C8CD246A700400708812 /* StreamlyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StreamlyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAC9C8D1246A700400708812 /* StreamlyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamlyTests.swift; sourceTree = "<group>"; };
+		AAC9C8D3246A700400708812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAC9C8D8246A700400708812 /* StreamlyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StreamlyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AAC9C8DC246A700400708812 /* StreamlyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamlyUITests.swift; sourceTree = "<group>"; };
+		AAC9C8DE246A700400708812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GEVersionMonitor.swift; sourceTree = "<group>"; };
+		AAC9C8F2246A7EFC00708812 /* Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradient.swift; sourceTree = "<group>"; };
+		AAFC54B0246D68B80027B5DB /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		AAFC54B2246D6C450027B5DB /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		AAFC54B4246D770F0027B5DB /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		AAFC54B6246D781A0027B5DB /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		BE003A075C67ACDE55437B82 /* Pods-Streamly-StreamlyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.debug.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FD9A79341CF79A970A8296A6 /* Pods-StreamlyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.release.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AAC9C8B3246A700100708812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8CA246A700400708812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8D5246A700400708812 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA367A3E246BF91700D8851B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				AA367A3F246BF93F00D8851B /* CommonView */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		AA367A3F246BF93F00D8851B /* CommonView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CommonView;
+			sourceTree = "<group>";
+		};
+		AA741F0B246ABBF00090A0F7 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				AA741F0C246ABC1A0090A0F7 /* PreLogin */,
+				AA741F0D246ABC230090A0F7 /* PostLogin */,
+			);
+			path = Module;
+			sourceTree = "<group>";
+		};
+		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
+			isa = PBXGroup;
+			children = (
+				AA741F0E246ABC620090A0F7 /* Login */,
+			);
+			path = PreLogin;
+			sourceTree = "<group>";
+		};
+		AA741F0D246ABC230090A0F7 /* PostLogin */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PostLogin;
+			sourceTree = "<group>";
+		};
+		AA741F0E246ABC620090A0F7 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8EC246A70D600708812 /* Controller */,
+				AAC9C8EA246A70C200708812 /* Model */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		AAC9C8AD246A700100708812 = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8B8246A700100708812 /* Streamly */,
+				AAC9C8D0246A700400708812 /* StreamlyTests */,
+				AAC9C8DB246A700400708812 /* StreamlyUITests */,
+				AAC9C8B7246A700100708812 /* Products */,
+				F490E78455C225E322EFFC99 /* Pods */,
+				E17D9F7BA9B80E44C69CFB47 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AAC9C8B7246A700100708812 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8B6246A700100708812 /* Streamly.app */,
+				AAC9C8CD246A700400708812 /* StreamlyTests.xctest */,
+				AAC9C8D8246A700400708812 /* StreamlyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AAC9C8B8246A700100708812 /* Streamly */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8B9246A700100708812 /* AppDelegate.swift */,
+				AAC9C8C5246A700400708812 /* LaunchScreen.storyboard */,
+				AA741F0B246ABBF00090A0F7 /* Module */,
+				AAC9C8ED246A70E100708812 /* Utilities */,
+				AAC9C8EE246A715800708812 /* Resources */,
+				AAC9C8EF246A719800708812 /* Supporting Files */,
+				AA367A3E246BF91700D8851B /* Helpers */,
+			);
+			path = Streamly;
+			sourceTree = "<group>";
+		};
+		AAC9C8D0246A700400708812 /* StreamlyTests */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8D1246A700400708812 /* StreamlyTests.swift */,
+				AAC9C8D3246A700400708812 /* Info.plist */,
+			);
+			path = StreamlyTests;
+			sourceTree = "<group>";
+		};
+		AAC9C8DB246A700400708812 /* StreamlyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8DC246A700400708812 /* StreamlyUITests.swift */,
+				AAC9C8DE246A700400708812 /* Info.plist */,
+			);
+			path = StreamlyUITests;
+			sourceTree = "<group>";
+		};
+		AAC9C8EA246A70C200708812 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AAC9C8EC246A70D600708812 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AAFC54B0246D68B80027B5DB /* LoginVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AAC9C8ED246A70E100708812 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */,
+				AAC9C8F2246A7EFC00708812 /* Gradient.swift */,
+				AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */,
+				AAFC54B2246D6C450027B5DB /* Utility.swift */,
+				AAFC54B4246D770F0027B5DB /* Constant.swift */,
+				AAFC54B6246D781A0027B5DB /* Enums.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		AAC9C8EE246A715800708812 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8C3246A700400708812 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AAC9C8EF246A719800708812 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AAC9C8C8246A700400708812 /* Info.plist */,
+				AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */,
+				AAC9C8BD246A700200708812 /* Main.storyboard */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E17D9F7BA9B80E44C69CFB47 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */,
+				0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */,
+				7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F490E78455C225E322EFFC99 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */,
+				51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */,
+				BE003A075C67ACDE55437B82 /* Pods-Streamly-StreamlyUITests.debug.xcconfig */,
+				3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */,
+				9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */,
+				FD9A79341CF79A970A8296A6 /* Pods-StreamlyTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AAC9C8B5246A700100708812 /* Streamly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAC9C8E1246A700400708812 /* Build configuration list for PBXNativeTarget "Streamly" */;
+			buildPhases = (
+				EE34E810C089AA9CA95178E6 /* [CP] Check Pods Manifest.lock */,
+				AAC9C8B2246A700100708812 /* Sources */,
+				AAC9C8B3246A700100708812 /* Frameworks */,
+				AAC9C8B4246A700100708812 /* Resources */,
+				73C5970DCF7BE09D9EAB70DD /* [CP] Embed Pods Frameworks */,
+				AAFD55F0246C1BDD00C204B8 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Streamly;
+			productName = Streamly;
+			productReference = AAC9C8B6246A700100708812 /* Streamly.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AAC9C8CC246A700400708812 /* StreamlyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAC9C8E4246A700400708812 /* Build configuration list for PBXNativeTarget "StreamlyTests" */;
+			buildPhases = (
+				B1E1DD932DDA0B12E5548E0C /* [CP] Check Pods Manifest.lock */,
+				AAC9C8C9246A700400708812 /* Sources */,
+				AAC9C8CA246A700400708812 /* Frameworks */,
+				AAC9C8CB246A700400708812 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AAC9C8CF246A700400708812 /* PBXTargetDependency */,
+			);
+			name = StreamlyTests;
+			productName = StreamlyTests;
+			productReference = AAC9C8CD246A700400708812 /* StreamlyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AAC9C8D7246A700400708812 /* StreamlyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAC9C8E7246A700400708812 /* Build configuration list for PBXNativeTarget "StreamlyUITests" */;
+			buildPhases = (
+				B05D0CDD6550DCDADBBF5AB4 /* [CP] Check Pods Manifest.lock */,
+				AAC9C8D4246A700400708812 /* Sources */,
+				AAC9C8D5246A700400708812 /* Frameworks */,
+				AAC9C8D6246A700400708812 /* Resources */,
+				1B5F0252ED9537ECBD39E6F2 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AAC9C8DA246A700400708812 /* PBXTargetDependency */,
+			);
+			name = StreamlyUITests;
+			productName = StreamlyUITests;
+			productReference = AAC9C8D8246A700400708812 /* StreamlyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AAC9C8AE246A700100708812 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "Rohit Singh";
+				TargetAttributes = {
+					AAC9C8B5246A700100708812 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+					AAC9C8CC246A700400708812 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = AAC9C8B5246A700100708812;
+					};
+					AAC9C8D7246A700400708812 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = AAC9C8B5246A700100708812;
+					};
+				};
+			};
+			buildConfigurationList = AAC9C8B1246A700100708812 /* Build configuration list for PBXProject "Streamly" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AAC9C8AD246A700100708812;
+			productRefGroup = AAC9C8B7246A700100708812 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AAC9C8B5246A700100708812 /* Streamly */,
+				AAC9C8CC246A700400708812 /* StreamlyTests */,
+				AAC9C8D7246A700400708812 /* StreamlyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AAC9C8B4246A700100708812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAC9C8C7246A700400708812 /* LaunchScreen.storyboard in Resources */,
+				AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */,
+				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8CB246A700400708812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8D6246A700400708812 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1B5F0252ED9537ECBD39E6F2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		73C5970DCF7BE09D9EAB70DD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Streamly/Pods-Streamly-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Streamly/Pods-Streamly-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Streamly/Pods-Streamly-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AAFD55F0246C1BDD00C204B8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#\"${PODS_ROOT}/SwiftLint/swiftlint\"\n\n";
+		};
+		B05D0CDD6550DCDADBBF5AB4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Streamly-StreamlyUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1E1DD932DDA0B12E5548E0C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-StreamlyTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EE34E810C089AA9CA95178E6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Streamly-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AAC9C8B2246A700100708812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */,
+				AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */,
+				AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */,
+				AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */,
+				AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */,
+				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
+				AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */,
+				AAFC54B7246D781A0027B5DB /* Enums.swift in Sources */,
+				AAC9C8F1246A738A00708812 /* GEVersionMonitor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8C9246A700400708812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAC9C8D2246A700400708812 /* StreamlyTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AAC9C8D4246A700400708812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AAC9C8DD246A700400708812 /* StreamlyUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AAC9C8CF246A700400708812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AAC9C8B5246A700100708812 /* Streamly */;
+			targetProxy = AAC9C8CE246A700400708812 /* PBXContainerItemProxy */;
+		};
+		AAC9C8DA246A700400708812 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AAC9C8B5246A700100708812 /* Streamly */;
+			targetProxy = AAC9C8D9246A700400708812 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		AAC9C8BD246A700200708812 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AAC9C8BE246A700200708812 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		AAC9C8C5246A700400708812 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				AAC9C8C6246A700400708812 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		AAC9C8DF246A700400708812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = appletvos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+			};
+			name = Debug;
+		};
+		AAC9C8E0246A700400708812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = appletvos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AAC9C8E2246A700400708812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		AAC9C8E3246A700400708812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+		AAC9C8E5246A700400708812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = StreamlyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Streamly.app/Streamly";
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+			};
+			name = Debug;
+		};
+		AAC9C8E6246A700400708812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FD9A79341CF79A970A8296A6 /* Pods-StreamlyTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = StreamlyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Streamly.app/Streamly";
+				TVOS_DEPLOYMENT_TARGET = 13.2;
+			};
+			name = Release;
+		};
+		AAC9C8E8246A700400708812 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE003A075C67ACDE55437B82 /* Pods-Streamly-StreamlyUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = StreamlyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = Streamly;
+			};
+			name = Debug;
+		};
+		AAC9C8E9246A700400708812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = StreamlyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = Streamly;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AAC9C8B1246A700100708812 /* Build configuration list for PBXProject "Streamly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAC9C8DF246A700400708812 /* Debug */,
+				AAC9C8E0246A700400708812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AAC9C8E1246A700400708812 /* Build configuration list for PBXNativeTarget "Streamly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAC9C8E2246A700400708812 /* Debug */,
+				AAC9C8E3246A700400708812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AAC9C8E4246A700400708812 /* Build configuration list for PBXNativeTarget "StreamlyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAC9C8E5246A700400708812 /* Debug */,
+				AAC9C8E6246A700400708812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AAC9C8E7246A700400708812 /* Build configuration list for PBXNativeTarget "StreamlyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AAC9C8E8246A700400708812 /* Debug */,
+				AAC9C8E9246A700400708812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AAC9C8C1246A700200708812 /* Streamly.xcdatamodel */,
+			);
+			currentVersion = AAC9C8C1246A700200708812 /* Streamly.xcdatamodel */;
+			path = Streamly.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = AAC9C8AE246A700100708812 /* Project object */;
+}
