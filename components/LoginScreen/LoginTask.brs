@@ -4,9 +4,10 @@ Sub INIT() 'This function retrieves and parses the feed and stores each content 
 end Sub
     
 Sub LogAPI() 
-
+    url= getBaseUrl()+loginUrl()
+    ?"login::url: ";url
     requestforLogin = CreateObject("roUrlTransfer")
-    requestforLogin.SetUrl("https://b992c94f.ngrok.io/api/auth/login")
+    requestforLogin.SetUrl(url)
     requestforLogin.addHeader("Content-Type","application/x-www-form-urlencoded")
 '    url.addHeader("Content-Type","application/json")
     requestforLogin.setCertificatesFile("common:/certs/ca-bundle.crt")
@@ -17,6 +18,7 @@ Sub LogAPI()
     requestforLogin.SetRequest("POST")
     port = CreateObject("roMessagePort")
     requestforLogin.setMessagePort(port)
+
 
 
     if requestforLogin.AsyncPostFromString(m.top.data)

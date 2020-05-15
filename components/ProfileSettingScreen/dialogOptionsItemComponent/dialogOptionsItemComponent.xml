@@ -2,7 +2,7 @@
 <component name="dialogOptionsItemComponent" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
 
 	<script type="text/brightscript" uri="pkg:/components/ProfileSettingScreen/dialogOptionsItemComponent/dialogOptionsItemComponent.brs" />
-
+     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
   <interface > 
   
      <field id = "itemContent" type = "node" onChange = "showcontent"/>
@@ -17,23 +17,22 @@
 
   <children >  
         
+      <Rectangle
+            id = "underline"
+            translation = "[  339, 30 ]" 
+            color="#FFFFFF"
+          />  
       <Label id = "labelName" 
         translation = "[ 0, 0 ]"
-        width  = "280"
-        height = "268" />
+         />
         
         <Label id = "labelvalue" 
         translation = "[ 339, 0 ]"
-        width  = "280"
-        height = "268" >
+         >
        
           
         </Label>
-        <Rectangle
-            translation = "[  339, 285 ]" 
-            width  = "280"
-            height = "1"
-          />
+        
         
        
          

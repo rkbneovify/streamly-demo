@@ -63,25 +63,76 @@
                  drawFocusFeedback="false"/> 
                  
        
-     <Group id = "Dialog" visible = "false" translation = "[ 349, 224]" height="724" width="1223">
+     <Group id = "Dialog" visible = "false" translation = "[ 349, 224]" >
      
-      
-       <Rectangle
-         translation = "[ 0, 0 ]"
-         width  = "1223"
-         height = "724" 
-          opacity="0.5"/>
+         
        <Poster
-                   
+         id = "dialogbackgndUri"          
          translation = "[ 0, 0 ]"
          width  = "1223"
          height = "724"
         
-         uri="pkg:/images/profile/markupitemcomponentBackground.png"    
+         uri="pkg:/images/profile/dialogBackground.png"    
          loadDisplayMode = "scaleToFill" /> 
+       <Group id = "logoutView" visible="false">
+           
+         <Label
          
-       
-       <MarkupList id = "dialogOptions"
+             id = "" 
+             text = "Are you sure you want to logout from this device?"
+             width  = "842"
+             height = "36" 
+             translation = "[196,117]"/>             
+           
+            <Button id="NoButton"
+                 visible="true"                
+                 translation= "[275,287]"
+                 minWidth  = "280"
+                 maxWidth  = "280"                
+                 focusedTextColor="#FFFFFF"
+                 height = "84"
+                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite1.png"
+                 BitmapUri =               "pkg:/images/home/borderwhite1.png"
+                 focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+                 showFocusFootprint="true"             
+                 iconUri=""
+                 focusedIconUri=""
+                 horizAlign="center">
+                
+                <Label  horizAlign="center"
+                        height = "84"
+                        Width  = "280"
+                        vertAlign = "center"
+                        text="No" />
+             </Button>  
+            <Button 
+                
+                id="YesButton"
+                visible="true"                
+                translation= "[669,287]"
+                minWidth  = "280"
+                maxWidth  = "280"                
+                focusedTextColor="#FFFFFF"
+                height = "84"
+                focusFootprintBitmapUri = "pkg:/images/home/borderwhite1.png"
+                focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                BitmapUri =               "pkg:/images/home/borderwhite1.png"
+                iconUri=""
+                focusedIconUri=""
+                showFocusFootprint="true"
+                horizAlign="center">
+                <Label  horizAlign="center"
+                        height = "84"
+                        Width  = "280"
+                        vertAlign = "center"
+                        text="Yes" />
+            </Button>         
+          
+        </Group>
+         
+       <Group id="profileView" visible="false">
+          
+              <MarkupList id = "dialogOptions"
                  itemComponentName = "dialogOptionsItemComponent"
                  itemSpacing = "[ 0, 50 ]" 
                  numRows="4"                  
@@ -100,6 +151,8 @@
                 height = "84"
                 focusFootprintBitmapUri = "pkg:/images/Login/buttonFoucs.png"
                 focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                BitmapUri =               "pkg:/images/home/borderwhite1.png"
+                showFocusFootprint="true"
                 iconUri=""
                 focusedIconUri=""
                 horizAlign="center">
@@ -108,9 +161,23 @@
                         Width  = "280"
                         vertAlign = "center"
                         text="OK" />
-                </Button>            
+                </Button>   
+          
+       </Group>
+             
      </Group>
        
+       <Rectangle
+                id="LoaderBackground"
+                color="0x000000FF"
+                visible="false"
+                opacity="0.65"
+              />
+	        <BusySpinner 
+	 
+	    		id = "LoginBusySpinner" 
+		    	visible = "false"
+			  />
        
 	</children>
 </component>

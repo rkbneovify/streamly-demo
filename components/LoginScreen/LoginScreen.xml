@@ -71,7 +71,7 @@
 	          
 	             <TextEditBox
 	                 id = "UsernamEditText"
-	                 text = "shahjad@gmail.com"
+	                 text = "aspire@gmail.com"
 	                 translation = "[35,30]"	                 
 	                 width = "585"
 	                 textColor="#0A0A0A"
