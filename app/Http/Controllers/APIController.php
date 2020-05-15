@@ -242,7 +242,7 @@ public function login(Request $request)
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
-         ])->orderBy('connected_devices', 'desc')->get()->toArray();
+         ])->orderBy('connected_devices', 'asc')->get()->toArray();
     
          $response = array('status' =>true ,'response_code'=>200,'message'=>$prevConnectDevicecount);
          return response()->json($response, 200);
