@@ -58,28 +58,75 @@ extension UIView {
 //MARK:- UIcolor extension
 extension UIColor
 {
-  convenience init(r:CGFloat,g:CGFloat,b:CGFloat,a:CGFloat)
+    convenience init(redd:CGFloat,greenn:CGFloat,bluee:CGFloat,alphaa:CGFloat)
     {
-        self.init(red: r/255, green: g/255, blue: b/255,alpha: a)
+        self.init(red: redd/255, green: greenn/255, blue: bluee/255,alpha: alphaa)
     }
 }
 //MARK:- UIViewController Extension
+
+var vSpinner : UIView?
+
 extension UIViewController
 {
-func showSimpleAlertWithMessage(_ message: String) {
-    DispatchQueue.main.async {
-        let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
-        alert.addAction(okAction)
-        self.present(alert, animated: true, completion: nil)
+    func showSimpleAlertWithMessage(_ message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
-  }
     class var storyboardID : String {
         return "\(self)"
     }
 
     static func instantiateFromAppStoryboard(appStoryboard: AppStoryboard) -> Self {
         return appStoryboard.viewController(viewControllerClass: self)
+    }
+    func showSpinner(onView : UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        spinnerView.backgroundColor = spinnerBackgroundColor
+        let aIndi = UIActivityIndicatorView.init(style: .large)
+        aIndi.startAnimating()
+        aIndi.center = spinnerView.center
+
+        DispatchQueue.main.async {
+            spinnerView.addSubview(aIndi)
+            onView.addSubview(spinnerView)
+        }
+
+        vSpinner = spinnerView
+    }
+
+    func removeSpinner() {
+        DispatchQueue.main.async {
+            vSpinner?.removeFromSuperview()
+            vSpinner = nil
+        }
+    }
+
+    func validateEmail(text: String) -> String {
+        if text.isEmptyString() {
+            return ValidationErrorMessages.emailEmpty.descriptipon()
+        } else if !text.isValidEmailID() {
+
+            return  ValidationErrorMessages.emailInvalid.descriptipon()
+        } else {
+            return ""
+        }
+    }
+
+
+
+    func validatePassword(text: String) -> String {
+        if text.isEmptyString() {
+            return ValidationErrorMessages.passwordEmpty.descriptipon()
+        } else if !text.isValidPassword() {
+            return ValidationErrorMessages.passwordInvalid.descriptipon()
+        } else {
+            return ""
+        }
     }
 
 }
@@ -102,14 +149,14 @@ extension String
     }
 
     func isValidPhoneNumber() -> Bool {
-        let PHONE_REGEX = "^[0-9]{8,15}"
-        let phoneTest = NSPredicate(format: "SELF MATCHES %@", PHONE_REGEX)
+        let phoneregEx = "^[0-9]{8,15}"
+        let phoneTest = NSPredicate(format: "SELF MATCHES %@", phoneregEx)
         let result =  phoneTest.evaluate(with: self)
         return result
     }
 
     func isValidPassword() -> Bool {
-        if self.isEmptyString() || self.count < password_min_limit || self.count > password_max_limit {
+        if self.isEmptyString() || self.count < passwordMinLimit || self.count > passwordMaxLimit {
             return false
         }
         return true

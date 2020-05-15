@@ -10,34 +10,34 @@ import Foundation
 import UIKit
 
 //Mark:- App colors
-let themecolor = UIColor(r: 225, g: 226, b: 115, a: 1)
-let bordercolor = UIColor(r: 23, g: 23, b: 23, a: 0.30)
+let spinnerBackgroundColor = UIColor(redd: 192.0, greenn: 192.0, bluee: 192.0, alphaa: 0.5)
 
 //Mark:- Validation Constants
-let password_min_limit = 6
-let password_max_limit = 10
-let mobile_max_limit = 15
-let mobile_min_limit = 8
+let passwordMinLimit = 6
+let passwordMaxLimit = 10
+let mobileMaxLimit = 15
+let mobileMinLimit = 8
 
 //Mark:- Constant Text
 let appName = "Streamly"
 
 ///Appdelegate refrence
-let appDelegate = UIApplication.shared.delegate as! AppDelegate
+let appDelegate = UIApplication.shared.delegate as? AppDelegate
 
 
 class Constant: NSObject
 {
     class func navigateToRootLogin()
     {
-        let loginVc = LoginVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-        let rootViewController = appDelegate.window!.rootViewController as! UINavigationController
+        guard let app = appDelegate else {return}
+        let loginVc = LoginVC.instantiateFromAppStoryboard(appStoryboard: .main)
+        let rootViewController = appDelegate?.window!.rootViewController as! UINavigationController
         rootViewController.setViewControllers([loginVc], animated: false)
         rootViewController.isNavigationBarHidden = true
-        appDelegate.window!.rootViewController!.removeFromParent()
-        appDelegate.window!.rootViewController!.view.removeFromSuperview()
-        appDelegate.window!.rootViewController = nil
-        appDelegate.window!.rootViewController = rootViewController
+        app.window?.rootViewController!.removeFromParent()
+        app.window?.rootViewController!.view.removeFromSuperview()
+        app.window?.rootViewController = nil
+        app.window?.rootViewController = rootViewController
     }
 
 }

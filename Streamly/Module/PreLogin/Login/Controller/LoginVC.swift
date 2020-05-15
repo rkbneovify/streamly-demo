@@ -29,18 +29,18 @@ class LoginVC: UIViewController {
     //MARK:- Helpers
     func initialSetup()
     {
-
+        //self.showSpinner(onView: self.view)
     }
 
     //MARK:- Action
-    @IBAction func BtnActions( _ sender:UIButton)
+    @IBAction func btnActions( _ sender:UIButton)
     {
         // tag 2 for rembember me
         // tag 3 for Need Help
         // tag 4 for Sign IN
         // tag 5 for Register Now
         if sender.tag == 2 {
-            self.showSimpleAlertWithMessage("Hello")
+
         }
         else if sender.tag == 3
         {
@@ -48,6 +48,12 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 4
         {
+            guard self.validateEmail(text: userIDField.text ?? "") == "" else {
+                return self.showSimpleAlertWithMessage(self.validateEmail(text: userIDField.text ?? ""))
+            }
+            guard self.validatePassword(text: passwordField.text ?? "") == "" else {
+                return self.showSimpleAlertWithMessage(self.validatePassword(text: passwordField.text ?? ""))
+            }
 
         }
         else if sender.tag == 5
@@ -56,4 +62,5 @@ class LoginVC: UIViewController {
         }
     }
 }
+
 

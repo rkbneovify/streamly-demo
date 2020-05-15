@@ -34,7 +34,7 @@
                                         <rect key="frame" x="0.0" y="20" width="873" height="720"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jpm-NJ-b0I">
-                                                <rect key="frame" x="0.0" y="0.0" width="833" height="720"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="873" height="720"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign In" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWd-ny-HIG">
                                                         <rect key="frame" x="127" y="40" width="145" height="53"/>
@@ -53,7 +53,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g7Z-qZ-utB">
-                                                        <rect key="frame" x="127" y="177" width="580" height="94"/>
+                                                        <rect key="frame" x="127" y="177" width="620" height="94"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
@@ -61,7 +61,7 @@
                                                         </constraints>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
-                                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                                 <real key="value" value="2"/>
@@ -102,7 +102,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xwG-Uj-qcV">
-                                                        <rect key="frame" x="127" y="339" width="580" height="94"/>
+                                                        <rect key="frame" x="127" y="339" width="620" height="94"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
@@ -110,7 +110,7 @@
                                                         </constraints>
                                                         <color key="textColor" red="0.039215686274509803" green="0.039215686274509803" blue="0.039215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
-                                                        <textInputTraits key="textInputTraits"/>
+                                                        <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                                                 <real key="value" value="2"/>
@@ -143,12 +143,11 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="9BK-lK-S1l"/>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="touchUpInside" id="yj9-kp-0Qx"/>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="kWC-ka-rhx"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGh-M6-aXv">
-                                                        <rect key="frame" x="511" y="457" width="196" height="46"/>
+                                                        <rect key="frame" x="551" y="457" width="196" height="46"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="196" id="GRM-wC-IMx"/>
@@ -168,8 +167,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="0Xy-i8-8Pb"/>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="touchUpInside" id="yko-HK-8LI"/>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="MXs-Aj-hae"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ti-Zk-8Fg">
@@ -202,12 +200,11 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="Mcc-gt-OHP"/>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="touchUpInside" id="ttg-6u-EnA"/>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="enj-mW-cEW"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MJZ-82-KwY" customClass="GradientBUtton" customModule="Streamly" customModuleProvider="target">
-                                                        <rect key="frame" x="127" y="530" width="580" height="84"/>
+                                                        <rect key="frame" x="127" y="530" width="620" height="84"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="84" id="lex-Ma-kVW"/>
                                                         </constraints>
@@ -226,8 +223,7 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="G5u-DY-yiX"/>
-                                                            <action selector="BtnActions:" destination="aq3-6r-fX2" eventType="touchUpInside" id="wXh-ul-615"/>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="9Nb-e9-u3w"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -288,7 +284,7 @@
                                     <constraint firstItem="XRV-Fz-lLF" firstAttribute="leading" secondItem="Nnr-7x-frO" secondAttribute="leading" id="Xet-AT-Drx"/>
                                     <constraint firstItem="XRV-Fz-lLF" firstAttribute="top" secondItem="Nnr-7x-frO" secondAttribute="top" constant="20" symbolic="YES" id="eBR-5C-bbW"/>
                                     <constraint firstAttribute="height" constant="760" id="efd-u3-XFj"/>
-                                    <constraint firstItem="Jpm-NJ-b0I" firstAttribute="width" secondItem="Nnr-7x-frO" secondAttribute="width" multiplier="0.954181" id="x9z-S7-PvJ"/>
+                                    <constraint firstItem="Jpm-NJ-b0I" firstAttribute="width" secondItem="Nnr-7x-frO" secondAttribute="width" id="x9z-S7-PvJ"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

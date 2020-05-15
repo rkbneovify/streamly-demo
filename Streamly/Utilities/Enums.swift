@@ -12,25 +12,25 @@ import UIKit
 //MARK:- enum for validation message
 enum ValidationErrorMessages:String
 {
-    case user_name_empty
-    case email_empty
-    case email_invalid
-    case mobile_empty
-    case mobile_invalid
-    case address_empty
-    case password_empty
-    case password_invalid
+    case userNameEmpty
+    case emailEmpty
+    case emailInvalid
+    case mobileEmpty
+    case mobileInvalid
+    case addressEmpty
+    case passwordEmpty
+    case passwordInvalid
 
     func descriptipon() -> String {
         switch self{
-        case .user_name_empty:return "Please enter user name"
-        case .email_empty:return "Please enter an email address"
-        case .email_invalid:return "Please enter an valid email address"
-        case .mobile_empty:return "Please enter mobile number"
-        case .mobile_invalid:return "Please enter valid mobile number"
-        case .address_empty:return "Please Select address"
-        case .password_empty:return "Please enter password"
-        case .password_invalid:return "Password should be min \(password_min_limit) character and max \(password_max_limit)"
+        case .userNameEmpty:return "Please enter user name"
+        case .emailEmpty:return "Please enter an email address"
+        case .emailInvalid:return "Please enter an valid email address"
+        case .mobileEmpty:return "Please enter mobile number"
+        case .mobileInvalid:return "Please enter valid mobile number"
+        case .addressEmpty:return "Please Select address"
+        case .passwordEmpty:return "Please enter password"
+        case .passwordInvalid:return "Password should be min \(passwordMinLimit) character and max \(passwordMaxLimit)"
     }
     }
 
@@ -39,7 +39,7 @@ enum ValidationErrorMessages:String
 enum AppStoryboard : String {
 
     /// we can add number if name
-    case Main
+    case main
 
     var instance : UIStoryboard {
         return UIStoryboard(name: self.rawValue, bundle: Bundle.main)
