@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
-use DeviceDetector\DeviceDetector;  
 use App\Models\JwtToken;
 use Illuminate\Http\Request;
 use App\User;
@@ -86,15 +85,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {	
         $ua = $request->server('HTTP_USER_AGENT');
-        $deviceid= $request->input('deviceid') ?? 'Null';;
-       // echo $ua; 
-        $dd = new DeviceDetector($ua);//detect device
-      //print_r($dd->getClient());exit;
-        $clientInfo = $dd->getClient() ?? 'Null'; // big info  holds information about browser, feed reader, media player, ...
-        $osInfo = $dd->getOs() ?? 'Null';
-        $device = $dd->getDeviceName() ?? 'Null';
-        $brand = $dd->getBrandName() ?? 'Null';
-        $deviceDetails=$ua.' Device id:-'.$deviceid.' DeviceName:-'.$device.' BrandName:-'.$brand.' Os Info:-'.$osInfo.' Client Info:-'.$clientInfo;
+        $deviceid= $request->input('deviceid') ?? 'Null';
+       
+        $deviceDetails=' Device Name:-'.$ua.' Device id:-'.$deviceid;
         $credentials = request(['email', 'password']);
 
         if(empty(request('email')) || empty(request('password'))){
@@ -315,7 +308,52 @@ class AuthController extends Controller
         ], 500 );
     }
 }
+//function incomplete this let user delete sessions
+public function multilogout()
+{    try {
+    $request = request();
+    $token = $request->bearerToken();//get token from header
+    $user=JWTAuth::user();
+    $userRole= $user->roles->pluck('name');//check users role
+       if($userRole[0]=='user'){
+           //check if token exist in table
+        $acctoken = SessionTable::where([
+            ['status', '=', '1'],
+            ['access_token', '=', $token],
+             ])->get()->toArray();
+    $uid=  $user['id'];
+    if ((count($acctoken)==0)){ 
+        $response = [
+            'success' => false,
+            'data' => 'Empty',
+            'message' => 'access token not found.',
+            'response_code'=>404,
+        ];
+        return response()->json($response, 404);
 
+    }  else {
+
+        $id=  $acctoken[0]['id'];
+          LogoutandDecrementDevice($id);
+          exit;
+      }
+    
+    
+    
+} else { 
+    config([
+    'jwt.blacklist_enabled' => true
+]);
+     JWTAuth::parseToken()->invalidate();
+    return response()->json(['status'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
+} catch (Exception $ex) { // Anything that went wrong
+    return response()->json( [
+        'error'   => true,
+        'message' => 'Something went wrong'
+
+    ], 500 );
+}
+}
 
     /**
      * Refresh a token.
