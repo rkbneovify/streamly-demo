@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="programCell" id="Rz2-K0-ksD" customClass="ProgramCollectionViewCell" customModule="Streamly" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="799" height="120"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="799" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWj-my-qYC">
+                        <rect key="frame" x="5" y="5" width="786" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="6hM-QM-ofR"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="30"/>
+                        <color key="textColor" red="0.98274439570000005" green="0.61241191630000003" blue="0.4485390782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="15b-sO-HoC">
+                        <rect key="frame" x="5" y="51" width="786" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="PGB-qk-X1F"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="25"/>
+                        <color key="textColor" red="1" green="0.015686274510000001" blue="0.15686274510000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7LB-3t-eJX">
+                        <rect key="frame" x="5" y="77" width="786" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="MCG-cd-iol"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="25"/>
+                        <color key="textColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="15b-sO-HoC" firstAttribute="trailing" secondItem="dWj-my-qYC" secondAttribute="trailing" id="BnQ-t2-P3g"/>
+                <constraint firstItem="7LB-3t-eJX" firstAttribute="leading" secondItem="15b-sO-HoC" secondAttribute="leading" id="DEZ-Du-zjx"/>
+                <constraint firstItem="dWj-my-qYC" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" constant="5" id="Uzs-Gc-nI7"/>
+                <constraint firstItem="7LB-3t-eJX" firstAttribute="top" secondItem="15b-sO-HoC" secondAttribute="bottom" constant="6" id="WQ5-sZ-Zou"/>
+                <constraint firstAttribute="trailing" secondItem="dWj-my-qYC" secondAttribute="trailing" constant="8" id="Wjs-Qh-DCn"/>
+                <constraint firstItem="15b-sO-HoC" firstAttribute="top" secondItem="dWj-my-qYC" secondAttribute="bottom" constant="6" id="aRy-Hc-iXK"/>
+                <constraint firstItem="dWj-my-qYC" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" constant="5" id="m8E-Ia-zqh"/>
+                <constraint firstItem="7LB-3t-eJX" firstAttribute="trailing" secondItem="15b-sO-HoC" secondAttribute="trailing" id="rff-sG-gmm"/>
+                <constraint firstItem="15b-sO-HoC" firstAttribute="leading" secondItem="dWj-my-qYC" secondAttribute="leading" id="zkq-Ta-9Rm"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
+            <connections>
+                <outlet property="durationLabel" destination="7LB-3t-eJX" id="22o-Ss-QPp"/>
+                <outlet property="scheduleLabel" destination="15b-sO-HoC" id="WJe-H3-q9o"/>
+                <outlet property="titleLabel" destination="dWj-my-qYC" id="soW-2k-y8a"/>
+            </connections>
+            <point key="canvasLocation" x="67" y="196"/>
+        </collectionViewCell>
+    </objects>
+</document>
