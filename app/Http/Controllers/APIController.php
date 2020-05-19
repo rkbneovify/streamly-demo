@@ -34,6 +34,7 @@ class APIController extends Controller
 
         $response = [
             'success' => true,
+            'status' => true,'response_code'=>200,
             'data' => $data,
             'message' => 'User retrieved successfully.'
         ];
@@ -55,7 +56,8 @@ class APIController extends Controller
             $response = [
                 'success' => false,
                 'data' => 'Empty',
-                'message' => 'User not found.'
+                'message' => 'User not found.',
+                'response_code'=>404,
             ];
             return response()->json($response, 404);
         }
@@ -64,7 +66,7 @@ class APIController extends Controller
         $response = [
             'success' => true,
             'data' => $data,
-            'message' => 'User retrieved successfully.'
+            'message' => 'User retrieved successfully.','response_code'=>200,
         ];
 
         return response()->json($response, 200);
@@ -91,7 +93,8 @@ class APIController extends Controller
             $response = [
                 'success' => false,
                 'data' => 'Validation Error.',
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
+                'response_code'=>404,
             ];
             return response()->json($response, 404);
         }
@@ -103,7 +106,8 @@ class APIController extends Controller
         $response = [
             'success' => true,
             'data' => $data,
-            'message' => 'User updated successfully.'
+            'message' => 'User updated successfully.',
+            'response_code'=>200,
         ];
 
         return response()->json($response, 200);
@@ -124,11 +128,11 @@ public function login(Request $request)
         
 
         if(empty(request('email')) || empty(request('password'))){
-            return response()->json(['status'=>false,'message' => 'both email and password required'], 401);
+            return response()->json(['status'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
         }
     
         if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['status'=>false,'message' => 'Invalid credentials'], 401);
+            return response()->json(['status'=>false,'response_code'=>401,'message' => 'Invalid credentials'], 401);
         }
         $user = JWTAuth::user();//all the user info
         // if($user->email_verified_at==null){
@@ -136,7 +140,7 @@ public function login(Request $request)
         // }
 
         if($user->is_active==0){
-            return response()->json(['status'=>false,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['status'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
         }
 
       $uid=  $user['id'];
@@ -174,13 +178,14 @@ public function login(Request $request)
                 return response()->json([
                     'success' => false,
                     'message' => 'the user cannot be logged out because reqired token is not provided',
+                    'response_code'=>401,
                    
                 ]);
             } else   if ((count($acctoken)==0)){ 
                 $response = [
                     'success' => false,
                     'data' => 'Empty',
-                    'message' => 'access token not found.'
+                    'message' => 'access token not found.','response_code'=>404,
                 ];
                 return response()->json($response, 404);
 
@@ -196,6 +201,7 @@ public function login(Request $request)
                 'success' => false,
                 'message' => 'Sorry, the user cannot be logged out',
                 'error'=>$exception,
+                'response_code'=>500,
                 
             ], 500);
         }
