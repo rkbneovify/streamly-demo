@@ -5,9 +5,11 @@ sub init()
       m.icon = m.top.findNode("icon") 
       m.textLabel = m.top.findNode("textLabel") 
        
+     
+      m.textLabel.font = getFont(27, "pkg:/fonts/HelveticaNeueMedium.ttf")
       
-     m.textLabel.font = "font:SmallestBoldSystemFont"
-     m.textLabel.font.size = 27
+'     m.textLabel.font = "font:SmallestBoldSystemFont"
+'     m.textLabel.font.size = 27
            
 end sub
 

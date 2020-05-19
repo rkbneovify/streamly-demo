@@ -2,7 +2,7 @@
 <component name="HomeScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
 
 	<script type="text/brightscript" uri="pkg:/components/HomeScreen/HomeScreen.brs" />
-
+    <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
 	<interface>
 	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
 	</interface>
@@ -13,8 +13,6 @@
       <ExtVideoPlayerUI id="myVideo" width="1920" height="1080" />
             
 	</Group> 
-	
-    
             
 	<!--  <Poster uri="pkg:/images/homeScreenBckgrnd.png"	 
              

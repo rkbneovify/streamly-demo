@@ -55,26 +55,26 @@ Function APICall(url as string, callType as String ,data as object) as object
           if type(msg) = "roUrlEvent"
               code = msg.GetResponseCode()
               
-              if code = 200
+'              if code = 200
                 JsonResponse = ParseJson(msg.GetString()) 
                 ?"APICall::JsonResponse: ";JsonResponse
-                responsedata={}
-                responsedata["result"] = "success"
-                responsedata["data"] = JsonResponse
-                return responsedata
-              else
-             
-                responsedata={}
-                responsedata["result"] = "failure"
-                responsedata["GetResponseCode"] = msg.GetResponseCode()  
-                responsedata["message"] = msg.GetFailureReason()  
-                ?"APICall::JsonResponse: ";JsonResponse
-                return responsedata   
-              end if 
+'                
+                return JsonResponse
+                
+'              else
+'             
+'                responsedata={}
+'                responsedata["success"] = false
+'                responsedata["GetResponseCode"] = msg.GetResponseCode()  
+'                responsedata["message"] = msg.GetFailureReason()  
+'                ?"APICall::JsonResponse: ";JsonResponse
+'                return responsedata   
+'              end if 
           
           else
            ?"APICall::ResponseCode: ";msg.GetResponseCode() 
            ?"APICall::FailureReason: ";msg.GetFailureReason()
+           
           end if
        end while  
      else
@@ -95,6 +95,7 @@ Function profileUrl()
  return "api/auth/profile"
 end Function
 
+
 Function logoutUrl()
  return "api/auth/logout"
 end Function
@@ -102,6 +103,16 @@ Function loginUrl()
  return "api/auth/login"
 end Function
 
+Function connectedDeviceUrl() as String
+
+return "api/auth/connecteddevice"
+
+end Function
+
+Function getDeviceInfo() as object
+ ?"getDeviceInfo"
+ return createObject("roDeviceInfo")
+end Function
 
 
 

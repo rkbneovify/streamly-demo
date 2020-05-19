@@ -4,11 +4,15 @@ sub init()
       m.labelvalue = m.top.findNode("labelvalue") 
       m.underline = m.top.findNode("underline") 
  
-     m.labelName.font = "font:MediumBoldSystemFont"
+'     m.labelName.font = "font:MediumBoldSystemFont"
      
-     m.labelName.font= getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
+'     m.labelName.font= getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
     
-     m.labelvalue.font.size = 24
+'     m.labelvalue.font.size = 24
+     
+    m.labelName.font = getFont(32, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.labelvalue.font = getFont(28, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+     
            
 end sub
 

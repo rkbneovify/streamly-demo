@@ -2,10 +2,14 @@
 
 sub init()
 
-    
+    m.tracker=m.top.createChild("TrackerTask")
+'    m.TrackerTask = CreateObject("roSGNode", "TrackerTask")
+'    m.TrackerTask.control="RUN"
+'    m.TrackerTask.control = "RUN" 'Run the task node 
     m.HomeScreen = m.top.findNode("HomeScreen")
    
     m.LoginScreen = m.top.findNode("LoginScreen")
+   
     
     m.ProfileSettingScreen = m.top.findNode("ProfileSettingScreen")
 
@@ -15,7 +19,8 @@ sub init()
     m.HomeScreen.observeField("openProfileScreen","openScreen")
     
     m.ProfileSettingScreen.observeField("visible","focusSet")
-    
+    m.ProfileSettingScreen.observeField("logout","logout")
+   
    
 '    setAccountToken("")  
    if getAccountToken() <> Invalid and getAccountToken() <> ""
@@ -31,15 +36,22 @@ sub init()
       m.HomeScreen.visible = false
       m.LoginScreen.visible = true
       m.LoginScreen.setFocus(true)
-   
+      m.LoginScreen.findNode("UsernamEditText").setFocus(true)
    endif  
     
 End sub
-
+sub logout()
+?"logout::expired access token: "
+      
+      m.HomeScreen.visible = false
+      m.ProfileSettingScreen.visible = false
+      m.LoginScreen.visible = true 
+      
+end sub
 sub focusSet()
 ?"focusSet: ";
 
-  if m.ProfileSettingScreen.visible = false    
+  if m.ProfileSettingScreen.visible = false and  m.ProfileSettingScreen.findNode("ProfileCategory").hasFocus()    
      m.HomeScreen.visible = true
      m.HomeScreen.findNode("timeGrid").setFocus(true)
           
@@ -47,13 +59,24 @@ sub focusSet()
 end sub
 
 sub closeScreen()
-?"closeScreen: ";
+?"MainScreeen::closeScreen: ";
   
   if m.LoginScreen.visible = false
  
    ?"if close"
    m.HomeScreen.visible = true
    m.HomeScreen.setFocus(true) 
+  
+  else if m.LoginScreen.visible = true
+ 
+   ?"else login screen open"
+      
+      m.HomeScreen.visible = false
+      m.HomeScreen.findNode("myVideo").visible= false
+      m.HomeScreen.findNode("ChannelsGroup").visible= false
+      m.LoginScreen.visible = true
+      
+'      m.LoginScreen.findNode("UsernamEditText").setFocus(true)
   
   end if
   
@@ -80,7 +103,7 @@ sub openScreen(event as object)
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
- ?"key: ";key
+ ?"MainScree::key: ";key
     result = false
     
     return result 

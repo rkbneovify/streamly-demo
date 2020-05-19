@@ -6,14 +6,10 @@ end Sub
 
 sub getProfile()
  ?"getProfile: ";
- 
-  
-'    
-'   m.ProfileTask.setField("callType","GET")
-'   m.ProfileTask.setField("callFor","Account")
-'  
+   
     m.top.data={}
     ?"m.top.callto: ";m.top.callto
+ 
   if  m.top.callto = "Account"
      
         jsonResponse = APICall(getBaseUrl()+profileUrl(), m.top.callType ,m.top.data)     
@@ -22,7 +18,7 @@ sub getProfile()
   
   else if m.top.callto = "Registered Devices"
   
-         jsonResponse = APICall("", m.top.callType ,m.top.data)
+         jsonResponse = APICall(getBaseUrl()+connectedDeviceUrl(), m.top.callType ,m.top.data)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse 
   else if m.top.callto = "Support"
@@ -36,12 +32,10 @@ sub getProfile()
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   else if m.top.callto = "Sign out"
-         m.top.response = jsonResponse
+'         m.top.response = jsonResponse
          jsonResponse = APICall(getBaseUrl()+logoutUrl(), m.top.callType ,m.top.data)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   end if   
-  
- 
- 
+
 end sub

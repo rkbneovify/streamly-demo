@@ -19,7 +19,7 @@
         
       <Rectangle
             id = "underline"
-            translation = "[  339, 30 ]" 
+            translation = "[  339, 35 ]" 
             color="#FFFFFF"
           />  
       <Label id = "labelName" 

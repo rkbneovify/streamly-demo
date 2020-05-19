@@ -32,13 +32,14 @@ sub init()
     
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
     
-    UsernameFont  = CreateObject("roSGNode", "Font") 
-    UsernameFont.uri = "pkg:/fonts/HelveticaNeueMedium.ttf"
-    UsernameFont.size = 28
+'    UsernameFont  = CreateObject("roSGNode", "Font") 
+'    UsernameFont.uri = "pkg:/fonts/HelveticaNeueMedium.ttf"
+'    UsernameFont.size = 28
     
-    m.channelGuide.font = UsernameFont
-    m.pressbackLabel.font = UsernameFont
-    m.Settings.font = UsernameFont
+    font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.channelGuide.font = font 
+    m.pressbackLabel.font = font
+    m.Settings.font = font
     
     initGrigData()
   
@@ -68,6 +69,7 @@ sub init()
     programNode.PLAYSTART = t+3000  
     programNode.PLAYDURATION = 2000
 '    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
+    
     
     programNode = channleNode.createChild("ContentNode")
     programNode.TITLE  = "c"
@@ -306,9 +308,11 @@ sub init()
 '    m.video.setFocus(true)
 
 end sub
+
 sub setFocus()
 ?"HomeScreen:setFocus: "
     if m.top.getScene().visible = true
+      m.video.visible = true
       m.video.setFocus(true)
 '       playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
       

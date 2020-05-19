@@ -8,6 +8,8 @@
 	
 	<interface>	
 	  <field id="dialog"  type="node"/>
+	  <field id="logout"  type="boolean" alwaysnotify="true"/>
+	  
 	</interface>
 	
 	<children>
@@ -78,11 +80,13 @@
            
          <Label
          
-             id = "" 
-             text = "Are you sure you want to logout from this device?"
-             width  = "842"
+             id = "logoutText" 
+             text = ""
+             width  = "1223"
+             horizAlign="center"
+             vertAlign="center"
              height = "36" 
-             translation = "[196,117]"/>             
+             translation = "[0,117]"/>             
            
             <Button id="NoButton"
                  visible="true"                
@@ -91,15 +95,17 @@
                  maxWidth  = "280"                
                  focusedTextColor="#FFFFFF"
                  height = "84"
-                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite1.png"
-                 BitmapUri =               "pkg:/images/home/borderwhite1.png"
-                 focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+                 focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
+                 focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                 BitmapUri =               "pkg:/images/profile/button1focus.png"
                  showFocusFootprint="true"             
                  iconUri=""
                  focusedIconUri=""
                  horizAlign="center">
                 
-                <Label  horizAlign="center"
+                <Label   
+                        id="labelNo"
+                        horizAlign="center"
                         height = "84"
                         Width  = "280"
                         vertAlign = "center"
@@ -114,14 +120,16 @@
                 maxWidth  = "280"                
                 focusedTextColor="#FFFFFF"
                 height = "84"
-                focusFootprintBitmapUri = "pkg:/images/home/borderwhite1.png"
+                focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
                 focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri =               "pkg:/images/home/borderwhite1.png"
+                BitmapUri =               "pkg:/images/profile/button1focus.png"
                 iconUri=""
                 focusedIconUri=""
                 showFocusFootprint="true"
                 horizAlign="center">
-                <Label  horizAlign="center"
+                <Label  
+                        id="labelYes"
+                        horizAlign="center"
                         height = "84"
                         Width  = "280"
                         vertAlign = "center"
@@ -146,17 +154,18 @@
                 translation= "[471,589]"
                 minWidth  = "280"
                 maxWidth  = "280"
-                
+               
                 focusedTextColor="#FFFFFF"
                 height = "84"
-                focusFootprintBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+                focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
                 focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri =               "pkg:/images/home/borderwhite1.png"
+                BitmapUri =               "pkg:/images/profile/button1focus.png"
                 showFocusFootprint="true"
                 iconUri=""
                 focusedIconUri=""
                 horizAlign="center">
-                <Label  horizAlign="center"
+                <Label  id="Lbaelok"
+                        horizAlign="center"
                         height = "84"
                         Width  = "280"
                         vertAlign = "center"
@@ -178,6 +187,49 @@
 	    		id = "LoginBusySpinner" 
 		    	visible = "false"
 			  />
-       
+			  
+        <Group id="ErrorDialogView" visible = "false"> 
+        
+              <Rectangle
+                  id="dialogfadeBackground"
+                  color="#000000"
+                  
+                  opacity="0.65"
+               />
+	          <Poster id = "backgroungPoster"
+	                   translation = "[ 497, 319 ]"
+	                    width="923.00"
+	                    height="500.00"
+	                    uri="pkg:/images/profile/dialogBackground.png"   />
+	          <Label  id = "messageBody"
+	                        translation = "[ 643, 408 ]"
+	                        width="658.00"
+	                        height="177.00"
+	                        horizAlign="center"
+	                        vertAlign="center"
+                            /> 
+	       
+	                
+              <Button id = "buttonClick"
+                      visible="true"
+                
+                      translation= "[835,672]"
+                      minWidth  = "280"
+                      maxWidth  = "280"
+                
+                      focusedTextColor="#FFFFFF"
+                      height = "96"
+                      focusFootprintBitmapUri = "pkg:images/profile/button1focus.png"
+                      focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                      BitmapUri =               "pkg:/images/profile/button1focus.png"
+                      showFocusFootprint="true"
+                      iconUri=""
+                      focusedIconUri=""
+                      text="Retry"
+                      >
+               
+                </Button> 
+        
+            </Group>   
 	</children>
 </component>

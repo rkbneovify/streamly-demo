@@ -26,7 +26,7 @@
         width  = "220"
         height = "60"
         opacity="0.00"
-        uri = "pkg:/images/home/borderwhite1.png"     
+        uri = "pkg:/images/home/categiryNavFocusIcon.png"     
         loadDisplayMode = "scaleToFit">
       </Poster>
       

@@ -2,16 +2,41 @@ sub init()
 
  m.ProfileCategory = m.top.findNode("ProfileCategory")
  m.Dialog = m.top.findNode("Dialog")
+ 
+ 
+ 'dialog
  m.dialogbackgndUri = m.top.findNode("dialogbackgndUri")
  m.logoutView = m.top.findNode("logoutView")
  m.profileView = m.top.findNode("profileView")
  m.NoButton = m.top.findNode("NoButton")
  m.YesButton = m.top.findNode("YesButton")
- 
- m.YesButton.observeField("buttonSelected","logoutApiCall")
- 
- 
+ m.logoutText = m.top.findNode("logoutText")
+ m.Lbaelok = m.top.findNode("Lbaelok")
+ m.labelYes = m.top.findNode("labelYes")
+ m.labelNo = m.top.findNode("labelNo")
+
+
+  font = getFont(30, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+  m.Lbaelok.font = font 
+  m.labelYes.font = font
+  m.labelNo.font = font
+  m.logoutText.font = getFont(32, "pkg:/fonts/HelveticaNeueMedium.ttf")
+  textTranslate()
+
+'  m.ProfileTask = CreateObject("roSGNode", "TrackerTask")
+'  m.ProfileTask.control="init"
+   m.logout = false
+
+'  dialog error
+   m.ErrorDialogView = m.top.findNode("ErrorDialogView")
+   m.buttonClick = m.top.findNode("buttonClick")
+   m.messageBody = m.top.findNode("messageBody")
+  
+
+    m.YesButton.observeField("buttonSelected","logoutApiCall")
+    m.NoButton.observeField("buttonSelected","closeDialog")
    'loader
+   
     m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
     m.LoaderBackground = m.top.findNode("LoaderBackground")    
     m.LoginBusySpinner.observeField("visible", "showspinner")
@@ -19,8 +44,8 @@ sub init()
     m.LoginBusySpinner.visible = false
  
  
- m.ok = m.top.findNode("ok")
- m.ok.observeField("buttonSelected","closeDialog")
+    m.ok = m.top.findNode("ok")
+    m.ok.observeField("buttonSelected","closeDialog")
 
 
  m.ProfileCategory.observeField("itemSelected","initDialogMrkupWithData")
@@ -33,21 +58,50 @@ sub init()
  
 end sub
 
-sub logoutApiCall()
-?"logoutApiCall"
- ApiCallFor("Account","POST")
+sub textTranslate()
+  m.logoutText.text = tr("Are you sure you want to logout from this device?")
 end sub
 
-sub closeDialog()
+sub logoutApiCall()
+?"ProfileSetting::logoutApiCall"
+ m.YesButton.setFocus(false)
+ showDialog("",false,false)
+ ApiCallFor("Sign out","POST")
+end sub
 
-    m.ok.setFocus(false)
-    m.ProfileCategory.setFocus(true)      
-    showDialog("",false)
+
+sub closeScreen()
+?"ProfileScreen::closeScreen";
+'m.buttonClick.observeField("buttonSelected","closeScreen")
+m.buttonClick.unobserveField("buttonSelected")
+   if m.buttonClick.hasFocus() and m.logout = true
+       
+       ?"ProfileSetting::if:close screen::" 
+       m.logout = false
+       m.buttonClick.setFocus(false)
+       m.ErrorDialogView.visible = false
+       m.top.logout = true
+    
+    end if
+end sub
+sub closeDialog()
+ ?"ProfileSetting:: close dialog"   
+    
+  
+     ?"ProfileSetting::else close dialog"
+       m.ok.setFocus(false)
+       m.NoButton.setFocus(false)
+            
+       showDialog("",false,true)
         
+       m.buttonClick.setFocus(false)
+       m.ErrorDialogView.visible =false    
+    
+         
 end sub
 
 sub initMrkupWithData()
-?"m.ChannelCategoryMarkuGrid:init()"
+?"ProfileSetting:MarkuGrid:init()"
  
  marupContent = createObject("roSGNode", "ContentNode")
  
@@ -76,9 +130,11 @@ sub initMrkupWithData()
  end sub
  
 sub initDialogMrkupWithData(event as object)
-?"m.ChannelCategoryMarkuGrid:init(): event pos: ";event.getData()
+?"ProfileSetting::MarkuGrid:init(): event pos: ";event.getData()
   
-    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
+    m.ProfileCategory.setFocus(false)
+    
+'
     
  if  event.getData() = 0
      
@@ -90,7 +146,7 @@ sub initDialogMrkupWithData(event as object)
      
 '     m.ProfileTask.setField("callType","GET")
 '     m.ProfileTask.setField("callFor","Registered Devices")
- 
+      ApiCallFor("Registered Devices","GET")
  else if event.getData() = 2
     
 '    m.ProfileTask.setField("callType","GET")
@@ -103,15 +159,15 @@ sub initDialogMrkupWithData(event as object)
     
  else if event.getData() = 4 'Logout api call 
      m.YesButton.setFocus(true)
-     showDialog("Sign out",true)
+     showDialog("Sign out",true,false)
  end if
-   
 
  
 end sub
 
 sub ApiCallFor(callto as String, callType as String)
- ?"ApiCallFor: " 
+ ?"ProfileSetting::ApiCallFor: " 
+     m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
     m.LoginBusySpinner.visible=true   
 '     ApiCallFor(callto,"GET")
      m.ProfileTask.callto = callto
@@ -119,49 +175,71 @@ sub ApiCallFor(callto as String, callType as String)
       
      m.ProfileTask.observeField("response","responseAPI")
      
-      m.ProfileTask.observeField("response","responseAPI")
+     m.ProfileTask.observeField("response","responseAPI")
      m.ProfileTask.control = "RUN" 'Run the task node 
+     
 end sub 
 sub responseAPI(event as object)
-  responseData = event.getData().data
-  ?"ProfileScreen::responseAPI: event: ";responseData.user
+  responseData = event.getData()
+  ?"ProfileScreen::responseAPI: event: ";responseData
   
   m.LoginBusySpinner.visible=false
   m.ProfileTask.control = "STOP"
-  
- if responseData.success = true
+  m.ProfileCategory.setFocus(true)
+ if responseData.response_code = true
     
     if m.ProfileTask.callto = "Account" 
    
       m.ok.setFocus(true) 
       marupContent = createObject("roSGNode", "ContentNode")
    
-      userData = responseData.user
+      userData = responseData.data
       for each data  in userData.Keys()
         ?"data: "data
         ?"userData[data]: "userData[data]
         if userData[data] <> invalid        
            assoArray = createObject("roAssociativeArray")    
-           assoArray[data] =   userData[data]          
+           assoArray[data+":"] =   userData[data]          
            marupContent.createChild("ContentNode").addFields(assoArray)
         end if
       end for
    
       m.dialogOptions.content = marupContent
-      showDialog("Account",true) 
-    else if m.ProfileTask.callto = "Sign out"
-            
+      showDialog("Account",true,false) 
+    else if m.ProfileTask.callto = "Sign out" 
+       ?"Profile::responseData.message:";responseData.message
+        setAccountToken("")
+         m.logout = true
+        showDialogError(true , responseData.message, "Ok") 
+    else if m.ProfileTask.callto = "Registered Devices" 
+       ConnectedDevices = responseData.message 
+       ?"Profile::responseData.message:";responseData.message
+      
+'        for each data  in ConnectedDevices.Keys()
+'        ?"data: "data
+'        ?"userData[data]: "userData[data]
+'        count = 0
+'        if userData[data] <> invalid        
+'            assoArray = createObject("roAssociativeArray")    
+'            assoArray[count+". "+data] =   userData[data]          
+'            marupContent.createChild("ContentNode").addFields(assoArray)
+'        end if
+'      end for
+'        showDialogError(true , responseData.message, "Ok")                
     end if
  else
    ?"error dialog to show the error:";responseData
+    showDialog("",false,false)
+     
+    showDialogError(true , responseData.message, "Something error")
  end if
  
    
  
 end sub
 
-sub showDialog(dialogView as String , show as boolean ) 
-
+sub showDialog(dialogView as String , show as boolean ,focus as boolean) 
+ ?"ProfileSetting::showDialog"
  m.logoutView.visible = false
  m.profileView.visible = false
  
@@ -187,18 +265,19 @@ sub showDialog(dialogView as String , show as boolean )
      end if
   else
     m.Dialog.visible = show
+    m.ProfileCategory.setFocus(focus)
   end if
  
 end sub
  
 sub setfocus()
-  ?"ProfileScreen: ";m.top.visible
+  ?"ProfileScreen: m.top.visible ";m.top.visible
   if m.top.visible  = true
     m.ProfileCategory.setFocus(true)
   end if 
 end sub 
 sub showspinner(event as object)
-?"showspinner:event : ";event
+?"ProfileSetting::showspinner:event : ";event
 
 
       if(event.getData() = true)
@@ -222,12 +301,40 @@ sub showspinner(event as object)
       
 end sub
  
+ 
+ 
+sub showDialogError(visible as boolean , text as String, buttontext as String)
+?"ProfileSetting::showDialogError"
+ if visible then
+
+  
+    m.ErrorDialogView.visible = visible
+
+    m.messageBody.text = text
+    m.ErrorDialogView.visible = visible
+    m.buttonClick.setFocus(visible)
+    m.buttonClick.text = buttontext
+    m.buttonClick.observeField("buttonSelected","closeScreen")
+   
+ else 
+    m.buttonClick.setFocus(visible)
+    m.ErrorDialogView.visible = visible
+ end if
+end sub 
+ 
 function onKeyEvent(key as String, press as Boolean) as Boolean
-    ?"key: ";key
-    ?"press: ";press
+    ?"Profile::key: ";key
+    ?"Profile::press: ";press
     result = false    
     if press
-      if m.YesButton.hasFocus() and key = "left"
+    
+      if m.buttonClick.hasFocus() and m.logout = true and key = "back"
+       m.buttonClick.setFocus(false)
+       m.ErrorDialogView.visible =false
+       m.top.logout = true
+       m.logout = false
+    
+    else  if m.YesButton.hasFocus() and key = "left"
         m.YesButton.setFocus(false)   
         m.NoButton.setFocus(true)
          
@@ -240,9 +347,8 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         m.NoButton.setFocus(false)
         m.YesButton.setFocus(false)
        
-        m.ProfileCategory.setFocus(true)
         
-        showDialog("",false)
+        showDialog("",false,true)
         return true
      else if m.ProfileCategory.hasFocus() and key = "back" 
       m.top.visible = false

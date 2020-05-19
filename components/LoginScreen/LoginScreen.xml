@@ -6,19 +6,22 @@
 	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
 	
 	
+	
+	
 	<interface>
 	
 	  <field id="dialog"  type="node"/>
 	</interface>
 	<children>
-	  <Poster id="LoginBackgroundImage"
-	          height="1080"
-	          width="1920"
+	  <Poster  id="LoginBackgroundImage"
+	           height="1080"
+	           width="1920"
 	          
-	          loadwidth="1280"
-	          loadheight="720"
-	          uri="pkg:/images/homeScreenBckgrndhd.png" 
-	          loadDisplayMode = "scaleTofill"
+	           loadwidth="1280"
+	           loadheight="720"
+	           uri="pkg:/images/home/homeScreenBckgrndhd.png" 
+	           loadDisplayMode = "scaleTofill"
+	          
 	           />
       <Poster id="logo"
               translation= "[723,68]"

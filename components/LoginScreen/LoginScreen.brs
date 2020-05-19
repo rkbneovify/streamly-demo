@@ -13,8 +13,7 @@ sub init()
     m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
     m.LoginBusySpinner.visible = false
       
-  
-    
+ 
     m.UsernamPoster = m.top.findNode("UsernamPoster")
     m.PasswordPoster = m.top.findNode("PasswordPoster") 
     
@@ -48,8 +47,16 @@ sub init()
     
     m.UsernamLable.font = UsernameFont
     m.PasswordLable.font = UsernameFont
-    m.UsernamEditText.setFocus(true)
     
+    m.top.observeField("visible","visibility")
+    
+end sub
+sub visibility()
+?"visibility: "
+if m.top.visible
+   m.UsernamEditText.setFocus(true)
+   onTextBoxActive(true)
+end if
 end sub
 
 sub LoginValidation()
@@ -97,7 +104,16 @@ sub LoginProcess()
             
    email=(m.UsernamEditText.text).Trim()
    password=(m.PasswordEditText.text).Trim()
-   data =  "email="+email+"&password="+password
+   data={}
+   
+   deviceInfo = getDeviceInfo()  'GetDeviceUniqueId()
+  
+   data["email"] = email
+   data["password"] = password
+   data["deviceid"] = deviceInfo.GetChannelClientId()
+   
+    m.LoginTask.callType = "POST" 
+'   data =  "email="+email+"&password="+password+deviceid
     ?"data: ";data
     m.LoginTask.data = data
    m.LoginTask.control = "RUN"
@@ -109,7 +125,7 @@ sub LoginResponse()
 
 ?"LoginResponse :m.LoginTask: ";m.LoginTask.response
 m.loginsuccess = false
-  if m.LoginTask.response.success = true
+  if m.LoginTask.response.response_code = 200
         
         setAccountToken(m.LoginTask.response.access_token)  
         m.loginsuccess = true

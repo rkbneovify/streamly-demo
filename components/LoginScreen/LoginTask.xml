@@ -5,7 +5,9 @@
 	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
 	<interface>
 
-      <field  id="data"  type="string" />
+      <field  id="data"  type="roAssociativeArray" />
+      <field  id="callType"  type="String" />
+      
       <field  id="response"  type="roAssociativeArray" /> 
       <field  id="error"  type="roAssociativeArray" />  
     </interface>
