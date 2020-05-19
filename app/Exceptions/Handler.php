@@ -51,6 +51,9 @@ class Handler extends ExceptionHandler
     {   if ($exception instanceof QueryException && $request->wantsJson()) {
         return response()->json(['status'=>false,'response_code'=>500, 'error'=>$exception->getMessage(), 'message' =>'Internal Server Error'], 500);   
     
+    } if ($exception instanceof BindingResolutionException && $request->wantsJson()) {
+        return response()->json(['status'=>false,'response_code'=>500, 'error'=>$exception->getMessage(), 'message' =>'Internal Server Error'], 500);   
+    
     }
     if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
         return response()->json([

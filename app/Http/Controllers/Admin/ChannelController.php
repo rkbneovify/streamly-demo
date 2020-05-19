@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
+use App\Models\Gracenote;
 use App\Models\Genre;
-
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 /**
  * Description of ChannelController
@@ -29,8 +30,18 @@ class ChannelController extends Controller
     }  
     
     public function channeljson() 
-    {
-        $record = Channel::paginate(10);
+    {   $extrafield='genre_name';
+        
+        //Option 1            
+        $record = DB::table('gracenote')
+        ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+       ->distinct()
+        ->select('channels.id','gracenote.StationName', 'channels.callSign','channels.genres', 'channels.url')
+        ->addSelect(DB::raw("'fakegenrevalue' as $extrafield"))
+        ->orderBy('channels.callSign', 'asc')
+        
+        ->paginate(20);
+      //  $record = Channel::paginate(10);
         
         return response()->json($record);
     }
@@ -198,6 +209,20 @@ class ChannelController extends Controller
                
            }
         return redirect()->back();
+    }
+    
+
+    public function channelschedulejson(){
+        
+        $search = '2020-05-14';
+        $callsign = request()->get('search');
+         $record  = Gracenote::where([
+    ['CallSign', '=', $callsign],
+    ['StartDateTime', 'LIKE', "%{$search}%"],
+     ])->get();
+         
+        return response()->json($record);
+        // SELECT * FROM `gracenote` WHERE `CallSign`= 'COMEDYP' AND `StartDateTime` LIKE '%2020-05-14%' ORDER BY `StartDateTime` ASC
     }
 
     public function channelData()

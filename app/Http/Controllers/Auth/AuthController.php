@@ -194,7 +194,13 @@ class AuthController extends Controller
     public function profile()
     {        
         $user=JWTAuth::user();
-        return response()->json(compact('user'));
+        $response = [
+            'success' => true,
+            'data' => $user,
+            'message' => 'Users Profile',
+            'response_code'=>200,
+        ];
+        return response()->json($response, 200);
        // $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
         
        // return response()->json($user_data);
@@ -210,12 +216,12 @@ class AuthController extends Controller
         $loggedInuserinfo=JWTAuth::user();
        $userid = $loggedInuserinfo->id;
        if($request==''){
-        return response()->json(['status'=>true,'response_code'=>400,'message' => 'No data sent'],400);
+        return response()->json(['response_code'=>400,'message' => 'No data sent'],400);
        }
         $exist=User::whereNotIn('id',[$userid])->where('email',[$request->email])->first();
 
         if($exist){
-            $response = array('status' => false,'response_code'=>400,'message'=>'Email already exists.');
+            $response = array('success' => false,'response_code'=>400,'message'=>'Email already exists.');
             return response()->json($response, 400);
         }
  //if email is passed
@@ -224,7 +230,7 @@ class AuthController extends Controller
             if ($input['lastdigit']==2222){
                 $input['email'] =$request->email;
             } else {
-                $response = array('status' => false,'response_code'=>400,'message'=>'Wrong code entered.');
+                $response = array('success' => false,'response_code'=>400,'message'=>'Wrong code entered.');
                 return response()->json($response, 400);
             }
             
@@ -250,10 +256,10 @@ class AuthController extends Controller
         
         if($user){
             $user->update($input);
-            $response = array('status' => true,'response_code'=>200,'message'=>'User updated successfully.','data'=>$user);             
+            $response = array('success' => true,'response_code'=>200,'message'=>'User updated successfully.','data'=>$user);             
             return response()->json($response, 200);
         }else{
-            $response = array('status' => false,'response_code'=>404,'message'=>'User not found.');
+            $response = array('success' => false,'response_code'=>404,'message'=>'User not found.');
             return response()->json($response, 404);
             }            
     }
@@ -299,7 +305,7 @@ class AuthController extends Controller
         'jwt.blacklist_enabled' => true
     ]);
          JWTAuth::parseToken()->invalidate();
-        return response()->json(['status'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
+        return response()->json(['success'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
     } catch (Exception $ex) { // Anything that went wrong
         return response()->json( [
             'error'   => true,
