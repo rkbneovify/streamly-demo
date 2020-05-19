@@ -57,6 +57,9 @@ class Gracenote extends Model
 'EndaDateTime'];
 
 
-
+public function gracenotechannel()
+    {
+        return $this->belongsTo(Gracenotechannel::class,'CallSign');
+    }
 
 }
