@@ -11,16 +11,34 @@ import UIKit
 
 class Utility {
 
-   
+   static func setBoolInUserDefaultData(value: Bool = false, key: String) {
+           UserDefaults.standard.set(value, forKey: key)
+           UserDefaults.standard.synchronize()
+       }
 
+       static func retriveBooleanFromUserDefault(key: String) -> Bool {
+           return  UserDefaults.standard.bool(forKey: key)
+       }
 
-//    class func getAlertViewWithAction(alertMessage: String,allRight: (()->())? = nil) -> UIAlertController {
-//        let alertView =  UIAlertController(title: "", message: alertMessage, preferredStyle: UIAlertController.Style.alert)
-//        //alertView.view.tintColor = UIColor.primaryColor
-//        alertView.addAction(UIAlertAction.init(title: "نعم", style: .default, handler: {(ACTION: UIAlertAction!)in
-//            allRight?()
-//        }))
-//        return alertView
-//    }
+       static func setStringObject(value: String, key: String) {
+           UserDefaults.standard.set(value, forKey: key)
+           UserDefaults.standard.synchronize()
+       }
+
+       /// clear user default
+       class func logOut()
+       {
+        let domain = Bundle.main.bundleIdentifier!
+           UserDefaults.standard.removePersistentDomain(forName: domain)
+           UserDefaults.standard.synchronize()
+           debugPrint(Array(UserDefaults.standard.dictionaryRepresentation().keys).count)
+           debugPrint("LogoutDone")
+           Switcher.updateRootVC()
+       }
+
+       static func retriveStringObject(key: String) -> String? {
+
+           return  UserDefaults.standard.string(forKey: key)
+       }
 
 }

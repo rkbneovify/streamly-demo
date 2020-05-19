@@ -11,6 +11,7 @@
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
 		AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */; };
+		AA2DB89C246EAD73003848FE /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2DB89B246EAD73003848FE /* HomeVC.swift */; };
 		AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8B9246A700100708812 /* AppDelegate.swift */; };
 		AAC9C8BF246A700200708812 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8BD246A700200708812 /* Main.storyboard */; };
 		AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */; };
@@ -20,6 +21,10 @@
 		AAC9C8DD246A700400708812 /* StreamlyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8DC246A700400708812 /* StreamlyUITests.swift */; };
 		AAC9C8F1246A738A00708812 /* GEVersionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */; };
 		AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8F2246A7EFC00708812 /* Gradient.swift */; };
+		AAD59545247250EC00BC5E6C /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD59544247250EC00BC5E6C /* LoginResponse.swift */; };
+		AAD595472472515800BC5E6C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD595462472515800BC5E6C /* Request.swift */; };
+		AAD5954C24726FFF00BC5E6C /* Switcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5954B24726FFF00BC5E6C /* Switcher.swift */; };
+		AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5954E2472705B00BC5E6C /* Rechability.swift */; };
 		AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B0246D68B80027B5DB /* LoginVC.swift */; };
 		AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B2246D6C450027B5DB /* Utility.swift */; };
 		AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B4246D770F0027B5DB /* Constant.swift */; };
@@ -52,6 +57,7 @@
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AA2DB89B246EAD73003848FE /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		AAC9C8B6246A700100708812 /* Streamly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Streamly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAC9C8B9246A700100708812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAC9C8BE246A700200708812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -67,6 +73,10 @@
 		AAC9C8DE246A700400708812 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GEVersionMonitor.swift; sourceTree = "<group>"; };
 		AAC9C8F2246A7EFC00708812 /* Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Gradient.swift; sourceTree = "<group>"; };
+		AAD59544247250EC00BC5E6C /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		AAD595462472515800BC5E6C /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		AAD5954B24726FFF00BC5E6C /* Switcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switcher.swift; sourceTree = "<group>"; };
+		AAD5954E2472705B00BC5E6C /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
 		AAFC54B0246D68B80027B5DB /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		AAFC54B2246D6C450027B5DB /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		AAFC54B4246D770F0027B5DB /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -103,19 +113,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA2DB897246EAD2D003848FE /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				AA2DB89A246EAD56003848FE /* View */,
+				AA2DB899246EAD4C003848FE /* Model */,
+				AA2DB898246EAD3B003848FE /* Controller */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		AA2DB898246EAD3B003848FE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AA2DB89B246EAD73003848FE /* HomeVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AA2DB899246EAD4C003848FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AA2DB89A246EAD56003848FE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		AA367A3E246BF91700D8851B /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				AA367A3F246BF93F00D8851B /* CommonView */,
+				AAD5954D2472704200BC5E6C /* Reachebility */,
 			);
 			path = Helpers;
-			sourceTree = "<group>";
-		};
-		AA367A3F246BF93F00D8851B /* CommonView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CommonView;
 			sourceTree = "<group>";
 		};
 		AA741F0B246ABBF00090A0F7 /* Module */ = {
@@ -138,6 +173,7 @@
 		AA741F0D246ABC230090A0F7 /* PostLogin */ = {
 			isa = PBXGroup;
 			children = (
+				AA2DB897246EAD2D003848FE /* Home */,
 			);
 			path = PostLogin;
 			sourceTree = "<group>";
@@ -208,6 +244,8 @@
 		AAC9C8EA246A70C200708812 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				AAD59544247250EC00BC5E6C /* LoginResponse.swift */,
+				AAD595462472515800BC5E6C /* Request.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,6 +261,7 @@
 		AAC9C8ED246A70E100708812 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				AAD5954A24726FF100BC5E6C /* Switcher */,
 				AAC9C8F0246A738A00708812 /* GEVersionMonitor.swift */,
 				AAC9C8F2246A7EFC00708812 /* Gradient.swift */,
 				AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */,
@@ -249,6 +288,22 @@
 				AAC9C8BD246A700200708812 /* Main.storyboard */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AAD5954A24726FF100BC5E6C /* Switcher */ = {
+			isa = PBXGroup;
+			children = (
+				AAD5954B24726FFF00BC5E6C /* Switcher.swift */,
+			);
+			path = Switcher;
+			sourceTree = "<group>";
+		};
+		AAD5954D2472704200BC5E6C /* Reachebility */ = {
+			isa = PBXGroup;
+			children = (
+				AAD5954E2472705B00BC5E6C /* Rechability.swift */,
+			);
+			path = Reachebility;
 			sourceTree = "<group>";
 		};
 		E17D9F7BA9B80E44C69CFB47 /* Frameworks */ = {
@@ -532,12 +587,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */,
+				AA2DB89C246EAD73003848FE /* HomeVC.swift in Sources */,
 				AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */,
 				AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */,
 				AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */,
+				AAD59545247250EC00BC5E6C /* LoginResponse.swift in Sources */,
 				AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */,
 				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
+				AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */,
 				AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */,
+				AAD595472472515800BC5E6C /* Request.swift in Sources */,
+				AAD5954C24726FFF00BC5E6C /* Switcher.swift in Sources */,
 				AAFC54B7246D781A0027B5DB /* Enums.swift in Sources */,
 				AAC9C8F1246A738A00708812 /* GEVersionMonitor.swift in Sources */,
 			);

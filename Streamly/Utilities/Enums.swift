@@ -20,6 +20,7 @@ enum ValidationErrorMessages:String
     case addressEmpty
     case passwordEmpty
     case passwordInvalid
+    case somethingWentWrong
 
     func descriptipon() -> String {
         switch self{
@@ -31,6 +32,7 @@ enum ValidationErrorMessages:String
         case .addressEmpty:return "Please Select address"
         case .passwordEmpty:return "Please enter password"
         case .passwordInvalid:return "Password should be min \(passwordMinLimit) character and max \(passwordMaxLimit)"
+        case .somethingWentWrong:return "Something Went wrong! Please try again"
     }
     }
 
@@ -39,7 +41,7 @@ enum ValidationErrorMessages:String
 enum AppStoryboard : String {
 
     /// we can add number if name
-    case main
+    case Main
 
     var instance : UIStoryboard {
         return UIStoryboard(name: self.rawValue, bundle: Bundle.main)
