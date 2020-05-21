@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Support\Facades\DB;
 /**
    @property varchar $name name
 @property varchar $url url
@@ -42,7 +44,6 @@ class Channel extends Model
         return $this->belongsTo(Genre::class,'genre_id');
     }
 
-    
     
 
 

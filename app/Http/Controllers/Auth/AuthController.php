@@ -35,7 +35,7 @@ class AuthController extends Controller
         $validate=User::validator($request);
         
         if($validate->fails()){
-            $response = array('status' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
+            $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
         }
 
@@ -73,7 +73,7 @@ class AuthController extends Controller
         });
 
 
-        $response = array('status' => true,'response_code'=>200,'message'=>'You are registered successfully, check email and click on verification link to activate your account.');
+        $response = array('success' => true,'response_code'=>200,'message'=>'You are registered successfully, check email and click on verification link to activate your account.');
         return response()->json($response, 200);
     }
 
@@ -87,25 +87,25 @@ class AuthController extends Controller
         $ua = $request->server('HTTP_USER_AGENT');
         $deviceid= $request->input('deviceid') ?? 'Null';
        
-        $deviceDetails=' Device Name:-'.$ua.' Device id:-'.$deviceid;
+        $deviceDetails=$ua.'#~'.$deviceid;
         $credentials = request(['email', 'password']);
 
         if(empty(request('email')) || empty(request('password'))){
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
         }
     
         if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['status'=>false,'message' => 'Invalid credentials','response_code'=>401], 401);
+            return response()->json(['success'=>false,'message' => 'Invalid credentials','response_code'=>401], 401);
         }
 
         $user=JWTAuth::user();
 
         if($user->email_verified_at==null){
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
         }
 
         if($user->is_active==0){
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'){
@@ -126,7 +126,7 @@ class AuthController extends Controller
         ]);
         
         if ($validate->fails()) {
-            $response = array('status' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
+            $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
         }
 
@@ -141,11 +141,11 @@ class AuthController extends Controller
             $user->email_verified_at = $email_verified_at;
             $user->save();
             
-            $response = array('status' =>true ,'response_code'=>200,'message'=>'Account successfully verified');
+            $response = array('success' =>true ,'response_code'=>200,'message'=>'Account successfully verified');
             return response()->json($response, 200);
 
         }else{
-            $response = array('status' =>false ,'response_code'=>401,'message'=>'Invalid verification token');
+            $response = array('success' =>false ,'response_code'=>401,'message'=>'Invalid verification token');
             return response()->json($response, 401);
         }
     }
@@ -157,7 +157,7 @@ class AuthController extends Controller
         ]);
         
         if ($validate->fails()) {
-            $response = array('status' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
+            $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
         }
 
@@ -165,10 +165,10 @@ class AuthController extends Controller
         if($User){
              $User->password=Hash::make($request->password);
              $User->save();
-             $response = array('status' =>true ,'response_code'=>200,'message'=>'Password changed successfully.');
+             $response = array('success' =>true ,'response_code'=>200,'message'=>'Password changed successfully.');
             return response()->json($response, 200);         
         }else{
-            $response = array('status' =>false ,'response_code'=>404,'message'=>'User not found');
+            $response = array('success' =>false ,'response_code'=>404,'message'=>'User not found');
             return response()->json($response, 404);
         }
     }
@@ -196,6 +196,7 @@ class AuthController extends Controller
         $user=JWTAuth::user();
         $response = [
             'success' => true,
+            
             'data' => $user,
             'message' => 'Users Profile',
             'response_code'=>200,
@@ -216,7 +217,7 @@ class AuthController extends Controller
         $loggedInuserinfo=JWTAuth::user();
        $userid = $loggedInuserinfo->id;
        if($request==''){
-        return response()->json(['response_code'=>400,'message' => 'No data sent'],400);
+        return response()->json(['success'=>false,'response_code'=>400,'message' => 'No data sent'],400);
        }
         $exist=User::whereNotIn('id',[$userid])->where('email',[$request->email])->first();
 
@@ -284,6 +285,7 @@ class AuthController extends Controller
         $uid=  $user['id'];
         if ((count($acctoken)==0)){ 
             $response = [
+                
                 'success' => false,
                 'data' => 'Empty',
                 'message' => 'access token not found.',
@@ -330,6 +332,7 @@ public function multilogout()
     $uid=  $user['id'];
     if ((count($acctoken)==0)){ 
         $response = [
+            
             'success' => false,
             'data' => 'Empty',
             'message' => 'access token not found.',
@@ -351,7 +354,7 @@ public function multilogout()
     'jwt.blacklist_enabled' => true
 ]);
      JWTAuth::parseToken()->invalidate();
-    return response()->json(['status'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
+    return response()->json(['success'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
 } catch (Exception $ex) { // Anything that went wrong
     return response()->json( [
         'error'   => true,
