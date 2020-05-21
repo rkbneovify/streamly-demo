@@ -63,7 +63,7 @@ class ForgotPasswordController extends Controller
                 ->subject(env('APP_NAME').': Password Reset');
             });
 
-            $response = array('status' => true,'message'=>'Password reset link sent on your email.');
+            $response = array('success' => true,'message'=>'Password reset link sent on your email.');
             return response()->json($response, 200);
         }
     }

@@ -34,7 +34,7 @@ class APIController extends Controller
 
         $response = [
             'success' => true,
-            'status' => true,'response_code'=>200,
+            'response_code'=>200,
             'data' => $data,
             'message' => 'User retrieved successfully.'
         ];
@@ -128,19 +128,19 @@ public function login(Request $request)
         
 
         if(empty(request('email')) || empty(request('password'))){
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
         }
     
         if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'Invalid credentials'], 401);
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Invalid credentials'], 401);
         }
         $user = JWTAuth::user();//all the user info
         // if($user->email_verified_at==null){
-        //     return response()->json(['status'=>false,'message' => 'Email not verfied, verify your email first.'], 401);   
+        //     return response()->json(['success'=>false,'message' => 'Email not verfied, verify your email first.'], 401);   
         // }
 
         if($user->is_active==0){
-            return response()->json(['status'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
         }
 
       $uid=  $user['id'];
@@ -244,15 +244,20 @@ public function login(Request $request)
         $user = JWTAuth::user();//all the user info
         $uid=  $user['id'];
         //and get the number of last connected device
-        $prevConnectDevicecount = SessionTable::select('connected_devices','mac_address')
+        $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
-         ])->orderBy('connected_devices', 'asc')->get()->toArray();
+         ])->orderBy('connected_devices', 'asc');
+        $s='';$numofdevice='';
+    $s=$prevConnectDevicecount->get();
     
-         $response = array('status' =>true ,'response_code'=>200,'message'=>$prevConnectDevicecount);
+    $numofdevice=$prevConnectDevicecount->count();
+   
+     
+         $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
          return response()->json($response, 200);
-         //print_r($prevConnectDevicecount);
+         
 
     }
 

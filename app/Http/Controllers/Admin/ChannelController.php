@@ -31,19 +31,70 @@ class ChannelController extends Controller
     
     public function channeljson() 
     {   $extrafield='genre_name';
-        
+        $forwhen=true;
+        $genres = Genre::pluck('name', 'id'); 
+        $extrafield='genre_name';
         //Option 1            
-        $record = DB::table('gracenote')
-        ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-       ->distinct()
-        ->select('channels.id','gracenote.StationName', 'channels.callSign','channels.genres', 'channels.url')
-        ->addSelect(DB::raw("'fakegenrevalue' as $extrafield"))
-        ->orderBy('channels.callSign', 'asc')
+        $record = DB::table('channels')
+        ->join('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
         
-        ->paginate(20);
-      //  $record = Channel::paginate(10);
+       
+        ->select('channels.id','gracenotechannels.StationName', 'channels.callSign','channels.genres', 'channels.url')
+        ->when(true, function($query) use ($genres,$extrafield){
+           $genreInNum=$query->pluck('genres');
+           $genres = Genre::pluck('name', 'id'); 
+          // print_r($genreInNum);exit;
+          if(!is_null($genreInNum)){
+            $arrVal=explode(',',$genreInNum);}
+            
+            $options = '';
+            foreach ($genres as $id => $genre) {
+                if(in_array($id, $arrVal)){
+                                 
+                $options .= ''.$genre.' ';
+                $query->addSelect(DB::raw("' . $options . ' as $extrafield"));
+            } 
+                
+                
+            }
+            
+    
+            
+     
+         
+        })
         
-        return response()->json($record);
+        ->orderBy('channels.callSign', 'asc');
+        // SELECT name FROM genre WHERE id IN (1,2,3)
+        // SELECT group_concat(concat_ws(',', name)) AS genresss FROM genre WHERE id IN (1,2,3)
+        // SELECT genres FROM `channels`
+    //     $s=$record->pluck('genres');
+    //     $genres = Genre::pluck('name', 'id'); 
+    //     //$arrVal=explode(',',$s[]);
+    //     foreach($s as $player)
+    //     {
+    //         echo $player;
+    //     }
+    //    // print_r($s);
+    //     exit;
+    //     $options = '';
+    //     foreach ($genres as $id => $genre) {
+    //         if(in_array($id, $arrVal)){
+                             
+    //         $options .= ''.$genre.' ';
+    //     } else{
+    //         $options .= '';}
+            
+    //     }
+      $pagechannel=$record->paginate(10);
+        
+      return response()->json(array(
+        'message' => $pagechannel, 
+        'success' => true,
+        //'author'=>$author,
+        //'genre'=>$genre,
+     ));
+        return response()->json($record->toSql());
     }
     //search
     public function searchapi(Request $request)
@@ -64,7 +115,8 @@ class ChannelController extends Controller
 
 
    return response()->json(array(
-    'channel' => $channel, 
+    'message' => $channel, 
+    'success' => true,
     //'author'=>$author,
     //'genre'=>$genre,
  ));
