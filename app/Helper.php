@@ -3,7 +3,7 @@ use Carbon\Carbon;
 
 use Jenssegers\Agent\Agent;
      function checkLoginLimit($user_id,$token,$deviceDetails){
-        $login_limit = 5;
+        $login_limit = 5;$userInfo = JWTAuth::user();
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
     ['status', '=', '1'],
@@ -39,7 +39,8 @@ use Jenssegers\Agent\Agent;
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'device_info'=>$deviceDetails
+            'device_info'=>$deviceDetails,
+            'user'=>$userInfo
             
           
           
@@ -86,11 +87,12 @@ use Jenssegers\Agent\Agent;
             'response_code'=>200,
             
 
-           // 'user'=>$userInfo,
+            
           'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'device_info'=>$deviceDetails
+            'device_info'=>$deviceDetails,
+            'user'=>$userInfo,
             
           ],200)->send();}
         

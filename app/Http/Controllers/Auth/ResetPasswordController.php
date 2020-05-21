@@ -52,10 +52,10 @@ class ResetPasswordController extends Controller
         );
         if ($request->wantsJson()) {
             if ($response == Password::PASSWORD_RESET) {
-                $response = array('status' => false,'message'=>trans('passwords.reset'));
+                $response = array('success' => false,'message'=>trans('passwords.reset'));
                 return response()->json($response, 200);
             } else {
-                $response = array('status' => false,'message'=>'Password reset token is invalid');
+                $response = array('success' => false,'message'=>'Password reset token is invalid');
                 return response()->json($response, 400);                
             }
         }
