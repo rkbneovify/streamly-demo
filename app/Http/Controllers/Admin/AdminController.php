@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\User;
+use App\Models\Gracenotechannel;
+use App\Models\Subscription;
 class AdminController extends Controller
 {
     /**
@@ -24,7 +26,13 @@ class AdminController extends Controller
      */
     public function index()
     {
-      return view('home');
+      $Activeusers = User::where([
+        ['is_active', '=', '1'],
+         ])->count();
+         $channel=Gracenotechannel::count();
+         $Subscription=Subscription::count();
+         return view('home', ['Activeusers' => $Activeusers,'channel' => $channel,'Subscription' => $Subscription,]);
+      
     }
 
     
