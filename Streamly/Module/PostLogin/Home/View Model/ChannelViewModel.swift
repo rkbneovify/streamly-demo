@@ -1,10 +1,11 @@
 //
 //  ChannelViewModel.swift
-//  EPG
+//  Streamly
 //
-//  Created by Jerald Abille on 3/20/18.
-//  Copyright © 2018 Jerald Abille. All rights reserved.
+//  Created by Rohit Singh on 5/12/20.
+//  Copyright © 2020 Rohit Singh. All rights reserved.
 //
+
 
 import UIKit
 
@@ -18,6 +19,6 @@ class ChannelViewModel {
     self.channel = channel
     self.channelNumberText = "Ch \(channel.number)"
     self.nameText = "Ch.\(channel.number)"
-    self.image = UIImage(named: "Logo.png")
+    self.image = UIImage(named: channel.name.lowercased())
   }
 }

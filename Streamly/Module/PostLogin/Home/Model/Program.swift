@@ -1,10 +1,11 @@
 //
 //  Program.swift
-//  EPG
+//  Streamly
 //
-//  Created by Jerald Abille on 3/18/18.
-//  Copyright © 2018 Jerald Abille. All rights reserved.
+//  Created by Rohit Singh on 5/12/20.
+//  Copyright © 2020 Rohit Singh. All rights reserved.
 //
+
 
 import Foundation
 

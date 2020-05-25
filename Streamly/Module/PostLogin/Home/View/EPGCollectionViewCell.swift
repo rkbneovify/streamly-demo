@@ -14,6 +14,7 @@ class EPGCollectionViewCell: UICollectionViewCell {
 
       override func awakeFromNib() {
         super.awakeFromNib()
+
         // Initialization code
       }
 

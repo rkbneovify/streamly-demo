@@ -9,7 +9,7 @@
 import UIKit
 
 class EPGCollectionViewLayout: UICollectionViewLayout {
-let cellWidth = 120.0
+ let cellWidth = 395.0
   let cellHeight = 120.0
   var cellAttributesDictionary = Dictionary<IndexPath, UICollectionViewLayoutAttributes>()
   var contentSize = CGSize.zero
@@ -23,6 +23,7 @@ let cellWidth = 120.0
   }
 
   override func prepare() {
+    
     if !dataSourceDidUpdate {
       let xOffset = collectionView!.contentOffset.x
       let yOffset = collectionView!.contentOffset.y
@@ -37,17 +38,18 @@ let cellWidth = 120.0
                 if let attributes = cellAttributesDictionary[indexPath] {
                   var frame = attributes.frame
                   if item == 0 {
-                    frame.origin.x = xOffset
+                    frame.origin.x = xOffset + 40.0
                   }
-                  frame.origin.y = yOffset
+                    frame.origin.y = yOffset + 23.0
                   attributes.frame = frame
+
                 }
               }
             } else {
               let indexPath = IndexPath(item: 0, section: section)
               if let attributes = cellAttributesDictionary[indexPath] {
                 var frame = attributes.frame
-                frame.origin.x = xOffset
+                frame.origin.x = xOffset + 40.0
                 attributes.frame = frame
               }
             }
@@ -83,12 +85,16 @@ let cellWidth = 120.0
             let yPos = Double(section) * cellHeight
 
             let cellAttributes = UICollectionViewLayoutAttributes(forCellWith: cellIndex)
-            cellAttributes.frame = CGRect(x: xPos, y: yPos, width: cellWidth, height: cellHeight)
+            cellAttributes.frame = CGRect(x: xPos, y: yPos, width: cellWidth - 9.0, height: cellHeight)
+            let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
+            cellAttributes.frame = insetFrame
 
             if let _ = program {
               xPos = (cellWidth * (program!.schedule.start / 60 / 60) + cellWidth)
-              let width = (program!.duration / 60 / 60) * 120
-              cellAttributes.frame = CGRect(x: xPos, y: yPos, width: width, height: cellHeight)
+                let width = (program!.duration / 60 / 60) * cellWidth
+                cellAttributes.frame = CGRect(x: xPos, y: yPos, width: width - 9.0, height: cellHeight)
+                let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
+                cellAttributes.frame = insetFrame
             }
 
             if section == 0 && item == 0 {
@@ -119,6 +125,7 @@ let cellWidth = 120.0
         attributesInRect.append(cellAttributes)
       }
     }
+
     return attributesInRect
   }
 
@@ -129,4 +136,6 @@ let cellWidth = 120.0
   override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
     return true
   }
+
+   
 }

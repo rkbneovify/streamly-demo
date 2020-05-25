@@ -10,35 +10,36 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="timeCell" id="Rz2-K0-ksD" customClass="TimeCollectionViewCell" customModule="Streamly" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+            <rect key="frame" x="0.0" y="0.0" width="1158" height="864"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="600" height="300"/>
+                <rect key="frame" x="0.0" y="0.0" width="1158" height="864"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNO-tp-WLN">
-                        <rect key="frame" x="10" y="10" width="580" height="280"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oNO-tp-WLN">
+                        <rect key="frame" x="426.5" y="402" width="395" height="120"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="580" id="Lin-cJ-RY4"/>
-                            <constraint firstAttribute="height" constant="280" id="bIf-iG-LMA"/>
+                            <constraint firstAttribute="width" constant="395" id="XBI-j5-adS"/>
+                            <constraint firstAttribute="height" constant="120" id="xe7-uo-NtT"/>
                         </constraints>
-                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="27"/>
-                        <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
             </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="oNO-tp-WLN" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" constant="10" id="OQU-Lw-Def"/>
-                <constraint firstAttribute="bottom" secondItem="oNO-tp-WLN" secondAttribute="bottom" constant="10" id="inr-YV-fyw"/>
-                <constraint firstItem="oNO-tp-WLN" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" constant="10" id="rtQ-Sj-8Ln"/>
-                <constraint firstAttribute="trailing" secondItem="oNO-tp-WLN" secondAttribute="trailing" constant="10" id="yUu-AX-vt7"/>
+                <constraint firstItem="oNO-tp-WLN" firstAttribute="centerY" secondItem="7PP-Ag-gPX" secondAttribute="centerY" id="IE0-Ko-IZ9"/>
+                <constraint firstItem="oNO-tp-WLN" firstAttribute="centerX" secondItem="7PP-Ag-gPX" secondAttribute="centerX" id="TQI-RW-OhP"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
+            <size key="customSize" width="1158" height="864"/>
             <connections>
                 <outlet property="timeLabel" destination="oNO-tp-WLN" id="Zzh-nb-HYY"/>
             </connections>
-            <point key="canvasLocation" x="66" y="196"/>
+            <point key="canvasLocation" x="345" y="478"/>
         </collectionViewCell>
     </objects>
 </document>

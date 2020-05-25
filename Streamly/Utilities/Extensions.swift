@@ -281,3 +281,16 @@ public extension UIDevice {
     }()
 
 }
+
+extension UIButton
+{
+    /// for the EPG menu categories
+     func setBtnProperties(_ button:UIButton)
+    {
+        button.setTitleColor(UIColor.white, for: .focused)
+        button.setTitleColor(UIColor.white, for: .highlighted)
+        button.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
+        button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
+        button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+    }
+}

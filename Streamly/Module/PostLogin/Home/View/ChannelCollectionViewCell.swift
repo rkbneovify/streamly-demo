@@ -14,6 +14,9 @@ class ChannelCollectionViewCell: UICollectionViewCell {
 
       override func awakeFromNib() {
         super.awakeFromNib()
+        // These properties are also exposed in Interface Builder.
+               imageView.adjustsImageWhenAncestorFocused = true
+               imageView.clipsToBounds = false
         // Initialization code
       }
 
@@ -28,15 +31,28 @@ class ChannelCollectionViewCell: UICollectionViewCell {
       }
 
       func setup() {
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor.gray
         self.layer.borderWidth = 0.5
         self.layer.borderColor = UIColor.gray.cgColor
-      }
+        self.layer.cornerRadius = 8
+        
+    }
 
       func configureWith(channel: Channel) {
         let viewModel = ChannelViewModel(channel: channel)
         if let _ = viewModel.image {
-       //   self.imageView.image = viewModel.image
+        self.imageView.image = viewModel.image
         }
       }
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        coordinator.addCoordinatedAnimations({
+            if self.isFocused {
+                self.tintAdjustmentMode = .dimmed
+                  }
+                  else {
+                self.tintAdjustmentMode = .normal
+                  }
+                  }, completion: nil)
+    }
     }

@@ -29,6 +29,6 @@ class TimeCollectionViewCell: UICollectionViewCell {
 
       func setup() {
         self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.gray.cgColor
+        self.layer.borderColor = UIColor.clear.cgColor
       }
     }

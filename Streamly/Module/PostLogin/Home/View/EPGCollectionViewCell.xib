@@ -20,10 +20,11 @@
                         <rect key="frame" x="3" y="3" width="57" height="38"/>
                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                         <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
+                        <color key="highlightedColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </label>
                 </subviews>
             </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="hlv-MR-6s6" secondAttribute="bottom" constant="3" id="JJX-3N-zDi"/>
                 <constraint firstAttribute="trailing" secondItem="hlv-MR-6s6" secondAttribute="trailing" constant="3" id="f1w-4U-EuJ"/>

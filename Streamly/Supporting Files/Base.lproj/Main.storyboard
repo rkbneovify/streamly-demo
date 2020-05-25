@@ -338,62 +338,179 @@
                         <viewControllerLayoutGuide type="top" id="LT0-yU-6Xt"/>
                         <viewControllerLayoutGuide type="bottom" id="xVS-lk-fY2"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="KtU-TU-Waj" customClass="GradientView" customModule="Streamly" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" id="KtU-TU-Waj">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcP-tF-a58">
-                                <rect key="frame" x="1557" y="90" width="253" height="90"/>
-                                <color key="backgroundColor" red="0.98274439570000005" green="0.61241191630000003" blue="0.4485390782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gNy-qp-SVR">
+                                <rect key="frame" x="0.0" y="212" width="1920" height="868"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="90" id="ivJ-v4-flJ"/>
+                                    <constraint firstAttribute="height" constant="868" id="hbb-MC-wdv"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="38"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="LOG OUT"/>
-                                <connections>
-                                    <action selector="logOUT:" destination="Eyd-tc-C2G" eventType="primaryActionTriggered" id="Vow-58-FhW"/>
-                                </connections>
-                            </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gNy-qp-SVR">
-                                <rect key="frame" x="90" y="212" width="1740" height="800"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="800" id="Kc6-l8-zKp"/>
-                                </constraints>
-                                <collectionViewLayout key="collectionViewLayout" id="KDW-kb-g1d" customClass="EPGCollectionViewLayout" customModule="Streamly" customModuleProvider="target"/>
+                                <collectionViewLayout key="collectionViewLayout" id="vRO-ie-2UJ" customClass="EPGCollectionViewLayout" customModule="Streamly" customModuleProvider="target"/>
                                 <cells/>
                                 <connections>
                                     <outlet property="dataSource" destination="Eyd-tc-C2G" id="2SE-ZH-vT0"/>
                                     <outlet property="delegate" destination="Eyd-tc-C2G" id="a5m-X0-pYg"/>
                                 </connections>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y0s-iu-g2A">
+                                <rect key="frame" x="36" y="40" width="50" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="y0s-iu-g2A" secondAttribute="height" multiplier="1:1" id="6cL-Cy-d4C"/>
+                                    <constraint firstAttribute="height" constant="50" id="U7Q-ZN-2l1"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" backgroundImage="magnifyingglass" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="17" scale="default"/>
+                                </state>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YE6-cD-1aK">
+                                <rect key="frame" x="145" y="40" width="1273" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ml5-EV-iaZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="110" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="All">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z8U-69-9dI">
+                                        <rect key="frame" x="130" y="0.0" width="171.5" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="RECENT">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hSL-up-Py5">
+                                        <rect key="frame" x="321.5" y="0.0" width="240.5" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="MY CHANNELS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6hi-O7-Vuc">
+                                        <rect key="frame" x="582" y="0.0" width="171.5" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="SPORTS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hkf-lV-fy6">
+                                        <rect key="frame" x="773.5" y="0.0" width="148.5" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="NEWS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TIO-2n-DWs">
+                                        <rect key="frame" x="942" y="0.0" width="167.5" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="MOVIES">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8p-mT-5yQ">
+                                        <rect key="frame" x="1129.5" y="0.0" width="143.5" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="KIDS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="A6P-ZR-vxe"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uki-an-m3n">
+                                <rect key="frame" x="1700" y="42.5" width="195" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="195" id="cWZ-xJ-rbh"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
+                                <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="26"/>
+                                <state key="normal" title="GO BACK">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkS-OL-cQ8">
+                                <rect key="frame" x="1485" y="42.5" width="195" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="195" id="7st-4U-dgt"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
+                                <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="24"/>
+                                <state key="normal" title="SETTINGS">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
                         </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="BBy-GG-1eS" firstAttribute="trailing" secondItem="gNy-qp-SVR" secondAttribute="trailing" id="Bhk-zn-36h"/>
-                            <constraint firstItem="gNy-qp-SVR" firstAttribute="leading" secondItem="BBy-GG-1eS" secondAttribute="leading" id="iIK-Ye-qZt"/>
-                            <constraint firstItem="vcP-tF-a58" firstAttribute="top" secondItem="LT0-yU-6Xt" secondAttribute="bottom" constant="30" id="l6L-Nx-VNN"/>
-                            <constraint firstItem="xVS-lk-fY2" firstAttribute="top" secondItem="gNy-qp-SVR" secondAttribute="bottom" constant="20" symbolic="YES" id="pT8-3e-Saf"/>
-                            <constraint firstItem="gNy-qp-SVR" firstAttribute="top" secondItem="vcP-tF-a58" secondAttribute="bottom" constant="32" id="ufE-rl-pZp"/>
-                            <constraint firstItem="BBy-GG-1eS" firstAttribute="trailing" secondItem="vcP-tF-a58" secondAttribute="trailing" constant="20" id="zjl-7v-y7m"/>
+                            <constraint firstItem="uki-an-m3n" firstAttribute="centerY" secondItem="YE6-cD-1aK" secondAttribute="centerY" id="76V-3R-uoW"/>
+                            <constraint firstItem="YE6-cD-1aK" firstAttribute="leading" secondItem="agR-tS-Ztd" secondAttribute="leading" constant="55" id="BtJ-ma-kRR"/>
+                            <constraint firstAttribute="trailing" secondItem="gNy-qp-SVR" secondAttribute="trailing" id="EvI-r2-c5F"/>
+                            <constraint firstItem="y0s-iu-g2A" firstAttribute="leading" secondItem="KtU-TU-Waj" secondAttribute="leading" constant="35.969999999999999" id="G2p-jJ-c76"/>
+                            <constraint firstItem="uki-an-m3n" firstAttribute="leading" secondItem="lkS-OL-cQ8" secondAttribute="trailing" constant="20" id="J4Y-5W-CgC"/>
+                            <constraint firstAttribute="bottom" secondItem="gNy-qp-SVR" secondAttribute="bottom" id="KzW-wU-j80"/>
+                            <constraint firstItem="YE6-cD-1aK" firstAttribute="centerY" secondItem="y0s-iu-g2A" secondAttribute="centerY" id="TTp-MQ-wJi"/>
+                            <constraint firstItem="lkS-OL-cQ8" firstAttribute="height" secondItem="uki-an-m3n" secondAttribute="height" id="TZg-X8-l6V"/>
+                            <constraint firstAttribute="trailing" secondItem="uki-an-m3n" secondAttribute="trailing" constant="25" id="Toa-03-cgK"/>
+                            <constraint firstItem="lkS-OL-cQ8" firstAttribute="centerY" secondItem="uki-an-m3n" secondAttribute="centerY" id="Vaf-6N-JNE"/>
+                            <constraint firstItem="lkS-OL-cQ8" firstAttribute="leading" secondItem="YE6-cD-1aK" secondAttribute="trailing" constant="67" id="Yjq-px-8gA"/>
+                            <constraint firstItem="gNy-qp-SVR" firstAttribute="leading" secondItem="KtU-TU-Waj" secondAttribute="leading" id="eWc-0B-8gD"/>
+                            <constraint firstItem="gNy-qp-SVR" firstAttribute="top" secondItem="y0s-iu-g2A" secondAttribute="bottom" constant="122" id="jZj-c7-3SX"/>
+                            <constraint firstItem="uki-an-m3n" firstAttribute="height" secondItem="YE6-cD-1aK" secondAttribute="height" multiplier="0.9" id="sxv-JZ-0Tf"/>
+                            <constraint firstItem="y0s-iu-g2A" firstAttribute="top" secondItem="KtU-TU-Waj" secondAttribute="top" constant="40" id="tPF-cz-qou"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="BBy-GG-1eS"/>
+                        <viewLayoutGuide key="safeArea" id="agR-tS-Ztd"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
-                                <color key="value" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </userDefinedRuntimeAttribute>
                             <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
-                                <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
+                        <outlet property="allButton" destination="Ml5-EV-iaZ" id="cTM-fK-w4d"/>
                         <outlet property="collectionView" destination="gNy-qp-SVR" id="yse-Qj-Suu"/>
+                        <outlet property="goBackButton" destination="uki-an-m3n" id="OnK-V5-SYa"/>
+                        <outlet property="kidsButton" destination="G8p-mT-5yQ" id="4P2-pj-Wup"/>
+                        <outlet property="moviesButton" destination="TIO-2n-DWs" id="Zux-ty-ASU"/>
+                        <outlet property="myChannelButton" destination="hSL-up-Py5" id="blh-yZ-OMV"/>
+                        <outlet property="newsButton" destination="hkf-lV-fy6" id="XqV-gh-Ktf"/>
+                        <outlet property="recentButton" destination="z8U-69-9dI" id="h1v-10-V8m"/>
+                        <outlet property="searchButton" destination="y0s-iu-g2A" id="aya-7T-4bR"/>
+                        <outlet property="settingsButton" destination="lkS-OL-cQ8" id="jyo-Jf-ZFt"/>
+                        <outlet property="sportsButton" destination="6hi-O7-Vuc" id="8vn-s4-haO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xjv-DX-qKZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6237" y="120"/>
+            <point key="canvasLocation" x="6397" y="-337"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k0c-i8-oDO">
@@ -416,5 +533,6 @@
     </scenes>
     <resources>
         <image name="Logo" width="796" height="200"/>
+        <image name="magnifyingglass" catalog="system" width="32" height="28"/>
     </resources>
 </document>

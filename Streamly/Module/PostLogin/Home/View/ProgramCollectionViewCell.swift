@@ -30,19 +30,20 @@ class ProgramCollectionViewCell: UICollectionViewCell {
       }
 
       func setup() {
-        self.backgroundColor = UIColor.white
+        self.backgroundColor = UIColor.clear
         self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.lightGray.cgColor
+        self.layer.borderColor = UIColor.clear.cgColor
       }
 
       func configureWith(program: Program) {
         let viewModel = ProgramViewModel(program: program)
-        self.titleLabel.text = viewModel.titleString
-        self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
-        self.durationLabel.text = viewModel.durationString
+        
+//        self.titleLabel.text = viewModel.titleString
+//        self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
+//        self.durationLabel.text = viewModel.durationString
 
-        self.scheduleLabel.textColor = UIColor.gray
-        self.durationLabel.textColor = UIColor.gray
+//        self.scheduleLabel.textColor = UIColor.gray
+//        self.durationLabel.textColor = UIColor.gray
       }
     }
 

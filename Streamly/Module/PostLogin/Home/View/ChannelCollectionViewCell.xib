@@ -10,32 +10,58 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="channelCell" id="Rz2-K0-ksD" customClass="ChannelCollectionViewCell" customModule="Streamly" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="297" height="120"/>
+            <rect key="frame" x="0.0" y="0.0" width="297" height="240"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="297" height="120"/>
+                <rect key="frame" x="0.0" y="0.0" width="297" height="240"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Splash" translatesAutoresizingMaskIntoConstraints="NO" id="HDQ-7M-CTr">
-                        <rect key="frame" x="4" y="4" width="289" height="112"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hbo" translatesAutoresizingMaskIntoConstraints="NO" id="HDQ-7M-CTr">
+                        <rect key="frame" x="25" y="124" width="92" height="52"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="92" id="Ycz-VM-0D9"/>
+                            <constraint firstAttribute="height" constant="52" id="rk5-OY-aF0"/>
+                        </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="05" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DoC-wm-cdg">
+                        <rect key="frame" x="139" y="124" width="23" height="23"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="23" id="myJ-hm-Hdd"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MTV- USA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUy-Oc-pYt">
+                        <rect key="frame" x="139" y="149" width="124" height="23"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="23" id="hvK-iL-SDy"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="HDQ-7M-CTr" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" constant="4" id="Hmc-pq-2rf"/>
-                <constraint firstAttribute="trailing" secondItem="HDQ-7M-CTr" secondAttribute="trailing" constant="4" id="W6A-UA-ECF"/>
-                <constraint firstAttribute="bottom" secondItem="HDQ-7M-CTr" secondAttribute="bottom" constant="4" id="ZHG-hW-MmB"/>
-                <constraint firstItem="HDQ-7M-CTr" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" constant="4" id="wxQ-1G-MCt"/>
+                <constraint firstItem="nUy-Oc-pYt" firstAttribute="leading" secondItem="DoC-wm-cdg" secondAttribute="leading" id="87b-qX-Hhk"/>
+                <constraint firstItem="HDQ-7M-CTr" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" constant="25" id="HBx-7d-0RB"/>
+                <constraint firstItem="DoC-wm-cdg" firstAttribute="leading" secondItem="HDQ-7M-CTr" secondAttribute="trailing" constant="22" id="QxW-cf-RjH"/>
+                <constraint firstItem="nUy-Oc-pYt" firstAttribute="top" secondItem="DoC-wm-cdg" secondAttribute="bottom" constant="2" id="cfh-kj-w0o"/>
+                <constraint firstItem="HDQ-7M-CTr" firstAttribute="centerY" secondItem="7PP-Ag-gPX" secondAttribute="centerY" id="p65-iE-n0H"/>
+                <constraint firstItem="DoC-wm-cdg" firstAttribute="top" secondItem="HDQ-7M-CTr" secondAttribute="top" id="pxe-ij-mVm"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
             <connections>
                 <outlet property="imageView" destination="HDQ-7M-CTr" id="8CJ-UK-RPg"/>
             </connections>
-            <point key="canvasLocation" x="67" y="196"/>
+            <point key="canvasLocation" x="66.5" y="196"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Splash" width="1920" height="1080"/>
+        <image name="hbo" width="69" height="52"/>
     </resources>
 </document>
