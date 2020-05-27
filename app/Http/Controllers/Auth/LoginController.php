@@ -33,8 +33,8 @@ class LoginController extends Controller
         if ($userRole[0]== 'admin'||$userRole[0]== 'superadmin') {
             return '/admin';
         } else{
-        Auth::logout();
-    \Session::flush();
+    //     Auth::logout();
+    // \Session::flush();
         return '/';}
     }
 
