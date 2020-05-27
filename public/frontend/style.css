@@ -10098,8 +10098,9 @@ img::-moz-selection {
   font-size: 0.75rem;
   color: #fff;
   text-transform: uppercase;
-  background-color: #fed136;
-  border: 0;
+  background-color: transparent;
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
 }
 #mainNav .navbar-brand {
   color: #fed136;
@@ -10579,4 +10580,46 @@ footer.footer h6 {
 
 footer.footer ul li {
     margin-bottom: 1rem;
+}
+
+.login_txt {
+  color: #004E92;
+  font-weight: bold;
+  width: 100%;
+}
+
+.login-form {
+  width: 100%;
+}
+
+.login-form #email{
+  border: 1px solid #5E5E5E;
+  border-radius: 6px;
+}
+
+.login-form #password{
+  border: 1px solid #5E5E5E;
+  border-radius: 6px;
+}
+
+.login-form label:not(.no-font-s) {
+  color: #0A0A0A;
+  letter-spacing: 1.6px;
+}
+
+.login-btn {
+  background: transparent linear-gradient(89deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+  border-radius: 6px;
+  width: 100%;
+  color: #fff;
+}
+
+.google-btn {
+  border: 1px solid #C4C4C4;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.google-btn span{
+  vertical-align: middle;
 }
