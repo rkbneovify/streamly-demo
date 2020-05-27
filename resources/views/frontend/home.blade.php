@@ -51,10 +51,22 @@
             #mySidenav.show{width:50%;}
         }
 
+        .alert.alert-danger.alert-dismissible {
+            position: absolute;
+            width: 100%;
+            z-index: 1040;
+        }
     </style>
 @endsection
 
 @section('content')
+    
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> {{$errors->first()}}.
+        </div>
+    @endif
 
 	<!-- Masthead-->
 	<header class="masthead">
@@ -74,7 +86,7 @@
         <div class="container" style="padding: 0px 50px;">
             <div class="row mt-4">
                 <h4 class="login_txt">Log In</h4>    
-                <form class="login-form mt-3">
+                <form action="login" method="post" class="login-form mt-3">
                     <div class="form-group">
                         <label for="email" class="control-label">Email</label>
                         <input type="email" id="email" name="email" class="form-control">
@@ -104,9 +116,9 @@
                     </div>
 
                     <div class="form-group mt-4 text-center">
-                        <a class="btn btn-sm google-btn"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                        <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
                     </div>
-
+                    {!! csrf_field() !!}
                 </form>
             </div>
             
@@ -188,6 +200,10 @@
 
             // document.getElementById("mySidenav").style.width = "0";
             document.getElementById("mySidenav").classList.remove("show");
+        }
+
+        function logoutUser() {
+            window.location.href = '/logout';
         }
     </script>
 @endsection
