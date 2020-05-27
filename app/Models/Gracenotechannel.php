@@ -20,6 +20,7 @@ class Gracenotechannel extends Model
     protected $fillable=['StationName',
 'CallSign'];
 
+
     /**
     * Date time columns.
     */
@@ -28,6 +29,11 @@ class Gracenotechannel extends Model
     public function gracenote()
     {
         return $this->belongsTo(Gracenote::class,'CallSign');
+    }
+
+    public function gracenotesprograms()
+    {
+        return $this->hasMany(Gracenote::class,'CallSign');
     }
 
 
