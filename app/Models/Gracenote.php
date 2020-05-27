@@ -56,7 +56,9 @@ class Gracenote extends Model
     protected $dates=['StartDateTime',
 'EndaDateTime'];
 
-
+protected $casts = [
+    'programs' => 'array',
+  ];
 public function gracenotechannel()
     {
         return $this->belongsTo(Gracenotechannel::class,'CallSign');
