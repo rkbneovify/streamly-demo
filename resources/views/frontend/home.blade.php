@@ -1,5 +1,59 @@
 @extends('frontend/partials/master')
 
+@section('stylesheets')
+    <style>
+        
+        .sidenav {
+            height: 100%;
+            width: 0%;
+            position: fixed;
+            z-index: 1100;
+            top: 0;
+            right: 0;
+            background-color: #fff;
+            overflow-x: hidden;
+            transition: 0.5s;
+            /*padding-top: 60px;*/
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            color: #004E92;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        #mySidenav.show{
+            width: 34%;
+        }
+
+        @media only screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+        }
+
+        @media only screen and (max-width: 450px) {
+            #mySidenav.show{width:100%;}
+        }
+
+        @media (min-width: 451px) and (max-width: 900px) {
+            #mySidenav.show{width:50%;}
+        }
+
+    </style>
+@endsection
+
 @section('content')
 
 	<!-- Masthead-->
@@ -10,6 +64,56 @@
 	        <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">START TODAY</a>
 	    </div>
 	</header>
+
+    <div id="mySidenav" class="sidenav">
+
+        <div style="width: 100%;height: 5%;">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        </div>
+
+        <div class="container" style="padding: 0px 50px;">
+            <div class="row mt-4">
+                <h4 class="login_txt">Log In</h4>    
+                <form class="login-form mt-3">
+                    <div class="form-group">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="email" id="email" name="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember-me">
+                        <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
+
+                        <label class="no-font-s float-right">Forgot password?</label>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
+                    </div>
+
+                    <span>Don't have an account?</span> <a href="javascript:void(0)" style="padding: 0;">Start you trial now</a>
+
+                    <div class="mt-4">
+                        <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
+                        <span style="padding: 0 4%;">or</span>
+                        <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
+                    </div>
+
+                    <div class="form-group mt-4 text-center">
+                        <a class="btn btn-sm google-btn"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                    </div>
+
+                </form>
+            </div>
+            
+        </div>
+
+    </div>
+
 
 	<!-- Select Plan-->
     <section class="page-section" id="services">
@@ -72,4 +176,18 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function openNav(event) {
+            event.preventDefault();
+            // document.getElementById("mySidenav").style.width = "34%";
+            document.getElementById("mySidenav").classList.add("show");
+        }
+
+        function closeNav() {
+
+            // document.getElementById("mySidenav").style.width = "0";
+            document.getElementById("mySidenav").classList.remove("show");
+        }
+    </script>
 @endsection
