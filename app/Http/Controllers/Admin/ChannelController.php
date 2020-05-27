@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\Gracenote;
+use App\Models\Gracenotechannel;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -267,4 +268,75 @@ class ChannelController extends Controller
       //  >rawColumns(['fullName', 'action'])
         ->make(true);
     }
+
+  //channel with 7 day of schdule
+    public function channelDaysSchedule(){
+      //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
+    //   select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
+    //   SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
+// select count(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign
+// select GROUP_CONCAT(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign   
+//$record  = Gracenote::select('StationName','CallSign','EventTitle','EventDescription','StartDateTime','EndDateTime')->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
+// SELECT CallSign,StationName,
+        // JSON_ARRAYAGG(
+        //     JSON_OBJECT(
+        //         'title', EventTitle,
+        //         'start', StartDateTime,'end', EndDateTime )
+        // ) AS programs
+//     FROM gracenote
+//     GROUP BY CallSign,StationName
+// $record  = Gracenote::select('CallSign',DB::raw("JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs"))
+// $record  = Gracenote::select('CallSign',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs "),DB::raw('SEPARATOR'),DB::raw("'|'"))->groupBy('CallSign');
+// $record  = Gracenote::select('CallSign','StationName',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime )SEPARATOR '|' ) AS programs "))->groupBy('CallSign','StationName');
+// SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', sub.StartDateTime,'end', sub.EndDateTime ) ) AS programs FROM ( SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC ) AS sub GROUP BY sub.CallSign 
+DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select("CallSign","StationName")
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->fromSub(function ($query) {
+    $query->select('gracenote.*')
+    ->from('gracenote')
+    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN "2020-05-20 00:00:00" AND DATE_ADD("2020-05-20 00:00:00", INTERVAL 7 DAY)')
+    ->orderBy('gracenote.StartDateTime', 'asc');
+}, 'sub')
+
+->orderBy('CallSign', 'asc')
+->groupBy('CallSign','StationName');
+// SELECT CallSign,StationName,
+// GROUP_CONCAT(
+//   JSON_OBJECT('title', EventTitle,
+//                 'start', StartDateTime,'end', EndDateTime 
+//   ) SEPARATOR '|'
+// ) AS programs
+//     FROM gracenote
+//     GROUP BY CallSign,StationName
+// ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
+    
+$api=$record->get();
+        // return response()->json($record->toSql());
+        // return json_encode($api);
+    return response()->json($api, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+    //  return  response()->json([
+    //     'clients' => $this->transformClientCollection($api)
+    //  ], 200);
+    }
+
+
+public function transformClientCollection($api)
+{
+    return array_map([$this, 'transformClient'], $api->toArray());
+}
+
+public function transformClient($clients)
+{
+  
+    return [
+        'StationName' => $clients['StationName'],
+        'Slug' => $clients['CallSign'],
+        'title' => $clients['EventTitle'],
+        'description' => $clients['EventDescription'],
+        'startdate' => $clients['StartDateTime'],
+        'enddate' => $clients['EndDateTime']
+    ];
+}
 }
