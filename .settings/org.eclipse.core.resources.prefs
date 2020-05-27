@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//components/ErrorDialogScreen/ErrorDialogScreen.xml=UTF-8
 encoding//components/HomeScreen/ChannelCategoryItemComponent.xml=UTF-8
+encoding//components/HomeScreen/ChannelEpisodeTask/ChannelEpisodeTask.xml=UTF-8
 encoding//components/HomeScreen/ChannelItemComponent.xml=UTF-8
 encoding//components/HomeScreen/HomeScreen.xml=UTF-8
 encoding//components/LoginScreen/LoginScreen.xml=UTF-8
@@ -9,5 +10,6 @@ encoding//components/ProfileSettingScreen/ProfileItemComponent/ProfileItemCompon
 encoding//components/ProfileSettingScreen/ProfileSettingScreen.xml=UTF-8
 encoding//components/ProfileSettingScreen/ProfileTask/ProfileTask.xml=UTF-8
 encoding//components/ProfileSettingScreen/dialogOptionsItemComponent/dialogOptionsItemComponent.xml=UTF-8
+encoding//components/SearchScreen/ChannelSearchTask/ChannelSearchTask.xml=UTF-8
 encoding//components/SearchScreen/SearchScreen.xml=UTF-8
 encoding/manifest=UTF-8

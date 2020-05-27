@@ -2,5 +2,10 @@
 <component name="SearchScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
 
 	<script type="text/brightscript" uri="pkg:/components/SearchScreen/SearchScreen.brs" />
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+
+  <interface>
+   <field id="exitView" type="boolean" />
+  </interface>
 	
 </component>

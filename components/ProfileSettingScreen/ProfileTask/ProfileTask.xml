@@ -9,5 +9,6 @@
       <field  id="response"  type="roAssociativeArray" /> 
       <field  id="callto"  type="String" /> 
       <field  id="callType"  type="String" /> 
+      <field  id="parameters"  type="roAssociativeArray" /> 
     </interface>
 </component>

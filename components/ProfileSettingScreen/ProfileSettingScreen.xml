@@ -9,7 +9,7 @@
 	<interface>	
 	  <field id="dialog"  type="node"/>
 	  <field id="logout"  type="boolean" alwaysnotify="true"/>
-	  
+	  <field id="exitView"  type="boolean" alwaysnotify="true"/>
 	</interface>
 	
 	<children>

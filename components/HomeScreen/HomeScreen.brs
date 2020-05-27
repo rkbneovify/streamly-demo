@@ -12,10 +12,23 @@ sub init()
     m.Settings = m.top.findNode("Settings")
     m.channelBackgroundposter = m.top.findNode("channelBackgroundposter")
     
+    m.searchPoster = m.top.createChild("Poster")    
+    m.searchPoster.translation= [60,50]
+    m.searchPoster.uri = "pkg:/images/home/searchicon_100.png"
+    m.searchPoster.height = 50
+    m.searchPoster.width = 50
     
+    m.focusPoster = m.searchPoster.createChild("Poster")
+    m.focusPoster.id="focusPoster"
+    m.focusPoster.translation= [-10,-10]
+    m.focusPoster.uri = ""
+    m.focusPoster.height = 60
+    m.focusPoster.width = 75
+          
     m.deviceinfo = createObject("roDeviceInfo")
+  
     if m.deviceinfo.getDisplaySize().w = 1920
-'         m.PosterBackground.uri = "pkg:/images/background_FHD.jpg"     
+'        m.PosterBackground.uri = "pkg:/images/background_FHD.jpg"     
          m.channelBackgroundposter.uri="pkg:/images/homeScreenBckgrnd.png"  
           
     else if m.deviceinfo.getDisplaySize().w = 1280
@@ -26,21 +39,18 @@ sub init()
          m.channelBackgroundposter.uri="pkg:/images/home/homeScreenBckgrndhd.png"  
      
     end if
-    
-    
-    
-    
+      
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
+   
+   'channel ,episode api call '
     
-'    UsernameFont  = CreateObject("roSGNode", "Font") 
-'    UsernameFont.uri = "pkg:/fonts/HelveticaNeueMedium.ttf"
-'    UsernameFont.size = 28
-    
+'    reqApiCAll({"page":1})   
     font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.channelGuide.font = font 
     m.pressbackLabel.font = font
     m.Settings.font = font
     
+   
     initGrigData()
   
     currentTime =  CreateObject("roDateTime")
@@ -49,12 +59,15 @@ sub init()
     m.timeGride.contentStartTime = t
     m.timeGride.leftEdgeTargetTime = currentTime.AsSeconds()
 
+
+
     'content
     content = CreateObject("roSGNode", "ContentNode")
     
     channleNode = content.createChild("ContentNode")
     channleNode.TITLE = "MTV-USA"
     channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
+    
     programNode = channleNode.createChild("ContentNode")  
     programNode.TITLE  = "Justin Beiber concert"
     programNode.PLAYSTART = t  
@@ -305,19 +318,29 @@ sub init()
     m.timeGride.vertFocusAnimationStyle ="fixedFocus"
     
     m.top.observeField("visible","setFocus")
-'    m.video.setFocus(true)
+    m.video.setFocus(true)
 
+
+'    abc
+   
 end sub
 
-sub setFocus()
-?"HomeScreen:setFocus: "
-    if m.top.getScene().visible = true
-      m.video.visible = true
-      m.video.setFocus(true)
-'       playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
-      
-    end if  
+sub reqApiCAll(page)
+
+    m.ChannelEpisodeTask = CreateObject("roSGNode","ChannelEpisodeTask")
+    m.ChannelEpisodeTask.parameters = page
+    m.ChannelEpisodeTask.observeField("ChannelData","ChannelResponseData")
+    
+    m.ChannelEpisodeTask.control = "RUN"
+
 end sub
+sub ChannelResponseData()
+?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
+ m.timeGride.content = m.ChannelEpisodeTask.ChannelData
+    
+end sub
+  
+
 
 function playVideo(url as String) as void
 ?"HomeScreen:playVideo: "
@@ -367,6 +390,7 @@ sub initGrigData()
  marupContent.createChild("ContentNode").TITLE = "KIDS"
 
  m.ChannelCategoryMarkuGrid.content = marupContent
+ m.ChannelCategoryMarkuGrid.setFocus(false)
  
  
 end sub
@@ -393,15 +417,46 @@ sub VideoControl(event as object)
 
 end sub
 
+sub onPofileFinished()
+?"onPofileFinished";
 
+end sub
+
+sub closeSearchScreen(event as object)
+?"closeSearchScreen; "
+  searchScreen = event.getRoSGNode()    
+  exitView = searchScreen.exitView
+  
+    if exitView 
+      m.top.removeChild(searchScreen)
+      m.ChannelCategoryMarkuGrid.setFocus(true)
+      m.focusPoster.uri = "pkg:/images/home/categiryNavFocusIcon.png"
+    end if
+end sub
+ 
 function onKeyEvent(key as String, press as Boolean) as Boolean
-    ?"key: ";key
-    ?"press: ";press
+    ?"HomeScreen::key: ";key
+    ?"HomeScreen::press: ";press
     result = false
     
     if press
-        
-        if m.timeGride.hasFocus() and key="up"
+       
+       if m.searchPoster.hasFocus() and key="OK"
+        m.searchPoster.setFocus(false)
+        m.focusPoster.uri=""
+        SearchScreen = m.top.createChild("SearchScreen")
+        SearchScreen.id ="SearchScreen"
+        SearchScreen.observeField("exitView","closeSearchScreen")
+       else if  m.ChannelCategoryMarkuGrid.hasFocus() and key="left"
+         m.searchPoster.setFocus(true)
+         m.ChannelCategoryMarkuGrid.setFocus(false)
+         m.focusPoster.uri = "pkg:/images/home/categiryNavFocusIcon.png"
+         
+       else if  m.searchPoster.hasFocus() and key="right"
+         m.ChannelCategoryMarkuGrid.setFocus(true)
+         m.searchPoster.setFocus(false)  
+         m.focusPoster.uri=""
+       else if m.timeGride.hasFocus() and key="up"
       
           m.timeGride.setFocus(false)
           m.ChannelCategoryMarkuGrid.setFocus(true)
@@ -421,18 +476,19 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
           m.video.setFocus(true)
          
           result = true        
-        else if m.video.visible=true and key="options" and m.video.state<> "buffering" and m.video.state<> "stopped"
-           ?"HomeSceen:m.video.control:";m.video.state
+        else if m.video.visible=true and key="options" and  m.video.hasFocus() and m.video.state<> "buffering" and m.video.state<> "stopped"
+  
+          ?"HomeSceen:m.video.control:";m.video.state
           m.video.visible=false 
           m.ChannelsGroup.visible = true
-           
-          m.ChannelCategoryMarkuGrid.setFocus(false)
+          m.video.setFocus(false) 
+          m.ChannelCategoryMarkuGrid.setFocus(false)         
           m.timeGride.setFocus(true)
          
           result = true 
-        else if m.video.visible=true and key="play" or key="OK"
+        else if m.video.hasFocus()  and key="play" or key="OK"
           
-          
+           ?"ok pressed fr play video"
           playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8") 
 '          m.video.visible=false 
 '          m.ChannelsGroup.visible = true
@@ -441,13 +497,20 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 '          m.timeGride.setFocus(true)
          
           result = true 
-         else if m.timeGride.hasFocus() = true and key="options" 
+         else if m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()and key="options" 
            ?"HomeSceen:timeGride.control:";
            
-           m.top.openProfileScreen = true
+'           m.top.profileScreen = true
 '          m.ChannelsGroup.visible = true
-         
-           result = true    
+           
+          m.searchPoster.setFocus(false)
+          m.ChannelCategoryMarkuGrid.setFocus(false)
+          m.focusPoster.uri=""
+          ProfileSettingScreen = m.top.createChild("ProfileSettingScreen")
+          ProfileSettingScreen.id ="ProfileSettingScreen"
+          ProfileSettingScreen.observeField("exitView","closeSearchScreen")
+          m.timeGride.setFocus(false)
+          result = true    
         
         end if   
     end if

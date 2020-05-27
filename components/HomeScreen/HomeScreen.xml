@@ -5,6 +5,8 @@
     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
 	<interface>
 	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
+	  <field id="profileScreen" type = "boolean" alwaysnotify="true" />
+	 
 	</interface>
 	<children>
 	 
@@ -13,16 +15,7 @@
       <ExtVideoPlayerUI id="myVideo" width="1920" height="1080" />
             
 	</Group> 
-            
-	<!--  <Poster uri="pkg:/images/homeScreenBckgrnd.png"	 
-             
-             Height="1080"
-             Width="1920"
-            
-             loadWidth = "100"
-             loadHeight = "50"
-             loadDisplayMode = "scaleTofill"
-             /> -->
+
     
       <Group id="ChannelsGroup"
              visible="false">
@@ -39,12 +32,6 @@
                         
      <TimeGrid id="timeGrid"/>
      
-     <Poster
-          uri="pkg:/images/home/searchIcon.png"
-          translation= "[36,40]"
-          height="38"
-          width="38">
-      </Poster>
      
       <Poster
           uri="pkg:/images/home/profileSetting.png"
@@ -71,6 +58,14 @@
             
              translation= "[70,10]"/>
       </Poster>
+      
+      <!-- <Poster
+          id=""
+          uri="pkg:/images/home/searchIcon.png"
+          translation= "[36,40]"
+          height="56"
+          width="56">
+      </Poster>  -->
       
      <MarkupGrid id = "ChannelCategoryMarkuGrid"
                  itemComponentName = "ChannelCategoryItemComponent"

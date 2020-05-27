@@ -7,11 +7,17 @@
     <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
     
-    <children>
+    <!-- script type="text/brightscript" uri="MainScene.brs" />
+    <script type="text/brightscript" uri="SearchViewLogic.brs" />
+    <script type="text/brightscript" uri="LoginViewLogic.brs" />
+    <script type="text/brightscript" uri="TimeGridViewLogic.brs" />
+    <script type="text/brightscript" uri="VideoPlayerLogics.brs" />
+    <script type="text/brightscript" uri="ProfileSettingLogic.brs" /> -->
+    <!--  <children>
     
             <LoginScreen id="LoginScreen"  visible="false"/>
             <HomeScreen id="HomeScreen"    visible="false"/>                        
             <ProfileSettingScreen id="ProfileSettingScreen" visible="false"/>           
             
-    </children>
+    </children>  -->
 </component>

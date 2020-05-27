@@ -1,10 +1,11 @@
 sub init()
-?"login init()"
+  ?"login init()"
     m.SignInLabel = m.top.findNode("SignInLabel")
     m.UsernamEditText = m.top.findNode("UsernamEditText")
     m.PasswordEditText = m.top.findNode("PasswordEditText")
     m.SignInButton = m.top.findNode("SignInButton")
-    
+'     m.UsernamEditText.setFocus(true)
+'    m.screentoOpen = CreateObject("roSGNode", "LoginScreen")
     
     'loader
     m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
@@ -28,36 +29,50 @@ sub init()
     m.KeyboardInput.setFocus(false)
     m.TextField=""
     
-    signInFont  = CreateObject("roSGNode", "Font") 
-    signInFont.uri = "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf"
-    m.SignInLabel.text = "Sign In"
-    signInFont.size = 44    
+    signInFont  = getFont(44,"pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
+    m.SignInLabel.text = "Sign In"   
     m.SignInLabel.font = signInFont
-    
-    
+      
     m.UsernamLable = m.top.findNode("UsernamLable")
     m.PasswordLable = m.top.findNode("PasswordLable")
     
     m.UsernamLable.text = "Username"
     m.PasswordLable.text = "Password"
         
-    UsernameFont  = CreateObject("roSGNode", "Font") 
-    UsernameFont.uri = "pkg:/fonts/HelveticaNeueMedium.ttf"
-    UsernameFont.size = 24
-    
+    UsernameFont  = getFont(24,"pkg:/fonts/HelveticaNeueMedium.ttf") 
     m.UsernamLable.font = UsernameFont
     m.PasswordLable.font = UsernameFont
     
-    m.top.observeField("visible","visibility")
+'    m.top.observeField("visible","visibility")
     
+'    m.viewThatHasFocus = m.top.findNode("viewThatHasFocus")
+'    m.top.observeField("focusedChild","OnFocusChildChange")
+'    m.top.ObserveField("wasShown", "OnViewWasShown")
+    m.UsernamEditText.setFocus(true)
+    
+'    m.PasswordEditText.setFocus(true)
+'     m.SignInButton.setFocus(true) 
 end sub
-sub visibility()
-?"visibility: "
-if m.top.visible
-   m.UsernamEditText.setFocus(true)
-   onTextBoxActive(true)
-end if
-end sub
+
+'sub OnFocusChildChange()
+' ?"OnFocusChildChange" 
+'' m.UsernamEditText.setFocus(true) 
+'   
+''m.PasswordEditText.setFocus(true)
+'
+'    if m.top.isInFocusChain() and not m.UsernamEditText.hasFocus()  then
+'       ?"OnFocusChildChange: if" 
+'       m.UsernamEditText.setFocus(true)
+'       onTextBoxActive("username")
+''    else if m.top.isInFocusChain() and not m.PasswordEditText.hasFocus() then
+''       ?"OnFocusChildChange: else" 
+'''       m.UsernamEditText.setFocus(true)   
+''       m.PasswordEditText.setFocus(true)
+'       
+'    end if
+'    
+'end sub
+
 
 sub LoginValidation()
  ?"LoginValidation: ";
@@ -157,7 +172,6 @@ end sub
 sub showspinner(event as object)
 ?"showspinner:event : ";event
 
-
       if(event.getData() = true)
         
         centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
@@ -179,8 +193,6 @@ sub showspinner(event as object)
       
 end sub
 
-
-
 sub showdialog(title as String,message as string , optionsDialog as boolean,buttons as object,onserveField as object)
       
       ?"showDialog: message: ";message
@@ -196,8 +208,7 @@ sub showdialog(title as String,message as string , optionsDialog as boolean,butt
     
       m.dialog.titleFont = titleFont
 '      m.dialog.iconUri=""
-      
-      
+           
        m.dialog.titleColor = "#004E92"  
        m.dialog. messageColor = "#000000"
        m.dialog.dividerUri = "pkg:/images/Login/horizontal_line80.png"
@@ -225,14 +236,10 @@ sub showdialog(title as String,message as string , optionsDialog as boolean,butt
          
 '      m.dialog.graphicWidth = 300
 '      m.dialog.graphicHeight = 300
-
-    
   end if
      
     if onserveField <> "" then
-    
-       
-       
+          
        if message <> "" m.dialog.message = "   "+message
        
        m.dialog.observeField("buttonSelected","dialogButtonResponse")
@@ -250,7 +257,9 @@ sub closeDialog()
  ?"closeDialog true"
  
  if m.loginsuccess = true
-    m.top.visible = false
+    'm.top.visible = false
+      LoginScreen = CreateObject("roSGNode", "LoginScreen")
+      m.LoginScreen.close = true
  end if
  
  m.dialog.close=true
@@ -286,14 +295,24 @@ sub FieldText(event as object)
  end if
 end sub
 
-function onTextBoxActive( event as boolean ) as void
+function onTextBoxActive( field as string) as void
 
-  isActive =  event
-
-  if ( isActive )
+'  isActive =  event
+m.TextField=""
+  if field="username"
+  
     m.UsernamPoster.Uri = "pkg:/images/Login/borderof.png"
-  else
+    m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png"
+    m.TextField = "UsernamEditText"
+    
+        
+  else if field="password"
     m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
+    m.PasswordPoster.Uri = "pkg:/images/Login/borderof.png"
+    m.TextField="PasswordEditText"
+  else
+     m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"  
+     m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png" 
   end if
 
 end function
@@ -325,34 +344,25 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
   result = false
   if press
     if key="down" 
- 
-        
+            
        ?"Login: if: "
      
       if m.PasswordEditText.hasFocus()
        ?"SignInButton: true"
-'       m.PasswordEditText.active=false
        m.PasswordEditText.setFocus(false)
        
        m.SignInButton.setFocus(true)
-       onTextBoxActive(false)
-       onTextBoxActives(false) 
-       m.UsernamEditText.active=false
-       m.PasswordEditText.active=false   
+       onTextBoxActive("")      
        return true
      else if m.UsernamEditText.hasFocus() 
       
        ?"PasswordEditText: true"
        m.UsernamEditText.setFocus(false)
-'       m.UsernamEditText.active=false
 
-'       m.PasswordEditText.active=true
-      
        m.PasswordEditText.setFocus(true)
-       onTextBoxActives(true)
-       onTextBoxActive(false)
-       m.UsernamEditText.active=false
-       m.PasswordEditText.active=false
+      
+       onTextBoxActive("password")
+
        return true 
     end if
   
@@ -361,85 +371,81 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
        
       if m.PasswordEditText.hasFocus()
      
-        ?"PasswordEditText: true"
-       m.UsernamEditText.setFocus(true)
-      
-       m.UsernamEditText.active=false
-       m.PasswordEditText.active=false
-      
+        ?"UsernamEditText: true"
       
        m.PasswordEditText.setFocus(false)
-       onTextBoxActive(true)
-       onTextBoxActives(false)
-       m.UsernamEditText.active=false
-       m.PasswordEditText.active=false
+       m.UsernamEditText.setFocus(true)
+       onTextBoxActive("username")
+
        return true
-      else   if m.SignInButton.hasFocus() 
-              
+      else  if m.SignInButton.hasFocus() 
+       ?"PasswordEditText: true"       
        m.SignInButton.setFocus(false)
        m.PasswordEditText.setFocus(true)
-'       m.PasswordEditText.active=true
-       onTextBoxActives(true)
-       onTextBoxActive(false)
-       
-       m.UsernamEditText.active = false
-       m.PasswordEditText.active = false
+       onTextBoxActive("password")
         
       return true
             
-  else if ( m.TextField="UsernamEditText" or m.TextField="PasswordEditText") and key="up" 
+  else if   m.TextField = "UsernamEditText" or m.TextField="PasswordEditText" and key="up" 
+      ?"keyboard close"
+       m.KeyboardPoster.visible = false
+       m.KeyboardInput.setFocus(false)
+       m.UsernamEditText.active=false
+       m.PasswordEditText.active=false
+'      m.TextField = ""
      
       if  m.TextField="UsernamEditText"
-        m.KeyboardPoster.visible = false
-        m.KeyboardInput.setFocus(false)
-        m.TextField=""
+
         m.UsernamEditText.setFocus(true)
+      
+      else if m.TextField="PasswordEditText"
         
-        m.UsernamEditText.active = false
-        m.PasswordEditText.active = false
-       else if m.TextField="PasswordEditText"
-         m.KeyboardPoster.visible = false
-         m.KeyboardInput.setFocus(false)
-         m.TextField=""
          m.PasswordEditText.setFocus(true)
-         
-         m.UsernamEditText.active = false
-         m.PasswordEditText.active = false
+
        end if 
+        
       return true      
      end if
    end if 
-   
-   
-  else if m.UsernamEditText.hasFocus() and key="OK"
+  
+ else if m.UsernamEditText.hasFocus() and key="OK"
+     
+     ?"keyboard open for email field"
+           
+'      m.UsernamEditText.active = false
+'      m.PasswordEditText.active=false
       
-      m.TextField="UsernamEditText"
-      m.UsernamEditText.setFocus(false)
-      
+'      m.TextField="UsernamEditText"
+      m.UsernamEditText.setFocus(false)      
       m.UsernamEditText.active=true
-      m.PasswordEditText.active=false
+       onTextBoxActive("username")
       m.KeyboardInput.textEditBox.text = m.UsernamEditText.text
       m.KeyboardInput.textEditBox.cursorPosition = (m.UsernamEditText.text).Len()
       m.UsernamEditText.cursorPosition = (m.UsernamEditText.text).Len()
       m.KeyboardPoster.visible = true
       m.KeyboardInput.setFocus(true)
-      
+ 
+      return true
+ 
+ 
   else if m.PasswordEditText.hasFocus() and key = "OK"
-  
-      m.TextField="PasswordEditText"
+      
+      ?"keyboard open for password field"
+'      m.TextField="PasswordEditText"
       m.PasswordEditText.setFocus(false)
+      onTextBoxActive("password")
       
       m.PasswordEditText.active = true
-      m.UsernamEditText.active = false
       
       m.KeyboardInput.textEditBox.text = m.PasswordEditText.text
-      m.KeyboardInput.textEditBox.cursorPosition = (m.PasswordEditText.text).Len()
-      
+      m.KeyboardInput.textEditBox.cursorPosition = (m.PasswordEditText.text).Len()     
       m.PasswordEditText.cursorPosition = (m.PasswordEditText.text).Len()
+      
       m.KeyboardPoster.visible = true
       m.KeyboardInput.setFocus(true)
-  
-  else    
+ 
+     return true
+   
   end if   
     return result 
 end function

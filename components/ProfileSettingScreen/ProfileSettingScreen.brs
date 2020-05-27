@@ -2,7 +2,7 @@ sub init()
 
  m.ProfileCategory = m.top.findNode("ProfileCategory")
  m.Dialog = m.top.findNode("Dialog")
- 
+' m.ProfileSettingScreen = CreateObject("roSGNode", "ProfileSettingScreen")
  
  'dialog
  m.dialogbackgndUri = m.top.findNode("dialogbackgndUri")
@@ -54,13 +54,25 @@ sub init()
  
  initMrkupWithData()
  
- m.top.observeField("visible","setfocus")
- 
+' m.top.observeField("visible","setfocus")
+ m.top.observeField("focusedChild","OnFocusChildChange")
+ m.ProfileCategory.setFocus(true)   
 end sub
 
 sub textTranslate()
   m.logoutText.text = tr("Are you sure you want to logout from this device?")
 end sub
+  
+
+sub OnFocusChildChange()
+  ?"Pr0file focus"
+'    if m.top.isInFocusChain() and not m.ProfileCategory.hasFocus() then
+'        ?"Pr0file focus true"
+       m.ProfileCategory.setFocus(true)
+'    end if
+    
+end sub
+
 
 sub logoutApiCall()
 ?"ProfileSetting::logoutApiCall"
@@ -99,6 +111,10 @@ sub closeDialog()
     
          
 end sub
+
+
+
+
 
 sub initMrkupWithData()
 ?"ProfileSetting:MarkuGrid:init()"
@@ -212,20 +228,22 @@ sub responseAPI(event as object)
          m.logout = true
         showDialogError(true , responseData.message, "Ok") 
     else if m.ProfileTask.callto = "Registered Devices" 
-       ConnectedDevices = responseData.message 
-       ?"Profile::responseData.message:";responseData.message
+       ConnectedDevices = responseData.data 
+       ?"Profile::responseData.message:";responseData.data
       
-'        for each data  in ConnectedDevices.Keys()
-'        ?"data: "data
-'        ?"userData[data]: "userData[data]
-'        count = 0
-'        if userData[data] <> invalid        
-'            assoArray = createObject("roAssociativeArray")    
-'            assoArray[count+". "+data] =   userData[data]          
-'            marupContent.createChild("ContentNode").addFields(assoArray)
-'        end if
-'      end for
-'        showDialogError(true , responseData.message, "Ok")                
+        for each data  in ConnectedDevices
+        ?"data: "data
+        ?"userData[data]: ";data["device_id"] ;data["device_name"]
+        count = 0
+        if data["device_id"] <> invalid and  data["device_name"] <> invalid      
+            assoArray = createObject("roAssociativeArray")    
+            assoArray[count+". "+data["device_name"]] =   data["device_id"]         
+            marupContent.createChild("ContentNode").addFields(assoArray)
+        end if
+      end for
+        m.dialogOptions.content = marupContent
+         showDialog("Registered Devices",true,false)
+        showDialogError(true , responseData.message, "Ok")                
     end if
  else
    ?"error dialog to show the error:";responseData
@@ -252,7 +270,7 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
         m.logoutView.visible = show
         m.Dialog.visible = show
         
-     else if dialogView = "Account"
+     else if dialogView = "Account" or dialogView = "Registered Devices"
         
         m.dialogbackgndUri.width = 1223
         m.dialogbackgndUri.height = 724
@@ -270,12 +288,12 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
  
 end sub
  
-sub setfocus()
-  ?"ProfileScreen: m.top.visible ";m.top.visible
-  if m.top.visible  = true
-    m.ProfileCategory.setFocus(true)
-  end if 
-end sub 
+'sub setfocus()
+'  ?"ProfileScreen: m.top.visible ";m.top.visible
+'  if m.top.visible  = true
+'    m.ProfileCategory.setFocus(true)
+'  end if 
+'end sub 
 sub showspinner(event as object)
 ?"ProfileSetting::showspinner:event : ";event
 
@@ -333,14 +351,15 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
        m.ErrorDialogView.visible =false
        m.top.logout = true
        m.logout = false
-    
+        return true
     else  if m.YesButton.hasFocus() and key = "left"
         m.YesButton.setFocus(false)   
         m.NoButton.setFocus(true)
-         
+         return true
      else if m.NoButton.hasFocus() and key = "right"
         m.NoButton.setFocus(false)   
-        m.YesButton.setFocus(true)    
+        m.YesButton.setFocus(true) 
+        return true   
      else if (m.NoButton.hasFocus() or m.YesButton.hasFocus() or m.ok.hasFocus() ) and key = "back" 
         
         m.ok.setFocus(false)
@@ -350,9 +369,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         
         showDialog("",false,true)
         return true
-     else if m.ProfileCategory.hasFocus() and key = "back" 
-      m.top.visible = false
-      return true
+     
      end if 
     end if    
 end function     

@@ -6,65 +6,10 @@ end Sub
 Sub LogAPI() 
 
 
-     jsonResponse = APICall(getBaseUrl()+loginUrl(), m.top.callType ,m.top.data) 
+     jsonResponse = APICall(getBaseUrl()+loginUrl(), m.top.callType ,m.top.data,m.top.headerData,{}) 
      ?"LoginTask: ";jsonResponse 
      m.top.response = jsonResponse
-   
-'     
-'    url= getBaseUrl()+loginUrl()
-'    ?"login::url: ";url
-'    requestforLogin = CreateObject("roUrlTransfer")
-'    requestforLogin.SetUrl(url)
-'    requestforLogin.addHeader("Content-Type","application/x-www-form-urlencoded")
-''    url.addHeader("Content-Type","application/json")
-'    requestforLogin.setCertificatesFile("common:/certs/ca-bundle.crt")
-'    requestforLogin.initClientCertificates()
-'    requestforLogin.enableEncodings(true)
-'    requestforLogin.RetainBodyOnError(true)
-'    
-'    requestforLogin.SetRequest("POST")
-'    port = CreateObject("roMessagePort")
-'    requestforLogin.setMessagePort(port)
-'
-'
-'
-'    if requestforLogin.AsyncPostFromString(m.top.data)
-'       while true
-'         msg = wait(0, port)
-'         if type(msg) = "roUrlEvent"
-'          
-'          code = msg.GetResponseCode()
-'          if code = 200 or code = 201 or code = 202 or code = 203 or code = 204
-'            responsejson = ParseJson(msg.GetString())
-'            ?"requestforLogin: responsejson: ";responsejson
-'            
-'            if responsejson.success =true
-'              
-'              m.top.response = responsejson
-'            else
-'              error={} 
-'              error["success"] = false
-'              error["msg"] = responsejson.msg
-'              m.top.response = error
-'            end if
-'            
-'           
-'          
-'          else
-'           ?"GetResponseCode: ";msg.GetResponseCode()
-'           ?"GetFailureReason: ";msg.GetFailureReason()
-'           error={} 
-'           error["success"] = false
-'           error["responseCode"] = msg.GetResponseCode()
-'           error["message"] = msg.GetFailureReason()
-'           
-'           m.top.response = error
-'          end if
-'          
-'            exit while 
-'        end if
-'       end while        
-'    end if     
+     
 
 end sub 
 

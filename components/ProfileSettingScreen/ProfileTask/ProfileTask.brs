@@ -9,31 +9,36 @@ sub getProfile()
    
     m.top.data={}
     ?"m.top.callto: ";m.top.callto
+    ?"m.top.data: ";m.top.data
+    ?"m.top.parameters: ";m.top.parameters
+    ?"m.top.callType: ";m.top.callType
+    
+    
  
   if  m.top.callto = "Account"
-     
-        jsonResponse = APICall(getBaseUrl()+profileUrl(), m.top.callType ,m.top.data)     
+      
+        jsonResponse = APICall(getBaseUrl()+profileUrl(), m.top.callType ,m.top.data,m.top.parameters)     
         ?"getProfile: jsonResponse: ";jsonResponse
-        m.top.response = jsonResponse
+        m.top.response = jsonResponse    
   
   else if m.top.callto = "Registered Devices"
-  
-         jsonResponse = APICall(getBaseUrl()+connectedDeviceUrl(), m.top.callType ,m.top.data)
+         ?"getProfile:url req.:";getBaseUrl()+connectedDeviceUrl()
+         jsonResponse = APICall(getBaseUrl()+connectedDeviceUrl(), m.top.callType ,m.top.data,m.top.parameters)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse 
   else if m.top.callto = "Support"
   
-         jsonResponse = APICall("", m.top.callType ,m.top.data)       
+         jsonResponse = APICall("", m.top.callType ,m.top.data, m.top.parameters)       
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   else if m.top.callto = "Privacy & Policy"
   
-         jsonResponse = APICall("", m.top.callType ,m.top.data)
+         jsonResponse = APICall("", m.top.callType ,m.top.data,m.top.parameters)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   else if m.top.callto = "Sign out"
 '         m.top.response = jsonResponse
-         jsonResponse = APICall(getBaseUrl()+logoutUrl(), m.top.callType ,m.top.data)
+         jsonResponse = APICall(getBaseUrl()+logoutUrl(), m.top.callType ,m.top.data,m.top.parameters)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   end if   
