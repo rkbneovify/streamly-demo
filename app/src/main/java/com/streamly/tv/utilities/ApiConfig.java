@@ -6,12 +6,7 @@ public class ApiConfig {
         throw new IllegalStateException("Utility class");
     }
 
-
-
-    public static final String WEB_URL="https://1d40c858.ngrok.io";
-
+    public static final String WEB_URL="https://ac3a8022.ngrok.io";
     public static final String BASE_URL=WEB_URL+"/api/auth/";
-
-
 
 }

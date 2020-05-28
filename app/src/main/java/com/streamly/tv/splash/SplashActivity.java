@@ -21,9 +21,9 @@ public class SplashActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         NetworkUtils network = new NetworkUtils(getApplicationContext());
-        network.registerNetworkCallback();
+//        network.registerNetworkCallback();
 
-        TokenStorage.clearSharedToken(SplashActivity.this);
+//        TokenStorage.clearSharedToken(SplashActivity.this);
         auth_token = TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null);
         new Handler().postDelayed(new Runnable() {
             @Override

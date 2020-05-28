@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import com.streamly.tv.databinding.ActivityLogInBinding;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.retrofit_clients.ApiClient;
 import com.streamly.tv.retrofit_clients.ApiInterface;
+import com.streamly.tv.splash.SplashActivity;
 import com.streamly.tv.utilities.ApiConfig;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
@@ -41,7 +43,7 @@ public class LogInActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                if (ConstantUtility.isNetworkConnected){
+//                if (ConstantUtility.isNetworkConnected){
                     if (logInBinding.edUserName.getText().toString().matches("")){
                         CommonUtility.showToast(LogInActivity.this,ConstantUtility.FILL_EMAIL);
 
@@ -52,12 +54,25 @@ public class LogInActivity extends FragmentActivity {
                         CommonUtility.showToast(LogInActivity.this,ConstantUtility.FILL_PASSWORD);
 
                     }else {
-                        signInCall();
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                                startActivity(new Intent(LogInActivity.this, ChannelActivity.class));
+                                finish();
+
+                                logInBinding.edUserName.setText("");
+                                logInBinding.edPassword.setText("");
+
+                            }
+                        },3000);
+//                        signInCall();
                     }
 
-                }else {
-                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.CHECK_INTERNET_CONNECTION);
-                }
+//                }else {
+//                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.CHECK_INTERNET_CONNECTION);
+//                }
             }
         });
 

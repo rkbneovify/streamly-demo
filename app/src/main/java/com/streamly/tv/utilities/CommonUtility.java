@@ -5,7 +5,6 @@ import android.content.Context;
 import android.widget.Toast;
 import com.streamly.tv.R;
 
-
 public class CommonUtility {
     public static final String TAG=CommonUtility.class.getSimpleName();
 
@@ -26,7 +25,7 @@ public class CommonUtility {
             //todo when Internet has Connected
         }else{
             // when internet do not Connected
-            Toast.makeText(context, ConstantUtility.CHECK_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context, ConstantUtility.CHECK_INTERNET_CONNECTION, Toast.LENGTH_SHORT).show();
         }
     }
 

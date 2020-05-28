@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_330sdp"
+    android:layout_height="@dimen/_150sdp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:paddingLeft="@dimen/_12sdp"
+    android:paddingRight="@dimen/_12sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    android:background="@drawable/white_transparent">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/support_text"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_8ssp"
+            android:textAlignment="center"
+            android:padding="@dimen/_8sdp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/number_one"
+                android:textColor="@color/md_white_1000"
+                android:textSize="@dimen/_8ssp"
+                android:textAlignment="center"
+                android:padding="@dimen/_8sdp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/number_two"
+        android:textColor="@color/md_white_1000"
+        android:textSize="@dimen/_8ssp"
+        android:textAlignment="center"
+        android:padding="@dimen/_8sdp"/>
+
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:background="@drawable/signin_background"
+        android:text="@string/ok"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/_7ssp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:padding="@dimen/_2sdp" />
+
+</LinearLayout>

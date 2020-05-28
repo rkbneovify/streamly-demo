@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_330sdp"
+    android:layout_height="@dimen/_120sdp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:paddingLeft="@dimen/_12sdp"
+    android:paddingRight="@dimen/_12sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    android:background="@drawable/white_transparent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:text="@string/privacy_right"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_7ssp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:background="@drawable/white_border"/>
+
+
+        <Button
+            android:layout_width="@dimen/_130sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:text="@string/policy"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_7ssp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:background="@drawable/white_border"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:background="@drawable/signin_background"
+        android:text="@string/ok"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/_7ssp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:padding="@dimen/_2sdp" />
+
+</LinearLayout>

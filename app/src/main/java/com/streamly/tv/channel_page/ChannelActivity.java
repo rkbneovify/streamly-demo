@@ -2,23 +2,13 @@ package com.streamly.tv.channel_page;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import androidx.databinding.DataBindingUtil;
 import com.streamly.tv.R;
 import com.streamly.tv.databinding.ActivityChannelBinding;
 import com.streamly.tv.local_storage.TokenStorage;
-import com.streamly.tv.log_in.LogInActivity;
-import com.streamly.tv.log_in.LogInModel;
-import com.streamly.tv.retrofit_clients.ApiClient;
-import com.streamly.tv.retrofit_clients.ApiInterface;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChannelActivity extends Activity {
     private static final String TAG = ChannelActivity.class.getSimpleName();
@@ -35,16 +25,10 @@ public class ChannelActivity extends Activity {
 
         auth_token = TokenStorage.readSharedToken(ChannelActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
-        channelBinding.logOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logOutCall();
-            }
-        });
 
     }
 
-    private void logOutCall() {
+    /*private void logOutCall() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
         Call<LogInModel> call=apiInterface.postLogOutCall("Bearer "+auth_token,"application/json");
@@ -79,5 +63,5 @@ public class ChannelActivity extends Activity {
                 dialog.dismiss();
             }
         });
-    }
+    }*/
 }
