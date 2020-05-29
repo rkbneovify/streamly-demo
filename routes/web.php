@@ -90,3 +90,4 @@ Route::get('/logout', 'HomeController@logout')->name('logout');
 Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google.login');
 
 Route::get('/google/login', 'HomeController@handleGoogleCallback');
+Route::post('/user/register', 'HomeController@createUser');
