@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
 use App\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -36,6 +38,36 @@ class HomeController extends Controller
         }
 
         return view('frontend.home', compact('login'));
+    }
+
+    public function createUser(Request $request){
+
+        $attributeNames = array(
+           'user-email' => 'Email',
+           'user-password' => 'Password',
+           'name' => 'Name',
+           'zip_code' => 'Zip Code',
+        );
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'user-email' => 'required|string|email|max:255|unique:users,email',
+            'user-password' => 'required|string|min:8',
+            'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
+        ], [], $attributeNames);
+
+        /*if ( $validatedData->fails() ) {
+            return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
+        }*/
+
+        $User = User::create([
+            'name' => $request['name'],
+            'email' => $request['user-email'],
+            'password' => Hash::make($request['user-password']),
+            'zip_code' => $request['zip_code'],
+        ]);
+
+        return redirect()->back()->with('message', 'Your account has been successfully registered!');
     }
 
     public function logout()
