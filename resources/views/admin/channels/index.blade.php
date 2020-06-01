@@ -63,6 +63,9 @@
                       </th>
                       
                       <th style="width: 20%">
+                        image
+                        </th>
+                      <th style="width: 20%">
                       Action
                       </th>
                   </tr>
@@ -99,7 +102,9 @@ $(function() {
             { data: 'name', name: 'name',orderable: true },
             { data: 'url', name: 'url' },
             { data: 'fullName', name: 'fullName' ,searchable: true},
+            
             { data: 'status', name: 'status' ,orderable:false},
+            { data: 'photo', name: 'photo',orderable: false, searchable: false },
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
         columnDefs: [

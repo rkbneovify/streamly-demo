@@ -45,8 +45,8 @@ protected $appends = ['logo'];
     }
 
     public function getLogoAttribute($size=null)
-{ $destinationPath = public_path('/uploads/channellogo');
-    $imagePath = $destinationPath. "/".  $this->image;
+{ 
+    $imagePath=asset("/uploads/channellogo/".$this->image);
    return $imagePath;
 }
 
