@@ -18,7 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/admin', 'Admin\AdminController@index');
-Route::get('/', 'HomeController@index')->name('welcome');
+Route::get('/', 'HomeController@index')->name('home');
 
 
 
@@ -83,3 +83,11 @@ Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
     
 
 });
+
+
+
+Route::get('/logout', 'HomeController@logout')->name('logout');
+Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google.login');
+
+Route::get('/google/login', 'HomeController@handleGoogleCallback');
+Route::post('/user/register', 'HomeController@createUser');
