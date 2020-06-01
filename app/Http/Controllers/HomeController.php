@@ -3,9 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Socialite;
+use App\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
+
+    private $user;
+
     /**
      * Create a new controller instance.
      *
@@ -23,8 +31,81 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('frontend.home');
+        if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+
+        return view('frontend.home', compact('login'));
     }
 
-    
+    public function createUser(Request $request){
+
+        $attributeNames = array(
+           'user-email' => 'Email',
+           'user-password' => 'Password',
+           'name' => 'Name',
+           'zip_code' => 'Zip Code',
+        );
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'user-email' => 'required|string|email|max:255|unique:users,email',
+            'user-password' => 'required|string|min:8',
+            'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
+        ], [], $attributeNames);
+
+        /*if ( $validatedData->fails() ) {
+            return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
+        }*/
+
+        $User = User::create([
+            'name' => $request['name'],
+            'email' => $request['user-email'],
+            'password' => Hash::make($request['user-password']),
+            'zip_code' => $request['zip_code'],
+        ]);
+
+        return redirect()->back()->with('message', 'Your account has been successfully registered!');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('home');
+    }
+
+    public function rediretToGoogleLogin(){
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+        } catch (\Exception $e) {
+            return redirect()->route('login');
+        }
+
+        $existingUser = User::where('email', $user->getEmail())->first();
+
+        if ($existingUser) {
+            auth()->login($existingUser, true);
+        } else {
+            $newUser                    = new User;
+            $newUser->provider_name     = 'google';
+            $newUser->provider_id       = $user->getId();
+            $newUser->name              = $user->getName();
+            $newUser->email             = $user->getEmail();
+            $newUser->email_verified_at = now();
+            $newUser->avatar            = $user->getAvatar();
+            $newUser->save();
+
+            auth()->login($newUser, true);
+        }
+
+        return redirect('/');
+    }
+
 }

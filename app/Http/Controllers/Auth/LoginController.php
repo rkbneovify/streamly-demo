@@ -27,14 +27,15 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/admin';
     protected function redirectTo()
-    {  $u=Auth::user();
+    {  
+        $u=Auth::user();
         $userRole= $u->roles->pluck('name');
          
-        if ($userRole[0]== 'admin'||$userRole[0]== 'superadmin') {
+        if( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
             return '/admin';
         } else{
-        return '/';
-    }
+            return '/';
+        }
     }
 
     /**

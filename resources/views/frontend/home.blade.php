@@ -39,6 +39,10 @@
             width: 34%;
         }
 
+        #mySidenavRegister.show{
+            width: 34%;
+        }
+
         @media only screen and (max-height: 450px) {
             .sidenav {padding-top: 15px;}
         }
@@ -51,10 +55,29 @@
             #mySidenav.show{width:50%;}
         }
 
+        .alert.alert-position {
+            position: absolute;
+            width: 100%;
+            z-index: 1040;
+        }
     </style>
 @endsection
 
 @section('content')
+    
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> {{$errors->first()}}
+        </div>
+    @endif
+
+    @if(session()->has('message'))
+        <div class="alert alert-success alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ session()->get('message') }}
+        </div>
+    @endif
 
 	<!-- Masthead-->
 	<header class="masthead">
@@ -74,7 +97,7 @@
         <div class="container" style="padding: 0px 50px;">
             <div class="row mt-4">
                 <h4 class="login_txt">Log In</h4>    
-                <form class="login-form mt-3">
+                <form action="login" method="post" class="login-form mt-3">
                     <div class="form-group">
                         <label for="email" class="control-label">Email</label>
                         <input type="email" id="email" name="email" class="form-control">
@@ -95,7 +118,7 @@
                         <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
                     </div>
 
-                    <span>Don't have an account?</span> <a href="javascript:void(0)" style="padding: 0;">Start you trial now</a>
+                    <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a>
 
                     <div class="mt-4">
                         <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
@@ -104,9 +127,60 @@
                     </div>
 
                     <div class="form-group mt-4 text-center">
-                        <a class="btn btn-sm google-btn"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                        <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                    </div>
+                    {!! csrf_field() !!}
+                </form>
+            </div>
+            
+        </div>
+
+    </div>
+
+    <div id="mySidenavRegister" class="sidenav">
+
+        <div style="width: 100%;height: 5%;">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNavReg()">&times;</a>
+        </div>
+
+        <div class="container" style="padding: 0px 50px;">
+            <div class="row mt-4">
+                <h4 class="login_txt">Create Your Account</h4>    
+                <form action="user/register" method="post" class="login-form mt-3">
+                    <div class="form-group">
+                        <label for="name" class="control-label">Name</label>
+                        <input type="text" id="name" name="name" class="form-control">
                     </div>
 
+                    <div class="form-group">
+                        <label for="email" class="control-label">Email</label>
+                        <input type="email" id="user-email" name="user-email" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" id="user-password" name="user-password" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="zip-code" class="control-label">Home zip code</label>
+                        <input type="text" id="zip-code" name="zip_code" class="form-control">
+                    </div>
+
+                    <span class="remove-p-a-r">By clicking “REGISTER” you agree to the Streamly <br />
+                        <a href="">Terms of Use</a>
+                        <span>and</span>
+                        <a href="">Privacy Policy</a>
+                        <span>.</span>
+                    </span>
+
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-lg login-btn">REGISTER</button>
+                    </div>
+
+                    <span>Already have an account?</span> <a href="javascript:void(0)" onclick="openNav(event);"style="padding: 0;">Log in</a>
+
+                    {!! csrf_field() !!}
                 </form>
             </div>
             
@@ -137,7 +211,7 @@
 
                 		</ul>
 
-                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" href="#services">SELECT PLAN</a>
+                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" onclick="openNavReg()" href="javascript:void(0);">SELECT PLAN</a>
                 	</div>
                 </div>
             </div>
@@ -180,8 +254,15 @@
     <script>
         function openNav(event) {
             event.preventDefault();
+            closeNavReg();
             // document.getElementById("mySidenav").style.width = "34%";
             document.getElementById("mySidenav").classList.add("show");
+        }
+
+        function openNavReg() {
+            closeNav();
+            // document.getElementById("mySidenav").style.width = "34%";
+            document.getElementById("mySidenavRegister").classList.add("show");
         }
 
         function closeNav() {
@@ -189,5 +270,19 @@
             // document.getElementById("mySidenav").style.width = "0";
             document.getElementById("mySidenav").classList.remove("show");
         }
+
+        function logoutUser() {
+            window.location.href = '/logout';
+        }
+
+        function closeNavReg() {
+            document.getElementById("mySidenavRegister").classList.remove("show");
+        }
+
+        window.setTimeout(function() {
+            $(".alert-position").slideUp(500, function() {
+                $(this).remove();
+            });
+        }, 3000);
     </script>
 @endsection
