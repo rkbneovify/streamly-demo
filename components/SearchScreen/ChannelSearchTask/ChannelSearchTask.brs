@@ -12,8 +12,7 @@ sub getChannel()
         m.top.data ={}
         m.top.headerData={}
         jsonResponse = APICall(getBaseUrl()+getchannelSearchUrl(), m.top.callType ,m.top.data,m.top.parameters)     
-        ?"getProfile: jsonResponse: ";jsonResponse
+        ?"getSearch Result Task: jsonResponse: ";jsonResponse
         m.top.response = jsonResponse 
-        
-       
+    
  end sub       

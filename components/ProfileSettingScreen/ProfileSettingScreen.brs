@@ -64,14 +64,14 @@ sub textTranslate()
 end sub
   
 
-sub OnFocusChildChange()
-  ?"Pr0file focus"
-'    if m.top.isInFocusChain() and not m.ProfileCategory.hasFocus() then
-'        ?"Pr0file focus true"
-       m.ProfileCategory.setFocus(true)
-'    end if
-    
-end sub
+'sub OnFocusChildChange()
+'  ?"Pr0file focus"
+''    if m.top.isInFocusChain() and not m.ProfileCategory.hasFocus() then
+''        ?"Pr0file focus true"
+'       m.ProfileCategory.setFocus(true)
+''    end if
+'    
+'end sub
 
 
 sub logoutApiCall()
@@ -92,6 +92,7 @@ m.buttonClick.unobserveField("buttonSelected")
        m.logout = false
        m.buttonClick.setFocus(false)
        m.ErrorDialogView.visible = false
+       
        m.top.logout = true
     
     end if
@@ -148,12 +149,12 @@ sub initMrkupWithData()
 sub initDialogMrkupWithData(event as object)
 ?"ProfileSetting::MarkuGrid:init(): event pos: ";event.getData()
   
-    m.ProfileCategory.setFocus(false)
+   
     
 '
     
  if  event.getData() = 0
-     
+      m.ProfileCategory.setFocus(false)
      ApiCallFor("Account","GET")
      
 ' m.ProfileTask.control = "RUN" 'Run the task node    
@@ -162,6 +163,7 @@ sub initDialogMrkupWithData(event as object)
      
 '     m.ProfileTask.setField("callType","GET")
 '     m.ProfileTask.setField("callFor","Registered Devices")
+      m.ProfileCategory.setFocus(false)
       ApiCallFor("Registered Devices","GET")
  else if event.getData() = 2
     
@@ -174,6 +176,7 @@ sub initDialogMrkupWithData(event as object)
 '    m.ProfileTask.setField("callFor","Privacy & Policy")
     
  else if event.getData() = 4 'Logout api call 
+     m.ProfileCategory.setFocus(false)
      m.YesButton.setFocus(true)
      showDialog("Sign out",true,false)
  end if
@@ -201,12 +204,12 @@ sub responseAPI(event as object)
   
   m.LoginBusySpinner.visible=false
   m.ProfileTask.control = "STOP"
-  m.ProfileCategory.setFocus(true)
+'  m.ProfileCategory.setFocus(true)
  if responseData.response_code = true
     
     if m.ProfileTask.callto = "Account" 
    
-      m.ok.setFocus(true) 
+     
       marupContent = createObject("roSGNode", "ContentNode")
    
       userData = responseData.data
@@ -215,7 +218,7 @@ sub responseAPI(event as object)
         ?"userData[data]: "userData[data]
         if userData[data] <> invalid        
            assoArray = createObject("roAssociativeArray")    
-           assoArray[data+":"] =   userData[data]          
+           assoArray[data+":"] =   userData[data].ToStr()          
            marupContent.createChild("ContentNode").addFields(assoArray)
         end if
       end for
@@ -226,24 +229,30 @@ sub responseAPI(event as object)
        ?"Profile::responseData.message:";responseData.message
         setAccountToken("")
          m.logout = true
-        showDialogError(true , responseData.message, "Ok") 
+         m.top.logout = true
+'        showDialogError(true , responseData.message, "Ok") 
     else if m.ProfileTask.callto = "Registered Devices" 
        ConnectedDevices = responseData.data 
        ?"Profile::responseData.message:";responseData.data
-      
+        marupContent = createObject("roSGNode", "ContentNode")
+        count = 1
         for each data  in ConnectedDevices
         ?"data: "data
         ?"userData[data]: ";data["device_id"] ;data["device_name"]
-        count = 0
+        
         if data["device_id"] <> invalid and  data["device_name"] <> invalid      
-            assoArray = createObject("roAssociativeArray")    
-            assoArray[count+". "+data["device_name"]] =   data["device_id"]         
+            assoArray = createObject("roAssociativeArray")
+            key = count.ToStr()+". "+(data["device_name"].ToStr())
+            assoArray[key] =   data["device_id"].ToStr()         
             marupContent.createChild("ContentNode").addFields(assoArray)
+           count=count+1
         end if
+        
       end for
         m.dialogOptions.content = marupContent
+'        m.dialogOptions.content = marupContent
          showDialog("Registered Devices",true,false)
-        showDialogError(true , responseData.message, "Ok")                
+'        showDialogError(true , responseData.message, "Ok")                
     end if
  else
    ?"error dialog to show the error:";responseData
@@ -277,7 +286,7 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
         
         m.profileView.visible = show
         m.Dialog.visible = show
-     
+        m.ok.setFocus(true) 
      else if dialogView = ""
      
      end if
@@ -321,6 +330,7 @@ end sub
  
  
  
+ 
 sub showDialogError(visible as boolean , text as String, buttontext as String)
 ?"ProfileSetting::showDialogError"
  if visible then
@@ -332,6 +342,7 @@ sub showDialogError(visible as boolean , text as String, buttontext as String)
     m.ErrorDialogView.visible = visible
     m.buttonClick.setFocus(visible)
     m.buttonClick.text = buttontext
+'    m.buttonClick.getCh
     m.buttonClick.observeField("buttonSelected","closeScreen")
    
  else 
@@ -347,11 +358,13 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if press
     
       if m.buttonClick.hasFocus() and m.logout = true and key = "back"
+       
        m.buttonClick.setFocus(false)
        m.ErrorDialogView.visible =false
        m.top.logout = true
        m.logout = false
-        return true
+       
+       return true
     else  if m.YesButton.hasFocus() and key = "left"
         m.YesButton.setFocus(false)   
         m.NoButton.setFocus(true)
@@ -369,6 +382,9 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         
         showDialog("",false,true)
         return true
+     else if key="back"
+       m.top.exitView = true
+            
      
      end if 
     end if    

@@ -24,6 +24,8 @@ sub init()
     m.focusPoster.uri = ""
     m.focusPoster.height = 60
     m.focusPoster.width = 75
+    
+    m.searchPoster.visible =false
           
     m.deviceinfo = createObject("roDeviceInfo")
   
@@ -298,6 +300,7 @@ sub init()
     m.timeGride.channelInfoComponentName="ChannelItemComponent"
   
     m.timeGride.observeField("programSelected","programSelected")
+    m.timeGride.observeField("programFocused","programFocus")
                 
     m.timeGride.programHorizMargin = 24
 '    m.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
@@ -319,12 +322,52 @@ sub init()
     
     m.top.observeField("visible","setFocus")
     m.video.setFocus(true)
-
-
-'    abc
-   
+    m.totalcount = 8
 end sub
 
+sub programFocus(event as object)
+?"programFocus:";event.getRoSGNode().content.getChildCount()
+'?"event.getRoSGNode().content.getChild( m.totalcount).id.ToInt() :";event.getRoSGNode().content.getChild( m.totalcount)
+'?"event.getRoSGNode().content.getChild( m.totalcount) ::node :";event.getRoSGNode().content.getChild( m.totalcount)
+?"event.getRoSGNode().content.getChildCount()-1 :";event.getRoSGNode().content.getChildCount()
+?"m.totalcount; ";m.totalcount
+'
+' if event.getRoSGNode().content.getChild( event.getRoSGNode().content.getChildCount() ) = invalid
+'    
+'    ?"m.totalcount; ";event.getRoSGNode().content.getChildCount()    
+'    TestingTAsk = createObject("roSGNode", "TestingTAsk")
+'    
+'    channleNode = event.getRoSGNode().content.createChild("ContentNode")
+'    channleNode.id = event.getRoSGNode().content.getChildCount()-1
+'    channleNode.TITLE = "Abba chaba dabba"
+'    channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
+'    m.totalcount=  event.getRoSGNode().content.getChildCount()
+'    
+'    TestingTAsk.id = event.getRoSGNode().content.getChildCount()-1 
+'    TestingTAsk.observeField("data","showResponse")
+'    
+'    
+'    TestingTAsk.control ="RUN"
+'    end if    
+end sub
+ 
+sub showResponse(event as object)
+?"testing ::showResponse; ";event.getData()
+
+event.getRoSGNode().control="stop"    
+
+   content = m.timeGride.content
+   channleNode = content.getChild(event.getData().ToInt())
+   currentTime =  CreateObject("roDateTime")
+    t = currentTime.AsSeconds()
+    t = t - (t mod 1800)
+    programNode = channleNode.createChild("ContentNode")  
+    programNode.TITLE  = "Justin Beiber concert"
+    programNode.PLAYSTART = t  
+    programNode.PLAYDURATION = 3000
+    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"   
+end sub
+  
 sub reqApiCAll(page)
 
     m.ChannelEpisodeTask = CreateObject("roSGNode","ChannelEpisodeTask")
@@ -340,14 +383,12 @@ sub ChannelResponseData()
     
 end sub
   
-
-
 function playVideo(url as String) as void
 ?"HomeScreen:playVideo: "
     vidContent = createObject("RoSGNode", "ContentNode")
     vidContent.url = url
     vidContent.streamformat = "HLS"
-
+    m.searchPoster.visible =false
     m.video.enableUI = false
     m.video.content = vidContent
     m.video.setFocus(true)
@@ -390,10 +431,15 @@ sub initGrigData()
  marupContent.createChild("ContentNode").TITLE = "KIDS"
 
  m.ChannelCategoryMarkuGrid.content = marupContent
+ m.ChannelCategoryMarkuGrid.observeField("itemSelected","categorySelcted")
  m.ChannelCategoryMarkuGrid.setFocus(false)
  
- 
 end sub
+sub categorySelcted(event as object)
+?"categorySelcted: ";event.getData()
+    
+end sub
+ 
 sub programSelected(event as object)
  
  timeGrid = event.GetRoSGNode()
@@ -405,7 +451,7 @@ sub programSelected(event as object)
 
  m.ChannelsGroup.visible = false
  m.video.visible=true
- m.video.setFocus(true) 
+' m.video.setFocus(true) 
 playVideo(url)
 end sub
 
@@ -429,24 +475,66 @@ sub closeSearchScreen(event as object)
   
     if exitView 
       m.top.removeChild(searchScreen)
-      m.ChannelCategoryMarkuGrid.setFocus(true)
+      m.searchPoster.setFocus(true)
+      m.ChannelCategoryMarkuGrid.setFocus(false)
       m.focusPoster.uri = "pkg:/images/home/categiryNavFocusIcon.png"
     end if
 end sub
+
+sub closeProfileScreen(event as object)
+?"closeProfileScreen; "
+  searchScreen = event.getRoSGNode()    
+  exitView = searchScreen.exitView
+  
+    if exitView 
+      m.top.removeChild(searchScreen)
+      m.searchPoster.setFocus(false)
+      m.ChannelCategoryMarkuGrid.setFocus(false)
+       m.timeGride.setFocus(true)
+      m.focusPoster.uri = ""
+    end if
+end sub
+sub showLoginPage(event as object)
+?"showLoginPage"
+  searchScreen = event.getRoSGNode()    
+  m.top.removeChild(searchScreen)
+   
+m.top.ExitView =true    
+end sub
+
+sub playSearchChannelUrl(event as object)
+?"playSearchChannelUrl:";event.getData() 
+
+  searchScreen = event.getRoSGNode()
+  m.top.removeChild(searchScreen)    
+  
+  m.ChannelsGroup.visible = false
+  m.video.visible=true
+  playVideo(searchScreen.playChannel) 
+    
+end sub
+    
+ 
  
 function onKeyEvent(key as String, press as Boolean) as Boolean
     ?"HomeScreen::key: ";key
     ?"HomeScreen::press: ";press
+    ?" m.video.hasFocus() "; m.video.hasFocus()
+   
     result = false
     
     if press
-       
-       if m.searchPoster.hasFocus() and key="OK"
+      if m.searchPoster.hasFocus() and key="down"
+         m.searchPoster.setFocus(false)
+         m.focusPoster.uri=""
+         m.timeGride.setFocus(true)
+      else if m.searchPoster.hasFocus() and key="OK"
         m.searchPoster.setFocus(false)
         m.focusPoster.uri=""
         SearchScreen = m.top.createChild("SearchScreen")
         SearchScreen.id ="SearchScreen"
         SearchScreen.observeField("exitView","closeSearchScreen")
+        SearchScreen.observeField("playChannel","playSearchChannelUrl")
        else if  m.ChannelCategoryMarkuGrid.hasFocus() and key="left"
          m.searchPoster.setFocus(true)
          m.ChannelCategoryMarkuGrid.setFocus(false)
@@ -460,25 +548,30 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
       
           m.timeGride.setFocus(false)
           m.ChannelCategoryMarkuGrid.setFocus(true)
-          
+          m.video.setFocus(false) 
           result = true
           
         else if m.ChannelCategoryMarkuGrid.hasFocus() and key="down"
            
           m.ChannelCategoryMarkuGrid.setFocus(false)
+          m.video.setFocus(false) 
           m.timeGride.setFocus(true)
           result = true
         
         else if m.ChannelsGroup.visible=true and key="back"
           
           m.ChannelsGroup.visible = false
+          m.timeGride.setFocus(false)
+          m.ChannelCategoryMarkuGrid.setFocus(false)
+          
           m.video.visible=true
           m.video.setFocus(true)
-         
+          m.searchPoster.visible =false
           result = true        
         else if m.video.visible=true and key="options" and  m.video.hasFocus() and m.video.state<> "buffering" and m.video.state<> "stopped"
   
-          ?"HomeSceen:m.video.control:";m.video.state
+          ?"HomeSceen:open channel view";
+          m.searchPoster.visible =true
           m.video.visible=false 
           m.ChannelsGroup.visible = true
           m.video.setFocus(false) 
@@ -486,10 +579,12 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
           m.timeGride.setFocus(true)
          
           result = true 
-        else if m.video.hasFocus()  and key="play" or key="OK"
+        else if m.video.hasFocus()  and (key="play" or key="OK")
           
            ?"ok pressed fr play video"
-          playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8") 
+          
+          playVideo("http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8") 
+'          playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8") 
 '          m.video.visible=false 
 '          m.ChannelsGroup.visible = true
 '           
@@ -497,8 +592,8 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 '          m.timeGride.setFocus(true)
          
           result = true 
-         else if m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()and key="options" 
-           ?"HomeSceen:timeGride.control:";
+         else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key="options" 
+           ?"HomeSceen:open profile setting view";
            
 '           m.top.profileScreen = true
 '          m.ChannelsGroup.visible = true
@@ -506,13 +601,17 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
           m.searchPoster.setFocus(false)
           m.ChannelCategoryMarkuGrid.setFocus(false)
           m.focusPoster.uri=""
+          m.timeGride.setFocus(false)
+          
           ProfileSettingScreen = m.top.createChild("ProfileSettingScreen")
           ProfileSettingScreen.id ="ProfileSettingScreen"
-          ProfileSettingScreen.observeField("exitView","closeSearchScreen")
-          m.timeGride.setFocus(false)
+          ProfileSettingScreen.observeField("exitView","closeProfileScreen")
+          ProfileSettingScreen.observeField("logout","showLoginPage")
+          
           result = true    
         
-        end if   
+        end if  
+        return result  
     end if
         
     return result 

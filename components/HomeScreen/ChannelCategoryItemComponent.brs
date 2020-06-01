@@ -8,7 +8,8 @@ sub init()
              
 end sub
 
-    sub showcontent()               
+    sub showcontent()
+'       m.focus.opacity =0.0               
        m.labelName.text = m.top.itemContent.title
        
        movieTitlerect =   m.labelName.boundingRect()
@@ -37,21 +38,22 @@ end sub
     End Sub
 sub showfocus()
      
-    ?"showfocus:";m.top.focusPercent
-    ' scale = 1 + (m.top.focusPercent * 0.08)
-'    if m.top.focusPercent>.5
-      m.focus.opacity = m.top.focusPercent           
-'    end if
+'    ?"showfocus:";m.top.focusPercent
+'    ' scale = 1 + (m.top.focusPercent * 0.08)
+''    if m.top.focusPercent<.5
+'     
+'      m.focus.opacity = m.top.focusPercent           
+''    end if
 end sub
 
 sub setfcous()
 ?"itemHasFocus"
 if m.top.itemHasFocus =false
 m.focus.visible=m.top.itemHasFocus
+m.focus.opacity = 0
 else if m.top.itemHasFocus =true
 m.focus.visible=m.top.itemHasFocus
-
-
+ m.focus.opacity = 1
 end if
   
 end sub

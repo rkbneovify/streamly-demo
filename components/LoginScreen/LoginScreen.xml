@@ -3,8 +3,15 @@
 
 	<script type="text/brightscript" uri="pkg:/components/LoginScreen/LoginScreen.brs" />
     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
-    
+        
+     <interface>	
+	   <field id="ExitView" type="boolean" alwaysNotify="true"/>
+	   <field id="dialog" type="node" alwaysNotify="true"/>
+	  
+	</interface>
+	
 <children>
+        
 	  <Poster  id="LoginBackgroundImage"
 	           height="1080"
 	           width="1920"
@@ -42,9 +49,7 @@
 	                 translation= "[127,40]"
 	                 height="53"
 	                 width="0"
-	                 color="#004E92"
-	                 
-	      
+	                 color="#004E92"	      
 	          />
 	         
 	          <Label
@@ -66,7 +71,7 @@
 	          
 	             <TextEditBox
 	                 id = "UsernamEditText"
-	                 text = "aspire@gmail.com"
+	                 text = ""
 	                 translation = "[35,30]"	                 
 	                 width = "585"
 	                 textColor="#0A0A0A"
@@ -92,7 +97,7 @@
 	              <TextEditBox
 	               
 	                 id = "PasswordEditText"
-	                 text = "123456789"
+	                 text = ""
 	                 translation = "[35,30]"
 	                 secureMode="true"
 	                 width = "585"
@@ -101,6 +106,13 @@
 	                 clearOnDownKey="false"                        
 	              />
 	          </Poster>
+	        <!--   <CheckList id="rememberCheckList">
+	          <ContentNode role = "content" >
+        <ContentNode title = "Remember me"/>
+        <ContentNode title = "Renderable "/>
+        
+      </ContentNode>
+	          </CheckList> -->
 	          <Button 
 	                 id="SignInButton"
 	                 
@@ -146,13 +158,7 @@
 	 
 	    		id = "LoginBusySpinner" 
 		    	visible = "false"
-			  />   
-			 
-	  
-	             
-			 
-			        
-	  
+			  />    
 	            	
 	</children>
 </component>
