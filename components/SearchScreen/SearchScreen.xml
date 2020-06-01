@@ -6,6 +6,7 @@
 
   <interface>
    <field id="exitView" type="boolean" />
+   <field id="playChannel" type="String" />
   </interface>
 	
 </component>

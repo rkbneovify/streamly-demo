@@ -4,8 +4,6 @@ sub init()
     m.UsernamEditText = m.top.findNode("UsernamEditText")
     m.PasswordEditText = m.top.findNode("PasswordEditText")
     m.SignInButton = m.top.findNode("SignInButton")
-'     m.UsernamEditText.setFocus(true)
-'    m.screentoOpen = CreateObject("roSGNode", "LoginScreen")
     
     'loader
     m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
@@ -42,36 +40,94 @@ sub init()
     UsernameFont  = getFont(24,"pkg:/fonts/HelveticaNeueMedium.ttf") 
     m.UsernamLable.font = UsernameFont
     m.PasswordLable.font = UsernameFont
+
+    rememberMe()
+    dontHaveAccount()
+
+    m.top.observeField("focusedChild","OnFocusChildChange")
+
+    m.setFocus=false
+
+end sub
+sub dontHaveAccount()
+
+    m.layoutGroup = m.top.createChild("LayoutGroup")
+    m.layoutGroup.itemSpacings = 25
+    m.layoutGroup.layoutDirection ="horiz"
+'    m.layoutGroup.translation =[700,900]
+'   m.layoutGroup.vertAlignment = "center"
+'   m.layoutGroup.horizAlignment = "left"
+     
+    m.dontHaveAccountLAbel = m.top.createChild("Label")
+    m.dontHaveAccountLAbel.text ="Don't have acount ?"
+    m.dontHaveAccountLAbel.translation =[760,900]
+    m.dontHaveAccountLAbel.color = "#000000"
+    m.dontHaveAccountLAbel.Font= getFont(26,"pkg:/fonts/HelveticaNeueMedium.ttf") 
     
-'    m.top.observeField("visible","visibility")
-    
-'    m.viewThatHasFocus = m.top.findNode("viewThatHasFocus")
-'    m.top.observeField("focusedChild","OnFocusChildChange")
-'    m.top.ObserveField("wasShown", "OnViewWasShown")
-    m.UsernamEditText.setFocus(true)
-    
-'    m.PasswordEditText.setFocus(true)
-'     m.SignInButton.setFocus(true) 
+    m.registerNowLabel = m.dontHaveAccountLAbel.createChild("LabelList")
+    m.registerNowLabel.color="#004E92"
+    m.registerNowLabel.focusedColor="#0db5ba"
+    m.registerNowLabel.Font= getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+    m.registerNowLabel.focusedFont = getFont(30,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+    m.registerNowLabel.translation =[250,0]
+    m.registerNowLabel.itemSize=[200,35]
+    m.registerNowLabel.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
+    m.registerNowLabel.focusBitmapUri = ""
+    checklistNode = createObject("roSGNode", "ContentNode") 
+    contentNode = checklistNode.createChild("ContentNode")
+    contentNode.Title = "Register now"
+    m.registerNowLabel.content =  checklistNode 
+end sub
+ 
+sub rememberMe()
+       
+     m.remenberCheckList =  m.top.createChild("CheckList")
+     m.remenberCheckList.translation =[650,680]
+     m.remenberCheckList.itemSize=[300,50]
+     m.remenberCheckList.checkedIconUri = "pkg:/images/checked_icon_30.png"
+     m.remenberCheckList.uncheckedIconUri = "pkg:/images/unchecked_icon_30.png"
+     m.remenberCheckList.focusedCheckedIconUri = "pkg:/images/checked_icon_30.png"
+     m.remenberCheckList.focusedUncheckedIconUri = "pkg:/images/unchecked_icon_30.png"
+     m.remenberCheckList.focusBitmapUri = ""
+     m.remenberCheckList.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
+     m.remenberCheckList.color="#000000"
+     m.remenberCheckList.focusedColor="#0db5ba"
+     m.remenberCheckList.Font= getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+     m.remenberCheckList.focusedFont = getFont(30,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+     checklistNode = createObject("roSGNode", "ContentNode") 
+     contentNode = checklistNode.createChild("ContentNode")
+     contentNode.Title = "Remember me"
+     m.remenberCheckList.content =  checklistNode 
+     m.remenberCheckList.ObserveField("checkedState", "remeberMeUpdate")
+     
+     if getUserName() <> Invalid and getUserPassword()  <> Invalid  and getUserName() <> "" and getUserPassword() <> ""
+       
+         m.rememberFlag = true
+          
+         m.remenberCheckList.checkedState = [ m.rememberFlag ]
+         
+         m.UsernamEditText.text =  getUserName()
+         m.PasswordEditText.text = getUserPassword()   
+     else      
+         m.rememberFlag = false 
+     end if
+   
+     
 end sub
 
-'sub OnFocusChildChange()
-' ?"OnFocusChildChange" 
-'' m.UsernamEditText.setFocus(true) 
-'   
-''m.PasswordEditText.setFocus(true)
-'
-'    if m.top.isInFocusChain() and not m.UsernamEditText.hasFocus()  then
-'       ?"OnFocusChildChange: if" 
-'       m.UsernamEditText.setFocus(true)
-'       onTextBoxActive("username")
-''    else if m.top.isInFocusChain() and not m.PasswordEditText.hasFocus() then
-''       ?"OnFocusChildChange: else" 
-'''       m.UsernamEditText.setFocus(true)   
-''       m.PasswordEditText.setFocus(true)
-'       
-'    end if
-'    
-'end sub
+sub remeberMeUpdate(event as object)
+?"remeberMeUpdate: ";event.getData()[0]
+    m.rememberFlag = event.getData()[0]
+end sub
+
+sub OnFocusChildChange()
+ ?"OnFocusChildChange" 
+ if m.top.hasFocus() and not m.UsernamEditText.hasFocus()  and  m.setFocus=false
+    m.UsernamEditText.setFocus(true) 
+    m.setFocus=true
+ end if
+ 
+end sub
 
 
 sub LoginValidation()
@@ -84,6 +140,16 @@ sub LoginValidation()
            if m.PasswordEditText.text <>""
                
                if Len((m.PasswordEditText.text)) < 11
+                   
+                  if  m.rememberFlag then
+                    
+                    setUserName(m.UsernamEditText.text)
+                    setUserPassword(m.PasswordEditText.text)
+                  else
+                    setUserName("")
+                    setUserPassword("")
+                  end if
+                   
                    LoginProcess()
                else
                    showdialog("Error ","Password length should not grater than 10",true,"","")     
@@ -130,7 +196,7 @@ sub LoginProcess()
     m.LoginTask.callType = "POST" 
 '   data =  "email="+email+"&password="+password+deviceid
     ?"data: ";data
-    m.LoginTask.data = data
+   m.LoginTask.data = data
    m.LoginTask.control = "RUN"
    m.LoginTask.observeField("response","LoginResponse")
 
@@ -169,6 +235,7 @@ sub dialogButtonResponse()
    end if
 
 end sub
+
 sub showspinner(event as object)
 ?"showspinner:event : ";event
 
@@ -258,8 +325,11 @@ sub closeDialog()
  
  if m.loginsuccess = true
     'm.top.visible = false
-      LoginScreen = CreateObject("roSGNode", "LoginScreen")
-      m.LoginScreen.close = true
+    
+      
+      m.top.ExitView = true
+'      LoginScreen = CreateObject("roSGNode", "LoginScreen")
+'      m.LoginScreen.close = true
  end if
  
  m.dialog.close=true
@@ -267,15 +337,10 @@ end sub
 
 sub cursorPosition(event as object)
 ?"cursorPosition: event: ";event.getData()
-
-  if  m.TextField="UsernamEditText" 
-          
+  if  m.TextField="UsernamEditText"           
            m.UsernamEditText.cursorPosition =  event.getData()
-  
-  else if  m.TextField="PasswordEditText"
-         
-           m.PasswordEditText.cursorPosition = event.getData()
-  
+  else if  m.TextField="PasswordEditText"         
+           m.PasswordEditText.cursorPosition = event.getData() 
   end if
 end sub
 
@@ -286,10 +351,9 @@ sub FieldText(event as object)
        m.PasswordEditText.active=true
        m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition
  else if m.TextField="UsernamEditText"
- 
+  
        m.UsernamEditText.text = event.getData()
-       m.UsernamEditText.active=true
-       
+       m.UsernamEditText.active=true       
        m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition
  
  end if
@@ -304,8 +368,7 @@ m.TextField=""
     m.UsernamPoster.Uri = "pkg:/images/Login/borderof.png"
     m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png"
     m.TextField = "UsernamEditText"
-    
-        
+            
   else if field="password"
     m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
     m.PasswordPoster.Uri = "pkg:/images/Login/borderof.png"
@@ -317,8 +380,7 @@ m.TextField=""
 
 end function
 
-function IsValidEmail(email as String) as Boolean
-    
+function IsValidEmail(email as String) as Boolean   
     regexEmail = "^[A-Za-z0-9_%+-]+(\.[A-Za-z0-9_%+-]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$"
     return CreateObject("roRegex", regexEmail, "i").IsMatch(email)
 end function
@@ -346,14 +408,28 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     if key="down" 
             
        ?"Login: if: "
+    
+     if m.SignInButton.hasFocus() then
+       
+       m.SignInButton.setFocus(false)
+       m.registerNowLabel.setFocus(true)
+       
+     else if m.PasswordEditText.hasFocus()
      
-      if m.PasswordEditText.hasFocus()
-       ?"SignInButton: true"
-       m.PasswordEditText.setFocus(false)
+      m.PasswordEditText.setFocus(false)  
+      m.remenberCheckList.setFocus(true)
+      onTextBoxActive("")
+      return true
+     else if  m.remenberCheckList.hasFocus()
+         
+         ?"SignInButton: true"
+       m.remenberCheckList.setFocus(false)
        
        m.SignInButton.setFocus(true)
-       onTextBoxActive("")      
+             
        return true
+        
+     
      else if m.UsernamEditText.hasFocus() 
       
        ?"PasswordEditText: true"
@@ -369,7 +445,12 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     else if  key="up"
      ?"Login: else: "
        
-      if m.PasswordEditText.hasFocus()
+     if m.registerNowLabel.hasFocus() then
+       
+       m.registerNowLabel.setFocus(false) 
+       m.SignInButton.setFocus(true)     
+       
+     else if m.PasswordEditText.hasFocus()
      
         ?"UsernamEditText: true"
       
@@ -378,13 +459,19 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
        onTextBoxActive("username")
 
        return true
-      else  if m.SignInButton.hasFocus() 
-       ?"PasswordEditText: true"       
-       m.SignInButton.setFocus(false)
-       m.PasswordEditText.setFocus(true)
-       onTextBoxActive("password")
+      else if  m.remenberCheckList.hasFocus()
         
-      return true
+        m.remenberCheckList.setFocus(false)
+        m.PasswordEditText.setFocus(true)
+        onTextBoxActive("password")       
+        return true
+        
+      else  if m.SignInButton.hasFocus() 
+       
+       ?"remenberCheckList: true"         
+       m.remenberCheckList.setFocus(true)       
+       m.SignInButton.setFocus(false)             
+       return true
             
   else if   m.TextField = "UsernamEditText" or m.TextField="PasswordEditText" and key="up" 
       ?"keyboard close"

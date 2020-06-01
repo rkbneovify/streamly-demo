@@ -8,6 +8,27 @@ Function setAccountToken(accountToken as String) as dynamic
   sec.Write("accountToken",accountToken)
 end Function
 
+Function getUserName() as dynamic
+ sec = CreateObject("roRegistrySection", "Authentication")
+ return sec.Read("UserName")
+end Function
+
+Function setUserName(userName as String) as dynamic
+  sec = CreateObject("roRegistrySection", "Authentication")
+  sec.Write("UserName",userName)
+end Function
+
+
+Function getUserPassword() as dynamic
+ sec = CreateObject("roRegistrySection", "Authentication")
+ return sec.Read("UserPassword")
+end Function
+
+Function setUserPassword(UserPassword as String) as dynamic
+  sec = CreateObject("roRegistrySection", "Authentication")
+  sec.Write("UserPassword",UserPassword)
+end Function
+
 
 Function getFont(fontSize as integer, fontUri as string) as object
 
@@ -22,14 +43,6 @@ Function APICall(url as string, callType as String ,data as object,parameters as
 ?"APICall:"
     requestObject = CreateObject("roUrlTransfer")
     
-'    ?"parameters: ";parameters
-'   if headerData <> invalid and headerData.Keys() >0
-'    
-'    for each header in headerData
-'      requestObject.addHeader(header,headerData[header])
-'    end for
-    
-'   end if
    urlParameters=""
    if parameters<>invalid and parameters.Count()>0
    
@@ -163,6 +176,7 @@ Function getDeviceInfo() as object
  ?"getDeviceInfo"
  return createObject("roDeviceInfo")
 end Function
+
 
 
 
