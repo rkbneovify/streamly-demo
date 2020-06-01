@@ -10623,3 +10623,11 @@ footer.footer ul li {
 .google-btn span{
   vertical-align: middle;
 }
+
+.remove-p-a-r a{
+  padding-left: 0;
+}
+
+span.remove-p-a-r {
+  font-size: 13px;
+}
