@@ -293,8 +293,9 @@ $record  = Gracenote::select("CallSign","StationName","image")
         return response()->json($response, 404);
     }    
     //  return response()->json($record->toSql());
-    $destinationPath = public_path('/uploads/channellogo');
-    $imagePath = $destinationPath. "/".  $record->value('image');
+    // $destinationPath = public_path('/uploads/channellogo');
+    // $imagePath = $destinationPath. "/".  $record->value('image');
+    $imagePath=asset("/uploads/channellogo/".$record->value('image'));
         $response = [
             'success' => true,
             'date'=>date("Y-m-d"),
@@ -333,7 +334,17 @@ $record  = Gracenote::select("CallSign","StationName","image")
         ->addColumn('action', function($row) {
             return '<a href="/admin/channelstatus/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
-      //  >rawColumns(['fullName', 'action'])
+        ->editColumn('photo', function ($row) {
+            if ($row->image!='') {
+                $url=asset("/uploads/channellogo/$row->image");
+                return  '<a href="'.$url.'" target="_blank"><img src='.$url.' width="50px" height="50px"></a>';
+                
+                  
+            }
+
+            return '';
+        })
+      ->rawColumns(['photo', 'action'])
         ->make(true);
     }
 
