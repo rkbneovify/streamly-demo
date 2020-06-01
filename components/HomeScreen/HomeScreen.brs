@@ -348,12 +348,17 @@ sub programFocus(event as object)
 '    
 '    
 '    TestingTAsk.control ="RUN"
+
 '    end if 
    
+
+'    end if    
+
 end sub
  
 sub showResponse(event as object)
 ?"testing ::showResponse; ";event.getData()
+
 
 event.getRoSGNode().control="stop"    
 
