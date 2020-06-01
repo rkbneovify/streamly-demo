@@ -10,13 +10,14 @@ use App\Models\Gracenotechannel;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+//use App\Traits\ImageUpload;
 /**
  * Description of ChannelController
  *
  */
 
 class ChannelController extends Controller
-{
+{    //use ImageUpload; //Using our created Trait to access inside trait method
        /**
      * Display a listing of the resource.
      *
@@ -32,9 +33,7 @@ class ChannelController extends Controller
     
     public function channeljson() 
     {   
-                
-        $record = DB::table('channels')
-        ->select('channels.id', 'channels.callSign','channels.genres', 'channels.url',DB::raw('GROUP_CONCAT(g.name) genrename'))
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url',DB::raw('GROUP_CONCAT(g.name) genrename'))
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
         ->whereIn('channels.callSign', function($query)
     {
@@ -122,7 +121,9 @@ class ChannelController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+          ]);
         
         $input = $request->only('name', 'genre_id', 'url','status');
         $model=new Channel;
@@ -131,6 +132,27 @@ class ChannelController extends Controller
             $input['genres'] = $break_value;
         
         }
+
+
+    //     $model->image = $request->image;
+    //     if($model->image){
+    //        try {
+    //         $filePath = $this->UserImageUpload($model->image); //Passing $data->image as parameter to our created method
+    //         $model->image = $filePath;
+           
+
+    //    } catch (Exception $e) {
+    //        //Write your error message here
+    //    }
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = $request->name.'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/channellogo');
+            $imagePath = $destinationPath. "/".  $name;
+            $image->move($destinationPath, $name);
+            $model->image = $name;
+          }
         
         $model->fill($input);
 
@@ -142,7 +164,8 @@ class ChannelController extends Controller
                 return redirect('admin/channelstatus')->with('info','Some error occured');
         
             }
-    } /**
+    } 
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  Edit  $request
@@ -172,7 +195,8 @@ class ChannelController extends Controller
         $request->validate([
             'name'=>'required',
             'url'=>'required',
-            'genre_id'=>'required'
+            'genre_id'=>'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $input = $request->only('name', 'url', 'genre_id');
         if ($request->has('toggleswitch')) {
@@ -189,11 +213,20 @@ class ChannelController extends Controller
             $input['genres'] = $break_value;
         
         }
+
+        
     //            $allpost= $request->post();
     //    dd($input);  //get all the post data
         
         $model = Channel::find($id);
-        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = $request->name.'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads/channellogo');
+            $imagePath = $destinationPath. "/".  $name;
+            $image->move($destinationPath, $name);
+            $model->image = $name;
+          }
        // dd($input);exit;
         if(!$model){
             return redirect('admin/channelstatus')->with('info','Channel with id ' . $id . ' cannot be found.'); 
@@ -229,15 +262,50 @@ class ChannelController extends Controller
 
     public function channelschedulejson(){
         
-        $search = '2020-05-14';
+       // $search = date("Y-m-d");
         $callsign = request()->get('search');
-         $record  = Gracenote::where([
-    ['CallSign', '=', $callsign],
-    ['StartDateTime', 'LIKE', "%{$search}%"],
-     ])->get();
-         
-        return response()->json($record);
-        // SELECT * FROM `gracenote` WHERE `CallSign`= 'COMEDYP' AND `StartDateTime` LIKE '%2020-05-14%' ORDER BY `StartDateTime` ASC
+    //      $record  = Gracenote::where([
+    // ['CallSign', '=', $callsign],
+    // ['StartDateTime', 'LIKE', "%{$search}%"],
+    //  ]);
+     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select("CallSign","StationName","image")
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->fromSub(function ($query) {
+    $callsign = request()->get('search');
+    $query->select('gracenote.*','channels.image')
+    ->from('gracenote')
+    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(CURDATE(), ' 23:59:59'), '%Y-%m-%d %H:%i:%s')  AND (gracenote.`CallSign`='".$callsign."')")
+    ->orderBy('gracenote.StartDateTime', 'asc');
+}, 'sub')
+
+->orderBy('CallSign', 'asc')
+->groupBy('CallSign','StationName','image');
+     $reco=$record->get();   
+     if ($reco->isEmpty()) {
+        $response = [
+            'success' => false,
+            'data' => 'Empty',
+            'message' => 'Channel not found.',
+            'response_code'=>404,
+        ];
+        return response()->json($response, 404);
+    }    
+    //  return response()->json($record->toSql());
+    $destinationPath = public_path('/uploads/channellogo');
+    $imagePath = $destinationPath. "/".  $record->value('image');
+        $response = [
+            'success' => true,
+            'date'=>date("Y-m-d"),
+            'logo'=>$imagePath,
+            'data' => $reco,
+           
+            'message' => 'Channel found',
+            'response_code'=>200,
+        ];
+        // return response()->json($reco);
+        return response()->json($response, 200);
     }
 
     public function channelData()
@@ -296,7 +364,7 @@ $record  = Gracenote::select("CallSign","StationName")
     $query->select('gracenote.*')
     ->from('gracenote')
     ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw('gracenote.`StartDateTime` BETWEEN "2020-05-20 00:00:00" AND DATE_ADD("2020-05-20 00:00:00", INTERVAL 7 DAY)')
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')
     ->orderBy('gracenote.StartDateTime', 'asc');
 }, 'sub')
 
@@ -312,10 +380,30 @@ $record  = Gracenote::select("CallSign","StationName")
 //     GROUP BY CallSign,StationName
 // ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
     
-$api=$record->get();
+$reco=$record->get();   
+     if ($reco->isEmpty()) {
+        $response = [
+            'success' => false,
+            'data' => 'Empty',
+            'message' => 'Channel not found.',
+            'response_code'=>404,
+        ];
+        return response()->json($response, 404);
+    }  
         // return response()->json($record->toSql());
         // return json_encode($api);
-    return response()->json($api, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+
+        $response = [
+            'success' => true,
+            'date'=>date("Y-m-d"),
+            'data' => $reco,
+           
+            'message' => 'Schedule data for 7 days found',
+            'response_code'=>200,
+        ];
+        // return response()->json($reco);
+       
+    return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
     //  return  response()->json([
     //     'clients' => $this->transformClientCollection($api)
     //  ], 200);

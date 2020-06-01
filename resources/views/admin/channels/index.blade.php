@@ -96,7 +96,7 @@ $(function() {
     
         columns: [
             { data: 'id', name: 'id' },
-            { data: 'name', name: 'name' },
+            { data: 'name', name: 'name',orderable: true },
             { data: 'url', name: 'url' },
             { data: 'fullName', name: 'fullName' ,searchable: true},
             { data: 'status', name: 'status' ,orderable:false},
