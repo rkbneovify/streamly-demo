@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1004.1 433.1"
+	 style="enable-background:new 0 0 1004.1 433.1;" xml:space="preserve">
+<style type="text/css">
+	.st0{clip-path:url(#SVGID_2_);}
+</style>
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="447" width="1004.1" x="0" y="-6.9"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path d="M117.1,329.4V0H0v365c0,37.6,30.5,68.1,68.1,68.1h49h140.2V329.4H117.1z"/>
+<polygon points="889.9,0 889.9,226 715.3,0 715.3,433.1 730.2,433.1 730.2,204.9 907,433.1 1004.1,433.1 1004.1,0 "/>
+<g>
+	<g>
+		<defs>
+			<polygon id="SVGID_1_" points="580.4,0 486.3,161.8 392.1,0 265.9,0 265.9,433.1 375.5,433.1 375.5,183.4 486.3,351.4 597,183.4 
+				597,433.1 706.7,433.1 706.7,0 			"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<path class="st0" d="M279.7,440h-13.9V-7h13.9V440z M302.2-7h-13.9v447h13.9V-7z M324.7-7h-13.9v447h13.9V-7z M347.2-7h-13.9v447
+			h13.9V-7z M369.6-7h-13.9v447h13.9V-7z M392.1-7h-13.9v447h13.9V-7z M414.6-7h-13.9v447h13.9V-7z M437-7h-13.9v447H437V-7z
+			 M459.5-7h-13.9v447h13.9V-7z M482-7h-13.9v447H482V-7z M504.4-7h-13.9v447h13.9V-7z M526.9-7H513v447h13.9V-7z M549.4-7h-13.9
+			v447h13.9V-7z M571.8-7H558v447h13.9V-7H571.8z M594.3-7h-13.9v447h13.9V-7z M616.8-7h-13.9v447h13.9V-7z M639.3-7h-13.9v447h13.9
+			V-7z M661.7-7h-13.9v447h13.9V-7z M684.2-7h-13.9v447h13.9V-7z M706.7-7h-13.9v447h13.9V-7z"/>
+	</g>
+</g>
+</svg>
