@@ -8,7 +8,7 @@
 
         <field  id="data"  type="roAssociativeArray" />
         <field  id="response"  type="roAssociativeArray" /> 
-        <field  id="ChannelData"  type="node" /> 
+        <field  id="ChannelData"  type="roArray" /> 
         <field  id="callType"  type="String" /> 
         <field  id="parameters" type="roAssociativeArray"/>
      

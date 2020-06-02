@@ -44,9 +44,9 @@ sub init()
       
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
    
-   'channel ,episode api call '
+   'channel ,episode api call '   
+    reqApiCAll({"page":1})   
     
-'    reqApiCAll({"page":1})   
     font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.channelGuide.font = font 
     m.pressbackLabel.font = font
@@ -59,248 +59,13 @@ sub init()
     t = currentTime.AsSeconds()
     t = t - (t mod 1800) ' RDE-2665 - TimeGrid works best when contentStartTime is set to a 30m mark
     m.timeGride.contentStartTime = t
-    m.timeGride.leftEdgeTargetTime = currentTime.AsSeconds()
-
-
-
-    'content
-    content = CreateObject("roSGNode", "ContentNode")
-    
-    channleNode = content.createChild("ContentNode")
-    channleNode.TITLE = "MTV-USA"
-    channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Justin Beiber concert"
-    programNode.PLAYSTART = t  
-    programNode.PLAYDURATION = 3000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-   
-    
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "International football tournament"
-    programNode.PLAYSTART = t+3000  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "c"
-    programNode.PLAYSTART = t+5000  
-    programNode.PLAYDURATION = 2000 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"     
-    'second channel
-    
-    channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/espn.png"
-    channleNode.TITLE = "ESPN"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Cricket test"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "ICC World cup 2011"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Highlghts of crickets"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    
-    channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/cnicon.png"
-    channleNode.TITLE = "Discovery"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Oggy show"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-   
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-
-    channleNode = content.createChild("ContentNode")
-    channleNode.TITLE = "MTV-USA"
-    channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Justin Beiber concert"
-    programNode.PLAYSTART = t  
-    programNode.PLAYDURATION = 3000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "International football tournament"
-    programNode.PLAYSTART = t+3000  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "c"
-    programNode.PLAYSTART = t+5000  
-    programNode.PLAYDURATION = 2000 
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"     
-    'second channel
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/espn.png"
-    channleNode.TITLE = "ESPN"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Cricket test"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "ICC World cup 2011"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Highlghts of crickets"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    
-     channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/cnicon.png"
-    channleNode.TITLE = "Discovery"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Oggy show"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-   
-    channleNode = content.createChild("ContentNode")
-    channleNode.TITLE = "MTV-USA"
-    channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Justin Beiber concert"
-    programNode.PLAYSTART = t  
-    programNode.PLAYDURATION = 3000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "International football tournament"
-    programNode.PLAYSTART = t+3000  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "c"
-    programNode.PLAYSTART = t+5000  
-    programNode.PLAYDURATION = 2000 
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"     
-    'second channel
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/espn.png"
-    channleNode.TITLE = "ESPN"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Cricket test"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "ICC World cup 2011"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Highlghts of crickets"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    
-     channleNode = content.createChild("ContentNode")
-    channleNode.HDSMALLICONURL="pkg:/images/cnicon.png"
-    channleNode.TITLE = "Discovery"
-    
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Oggy show"
-    programNode.PLAYSTART = t 
-    programNode.PLAYDURATION = 2100
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png" 
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+2100  
-    programNode.PLAYDURATION = 2000
-'    programNode.HDSMALLICONURL = "pkg:/images/Login/borderon.png"  
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "Tom & Jerry"
-    programNode.PLAYSTART = t+4100  
-    programNode.PLAYDURATION = 2000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
- 
-    m.timeGride.content = content  
+    m.timeGride.leftEdgeTargetTime = currentTime.AsSeconds() 
       
     m.timeGride.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
     m.timeGride.channelInfoComponentName="ChannelItemComponent"
   
     m.timeGride.observeField("programSelected","programSelected")
-    m.timeGride.observeField("programFocused","programFocus")
+    m.timeGride.observeField("channelFocused","channelFocused")
                 
     m.timeGride.programHorizMargin = 24
 '    m.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
@@ -322,43 +87,72 @@ sub init()
     
     m.top.observeField("visible","setFocus")
     m.video.setFocus(true)
-    m.totalcount = 8
+    
+    m.lazyLoadingTimer = CreateObject("roSGNode", "Timer")
+    m.lazyLoadingTimer.repeat = false
+    m.lazyLoadingTimer.duration = 3
+    m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
+'    m.lazyLoadingTimer.control = "start"
+    m.ChannelData = createObject("roArray")
 end sub
 
-sub programFocus(event as object)
-?"programFocus:";event.getRoSGNode().content.getChildCount()
-'?"event.getRoSGNode().content.getChild( m.totalcount).id.ToInt() :";event.getRoSGNode().content.getChild( m.totalcount)
-'?"event.getRoSGNode().content.getChild( m.totalcount) ::node :";event.getRoSGNode().content.getChild( m.totalcount)
-?"event.getRoSGNode().content.getChildCount()-1 :";event.getRoSGNode().content.getChildCount()
-?"m.totalcount; ";m.totalcount
-'
-' if event.getRoSGNode().content.getChild( event.getRoSGNode().content.getChildCount() ) = invalid
-'    
-'    ?"m.totalcount; ";event.getRoSGNode().content.getChildCount()    
-'    TestingTAsk = createObject("roSGNode", "TestingTAsk")
-'    
-'    channleNode = event.getRoSGNode().content.createChild("ContentNode")
-'    channleNode.id = event.getRoSGNode().content.getChildCount()-1
-'    channleNode.TITLE = "Abba chaba dabba"
-'    channleNode.HDSMALLICONURL="pkg:/images/mtv.png"
-'    m.totalcount=  event.getRoSGNode().content.getChildCount()
-'    
-'    TestingTAsk.id = event.getRoSGNode().content.getChildCount()-1 
-'    TestingTAsk.observeField("data","showResponse")
-'    
-'    
-'    TestingTAsk.control ="RUN"
+Sub RestartLazyLoadingTimer()
+?"RestartLazyLoadingTimer"
+    m.lazyLoadingTimer.control = "stop"
+    m.lazyLoadingTimer.control = "start"
+End Sub
 
-'    end if 
+sub channelFocused(event as object)
+?"channelFocused:";event.getData()+5
+
+ if  event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild( event.getData()+5 ) = invalid and m.channelListData < m.ChannelData.Count()
+    
+    if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"         
+    channelnode = event.getRoSGNode().content
+    getChannelDAta(channelnode,m.ChannelData[m.channelListData])
+    m.channelListData +=1
+  end if 
    
+end sub
 
-'    end if    
+sub StartContentLoading()
+?"StartContentLoading; "
+ if  m.channelListData < m.ChannelData.Count() and m.timeGride.content<> invalid
+     m.channelListData +=1
+     getChannelDAta(m.timeGride.content,m.ChannelData[m.channelListData])           
+ else if  m.timeGride.content = invalid
+      ?"first time start"
+      content = CreateObject("roSGNode", "ContentNode")     
+      m.timeGride.content = content
+      getChannelDAta(m.timeGride.content,m.ChannelData[m.channelListData]) 
+ else if  m.channelListData = 0 then
+        if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"       
+ end if  
+end sub
+  
 
+sub getChannelDAta(channelnode as object,channelData as object)
+?"getChannelDAta;";nodedata;
+    nodedata = channelnode.createChild("ContentNode")
+  if channelData <> invalid
+   if channelData.id <> invalid then nodedata.id = channelData.id
+   if channelData.callSign <> invalid then nodedata.TITLE = channelData.callSign
+   if channelData.logo <> invalid then nodedata.HDSMALLICONURL = channelData.logo
+   if channelData.url <> invalid then nodedata.url = channelData.url
+    
+    m.TestingTAsk = createObject("roSGNode", "TestingTAsk")
+    m.TestingTAsk.id = channelnode.getChildCount()-1 
+    m.TestingTAsk.observeField("data","showResponse")
+    m.TestingTAsk.control = "RUN"
+  else 
+    ?"getChannelDAta:: data is not complete ;";nodedata.Keys();
+  end if  
+   
+       
 end sub
  
 sub showResponse(event as object)
 ?"testing ::showResponse; ";event.getData()
-
 
 event.getRoSGNode().control="stop"    
 
@@ -367,26 +161,39 @@ event.getRoSGNode().control="stop"
    currentTime =  CreateObject("roDateTime")
     t = currentTime.AsSeconds()
     t = t - (t mod 1800)
+      
     programNode = channleNode.createChild("ContentNode")  
     programNode.TITLE  = "Justin Beiber concert"
     programNode.PLAYSTART = t  
     programNode.PLAYDURATION = 3000
-    programNode.url = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"   
+    
+    programNode = channleNode.createChild("ContentNode")
+    programNode.TITLE  = "International football tournament"
+    programNode.PLAYSTART = t+3000  
+    programNode.PLAYDURATION = 2000
+      
+    programNode = channleNode.createChild("ContentNode")
+    programNode.TITLE  = "c"
+    programNode.PLAYSTART = t+5000  
+    programNode.PLAYDURATION = 2000   
+    
+    if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "stop" then m.lazyLoadingTimer.control = "start"
+      
 end sub
   
 sub reqApiCAll(page)
 
     m.ChannelEpisodeTask = CreateObject("roSGNode","ChannelEpisodeTask")
-    m.ChannelEpisodeTask.parameters = page
-    m.ChannelEpisodeTask.observeField("ChannelData","ChannelResponseData")
-    
+    m.ChannelEpisodeTask.observeField("ChannelData","ChannelResponseData")    
     m.ChannelEpisodeTask.control = "RUN"
 
 end sub
 sub ChannelResponseData()
 ?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
- m.timeGride.content = m.ChannelEpisodeTask.ChannelData
-    
+   m.ChannelData = m.ChannelEpisodeTask.ChannelData
+   m.channelListData = 0
+   m.lazyLoadingTimer.control = "start"
+      
 end sub
   
 function playVideo(url as String) as void
@@ -452,7 +259,7 @@ sub programSelected(event as object)
  data=timeGrid.content.getChild(timeGrid.channelSelected).getChild( timeGrid.programSelected)
 
  ?":programSelecte: data: ";data
- 
+  
  url=data.url
 
  m.ChannelsGroup.visible = false
@@ -590,20 +397,11 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
            ?"ok pressed fr play video"
           
           playVideo("http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8") 
-'          playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8") 
-'          m.video.visible=false 
-'          m.ChannelsGroup.visible = true
-'           
-'          m.ChannelCategoryMarkuGrid.setFocus(false)
-'          m.timeGride.setFocus(true)
-         
+ 
           result = true 
          else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key="options" 
            ?"HomeSceen:open profile setting view";
-           
-'           m.top.profileScreen = true
-'          m.ChannelsGroup.visible = true
-           
+      
           m.searchPoster.setFocus(false)
           m.ChannelCategoryMarkuGrid.setFocus(false)
           m.focusPoster.uri=""
