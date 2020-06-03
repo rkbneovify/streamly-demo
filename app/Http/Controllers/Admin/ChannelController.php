@@ -276,7 +276,7 @@ $record  = Gracenote::select("CallSign","StationName","image")
     $query->select('gracenote.*','channels.image')
     ->from('gracenote')
     ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(CURDATE(), ' 23:59:59'), '%Y-%m-%d %H:%i:%s')  AND (gracenote.`CallSign`='".$callsign."')")
+    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 7 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s')  AND (gracenote.`CallSign`='".$callsign."')")
     ->orderBy('gracenote.StartDateTime', 'asc');
 }, 'sub')
 
