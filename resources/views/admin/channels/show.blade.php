@@ -39,12 +39,12 @@
             </div>
           
             <div class="card-body">
-            <div class="form-group">
+            {{-- <div class="form-group">
                             <label for="name" class="col-md-4 control-label">Genre</label>
                             
                                     <label class="label label-success">{{ $channel->genre->name?? "unknown" }}</label>
                                 
-                        </div>
+                        </div> --}}
               <div class="form-group">
                 <label for="inputName">Name</label>
                 <input type="text" id="inputName" class="form-control" value="{{ $channel->name }}" disabled>
@@ -82,6 +82,16 @@
 <input type="text" id="inputurl" class="form-control" value="Inactive " disabled>
 @else
 <input type="text" id="inputurl" class="form-control" value="Unknown " disabled>
+@endif
+                
+              </div>
+              <div class="form-group">
+                <label for="inputLogo">Logo</label>
+                @if ($channel->image!='')
+              <a href="{{asset("/uploads/channellogo/".$channel->image)}}" target="_blank"><img src='{{asset("/uploads/channellogo/".$channel->image)}}' width="70px" height="70px"></a>
+@else
+
+<input type="text" id="inputurl" class="form-control" value="No logo found " disabled>
 @endif
                 
               </div>
