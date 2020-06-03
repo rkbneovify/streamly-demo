@@ -27,8 +27,8 @@ class Channel extends Model
     */
     protected $fillable=['name',
 'url',
-'genre_id','status','genres'];
-
+'genre_id','status','genres','image'];
+protected $appends = ['logo'];
     /**
     * Date time columns.
     */
@@ -43,6 +43,12 @@ class Channel extends Model
     {
         return $this->belongsTo(Genre::class,'genre_id');
     }
+
+    public function getLogoAttribute($size=null)
+{ 
+    $imagePath=asset("/uploads/channellogo/".$this->image);
+   return $imagePath;
+}
 
     
 
