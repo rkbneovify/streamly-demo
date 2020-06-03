@@ -3,7 +3,7 @@
     <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="{{ asset('frontend/img/streamly-logo.png') }}" /></a>
 
-        @if($login)
+        @if( isset($login) && $login)
 
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive1" aria-controls="navbarResponsive" aria-expanded="false" onclick="logoutUser()" aria-label="Toggle navigation">Logout<i class="fas fa-bars ml-1"></i></button>
 
@@ -18,7 +18,7 @@
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">About</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#team">Team</a></li> -->
 
-                @if($login)
+                @if( isset($login) && $login)
 
                     <li class="nav-item"><a class="nav-link js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a></li>
                 @else
