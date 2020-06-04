@@ -42,6 +42,7 @@ enum AppStoryboard : String {
 
     /// we can add number if name
     case Main
+    case Extended = "Main+Extended"
 
     var instance : UIStoryboard {
         return UIStoryboard(name: self.rawValue, bundle: Bundle.main)

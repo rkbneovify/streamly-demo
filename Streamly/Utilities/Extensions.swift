@@ -164,10 +164,12 @@ extension String
 }
 
 extension UIColor {
+
     static let cardBgColor = UIColor(redd: 235.0, greenn: 235.0, bluee: 235.0, alphaa: 1.0)
     static let spinnerBackgroundColor = UIColor(redd: 192.0, greenn: 192.0, bluee: 192.0, alphaa: 0.5)
     static let firstGradientColor = UIColor(redd: 0.0, greenn: 4.0, bluee: 40.0, alphaa: 1.0)
     static let secondGradientColor = UIColor(redd: 0.0, greenn: 78.0, bluee: 146.0, alphaa: 1.0)
+    static let channelBox = UIColor(redd: 60.0, greenn: 60.0, bluee: 67.0, alphaa: 0.2)
 }
 
 public extension UIImage {

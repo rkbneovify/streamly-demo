@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--SettingsVC-->
+        <scene sceneID="bV5-QA-9GX">
+            <objects>
+                <viewController storyboardIdentifier="SettingsVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="MD2-Du-5fo" customClass="SettingsVC" customModule="StreamlyTV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2YY-3W-ZDY"/>
+                        <viewControllerLayoutGuide type="bottom" id="UqI-Nq-xdb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ZXL-UP-sBn">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t00-Ae-fHi">
+                                <rect key="frame" x="151" y="114" width="140" height="47"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="140" id="I5U-vw-rRz"/>
+                                    <constraint firstAttribute="height" constant="47" id="vdL-NB-iZI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="40"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3GB-Ii-i3v">
+                                <rect key="frame" x="1671" y="109.5" width="195" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="195" id="DdC-wy-NZB"/>
+                                    <constraint firstAttribute="height" constant="56" id="lWa-3b-d6z"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
+                                <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="26"/>
+                                <state key="normal" title="LIVE TV">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="pWo-tk-kMo">
+                                <rect key="frame" x="120" y="405" width="1680" height="270"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="270" id="ISO-EY-Oqt"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="70" minimumInteritemSpacing="70" id="TQ4-wG-OGn">
+                                    <size key="itemSize" width="280" height="282"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsGridCell" id="PZs-2d-iZd" customClass="SettingsGridCell" customModule="StreamlyTV" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hlK-hi-ve9" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
+                                                    <rect key="frame" x="101" y="51" width="78" height="90"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
+                                                    <rect key="frame" x="8" y="209" width="272" height="31"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                    <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                    <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="isHorizontal" value="NO"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </collectionViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <size key="customSize" width="280" height="268"/>
+                                        <connections>
+                                            <outlet property="content" destination="hlK-hi-ve9" id="gKE-wL-25F"/>
+                                            <outlet property="imageView" destination="gRM-Jd-QTU" id="R2p-2d-AZb"/>
+                                            <outlet property="label" destination="SFY-LH-mTw" id="CLI-QB-SpZ"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
+                                <rect key="frame" x="1451" y="109.5" width="210" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="210" id="8z3-xh-e5T"/>
+                                    <constraint firstAttribute="height" constant="56" id="9m1-ly-lab"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
+                                <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="26"/>
+                                <state key="normal" title="CHANNELS">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="trk-TA-CcH" firstAttribute="centerY" secondItem="3GB-Ii-i3v" secondAttribute="centerY" id="03B-65-8X1"/>
+                            <constraint firstAttribute="trailing" secondItem="pWo-tk-kMo" secondAttribute="trailing" constant="120" id="6BT-ON-3kz"/>
+                            <constraint firstItem="t00-Ae-fHi" firstAttribute="leading" secondItem="ZXL-UP-sBn" secondAttribute="leading" constant="151" id="98g-Aa-mQS"/>
+                            <constraint firstItem="3GB-Ii-i3v" firstAttribute="centerY" secondItem="t00-Ae-fHi" secondAttribute="centerY" id="Rrc-ks-lKw"/>
+                            <constraint firstItem="t00-Ae-fHi" firstAttribute="top" secondItem="2YY-3W-ZDY" secondAttribute="bottom" constant="54" id="ajM-iv-QnS"/>
+                            <constraint firstAttribute="trailing" secondItem="3GB-Ii-i3v" secondAttribute="trailing" constant="54" id="cQw-1A-t5J"/>
+                            <constraint firstItem="3GB-Ii-i3v" firstAttribute="leading" secondItem="trk-TA-CcH" secondAttribute="trailing" constant="10" id="k17-JD-RO4"/>
+                            <constraint firstItem="pWo-tk-kMo" firstAttribute="centerY" secondItem="ZXL-UP-sBn" secondAttribute="centerY" id="tlA-lV-JqZ"/>
+                            <constraint firstItem="pWo-tk-kMo" firstAttribute="leading" secondItem="ZXL-UP-sBn" secondAttribute="leading" constant="120" id="zeT-nO-nf8"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="xxy-co-UAN"/>
+                    </view>
+                    <connections>
+                        <outlet property="channellsBtn" destination="trk-TA-CcH" id="NXs-gc-bwQ"/>
+                        <outlet property="collectionView" destination="pWo-tk-kMo" id="wlR-48-jPM"/>
+                        <outlet property="liveTVBtn" destination="3GB-Ii-i3v" id="LcY-A0-j51"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n9g-li-oaY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="272" y="365"/>
+        </scene>
+    </scenes>
+</document>

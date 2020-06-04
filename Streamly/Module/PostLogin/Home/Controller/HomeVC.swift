@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 
 class HomeVC: UIViewController {
 
@@ -25,6 +26,11 @@ class HomeVC: UIViewController {
 
     //MARK:- Properties
     var channels: [Channel]?
+    {
+        didSet{
+            self.removeSpinner()
+        }
+    }
     var timer: Timer?
     var timeIntervals: [String] {
         return [
@@ -116,9 +122,6 @@ class HomeVC: UIViewController {
         self.newsButton.setBtnProperties(self.newsButton)
         self.moviesButton.setBtnProperties(self.moviesButton)
         self.kidsButton.setBtnProperties(self.kidsButton)
-        self.allButton.setBtnProperties(self.allButton)
-        self.allButton.setBtnProperties(self.allButton)
-        self.allButton.setBtnProperties(self.allButton)
         self.goBackButton.setBtnProperties(self.goBackButton)
         self.settingsButton.setBtnProperties(self.settingsButton)
 
@@ -127,6 +130,7 @@ class HomeVC: UIViewController {
     //MARK:- Properties
 
     func loadData() {
+        self.showSpinner(onView: self.view)
         if let jsonFile = Bundle.main.path(forResource: "Schedule", ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: jsonFile), options: .dataReadingMapped)
@@ -162,6 +166,19 @@ class HomeVC: UIViewController {
             }
         }
         collectionView.reloadData()
+    }
+
+    //MARK:- Actions
+    @IBAction func searchAction(_ sender:UIButton){
+        
+        let viewVC = Utility.packagedSearchController()
+        self.present(viewVC, animated:true, completion:nil)
+    }
+
+    @IBAction func settingsAction(_ sender:UIButton){
+
+         let SettingVc = SettingsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+         self.navigationController?.pushViewController(SettingVc, animated: false)
     }
 }
 
@@ -243,6 +260,9 @@ extension HomeVC: UICollectionViewDelegate {
         else if indexPath.row == 0 { // Channels
             if let channel = self.channels?[indexPath.section - 1] {
                 print(channel)
+                 guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
+                self.navigationController?.pushViewController(viewController, animated: true)
+
             }
         } else { // Programs
             if let channel = self.channels?[indexPath.section - 1] {

@@ -12,6 +12,13 @@
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
 		AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */; };
 		AA2DB89C246EAD73003848FE /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2DB89B246EAD73003848FE /* HomeVC.swift */; };
+		AA352CB424813B01009ACD55 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB024813B00009ACD55 /* DataItem.swift */; };
+		AA352CB524813B01009ACD55 /* DataItemCellComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */; };
+		AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */; };
+		AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */; };
+		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
+		AA53DE5B248638F200FA6821 /* Main+Extended.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA53DE5A248638F200FA6821 /* Main+Extended.storyboard */; };
+		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
 		AA72AF722473EEB500906796 /* Schedule.json in Resources */ = {isa = PBXBuildFile; fileRef = AA72AF712473EEB500906796 /* Schedule.json */; };
 		AA72AF742473EED600906796 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72AF732473EED600906796 /* Channel.swift */; };
 		AA72AF762473EEDD00906796 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72AF752473EEDD00906796 /* Program.swift */; };
@@ -26,6 +33,41 @@
 		AA72AF892473F4C000906796 /* ProgramCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA72AF872473F4C000906796 /* ProgramCollectionViewCell.xib */; };
 		AA72AF8C2473F5E600906796 /* TimeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA72AF8A2473F5E600906796 /* TimeCollectionViewCell.swift */; };
 		AA72AF8D2473F5E600906796 /* TimeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA72AF8B2473F5E600906796 /* TimeCollectionViewCell.xib */; };
+		AA84F127247E304A00E4F709 /* PlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA84F126247E304A00E4F709 /* PlayerVC.swift */; };
+		AAB60AF3248910DC00708BB0 /* ButtonImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB60AF2248910DC00708BB0 /* ButtonImage.swift */; };
+		AABCA0452484C88900DCE76A /* DataItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABCA0442484C88900DCE76A /* DataItemCollectionViewCell.swift */; };
+		AABCA0672484DD4B00DCE76A /* Italy 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0472484DD4A00DCE76A /* Italy 1.jpg */; };
+		AABCA0682484DD4B00DCE76A /* Italy 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0482484DD4A00DCE76A /* Italy 3.jpg */; };
+		AABCA0692484DD4B00DCE76A /* Lola 2 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */; };
+		AABCA06A2484DD4B00DCE76A /* Iceland 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */; };
+		AABCA06B2484DD4B00DCE76A /* Italy 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */; };
+		AABCA06C2484DD4B00DCE76A /* Italy 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */; };
+		AABCA06D2484DD4B00DCE76A /* Italy 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */; };
+		AABCA06E2484DD4B00DCE76A /* Italy 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */; };
+		AABCA06F2484DD4B00DCE76A /* Italy 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */; };
+		AABCA0702484DD4B00DCE76A /* Lola 4 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */; };
+		AABCA0712484DD4B00DCE76A /* Lola 3 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */; };
+		AABCA0722484DD4B00DCE76A /* Baby 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0522484DD4A00DCE76A /* Baby 8.jpg */; };
+		AABCA0732484DD4B00DCE76A /* Lola 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0532484DD4A00DCE76A /* Lola 3.jpg */; };
+		AABCA0742484DD4B00DCE76A /* Baby 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0542484DD4A00DCE76A /* Baby 6.jpg */; };
+		AABCA0752484DD4B00DCE76A /* Baby 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0552484DD4A00DCE76A /* Baby 7.jpg */; };
+		AABCA0762484DD4B00DCE76A /* Lola 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0562484DD4A00DCE76A /* Lola 2.jpg */; };
+		AABCA0772484DD4B00DCE76A /* Baby 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0572484DD4A00DCE76A /* Baby 5.jpg */; };
+		AABCA0782484DD4B00DCE76A /* Baby 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0582484DD4A00DCE76A /* Baby 4.jpg */; };
+		AABCA0792484DD4B00DCE76A /* Lola 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0592484DD4A00DCE76A /* Lola 1.jpg */; };
+		AABCA07A2484DD4B00DCE76A /* Baby 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */; };
+		AABCA07B2484DD4B00DCE76A /* Lola 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */; };
+		AABCA07C2484DD4B00DCE76A /* Baby 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */; };
+		AABCA07D2484DD4B00DCE76A /* Baby 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */; };
+		AABCA07E2484DD4B00DCE76A /* Iceland 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */; };
+		AABCA07F2484DD4B00DCE76A /* Iceland 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */; };
+		AABCA0802484DD4B00DCE76A /* Italy 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0602484DD4A00DCE76A /* Italy 8.jpg */; };
+		AABCA0812484DD4B00DCE76A /* Lola 1 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */; };
+		AABCA0822484DD4B00DCE76A /* Iceland 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */; };
+		AABCA0832484DD4B00DCE76A /* Iceland 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */; };
+		AABCA0842484DD4B00DCE76A /* Iceland 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */; };
+		AABCA0852484DD4B00DCE76A /* Iceland 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */; };
+		AABCA0862484DD4B00DCE76A /* Iceland 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */; };
 		AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8B9246A700100708812 /* AppDelegate.swift */; };
 		AAC9C8BF246A700200708812 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8BD246A700200708812 /* Main.storyboard */; };
 		AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */; };
@@ -39,6 +81,7 @@
 		AAD595472472515800BC5E6C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD595462472515800BC5E6C /* Request.swift */; };
 		AAD5954C24726FFF00BC5E6C /* Switcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5954B24726FFF00BC5E6C /* Switcher.swift */; };
 		AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5954E2472705B00BC5E6C /* Rechability.swift */; };
+		AAFC43E92480EEE5000928C0 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC43E82480EEE5000928C0 /* SearchVC.swift */; };
 		AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B0246D68B80027B5DB /* LoginVC.swift */; };
 		AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B2246D6C450027B5DB /* Utility.swift */; };
 		AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B4246D770F0027B5DB /* Constant.swift */; };
@@ -72,6 +115,13 @@
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		AA2DB89B246EAD73003848FE /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		AA352CB024813B00009ACD55 /* DataItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
+		AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCellComposer.swift; sourceTree = "<group>"; };
+		AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+ImageName.swift"; sourceTree = "<group>"; };
+		AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+SampleData.swift"; sourceTree = "<group>"; };
+		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		AA53DE5A248638F200FA6821 /* Main+Extended.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Main+Extended.storyboard"; sourceTree = "<group>"; };
+		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
 		AA72AF712473EEB500906796 /* Schedule.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Schedule.json; sourceTree = "<group>"; };
 		AA72AF732473EED600906796 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		AA72AF752473EEDD00906796 /* Program.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
@@ -86,7 +136,42 @@
 		AA72AF872473F4C000906796 /* ProgramCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProgramCollectionViewCell.xib; sourceTree = "<group>"; };
 		AA72AF8A2473F5E600906796 /* TimeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeCollectionViewCell.swift; sourceTree = "<group>"; };
 		AA72AF8B2473F5E600906796 /* TimeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimeCollectionViewCell.xib; sourceTree = "<group>"; };
-		AAC9C8B6246A700100708812 /* Streamly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Streamly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA84F126247E304A00E4F709 /* PlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerVC.swift; sourceTree = "<group>"; };
+		AAB60AF2248910DC00708BB0 /* ButtonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonImage.swift; sourceTree = "<group>"; };
+		AABCA0442484C88900DCE76A /* DataItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		AABCA0472484DD4A00DCE76A /* Italy 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 1.jpg"; sourceTree = "<group>"; };
+		AABCA0482484DD4A00DCE76A /* Italy 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 3.jpg"; sourceTree = "<group>"; };
+		AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 2 Large.jpg"; sourceTree = "<group>"; };
+		AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 8.jpg"; sourceTree = "<group>"; };
+		AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 2.jpg"; sourceTree = "<group>"; };
+		AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 6.jpg"; sourceTree = "<group>"; };
+		AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 7.jpg"; sourceTree = "<group>"; };
+		AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 5.jpg"; sourceTree = "<group>"; };
+		AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 4.jpg"; sourceTree = "<group>"; };
+		AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 4 Large.jpg"; sourceTree = "<group>"; };
+		AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 3 Large.jpg"; sourceTree = "<group>"; };
+		AABCA0522484DD4A00DCE76A /* Baby 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 8.jpg"; sourceTree = "<group>"; };
+		AABCA0532484DD4A00DCE76A /* Lola 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 3.jpg"; sourceTree = "<group>"; };
+		AABCA0542484DD4A00DCE76A /* Baby 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 6.jpg"; sourceTree = "<group>"; };
+		AABCA0552484DD4A00DCE76A /* Baby 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 7.jpg"; sourceTree = "<group>"; };
+		AABCA0562484DD4A00DCE76A /* Lola 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 2.jpg"; sourceTree = "<group>"; };
+		AABCA0572484DD4A00DCE76A /* Baby 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 5.jpg"; sourceTree = "<group>"; };
+		AABCA0582484DD4A00DCE76A /* Baby 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 4.jpg"; sourceTree = "<group>"; };
+		AABCA0592484DD4A00DCE76A /* Lola 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 1.jpg"; sourceTree = "<group>"; };
+		AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 1.jpg"; sourceTree = "<group>"; };
+		AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 4.jpg"; sourceTree = "<group>"; };
+		AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 3.jpg"; sourceTree = "<group>"; };
+		AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 2.jpg"; sourceTree = "<group>"; };
+		AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 3.jpg"; sourceTree = "<group>"; };
+		AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 2.jpg"; sourceTree = "<group>"; };
+		AABCA0602484DD4A00DCE76A /* Italy 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 8.jpg"; sourceTree = "<group>"; };
+		AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 1 Large.jpg"; sourceTree = "<group>"; };
+		AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 1.jpg"; sourceTree = "<group>"; };
+		AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 5.jpg"; sourceTree = "<group>"; };
+		AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 4.jpg"; sourceTree = "<group>"; };
+		AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 6.jpg"; sourceTree = "<group>"; };
+		AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 7.jpg"; sourceTree = "<group>"; };
+		AAC9C8B6246A700100708812 /* StreamlyTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StreamlyTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAC9C8B9246A700100708812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAC9C8BE246A700200708812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		AAC9C8C1246A700200708812 /* Streamly.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Streamly.xcdatamodel; sourceTree = "<group>"; };
@@ -105,6 +190,7 @@
 		AAD595462472515800BC5E6C /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		AAD5954B24726FFF00BC5E6C /* Switcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Switcher.swift; sourceTree = "<group>"; };
 		AAD5954E2472705B00BC5E6C /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
+		AAFC43E82480EEE5000928C0 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		AAFC54B0246D68B80027B5DB /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		AAFC54B2246D6C450027B5DB /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		AAFC54B4246D770F0027B5DB /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
@@ -187,6 +273,31 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		AA53DE552486386500FA6821 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AA53DE59248638AF00FA6821 /* View */,
+				AA53DE562486387C00FA6821 /* Controller */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AA53DE562486387C00FA6821 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AA53DE572486389400FA6821 /* SettingsVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AA53DE59248638AF00FA6821 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		AA72AF7D2473F12F00906796 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,6 +334,9 @@
 		AA741F0D246ABC230090A0F7 /* PostLogin */ = {
 			isa = PBXGroup;
 			children = (
+				AA53DE552486386500FA6821 /* Settings */,
+				AAFC43E72480EEC9000928C0 /* SerachChannels */,
+				AA84F124247E2F0000E4F709 /* Player */,
 				AA2DB897246EAD2D003848FE /* Home */,
 			);
 			path = PostLogin;
@@ -235,6 +349,69 @@
 				AAC9C8EA246A70C200708812 /* Model */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		AA84F124247E2F0000E4F709 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				AA84F128247E7AED00E4F709 /* View */,
+				AA84F125247E2F1800E4F709 /* Controller */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		AA84F125247E2F1800E4F709 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AA84F126247E304A00E4F709 /* PlayerVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		AA84F128247E7AED00E4F709 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		AABCA0462484DD4A00DCE76A /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AABCA0472484DD4A00DCE76A /* Italy 1.jpg */,
+				AABCA0482484DD4A00DCE76A /* Italy 3.jpg */,
+				AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */,
+				AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */,
+				AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */,
+				AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */,
+				AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */,
+				AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */,
+				AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */,
+				AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */,
+				AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */,
+				AABCA0522484DD4A00DCE76A /* Baby 8.jpg */,
+				AABCA0532484DD4A00DCE76A /* Lola 3.jpg */,
+				AABCA0542484DD4A00DCE76A /* Baby 6.jpg */,
+				AABCA0552484DD4A00DCE76A /* Baby 7.jpg */,
+				AABCA0562484DD4A00DCE76A /* Lola 2.jpg */,
+				AABCA0572484DD4A00DCE76A /* Baby 5.jpg */,
+				AABCA0582484DD4A00DCE76A /* Baby 4.jpg */,
+				AABCA0592484DD4A00DCE76A /* Lola 1.jpg */,
+				AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */,
+				AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */,
+				AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */,
+				AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */,
+				AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */,
+				AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */,
+				AABCA0602484DD4A00DCE76A /* Italy 8.jpg */,
+				AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */,
+				AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */,
+				AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */,
+				AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */,
+				AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */,
+				AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		AAC9C8AD246A700100708812 = {
@@ -252,7 +429,7 @@
 		AAC9C8B7246A700100708812 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AAC9C8B6246A700100708812 /* Streamly.app */,
+				AAC9C8B6246A700100708812 /* StreamlyTV.app */,
 				AAC9C8CD246A700400708812 /* StreamlyTests.xctest */,
 				AAC9C8D8246A700400708812 /* StreamlyUITests.xctest */,
 			);
@@ -318,6 +495,7 @@
 				AAFC54B2246D6C450027B5DB /* Utility.swift */,
 				AAFC54B4246D770F0027B5DB /* Constant.swift */,
 				AAFC54B6246D781A0027B5DB /* Enums.swift */,
+				AAB60AF2248910DC00708BB0 /* ButtonImage.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -336,6 +514,7 @@
 				AAC9C8C8246A700400708812 /* Info.plist */,
 				AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */,
 				AAC9C8BD246A700200708812 /* Main.storyboard */,
+				AA53DE5A248638F200FA6821 /* Main+Extended.storyboard */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -354,6 +533,28 @@
 				AAD5954E2472705B00BC5E6C /* Rechability.swift */,
 			);
 			path = Reachebility;
+			sourceTree = "<group>";
+		};
+		AAFC43E72480EEC9000928C0 /* SerachChannels */ = {
+			isa = PBXGroup;
+			children = (
+				AABCA0462484DD4A00DCE76A /* Resources */,
+				AAFC43EA2480EEEA000928C0 /* Controller */,
+			);
+			path = SerachChannels;
+			sourceTree = "<group>";
+		};
+		AAFC43EA2480EEEA000928C0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AABCA0442484C88900DCE76A /* DataItemCollectionViewCell.swift */,
+				AA352CB024813B00009ACD55 /* DataItem.swift */,
+				AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */,
+				AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */,
+				AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */,
+				AAFC43E82480EEE5000928C0 /* SearchVC.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		E17D9F7BA9B80E44C69CFB47 /* Frameworks */ = {
@@ -399,7 +600,7 @@
 			);
 			name = Streamly;
 			productName = Streamly;
-			productReference = AAC9C8B6246A700100708812 /* Streamly.app */;
+			productReference = AAC9C8B6246A700100708812 /* StreamlyTV.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AAC9C8CC246A700400708812 /* StreamlyTests */ = {
@@ -490,13 +691,46 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAC9C8C7246A700400708812 /* LaunchScreen.storyboard in Resources */,
+				AABCA06F2484DD4B00DCE76A /* Italy 4.jpg in Resources */,
 				AA72AF8D2473F5E600906796 /* TimeCollectionViewCell.xib in Resources */,
+				AABCA0732484DD4B00DCE76A /* Lola 3.jpg in Resources */,
+				AABCA0722484DD4B00DCE76A /* Baby 8.jpg in Resources */,
+				AA53DE5B248638F200FA6821 /* Main+Extended.storyboard in Resources */,
+				AABCA06E2484DD4B00DCE76A /* Italy 5.jpg in Resources */,
+				AABCA0712484DD4B00DCE76A /* Lola 3 Large.jpg in Resources */,
 				AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */,
+				AABCA07A2484DD4B00DCE76A /* Baby 1.jpg in Resources */,
+				AABCA07D2484DD4B00DCE76A /* Baby 2.jpg in Resources */,
+				AABCA07B2484DD4B00DCE76A /* Lola 4.jpg in Resources */,
+				AABCA0792484DD4B00DCE76A /* Lola 1.jpg in Resources */,
 				AA72AF852473F40C00906796 /* ChannelCollectionViewCell.xib in Resources */,
 				AA72AF722473EEB500906796 /* Schedule.json in Resources */,
+				AABCA0812484DD4B00DCE76A /* Lola 1 Large.jpg in Resources */,
 				AA72AF812473F2F300906796 /* EPGCollectionViewCell.xib in Resources */,
+				AABCA0672484DD4B00DCE76A /* Italy 1.jpg in Resources */,
+				AABCA0822484DD4B00DCE76A /* Iceland 1.jpg in Resources */,
+				AABCA06B2484DD4B00DCE76A /* Italy 2.jpg in Resources */,
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
+				AABCA0842484DD4B00DCE76A /* Iceland 4.jpg in Resources */,
+				AABCA0832484DD4B00DCE76A /* Iceland 5.jpg in Resources */,
+				AABCA06D2484DD4B00DCE76A /* Italy 7.jpg in Resources */,
+				AABCA0852484DD4B00DCE76A /* Iceland 6.jpg in Resources */,
+				AABCA07C2484DD4B00DCE76A /* Baby 3.jpg in Resources */,
+				AABCA0782484DD4B00DCE76A /* Baby 4.jpg in Resources */,
+				AABCA0702484DD4B00DCE76A /* Lola 4 Large.jpg in Resources */,
+				AABCA0862484DD4B00DCE76A /* Iceland 7.jpg in Resources */,
+				AABCA06A2484DD4B00DCE76A /* Iceland 8.jpg in Resources */,
+				AABCA0742484DD4B00DCE76A /* Baby 6.jpg in Resources */,
+				AABCA0752484DD4B00DCE76A /* Baby 7.jpg in Resources */,
+				AABCA0762484DD4B00DCE76A /* Lola 2.jpg in Resources */,
+				AABCA0692484DD4B00DCE76A /* Lola 2 Large.jpg in Resources */,
+				AABCA06C2484DD4B00DCE76A /* Italy 6.jpg in Resources */,
+				AABCA0682484DD4B00DCE76A /* Italy 3.jpg in Resources */,
+				AABCA0772484DD4B00DCE76A /* Baby 5.jpg in Resources */,
 				AA72AF892473F4C000906796 /* ProgramCollectionViewCell.xib in Resources */,
+				AABCA07E2484DD4B00DCE76A /* Iceland 3.jpg in Resources */,
+				AABCA07F2484DD4B00DCE76A /* Iceland 2.jpg in Resources */,
+				AABCA0802484DD4B00DCE76A /* Italy 8.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,11 +875,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABCA0452484C88900DCE76A /* DataItemCollectionViewCell.swift in Sources */,
+				AAB60AF3248910DC00708BB0 /* ButtonImage.swift in Sources */,
 				AA72AF762473EEDD00906796 /* Program.swift in Sources */,
+				AAFC43E92480EEE5000928C0 /* SearchVC.swift in Sources */,
 				AAFC54B3246D6C450027B5DB /* Utility.swift in Sources */,
 				AA72AF742473EED600906796 /* Channel.swift in Sources */,
+				AA352CB424813B01009ACD55 /* DataItem.swift in Sources */,
 				AA72AF782473EF0800906796 /* ChannelViewModel.swift in Sources */,
 				AA2DB89C246EAD73003848FE /* HomeVC.swift in Sources */,
+				AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */,
+				AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */,
 				AA72AF802473F2F300906796 /* EPGCollectionViewCell.swift in Sources */,
 				AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */,
 				AA72AF882473F4C000906796 /* ProgramCollectionViewCell.swift in Sources */,
@@ -653,13 +893,17 @@
 				AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */,
 				AA72AF842473F40C00906796 /* ChannelCollectionViewCell.swift in Sources */,
 				AAD59545247250EC00BC5E6C /* LoginResponse.swift in Sources */,
+				AA352CB524813B01009ACD55 /* DataItemCellComposer.swift in Sources */,
 				AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */,
+				AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */,
 				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
 				AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */,
+				AA84F127247E304A00E4F709 /* PlayerVC.swift in Sources */,
 				AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */,
 				AAD595472472515800BC5E6C /* Request.swift in Sources */,
 				AA72AF7C2473F0E100906796 /* EPGCollectionViewLayout.swift in Sources */,
 				AAD5954C24726FFF00BC5E6C /* Switcher.swift in Sources */,
+				AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */,
 				AAFC54B7246D781A0027B5DB /* Enums.swift in Sources */,
 				AAC9C8F1246A738A00708812 /* GEVersionMonitor.swift in Sources */,
 				AA72AF7A2473EF0D00906796 /* ProgramViewModel.swift in Sources */,
@@ -837,16 +1081,17 @@
 			baseConfigurationReference = 0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_NAME = StreamlyTV;
+				PROVISIONING_PROFILE_SPECIFIER = Streamly_Distribution;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -857,16 +1102,17 @@
 			baseConfigurationReference = 51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PRODUCT_NAME = StreamlyTV;
+				PROVISIONING_PROFILE_SPECIFIER = Streamly_Distribution;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};

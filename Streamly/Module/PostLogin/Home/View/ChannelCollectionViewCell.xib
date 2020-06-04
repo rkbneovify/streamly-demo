@@ -45,7 +45,7 @@
                     </label>
                 </subviews>
             </view>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" systemColor="tertiaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="nUy-Oc-pYt" firstAttribute="leading" secondItem="DoC-wm-cdg" secondAttribute="leading" id="87b-qX-Hhk"/>
                 <constraint firstItem="HDQ-7M-CTr" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" constant="25" id="HBx-7d-0RB"/>

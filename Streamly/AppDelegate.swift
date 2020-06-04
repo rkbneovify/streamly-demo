@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,7 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Navigate to root
         // check login validation
+
+//        if let tabController = window?.rootViewController as? UITabBarController {
+//                          tabController.viewControllers?.append(packagedSearchController())
+//                      }
+        self.setupAudio()
         Switcher.updateRootVC()
+
+
 
         // Override point for customization after application launch.
         return true
@@ -88,6 +96,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+    private func setupAudio()
+    {
+        let audioSession = AVAudioSession.sharedInstance()
+           do {
+               try audioSession.setCategory(.playback, mode: .moviePlayback)
+           }
+           catch {
+               print("Setting category to AVAudioSessionCategoryPlayback failed.")
+           }
+    }
+
+  
 
 }
 
