@@ -171,6 +171,10 @@ return "/api/auth/search"
 
 end Function
 
+Function getchannelschdeuleUrl() as String
+ return "api/auth/channelschdeule"
+end Function
+
 
 Function getDeviceInfo() as object
  ?"getDeviceInfo"

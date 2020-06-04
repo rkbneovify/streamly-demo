@@ -53,7 +53,7 @@ sub init()
     m.Settings.font = font
     
    
-    initGrigData()
+'    initGrigData()
   
     currentTime =  CreateObject("roDateTime")
     t = currentTime.AsSeconds()
@@ -80,7 +80,7 @@ sub init()
     m.timeGride.loadingDataText = "Loading..."
     m.timeGride.automaticLoadingDataFeedback = false
 
-    m.timeGride.numRows = 7
+    m.timeGride.numRows = 9
     m.timeGride.fillProgramGaps = false
     m.timeGride.translation="[0.0, 350.0]"
     m.timeGride.vertFocusAnimationStyle ="fixedFocus"
@@ -93,7 +93,69 @@ sub init()
     m.lazyLoadingTimer.duration = 3
     m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
 '    m.lazyLoadingTimer.control = "start"
-    m.ChannelData = createObject("roArray")
+'    m.ChannelData = createObject("roArray")
+    
+   PosterBackground= m.top.createChild("Poster")
+   PosterBackground.translation = [1411,716]
+   PosterBackground.height = 236
+   PosterBackground.width = 469
+   PosterBackground.uri="pkg:/images/home/channelinfobackgrnd.png"
+   PosterBackground.opacity=.8
+   PosterBackground.visible =false
+'   LayoutGroup = PosterBackground.createChild("LayoutGroup")
+'   LayoutGroup.layoutDirection = "horiz"
+'   LayoutGroup.itemSpacings ="10"
+  
+   
+   PosterchannleIcon = PosterBackground.createChild("Poster")
+   PosterchannleIcon.translation=[26,98]
+   PosterchannleIcon.height = 94
+   PosterchannleIcon.width = 138
+   PosterchannleIcon.uri="pkg:/images/mtv.png"
+  
+   PosterchannleIcon = PosterBackground.createChild("Poster")
+   PosterchannleIcon.translation=[189,22]
+   PosterchannleIcon.height = 20
+   PosterchannleIcon.width = 20
+   PosterchannleIcon.uri="pkg:/images/home/liveIcon.png"
+   PosterchannleIconLabel = PosterchannleIcon.createChild("Label")
+   
+   PosterchannleIconLabel.text = "Live"
+   PosterchannleIconLabel.font = getFont(18, "pkg:/fonts/HelveticaNeueMedium.ttf")
+   PosterchannleIconLabel.translation=[30,0]
+   
+   ConsertTiming = PosterBackground.createChild("Rectangle")
+   ConsertTiming.translation=[189,55]
+   ConsertTiming.height = 30
+   ConsertTiming.width = 163
+   ConsertTiming.color = "#004E92"
+   ConsertTimingTExt = ConsertTiming.createChild("Label")
+   ConsertTimingTExt.text ="04:00 - 05:00PM"
+   ConsertTimingTExt.translation = [8,4]
+   ConsertTimingTExt.font = getFont(18, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+   
+   
+   ConcertChannel = PosterBackground.createChild("Label")
+   ConcertChannel.translation=[189,103]
+   ConcertChannel.height = 41
+   ConcertChannel.width = 0
+'   ConcertChannel.wrap =true
+   ConcertChannel.text ="MTV-USA"
+   ConcertChannel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
+   
+   ConcertName = PosterBackground.createChild("Label")
+   ConcertName.translation=[189,162]
+   ConcertName.height = 30
+   ConcertName.width = 255
+   ConcertName.text="Justin Beiber concert"
+   ConcertName.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+'   LayutRght.layoutDirection = "vert"
+   
+'   LayutRght.itemSpacings ="10"
+'   LayutRght.createChild("Label")
+'   LayutRght.translation=[217,21]
+   m.AllChannelContent = createObject("roSGNode", "ContentNode")
+   
 end sub
 
 Sub RestartLazyLoadingTimer()
@@ -105,11 +167,12 @@ End Sub
 sub channelFocused(event as object)
 ?"channelFocused:";event.getData()+5
 
- if  event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild( event.getData()+5 ) = invalid and m.channelListData < m.ChannelData.Count()
+ if  event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild( event.getData()+5 ) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
     
     if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"         
+    
     channelnode = event.getRoSGNode().content
-    getChannelDAta(channelnode,m.ChannelData[m.channelListData])
+    getChannelDAta(channelnode,m.ChannelData[m.channelNameString][m.channelListData])
     m.channelListData +=1
   end if 
    
@@ -117,14 +180,14 @@ end sub
 
 sub StartContentLoading()
 ?"StartContentLoading; "
- if  m.channelListData < m.ChannelData.Count() and m.timeGride.content<> invalid
+ if  m.channelListData < m.ChannelData[m.channelNameString].Count() and m.timeGride.content<> invalid
      m.channelListData +=1
-     getChannelDAta(m.timeGride.content,m.ChannelData[m.channelListData])           
+     getChannelDAta(m.timeGride.content,m.ChannelData[m.channelNameString][m.channelListData])           
  else if  m.timeGride.content = invalid
       ?"first time start"
       content = CreateObject("roSGNode", "ContentNode")     
       m.timeGride.content = content
-      getChannelDAta(m.timeGride.content,m.ChannelData[m.channelListData]) 
+      getChannelDAta(m.timeGride.content,m.ChannelData[m.channelNameString][m.channelListData]) 
  else if  m.channelListData = 0 then
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"       
  end if  
@@ -132,7 +195,7 @@ end sub
   
 
 sub getChannelDAta(channelnode as object,channelData as object)
-?"getChannelDAta;";nodedata;
+?"getChannelDAta;"
     nodedata = channelnode.createChild("ContentNode")
   if channelData <> invalid
    if channelData.id <> invalid then nodedata.id = channelData.id
@@ -140,45 +203,23 @@ sub getChannelDAta(channelnode as object,channelData as object)
    if channelData.logo <> invalid then nodedata.HDSMALLICONURL = channelData.logo
    if channelData.url <> invalid then nodedata.url = channelData.url
     
-    m.TestingTAsk = createObject("roSGNode", "TestingTAsk")
-    m.TestingTAsk.id = channelnode.getChildCount()-1 
-    m.TestingTAsk.observeField("data","showResponse")
+    m.TestingTAsk = createObject("roSGNode","TestingTAsk")
+    m.TestingTAsk.id = channelnode.getChildCount()-1
+    m.TestingTAsk.content = m.timeGride.content 
+    m.TestingTAsk.parameters ={"search":channelData.callSign}
+    m.TestingTAsk.observeField("programData","showResponse")
     m.TestingTAsk.control = "RUN"
   else 
     ?"getChannelDAta:: data is not complete ;";nodedata.Keys();
-  end if  
-   
-       
+  end if        
 end sub
  
 sub showResponse(event as object)
-?"testing ::showResponse; ";event.getData()
+?"testing ::showResponse; ";
 
-event.getRoSGNode().control="stop"    
-
-   content = m.timeGride.content
-   channleNode = content.getChild(event.getData().ToInt())
-   currentTime =  CreateObject("roDateTime")
-    t = currentTime.AsSeconds()
-    t = t - (t mod 1800)
-      
-    programNode = channleNode.createChild("ContentNode")  
-    programNode.TITLE  = "Justin Beiber concert"
-    programNode.PLAYSTART = t  
-    programNode.PLAYDURATION = 3000
-    
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "International football tournament"
-    programNode.PLAYSTART = t+3000  
-    programNode.PLAYDURATION = 2000
-      
-    programNode = channleNode.createChild("ContentNode")
-    programNode.TITLE  = "c"
-    programNode.PLAYSTART = t+5000  
-    programNode.PLAYDURATION = 2000   
-    
-    if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "stop" then m.lazyLoadingTimer.control = "start"
-      
+ if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "stop" then m.lazyLoadingTimer.control = "start"
+  event.getRoSGNode().control="stop"    
+         
 end sub
   
 sub reqApiCAll(page)
@@ -191,7 +232,9 @@ end sub
 sub ChannelResponseData()
 ?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
    m.ChannelData = m.ChannelEpisodeTask.ChannelData
+   initGrigData(m.ChannelData)
    m.channelListData = 0
+   m.channelNameString ="ALL"
    m.lazyLoadingTimer.control = "start"
       
 end sub
@@ -215,8 +258,7 @@ sub videoState()
  Print "videoState"; m.video.state
  Print "completedStreamInfo"; m.video.completedStreamInfo
  Print "videoFormat"; m.video.completedStreamInfo
- 
- 
+  
 '  if m.video.state="playing"
 '     m.video.control="pause"
 '      m.video.mute = false
@@ -230,18 +272,22 @@ sub videoState()
 end sub
 
 
-sub initGrigData()
+sub initGrigData(channels as object)
 ?"m.ChannelCategoryMarkuGrid:init()"
  
  marupContent = createObject("roSGNode", "ContentNode")
  
- marupContent.createChild("ContentNode").TITLE = "ALL"
- marupContent.createChild("ContentNode").TITLE = "RECENT"
- marupContent.createChild("ContentNode").TITLE = "MY CHANNELS"
- marupContent.createChild("ContentNode").TITLE = "SPORTS"
- marupContent.createChild("ContentNode").TITLE = "NEWS"
- marupContent.createChild("ContentNode").TITLE = "MOVIES"
- marupContent.createChild("ContentNode").TITLE = "KIDS"
+ for each channel in channels.Keys()
+ 
+   marupContent.createChild("ContentNode").TITLE =channel
+ end for
+' marupContent.createChild("ContentNode").TITLE = "ALL"
+' marupContent.createChild("ContentNode").TITLE = "RECENT"
+' marupContent.createChild("ContentNode").TITLE = "MY CHANNELS"
+' marupContent.createChild("ContentNode").TITLE = "SPORTS"
+' marupContent.createChild("ContentNode").TITLE = "NEWS"
+' marupContent.createChild("ContentNode").TITLE = "MOVIES"
+' marupContent.createChild("ContentNode").TITLE = "KIDS"
 
  m.ChannelCategoryMarkuGrid.content = marupContent
  m.ChannelCategoryMarkuGrid.observeField("itemSelected","categorySelcted")
@@ -249,8 +295,15 @@ sub initGrigData()
  
 end sub
 sub categorySelcted(event as object)
-?"categorySelcted: ";event.getData()
-    
+?"categorySelcted: ";event.getRoSGNode().content.getChild(event.getData())
+
+  if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
+   m.timeGride.content  = createObject("roSGNode", "ContentNode")
+   m.channelNameString = event.getRoSGNode().content.getChild(event.getData()).title
+   m.channelListData = 0    
+   m.ChannelCategoryMarkuGrid.setFocus(false)
+   m.timeGride.setFocus(true)
+  
 end sub
  
 sub programSelected(event as object)
@@ -269,7 +322,7 @@ playVideo(url)
 end sub
 
 sub VideoControl(event as object) 
-  
+ 
   video = event.getRoSGNode()
   ?"VideoControl: ";video
   ?"control: ";video.control
@@ -293,7 +346,6 @@ sub closeSearchScreen(event as object)
       m.focusPoster.uri = "pkg:/images/home/categiryNavFocusIcon.png"
     end if
 end sub
-
 sub closeProfileScreen(event as object)
 ?"closeProfileScreen; "
   searchScreen = event.getRoSGNode()    
@@ -303,16 +355,15 @@ sub closeProfileScreen(event as object)
       m.top.removeChild(searchScreen)
       m.searchPoster.setFocus(false)
       m.ChannelCategoryMarkuGrid.setFocus(false)
-       m.timeGride.setFocus(true)
+      m.timeGride.setFocus(true)
       m.focusPoster.uri = ""
     end if
 end sub
 sub showLoginPage(event as object)
 ?"showLoginPage"
   searchScreen = event.getRoSGNode()    
-  m.top.removeChild(searchScreen)
-   
-m.top.ExitView =true    
+  m.top.removeChild(searchScreen)   
+  m.top.ExitView =true    
 end sub
 
 sub playSearchChannelUrl(event as object)
