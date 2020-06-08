@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	@yield('top-stylesheets')
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -30,6 +32,8 @@
 
 <link rel="stylesheet" href="{{ asset('frontend/style.css') }}" />
 <script src="{{ asset('frontend/script.js') }}" ></script>
+
+@yield('stylesheets-bottom')
 
 </body>
 </html>

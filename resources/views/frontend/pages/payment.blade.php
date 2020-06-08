@@ -1,7 +1,13 @@
+@extends('frontend/partials/master')
 
+@section('top-stylesheets')
 	<style>
 		nav#mainNav {
 			background-color: #004E92;
+		}
+
+		.page-section {
+		    padding: 8rem 0 !important;
 		}
 
 		.subscription-box {
@@ -70,8 +76,7 @@
 		}
 	</style>
 
-@extends('frontend/partials/master')
-
+@endsection
 
 @section('content')
 	<section class="page-section">
@@ -79,7 +84,7 @@
 			<div class="text-center">
 				<h2 class="section-heading">Add Your Billing Details</h2>
 				<div class="row">
-					<div class="col-md-4">
+					<div class="col-md-4 text-left">
 						<div class="row subscription-box">
 							<div class="subscription-box-head">
 								<h4>Your Subscription:</h4>
@@ -113,14 +118,17 @@
 						<div class="my-auto" style="width: 80%;height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
 							<div class="container">
 								<div class="row" style="padding-top: 2rem;margin-left: 2rem;margin-right: 2rem;">
-									<div class="col-md-4" style="padding: 1rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;">
-										Credit Card
+									<div class="col-md-4" style="padding: 2rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;">
+										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
+										<span style="display: block;">Credit Card</span>
 									</div>
 									<div class="col-md-4" style="padding: 2rem;">
-										Debit Card
+										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
+										<span style="display: block;">Debit Card</span>
 									</div>
 									<div class="col-md-4" style="padding: 2rem;">
-										Paypal
+										<img src="{{ asset('frontend/img/paypal.svg') }}">
+										<span style="display: block;">Paypal</span>
 									</div>
 								</div>
 
