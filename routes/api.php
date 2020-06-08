@@ -49,6 +49,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('channeldayschdeule', 'Admin\ChannelController@channelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
+    Route::get('support', 'APIController@support');
 });
 
 // Superadmin Routes

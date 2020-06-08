@@ -261,5 +261,12 @@ public function login(Request $request)
 
     }
 
+    public function support()
+    { $supportnumber=[];
+        $supportnumber=['1234656477','773727828'];
+        $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>'For help and support call the numbers below');
+        return response()->json($response, 200);
+    }
+
     
 }
