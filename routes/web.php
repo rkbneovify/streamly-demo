@@ -92,3 +92,4 @@ Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google
 
 Route::get('/google/login', 'HomeController@handleGoogleCallback');
 Route::post('/user/register', 'HomeController@createUser');
+Route::get('/payment', 'Pages\Payment@showPage');
