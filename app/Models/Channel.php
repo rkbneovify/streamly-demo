@@ -2,8 +2,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Support\Facades\DB;
 /**
    @property varchar $name name
 @property varchar $url url
@@ -21,7 +19,9 @@ class Channel extends Model
     * Database table name
     */
     protected $table = 'channels';
-
+    protected $casts = [
+        'genrename' => 'array',
+      ];
     /**
     * Mass assignable columns
     */
@@ -29,6 +29,7 @@ class Channel extends Model
 'url',
 'genre_id','status','genres','image'];
 protected $appends = ['logo'];
+
     /**
     * Date time columns.
     */
@@ -49,6 +50,20 @@ protected $appends = ['logo'];
     $imagePath=asset("/uploads/channellogo/".$this->image);
    return $imagePath;
 }
+// public function getGenrenameAttribute($value)
+// {
+//   return $value = is_array($value) ? $value : json_decode($value) ;
+    
+// if (is_null($value)) {
+//         $value = [];
+//     }
+
+//     return $value;
+// }
+
+
+
+
 
     
 
