@@ -10,11 +10,14 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 use Illuminate\Http\Request;
 use Validator;
 use DB;
+use Laravel\Cashier\Billable;
+
 
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
     use EntrustUserTrait;
+    use Billable;
 
 
     /**

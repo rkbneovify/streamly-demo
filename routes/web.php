@@ -86,6 +86,7 @@ Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
 
 
 
+
 Route::get('/logout', 'HomeController@logout')->name('logout');
 Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google.login');
 
