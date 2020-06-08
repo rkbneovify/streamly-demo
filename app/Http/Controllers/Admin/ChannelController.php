@@ -10,7 +10,7 @@ use App\Models\Gracenotechannel;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
-//use App\Traits\ImageUpload;
+//use App\Traits\ImageUpload;programs
 /**
  * Description of ChannelController
  *
@@ -33,7 +33,13 @@ class ChannelController extends Controller
     
     public function channeljson() 
     {   
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url',DB::raw('GROUP_CONCAT(g.name) genrename'))
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+        // ->selectRaw("GROUP_CONCAT(g.name) genrename")
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
+        
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
         ->whereIn('channels.callSign', function($query)
     {
@@ -43,20 +49,21 @@ class ChannelController extends Controller
     })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
-        
-        
+    //JSON_ARRAY
        
       $pagechannel=$record->get();
     //   ->paginate(10);
         
-      return response()->json(array(
-        'message' => 'Channel with genre successfully fetched',
-        'data'=>$pagechannel, 
+      
+    //  return response()->json($record->toSql());
+    $response = [
         'success' => true,
-        //'author'=>$author,
-        //'genre'=>$genre,
-     ));
-       // return response()->json($record->toSql());
+        'data'=>$pagechannel, 
+        'message' => 'Channel with genre successfully fetched',
+        'response_code'=>200,
+    ];
+    // return response()->json($reco);
+    return response()->json($response, 200);
     }
     //search
     public function searchapi(Request $request)
