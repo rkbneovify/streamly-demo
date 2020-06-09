@@ -138,8 +138,10 @@ extension LoginVC
                 if response?.success == true {
                     Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
+                    Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
+                    Utility.setStringObject(value: response?.user?.created_at ?? "", key: Constant.UserDefault.createdAt)
                     selfStrong.removeSpinner()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
                         Switcher.updateRootVC()
                     })
                 }

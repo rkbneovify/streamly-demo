@@ -17,7 +17,7 @@ class Switcher {
         let reachability = Reachability.isConnectedToNetwork()
         debugPrint(reachability)
         if reachability == true{
-            if(status == true) {
+            if (status == true) {
                 //logedIn
                 Constant.navigateToRootHome()
             }

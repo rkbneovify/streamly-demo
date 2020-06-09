@@ -38,6 +38,13 @@ enum ValidationErrorMessages:String
 
 }
 
+/// for settings childView
+
+enum CustomPopUp:Int {
+    
+    case profile = 0, registrdDevice, support,policies,logOut
+}
+
 enum AppStoryboard : String {
 
     /// we can add number if name

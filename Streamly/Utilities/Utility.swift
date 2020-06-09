@@ -36,9 +36,9 @@ class Utility {
            Switcher.updateRootVC()
        }
 
-       static func retriveStringObject(key: String) -> String? {
+       static func retriveStringObject(key: String) -> String {
 
-           return  UserDefaults.standard.string(forKey: key)
+        return  UserDefaults.standard.string(forKey: key) ?? "N/A"
        }
 
       // MARK: Convenience

@@ -161,6 +161,19 @@ extension String
         }
         return true
     }
+
+    ///for load HTML string in TextView
+    var htmlToAttributedString: NSAttributedString? {
+        guard let data = data(using: .utf8) else { return NSAttributedString() }
+        do {
+            return try NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding:String.Encoding.utf8.rawValue], documentAttributes: nil)
+        } catch {
+            return NSAttributedString()
+        }
+    }
+    var htmlToString: String {
+        return htmlToAttributedString?.string ?? ""
+    }
 }
 
 extension UIColor {
@@ -294,5 +307,37 @@ extension UIButton
         button.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
         button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+    }
+}
+extension UIView {
+    
+    /** Loads instance from nib with the same name. */
+    func loadNib() -> UIView {
+        let bundle = Bundle(for: type(of: self))
+        let nibName = type(of: self).description().components(separatedBy: ".").last!
+        let nib = UINib(nibName: nibName, bundle: bundle)
+        print(nibName)
+        return nib.instantiate(withOwner: self, options: nil).first as! UIView
+    }
+}
+
+extension UITableView {
+
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .white
+        messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = .center
+        messageLabel.font = UIFont(name: "HelveticaNeue-Medium", size: 30)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel
+
+    }
+
+    func restore() {
+        self.backgroundView = nil
+
     }
 }

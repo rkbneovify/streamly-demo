@@ -74,6 +74,7 @@ extension SettingsVC:UICollectionViewDelegate {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.selectItem(indexPath.item)
         
     }
 }
@@ -84,4 +85,44 @@ extension SettingsVC:Scroll {
         self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [.centeredHorizontally, .centeredVertically], animated: true)
     }
 
+}
+
+extension SettingsVC{
+
+    private func selectItem(_ itemNo:Int)
+    {
+        switch itemNo {
+        case CustomPopUp.profile.rawValue:
+            self.tablePopup(true)
+        case CustomPopUp.registrdDevice.rawValue:
+            self.tablePopup(false)
+        case CustomPopUp.support.rawValue:
+            self.viewPopups(itemNo)
+        case CustomPopUp.policies.rawValue:
+            self.viewPopups(itemNo)
+        case CustomPopUp.logOut.rawValue:
+            self.viewPopups(itemNo)
+        default:
+            return
+
+        }
+
+    }
+
+    ///Helpers select item
+    private func tablePopup(_ flag:Bool)
+    {
+        let popUPTvVC = PopUPTvVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        popUPTvVC.modalPresentationStyle = .overCurrentContext
+        popUPTvVC.isProfile = flag
+        self.present(popUPTvVC, animated:true, completion:nil)
+    }
+
+    private func viewPopups(_ item:Int)
+    {
+        let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        popUPViewsVC.modalPresentationStyle = .overCurrentContext
+        popUPViewsVC.item = item
+        self.present(popUPViewsVC, animated:true, completion:nil)
+    }
 }

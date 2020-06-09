@@ -8,10 +8,6 @@
 //
 
 import UIKit
-protocol Scroll:class {
-
-    func scrollCollectionView(_ index:Int)
-}
 
 class SettingsGridCell: UICollectionViewCell {
 

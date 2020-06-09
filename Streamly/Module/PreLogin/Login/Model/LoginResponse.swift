@@ -17,6 +17,7 @@ struct LoginResponse : Codable {
     let status              :Int?
     let response_code       :Int?
     let token_type          :String?
+    let user                :User?
     
     enum CodingKeys : String, CodingKey {
         
@@ -28,6 +29,7 @@ struct LoginResponse : Codable {
         case status = "status"
         case response_code = "response_code"
         case token_type = "token_type"
+        case user = "user"
     }
     
     init(from decoder: Decoder) throws {
@@ -40,6 +42,25 @@ struct LoginResponse : Codable {
         device_info = try values.decodeIfPresent(String.self, forKey: .device_info)
         token_type = try values.decodeIfPresent(String.self, forKey: .token_type)
         response_code = try values.decodeIfPresent(Int.self, forKey: .response_code)
+        user          = try values.decodeIfPresent(User.self, forKey: .user)
     }
     
+}
+
+struct User:Codable {
+
+    let name        :   String?
+    let created_at    : String?
+
+    enum CodingKeys : String, CodingKey {
+
+        case name = "name"
+        case created_at = "created_at"
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        name = try values.decodeIfPresent(String.self, forKey: .name)
+        created_at = try values.decodeIfPresent(String.self, forKey: .created_at)
+    }
 }

@@ -38,6 +38,11 @@ class HomeVC: UIViewController {
             "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"
         ]
     }
+    override var preferredFocusedView: UIView? {
+        get {
+            return self.allButton
+        }
+    }
 
     //MARK:- LifeCycle Methods
     override func viewDidLoad() {
@@ -56,11 +61,6 @@ class HomeVC: UIViewController {
         invalidateTimer()
     }
 
-    override var preferredFocusedView: UIView? {
-        get {
-            return self.allButton
-        }
-    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
              
@@ -177,8 +177,9 @@ class HomeVC: UIViewController {
 
     @IBAction func settingsAction(_ sender:UIButton){
 
-         let SettingVc = SettingsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
-         self.navigationController?.pushViewController(SettingVc, animated: false)
+         let settingVc = SettingsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+         self.navigationController?.pushViewController(settingVc, animated: false)
+        
     }
 }
 
