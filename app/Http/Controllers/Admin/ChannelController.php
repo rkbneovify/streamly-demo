@@ -55,7 +55,7 @@ class ChannelController extends Controller
     //   ->paginate(10);
         
       
-     return response()->json($record->toSql());
+    //  return response()->json($record->toSql());
     $response = [
         'success' => true,
         'data'=>$pagechannel, 
@@ -63,7 +63,7 @@ class ChannelController extends Controller
         'response_code'=>200,
     ];
     // return response()->json($reco);
-    // return response()->json($response, 200);
+    return response()->json($response, 200);
     }
     //search
     public function searchapi(Request $request)
