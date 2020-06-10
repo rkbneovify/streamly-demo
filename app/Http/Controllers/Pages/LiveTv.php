@@ -12,4 +12,10 @@ class LiveTv extends Controller
     	return view('frontend.pages.livetv');
 
     }
+
+    public function showChannel(){
+
+    	return view('frontend.pages.livetvchannel');
+
+    }
 }
