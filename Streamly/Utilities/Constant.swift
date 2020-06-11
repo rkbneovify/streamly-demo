@@ -56,6 +56,12 @@ class Constant: NSObject
         app.window?.rootViewController = rootViewController
     }
 
+    class func logOut()
+    {
+        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+        Switcher.updateRootVC()
+    }
+
     struct UserDefault {
         
         static let isLogin = "isLogin"

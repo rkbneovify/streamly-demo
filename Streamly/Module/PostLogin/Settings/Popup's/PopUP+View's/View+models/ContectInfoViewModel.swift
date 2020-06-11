@@ -1,0 +1,112 @@
+//
+//  ContectInfoViewModel.swift
+//  Streamly
+//
+//  Created by Rohit Singh on 6/10/20.
+//  Copyright © 2020 Rohit Singh. All rights reserved.
+//
+
+import Foundation
+
+class ContactDataViewModel: NSObject {
+
+    var privacyResponseData:((PrivacyResponseData)->())?
+    var contactData:((ContactResponseData)->())?
+    var logoutdata:((LogoutResponseData)->())?
+    weak var delegate:HandleError?
+   
+
+    func getContactData() {
+        ApiCall.getContactInfoData(success: { data
+            in
+            if let contactModel = DataParserContact.parseContactData(data!) {
+                self.contactData!((contactModel))
+                print(contactModel)
+            }
+            print("Success")
+        }) { (error, data, code)  in
+
+            print("failure")
+            self.delegate?.handleError(error?.localizedDescription ?? "")
+        }
+    }
+
+    func logOUT() {
+        ApiCall.logOut(success: { data
+            in
+            if let logoutModel = DataParserLogOut.parseContactData(data!) {
+                self.logoutdata!((logoutModel))
+                print(logoutModel)
+            }
+            print("Success")
+        }) { (error, data, code)  in
+            
+            print("failure")
+            self.delegate?.handleError(error?.localizedDescription ?? "")
+        }
+    }
+
+    func getPrivacy() {
+           ApiCall.getPrivacyData(success: { data
+               in
+               if let privacyModel = DataParserPrivacy.parseContactData(data!) {
+                   self.privacyResponseData!((privacyModel))
+                   print(privacyModel)
+               }
+               print("Success")
+           }) { (error, data, code)  in
+
+               print("failure")
+               self.delegate?.handleError(error?.localizedDescription ?? "")
+           }
+       }
+}
+
+class DataParserContact {
+
+    static func parseContactData(_ data: Data) -> ContactResponseData? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(ContactResponseData.self, from: data)
+
+
+            return contactModelElement
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+}
+
+class DataParserLogOut {
+
+    static func parseContactData(_ data: Data) -> LogoutResponseData? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(LogoutResponseData.self, from: data)
+
+
+            return contactModelElement
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+}
+
+class DataParserPrivacy {
+
+    static func parseContactData(_ data: Data) -> PrivacyResponseData? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(PrivacyResponseData.self, from: data)
+
+
+            return contactModelElement
+        } catch {
+            print(error)
+        }
+        return nil
+    }
+}
+
+
+
+

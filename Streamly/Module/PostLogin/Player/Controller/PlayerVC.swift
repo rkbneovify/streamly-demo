@@ -23,7 +23,7 @@ class PlayerVC: UIViewController, AVPlayerViewControllerDelegate {
     // MARK: Helpers
     private func setupPlayer()
     {
-        let mediaURL = URL(string: "http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8")!
+        let mediaURL = URL(string: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8")!
         let asset = AVAsset(url: mediaURL)
 
         /*

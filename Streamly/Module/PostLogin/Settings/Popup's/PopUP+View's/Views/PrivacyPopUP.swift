@@ -13,6 +13,8 @@ class PrivacyPopUP: NibView {
     //MARK:- Outlets
 
     @IBOutlet weak var okButton:UIButton!
+    @IBOutlet weak var privacyBtn:UIButton!
+    @IBOutlet weak var policiesBtn:UIButton!
 
     //MARK:- Properties
 
@@ -35,7 +37,7 @@ class PrivacyPopUP: NibView {
 
     //MARK:- Actions
 
-    @IBAction func ButtonActions(_ sender: UIButton) {
+    @IBAction func buttonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)
     }
 }

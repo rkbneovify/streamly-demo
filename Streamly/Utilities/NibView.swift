@@ -36,14 +36,14 @@ private extension NibView {
         // Adding custom subview on top of our view
         addSubview(view)
 
-       // view.translatesAutoresizingMaskIntoConstraints = false
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[childView]|",
-//                                                      options: [],
-//                                                      metrics: nil,
-//                                                      views: ["childView": view]))
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[childView]|",
-//                                                      options: [],
-//                                                      metrics: nil,
-  //                                                    views: ["childView": view]))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[childView]|",
+                                                      options: [],
+                                                      metrics: nil,
+                                                      views: ["childView": view]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[childView]|",
+                                                      options: [],
+                                                      metrics: nil,
+                                                      views: ["childView": view]))
     }
 }
