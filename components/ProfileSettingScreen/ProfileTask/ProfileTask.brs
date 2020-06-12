@@ -28,12 +28,12 @@ sub getProfile()
          m.top.response = jsonResponse 
   else if m.top.callto = "Support"
   
-         jsonResponse = APICall("", m.top.callType ,m.top.data, m.top.parameters)       
+         jsonResponse = APICall(getBaseUrl()+getsupportUrl(), m.top.callType ,m.top.data, m.top.parameters)       
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   else if m.top.callto = "Privacy & Policy"
   
-         jsonResponse = APICall("", m.top.callType ,m.top.data,m.top.parameters)
+         jsonResponse = APICall(getBaseUrl()+getprivacypolUrl(), m.top.callType ,m.top.data,m.top.parameters)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
   else if m.top.callto = "Sign out"

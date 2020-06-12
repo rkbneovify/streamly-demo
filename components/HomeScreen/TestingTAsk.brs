@@ -7,25 +7,25 @@ sub ChannnleAPI()
 ?"ChannnleAPI"
 ?"API start call"
 
-        m.top.callType="POST"
-             
+        m.top.callType="POST"      
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
+  ?"programData: ";programData
 'sleep(4000)
 ?"API End call";   
 
-    data = programData.data 
-    programdata = data[0].programs      
+  if programData.response_code = 200
+    
+    programdata = programData.data[0].programs      
+    
     content = m.top.content
     channleNode = content.getChild(m.top.id.ToInt())
-'   ?"programdata: count: ";programdata.Count()
-    length =  programdata.Count()-80
-    
-'    programsNode = createObject("roSGNode", "ContentNode")
+   ?"programdata: count: ";programdata.Count()
+    length =  programdata.Count()
     timemin =0
-    for i=0 to length
+    for i=0 to length-30
        
     prograom = programdata[i]
-   
+'   ?"prograom ;";prograom
     if timemin <= prograom.start
        singleProgramNode = channleNode.createChild("ContentNode")  
        if prograom.title<>invalid then singleProgramNode.TITLE  = prograom.title
@@ -33,14 +33,13 @@ sub ChannnleAPI()
        if prograom["end"]<>invalid then 
         singleProgramNode.PLAYDURATION  = prograom["end"]- prograom["start"] 
         timemin = prograom["end"] 
-       end if
-      
+       end if      
     end if       
     end for
     
-'    channleNode.appendChildren(programsNode)
-'    channleNode.appendChild(programsNode) 
-    m.top.programData = programData
-'   m.top.control="stop" 
+    m.top.programData = programData  
+  end if
+   
+
 end sub
  

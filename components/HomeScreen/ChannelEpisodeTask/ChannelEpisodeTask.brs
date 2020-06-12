@@ -20,15 +20,22 @@ Sub ChannnleAPI()
       
       if channles[i]<>invalid
         ?"channles[i].genrename ;";channles[i].genrename
-          if channles[i].genrename <> invalid
-             
-              if categoryChannels[channles[i].genrename]<>invalid 
-                  arrayValue =  categoryChannels[channles[i].genrename] 
-                  arrayValue [arrayValue.count()] =channles[i]     
-                  categoryChannels[channles[i].genrename] = arrayValue
+          
+         if channles[i].genrename <> invalid 
+           for each genre in channles[i].genrename
+              
+              if categoryChannels[genre]<>invalid 
+                  arrayValue =  categoryChannels[genre] 
+                  arrayValue [arrayValue.count()] = channles[i]     
+                  categoryChannels[genre] = arrayValue
               else
-                 categoryChannels[channles[i].genrename] = [ channles[i] ]
+                 categoryChannels[genre] = [ channles[i] ]
               end if
+          
+            end for
+          
+             
+             
           end if
       end if
       
@@ -37,7 +44,7 @@ Sub ChannnleAPI()
      
       for each category in categoryChannels
         ?"category;tAsk ";category
-        ?"categoryChannels[category].Count() ";categoryChannels[category].Count()
+'        ?"categoryChannels[category].Count() ";categoryChannels[category].Count()
 '        Family, Sports ,Kids , (Movies,Family,Comedy)
       end for
 '     m.top.ChannelData = jsonResponse.data  

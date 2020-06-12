@@ -47,10 +47,10 @@ Function APICall(url as string, callType as String ,data as object,parameters as
    if parameters<>invalid and parameters.Count()>0
    
      for each parameter in parameters.Keys()
-     ?"parameter:";parameter
-     ?"parameters value";parameters[parameter]
+'     ?"parameter:";parameter
+'     ?"parameters value";parameters[parameter]
 '     ?" "+parameter+":"+parameters[parameter]
-            urlParameters=urlParameters+"&"+(parameter).toStr()+"="+(parameters[parameter]).toStr() 
+            urlParameters=(parameter).toStr()+"="+(parameters[parameter]).toStr()+"&"+ urlParameters
     end for
     
     
@@ -105,7 +105,7 @@ Function APICall(url as string, callType as String ,data as object,parameters as
                  responseJson["responseCode"] = msg.GetResponseCode()
                  responseJson["data"] = JsonResponse
                  
-                 ?"APICall::JsonResponse: ";JsonResponse
+'                 ?"APICall::JsonResponse: ";JsonResponse
 '                
                  return JsonResponse
                 
@@ -114,7 +114,7 @@ Function APICall(url as string, callType as String ,data as object,parameters as
                  responseJson["data"] =  ParseJson(msg.GetString()) 
                  responseJson["Failure"] =  msg.GetFailureReason()
                  
-                 ?"APICall::JsonResponse: ";responseJson
+'                 ?"APICall::JsonResponse: ";responseJson
 '                
                  return responseJson
               
@@ -156,7 +156,6 @@ Function connectedDeviceUrl() as String
 
 return "api/auth/connecteddevice"
         
-
 end Function
 
 Function getChannelListUrl() as String
@@ -175,6 +174,17 @@ Function getchannelschdeuleUrl() as String
  return "api/auth/channelschdeule"
 end Function
 
+Function getsupportUrl() as String
+ return "/api/auth/support"
+end Function
+
+Function getprivacypolUrl() as String
+ return "api/auth/privacypol"
+end Function
+
+Function getBaseUrlTemp() as String
+ return "http://ab8c26b210d7.ngrok.io/"
+end Function
 
 Function getDeviceInfo() as object
  ?"getDeviceInfo"

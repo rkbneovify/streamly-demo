@@ -2,6 +2,7 @@
 
 sub init()
     
+     ?"lMAin::accessToken: ";getAccountToken()
 '        setAccountToken("")  
    if getAccountToken() <> Invalid and getAccountToken() <> ""
             
@@ -15,6 +16,7 @@ sub init()
    end if  
     
 End sub
+
 
 Function showHomeScreen() as object
  ?"showHomeScreen"   

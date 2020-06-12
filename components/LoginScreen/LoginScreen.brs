@@ -47,42 +47,111 @@ sub init()
     m.top.observeField("focusedChild","OnFocusChildChange")
 
     m.setFocus=false
+    initDialogforCreateAccount()
 
 end sub
 sub dontHaveAccount()
-
-    m.layoutGroup = m.top.createChild("LayoutGroup")
-    m.layoutGroup.itemSpacings = 25
-    m.layoutGroup.layoutDirection ="horiz"
-'    m.layoutGroup.translation =[700,900]
-'   m.layoutGroup.vertAlignment = "center"
-'   m.layoutGroup.horizAlignment = "left"
-     
-    m.dontHaveAccountLAbel = m.top.createChild("Label")
+    
+    m.dontHaveAccountLAbel = m.top.findNode("registerLabel")
     m.dontHaveAccountLAbel.text ="Don't have acount ?"
-    m.dontHaveAccountLAbel.translation =[760,900]
+    m.dontHaveAccountLAbel.translation =[227,660]
     m.dontHaveAccountLAbel.color = "#000000"
     m.dontHaveAccountLAbel.Font= getFont(26,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+ 
     
-    m.registerNowLabel = m.dontHaveAccountLAbel.createChild("LabelList")
-    m.registerNowLabel.color="#004E92"
-    m.registerNowLabel.focusedColor="#0db5ba"
-    m.registerNowLabel.Font= getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf") 
-    m.registerNowLabel.focusedFont = getFont(30,"pkg:/fonts/HelveticaNeueMedium.ttf") 
-    m.registerNowLabel.translation =[250,0]
-    m.registerNowLabel.itemSize=[200,35]
-    m.registerNowLabel.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
-    m.registerNowLabel.focusBitmapUri = ""
-    checklistNode = createObject("roSGNode", "ContentNode") 
-    contentNode = checklistNode.createChild("ContentNode")
-    contentNode.Title = "Register now"
-    m.registerNowLabel.content =  checklistNode 
+    m.OkButton1 = m.dontHaveAccountLAbel.createChild("Button")
+    m.OkButton1.observeField("buttonSelected","showDialogforCreateAccount")  
+'    m.OkButton.setFocus(true)           
+                 m.OkButton1.translation= [250,-5]
+                 m.OkButton1.minWidth  = "180"
+                 m.OkButton1.maxWidth  = "180"                
+                 m.OkButton1.focusedTextColor="#FFFFFF"
+                 m.OkButton1.height = "45"              
+                 m.OkButton1.focusBitmapUri="pkg:/images/Login/borderof.png"
+                 m.OkButton1.showFocusFootprint="true"             
+                 m.OkButton1.iconUri=""
+                 m.OkButton1.focusedIconUri=""
+                 m.OkButton1.focusFootprintBitmapUri = "pkg:/images/Login/borderon.png"
+'                 m.OkButton.horizAlign="center"
+                 okLabel =  m.OkButton1.createChild("Label")
+                        okLabel.horizAlign="center"
+                        okLabel.height = "45"
+                        okLabel.color ="#004E92"
+                        okLabel.width  = "180"
+                        okLabel.vertAlign = "center"
+                        okLabel.text="Register now"
+                        okLabel.font = getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf")     
 end sub
+ 
+sub showDialogforCreateAccount()
+    m.top.appendChild(m.DialogNodePoster)
+    m.OkButton.setFocus(true) 
+end sub
+   
+ 
+sub initDialogforCreateAccount()
+?"showDialogforCreateAccount ;";
+
+    m.DialogNodePoster = createObject("roSGNode", "Poster")
+    m.DialogNodePoster.width = 1223
+    m.DialogNodePoster.height = 554
+    m.DialogNodePoster.uri = "pkg:/images/profile/dialogBackground.png"
+    m.DialogNodePoster.translation = [389,324]
+    
+    m.labelTitle = m.DialogNodePoster.createChild("Label") 
+    m.labelTitle.text = "Sign up for the best experience"
+    m.labelTitle.font =  getFont(44,"pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
+    m.labelTitle.width = 1223
+    m.labelTitle.height = 40
+    m.labelTitle.horizAlign="center"
+    m.labelTitle.vertAlign = "center"     
+    m.labelTitle.translation = [0,50]
+     
+    m.ScrolableText = m.DialogNodePoster.createChild("ScrollableText") 
+    m.ScrolableText.width = 1183
+    m.ScrolableText.height = 300
+    m.ScrolableText.translation = [50,130]
+    m.ScrolableText.font = "font:SmallBoldSystemFont"
+    m.ScrolableText.text = "Create account to see your favorite Sports Channels, Movies, News and much more." + chr(10) + chr(10) + "Just Go to the Website for sign up Now: " + chr(10) + "https://www.StreamlyTv.com/account"
+    m.ScrolableText.horizAlign = "center" 
+    m.ScrolableText.vertAlign = "center"
+    
+    
+    m.OkButton = m.DialogNodePoster.createChild("Button")
+    m.OkButton.observeField("buttonSelected","closeshowDialogforCreateAccoun") 
+           
+                 m.OkButton.translation= [470,440]
+                 m.OkButton.minWidth  = "240"
+                 m.OkButton.maxWidth  = "240"                
+                 m.OkButton.focusedTextColor="#FFFFFF"
+                 m.OkButton.height = "74"              
+                 m.OkButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                 m.OkButton.showFocusFootprint="true"             
+                 m.OkButton.iconUri=""
+                 m.OkButton.focusedIconUri=""
+                 m.OkButton.focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
+'                 m.OkButton.horizAlign="center"
+                 okLabel =  m.OkButton.createChild("Label")
+                        okLabel.horizAlign="center"
+                        okLabel.height = "74"
+                        okLabel.width  = "240"
+                        okLabel.vertAlign = "center"
+                        okLabel.text="OK" 
+    
+end sub
+
+sub closeshowDialogforCreateAccoun()
+?"closeshowDialogforCreateAccoun"
+    m.top.removeChild(m.DialogNodePoster)
+    m.OkButton.setFocus(false)
+    m.OkButton1.setFocus(true)
+end sub
+   
  
 sub rememberMe()
        
-     m.remenberCheckList =  m.top.createChild("CheckList")
-     m.remenberCheckList.translation =[650,680]
+     m.remenberCheckList =   m.top.findNode("rememberCheckList")
+     m.remenberCheckList.translation =[127,455]
      m.remenberCheckList.itemSize=[300,50]
      m.remenberCheckList.checkedIconUri = "pkg:/images/checked_icon_30.png"
      m.remenberCheckList.uncheckedIconUri = "pkg:/images/unchecked_icon_30.png"
@@ -405,14 +474,19 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
   
   result = false
   if press
-    if key="down" 
+  
+   if  m.OkButton.hasFocus()
+   
+    closeshowDialogforCreateAccoun()
+     return true 
+   else if key="down" 
             
        ?"Login: if: "
     
      if m.SignInButton.hasFocus() then
        
        m.SignInButton.setFocus(false)
-       m.registerNowLabel.setFocus(true)
+       m.OkButton1.setFocus(true)
        
      else if m.PasswordEditText.hasFocus()
      
@@ -445,9 +519,9 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     else if  key="up"
      ?"Login: else: "
        
-     if m.registerNowLabel.hasFocus() then
+     if m.OkButton1.hasFocus() then
        
-       m.registerNowLabel.setFocus(false) 
+       m.OkButton1.setFocus(false) 
        m.SignInButton.setFocus(true)     
        
      else if m.PasswordEditText.hasFocus()

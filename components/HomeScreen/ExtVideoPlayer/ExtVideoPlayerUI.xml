@@ -63,7 +63,7 @@
 		
 		<Rectangle id="outlineRect" width="1520" height="10" color="0xFFFFFFFF" />
 		<Rectangle id="progressRect" width="1" height="10" color="#004E92"/>
-	    <Poster id="currentseek" translation="[-10,-10]" width="35" height="35" opacity="1.0"
+	    <Poster id="currentseek" translation="[-10,-12]" width="35" height="35" opacity="1.0"
 	            uri = "pkg:/images/home/seekposition.png"/>
 	    	
 		<!-- <Label id="leftProgressLabel" text="00:00" translation="[-140,5]"/>

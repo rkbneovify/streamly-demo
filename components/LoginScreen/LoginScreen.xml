@@ -68,10 +68,10 @@
 	                  width="620"
 	                  uri="pkg:/images/Login/borderof.png" 
 	           >
-	          
+	          <!-- text = "shahjad@gmail.com" -->
 	             <TextEditBox
 	                 id = "UsernamEditText"
-	                 text = ""
+	                 text = "shahjad@gmail.com"
 	                 translation = "[35,30]"	                 
 	                 width = "585"
 	                 textColor="#0A0A0A"
@@ -88,16 +88,18 @@
 	                 color="#0A0A0A"
 	                    
 	          />
+	          <!-- fireTrackingEvents -->
 	           <Poster id="PasswordPoster"
                       translation = "[127,337]"
 	                  height="94"
 	                  width="620"
 	                  uri="pkg:/images/Login/borderon.png" 
 	           >
+	           <!-- text = "123456789" -->
 	              <TextEditBox
 	               
 	                 id = "PasswordEditText"
-	                 text = ""
+	                 text = "123456789"
 	                 translation = "[35,30]"
 	                 secureMode="true"
 	                 width = "585"
@@ -106,13 +108,7 @@
 	                 clearOnDownKey="false"                        
 	              />
 	          </Poster>
-	        <!--   <CheckList id="rememberCheckList">
-	          <ContentNode role = "content" >
-        <ContentNode title = "Remember me"/>
-        <ContentNode title = "Renderable "/>
-        
-      </ContentNode>
-	          </CheckList> -->
+              <CheckList id="rememberCheckList"/>
 	          <Button 
 	                 id="SignInButton"
 	                 
@@ -127,6 +123,8 @@
 	                 showFocusFootprint="true"
 	          
 	          />
+	          
+	          <Label  id="registerLabel"/>
 	  
 	  </Poster>
 	  

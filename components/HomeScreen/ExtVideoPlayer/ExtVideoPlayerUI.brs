@@ -5,7 +5,7 @@ Function init()
     m.ExtVideo = m.top
     m.top.observeField("state", "handleStateChange")
     m.top.observeField("bufferingStatus", "handleBufferingStatus")
-    m.top.observeField("position", "handlePosition")
+'    m.top.observeField("position", "handlePosition")
 
     initProgressBar()
     initThumbnails()       ' hostPefix and trickInterval are passed in from interface fields'
@@ -16,10 +16,10 @@ Function init()
      m.trickInterval=0
 end Function
 
-sub handlePosition(event as object)
-?"handlePosition: ";event.getData()
-?"handlePosition: state";event.getRoSGNode().state
-end sub
+'sub handlePosition(event as object)
+'?"handlePosition: ";event.getData()
+'?"handlePosition: state";event.getRoSGNode().state
+'end sub
 
 Function handleStateChange(msg)
 ?"handleStateChange: msg.getData(): ";msg.getData() 
@@ -83,8 +83,7 @@ sub showHideThumbnail()
      m.thumbnailVideoImage.uri = m.top.thumbnailImage
      m.thumbnailVideoImage.visible = true
      m.opcitythumpnail.visible = true
-     
- 
+      
  else
 
      m.thumbnailVideoImage.visible = false
@@ -120,15 +119,15 @@ end Function
 Function showProgressBar(position)
  m.playPause.uri = "pkg:/images/home/playicon.png"   
 '        m.playPause.visible =true
+
+    m.progress.visible = true
+    m.playPause.visible =true
+    m.headerIcons.visible = true
 if position <> 0 and m.videoDuration <>0
     
-   m.progress.visible = true
-    m.playPause.visible =true
-   m.headerIcons.visible = true
-   
     m.progressRect.width = position * m.progressWidth / m.videoDuration
     leftPositionSeconds = position * 100 / 100
-    m.currentseek.translation = [m.progressRect.width-10,-10]
+    m.currentseek.translation = [m.progressRect.width-20,-12]
     rightPositionSeconds = m.videoDuration - leftPositionSeconds
 '    m.leftProgressLabel.text = setTimeText(leftPositionSeconds)
 '    m.rightProgressLabel.text = setTimeText(rightPositionSeconds)
@@ -140,7 +139,7 @@ end Function
 Function hideProgressBar()
     m.playPause.uri = "pkg:/images/home/pauseicon100.png" 
     m.progress.visible = false
-     m.playPause.visible =false
+    m.playPause.visible =false
     m.headerIcons.visible = false
 end Function
 
@@ -213,8 +212,7 @@ Function startSeeking(key)  ' key is either "fastforward" or "rewind"
       ?"m.trickPlaySpeedplay speed:: ";m.trickPlaySpeed 
       m.trickPlaySpeed = m.trickPlaySpeed+ 1
       ?"m.trickPlaySpeed += 1: ";m.trickPlaySpeed 
-      if m.trickPlaySpeed > 3 ' saturate trickplay speed at 3x'
-          
+      if m.trickPlaySpeed > 3 ' saturate trickplay speed at 3x'          
           m.trickPlaySpeed = 1
       end if
       
@@ -230,7 +228,7 @@ Function pauseSeeking(key, position)  ' key is either "left" or "right"
 if m.trickPosition<>invalid and m.videoDuration<>invalid and m.trickInterval<>invalid
 
 
-   m.trickPlayTimer.control = "STOP"
+  m.trickPlayTimer.control = "STOP"
   m.trickPlaySpeed = 0
   if m.trickplayDirection = "paused"
 '    showThumbnails(position)
@@ -252,6 +250,7 @@ if m.trickPosition<>invalid and m.videoDuration<>invalid and m.trickInterval<>in
     end if
     m.trickplayDirection = "reverse"
   end if
+'  position = m.trickPosition * m.trickInterval
   showProgressBar(position)
 
 end if
@@ -262,115 +261,14 @@ Function endSeeking()
   ' is there a better way to force seek position?'
   m.ExtVideo.control = "stop"
   m.ExtVideo.control = "play"
+'  ?"m.trickPosition * m.trickInterval: ";m.trickPosition * m.trickInterval
+'  ?"Cdbl(m.trickPosition * m.trickInterval)";Cdbl(m.trickPosition * m.trickInterval)
   seekPosition = Cdbl(m.trickPosition * m.trickInterval)
-'  adinfo = getAdBreakAtPosition(seekPosition)
-'  if adinfo <> invalid and ((seekPosition >= adinfo.start and seekPosition <= adinfo.end))
-'    if m.initPos <> 0 and seekPosition > m.initPos
-'      seekPosition = adinfo.start
-'      ? "seek fwd - begin of ad, position= "; seekPosition
-'    else if m.initPos <> 0 and m.initPos < seekPosition
-'      seekPosition = adinfo.end + 3   ' until can get thumbnails aligned to iframes'
-'      ? "seek rew - end of ad, position= "; seekPosition
-'    else
-'      seekPosition = m.ExtVideo.position
-'    end if
-'  else if adinfo <> invalid and m.initPos <> 0 and seekPosition > adinfo.start ' user skipped ad, throw them back
-'      seekPosition = adinfo.start
-'  end if
+
   m.ExtVideo.seek = seekPosition
   resetSeekLogic()
   setProgressModePlay()
 end Function
-
-'Function showThumbnails(position)
-'    m.trickPosition = Fix(position / 5) + 1
-'    ? "m.trickPosition= ", m.trickPosition
-'
-'    'don't display thumbnails if m.hostPrefix is not set
-'    if m.hostPrefix = invalid
-'      return 0
-'    end if
-'
-'    m.thumbnails.visible = true
-'
-'    ' calculate the start index, special handling if m.trickPosition < 3
-'    ' the arrayPosters have 5 slots, don't fill lower two slots at beginning of the stream
-'    startIndex = 0
-'    endIndex = 4
-'    if m.trickPosition < 3
-'      startIndexData = [3, 2, 1]
-'      startIndex = startIndexData[m.trickPosition]
-'    end if
-'
-'    adinfo = getAdBreakAtPosition(position)
-'    if adinfo <> Invalid
-'      ? "ad start= "; adinfo.start; ", ad end= "; adinfo.end
-'    end if
-'    for i = startIndex to endIndex
-'      ' array index 2 is the current position (poster_thumb_center), other indexes are offset'
-'      position = (m.trickPosition + i - 2) * m.trickInterval
-'      if adinfo <> invalid and position >= adinfo.start and position <= adinfo.end
-'        m.arrayPosters[i].uri = ""
-'      else
-'        m.arrayPosters[i].uri = m.hostPrefix + "thumb-" + (m.trickPosition + i - 2).toStr() + ".jpg"
-'      end if
-'      ? "show - poster i="; i; ", position="; position; ", uri="; m.arrayPosters[i].uri
-'    end for
-'end Function
-
-'Function hideThumbnails()
-'    m.thumbnails.visible = false
-'end Function
-
-'Function shiftThumbnailsLeft()    ' forward direction'
-'  'don't display thumbnails if m.hostPrefix is not set
-'  if m.hostPrefix = invalid
-'    return 0
-'  end if
-'
-'  m.arrayPosters[0].uri = m.arrayPosters[1].uri
-'  m.arrayPosters[1].uri = m.arrayPosters[2].uri
-'  m.arrayPosters[2].uri = m.arrayPosters[3].uri
-'  m.arrayPosters[3].uri = m.arrayPosters[4].uri
-'
-'  position = (m.trickPosition + 2) * m.trickInterval
-'  adinfo = getAdBreakAtPosition(position)
-'  if adinfo <> Invalid and position >= adinfo.start
-'    ? "ad start= "; adinfo.start; ", ad end= "; adinfo.end
-'  end if
-'
-'  if adinfo <> invalid and position >= adinfo.start and position <= adinfo.end
-'    m.arrayPosters[4].uri = ""
-'  else
-'    m.arrayPosters[4].uri = m.hostPrefix + "thumb-" + (m.trickPosition + 2).toStr() + ".jpg"
-'  end if
-'  ? "shiftleft - poster 4, position="; position; ", uri="; m.arrayPosters[4].uri
-'end Function
-
-'Function shiftThumbnailsRight()   ' reverse direction'
-'  'don't display thumbnails if m.hostPrefix is not set
-'  if m.hostPrefix = invalid
-'    return 0
-'  end if
-'
-'  m.arrayPosters[4].uri = m.arrayPosters[3].uri
-'  m.arrayPosters[3].uri = m.arrayPosters[2].uri
-'  m.arrayPosters[2].uri = m.arrayPosters[1].uri
-'  m.arrayPosters[1].uri = m.arrayPosters[0].uri
-'
-'  position = (m.trickPosition - 2) * m.trickInterval
-'  adinfo = getAdBreakAtPosition(position)
-'  if adinfo <> Invalid
-'    ? "ad start= "; adinfo.start; ", ad end= "; adinfo.end
-'  end if
-'
-'  if adinfo <> invalid and position >= adinfo.start and position <= adinfo.end
-'    m.arrayPosters[0].uri = ""
-'  else
-'    m.arrayPosters[0].uri = m.hostPrefix + "thumb-" + (m.trickPosition - 2).toStr() + ".jpg"
-'  end if
-'  ? "shiftright - poster 0, position="; position; ", uri="; m.arrayPosters[0].uri
-'end Function
 
 Function handleTrickPlayTimer() as Void
     if m.trickplayDirection = "forward"
@@ -428,7 +326,6 @@ Function handleBufferingStatus(msg)
 end Function
 
 
-
 Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back button to leave video
    ? "onKeyEvent: "; key
     handled = false
@@ -453,12 +350,17 @@ Function onKeyEvent(key as String, press as Boolean) as Boolean  'Maps back butt
           if not isSeeking()
             position = m.ExtVideo.position
           else
+          ?"m.trickPosition; ";m.trickPosition
+          ?"m.trickInterval; ";m.trickInterval
+          
             position = m.trickPosition * m.trickInterval
           end if
+          ?"position:ckeing ;";position
           pauseSeeking(key, position)
         else if key = "play" or key = "OK"
             if m.ExtVideo.state = "playing"
                 m.initPos = m.ExtVideo.position
+                m.trickPosition = m.ExtVideo.position
                 showProgressBar(m.ExtVideo.position)
                 m.ExtVideo.control = "pause"
                 m.trickPlayDirection = "paused"

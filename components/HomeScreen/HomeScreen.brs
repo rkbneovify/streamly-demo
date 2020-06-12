@@ -52,7 +52,6 @@ sub init()
     m.pressbackLabel.font = font
     m.Settings.font = font
     
-   
 '    initGrigData()
   
     currentTime =  CreateObject("roDateTime")
@@ -88,12 +87,20 @@ sub init()
     m.top.observeField("visible","setFocus")
     m.video.setFocus(true)
     
+    'prgrams Api call timer
     m.lazyLoadingTimer = CreateObject("roSGNode", "Timer")
     m.lazyLoadingTimer.repeat = false
     m.lazyLoadingTimer.duration = 3
     m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
 '    m.lazyLoadingTimer.control = "start"
 '    m.ChannelData = createObject("roArray")
+    
+    'prgramView Update Timer
+    
+    m.programUpdateTimer = CreateObject("roSGNode", "Timer")
+    m.programUpdateTimer.repeat = false
+   
+    m.programUpdateTimer.observeField("fire", "StartProgramUpdating")    
     
    PosterBackground= m.top.createChild("Poster")
    PosterBackground.translation = [1411,716]
@@ -158,6 +165,24 @@ sub init()
    
 end sub
 
+
+sub StartProgramUpdating()
+?"StartProgramUpdating"
+
+'  m.programIndex = 0
+ currentProgram = m.currentProgramsNode.getChild(m.programIndex)
+ ?"currentProgram title ;";currentProgram.title
+ ?"currentProgram start ;";currentProgram.PLAYSTART
+ ?"currentProgram end ;";currentProgram["PLAYDURATION"] ;" sec"
+ 
+ m.programDuration = currentProgram["PLAYDURATION"]
+ 
+ m.programUpdateTimer.control = "stop" 
+ m.programUpdateTimer.duration = m.programDuration
+ m.programUpdateTimer.control = "start"
+ m.programIndex+=1
+ 
+end sub
 Sub RestartLazyLoadingTimer()
 ?"RestartLazyLoadingTimer"
     m.lazyLoadingTimer.control = "stop"
@@ -165,9 +190,9 @@ Sub RestartLazyLoadingTimer()
 End Sub
 
 sub channelFocused(event as object)
-?"channelFocused:";event.getData()+5
+?"channelFocused:";event.getData()
 
- if  event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild( event.getData()+5 ) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
+ if  event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild( event.getData()+6 ) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
     
     if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"         
     
@@ -210,7 +235,7 @@ sub getChannelDAta(channelnode as object,channelData as object)
     m.TestingTAsk.observeField("programData","showResponse")
     m.TestingTAsk.control = "RUN"
   else 
-    ?"getChannelDAta:: data is not complete ;";nodedata.Keys();
+    ?"getChannelDAta:: channelData is not complete : ;";channelData
   end if        
 end sub
  
@@ -230,7 +255,7 @@ sub reqApiCAll(page)
 
 end sub
 sub ChannelResponseData()
-?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
+'?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
    m.ChannelData = m.ChannelEpisodeTask.ChannelData
    initGrigData(m.ChannelData)
    m.channelListData = 0
@@ -306,12 +331,41 @@ sub categorySelcted(event as object)
   
 end sub
  
-sub programSelected(event as object)
+Function programSelected(event as object) as object
+ 
  
  timeGrid = event.GetRoSGNode()
- data=timeGrid.content.getChild(timeGrid.channelSelected).getChild( timeGrid.programSelected)
+ channelNode = timeGrid.content.getChild(timeGrid.channelSelected)
+ m.currentProgramsNode =  channelNode
+ 
+ m.programIndex = 0
+   
+ currentProgram = m.currentProgramsNode.getChild(m.programIndex)
+ ?"currentProgram title ;";currentProgram.title
+ ?"currentProgram start ;";currentProgram.PLAYSTART
+ ?"currentProgram end ;";currentProgram.PLAYDURATION ;" sec"
+ 
+    currentTime =  CreateObject("roDateTime")
+    t = currentTime.AsSeconds()
+    if  t > (currentProgram.PLAYSTART/1000)
+       m.programDuration = (t- (currentProgram.PLAYSTART/1000))   
+    else
+       m.programDuration = ((currentProgram.PLAYSTART/1000) -t)
+    end if
+ 
+ ?"m.programDuration exact ;";m.programDuration
+' m.programDuration = currentProgram.PLAYDURATION
+ 
+ if m.programUpdateTimer <> invalid and m.programUpdateTimer.control = "start" then m.programUpdateTimer.control = "stop"
+ 
+ 
+ m.programUpdateTimer.duration = m.programDuration
+ m.programUpdateTimer.control = "start"
+ m.programIndex+=1
 
- ?":programSelecte: data: ";data
+ data=timeGrid.content.getChild(timeGrid.channelSelected)
+ 
+ ?":programSelecte: data: ";data.url
   
  url=data.url
 
@@ -319,7 +373,9 @@ sub programSelected(event as object)
  m.video.visible=true
 ' m.video.setFocus(true) 
 playVideo(url)
-end sub
+
+return true
+end Function
 
 sub VideoControl(event as object) 
  
@@ -447,7 +503,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
           
            ?"ok pressed fr play video"
           
-          playVideo("http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8") 
+'           playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8") 
  
           result = true 
          else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key="options" 
@@ -471,21 +527,3 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         
     return result 
 end function
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
