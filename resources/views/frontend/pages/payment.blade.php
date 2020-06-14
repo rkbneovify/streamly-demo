@@ -131,9 +131,22 @@
 										<span style="display: block;">Paypal</span>
 									</div>
 								</div>
+								{{-- {{dd(auth()->user())}} --}}
 
-								<form action="user/payment" method="post" class="mt-3 text-left" style="padding: 2rem;">
-				                    <div class="form-group">
+                    <!-- If user is not subscribed to a plan, show them the payment form -->
+										@if(!auth()->user()->subscribed('main'))
+								@if(session('error_message'))
+                            <div role="alert" class="mb-4">
+                                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                    Payment Failed
+                                </div>
+                                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                                    <p>{{ session('error_message') }}</p>
+                                </div>
+                            </div>
+                        @endif
+								<form id="signup-form" action="{{ url('insertpay') }}" method="post" class="mt-3 text-left" style="padding: 2rem;">
+				                    {{-- <div class="form-group">
 				                        <label for="card" class="control-label">Card Number</label>
 				                        <input type="text" id="card" name="card" class="form-control">
 				                    </div>
@@ -158,20 +171,36 @@
 						                    </div>
 				                    	</div>
 				                    </div>
-
-				                    
+													 --}}
+													 <div class="form-group">
+														<label for="card-element" class="control-label">Name on Card</label>
+														<input type="text" id="name" name="name" class="form-control">
+												</div>
+				                    <!-- Stripe Elements Placeholder -->
+														<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
+														<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
+												</div>
 				                    <span class="remove-p-a-r">
 				                    	you will be charged $69/mo plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 				                    </span>
 
 				                    <div class="form-group mt-3">
-				                        <button type="submit" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
+				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
 				                        	<span style="width: 100%;">SUBMIT</span>
 				                        </button>
 				                    </div>
 
 				                    {!! csrf_field() !!}
-				                </form>
+												</form>
+												<!-- Otherwise if the user is subscribed, show them a success message -->
+												@else
+                    
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
+                            <p class="font-bold mb-2">Thanks for being a customer!</p>
+                            <p>You Are Subscribed to the Starter Plan.</p>
+                        </div>
+
+                    @endif
 							</div>
 						</div>
 					</div>
@@ -182,8 +211,8 @@
 	</section>
 	
 @endsection
-@section('stylesheets-bottom')
-{{-- @if(!auth()->user()->subscribed('main'))
+@section('stylesheets-bottom') 
+@if(!auth()->user()->subscribed('main'))
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
@@ -240,5 +269,5 @@
             });
         
         </script>
-    @endif --}}
+@endif
 @endsection
