@@ -14,10 +14,15 @@ class Payment extends Controller
         $this->middleware('auth');
     }
     public function showPage(){
-        
-        
-    	return view('frontend.pages.payment');
 
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+
+    	return view('frontend.pages.payment', compact('login'));
+        
     }
 
     public function pay(Request $request) {
