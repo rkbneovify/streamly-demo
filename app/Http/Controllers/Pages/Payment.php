@@ -15,7 +15,6 @@ class Payment extends Controller
         $this->middleware('auth');
     }
     public function showPage(){
-<<<<<<< HEAD
 
     	if( Auth::check()){
             $login = true;
@@ -24,12 +23,7 @@ class Payment extends Controller
         }
 
     	return view('frontend.pages.payment', compact('login'));
-=======
         
-        
-    	return view('frontend.pages.payment');
->>>>>>> 6e2f28ec4fa0ce5938d6d2b75d5d3e5454154025
-
     }
 
     public function pay(Request $request) {
