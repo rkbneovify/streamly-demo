@@ -26,6 +26,8 @@ return array(
     'App\\Http\\Controllers\\Auth\\VerificationController' => $baseDir . '/app/Http/Controllers/Auth/VerificationController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
+    'App\\Http\\Controllers\\Pages\\LiveTv' => $baseDir . '/app/Http/Controllers/Pages/LiveTv.php',
+    'App\\Http\\Controllers\\Pages\\Payment' => $baseDir . '/app/Http/Controllers/Pages/Payment.php',
     'App\\Http\\Controllers\\Profile\\ProfileController' => $baseDir . '/app/Http/Controllers/Profile/ProfileController.php',
     'App\\Http\\Controllers\\ZipcodeController' => $baseDir . '/app/Http/Controllers/Admin/ZipcodeController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
