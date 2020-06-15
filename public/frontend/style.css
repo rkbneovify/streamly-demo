@@ -10141,7 +10141,7 @@ img::-moz-selection {
   #mainNav.navbar-shrink {
     padding-top: 1rem;
     padding-bottom: 1rem;
-    background-color: #212529;
+    background: #004E92 0% 0% no-repeat padding-box;
   }
   #mainNav.navbar-shrink .navbar-brand {
     font-size: 1.25em;
@@ -10641,10 +10641,17 @@ a#navbarDropdownMenuLink:after {
 }
 
 #search-btn-header{
-  background: #1c619e 0% 0% no-repeat padding-box !important;
+  background: transparent;
   border: 1px solid #707070;
   border-radius: 27px;
   color: #FFFFFF;
+}
+
+.navbar-shrink #search-btn-header{
+  background: #1c619e 0% 0% no-repeat padding-box !important;
+  border: 1px solid #707070;
+  border-radius: 27px;
+  color: #FFFFFF; 
 }
 
 a#navbarDropdownMenuLink:after {
