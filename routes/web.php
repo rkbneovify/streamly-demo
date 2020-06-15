@@ -97,4 +97,6 @@ Route::get('/payment', 'Pages\Payment@showPage');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
 Route::get('/livetv/{channel}', 'Pages\LiveTv@showChannel');
 
+Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
+
 Route::post('/insertpay','Pages\Payment@pay')->name('insertpay');//send form data here
