@@ -1,7 +1,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="{{ asset('frontend/img/streamly-logo.png') }}" /></a>
+        <a class="navbar-brand js-scroll-trigger" href="/"><img src="{{ asset('frontend/img/streamly-logo.png') }}" /></a>
 
         @if( isset($login) && $login)
 
@@ -20,7 +20,27 @@
 
                 @if( isset($login) && $login)
 
-                    <li class="nav-item"><a class="nav-link js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a></li>
+                    <li class="nav-item"><input type="text" name="search" class="form-control" id="search-btn-header" placeholder="Search channels or shows"></li>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list-4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbar-list-4">
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
+                                </a>
+                                <div class="dropdown-menu navbarDropdownMenuLink text-center" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" href="#">Account Settings</a>
+                                    <a class="dropdown-item" href="#">Download app</a>
+                                    <a class="dropdown-item" href="#">Help & Support</a>
+                                    <a class="dropdown-item js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a>
+                                </div>
+                            </li>   
+                        </ul>
+                    </div>
+
                 @else
 
                     <li class="nav-item"><a class="nav-link js-scroll-trigger btn-login" onclick="openNav(event)" href="javascript:void(0)">Log In</a></li>
