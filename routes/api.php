@@ -50,6 +50,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
     Route::get('support', 'APIController@support');
+    Route::get('privacypol', 'APIController@privacypol');
 });
 
 // Superadmin Routes

@@ -267,6 +267,15 @@ public function login(Request $request)
         $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>'For help and support call the numbers below');
         return response()->json($response, 200);
     }
+    public function privacypol()
+    { $breakingpoint= '#~';
+       // echo json_encode( explode("\r\n",file_get_contents('data.txt')) );
+        $file = file_get_contents('PrivacyPolicy.txt');
+        $response = array('success' =>true ,'response_code'=>200,'data'=>$file,'message'=>'Privacy policy');
+        return response()->json($response, 200);
+    }
+
+
 
     
 }
