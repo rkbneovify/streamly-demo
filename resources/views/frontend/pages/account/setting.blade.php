@@ -73,13 +73,40 @@
 		i.fa.fa-edit {
 			cursor: pointer;
 		}
+
+		.modal-dialog {
+			min-height: calc(100vh - 60px);
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: center;
+		    overflow: auto;
+		}
+
+		.modal-body {
+		    position: relative;
+		    flex: 1 1 auto;
+		    padding: 3rem 5rem;
+		}
+
+		.modal-body p{
+			letter-spacing: 0.24px;
+			color: #5E5E5E;
+		}
 	</style>
 
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script>
 		jQuery(document).ready(function(){
 			jQuery('.remove-device').on('click', function(){
-				jQuery('.removeDevice').modal('show');
+				jQuery('#removeDevice').modal('show');
+			});
+
+			jQuery('.cancel-subscription').on('click', function(){
+				jQuery('#cancelSubscription').modal('show');
+			});
+
+			jQuery('.change-password').on('click', function(){
+				jQuery('#changePassword').modal('show');
 			});
 		});
 	</script>
@@ -91,20 +118,61 @@
 	    <div class="modal-dialog">
 			<div class="modal-content">
 
-				<!-- Modal Header -->
-				<div class="modal-header">
-					<h4 class="modal-title">Modal Heading</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<div class="modal-body text-center">
+					<h4>Remove Device</h4>
+					<p>Samsung smart TV - 43 inch will be removed. Would you like to continue?</p>
+					<div>
+						<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a>
+						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+					</div>
 				</div>
 
-				<!-- Modal body -->
-				<div class="modal-body">
-					Modal body..
+			</div>
+	    </div>
+	</div>
+
+	<div class="modal fade" id="cancelSubscription">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body text-center">
+					<h4>Cancel Subscription</h4>
+					<p>Are you sure you want to cancel your Streamly live TV at $69/mo. pack?</p>
+					<div>
+						<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a>
+						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+					</div>
 				</div>
 
-				<!-- Modal footer -->
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+	    </div>
+	</div>
+
+	<div class="modal fade" id="changePassword">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body text-center">
+					<form class="text-left">
+						<div class="form-group">
+							<label for="oldpassword">Old Password</label>
+							<input type="password" class="form-control" name="oldpassword" id="oldpassword">
+						</div>
+
+						<div class="form-group">
+							<label for="newpassword">New Password</label>
+							<input type="text" class="form-control" name="newpassword" id="newpassword">
+						</div>
+
+						<div class="form-group">
+							<label for="cnewpassword">New Password</label>
+							<input type="password" class="form-control" name="cnewpassword" id="cnewpassword">
+						</div>
+
+						<div class="text-center">
+							<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a>
+						</div>
+					</form>
 				</div>
 
 			</div>
@@ -138,7 +206,7 @@
 							<li>
 								Password:
 								<span class="pull-right">
-									<a href="javascript:void(0)">Change password</a>
+									<a href="javascript:void(0)" class="change-password">Change password</a>
 								</span>
 							</li>
 						</ul>
