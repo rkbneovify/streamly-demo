@@ -76,9 +76,41 @@
 	</style>
 
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script>
+		jQuery(document).ready(function(){
+			jQuery('.remove-device').on('click', function(){
+				jQuery('.removeDevice').modal('show');
+			});
+		});
+	</script>
 @endsection
 
 @section('content')
+
+	<div class="modal fade" id="removeDevice">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Modal Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Modal Heading</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Modal body -->
+				<div class="modal-body">
+					Modal body..
+				</div>
+
+				<!-- Modal footer -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+
+			</div>
+	    </div>
+	</div>
+
 	<section class="page-section">
 		<div class="container">
 				<h2 class="section-heading text-center">Account Settings</h2>
@@ -86,11 +118,11 @@
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>Device Management:</li>
-							<li>1. Samsung smart TV - 43 inch <i class="fa fa-trash pull-right light-brown" aria-hidden="true"></i></li>
-							<li>2. Sony bravia smart TV - 56 inch <i class="fa fa-trash pull-right light-brown" aria-hidden="true"></i></li>
-							<li>3. Apple iPhone - XR <i class="fa fa-trash pull-right light-brown" aria-hidden="true"></i></li>
-							<li>4. Samsung Note 10 <i class="fa fa-trash pull-right light-brown" aria-hidden="true"></i></li>
-							<li>5. Apple iPhone - XS max <i class="fa fa-trash pull-right light-brown" aria-hidden="true"></i></li>
+							<li>1. Samsung smart TV - 43 inch <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
+							<li>2. Sony bravia smart TV - 56 inch <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
+							<li>3. Apple iPhone - XR <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
+							<li>4. Samsung Note 10 <i class="fa fa-trash pull-right remove-device light-brown" aria-hidden="true"></i></li>
+							<li>5. Apple iPhone - XS max <i class="fa fa-trash remove-device pull-right light-brown" aria-hidden="true"></i></li>
 						</ul>
 					</div>
 				</div>
