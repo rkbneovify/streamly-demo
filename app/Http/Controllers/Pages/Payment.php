@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Pages;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 use Laravel\Cashier\Exceptions\IncompletePayment;
 class Payment extends Controller

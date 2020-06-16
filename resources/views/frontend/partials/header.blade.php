@@ -32,7 +32,7 @@
                                     <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
                                 </a>
                                 <div class="dropdown-menu navbarDropdownMenuLink text-center" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="#">Account Settings</a>
+                                    <a class="dropdown-item" href="/account/settings">Account Settings</a>
                                     <a class="dropdown-item" href="#">Download app</a>
                                     <a class="dropdown-item" href="#">Help & Support</a>
                                     <a class="dropdown-item js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a>
