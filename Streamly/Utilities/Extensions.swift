@@ -55,7 +55,7 @@ extension UIView {
 
 
 
-//MARK:- UIcolor extension
+//MARK: UIcolor extension
 extension UIColor
 {
     convenience init(redd:CGFloat,greenn:CGFloat,bluee:CGFloat,alphaa:CGFloat)
@@ -63,7 +63,7 @@ extension UIColor
         self.init(red: redd/255, green: greenn/255, blue: bluee/255,alpha: alphaa)
     }
 }
-//MARK:- UIViewController Extension
+//MARK: UIViewController Extension
 
 var vSpinner : UIView?
 
@@ -130,7 +130,7 @@ extension UIViewController
     }
 
 }
-//Mark:- String extension
+//Mark: String extension
 extension String
 {
     func isEmptyString() -> Bool {

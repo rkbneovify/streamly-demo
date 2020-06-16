@@ -1,0 +1,54 @@
+
+/* Class = "UIButton"; normalTitle = "Register Now"; ObjectID = "6Ti-Zk-8Fg"; */
+"6Ti-Zk-8Fg.normalTitle" = "Register Now";
+
+/* Class = "UIButton"; normalTitle = "SPORTS"; ObjectID = "6hi-O7-Vuc"; */
+"6hi-O7-Vuc.normalTitle" = "SPORTS";
+
+/* Class = "UILabel"; text = "Remember me"; ObjectID = "E3A-mh-nxK"; */
+"E3A-mh-nxK.text" = "Remember me";
+
+/* Class = "UILabel"; text = "Don't have an account?"; ObjectID = "F0E-Oc-jn2"; */
+"F0E-Oc-jn2.text" = "Don't have an account?";
+
+/* Class = "UILabel"; text = "Password"; ObjectID = "G6J-zO-Jpw"; */
+"G6J-zO-Jpw.text" = "Password";
+
+/* Class = "UIButton"; normalTitle = "KIDS"; ObjectID = "G8p-mT-5yQ"; */
+"G8p-mT-5yQ.normalTitle" = "KIDS";
+
+/* Class = "UIButton"; normalTitle = "Sign in"; ObjectID = "MJZ-82-KwY"; */
+"MJZ-82-KwY.normalTitle" = "Sign in";
+
+/* Class = "UIButton"; normalTitle = "All"; ObjectID = "Ml5-EV-iaZ"; */
+"Ml5-EV-iaZ.normalTitle" = "All";
+
+/* Class = "UILabel"; text = "Username"; ObjectID = "Syg-xH-Mku"; */
+"Syg-xH-Mku.text" = "Username";
+
+/* Class = "UIButton"; normalTitle = "MOVIES"; ObjectID = "TIO-2n-DWs"; */
+"TIO-2n-DWs.normalTitle" = "MOVIES";
+
+/* Class = "UILabel"; text = "Sign In"; ObjectID = "WWd-ny-HIG"; */
+"WWd-ny-HIG.text" = "Sign In";
+
+/* Class = "UIButton"; normalTitle = "MY CHANNELS"; ObjectID = "hSL-up-Py5"; */
+"hSL-up-Py5.normalTitle" = "MY CHANNELS";
+
+/* Class = "UIButton"; normalTitle = "NEWS"; ObjectID = "hkf-lV-fy6"; */
+"hkf-lV-fy6.normalTitle" = "NEWS";
+
+/* Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "lkS-OL-cQ8"; */
+"lkS-OL-cQ8.normalTitle" = "SETTINGS";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "mje-KO-1Gq"; */
+"mje-KO-1Gq.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "Need help?"; ObjectID = "nGh-M6-aXv"; */
+"nGh-M6-aXv.normalTitle" = "Need help?";
+
+/* Class = "UIButton"; normalTitle = "GO BACK"; ObjectID = "uki-an-m3n"; */
+"uki-an-m3n.normalTitle" = "GO BACK";
+
+/* Class = "UIButton"; normalTitle = "RECENT"; ObjectID = "z8U-69-9dI"; */
+"z8U-69-9dI.normalTitle" = "RECENT";

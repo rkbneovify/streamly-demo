@@ -10,7 +10,7 @@ import UIKit
 
 class LoginVC: UIViewController {
 
-    //MARK:- Outlets
+    //MARK: Outlets
     @IBOutlet weak var userIDField:     UITextField!
     @IBOutlet weak var passwordField:   UITextField!
     @IBOutlet weak var rembemberMe:     UIButton!
@@ -18,7 +18,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var registerNowBtn:  UIButton!
     @IBOutlet weak var signBtn:         GradientBUtton!
 
-    //MARK:- Properties
+    //MARK: Properties
     var remeberMeFlag:Bool?
     {
         didSet {
@@ -40,7 +40,7 @@ class LoginVC: UIViewController {
         }
     }
 
-    //MARK:- Lifecycle Methods
+    //MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -50,7 +50,7 @@ class LoginVC: UIViewController {
         
     }
 
-    //MARK:- Helpers
+    //MARK: Helpers
     func initialSetup()
     {
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
@@ -79,7 +79,7 @@ class LoginVC: UIViewController {
         }
     }
 
-    //MARK:- Action
+    //MARK: Action
     @IBAction func btnActions( _ sender:UIButton)
     {
 

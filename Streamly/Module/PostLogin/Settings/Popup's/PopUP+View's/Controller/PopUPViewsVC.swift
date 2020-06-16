@@ -10,7 +10,7 @@ import UIKit
 
 class PopUPViewsVC: UIViewController {
     
-    // MARK: - Outlets
+    // MARK: Outlets
     @IBOutlet weak var backView:UIView!
     @IBOutlet weak var backViewHeight: NSLayoutConstraint!
     @IBOutlet weak var txtview:UITextView!
@@ -22,7 +22,7 @@ class PopUPViewsVC: UIViewController {
     @IBOutlet weak var policiesView:UIView!
     @IBOutlet weak var okBtn:UIButton!
     
-    // MARK: - propertis
+    // MARK:  propertis
     var item:Int?
     var contactInfo:ContactResponseData?
     var privacyData:PrivacyResponseData?
@@ -31,7 +31,7 @@ class PopUPViewsVC: UIViewController {
         return ContactDataViewModel()
     }()
     
-    // MARK: - LifeCyle
+    // MARK:  LifeCyle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,7 +43,7 @@ class PopUPViewsVC: UIViewController {
         super.viewWillLayoutSubviews()
     }
     
-    // MARK: - Helpers
+    // MARK:  Helpers
     
     private func initialViewSetup()
     {
@@ -179,7 +179,7 @@ class PopUPViewsVC: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    //MARK:- Actions
+    //MARK: Actions
     @IBAction func actionBtns(_ sender: UIButton) {
         self.dissmissView()
     }

@@ -9,16 +9,16 @@
 import UIKit
 
 class SupportView: NibView {
-
-    //MARK:- Outlets
+    
+    //MARK: Outlets
     
     @IBOutlet weak var okButton  :    UIButton!
     @IBOutlet weak var firstLbl  :    UILabel!
     @IBOutlet weak var secondLbl :    UILabel!
     @IBOutlet weak var msgLbl    :    UILabel!
-
-    //MARK:- Properties
-
+    
+    //MARK: Properties
+    
     weak var delegate:CustomViews?
     var contactInfo:ContactResponseData? {
         didSet {
@@ -27,20 +27,20 @@ class SupportView: NibView {
             self.secondLbl.text = contactInfo?.data?[1]
         }
     }
-
-    //MARK:- LifeCycle
-
+    
+    //MARK: LifeCycle
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         self.okButton.setBtnProperties(self.okButton)
     }
-
-
-    //MARK:- Actions
-
+    
+    
+    //MARK: Actions
+    
     @IBAction func ButtonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)
     }
-
+    
     
 }

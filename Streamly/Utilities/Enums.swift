@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-//MARK:- enum for validation message
+//MARK: enum for validation message
 enum ValidationErrorMessages:String
 {
     case userNameEmpty

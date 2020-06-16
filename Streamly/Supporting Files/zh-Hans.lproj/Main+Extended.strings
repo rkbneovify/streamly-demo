@@ -1,0 +1,21 @@
+
+/* Class = "UIButton"; normalTitle = "LIVE TV"; ObjectID = "3GB-Ii-i3v"; */
+"3GB-Ii-i3v.normalTitle" = "LIVE TV";
+
+/* Class = "UIButton"; normalTitle = "Ok"; ObjectID = "MWa-xd-NtZ"; */
+"MWa-xd-NtZ.normalTitle" = "Ok";
+
+/* Class = "UILabel"; text = "Account"; ObjectID = "SFY-LH-mTw"; */
+"SFY-LH-mTw.text" = "Account";
+
+/* Class = "UIButton"; normalTitle = "Ok"; ObjectID = "lZJ-7v-ov9"; */
+"lZJ-7v-ov9.normalTitle" = "Ok";
+
+/* Class = "UILabel"; text = "Lou1234"; ObjectID = "qhq-ed-KIo"; */
+"qhq-ed-KIo.text" = "Lou1234";
+
+/* Class = "UILabel"; text = "Settings"; ObjectID = "t00-Ae-fHi"; */
+"t00-Ae-fHi.text" = "Settings";
+
+/* Class = "UIButton"; normalTitle = "CHANNELS"; ObjectID = "trk-TA-CcH"; */
+"trk-TA-CcH.normalTitle" = "CHANNELS";

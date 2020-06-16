@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 
-//Mark:- Validation Constants
+//Mark: Validation Constants
 let passwordMinLimit = 6
 let passwordMaxLimit = 10
 let mobileMaxLimit = 15
 let mobileMinLimit = 8
 
-//Mark:- Constant Text
+//Mark: Constant Text
 let appName = "Streamly"
 
 ///Appdelegate refrence

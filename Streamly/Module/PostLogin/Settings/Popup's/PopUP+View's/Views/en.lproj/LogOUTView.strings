@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "Are you sure you want to logout from this device?"; ObjectID = "U8w-hE-e1U"; */
+"U8w-hE-e1U.text" = "Are you sure you want to logout from this device?";
+
+/* Class = "UIButton"; normalTitle = "Yes"; ObjectID = "iIZ-VV-eJg"; */
+"iIZ-VV-eJg.normalTitle" = "Yes";
+
+/* Class = "UIButton"; normalTitle = "No"; ObjectID = "nrj-M2-BTN"; */
+"nrj-M2-BTN.normalTitle" = "No";

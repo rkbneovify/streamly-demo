@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Streamly/Module/PostLogin/Home/View/Base.lproj/ChannelCollectionViewCell.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="DoC-wm-cdg.text" xml:space="preserve">
+        <source>05</source>
+        <target>05</target>
+        <note>Class = "UILabel"; text = "05"; ObjectID = "DoC-wm-cdg";</note>
+      </trans-unit>
+      <trans-unit id="nUy-Oc-pYt.text" xml:space="preserve">
+        <source>MTV- USA</source>
+        <target>MTV- USA</target>
+        <note>Class = "UILabel"; text = "MTV- USA"; ObjectID = "nUy-Oc-pYt";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Home/View/Base.lproj/EPGCollectionViewCell.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="hlv-MR-6s6.text" xml:space="preserve">
+        <source>Label</source>
+        <target>Label</target>
+        <note>Class = "UILabel"; text = "Label"; ObjectID = "hlv-MR-6s6";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Home/View/Base.lproj/ProgramCollectionViewCell.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="6RA-YG-S46.text" xml:space="preserve">
+        <source>35 MINS LEFT</source>
+        <target>35 MINS LEFT</target>
+        <note>Class = "UILabel"; text = "35 MINS LEFT"; ObjectID = "6RA-YG-S46";</note>
+      </trans-unit>
+      <trans-unit id="REe-xW-0l2.text" xml:space="preserve">
+        <source>New</source>
+        <target>New</target>
+        <note>Class = "UILabel"; text = "New"; ObjectID = "REe-xW-0l2";</note>
+      </trans-unit>
+      <trans-unit id="uF0-xt-is2.text" xml:space="preserve">
+        <source>Jutin Beiber concert</source>
+        <target>Jutin Beiber concert</target>
+        <note>Class = "UILabel"; text = "Jutin Beiber concert"; ObjectID = "uF0-xt-is2";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Settings/Popup's/PopUP+View's/Views/Base.lproj/LoadTextView.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="5Lc-iL-XKp.text" xml:space="preserve">
+        <source>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</source>
+        <target>Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</target>
+        <note>Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "5Lc-iL-XKp";</note>
+      </trans-unit>
+      <trans-unit id="R4f-tW-aWD.normalTitle" xml:space="preserve">
+        <source>Ok</source>
+        <target>Ok</target>
+        <note>Class = "UIButton"; normalTitle = "Ok"; ObjectID = "R4f-tW-aWD";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Settings/Popup's/PopUP+View's/Views/Base.lproj/LogOUTView.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="U8w-hE-e1U.text" xml:space="preserve">
+        <source>Are you sure you want to logout from this device?</source>
+        <target>Are you sure you want to logout from this device?</target>
+        <note>Class = "UILabel"; text = "Are you sure you want to logout from this device?"; ObjectID = "U8w-hE-e1U";</note>
+      </trans-unit>
+      <trans-unit id="iIZ-VV-eJg.normalTitle" xml:space="preserve">
+        <source>Yes</source>
+        <target>Yes</target>
+        <note>Class = "UIButton"; normalTitle = "Yes"; ObjectID = "iIZ-VV-eJg";</note>
+      </trans-unit>
+      <trans-unit id="nrj-M2-BTN.normalTitle" xml:space="preserve">
+        <source>No</source>
+        <target>No</target>
+        <note>Class = "UIButton"; normalTitle = "No"; ObjectID = "nrj-M2-BTN";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Settings/Popup's/PopUP+View's/Views/Base.lproj/PrivacyPopUP.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="419-Cc-RPn.normalTitle" xml:space="preserve">
+        <source>Ok</source>
+        <target>Ok</target>
+        <note>Class = "UIButton"; normalTitle = "Ok"; ObjectID = "419-Cc-RPn";</note>
+      </trans-unit>
+      <trans-unit id="JAA-PK-hc5.normalTitle" xml:space="preserve">
+        <source>Policies</source>
+        <target>Policies</target>
+        <note>Class = "UIButton"; normalTitle = "Policies"; ObjectID = "JAA-PK-hc5";</note>
+      </trans-unit>
+      <trans-unit id="rDf-bA-ZJr.normalTitle" xml:space="preserve">
+        <source>Your Privacy Rights</source>
+        <target>Your Privacy Rights</target>
+        <note>Class = "UIButton"; normalTitle = "Your Privacy Rights"; ObjectID = "rDf-bA-ZJr";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Module/PostLogin/Settings/Popup's/PopUP+View's/Views/Base.lproj/SupportView.xib" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="7ui-Xa-rU9.text" xml:space="preserve">
+        <source>+1-548965-51 (24*7)</source>
+        <target>+1-548965-51 (24*7)</target>
+        <note>Class = "UILabel"; text = "+1-548965-51 (24*7)"; ObjectID = "7ui-Xa-rU9";</note>
+      </trans-unit>
+      <trans-unit id="Rsc-1j-qTP.text" xml:space="preserve">
+        <source>+1-548965-51 (24*7)</source>
+        <target>+1-548965-51 (24*7)</target>
+        <note>Class = "UILabel"; text = "+1-548965-51 (24*7)"; ObjectID = "Rsc-1j-qTP";</note>
+      </trans-unit>
+      <trans-unit id="hcS-iq-jR7.normalTitle" xml:space="preserve">
+        <source>Ok</source>
+        <target>Ok</target>
+        <note>Class = "UIButton"; normalTitle = "Ok"; ObjectID = "hcS-iq-jR7";</note>
+      </trans-unit>
+      <trans-unit id="lM1-jq-s71.text" xml:space="preserve">
+        <source>For Help and Support You can call us on below numbers.</source>
+        <target>For Help and Support You can call us on below numbers.</target>
+        <note>Class = "UILabel"; text = "For Help and Support You can call us on below numbers."; ObjectID = "lM1-jq-s71";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/Base.lproj/Main.storyboard" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="6Ti-Zk-8Fg.normalTitle" xml:space="preserve">
+        <source>Register Now</source>
+        <target>Register Now</target>
+        <note>Class = "UIButton"; normalTitle = "Register Now"; ObjectID = "6Ti-Zk-8Fg";</note>
+      </trans-unit>
+      <trans-unit id="6hi-O7-Vuc.normalTitle" xml:space="preserve">
+        <source>SPORTS</source>
+        <target>SPORTS</target>
+        <note>Class = "UIButton"; normalTitle = "SPORTS"; ObjectID = "6hi-O7-Vuc";</note>
+      </trans-unit>
+      <trans-unit id="E3A-mh-nxK.text" xml:space="preserve">
+        <source>Remember me</source>
+        <target>Remember me</target>
+        <note>Class = "UILabel"; text = "Remember me"; ObjectID = "E3A-mh-nxK";</note>
+      </trans-unit>
+      <trans-unit id="F0E-Oc-jn2.text" xml:space="preserve">
+        <source>Don't have an account?</source>
+        <target>Don't have an account?</target>
+        <note>Class = "UILabel"; text = "Don't have an account?"; ObjectID = "F0E-Oc-jn2";</note>
+      </trans-unit>
+      <trans-unit id="G6J-zO-Jpw.text" xml:space="preserve">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Class = "UILabel"; text = "Password"; ObjectID = "G6J-zO-Jpw";</note>
+      </trans-unit>
+      <trans-unit id="G8p-mT-5yQ.normalTitle" xml:space="preserve">
+        <source>KIDS</source>
+        <target>KIDS</target>
+        <note>Class = "UIButton"; normalTitle = "KIDS"; ObjectID = "G8p-mT-5yQ";</note>
+      </trans-unit>
+      <trans-unit id="MJZ-82-KwY.normalTitle" xml:space="preserve">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Class = "UIButton"; normalTitle = "Sign in"; ObjectID = "MJZ-82-KwY";</note>
+      </trans-unit>
+      <trans-unit id="Ml5-EV-iaZ.normalTitle" xml:space="preserve">
+        <source>All</source>
+        <target>All</target>
+        <note>Class = "UIButton"; normalTitle = "All"; ObjectID = "Ml5-EV-iaZ";</note>
+      </trans-unit>
+      <trans-unit id="Syg-xH-Mku.text" xml:space="preserve">
+        <source>Username</source>
+        <target>Username</target>
+        <note>Class = "UILabel"; text = "Username"; ObjectID = "Syg-xH-Mku";</note>
+      </trans-unit>
+      <trans-unit id="TIO-2n-DWs.normalTitle" xml:space="preserve">
+        <source>MOVIES</source>
+        <target>MOVIES</target>
+        <note>Class = "UIButton"; normalTitle = "MOVIES"; ObjectID = "TIO-2n-DWs";</note>
+      </trans-unit>
+      <trans-unit id="WWd-ny-HIG.text" xml:space="preserve">
+        <source>Sign In</source>
+        <target>Sign In</target>
+        <note>Class = "UILabel"; text = "Sign In"; ObjectID = "WWd-ny-HIG";</note>
+      </trans-unit>
+      <trans-unit id="hSL-up-Py5.normalTitle" xml:space="preserve">
+        <source>MY CHANNELS</source>
+        <target>MY CHANNELS</target>
+        <note>Class = "UIButton"; normalTitle = "MY CHANNELS"; ObjectID = "hSL-up-Py5";</note>
+      </trans-unit>
+      <trans-unit id="hkf-lV-fy6.normalTitle" xml:space="preserve">
+        <source>NEWS</source>
+        <target>NEWS</target>
+        <note>Class = "UIButton"; normalTitle = "NEWS"; ObjectID = "hkf-lV-fy6";</note>
+      </trans-unit>
+      <trans-unit id="lkS-OL-cQ8.normalTitle" xml:space="preserve">
+        <source>SETTINGS</source>
+        <target>SETTINGS</target>
+        <note>Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "lkS-OL-cQ8";</note>
+      </trans-unit>
+      <trans-unit id="mje-KO-1Gq.text" xml:space="preserve">
+        <source>Label</source>
+        <target>Label</target>
+        <note>Class = "UILabel"; text = "Label"; ObjectID = "mje-KO-1Gq";</note>
+      </trans-unit>
+      <trans-unit id="nGh-M6-aXv.normalTitle" xml:space="preserve">
+        <source>Need help?</source>
+        <target>Need help?</target>
+        <note>Class = "UIButton"; normalTitle = "Need help?"; ObjectID = "nGh-M6-aXv";</note>
+      </trans-unit>
+      <trans-unit id="uki-an-m3n.normalTitle" xml:space="preserve">
+        <source>GO BACK</source>
+        <target>GO BACK</target>
+        <note>Class = "UIButton"; normalTitle = "GO BACK"; ObjectID = "uki-an-m3n";</note>
+      </trans-unit>
+      <trans-unit id="z8U-69-9dI.normalTitle" xml:space="preserve">
+        <source>RECENT</source>
+        <target>RECENT</target>
+        <note>Class = "UIButton"; normalTitle = "RECENT"; ObjectID = "z8U-69-9dI";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/Base.lproj/Main+Extended.storyboard" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="3GB-Ii-i3v.normalTitle" xml:space="preserve">
+        <source>LIVE TV</source>
+        <target>LIVE TV</target>
+        <note>Class = "UIButton"; normalTitle = "LIVE TV"; ObjectID = "3GB-Ii-i3v";</note>
+      </trans-unit>
+      <trans-unit id="MWa-xd-NtZ.normalTitle" xml:space="preserve">
+        <source>Ok</source>
+        <target>Ok</target>
+        <note>Class = "UIButton"; normalTitle = "Ok"; ObjectID = "MWa-xd-NtZ";</note>
+      </trans-unit>
+      <trans-unit id="SFY-LH-mTw.text" xml:space="preserve">
+        <source>Account</source>
+        <target>Account</target>
+        <note>Class = "UILabel"; text = "Account"; ObjectID = "SFY-LH-mTw";</note>
+      </trans-unit>
+      <trans-unit id="lZJ-7v-ov9.normalTitle" xml:space="preserve">
+        <source>Ok</source>
+        <target>Ok</target>
+        <note>Class = "UIButton"; normalTitle = "Ok"; ObjectID = "lZJ-7v-ov9";</note>
+      </trans-unit>
+      <trans-unit id="qhq-ed-KIo.text" xml:space="preserve">
+        <source>Lou1234</source>
+        <target>Lou1234</target>
+        <note>Class = "UILabel"; text = "Lou1234"; ObjectID = "qhq-ed-KIo";</note>
+      </trans-unit>
+      <trans-unit id="t00-Ae-fHi.text" xml:space="preserve">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note>Class = "UILabel"; text = "Settings"; ObjectID = "t00-Ae-fHi";</note>
+      </trans-unit>
+      <trans-unit id="trk-TA-CcH.normalTitle" xml:space="preserve">
+        <source>CHANNELS</source>
+        <target>CHANNELS</target>
+        <note>Class = "UIButton"; normalTitle = "CHANNELS"; ObjectID = "trk-TA-CcH";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/en.lproj/InfoPlist.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>StreamlyTV</source>
+        <target>StreamlyTV</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/en.lproj/Localizable.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="Enter keyword (e.g. Channels)" xml:space="preserve">
+        <source>Enter keyword (e.g. Channels)</source>
+        <target>Enter keyword (e.g. Channels)</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Search" xml:space="preserve">
+        <source>Search</source>
+        <target>Search</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -10,24 +10,24 @@ import UIKit
 
 
 class LogOUTView: NibView {
-
-
-    //MARK:- Outlets
+    
+    
+    //MARK: Outlets
     @IBOutlet weak var noButton: UIButton!
     @IBOutlet weak var yesButton: UIButton!
-
-    //MARK:- properties
+    
+    //MARK: properties
     weak var delegate:CustomViews?
-
-    //MARK:- LifeCycle
+    
+    //MARK: LifeCycle
     override func layoutSubviews() {
         super.layoutSubviews()
         self.noButton.setBtnProperties(self.noButton)
         self.yesButton.setBtnProperties(self.yesButton)
     }
-
-      //MARK:- Actions
-
+    
+    //MARK: Actions
+    
     @IBAction func ButtonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)
     }

@@ -10,12 +10,12 @@ import UIKit
 
 class LoadTextView: NibView {
 
-    //MARK:- Outlets
+    //MARK: Outlets
 
     @IBOutlet weak var okButton:UIButton!
     @IBOutlet weak var textView:UITextView!
 
-    //MARK:- Properties
+    //MARK: Properties
 
     weak var delegate:CustomViews?
 
@@ -25,7 +25,7 @@ class LoadTextView: NibView {
         }
     }
 
-    //MARK:- LifeCycle
+    //MARK: LifeCycle
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -45,7 +45,7 @@ class LoadTextView: NibView {
     }
 
 
-    //MARK:- Actions
+    //MARK: Actions
 
     @IBAction func buttonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)

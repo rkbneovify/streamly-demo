@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Streamly/Supporting Files/Base.lproj/Main.storyboard" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="6Ti-Zk-8Fg.normalTitle" xml:space="preserve">
+        <source>Register Now</source>
+        <target>Register Now</target>
+        <note>Class = "UIButton"; normalTitle = "Register Now"; ObjectID = "6Ti-Zk-8Fg";</note>
+      </trans-unit>
+      <trans-unit id="6hi-O7-Vuc.normalTitle" xml:space="preserve">
+        <source>SPORTS</source>
+        <target>SPORTS</target>
+        <note>Class = "UIButton"; normalTitle = "SPORTS"; ObjectID = "6hi-O7-Vuc";</note>
+      </trans-unit>
+      <trans-unit id="E3A-mh-nxK.text" xml:space="preserve">
+        <source>Remember me</source>
+        <target>Remember me</target>
+        <note>Class = "UILabel"; text = "Remember me"; ObjectID = "E3A-mh-nxK";</note>
+      </trans-unit>
+      <trans-unit id="F0E-Oc-jn2.text" xml:space="preserve">
+        <source>Don't have an account?</source>
+        <target>Don't have an account?</target>
+        <note>Class = "UILabel"; text = "Don't have an account?"; ObjectID = "F0E-Oc-jn2";</note>
+      </trans-unit>
+      <trans-unit id="G6J-zO-Jpw.text" xml:space="preserve">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Class = "UILabel"; text = "Password"; ObjectID = "G6J-zO-Jpw";</note>
+      </trans-unit>
+      <trans-unit id="G8p-mT-5yQ.normalTitle" xml:space="preserve">
+        <source>KIDS</source>
+        <target>KIDS</target>
+        <note>Class = "UIButton"; normalTitle = "KIDS"; ObjectID = "G8p-mT-5yQ";</note>
+      </trans-unit>
+      <trans-unit id="MJZ-82-KwY.normalTitle" xml:space="preserve">
+        <source>Sign in</source>
+        <target>Sign in</target>
+        <note>Class = "UIButton"; normalTitle = "Sign in"; ObjectID = "MJZ-82-KwY";</note>
+      </trans-unit>
+      <trans-unit id="Ml5-EV-iaZ.normalTitle" xml:space="preserve">
+        <source>All</source>
+        <target>All</target>
+        <note>Class = "UIButton"; normalTitle = "All"; ObjectID = "Ml5-EV-iaZ";</note>
+      </trans-unit>
+      <trans-unit id="Syg-xH-Mku.text" xml:space="preserve">
+        <source>Username</source>
+        <target>Username</target>
+        <note>Class = "UILabel"; text = "Username"; ObjectID = "Syg-xH-Mku";</note>
+      </trans-unit>
+      <trans-unit id="TIO-2n-DWs.normalTitle" xml:space="preserve">
+        <source>MOVIES</source>
+        <target>MOVIES</target>
+        <note>Class = "UIButton"; normalTitle = "MOVIES"; ObjectID = "TIO-2n-DWs";</note>
+      </trans-unit>
+      <trans-unit id="WWd-ny-HIG.text" xml:space="preserve">
+        <source>Sign In</source>
+        <target>Sign In</target>
+        <note>Class = "UILabel"; text = "Sign In"; ObjectID = "WWd-ny-HIG";</note>
+      </trans-unit>
+      <trans-unit id="hSL-up-Py5.normalTitle" xml:space="preserve">
+        <source>MY CHANNELS</source>
+        <target>MY CHANNELS</target>
+        <note>Class = "UIButton"; normalTitle = "MY CHANNELS"; ObjectID = "hSL-up-Py5";</note>
+      </trans-unit>
+      <trans-unit id="hkf-lV-fy6.normalTitle" xml:space="preserve">
+        <source>NEWS</source>
+        <target>NEWS</target>
+        <note>Class = "UIButton"; normalTitle = "NEWS"; ObjectID = "hkf-lV-fy6";</note>
+      </trans-unit>
+      <trans-unit id="lkS-OL-cQ8.normalTitle" xml:space="preserve">
+        <source>SETTINGS</source>
+        <target>SETTINGS</target>
+        <note>Class = "UIButton"; normalTitle = "SETTINGS"; ObjectID = "lkS-OL-cQ8";</note>
+      </trans-unit>
+      <trans-unit id="mje-KO-1Gq.text" xml:space="preserve">
+        <source>Label</source>
+        <target>Label</target>
+        <note>Class = "UILabel"; text = "Label"; ObjectID = "mje-KO-1Gq";</note>
+      </trans-unit>
+      <trans-unit id="nGh-M6-aXv.normalTitle" xml:space="preserve">
+        <source>Need help?</source>
+        <target>Need help?</target>
+        <note>Class = "UIButton"; normalTitle = "Need help?"; ObjectID = "nGh-M6-aXv";</note>
+      </trans-unit>
+      <trans-unit id="uki-an-m3n.normalTitle" xml:space="preserve">
+        <source>GO BACK</source>
+        <target>GO BACK</target>
+        <note>Class = "UIButton"; normalTitle = "GO BACK"; ObjectID = "uki-an-m3n";</note>
+      </trans-unit>
+      <trans-unit id="z8U-69-9dI.normalTitle" xml:space="preserve">
+        <source>RECENT</source>
+        <target>RECENT</target>
+        <note>Class = "UIButton"; normalTitle = "RECENT"; ObjectID = "z8U-69-9dI";</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/en.lproj/InfoPlist.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>StreamlyTV</source>
+        <target>StreamlyTV</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Streamly/Supporting Files/en.lproj/Localizable.strings" source-language="en" target-language="en" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="11.3.1" build-num="11C505"/>
+    </header>
+    <body>
+      <trans-unit id="Enter keyword (e.g. Channels)" xml:space="preserve">
+        <source>Enter keyword (e.g. Channels)</source>
+        <target>Enter keyword (e.g. Channels)</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+      <trans-unit id="Search" xml:space="preserve">
+        <source>Search</source>
+        <target>Search</target>
+        <note>No comment provided by engineer.</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

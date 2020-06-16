@@ -10,13 +10,13 @@ import UIKit
 
 class PrivacyPopUP: NibView {
 
-    //MARK:- Outlets
+    //MARK: Outlets
 
     @IBOutlet weak var okButton:UIButton!
     @IBOutlet weak var privacyBtn:UIButton!
     @IBOutlet weak var policiesBtn:UIButton!
 
-    //MARK:- Properties
+    //MARK: Properties
 
     weak var delegate:CustomViews?
 
@@ -26,7 +26,7 @@ class PrivacyPopUP: NibView {
         }
     }
 
-    //MARK:- LifeCycle
+    //MARK: LifeCycle
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -35,7 +35,7 @@ class PrivacyPopUP: NibView {
     }
 
 
-    //MARK:- Actions
+    //MARK: Actions
 
     @IBAction func buttonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)

@@ -8,83 +8,141 @@
 
 import UIKit
 
-class SearchVC: UIViewController, UISearchResultsUpdating,UICollectionViewDelegate,UICollectionViewDataSource {
+class SearchVC: UIViewController {
+
     // MARK: Properties
     
     static let storyboardIdentifier = "SearchVC"
-    
     private let cellComposer = DataItemCellComposer()
-    
     private let allDataItems = DataItem.sampleItems
-    
     private var filteredDataItems = DataItem.sampleItems
-    
-    @IBOutlet weak var collectionView:UICollectionView!
-    
     var filterString = "" {
         didSet {
             // Return if the filter string hasn't changed.
             guard filterString != oldValue else { return }
-            
+
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
-                filteredDataItems = allDataItems
+                filtterdChannelList = self.channelList
             }
             else {
-                filteredDataItems = allDataItems.filter { $0.title.localizedStandardContains(filterString) }
+              //  filtterdChannelList = self.channelList?.message?.data?.filter { ($0.name?.localizedStandardContains(filterString) ?? <#default value#>) }
             }
-            
+
             // Reload the collection view to reflect the changes.
             collectionView?.reloadData()
         }
     }
+    var channelList:ChannelResponse?
+      {
+          didSet
+          {
+              self.collectionView.reloadData()
+          }
+      }
+     var filtterdChannelList:ChannelResponse?
+     lazy var viewModel: SearchDataViewModel = {
+          return SearchDataViewModel()
+      }()
+
+    //  MARK: Outlets
+
+    @IBOutlet weak var collectionView:UICollectionView!
+    
+
+    
+    //  MARK: LifeCycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.initialSetup()
+
+    }
+
+    //  MARK: Helper
+
+    private func initialSetup()
+    {
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()
+        self.makeApiCall()
+        self.initVM()
     }
-    // MARK: UIViewController
-    
-    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //        super.prepare(for: segue, sender: sender)
-    //
-    //        // Check if a DataItemViewController is being presented.
-    ////        if let dataItemViewController = segue.destination as? DataItemViewController {
-    ////            // Pass the selected `DataItem` to the `DataItemViewController`.
-    ////            guard let indexPath = collectionView?.indexPathsForSelectedItems?.first else { fatalError("Expected a cell to have been selected") }
-    ////            dataItemViewController.configure(with: filteredDataItems[indexPath.row])
-    ////        }
-    //    }
-    
-    // MARK: UICollectionViewDataSource
+
+    func makeApiCall(){
+        self.showSpinner(onView: self.view)
+          viewModel.delegate = self
+          viewModel.getSearchData()
+
+      }
+
+      private func initVM() {
+
+          viewModel.searchData = { contactModel in
+            self.channelList = contactModel
+            self.filtterdChannelList = contactModel
+          //  print(self.channelList?.message?.data?[0])
+
+              self.removeSpinner()
+
+
+          }
+
+      }
+
+}
+
+// MARK: UICollectionViewDataSource
+
+extension SearchVC:UICollectionViewDataSource
+{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filteredDataItems.count
+        return filtterdChannelList?.message?.data?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Dequeue a cell from the collection view.
         return collectionView.dequeueReusableCell(withReuseIdentifier: DataItemCollectionViewCell.reuseIdentifier, for: indexPath)
     }
-    
-    // MARK: UICollectionViewDelegate
-    
+
+
+}
+
+extension SearchVC:UICollectionViewDelegate
+
+{
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? DataItemCollectionViewCell else { fatalError("Expected to display a `DataItemCollectionViewCell`.") }
         let item = filteredDataItems[(indexPath as NSIndexPath).row]
-        
+
         // Configure the cell.
         cellComposer.compose(cell, withDataItem: item)
     }
-    
-    // MARK: UISearchResultsUpdating
+}
+
+// MARK: UISearchResultsUpdating
+
+extension SearchVC:UISearchResultsUpdating
+{
     
     func updateSearchResults(for searchController: UISearchController) {
         filterString = searchController.searchBar.text ?? ""
     }
 }
+
+extension SearchVC:HandleError
+{
+    func handleError(_ message: String) {
+        self.removeSpinner()
+        self.showSimpleAlertWithMessage("Something went wrong!")
+    }
+
+}
+
+
 
