@@ -67,11 +67,11 @@ sub dontHaveAccount()
                  m.OkButton1.maxWidth  = "180"                
                  m.OkButton1.focusedTextColor="#FFFFFF"
                  m.OkButton1.height = "45"              
-                 m.OkButton1.focusBitmapUri="pkg:/images/Login/borderof.png"
+                 m.OkButton1.focusBitmapUri="pkg:/images/Login/createAccountFocus.png"
                  m.OkButton1.showFocusFootprint="true"             
                  m.OkButton1.iconUri=""
                  m.OkButton1.focusedIconUri=""
-                 m.OkButton1.focusFootprintBitmapUri = "pkg:/images/Login/borderon.png"
+                 m.OkButton1.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
 '                 m.OkButton.horizAlign="center"
                  okLabel =  m.OkButton1.createChild("Label")
                         okLabel.horizAlign="center"

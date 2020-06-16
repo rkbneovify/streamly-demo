@@ -3,6 +3,7 @@ sub init()
     
     m.ChannelsGroup = m.top.findNode("ChannelsGroup")
     m.timeGride = m.top.findNode("timeGrid")
+    m.timeGride.numRows = 0
 '    m.video = m.top.findNode("video")
     m.video = m.top.findNode("myVideo")
     m.video.enableUI = false
@@ -55,6 +56,9 @@ sub init()
 '    initGrigData()
   
     currentTime =  CreateObject("roDateTime")
+    currentTime.Mark()
+    ?"currentTime1.ToISOString(): "currentTime.ToISOString()
+     ?"local.ToISOString(): "currentTime.ToLocalTime()
     t = currentTime.AsSeconds()
     t = t - (t mod 1800) ' RDE-2665 - TimeGrid works best when contentStartTime is set to a 30m mark
     m.timeGride.contentStartTime = t
@@ -79,7 +83,7 @@ sub init()
     m.timeGride.loadingDataText = "Loading..."
     m.timeGride.automaticLoadingDataFeedback = false
 
-    m.timeGride.numRows = 9
+    m.timeGride.numRows = 0
     m.timeGride.fillProgramGaps = false
     m.timeGride.translation="[0.0, 350.0]"
     m.timeGride.vertFocusAnimationStyle ="fixedFocus"
@@ -198,6 +202,11 @@ sub channelFocused(event as object)
     
     channelnode = event.getRoSGNode().content
     getChannelDAta(channelnode,m.ChannelData[m.channelNameString][m.channelListData])
+    
+    if  m.channelListData < 10
+       
+        m.timeGride.numRows = m.channelListData
+    end if
     m.channelListData +=1
   end if 
    
@@ -206,7 +215,10 @@ end sub
 sub StartContentLoading()
 ?"StartContentLoading; "
  if  m.channelListData < m.ChannelData[m.channelNameString].Count() and m.timeGride.content<> invalid
-     m.channelListData +=1
+      if  m.channelListData < 10       
+        m.timeGride.numRows = m.channelListData
+      end if
+      m.channelListData +=1
      getChannelDAta(m.timeGride.content,m.ChannelData[m.channelNameString][m.channelListData])           
  else if  m.timeGride.content = invalid
       ?"first time start"
@@ -304,7 +316,7 @@ sub initGrigData(channels as object)
  
  for each channel in channels.Keys()
  
-   marupContent.createChild("ContentNode").TITLE =channel
+   marupContent.createChild("ContentNode").TITLE = channel
  end for
 ' marupContent.createChild("ContentNode").TITLE = "ALL"
 ' marupContent.createChild("ContentNode").TITLE = "RECENT"
@@ -335,23 +347,33 @@ Function programSelected(event as object) as object
  
  
  timeGrid = event.GetRoSGNode()
+ 
+
  channelNode = timeGrid.content.getChild(timeGrid.channelSelected)
  m.currentProgramsNode =  channelNode
  
  m.programIndex = 0
    
  currentProgram = m.currentProgramsNode.getChild(m.programIndex)
+
+ currentTime1 =  CreateObject("roDateTime")
+    t = currentTime1.AsSeconds()
+ ?"currentProgram t ;";currentTime1.ToISOString() ;" sec"
+ 
+' currentTime1.FromSeconds(currentProgram.PLAYSTART)
+' ?"currentProgram PLAYSTART ;";currentTime1.ToISOString()
+ 
  ?"currentProgram title ;";currentProgram.title
- ?"currentProgram start ;";currentProgram.PLAYSTART
  ?"currentProgram end ;";currentProgram.PLAYDURATION ;" sec"
  
-    currentTime =  CreateObject("roDateTime")
-    t = currentTime.AsSeconds()
-    if  t > (currentProgram.PLAYSTART/1000)
-       m.programDuration = (t- (currentProgram.PLAYSTART/1000))   
-    else
-       m.programDuration = ((currentProgram.PLAYSTART/1000) -t)
-    end if
+ currentEpisodeDuration =  (   (currentProgram.PLAYSTART) +currentProgram.PLAYDURATION* 1000 - ( t  )  ) 
+    
+'    if  t > (currentProgram.PLAYSTART/1000)
+'       m.programDuration = (t- (currentProgram.PLAYSTART/1000))   
+'    else
+'       m.programDuration = ((currentProgram.PLAYSTART/1000) -t)
+'    end if
+  m.programDuration = (currentEpisodeDuration/1000)
  
  ?"m.programDuration exact ;";m.programDuration
 ' m.programDuration = currentProgram.PLAYDURATION
