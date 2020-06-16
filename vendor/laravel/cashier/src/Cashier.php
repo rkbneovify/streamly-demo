@@ -15,14 +15,14 @@ class Cashier
      *
      * @var string
      */
-    const VERSION = '11.3.0';
+    const VERSION = '10.7.1';
 
     /**
      * The Stripe API version.
      *
      * @var string
      */
-    const STRIPE_VERSION = '2020-03-02';
+    const STRIPE_VERSION = '2019-08-14';
 
     /**
      * The custom currency formatter.
@@ -99,10 +99,9 @@ class Cashier
      *
      * @param  int  $amount
      * @param  string|null  $currency
-     * @param  string|null  $locale
      * @return string
      */
-    public static function formatAmount($amount, $currency = null, $locale = null)
+    public static function formatAmount($amount, $currency = null)
     {
         if (static::$formatCurrencyUsing) {
             return call_user_func(static::$formatCurrencyUsing, $amount, $currency);
@@ -110,9 +109,7 @@ class Cashier
 
         $money = new Money($amount, new Currency(strtoupper($currency ?? config('cashier.currency'))));
 
-        $locale = $locale ?? config('cashier.currency_locale');
-
-        $numberFormatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+        $numberFormatter = new NumberFormatter(config('cashier.currency_locale'), NumberFormatter::CURRENCY);
         $moneyFormatter = new IntlMoneyFormatter($numberFormatter, new ISOCurrencies());
 
         return $moneyFormatter->format($money);
