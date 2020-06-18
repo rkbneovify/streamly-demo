@@ -115,7 +115,6 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         Single.fromCallable {
             val channels = listOf(
 
-
                 SimpleChannel("npo-1", SpannedString("MTV- USA"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
                 SimpleChannel("npo-2", SpannedString("CN"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
                 SimpleChannel("bbc-news", SpannedString("ESPN"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
