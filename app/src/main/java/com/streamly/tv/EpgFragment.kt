@@ -1,37 +1,40 @@
-package com.egeniq.programguide
+package com.streamly.tv
 
 import android.annotation.SuppressLint
-import android.os.Build
+import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.egeniq.androidtvprogramguide.ProgramGuideFragment
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
-import com.streamly.tv.R
+import com.streamly.tv.local_storage.TokenStorage
+import com.streamly.tv.playervideo.PlayerActivity
+import com.streamly.tv.retrofit_clients.ApiClient
+import com.streamly.tv.retrofit_clients.ApiInterface
+import com.streamly.tv.utilities.ConstantUtility
+import com.streamly.tv.utilities.NetworkKeys
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneOffset
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 
     // Feel free to change configuration values like this:
-    //
     // override val DISPLAY_CURRENT_TIME_INDICATOR = false
     // override val DISPLAY_SHOW_PROGRESS = false
 
@@ -59,7 +62,9 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
             return
         }
         if (schedule.isCurrentProgram) {
-            Toast.makeText(context, "Open live player", Toast.LENGTH_LONG).show()
+//            Toast.makeText(context, "Open live player", Toast.LENGTH_LONG).show()
+            val intent = Intent(context, PlayerActivity::class.java)
+            startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
         }
@@ -90,7 +95,6 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         return false
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("CheckResult")
     override fun requestingProgramGuideFor(localDate: LocalDate) {
         // Faking an asynchronous loading here
@@ -106,29 +110,22 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         val MAX_SHOW_LENGTH_SECONDS = TimeUnit.MINUTES.toSeconds(120)
 
 
+//        ApiInterface apinterface=
+
         Single.fromCallable {
             val channels = listOf(
 
-                SimpleChannel("npo-1", SpannedString("Channel 1"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("npo-2", SpannedString("Channel 2"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("bbc-news", SpannedString("Channel 3"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("zdf", SpannedString("Channel 4"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("jednotka", SpannedString("Channel 5"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("tv-nova", SpannedString("Channel 6"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("tv-5-monde", SpannedString("Channel 7"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("orf-2", SpannedString("Channel 8"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("tvp-1", SpannedString("Channel 9"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png")
 
+                SimpleChannel("npo-1", SpannedString("MTV- USA"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("npo-2", SpannedString("CN"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("bbc-news", SpannedString("ESPN"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("zdf", SpannedString("CNN-intl"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("jednotka", SpannedString("BBC earth"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("tv-nova", SpannedString("Discovery"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("tv-5-monde", SpannedString("MTV"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("orf-2", SpannedString("Sports TV"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
+                SimpleChannel("tvp-1", SpannedString("BBC"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png")
 
-                /*SimpleChannel("npo-1", SpannedString("NPO 1"), "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/NPO_1_logo_2014.svg/320px-NPO_1_logo_2014.svg.png"),
-                SimpleChannel("npo-2", SpannedString("NPO 2"), "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/NPO_2_logo_2014.svg/275px-NPO_2_logo_2014.svg.png"),
-                SimpleChannel("bbc-news", SpannedString("BBC NEWS"), "https://upload.wikimedia.org/wikipedia/en/thumb/6/62/BBC_News_2019.svg/240px-BBC_News_2019.svg.png"),
-                SimpleChannel("zdf", SpannedString("ZDF"), "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/ZDF_logo.svg/200px-ZDF_logo.svg.png"),
-                SimpleChannel("jednotka", SpannedString("Jednotka"), "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Jednotka.svg/255px-Jednotka.svg.png"),
-                SimpleChannel("tv-nova", SpannedString("TV nova"), "https://upload.wikimedia.org/wikipedia/commons/2/2f/TV_Nova_logo_2017.png"),
-                SimpleChannel("tv-5-monde", SpannedString("TV5MONDE"), "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/TV5MONDE_logo.png/320px-TV5MONDE_logo.png"),
-                SimpleChannel("orf-2", SpannedString("ORF 2"), "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/ORF2_logo_n.svg/320px-ORF2_logo_n.svg.png"),
-                SimpleChannel("tvp-1", SpannedString("TVP 1"), "https://upload.wikimedia.org/wikipedia/commons/e/ec/Tvp1.png")*/
             )
 
             val showNames = listOf("News", "Sherlock Holmes", "It's Always Sunny In Philadelphia", "Second World War Documentary", "World Cup Final Replay", "Game of Thrones",
@@ -162,7 +159,6 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
             })
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createSchedule(channel: SimpleChannel, scheduleName: String, startTime: ZonedDateTime, endTime: ZonedDateTime): ProgramGuideSchedule<SimpleProgram> {
         val id = Random.nextLong(100_000L)
         val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
@@ -179,14 +175,12 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun randomTimeBetween(min: ZonedDateTime, max: ZonedDateTime): ZonedDateTime {
         val randomEpoch = Random.nextLong(min.toEpochSecond(), max.toEpochSecond())
         return ZonedDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC)
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun requestRefresh() {
         // You can refresh other data here as well.
         requestingProgramGuideFor(currentDate)

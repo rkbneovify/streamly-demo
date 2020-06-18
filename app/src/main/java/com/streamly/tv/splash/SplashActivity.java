@@ -1,11 +1,12 @@
 package com.streamly.tv.splash;
 
-import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.fragment.app.FragmentActivity;
+import com.streamly.tv.MainActivity;
 import com.streamly.tv.R;
-import com.streamly.tv.channel_page.ChannelActivity;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.log_in.LogInActivity;
 import com.streamly.tv.utilities.ConstantUtility;
@@ -21,7 +22,7 @@ public class SplashActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         NetworkUtils network = new NetworkUtils(getApplicationContext());
-//        network.registerNetworkCallback();
+        network.registerNetworkCallback();
 
 //        TokenStorage.clearSharedToken(SplashActivity.this);
         auth_token = TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null);
@@ -29,7 +30,7 @@ public class SplashActivity extends FragmentActivity {
             @Override
             public void run() {
                 if (auth_token != null) {
-                    startActivity(new Intent(SplashActivity.this, ChannelActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
                 }else {
                     startActivity(new Intent(SplashActivity.this, LogInActivity.class));
@@ -37,6 +38,8 @@ public class SplashActivity extends FragmentActivity {
                 }
             }
         },3000);
+
+
 
 
 

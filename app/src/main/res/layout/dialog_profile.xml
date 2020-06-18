@@ -36,9 +36,9 @@
             android:orientation="vertical">
 
         <TextView
+            android:id="@+id/text_name"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
-            android:text="Lou1234"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_7ssp"
             android:layout_marginTop="@dimen/_5sdp"/>
@@ -67,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="@string/password_profile"
+            android:text="@string/email"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_8ssp"
             android:textAlignment="center"
@@ -80,13 +80,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/text_email"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="wrap_content"
-                android:text="Change Password"
                 android:textColor="@color/md_white_1000"
                 android:textSize="@dimen/_7ssp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:drawableRight="@drawable/ic_right_arrow"/>
+                android:layout_marginTop="@dimen/_5sdp" />
 
             <TextView
                 android:layout_width="@dimen/_100sdp"
@@ -167,9 +166,9 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/text_updated_date"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="wrap_content"
-                android:text="14/04/2020"
                 android:textColor="@color/md_white_1000"
                 android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_5sdp"/>

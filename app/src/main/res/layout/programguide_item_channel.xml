@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019, Egeniq
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,18 +19,19 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="150dp"
-    android:layout_height="40dp"
-    android:background="#D0D0D0"
-    android:paddingLeft="@dimen/programguide_page_left_padding"
-    android:layout_margin="2dp">
+    android:layout_height="35dp"
+    android:layout_margin="2dp"
+    android:background="@color/md_grey_600"
+    android:paddingLeft="@dimen/programguide_page_left_padding">
+    <!--    android:background="#D0D0D0"-->
 
     <TextView
-        style="@style/ProgramGuide.Text.Channel"
         android:id="@+id/programguide_channel_name"
+        style="@style/ProgramGuide.Text.Channel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="NPO Zappelin Xtra"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        tools:text="NPO Zappelin Xtra" />
 
     <ImageView
         android:id="@+id/programguide_channel_logo"

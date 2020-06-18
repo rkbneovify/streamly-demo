@@ -1,32 +1,33 @@
 package com.streamly.tv.settings;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import com.streamly.tv.R;
-import com.streamly.tv.databinding.ActivitySettingsBinding;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
+import com.streamly.tv.MainActivity;
 import com.streamly.tv.settings.privacy.PrivacyDialog;
 import com.streamly.tv.settings.profile.ProfileDialog;
 import com.streamly.tv.settings.registerdevice.RegisterDeviceDialog;
 import com.streamly.tv.settings.signout.SignOutDialog;
 import com.streamly.tv.settings.support.SupportDialog;
+import com.streamly.tv.R;
+import com.streamly.tv.databinding.ActivitySettingsBinding;
 import com.streamly.tv.utilities.CommonUtility;
+
 
 public class SettingsActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG=SettingsActivity.class.getSimpleName();
     private ActivitySettingsBinding settingsBinding;
     private ProgressDialog dialog;
-    private Context context=SettingsActivity.this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CommonUtility.checkInternetConnection(this);
-        settingsBinding= DataBindingUtil.setContentView(this,R.layout.activity_settings);
+        settingsBinding= DataBindingUtil.setContentView(this, R.layout.activity_settings);
 //        setContentView(R.layout.activity_settings);
         dialog= CommonUtility.custom_loader(this);
         initListeners();
@@ -38,6 +39,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         settingsBinding.support.setOnClickListener(this);
         settingsBinding.privacy.setOnClickListener(this);
         settingsBinding.signOut.setOnClickListener(this);
+        settingsBinding.textChannels.setOnClickListener(this);
     }
 
     @Override
@@ -68,6 +70,11 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             case R.id.sign_out :
                 SignOutDialog signOutDialog=new SignOutDialog(this);
                 signOutDialog.show();
+                break;
+
+            case R.id.text_channels :
+                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+                finish();
                 break;
             //handle multiple view click events
         }

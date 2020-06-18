@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Streamly</string>
+    <string name="app_name">Streamly TV</string>
     <string name="sign_in">Sign In</string>
     <string name="signIn">Sign in</string>
     <string name="username">Username</string>
@@ -30,7 +30,7 @@
     <string name="support_text">For Help and Support You can call us on below numbers.</string>
     <string name="number_one">+1-548965-51 (24*7)</string>
     <string name="number_two">+1-1800-815065-00</string>
-    <string name="privacy_right">Your Privacy Rights</string>
+    <string name="privacy_right">Privacy &amp; Policies</string>
     <string name="policy">Policies</string>
     <string name="sure_signout">Are you sure you want to logout from this device?</string>
     <string name="yes">Yes</string>
@@ -52,5 +52,34 @@
 
     <string name="programguide_day_selector_title">Select the desired day</string>
     <string name="programguide_day_time_selector_title">Select the desired time of day</string>
+    <string name="channels">Channels</string>
+    <string name="email">Email</string>
+    <string name="all">All</string>
+    <string name="my_channels">My Channels</string>
+    <string name="sports">Sports</string>
+    <string name="news">News</string>
+    <string name="movies">Movies</string>
+    <string name="Kids">Kids</string>
+
+    <string name="test">Notice the embedded tabs and extra spaces mixed into the middle of the output.
+        It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
+        This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
+        The sample string has an artificial indent level introduced for illustrating this feature.
+    Notice the embedded tabs and extra spaces mixed into the middle of the output.
+        It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
+        This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
+        The sample string has an artificial indent level introduced for illustrating this feature.
+    Notice the embedded tabs and extra spaces mixed into the middle of the output.
+        It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
+        This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
+        The sample string has an artificial indent level introduced for illustrating this feature.
+    Notice the embedded tabs and extra spaces mixed into the middle of the output.
+        It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
+        This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
+        The sample string has an artificial indent level introduced for illustrating this feature.
+    Notice the embedded tabs and extra spaces mixed into the middle of the output.
+        It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
+        This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
+        The sample string has an artificial indent level introduced for illustrating this feature.</string>
 
 </resources>

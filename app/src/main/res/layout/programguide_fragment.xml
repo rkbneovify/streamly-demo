@@ -20,8 +20,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/person_singing">
+    android:layout_height="match_parent">
+<!--    android:background="@drawable/person_singing"-->
 
     <Button
         android:id="@+id/programguide_jump_to_live"
@@ -116,11 +116,11 @@
         android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/person_singing"
         app:layout_constraintBottom_toTopOf="@id/bottom_detail"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/programguide_time_row" />
+<!--    android:background="@drawable/person_singing"-->
 
     <View
         android:id="@+id/focus_catcher"

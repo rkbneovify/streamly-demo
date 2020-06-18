@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_330sdp"
     android:layout_height="@dimen/_150sdp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_gravity="center"
@@ -9,6 +10,8 @@
     android:paddingRight="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
     android:background="@drawable/white_transparent">
+
+
 
 
         <TextView
@@ -20,25 +23,22 @@
             android:textAlignment="center"
             android:padding="@dimen/_8sdp"/>
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/number_one"
-                android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_8ssp"
-                android:textAlignment="center"
-                android:padding="@dimen/_8sdp"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/view_support"/>
 
 
-    <TextView
+
+   <!-- <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/number_two"
         android:textColor="@color/md_white_1000"
         android:textSize="@dimen/_8ssp"
         android:textAlignment="center"
-        android:padding="@dimen/_8sdp"/>
+        android:padding="@dimen/_8sdp"/>-->
 
 
     <Button

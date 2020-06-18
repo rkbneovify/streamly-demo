@@ -1,21 +1,38 @@
 package com.streamly.tv.settings.registerdevice;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.streamly.tv.R;
+import com.streamly.tv.local_storage.TokenStorage;
+import com.streamly.tv.log_in.LogInActivity;
+import com.streamly.tv.retrofit_clients.ApiClient;
+import com.streamly.tv.retrofit_clients.ApiInterface;
+import com.streamly.tv.utilities.CommonUtility;
+import com.streamly.tv.utilities.ConstantUtility;
+import com.streamly.tv.utilities.NetworkKeys;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterDeviceDialog extends Dialog {
+    private static final String TAG=RegisterDeviceDialog.class.getSimpleName();
     private Button btnOK;
     private RecyclerView rvDeviceModel;
     private Context context;
+    private ProgressDialog dialog;
+    private String auth_token;
     List<RegisterDeviceType> list=new ArrayList<RegisterDeviceType>();
 
 
@@ -29,8 +46,14 @@ public class RegisterDeviceDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_register_device);
-
+        CommonUtility.checkInternetConnection(context);
         initViews();
+        auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null);
+        if (ConstantUtility.isNetworkConnected) {
+            connectedDevice();
+        }else {
+            CommonUtility.showToast(context,ConstantUtility.CHECK_INTERNET_CONNECTION);
+        }
 
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,27 +62,64 @@ public class RegisterDeviceDialog extends Dialog {
             }
         });
 
-
-        RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,getList());
-        rvDeviceModel.setLayoutManager(new LinearLayoutManager(context,RecyclerView.VERTICAL,false));
-        rvDeviceModel.setAdapter(deviceAdapter);
-
     }
 
+    private void connectedDevice() {
+        dialog.show();
+        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
+        Call<ConnectedDeviceModel> call=apiInterface.getConnectedDevice(NetworkKeys.KEY_BEARER +auth_token,NetworkKeys.KEY_APP_JSON);
+        call.enqueue(new Callback<ConnectedDeviceModel>() {
+            @Override
+            public void onResponse(Call<ConnectedDeviceModel> call, Response<ConnectedDeviceModel> response) {
 
-    private List<RegisterDeviceType> getList(){
-            list.add(new RegisterDeviceType("1."+"Samsung smart tv -43 inch","548782-5555-895"));
-            list.add(new RegisterDeviceType("2."+"Sony Bravia smart tv -56 inch","548782-5555-895"));
-            list.add(new RegisterDeviceType("3."+"Apple iphone- XR","548782-5555-895"));
-            list.add(new RegisterDeviceType("4."+"Samsung Note 10","548782-5555-895"));
-            list.add(new RegisterDeviceType("5."+"Apple iPhone -XS max","548782-5555-895"));
-        return list;
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+
+                       List<Datum> datalist= response.body().getData();
+
+                       for (int i=0;i<datalist.size();i++){
+                           list.add(new RegisterDeviceType(datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId()));
+                       }
+                        RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,list);
+                        rvDeviceModel.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
+                        rvDeviceModel.setAdapter(deviceAdapter);
+
+
+                    } else if (response.code() == 401) {
+                        CommonUtility.showToast(context, response.body().getMessage());
+                        TokenStorage.clearSharedToken(context);
+                        context.startActivity(new Intent(context, LogInActivity.class));
+                        ((Activity) context).finish();
+                    }else if (response.code()==404){
+                        TokenStorage.clearSharedToken(context);
+                        CommonUtility.showToast(context,ConstantUtility.SESSION_EXPIRED);
+                        context.startActivity(new Intent(context, LogInActivity.class));
+                        ((Activity)context).finish();
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(context, ConstantUtility.SERVER_ISSUE);
+                    }
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                    Log.e(TAG, "Exception "+ex);
+                }
+                Log.e(TAG,"connected Devices "+response.code()+"");
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<ConnectedDeviceModel> call, Throwable t) {
+                Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
+                CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);
+                dialog.dismiss();
+            }
+        });
     }
 
 
     private void initViews() {
         btnOK=findViewById(R.id.btn_ok);
         rvDeviceModel=findViewById(R.id.rv_device_model);
+        dialog= CommonUtility.custom_loader(context);
     }
 
 
