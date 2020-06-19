@@ -54,3 +54,37 @@
     // Collapse the navbar when page is scrolled
     $(window).scroll(navbarCollapse);
 })(jQuery); // End of use strict
+
+
+function openNav(event) {
+    event.preventDefault();
+    closeNavReg();
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenav").classList.add("show");
+}
+
+function openNavReg() {
+    closeNav();
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenavRegister").classList.add("show");
+}
+
+function closeNav() {
+
+    // document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("mySidenav").classList.remove("show");
+}
+
+function logoutUser() {
+    window.location.href = '/logout';
+}
+
+function closeNavReg() {
+    document.getElementById("mySidenavRegister").classList.remove("show");
+}
+
+window.setTimeout(function() {
+    $(".alert-position").slideUp(500, function() {
+        $(this).remove();
+    });
+}, 3000);

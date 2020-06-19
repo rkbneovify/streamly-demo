@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Socialite;
 use App\User;
+use App\Models\RoleUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,6 +14,7 @@ class HomeController extends Controller
 {
 
     private $user;
+    private $DEFAULT_ROLE_ID = 3;
 
     /**
      * Create a new controller instance.
@@ -65,6 +67,11 @@ class HomeController extends Controller
             'email' => $request['user-email'],
             'password' => Hash::make($request['user-password']),
             'zip_code' => $request['zip_code'],
+        ]);
+
+        $role = RoleUser::create([
+            'user_id' => $User->id,
+            'role_id' => $this->DEFAULT_ROLE_ID,
         ]);
 
         return redirect()->back()->with('message', 'Your account has been successfully registered!');
