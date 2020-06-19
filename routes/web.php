@@ -95,7 +95,9 @@ Route::post('/user/register', 'HomeController@createUser');
 
 Route::get('/payment', 'Pages\Payment@showPage');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
+Route::get('/livetv/list', 'Pages\LiveTv@showAllPage');
 Route::get('/livetv/{channel}', 'Pages\LiveTv@showChannel');
+Route::get('/faq', 'Pages\Faq@showPage');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 
