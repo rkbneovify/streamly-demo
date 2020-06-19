@@ -36,7 +36,7 @@
 			owl.owlCarousel({
 				
 				loop:true,
-			    margin:10,
+			    margin:20,
 			    nav: true,
 			    responsiveClass:true,
 			    responsive:{
@@ -72,8 +72,11 @@
 
 		.owl-item {
 	        background-color: white;
-			padding: 2rem;
-			text-align: center;
+		    padding: 2rem 0;
+		    text-align: center;
+		    background: #FFFFFF 0% 0% no-repeat padding-box;
+		    box-shadow: 0px 3px 6px #00000029;
+		    border-radius: 8px;
 		}
 
 		.owl-nav {
@@ -122,6 +125,10 @@
 
 		.arrow-custom-car button.owl-next {
 		    top: -30px;
+		}
+
+		.owl-stage-outer {
+			height: 100%;
 		}
 	</style>
 @endsection
