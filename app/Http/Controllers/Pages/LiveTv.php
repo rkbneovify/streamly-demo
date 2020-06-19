@@ -31,4 +31,17 @@ class LiveTv extends Controller
     	return view('frontend.pages.livetvchannel', compact('login'));
 
     }
+
+    public function showAllPage()
+    {
+
+        if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+        
+        return view('frontend.pages.alllivetvchannel', compact('login'));
+
+    }
 }
