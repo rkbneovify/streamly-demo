@@ -181,6 +181,7 @@ return [
         Jenssegers\Agent\AgentServiceProvider::class,
         PrettyRoutes\ServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
 
 
 
@@ -240,6 +241,7 @@ return [
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
+        'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
 
 
     ],
