@@ -100,3 +100,8 @@ Route::get('/livetv/{channel}', 'Pages\LiveTv@showChannel');
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 
 Route::post('/insertpay','Pages\Payment@pay')->name('insertpay');//send form data here
+
+Route::get('/ffmpeg', 'VideoAnylyzerController@index');
+Route::get('/ffmpeg2', 'VideoAnylyzerController@probeAudioFile');
+Route::get('/ffmpeg3', 'VideoAnylyzerController@testFprobe');
+Route::get('/ffmpeg4', 'VideoAnylyzerController@testProbeOnRemoteFile');
