@@ -27,8 +27,8 @@ class VideoAnylyzerController extends Controller
         // echo $durationInSeconds;
         // echo '<br>';
         // echo $durationInMiliseconds;    echo '<br>';
-        // $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8',''];
-       $churl = Channel::all()->pluck('url');
+        $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8',''];
+    //    $churl = Channel::all()->pluck('url');
         foreach ($churl as $url) {
             try {
                 if ($url==null) {
@@ -335,5 +335,78 @@ public function probeAudioFile()
 
 // var_export($f);
 // echo "\n\n";
+}
+
+public function test(){
+    $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8','https://content.jwplatform.com/manifests/yp34SRmf.m3u8'];
+     
+    $file = 'http://channelstore.streamlytv.com/live/TVG/interlink.m3u8';
+    $file_headers = @get_headers($file);
+    //print_r($file_headers);
+    if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+        $exists = 'dead link.';
+    }
+    else {
+        $exists = 'link working';
+    }
+print_r($exists);}
+public function test2(){
+    $a=[]; $outputs=[];
+    // $churl = Channel::all()->pluck('url');
+    $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8','https://content.jwplatform.com/manifests/yp34SRmf.m3u8','https://www.youtube.com/watch?v=9ao4FEaDGhQ'];
+    foreach ($churl as $url) {
+        
+    ini_set('default_socket_timeout', 1);
+
+    if(!$fp = @fopen($url, "r")) {
+    
+       $urlstatus="no";
+        $a['url']=$url;
+        $a['isStreaming'] =$urlstatus;
+        
+       
+    $a['isHLS'] ='No';
+    } else {
+        
+        $urlstatus="streaming";
+        $a['url']=$url;
+        $a['isStreaming'] =$urlstatus;
+        $m3u8 = file_get_contents($url);
+        if(!$m3u8)
+        return false;
+        $array = preg_split('/$\n?^/m', trim($m3u8), NULL, PREG_SPLIT_NO_EMPTY);
+    if($array[0]!= '#EXTM3U'){
+     
+    $a['isHLS'] ='No';
+    }else{
+        $a['isHLS'] ='Yes';
+            if(strpos($m3u8, 'EXT-X-STREAM-INF') !== FALSE || strpos($m3u8, 'EXT-X-I-FRAME-STREAM-INF') !== FALSE){
+                
+                $a['hls_manifest_type'] ='MasterPlaylist';
+                $hls_manifest_type = "MasterPlaylist";
+                $a['variants'] =substr_count($m3u8, 'RESOLUTION');
+
+                if(strpos($m3u8, 'EXT-X-KEY:METHOD=AES-128') !== FALSE) {$a['isEncrypted'] ='Yes';} else{$a['isEncrypted'] ='No';}
+            }
+            else {
+                $a['hls_manifest_type'] ='MediaPlaylist';
+                $hls_manifest_type = "MediaPlaylist"; 
+                $a['variants'] =substr_count($m3u8, 'RESOLUTION');
+                if(strpos($m3u8, 'EXT-X-KEY:METHOD=AES-128') !== FALSE) {$a['isEncrypted'] ='Yes';} else{$a['isEncrypted'] ='No';}
+            }
+        }
+        fclose($fp);
+    }
+    array_push($outputs, $a);
+}
+return view('admin.videoanylyzer.index', compact('outputs'));
+//   return $output; 
+   // echo $this->getHttpResponseCode('http://channelstore.streamlytv.com/live/TVG/interlink.m3u8');
+}
+
+    function getHttpResponseCode(string $url): int
+{
+    $headers = get_headers($url);
+    return substr($headers[0], 9, 3);
 }
 }
