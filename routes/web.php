@@ -81,7 +81,9 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
 Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
     Route::delete('zipcode/{id}/delete', 'ZipcodeController@deleteRole');
     
+ //hls anaylzer
 
+Route::get('/ffmpeg6', 'VideoAnylyzerController@test2');
 });
 
 
@@ -107,3 +109,4 @@ Route::get('/ffmpeg', 'VideoAnylyzerController@index');
 Route::get('/ffmpeg2', 'VideoAnylyzerController@probeAudioFile');
 Route::get('/ffmpeg3', 'VideoAnylyzerController@testFprobe');
 Route::get('/ffmpeg4', 'VideoAnylyzerController@testProbeOnRemoteFile');
+Route::get('/ffmpeg5', 'VideoAnylyzerController@test');
