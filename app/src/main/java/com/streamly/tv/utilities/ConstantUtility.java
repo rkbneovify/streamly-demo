@@ -20,6 +20,7 @@ public class ConstantUtility {
     public static final String FILL_PASSWORD ="Fill Password";
     public static final String WRONG_EMAIL = "Wrong email, Please check your email Id";
     public static final String SESSION_EXPIRED ="Session expired, Please re-login";
+    public static final String MAX_USER_LOGIN="Your account is in use on 5 devices. Please stop playing on other devices to continue";
 
     public static final String CHECK_INTERNET_CONNECTION = "NO INTERNET, Please Check Your Internet Connection.";
     public static final String EMAIL_REGEX ="^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$" ;

@@ -7,9 +7,13 @@ import com.streamly.tv.settings.registerdevice.ConnectedDeviceModel;
 import com.streamly.tv.settings.support.SupportModel;
 import com.streamly.tv.utilities.NetworkKeys;
 import com.streamly.tv.log_in.LogInModel;
+
+import io.reactivex.Observable;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -36,6 +40,16 @@ public interface ApiInterface {
 
     @GET("channellist")
     Call<ChannellistModel> getChannelList(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Header(NetworkKeys.KEY_ACCEPT) String accept);
+
+    @Headers("Accept: application/json")
+    @GET("channellist")
+    Observable<ChannellistModel> getChannelList2(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+
+    @Headers("Accept: application/json")
+    @GET("channeldayschdeule")//api/auth/channeldayschdeule
+    Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
 
 
 }

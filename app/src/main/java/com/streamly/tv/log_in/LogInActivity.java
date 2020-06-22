@@ -112,14 +112,17 @@ public class LogInActivity extends FragmentActivity {
                 }else if (response.code()==401){
                     CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                 } else if (response.code()==429){
-                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+//                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.MAX_USER_LOGIN);
                 }
                 else if (response.code()==500){
                     CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
                 }
+
               }catch (Exception e){
-                    e.printStackTrace(); Log.e(TAG,"Exception: "+e.toString());
-                    Toast.makeText(LogInActivity.this, ConstantUtility.INCORRECT_CREDENTIALS, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception: "+e.toString());
+//                    Toast.makeText(LogInActivity.this, ConstantUtility.INCORRECT_CREDENTIALS, Toast.LENGTH_SHORT).show();
                 } dialog.dismiss();
                 Log.e(TAG,"ResponCode "+response.code()+"");
             }
