@@ -100,7 +100,7 @@
                   <p>Channel status</p>
                 </a>
               </li><li class="nav-item">
-              <a href=" {{ url('/admin/ffmpeg6') }}" class="nav-link">
+              <a href=" {{ url('/admin/hlsmonitor') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>HLS analyzer</p>
                 </a>

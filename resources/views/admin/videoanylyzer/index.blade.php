@@ -29,7 +29,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Users</h3>
+        <h3 class="card-title">No. of MasterPlaylist:{{array_count_values(array_column($outputs, 'hls_manifest_type'))['MasterPlaylist']}} | No. of MediaPlaylist:{{array_count_values(array_column($outputs, 'hls_manifest_type'))['MediaPlaylist']}}</h3>
            
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
