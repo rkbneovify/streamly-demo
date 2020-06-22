@@ -133,8 +133,10 @@ public function probeAudioFile()
 
 public function test2(){
     $a=[]; $outputs=[];
-    // $churl = Channel::all()->pluck('url');
-    $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8','https://content.jwplatform.com/manifests/yp34SRmf.m3u8','https://www.youtube.com/watch?v=9ao4FEaDGhQ'];
+    $churl = Channel::where([
+        ['status', '=', '1'],
+         ])->pluck('url');
+    // $churl = ['http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8','fdghsh.m3u8','http://radioitaliatv-lh.akamaihd.net/i/radioitaliatv_1@329645/master.m3u8','https://content.jwplatform.com/manifests/yp34SRmf.m3u8','https://www.youtube.com/watch?v=9ao4FEaDGhQ'];
     foreach ($churl as $url) {
         // $file_headers = @get_headers($url);
         
@@ -151,6 +153,7 @@ public function test2(){
         
        
     $a['isHLS'] ='No';
+    continue;
     } else {
         
         $urlstatus="streaming";
