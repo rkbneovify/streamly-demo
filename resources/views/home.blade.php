@@ -75,7 +75,7 @@
     <!-- small box -->
     <div class="small-box bg-danger">
       <div class="inner">
-        <h3>65</h3>
+        <h3>{{$Links}}</h3>
 
         <p>HLS Analyzer</p>
       </div>
