@@ -211,7 +211,17 @@
 
                 		</ul>
 
-                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" onclick="openNavReg()" href="javascript:void(0);">SELECT PLAN</a>
+                        <?php
+
+                        if ( isset($login) && $login ) {
+                            $selectPLanLink = 'href=/payment';
+                        } else {
+                            $selectPLanLink = 'onclick=openNavReg() href=javascript:void(0);';
+                        }
+
+                        ?>
+
+                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" {{$selectPLanLink}} >SELECT PLAN</a>
                 	</div>
                 </div>
             </div>
@@ -250,39 +260,4 @@
             </div>
         </div>
     </section>
-
-    <script>
-        function openNav(event) {
-            event.preventDefault();
-            closeNavReg();
-            // document.getElementById("mySidenav").style.width = "34%";
-            document.getElementById("mySidenav").classList.add("show");
-        }
-
-        function openNavReg() {
-            closeNav();
-            // document.getElementById("mySidenav").style.width = "34%";
-            document.getElementById("mySidenavRegister").classList.add("show");
-        }
-
-        function closeNav() {
-
-            // document.getElementById("mySidenav").style.width = "0";
-            document.getElementById("mySidenav").classList.remove("show");
-        }
-
-        function logoutUser() {
-            window.location.href = '/logout';
-        }
-
-        function closeNavReg() {
-            document.getElementById("mySidenavRegister").classList.remove("show");
-        }
-
-        window.setTimeout(function() {
-            $(".alert-position").slideUp(500, function() {
-                $(this).remove();
-            });
-        }, 3000);
-    </script>
 @endsection
