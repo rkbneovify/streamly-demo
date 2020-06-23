@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 
 class SearchVC: UIViewController {
 
@@ -14,8 +15,6 @@ class SearchVC: UIViewController {
     
     static let storyboardIdentifier = "SearchVC"
     private let cellComposer = DataItemCellComposer()
-    private let allDataItems = DataItem.sampleItems
-    private var filteredDataItems = DataItem.sampleItems
     var filterString = "" {
         didSet {
             // Return if the filter string hasn't changed.
@@ -23,10 +22,10 @@ class SearchVC: UIViewController {
 
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
-                filtterdChannelList = self.channelList
+                filtterdChannelList = self.channelList?.message?.data
             }
             else {
-              //  filtterdChannelList = self.channelList?.message?.data?.filter { ($0.name?.localizedStandardContains(filterString) ?? <#default value#>) }
+                filtterdChannelList = self.channelList?.message?.data?.filter { ($0.name?.localizedStandardContains(filterString) ?? false) }
             }
 
             // Reload the collection view to reflect the changes.
@@ -40,7 +39,7 @@ class SearchVC: UIViewController {
               self.collectionView.reloadData()
           }
       }
-     var filtterdChannelList:ChannelResponse?
+     var filtterdChannelList:[ChannelArray]?
      lazy var viewModel: SearchDataViewModel = {
           return SearchDataViewModel()
       }()
@@ -69,7 +68,7 @@ class SearchVC: UIViewController {
         self.initVM()
     }
 
-    func makeApiCall(){
+    private func makeApiCall(){
         self.showSpinner(onView: self.view)
           viewModel.delegate = self
           viewModel.getSearchData()
@@ -80,7 +79,7 @@ class SearchVC: UIViewController {
 
           viewModel.searchData = { contactModel in
             self.channelList = contactModel
-            self.filtterdChannelList = contactModel
+            self.filtterdChannelList = contactModel.message?.data
           //  print(self.channelList?.message?.data?[0])
 
               self.removeSpinner()
@@ -102,7 +101,7 @@ extension SearchVC:UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return filtterdChannelList?.message?.data?.count ?? 0
+        return filtterdChannelList?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -118,10 +117,19 @@ extension SearchVC:UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? DataItemCollectionViewCell else { fatalError("Expected to display a `DataItemCollectionViewCell`.") }
-        let item = filteredDataItems[(indexPath as NSIndexPath).row]
+        guard let item = filtterdChannelList?[(indexPath as NSIndexPath).row] else {return}
 
         // Configure the cell.
         cellComposer.compose(cell, withDataItem: item)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = filtterdChannelList?[(indexPath as NSIndexPath).row] else {return}
+        let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+        guard let url = URL(string: item.url ?? "") else {return}
+        viewController.url = url
+        self.present(viewController, animated:true, completion:nil)
+
     }
 }
 

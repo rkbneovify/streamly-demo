@@ -51,15 +51,26 @@ open class ApiCall {
         let requestParameter = RequestParameter.createRequestParameter(url, method: .get, headers: headers, parameters: nil)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
-
+    
     @discardableResult
     public static func getSearchData(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let url: String! = "http://100.26.190.92/api/auth/search"
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json"]
-       // let param:[String:String] = ["search":"TNT"]
-
+        // let param:[String:String] = ["search":"TNT"]
+        
         let requestParameter = RequestParameter.createRequestParameter(url, method: .post, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+
+    @discardableResult
+    public static func getEPGData(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let url: String! = "http://100.26.190.92/api/auth/channeldayschdeule"
+        //          let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        //          let headers = ["Authorization": "Bearer \(token)","Accept": "application/json"]
+        // let param:[String:String] = ["search":"TNT"]
+
+        let requestParameter = RequestParameter.createRequestParameter(url, method: .get, headers: nil, parameters: nil)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
 

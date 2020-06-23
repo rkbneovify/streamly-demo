@@ -15,8 +15,8 @@ class EPGCollectionViewLayout: UICollectionViewLayout {
   var contentSize = CGSize.zero
   var dataSourceDidUpdate = true
 
-  var channels: [Channel]?
-  var programs: [Program]?
+  var channels: [ChannelDetails]?
+  var programs: [ProgramArray]?
 
   override var collectionViewContentSize: CGSize {
     return self.contentSize
@@ -63,15 +63,15 @@ class EPGCollectionViewLayout: UICollectionViewLayout {
 
     if let sectionCount = collectionView?.numberOfSections, sectionCount > 0 {
       for section in 0...sectionCount - 1 {
-        var channel: Channel?
+        var channel: ChannelDetails?
         if section > 0 {
-          if let ch = self.channels?[section - 1] {
+            if let ch = self.channels?[section - 1] {
             channel = ch
           }
         }
         if let rowCount = collectionView?.numberOfItems(inSection: section), rowCount > 0 {
           for item in 0...rowCount - 1 {
-            var program: Program?
+            var program: ProgramArray?
             if section > 0 && item > 0 {
               if let _ = channel {
                 if let prog = channel!.programs?[item - 1] {
@@ -91,7 +91,7 @@ class EPGCollectionViewLayout: UICollectionViewLayout {
 
             if let _ = program {
               xPos = (cellWidth * (program!.schedule.start / 60 / 60) + cellWidth)
-                let width = (program!.duration / 60 / 60) * cellWidth
+                let width = ((program!.duration ?? 0) / 60 / 60) * cellWidth
                 cellAttributes.frame = CGRect(x: xPos, y: yPos, width: width - 9.0, height: cellHeight)
                 let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
                 cellAttributes.frame = insetFrame

@@ -20,7 +20,7 @@ class SettingsGridCell: UICollectionViewCell {
 
     // MARK: Properties
 
-    var representedDataItem: DataItem?
+    var representedDataItem: ChannelArray?
     static let reuseIdentifier = "SettingsGridCell"
     weak var delegate:Scroll?
     

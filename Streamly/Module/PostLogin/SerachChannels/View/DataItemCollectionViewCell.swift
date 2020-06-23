@@ -17,7 +17,7 @@ class DataItemCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    var representedDataItem: DataItem?
+    var representedDataItem: ChannelArray?
     
     // MARK: Initialization
     
@@ -28,7 +28,7 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         imageView.adjustsImageWhenAncestorFocused = true
         imageView.clipsToBounds = false
         
-        label.alpha = 0.0
+        label.alpha = 0.4
     }
     
     // MARK: UICollectionReusableView
@@ -37,7 +37,7 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
         // Reset the label's alpha value so it's initially hidden.
-        label.alpha = 0.0
+        label.alpha = 0.4
     }
     
     // MARK: UIFocusEnvironment
@@ -53,7 +53,7 @@ class DataItemCollectionViewCell: UICollectionViewCell {
                 self.label.alpha = 1.0
             }
             else {
-                self.label.alpha = 0.0
+                self.label.alpha = 0.4
             }
         }, completion: nil)
     }

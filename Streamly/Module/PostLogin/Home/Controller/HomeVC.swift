@@ -25,12 +25,15 @@ class HomeVC: UIViewController {
     @IBOutlet weak var settingsButton:        UIButton!
     
     //MARK: Properties
-    var channels: [Channel]?
+    var channels: EPGResponse?
     {
         didSet{
-            self.removeSpinner()
+            self.collectionView.reloadData()
         }
     }
+    lazy var viewModel: EPGViewModel = {
+             return EPGViewModel()
+         }()
     var timer: Timer?
     var timeIntervals: [String] {
         return [
@@ -70,6 +73,8 @@ class HomeVC: UIViewController {
     
     private func initialSetup()
     {
+        self.makeApiCall()
+        self.initVM()
         
         let epgNib = UINib(nibName: "EPGCollectionViewCell", bundle: Bundle.main)
         collectionView.register(epgNib, forCellWithReuseIdentifier: "epgCell")
@@ -83,23 +88,16 @@ class HomeVC: UIViewController {
         let programNib = UINib(nibName: "ProgramCollectionViewCell", bundle: Bundle.main)
         collectionView.register(programNib, forCellWithReuseIdentifier: "programCell")
         
-        loadData()
+
         
         collectionView.backgroundColor = UIColor.clear
-        
-        
+    }
+
+    private func setCollectionViewData()
+    {
         let layout = EPGCollectionViewLayout()
-        layout.channels = self.channels
-        
-        
-        
-        
+        layout.channels = self.channels?.data
         collectionView.setCollectionViewLayout(layout, animated: false)
-        
-        
-        
-        
-        
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.layoutIfNeeded()
@@ -126,53 +124,83 @@ class HomeVC: UIViewController {
         self.settingsButton.setBtnProperties(self.settingsButton)
         
     }
+
+    private func makeApiCall(){
+        self.showSpinner(onView: self.view)
+        viewModel.delegate = self
+        viewModel.getEPGData()
+
+    }
+
+    private func initVM() {
+
+        viewModel.epgData = { epgModel in
+             self.removeSpinner()
+            self.channels = epgModel
+            self.setCollectionViewData()
+        }
+
+    }
     
     //MARK: Properties
     
-    func loadData() {
-        self.showSpinner(onView: self.view)
-        if let jsonFile = Bundle.main.path(forResource: "Schedule", ofType: "json") {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: jsonFile), options: .dataReadingMapped)
-                let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
-                if let jsonDictionary = json as? [String:Any] {
-                    if let channelsArray = jsonDictionary["Channels"] as? [[String:Any]] {
-                        self.channels = [Channel]()
-                        for channelItem in channelsArray {
-                            let number = channelItem["number"] as! Int
-                            let name = channelItem["name"] as! String
-                            let channel = Channel(number: number, name: name)
-                            self.channels?.append(channel)
-                            
-                            if let programsArray = channelItem["programs"] as? [[String:Any]] {
-                                channel.programs = [Program]()
-                                for programItem in programsArray {
-                                    let title = programItem["title"] as! String
-                                    let start = programItem["start"] as! Int
-                                    let end = programItem["end"] as! Int
-                                    
-                                    let program = Program(title: title, schedule: Schedule(start: TimeInterval(start), end: TimeInterval(end)))
-                                    channel.programs?.append(program)
-                                }
-                            }
-                        }
-                        if let _ = self.channels {
-                            print(self.channels!)
-                        }
-                    }
-                }
-            } catch  {
-                print(error)
-            }
-        }
-        collectionView.reloadData()
-    }
+//    func loadData() {
+//        self.showSpinner(onView: self.view)
+//        if let jsonFile = Bundle.main.path(forResource: "Schedule", ofType: "json") {
+//            do {
+//                let data = try Data(contentsOf: URL(fileURLWithPath: jsonFile), options: .dataReadingMapped)
+//                let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+//                if let jsonDictionary = json as? [String:Any] {
+//                    if let channelsArray = jsonDictionary["Channels"] as? [[String:Any]] {
+//                        self.channels = [Channel]()
+//                        for channelItem in channelsArray {
+//                            let number = channelItem["number"] as! Int
+//                            let name = channelItem["name"] as! String
+//                            let channel = Channel(number: number, name: name)
+//                            self.channels?.append(channel)
+//
+//                            if let programsArray = channelItem["programs"] as? [[String:Any]] {
+//                                channel.programs = [Program]()
+//                                for programItem in programsArray {
+//                                    let title = programItem["title"] as! String
+//                                    let start = programItem["start"] as! Int
+//                                    let end = programItem["end"] as! Int
+//
+//                                    let program = Program(title: title, schedule: Schedule(start: TimeInterval(start), end: TimeInterval(end)))
+//                                    channel.programs?.append(program)
+//                                }
+//                            }
+//                        }
+//                        if let _ = self.channels {
+//                            print(self.channels!)
+//                        }
+//                    }
+//                }
+//            } catch  {
+//                print(error)
+//            }
+//        }
+//        collectionView.reloadData()
+//    }
     
     //MARK: Actions
     @IBAction func searchAction(_ sender:UIButton){
         
-        let viewVC = Utility.packagedSearchController()
-        self.present(viewVC, animated:true, completion:nil)
+        let viewVC =  SearchVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+        
+        let searchController = UISearchController(searchResultsController: viewVC)
+        searchController.searchResultsUpdater = viewVC
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Channels)", comment: "")
+        
+        
+        // Contain the `UISearchController` in a `UISearchContainerViewController`.
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
+        
+        
+        self.navigationController?.pushViewController(searchContainer, animated: true)
+        
+        
     }
     
     @IBAction func settingsAction(_ sender:UIButton){
@@ -205,7 +233,7 @@ extension HomeVC {
 
 extension HomeVC: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let count = channels?.count {
+        if let count = channels?.data?.count {
             return count + 1 // Number of channels + Time headers
         }
         return 1
@@ -215,7 +243,7 @@ extension HomeVC: UICollectionViewDataSource {
         if section == 0 {
             return timeIntervals.count
         } else {
-            if let count = self.channels?[section - 1].programs?.count {
+            if let count = self.channels?.data?[section - 1].programs?.count {
                 return count + 1
             }
         }
@@ -233,16 +261,16 @@ extension HomeVC: UICollectionViewDataSource {
             return timeCell
         } else if indexPath.row == 0 { // Channels
             let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as! ChannelCollectionViewCell
-            if let channel = self.channels?[indexPath.section - 1] {
-                channelCell.configureWith(channel: channel)
+            if let channel = self.channels?.data?[indexPath.section - 1] {
+               // channelCell.configureWith(channel: channel)
                 return channelCell
             }
             //cell.backgroundColor = UIColor.orange
         } else {
-            if let channel = self.channels?[indexPath.section - 1] {
+            if let channel = self.channels?.data?[indexPath.section - 1] {
                 if let program = channel.programs?[indexPath.row - 1] {
                     let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as! ProgramCollectionViewCell
-                    programCell.configureWith(program: program)
+                  //  programCell.configureWith(program: program)
                     return programCell
                 }
             }
@@ -259,20 +287,31 @@ extension HomeVC: UICollectionViewDelegate {
             // Do nothing.
         }
         else if indexPath.row == 0 { // Channels
-            if let channel = self.channels?[indexPath.section - 1] {
-                print(channel)
-                guard let viewController = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
-                self.navigationController?.pushViewController(viewController, animated: true)
+            if let channel = self.channels?.data?[indexPath.section - 1] {
+                //print(channel)
+                let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+                guard let url = URL(string: channel.url ?? "") else {return}
+                viewController.url = url
+                self.present(viewController, animated:true, completion:nil)
                 
             }
         } else { // Programs
-            if let channel = self.channels?[indexPath.section - 1] {
+            if let channel = self.channels?.data?[indexPath.section - 1] {
                 if let program = channel.programs?[indexPath.row - 1] {
-                    print(program)
+                 //   print(program)
                 }
             }
         }
     }
+}
+
+extension HomeVC:HandleError
+{
+    func handleError(_ message: String) {
+        self.removeSpinner()
+        self.showSimpleAlertWithMessage("Something went wrong!")
+    }
+
 }
 
 

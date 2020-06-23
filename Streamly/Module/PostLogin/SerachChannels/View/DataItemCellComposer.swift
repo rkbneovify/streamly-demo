@@ -7,6 +7,7 @@
 */
 
 import UIKit
+import SDWebImage
 
 class DataItemCellComposer {
     // MARK: Properties
@@ -23,16 +24,17 @@ class DataItemCellComposer {
 
     // MARK: Implementation
     
-    func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: DataItem) {
+    func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelArray) {
         // Cancel any queued operations to process images for the cell.
         let queue = operationQueue(forCell: cell)
         queue.cancelAllOperations()
         
         // Set the cell's properties.
         cell.representedDataItem = dataItem
-        cell.label.text = dataItem.title
+        cell.label.text = dataItem.name ?? ""
         cell.imageView.alpha = 1.0
-        cell.imageView.image =  UIImage(named: "hbo")
+       // cell.imageView.image =  UIImage(named: "hbo")
+       cell.imageView.sd_setImage(with: URL(string: dataItem.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
             //DataItemCellComposer.processedImageCache.object(forKey: dataItem.identifier as NSString)
         
         // No further work is necessary if the cell's image view has an image.
@@ -46,33 +48,33 @@ class DataItemCellComposer {
             The execution block is added after the operation is created to allow
             the block to check if the operation has been cancelled.
         */
-        let processImageOperation = BlockOperation()
-        
-        processImageOperation.addExecutionBlock { [unowned processImageOperation] in
-            // Ensure the operation has not been cancelled.
-            guard !processImageOperation.isCancelled else { return }
-            
-            // Load and process the image.
-            guard let image = self.processImage(named: dataItem.imageName) else { return }
-            
-            // Store the processed image in the cache.
-            DataItemCellComposer.processedImageCache.setObject(image, forKey: dataItem.identifier as NSString)
-            
-            OperationQueue.main.addOperation {
-                // Check that the cell is still showing the same `DataItem`.
-                guard dataItem == cell.representedDataItem else { return }
-
-                // Update the cell's `UIImageView` and then fade it into view.
-                cell.imageView.alpha = 0.0
-                cell.imageView.image = image
-                
-                UIView.animate(withDuration: 0.25) {
-                    cell.imageView.alpha = 1.0
-                }
-            }
-        }
-        
-        queue.addOperation(processImageOperation)
+//        let processImageOperation = BlockOperation()
+//        
+//        processImageOperation.addExecutionBlock { [unowned processImageOperation] in
+//            // Ensure the operation has not been cancelled.
+//            guard !processImageOperation.isCancelled else { return }
+//            
+//            // Load and process the image.
+//            guard let image = self.processImage(named: dataItem.imageName) else { return }
+//            
+//            // Store the processed image in the cache.
+//            DataItemCellComposer.processedImageCache.setObject(image, forKey: dataItem.identifier as NSString)
+//            
+//            OperationQueue.main.addOperation {
+//                // Check that the cell is still showing the same `DataItem`.
+//                guard dataItem == cell.representedDataItem else { return }
+//
+//                // Update the cell's `UIImageView` and then fade it into view.
+//                cell.imageView.alpha = 0.0
+//                cell.imageView.image = image
+//                
+//                UIView.animate(withDuration: 0.25) {
+//                    cell.imageView.alpha = 1.0
+//                }
+//            }
+//        }
+//        
+//        queue.addOperation(processImageOperation)
     }
     
     // MARK: Convenience

@@ -518,23 +518,13 @@
             </objects>
             <point key="canvasLocation" x="6235" y="120"/>
         </scene>
-        <!--PlayerVC-->
-        <scene sceneID="nID-Yt-IUb">
+        <!--AV Player View Controller-->
+        <scene sceneID="71K-Sv-Ang">
             <objects>
-                <viewController storyboardIdentifier="PlayerVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QfG-Jc-sLF" customClass="PlayerVC" customModule="StreamlyTV" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="IlE-eu-WEh"/>
-                        <viewControllerLayoutGuide type="bottom" id="t3R-01-S6E"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="wKR-vx-nMa">
-                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="xLx-yy-UBa"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1yd-jn-jUe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <avPlayerViewController storyboardIdentifier="PlayerVC" useStoryboardIdentifierAsRestorationIdentifier="YES" videoGravity="AVLayerVideoGravityResizeAspect" id="OUq-Af-FPT" customClass="PlayerVC" customModule="StreamlyTV" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RKp-55-V9u" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8232" y="120"/>
+            <point key="canvasLocation" x="8292" y="120"/>
         </scene>
         <!--SearchVC-->
         <scene sceneID="iTL-vr-t6Z">
@@ -565,7 +555,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UDn-MS-gGt">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" adjustsImageWhenAncestorFocused="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UDn-MS-gGt">
                                                     <rect key="frame" x="0.0" y="20" width="300" height="280"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

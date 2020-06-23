@@ -10,6 +10,8 @@
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
+		AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07E87A24A2087100D37ABF /* EPGViewModel.swift */; };
+		AA07E87D24A209CB00D37ABF /* EpgModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07E87C24A209CB00D37ABF /* EpgModel.swift */; };
 		AA105C6A249766A500CF075B /* Main+Extended.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA105C6C249766A500CF075B /* Main+Extended.storyboard */; };
 		AA105C712497678900CF075B /* EPGCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA105C732497678900CF075B /* EPGCollectionViewCell.xib */; };
 		AA105C78249767A000CF075B /* ChannelCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA105C7A249767A000CF075B /* ChannelCollectionViewCell.xib */; };
@@ -57,38 +59,6 @@
 		AAB8290424979EE1004E2DD7 /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB8290324979EE1004E2DD7 /* SearchResponse.swift */; };
 		AAB8290824979F10004E2DD7 /* SearchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB8290724979F10004E2DD7 /* SearchData.swift */; };
 		AABCA0452484C88900DCE76A /* DataItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABCA0442484C88900DCE76A /* DataItemCollectionViewCell.swift */; };
-		AABCA0672484DD4B00DCE76A /* Italy 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0472484DD4A00DCE76A /* Italy 1.jpg */; };
-		AABCA0682484DD4B00DCE76A /* Italy 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0482484DD4A00DCE76A /* Italy 3.jpg */; };
-		AABCA0692484DD4B00DCE76A /* Lola 2 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */; };
-		AABCA06A2484DD4B00DCE76A /* Iceland 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */; };
-		AABCA06B2484DD4B00DCE76A /* Italy 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */; };
-		AABCA06C2484DD4B00DCE76A /* Italy 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */; };
-		AABCA06D2484DD4B00DCE76A /* Italy 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */; };
-		AABCA06E2484DD4B00DCE76A /* Italy 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */; };
-		AABCA06F2484DD4B00DCE76A /* Italy 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */; };
-		AABCA0702484DD4B00DCE76A /* Lola 4 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */; };
-		AABCA0712484DD4B00DCE76A /* Lola 3 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */; };
-		AABCA0722484DD4B00DCE76A /* Baby 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0522484DD4A00DCE76A /* Baby 8.jpg */; };
-		AABCA0732484DD4B00DCE76A /* Lola 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0532484DD4A00DCE76A /* Lola 3.jpg */; };
-		AABCA0742484DD4B00DCE76A /* Baby 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0542484DD4A00DCE76A /* Baby 6.jpg */; };
-		AABCA0752484DD4B00DCE76A /* Baby 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0552484DD4A00DCE76A /* Baby 7.jpg */; };
-		AABCA0762484DD4B00DCE76A /* Lola 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0562484DD4A00DCE76A /* Lola 2.jpg */; };
-		AABCA0772484DD4B00DCE76A /* Baby 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0572484DD4A00DCE76A /* Baby 5.jpg */; };
-		AABCA0782484DD4B00DCE76A /* Baby 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0582484DD4A00DCE76A /* Baby 4.jpg */; };
-		AABCA0792484DD4B00DCE76A /* Lola 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0592484DD4A00DCE76A /* Lola 1.jpg */; };
-		AABCA07A2484DD4B00DCE76A /* Baby 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */; };
-		AABCA07B2484DD4B00DCE76A /* Lola 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */; };
-		AABCA07C2484DD4B00DCE76A /* Baby 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */; };
-		AABCA07D2484DD4B00DCE76A /* Baby 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */; };
-		AABCA07E2484DD4B00DCE76A /* Iceland 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */; };
-		AABCA07F2484DD4B00DCE76A /* Iceland 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */; };
-		AABCA0802484DD4B00DCE76A /* Italy 8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0602484DD4A00DCE76A /* Italy 8.jpg */; };
-		AABCA0812484DD4B00DCE76A /* Lola 1 Large.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */; };
-		AABCA0822484DD4B00DCE76A /* Iceland 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */; };
-		AABCA0832484DD4B00DCE76A /* Iceland 5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */; };
-		AABCA0842484DD4B00DCE76A /* Iceland 4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */; };
-		AABCA0852484DD4B00DCE76A /* Iceland 6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */; };
-		AABCA0862484DD4B00DCE76A /* Iceland 7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */; };
 		AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8B9246A700100708812 /* AppDelegate.swift */; };
 		AAC9C8BF246A700200708812 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AAC9C8BD246A700200708812 /* Main.storyboard */; };
 		AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */; };
@@ -138,6 +108,8 @@
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AA07E87A24A2087100D37ABF /* EPGViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPGViewModel.swift; sourceTree = "<group>"; };
+		AA07E87C24A209CB00D37ABF /* EpgModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpgModel.swift; sourceTree = "<group>"; };
 		AA105C682497662700CF075B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		AA105C692497662800CF075B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		AA105C6B249766A500CF075B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Main+Extended.storyboard"; sourceTree = "<group>"; };
@@ -205,38 +177,6 @@
 		AAB8290324979EE1004E2DD7 /* SearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResponse.swift; sourceTree = "<group>"; };
 		AAB8290724979F10004E2DD7 /* SearchData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchData.swift; sourceTree = "<group>"; };
 		AABCA0442484C88900DCE76A /* DataItemCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCollectionViewCell.swift; sourceTree = "<group>"; };
-		AABCA0472484DD4A00DCE76A /* Italy 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 1.jpg"; sourceTree = "<group>"; };
-		AABCA0482484DD4A00DCE76A /* Italy 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 3.jpg"; sourceTree = "<group>"; };
-		AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 2 Large.jpg"; sourceTree = "<group>"; };
-		AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 8.jpg"; sourceTree = "<group>"; };
-		AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 2.jpg"; sourceTree = "<group>"; };
-		AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 6.jpg"; sourceTree = "<group>"; };
-		AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 7.jpg"; sourceTree = "<group>"; };
-		AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 5.jpg"; sourceTree = "<group>"; };
-		AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 4.jpg"; sourceTree = "<group>"; };
-		AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 4 Large.jpg"; sourceTree = "<group>"; };
-		AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 3 Large.jpg"; sourceTree = "<group>"; };
-		AABCA0522484DD4A00DCE76A /* Baby 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 8.jpg"; sourceTree = "<group>"; };
-		AABCA0532484DD4A00DCE76A /* Lola 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 3.jpg"; sourceTree = "<group>"; };
-		AABCA0542484DD4A00DCE76A /* Baby 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 6.jpg"; sourceTree = "<group>"; };
-		AABCA0552484DD4A00DCE76A /* Baby 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 7.jpg"; sourceTree = "<group>"; };
-		AABCA0562484DD4A00DCE76A /* Lola 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 2.jpg"; sourceTree = "<group>"; };
-		AABCA0572484DD4A00DCE76A /* Baby 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 5.jpg"; sourceTree = "<group>"; };
-		AABCA0582484DD4A00DCE76A /* Baby 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 4.jpg"; sourceTree = "<group>"; };
-		AABCA0592484DD4A00DCE76A /* Lola 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 1.jpg"; sourceTree = "<group>"; };
-		AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 1.jpg"; sourceTree = "<group>"; };
-		AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 4.jpg"; sourceTree = "<group>"; };
-		AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 3.jpg"; sourceTree = "<group>"; };
-		AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Baby 2.jpg"; sourceTree = "<group>"; };
-		AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 3.jpg"; sourceTree = "<group>"; };
-		AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 2.jpg"; sourceTree = "<group>"; };
-		AABCA0602484DD4A00DCE76A /* Italy 8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Italy 8.jpg"; sourceTree = "<group>"; };
-		AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Lola 1 Large.jpg"; sourceTree = "<group>"; };
-		AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 1.jpg"; sourceTree = "<group>"; };
-		AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 5.jpg"; sourceTree = "<group>"; };
-		AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 4.jpg"; sourceTree = "<group>"; };
-		AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 6.jpg"; sourceTree = "<group>"; };
-		AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Iceland 7.jpg"; sourceTree = "<group>"; };
 		AAC9C8B6246A700100708812 /* StreamlyTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StreamlyTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAC9C8B9246A700100708812 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAC9C8BE246A700200708812 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -322,6 +262,7 @@
 				AA72AF752473EEDD00906796 /* Program.swift */,
 				AA72AF732473EED600906796 /* Channel.swift */,
 				AA72AF712473EEB500906796 /* Schedule.json */,
+				AA07E87C24A209CB00D37ABF /* EpgModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -331,6 +272,7 @@
 			children = (
 				AA72AF772473EF0800906796 /* ChannelViewModel.swift */,
 				AA72AF792473EF0D00906796 /* ProgramViewModel.swift */,
+				AA07E87A24A2087100D37ABF /* EPGViewModel.swift */,
 			);
 			path = "View Model";
 			sourceTree = "<group>";
@@ -568,45 +510,6 @@
 			path = "View+Model";
 			sourceTree = "<group>";
 		};
-		AABCA0462484DD4A00DCE76A /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				AABCA0472484DD4A00DCE76A /* Italy 1.jpg */,
-				AABCA0482484DD4A00DCE76A /* Italy 3.jpg */,
-				AABCA0492484DD4A00DCE76A /* Lola 2 Large.jpg */,
-				AABCA04A2484DD4A00DCE76A /* Iceland 8.jpg */,
-				AABCA04B2484DD4A00DCE76A /* Italy 2.jpg */,
-				AABCA04C2484DD4A00DCE76A /* Italy 6.jpg */,
-				AABCA04D2484DD4A00DCE76A /* Italy 7.jpg */,
-				AABCA04E2484DD4A00DCE76A /* Italy 5.jpg */,
-				AABCA04F2484DD4A00DCE76A /* Italy 4.jpg */,
-				AABCA0502484DD4A00DCE76A /* Lola 4 Large.jpg */,
-				AABCA0512484DD4A00DCE76A /* Lola 3 Large.jpg */,
-				AABCA0522484DD4A00DCE76A /* Baby 8.jpg */,
-				AABCA0532484DD4A00DCE76A /* Lola 3.jpg */,
-				AABCA0542484DD4A00DCE76A /* Baby 6.jpg */,
-				AABCA0552484DD4A00DCE76A /* Baby 7.jpg */,
-				AABCA0562484DD4A00DCE76A /* Lola 2.jpg */,
-				AABCA0572484DD4A00DCE76A /* Baby 5.jpg */,
-				AABCA0582484DD4A00DCE76A /* Baby 4.jpg */,
-				AABCA0592484DD4A00DCE76A /* Lola 1.jpg */,
-				AABCA05A2484DD4A00DCE76A /* Baby 1.jpg */,
-				AABCA05B2484DD4A00DCE76A /* Lola 4.jpg */,
-				AABCA05C2484DD4A00DCE76A /* Baby 3.jpg */,
-				AABCA05D2484DD4A00DCE76A /* Baby 2.jpg */,
-				AABCA05E2484DD4A00DCE76A /* Iceland 3.jpg */,
-				AABCA05F2484DD4A00DCE76A /* Iceland 2.jpg */,
-				AABCA0602484DD4A00DCE76A /* Italy 8.jpg */,
-				AABCA0612484DD4A00DCE76A /* Lola 1 Large.jpg */,
-				AABCA0622484DD4A00DCE76A /* Iceland 1.jpg */,
-				AABCA0632484DD4A00DCE76A /* Iceland 5.jpg */,
-				AABCA0642484DD4A00DCE76A /* Iceland 4.jpg */,
-				AABCA0652484DD4A00DCE76A /* Iceland 6.jpg */,
-				AABCA0662484DD4A00DCE76A /* Iceland 7.jpg */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		AAC9C8AD246A700100708812 = {
 			isa = PBXGroup;
 			children = (
@@ -755,7 +658,6 @@
 				AAB8290524979EE6004E2DD7 /* View+Model */,
 				AAB8290224979ECF004E2DD7 /* Model */,
 				AAB8290124979EBC004E2DD7 /* View */,
-				AABCA0462484DD4A00DCE76A /* Resources */,
 				AAFC43EA2480EEEA000928C0 /* Controller */,
 			);
 			path = SerachChannels;
@@ -907,50 +809,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAC9C8C7246A700400708812 /* LaunchScreen.storyboard in Resources */,
-				AABCA06F2484DD4B00DCE76A /* Italy 4.jpg in Resources */,
 				AA105C94249767E700CF075B /* SupportView.xib in Resources */,
 				AA105C86249767C100CF075B /* TimeCollectionViewCell.xib in Resources */,
-				AABCA0732484DD4B00DCE76A /* Lola 3.jpg in Resources */,
-				AABCA0722484DD4B00DCE76A /* Baby 8.jpg in Resources */,
 				AA105C6A249766A500CF075B /* Main+Extended.storyboard in Resources */,
-				AABCA06E2484DD4B00DCE76A /* Italy 5.jpg in Resources */,
-				AABCA0712484DD4B00DCE76A /* Lola 3 Large.jpg in Resources */,
 				AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */,
-				AABCA07A2484DD4B00DCE76A /* Baby 1.jpg in Resources */,
-				AABCA07D2484DD4B00DCE76A /* Baby 2.jpg in Resources */,
-				AABCA07B2484DD4B00DCE76A /* Lola 4.jpg in Resources */,
-				AABCA0792484DD4B00DCE76A /* Lola 1.jpg in Resources */,
 				AA105C78249767A000CF075B /* ChannelCollectionViewCell.xib in Resources */,
 				AA105C9B249767F500CF075B /* PrivacyPopUP.xib in Resources */,
 				AA72AF722473EEB500906796 /* Schedule.json in Resources */,
-				AABCA0812484DD4B00DCE76A /* Lola 1 Large.jpg in Resources */,
 				AA105CA2249767FF00CF075B /* LoadTextView.xib in Resources */,
 				AA105C712497678900CF075B /* EPGCollectionViewCell.xib in Resources */,
-				AABCA0672484DD4B00DCE76A /* Italy 1.jpg in Resources */,
 				AA105C8D249767D800CF075B /* LogOUTView.xib in Resources */,
-				AABCA0822484DD4B00DCE76A /* Iceland 1.jpg in Resources */,
-				AABCA06B2484DD4B00DCE76A /* Italy 2.jpg in Resources */,
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
-				AABCA0842484DD4B00DCE76A /* Iceland 4.jpg in Resources */,
-				AABCA0832484DD4B00DCE76A /* Iceland 5.jpg in Resources */,
-				AABCA06D2484DD4B00DCE76A /* Italy 7.jpg in Resources */,
-				AABCA0852484DD4B00DCE76A /* Iceland 6.jpg in Resources */,
-				AABCA07C2484DD4B00DCE76A /* Baby 3.jpg in Resources */,
-				AABCA0782484DD4B00DCE76A /* Baby 4.jpg in Resources */,
-				AABCA0702484DD4B00DCE76A /* Lola 4 Large.jpg in Resources */,
-				AABCA0862484DD4B00DCE76A /* Iceland 7.jpg in Resources */,
-				AABCA06A2484DD4B00DCE76A /* Iceland 8.jpg in Resources */,
-				AABCA0742484DD4B00DCE76A /* Baby 6.jpg in Resources */,
-				AABCA0752484DD4B00DCE76A /* Baby 7.jpg in Resources */,
-				AABCA0762484DD4B00DCE76A /* Lola 2.jpg in Resources */,
-				AABCA0692484DD4B00DCE76A /* Lola 2 Large.jpg in Resources */,
-				AABCA06C2484DD4B00DCE76A /* Italy 6.jpg in Resources */,
-				AABCA0682484DD4B00DCE76A /* Italy 3.jpg in Resources */,
-				AABCA0772484DD4B00DCE76A /* Baby 5.jpg in Resources */,
 				AA105C7F249767AE00CF075B /* ProgramCollectionViewCell.xib in Resources */,
-				AABCA07E2484DD4B00DCE76A /* Iceland 3.jpg in Resources */,
-				AABCA07F2484DD4B00DCE76A /* Iceland 2.jpg in Resources */,
-				AABCA0802484DD4B00DCE76A /* Italy 8.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1101,6 +971,7 @@
 				AA94D633248A798700EBF947 /* ResponseObject.swift in Sources */,
 				AAB60AF3248910DC00708BB0 /* ButtonImage.swift in Sources */,
 				AAD8E07B248F67AB00A4A66F /* PrivacyPopUP.swift in Sources */,
+				AA07E87D24A209CB00D37ABF /* EpgModel.swift in Sources */,
 				AA72AF762473EEDD00906796 /* Program.swift in Sources */,
 				AAB8290824979F10004E2DD7 /* SearchData.swift in Sources */,
 				AAFC43E92480EEE5000928C0 /* SearchVC.swift in Sources */,
@@ -1140,6 +1011,7 @@
 				AAD595472472515800BC5E6C /* Request.swift in Sources */,
 				AA72AF7C2473F0E100906796 /* EPGCollectionViewLayout.swift in Sources */,
 				AA94D62B248A14D200EBF947 /* ListingProfileCell.swift in Sources */,
+				AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */,
 				AA94D632248A798700EBF947 /* ApiCall.swift in Sources */,
 				AAD5954C24726FFF00BC5E6C /* Switcher.swift in Sources */,
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,
@@ -1418,7 +1290,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1440,7 +1312,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -94,7 +94,11 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 3
         {
-
+            let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+            popUPViewsVC.modalPresentationStyle = .overCurrentContext
+            popUPViewsVC.item = 2
+            //popUPViewsVC.contactInfo = contactInfo
+            self.present(popUPViewsVC, animated:true, completion:nil)
         }
         else if sender.tag == 4
         {
@@ -104,6 +108,7 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 5
         {
+            self.showSimpleAlertWithMessage("For registration, please visit http://100.26.190.92")
 
         }
     }

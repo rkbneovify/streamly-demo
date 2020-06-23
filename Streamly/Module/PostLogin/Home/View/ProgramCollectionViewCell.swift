@@ -38,12 +38,12 @@ class ProgramCollectionViewCell: UICollectionViewCell {
       func configureWith(program: Program) {
         let viewModel = ProgramViewModel(program: program)
         
-//        self.titleLabel.text = viewModel.titleString
-//        self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
-//        self.durationLabel.text = viewModel.durationString
+        self.titleLabel.text = viewModel.titleString
+        self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
+        self.durationLabel.text = viewModel.durationString
 
-//        self.scheduleLabel.textColor = UIColor.gray
-//        self.durationLabel.textColor = UIColor.gray
+        self.scheduleLabel.textColor = UIColor.gray
+        self.durationLabel.textColor = UIColor.gray
       }
     }
 
