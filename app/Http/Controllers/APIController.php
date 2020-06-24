@@ -24,7 +24,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol']]);
     }
 
     public function index()
