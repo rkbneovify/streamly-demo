@@ -375,11 +375,14 @@ $record  = Gracenote::select("CallSign","StationName","image")
 // $record  = Gracenote::select('CallSign',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs "),DB::raw('SEPARATOR'),DB::raw("'|'"))->groupBy('CallSign');
 // $record  = Gracenote::select('CallSign','StationName',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime )SEPARATOR '|' ) AS programs "))->groupBy('CallSign','StationName');
 // SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', sub.StartDateTime,'end', sub.EndDateTime ) ) AS programs FROM ( SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC ) AS sub GROUP BY sub.CallSign 
+$imagePath=url("/uploads/channellogo/");
+// CONCAT('https://my-site.com/images/',image)
 DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("CallSign","StationName")
+$record  = Gracenote::select("CallSign","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
 ->fromSub(function ($query) {
-    $query->select('gracenote.*')
+    $query->select('gracenote.*','channels.image','channels.url')
     ->from('gracenote')
     ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)')
@@ -387,7 +390,7 @@ $record  = Gracenote::select("CallSign","StationName")
 }, 'sub')
 
 ->orderBy('CallSign', 'asc')
-->groupBy('CallSign','StationName');
+->groupBy('CallSign','StationName','image','url');
 // SELECT CallSign,StationName,
 // GROUP_CONCAT(
 //   JSON_OBJECT('title', EventTitle,
