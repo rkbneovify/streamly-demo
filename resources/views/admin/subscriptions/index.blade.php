@@ -71,9 +71,9 @@
               <td>#</td>
               
     <td>{{ $user->user->name }}</td>
-    {{-- <td>{{ $user->subscriptionpack->name }}</td> --}}
-    <td>{{ $user->start_date }}</td>
-    <td>{{ $user->expiry_date }}</td>
+    <td>{{ $user->stripe_plan }}</td>
+    <td>{{ $user->created_at }}</td>
+    <td>{{ $user->renews_at }}</td>
     <td >
                             @if ($user->status===1)
                             <span class="badge badge-success">Active</span>
