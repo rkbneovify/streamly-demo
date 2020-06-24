@@ -3,14 +3,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 /**
-   @property int $subscriptionpack_id subscriptionpack id
-@property int $users_id users id
-@property date $start_date start date
-@property date $expiry_date expiry date
-@property datetime $created_on created on
-@property User $user belongsTo
-@property Subscriptionpack $subscriptionPack belongsTo
-@property \Illuminate\Database\Eloquent\Collection $payment hasMany
+   @property bigint unsigned $user_id user id
+@property varchar $name name
+@property varchar $stripe_id stripe id
+@property varchar $stripe_status stripe status
+@property varchar $stripe_plan stripe plan
+@property int $quantity quantity
+@property timestamp $trial_ends_at trial ends at
+@property timestamp $ends_at ends at
+@property timestamp $created_at created at
+@property timestamp $updated_at updated at
    
  */
 class Subscription extends Model 
@@ -20,57 +22,29 @@ class Subscription extends Model
     * Database table name
     */
     protected $table = 'subscriptions';
-    
-    const CREATED_AT = 'created_on';
-const UPDATED_AT = 'modified_on';
+
     /**
     * Mass assignable columns
     */
-    protected $fillable=[
-'subscriptionpack_id',
-'users_id',
-'start_date','status'
-];
+    protected $fillable=['user_id',
+'name',
+'stripe_id',
+'stripe_status',
+'stripe_plan',
+'quantity',
+'trial_ends_at',
+'ends_at'];
 
     /**
     * Date time columns.
     */
-    protected $dates=['start_date',
-'expiry_date',
-'created_on',
-'modified_on',
-];
+    protected $dates=['trial_ends_at',
+'ends_at'];
 
-    /**
-    * user
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    */
-    public function user()
+
+public function user()
     {
-        return $this->belongsTo('App\User','users_id');
+        return $this->belongsTo('App\User','user_id');
     }
-
-    /**
-    * subscriptionpack
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-    */
-    public function subscriptionpack()
-    {
-        return $this->belongsTo(SubscriptionPack::class,'subscriptionpack_id');
-    }
-
-    /**
-    * payments
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\HasMany
-    */
-    public function payments()
-    {
-        return $this->hasMany(Payment::class,'subscriptions_id');
-    }
-
-
 
 }
