@@ -10681,8 +10681,8 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
 
 .navbar-shrink .dropdown-menu.navbarDropdownMenuLink.show {
   position: absolute;
-  left: calc(1rem - 110px);
-  margin-top: 70%;
+  left: calc(1rem - 130px);
+  margin-top: 40%;
 }
 
 .dropdown-menu.show.navbarDropdownMenuLink {
@@ -10707,5 +10707,26 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
   letter-spacing: 0.17px;
   color: #CCCCCC;
   text-align: right;
+}
 
+.has-search .form-control {
+  padding-right: 2.375rem;
+}
+
+.has-search {
+  position: relative;
+  margin: 0;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  line-height: 2.375rem;
+  text-align: center;
+  color: #aaa;
+  right: 15px;
+  top: 11px;
+  width: 1rem;
+  cursor: pointer;
 }
