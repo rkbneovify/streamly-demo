@@ -71,7 +71,7 @@
               <td>#</td>
               
     <td>{{ $user->user->name }}</td>
-    <td>{{ $user->subscriptionpack->name }}</td>
+    {{-- <td>{{ $user->subscriptionpack->name }}</td> --}}
     <td>{{ $user->start_date }}</td>
     <td>{{ $user->expiry_date }}</td>
     <td >
