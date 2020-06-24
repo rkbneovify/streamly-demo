@@ -26,6 +26,9 @@ class Subscription extends Model
     /**
     * Mass assignable columns
     */
+      /**
+    * Mass assignable columns
+    */
     protected $fillable=['user_id',
 'name',
 'stripe_id',
@@ -33,12 +36,14 @@ class Subscription extends Model
 'stripe_plan',
 'quantity',
 'trial_ends_at',
+'renews_at',
 'ends_at'];
 
     /**
     * Date time columns.
     */
     protected $dates=['trial_ends_at',
+'renews_at',
 'ends_at'];
 
 
