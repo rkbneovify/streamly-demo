@@ -75,17 +75,8 @@
     <td>{{ $user->created_at }}</td>
     <td>{{ $user->renews_at }}</td>
     <td >
-                            @if ($user->status===1)
-                            <span class="badge badge-success">Active</span>
-@elseif ($user->status===0)
-<span class="badge badge-danger">Inactive</span>
-@else
-    unknown
-@endif
-                          
-                            
-                          
-                      </td>
+                            {{$user->stripe_status}}
+    </td>
     <td>
                                 
                                     <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $user->id) }}">

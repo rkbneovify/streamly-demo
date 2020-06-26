@@ -52,7 +52,12 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>User</p>
                 </a>
-              </li>
+              </li><li class="nav-item">
+                <a href=" {{ url('/admin/users/session') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>User sessions</p>
+                  </a>
+                </li>
             </ul>
           </li>
           
