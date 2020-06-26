@@ -54,12 +54,15 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::delete('subscriptionpack/destroy/{id}','Admin\SubscriptionPackController@destroy');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
+    Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
     Route::get('/users/view/{id}', 'Admin\UsersController@show');
 Route::get('/users/edit/{id}', 'Admin\UsersController@edit');
 Route::put('userupdate/{id}','Admin\UsersController@update')->name('userupdate');
 Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
+Route::delete('users/sessiondestroy/{id}/{access_token}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
 
 
   //channel
