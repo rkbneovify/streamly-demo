@@ -40,6 +40,7 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>(), NetworkCa
 
 
     val channels = ArrayList<SimpleChannel>()
+    val streamUrl = ArrayList<String>()
     lateinit var authToken :String
     lateinit var apiInterface : ApiInterface
     lateinit var MIN_CHANNEL_START_TIME : ZonedDateTime
@@ -49,6 +50,7 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>(), NetworkCa
     val MIN_SHOW_LENGTH_SECONDS = TimeUnit.MINUTES.toSeconds(5)
     val MAX_SHOW_LENGTH_SECONDS= TimeUnit.MINUTES.toSeconds(120)
     lateinit var localDate: LocalDate
+
 
     companion object {
         private val TAG = EpgFragment::class.java.name
@@ -78,7 +80,10 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>(), NetworkCa
         }
         if (schedule.isCurrentProgram) {
 //            Toast.makeText(context, "Open live player", Toast.LENGTH_LONG).show()
+
+           Log.e(TAG,"streamUrl "+streamUrl)
             val intent = Intent(context, PlayerActivity::class.java)
+
             startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
@@ -145,6 +150,7 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>(), NetworkCa
 
                     it.data.forEach {
                         channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo))
+                        streamUrl.add(it.url)
                     }
 
                     Log.e("### arrayList",channels.toString())
