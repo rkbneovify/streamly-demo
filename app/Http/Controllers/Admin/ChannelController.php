@@ -419,7 +419,7 @@ $reco=$record->get();
             'date'=>date("Y-m-d"),
             'data' => $reco,
            
-            'message' => 'Schedule data for 7 days found',
+            'message' => 'Schedule data for 3 days found',
             'response_code'=>200,
         ];
         // return response()->json($reco);
