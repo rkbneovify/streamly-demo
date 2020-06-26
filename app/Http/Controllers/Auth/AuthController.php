@@ -57,7 +57,7 @@ class AuthController extends Controller
 
         $FRONTEND_URL=env('FRONTEND_URL');
 
-        $account_verification_link=$FRONTEND_URL.'/auth/verify?token='.$verification_code;
+        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
 
         $html='<html>
             Hi, '.$User->name.'<br><br>
