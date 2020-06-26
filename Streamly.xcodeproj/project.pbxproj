@@ -27,6 +27,7 @@
 		AA352CB524813B01009ACD55 /* DataItemCellComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */; };
 		AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */; };
 		AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */; };
+		AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4B5E4024A514E80031AB15 /* ChannelList.swift */; };
 		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
 		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
 		AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA54082F2491F84F000D5F76 /* LogOutModel.swift */; };
@@ -145,6 +146,7 @@
 		AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCellComposer.swift; sourceTree = "<group>"; };
 		AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+ImageName.swift"; sourceTree = "<group>"; };
 		AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+SampleData.swift"; sourceTree = "<group>"; };
+		AA4B5E4024A514E80031AB15 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
 		AA54082F2491F84F000D5F76 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				AA72AF732473EED600906796 /* Channel.swift */,
 				AA72AF712473EEB500906796 /* Schedule.json */,
 				AA07E87C24A209CB00D37ABF /* EpgModel.swift */,
+				AA4B5E4024A514E80031AB15 /* ChannelList.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -994,6 +997,7 @@
 				AA5ADDCD248E4A94005936CE /* PopUPViewsVC.swift in Sources */,
 				AA72AF882473F4C000906796 /* ProgramCollectionViewCell.swift in Sources */,
 				AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */,
+				AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */,
 				AAFC54B5246D770F0027B5DB /* Constant.swift in Sources */,
 				AA5ADDD0248E4D0F005936CE /* LogOUTView.swift in Sources */,
 				AA72AF842473F40C00906796 /* ChannelCollectionViewCell.swift in Sources */,
@@ -1290,7 +1294,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1312,7 +1316,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

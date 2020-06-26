@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                try audioSession.setCategory(.playback, mode: .moviePlayback)
            }
            catch {
-               print("Setting category to AVAudioSessionCategoryPlayback failed.")
+               debugPrint("Setting category to AVAudioSessionCategoryPlayback failed.")
            }
     }
 

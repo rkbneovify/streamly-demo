@@ -19,12 +19,12 @@ class SearchDataViewModel: NSObject {
             in
             if let contactModel = SearchDataParser.parseContactData(data!) {
                 self.searchData!((contactModel))
-                print(contactModel)
+                debugPrint(contactModel)
             }
-            print("Success")
+            debugPrint("Success")
         }) { (error, data, code)  in
 
-            print("failure")
+            debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
@@ -39,7 +39,7 @@ class SearchDataParser {
 
             return contactModelElement
         } catch {
-            print(error)
+            debugPrint(error)
         }
         return nil
     }

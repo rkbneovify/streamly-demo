@@ -45,9 +45,9 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jutin Beiber concert" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uF0-xt-is2">
-                                <rect key="frame" x="19" y="64" width="768" height="29"/>
+                                <rect key="frame" x="19" y="64" width="768" height="28"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="28" id="qBt-WO-Gbu"/>
+                                    <constraint firstAttribute="height" constant="28" id="qBt-WO-Gbu"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -87,8 +87,7 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
             <connections>
-                <outlet property="durationLabel" destination="REe-xW-0l2" id="JpO-vI-M9Z"/>
-                <outlet property="scheduleLabel" destination="6RA-YG-S46" id="Db2-0v-Ube"/>
+                <outlet property="durationLabel" destination="6RA-YG-S46" id="GHk-Ku-BIA"/>
                 <outlet property="titleLabel" destination="uF0-xt-is2" id="MxT-tt-6IM"/>
             </connections>
             <point key="canvasLocation" x="67" y="196"/>

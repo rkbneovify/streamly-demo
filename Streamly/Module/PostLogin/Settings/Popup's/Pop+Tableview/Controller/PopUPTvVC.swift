@@ -90,7 +90,7 @@ class PopUPTvVC: UIViewController {
         
         viewModel.registredDevice = { contactModel in
             self.deviceList = contactModel.data
-            print("rohitsingh")
+            debugPrint("")
             self.removeSpinner()
 
             

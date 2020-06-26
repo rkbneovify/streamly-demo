@@ -21,12 +21,12 @@ class ContactDataViewModel: NSObject {
             in
             if let contactModel = DataParserContact.parseContactData(data!) {
                 self.contactData!((contactModel))
-                print(contactModel)
+                debugPrint(contactModel)
             }
-            print("Success")
+            debugPrint("Success")
         }) { (error, data, code)  in
 
-            print("failure")
+            debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
@@ -36,12 +36,12 @@ class ContactDataViewModel: NSObject {
             in
             if let logoutModel = DataParserLogOut.parseContactData(data!) {
                 self.logoutdata!((logoutModel))
-                print(logoutModel)
+                debugPrint(logoutModel)
             }
-            print("Success")
+            debugPrint("Success")
         }) { (error, data, code)  in
             
-            print("failure")
+            debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
@@ -53,10 +53,10 @@ class ContactDataViewModel: NSObject {
                    self.privacyResponseData!((privacyModel))
                    print(privacyModel)
                }
-               print("Success")
+               debugPrint("Success")
            }) { (error, data, code)  in
 
-               print("failure")
+               debugPrint("failure")
                self.delegate?.handleError(error?.localizedDescription ?? "")
            }
        }
@@ -71,7 +71,7 @@ class DataParserContact {
 
             return contactModelElement
         } catch {
-            print(error)
+            debugPrint(error)
         }
         return nil
     }
@@ -86,7 +86,7 @@ class DataParserLogOut {
 
             return contactModelElement
         } catch {
-            print(error)
+            debugPrint(error)
         }
         return nil
     }
@@ -101,7 +101,7 @@ class DataParserPrivacy {
 
             return contactModelElement
         } catch {
-            print(error)
+            debugPrint(error)
         }
         return nil
     }

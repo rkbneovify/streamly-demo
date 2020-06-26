@@ -35,14 +35,14 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         self.layer.borderColor = UIColor.clear.cgColor
       }
 
-      func configureWith(program: Program) {
-        let viewModel = ProgramViewModel(program: program)
+    func configureWith(program: ProgramArray) {
+    //    let viewModel = ProgramViewModel(program: program)
         
-        self.titleLabel.text = viewModel.titleString
-        self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
-        self.durationLabel.text = viewModel.durationString
+        self.titleLabel.text = program.title  ?? ""
+       // self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
+        self.durationLabel.text = "\(program.duration)"
 
-        self.scheduleLabel.textColor = UIColor.gray
+      //  self.scheduleLabel.textColor = UIColor.gray
         self.durationLabel.textColor = UIColor.gray
       }
     }

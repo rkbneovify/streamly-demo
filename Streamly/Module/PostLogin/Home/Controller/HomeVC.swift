@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 import AVKit
 
 class HomeVC: UIViewController {
@@ -29,6 +30,14 @@ class HomeVC: UIViewController {
     {
         didSet{
             self.collectionView.reloadData()
+        }
+    }
+    var channelsList: ChannelListResponse?
+    var channels1:[Channel]?
+    {
+        didSet
+        {
+            self.removeSpinner()
         }
     }
     lazy var viewModel: EPGViewModel = {
@@ -75,7 +84,12 @@ class HomeVC: UIViewController {
     {
         self.makeApiCall()
         self.initVM()
-        
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeApiCallChannelList()
+                self.initVMList()
+        }
+//
         let epgNib = UINib(nibName: "EPGCollectionViewCell", bundle: Bundle.main)
         collectionView.register(epgNib, forCellWithReuseIdentifier: "epgCell")
         
@@ -87,9 +101,9 @@ class HomeVC: UIViewController {
         
         let programNib = UINib(nibName: "ProgramCollectionViewCell", bundle: Bundle.main)
         collectionView.register(programNib, forCellWithReuseIdentifier: "programCell")
-        
+       // self.loadData()
 
-        
+     //   self.setCollectionViewData()
         collectionView.backgroundColor = UIColor.clear
     }
 
@@ -102,8 +116,9 @@ class HomeVC: UIViewController {
         collectionView.delegate = self
         collectionView.layoutIfNeeded()
         collectionView.layoutSubviews()
+        self.collectionView.reloadData()
     }
-    
+
     func configureButtons()
     {
         if let image = UIImage(systemName: "magnifyingglass")
@@ -141,6 +156,22 @@ class HomeVC: UIViewController {
         }
 
     }
+
+    private func makeApiCallChannelList(){
+        viewModel.getChannelList()
+        
+    }
+    
+    private func initVMList() {
+        
+        viewModel.channelData = { epgModel in
+            
+            self.channelsList = epgModel
+            
+        }
+        
+    }
+
     
     //MARK: Properties
     
@@ -151,13 +182,13 @@ class HomeVC: UIViewController {
 //                let data = try Data(contentsOf: URL(fileURLWithPath: jsonFile), options: .dataReadingMapped)
 //                let json = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
 //                if let jsonDictionary = json as? [String:Any] {
-//                    if let channelsArray = jsonDictionary["Channels"] as? [[String:Any]] {
-//                        self.channels = [Channel]()
+//                    if let channelsArray = jsonDictionary["data"] as? [[String:Any]] {
+//                        self.channels1 = [Channel]()
 //                        for channelItem in channelsArray {
-//                            let number = channelItem["number"] as! Int
-//                            let name = channelItem["name"] as! String
+//                            let number = 0
+//                            let name = channelItem["StationName"] as! String
 //                            let channel = Channel(number: number, name: name)
-//                            self.channels?.append(channel)
+//                            self.channels1?.append(channel)
 //
 //                            if let programsArray = channelItem["programs"] as? [[String:Any]] {
 //                                channel.programs = [Program]()
@@ -165,14 +196,18 @@ class HomeVC: UIViewController {
 //                                    let title = programItem["title"] as! String
 //                                    let start = programItem["start"] as! Int
 //                                    let end = programItem["end"] as! Int
+//                                    let date1 = getDateFromTimeStamp(Double(start)) ?? 0
+//                                     let date2 = getDateFromTimeStamp(Double(end)) ?? 0
+////                                    let x = self.commonDate(start)
+////                                   let y = self.commonDate(end)
 //
-//                                    let program = Program(title: title, schedule: Schedule(start: TimeInterval(start), end: TimeInterval(end)))
+//                                    let program = Program(title: title, schedule: Schedule(start: TimeInterval(date1), end: TimeInterval(date2)))
 //                                    channel.programs?.append(program)
 //                                }
 //                            }
 //                        }
-//                        if let _ = self.channels {
-//                            print(self.channels!)
+//                        if let _ = self.channels1 {
+//                           // print(self.channels!)
 //                        }
 //                    }
 //                }
@@ -182,22 +217,37 @@ class HomeVC: UIViewController {
 //        }
 //        collectionView.reloadData()
 //    }
-    
+//    func getDateFromTimeStamp(_ timeStamp : Double) -> Int? {
+//
+//        let date = NSDate(timeIntervalSince1970: timeStamp)
+//
+//        let dayTimePeriodFormatter = DateFormatter()
+//        dayTimePeriodFormatter.dateFormat = "HH:mm"
+//        dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
+//        dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
+//     // UnComment below to get only time
+//    //  dayTimePeriodFormatter.dateFormat = "hh:mm a"
+//
+//        let dateString = dayTimePeriodFormatter.string(from: date as Date)
+//
+//        let fullNameArr = dateString.components(separatedBy: ":")
+//        guard let hour = Int(fullNameArr[0]) else {return nil}
+//        guard let min = Int(fullNameArr[1]) else {return nil}
+//
+//
+//        return ((hour * 60 * 60) + (min * 60))
+//    }
+//    
     //MARK: Actions
     @IBAction func searchAction(_ sender:UIButton){
         
         let viewVC =  SearchVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-        
         let searchController = UISearchController(searchResultsController: viewVC)
         searchController.searchResultsUpdater = viewVC
         searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Channels)", comment: "")
-        
-        
         // Contain the `UISearchController` in a `UISearchContainerViewController`.
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
-        
-        
         self.navigationController?.pushViewController(searchContainer, animated: true)
         
         
@@ -233,7 +283,7 @@ extension HomeVC {
 
 extension HomeVC: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        if let count = channels?.data?.count {
+        if let count = channels?.data?.count{
             return count + 1 // Number of channels + Time headers
         }
         return 1
@@ -259,21 +309,26 @@ extension HomeVC: UICollectionViewDataSource {
             let time = self.timeIntervals[indexPath.row]
             timeCell.timeLabel.text = time
             return timeCell
-        } else if indexPath.row == 0 { // Channels
+
+        }
+            else
+        {
+         if indexPath.row == 0 { // Channels
             let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as! ChannelCollectionViewCell
             if let channel = self.channels?.data?[indexPath.section - 1] {
-               // channelCell.configureWith(channel: channel)
+                channelCell.configureWith(channel: channel)
                 return channelCell
             }
-            //cell.backgroundColor = UIColor.orange
+           // cell.backgroundColor = UIColor.orange
         } else {
             if let channel = self.channels?.data?[indexPath.section - 1] {
                 if let program = channel.programs?[indexPath.row - 1] {
                     let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as! ProgramCollectionViewCell
-                  //  programCell.configureWith(program: program)
+                    programCell.configureWith(program: program)
                     return programCell
                 }
             }
+        }
         }
         return cell
     }

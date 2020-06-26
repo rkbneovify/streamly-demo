@@ -10,8 +10,8 @@ import Foundation
 struct EPGResponse : Codable {
 
     let data : [ChannelDetails]?
-    var date:String?
-    var success:Bool?
+    let date:String?
+    let success:Bool?
 
     enum CodingKeys: String, CodingKey {
 
@@ -33,9 +33,9 @@ struct EPGResponse : Codable {
 struct ChannelDetails : Codable {
 
 
-    var StationName :String?
-    var url :String?
-    var logo :String?
+    let StationName :String?
+    let url :String?
+    let logo :String?
     let programs :[ProgramArray]?
 
     enum CodingKeys: String, CodingKey {
@@ -62,9 +62,21 @@ struct ChannelDetails : Codable {
 
 struct ProgramArray : Codable {
 
-    let end : Date?
-    let start : Date?
+    let end : TimeInterval?
+    let start : TimeInterval?
     let title:String?
+  //  var schedule: Schedule?
+    var startDate: Date {
+        return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
+     }
+    var endDate: Date {
+        return Date(timeIntervalSince1970: TimeInterval(self.end ?? 0))
+     }
+    var duration: TimeInterval {
+        let duration = self.endDate.addingTimeInterval(-(self.start ?? 0)).timeIntervalSince1970
+       return duration
+     }
+
 
     enum CodingKeys: String, CodingKey {
 
@@ -76,10 +88,11 @@ struct ProgramArray : Codable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        end = try values.decodeIfPresent(Date.self, forKey: .end)
-        start = try values.decodeIfPresent(Date.self, forKey: .start)
+        end = try values.decodeIfPresent(TimeInterval.self, forKey: .end)
+        start = try values.decodeIfPresent(TimeInterval.self, forKey: .start)
         title = try values.decodeIfPresent(String.self, forKey: .title)
 
     }
+    
 
 }

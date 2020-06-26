@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ChannelCollectionViewCell: UICollectionViewCell {
     
    @IBOutlet weak var imageView: UIImageView!
 
-      override func awakeFromNib() {
+    @IBOutlet weak var channelName: UILabel!
+    @IBOutlet weak var channelNumber: UILabel!
+    override func awakeFromNib() {
         super.awakeFromNib()
         // These properties are also exposed in Interface Builder.
 //               imageView.adjustsImageWhenAncestorFocused = true
@@ -38,11 +41,12 @@ class ChannelCollectionViewCell: UICollectionViewCell {
         
     }
 
-      func configureWith(channel: Channel) {
-        let viewModel = ChannelViewModel(channel: channel)
-        if let _ = viewModel.image {
-        self.imageView.image = viewModel.image
+      func configureWith(channel: ChannelDetails) {
+       // let viewModel = ChannelViewModel(channel: channel)
+        if let _ = channel.logo {
+        self.imageView.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
         }
+        self.channelName.text = channel.StationName ?? ""
       }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {

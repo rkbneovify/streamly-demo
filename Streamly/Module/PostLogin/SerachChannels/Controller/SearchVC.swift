@@ -80,7 +80,7 @@ class SearchVC: UIViewController {
           viewModel.searchData = { contactModel in
             self.channelList = contactModel
             self.filtterdChannelList = contactModel.message?.data
-          //  print(self.channelList?.message?.data?[0])
+          //  debugPrint(self.channelList?.message?.data?[0])
 
               self.removeSpinner()
 

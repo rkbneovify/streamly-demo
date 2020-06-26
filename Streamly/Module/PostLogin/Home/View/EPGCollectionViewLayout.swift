@@ -10,7 +10,7 @@ import UIKit
 
 class EPGCollectionViewLayout: UICollectionViewLayout {
  let cellWidth = 395.0
-  let cellHeight = 120.0
+    let cellHeight = 120.0
   var cellAttributesDictionary = Dictionary<IndexPath, UICollectionViewLayoutAttributes>()
   var contentSize = CGSize.zero
   var dataSourceDidUpdate = true
@@ -90,8 +90,8 @@ class EPGCollectionViewLayout: UICollectionViewLayout {
             cellAttributes.frame = insetFrame
 
             if let _ = program {
-              xPos = (cellWidth * (program!.schedule.start / 60 / 60) + cellWidth)
-                let width = ((program!.duration ?? 0) / 60 / 60) * cellWidth
+                xPos = (cellWidth * ((getDateFromTimeStamp(program?.start ?? 0) ?? 0) / 60 / 60) + cellWidth)
+                let width = ((duration(program?.start ?? 0 ,program?.end ?? 0) / 60 / 60) * cellWidth)
                 cellAttributes.frame = CGRect(x: xPos, y: yPos, width: width - 9.0, height: cellHeight)
                 let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
                 cellAttributes.frame = insetFrame
@@ -131,11 +131,40 @@ class EPGCollectionViewLayout: UICollectionViewLayout {
 
   override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
     return cellAttributesDictionary[indexPath]!
-  }
+
+    }
 
   override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
     return true
   }
+
+      func getDateFromTimeStamp(_ timeStamp : Double) -> TimeInterval? {
+
+          let date = NSDate(timeIntervalSince1970: timeStamp)
+
+          let dayTimePeriodFormatter = DateFormatter()
+          dayTimePeriodFormatter.dateFormat = "HH:mm"
+          dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
+          dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
+       // UnComment below to get only time
+      //  dayTimePeriodFormatter.dateFormat = "hh:mm a"
+
+          let dateString = dayTimePeriodFormatter.string(from: date as Date)
+
+          let fullNameArr = dateString.components(separatedBy: ":")
+          guard let hour = Int(fullNameArr[0]) else {return nil}
+          guard let min = Int(fullNameArr[1]) else {return nil}
+
+
+          return TimeInterval((hour * 60 * 60) + (min * 60))
+      }
+
+    func duration(_ start:TimeInterval,_ end:TimeInterval) -> TimeInterval
+    {
+        return Date(timeIntervalSince1970: TimeInterval(getDateFromTimeStamp(end) ?? 0)).addingTimeInterval(-(getDateFromTimeStamp(start ) ?? 0)).timeIntervalSince1970
+
+
+    }
 
    
 }
