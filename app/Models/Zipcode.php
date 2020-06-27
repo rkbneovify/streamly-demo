@@ -15,13 +15,13 @@ use Illuminate\Database\Eloquent\Model;
    
  */
 class Zipcode extends Model 
-{
+{  
     
     /**
     * Database table name
     */
     protected $table = 'zipcodes';
-
+    public $timestamps = false;
     /**
     * Mass assignable columns
     */

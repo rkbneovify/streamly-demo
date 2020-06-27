@@ -26,6 +26,12 @@ class ZipcodeController extends Controller
        
        return view('admin.zipcodes.index', compact('zipcodes'));
     }  
+    public function allowedZipcodes()
+    { 
+        $zipcodes = Zipcode::paginate(10);
+       
+       return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
+    }  
    
     public function zipjson() 
     {
@@ -93,32 +99,46 @@ class ZipcodeController extends Controller
      * @param  Zipcode  $zipcode
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, Zipcode $zipcode)
+     public function edit($id)
     {
-
-        return view('pages.zipcodes.edit', [
-            'model' => $zipcode,
-
-            ]);
-    }    /**
+        $zipcode = Zipcode::find($id); 
+        return view('admin.zipcodes.edit', compact('zipcode'));
+        
+    }   /**
      * Update a existing resource in storage.
      *
      * @param  Request  $request
      * @param  Zipcode  $zipcode
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Zipcode $zipcode)
-    {
-        $zipcode->fill($request->all());
+    public function update(Request $request, $id)
+    {   $this->validate($request, [
+        'zipcode' => 'required|max:20',
+        'city' => 'required',
+        'state' => 'required',
+        
+        
 
-        if ($zipcode->save()) {
-            
-            session()->flash('app_message', 'Zipcode successfully updated');
-            return redirect()->route('zipcodes.index');
-            } else {
-                session()->flash('app_error', 'Something is wrong while updating Zipcode');
-            }
-        return redirect()->back();
+    ]);
+
+    $input = $request->only('zipcode', 'city', 'state','state_abbr','county_area','code','latitude','longitude');
+    if ($request->has('toggleswitch')) {
+        // $archived="helllo block user on";
+         $input['status'] = 0;
+        // $user->is_active=0;
+     } else{
+        // $archived="bye block off";
+         //$user->is_active=1;
+         $input['status'] = 1;
+     }
+    $model = Zipcode::find($id);
+    if(!$model){
+        return redirect('admin/zipcode')->with('info','zipcode with id ' . $id . ' cannot be found.'); 
+    }
+    else{$model->update($input); //update the subscription info
+
+        return redirect('admin/zipcode')->with('info','zipcode updated Successfully');
+   }
     }    /**
      * Delete a  resource from  storage.
      *
@@ -148,6 +168,14 @@ class ZipcodeController extends Controller
     public function categoryData()
     {
         return DataTables::of(Zipcode::query())
+        ->addColumn('action', function($row) {
+            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })
+        ->make(true);
+    }
+    public function allowedZipdata()
+    {  $data = Zipcode::where('status',1)->get();
+        return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
