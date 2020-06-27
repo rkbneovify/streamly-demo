@@ -45,7 +45,7 @@ class SubscriptionPackController extends Controller
      */
     public function create()
     { 
-        return view('admin.subscriptionpack.create', compact('subscriptionpack'));
+        return view('admin.subscriptionpack.create');
     }    /**
      * Store a newly created resource in storage.
      *

@@ -69,10 +69,7 @@ class ZipcodeController extends Controller
     public function create(Request $request)
     {
 
-        return view('pages.zipcodes.create', [
-            'model' => new Zipcode,
-
-        ]);
+        return view('admin.zipcodes.create');
     }    /**
      * Store a newly created resource in storage.
      *
@@ -86,12 +83,13 @@ class ZipcodeController extends Controller
 
         if ($model->save()) {
             
-            session()->flash('app_message', 'Zipcode saved successfully');
-            return redirect()->route('zipcodes.index');
+            return redirect('admin/zipcode')->with('info','Zipcode Added Successfully');
+        
             } else {
-                session()->flash('app_message', 'Something is wrong while saving Zipcode');
+                return redirect('admin/zipcode')->with('info','Some error occured');
+        
             }
-        return redirect()->back();
+        
     } /**
      * Show the form for editing the specified resource.
      *
