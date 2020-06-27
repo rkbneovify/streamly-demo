@@ -23,7 +23,7 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-6">
           <div class="card card-primary">
             <div class="card-header">
               <h3 class="card-title">General</h3>
@@ -83,7 +83,19 @@
                                     @endif
               </div>
               
-              <div class="form-group {{ $errors->has('state_abbr') ? ' has-error' : '' }}">
+              <div class="form-group {{ $errors->has('longitude') ? ' has-error' : '' }}">
+        
+                <label for="longitude">longitude </label>
+                 <input type="text" name="longitude" placehoder="longitude" class="form-control"  disabled value="{{$zipcode->longitude}}" />
+                 <!-- <input type="text" name="state_abbr" placehoder="Start Date" class="form-control" id="state_abbr"/> -->
+                @if ($errors->has('longitude'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('longitude') }}</strong>
+                                    </span>
+                                    @endif
+              </div>
+              
+              {{-- <div class="form-group {{ $errors->has('state_abbr') ? ' has-error' : '' }}">
               
                 <label for="state_abbr">Created on</label>
                  <input type="text" name="state_abbr" placehoder="Start Date" class="form-control" disabled value={{$zipcode->created_on}} />
@@ -93,7 +105,7 @@
                                         <strong>{{ $errors->first('state_abbr') }}</strong>
                                     </span>
                                     @endif
-              </div>
+              </div> --}}
             </div>
             <!-- /.card-body -->
           </div>
@@ -101,7 +113,87 @@
         </div>
              
 </div>
-              
+    
+<div class="col-md-6">
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title"></h3>
+
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+          <i class="fas fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="panel-body">
+                <!-- Display Validation Errors -->
+                @if (count($errors) > 0)
+                    <div class="alert alert-danger">
+                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
+    <div class="card-body">
+      <div class="form-group{{ $errors->has('state_abbr') ? ' has-error' : '' }}">
+        <label for="state_abbr">state abbr</label>
+        
+      <input type="text" name="state_abbr"    class="form-control"   disabled value="{{ $zipcode->state_abbr }}">
+        @if ($errors->has('state_abbr'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('state_abbr') }}</strong>
+                            </span>
+                            @endif
+      </div>
+      {{-- {{ $zipcode->county_area  }} --}}
+      <div class="form-group{{ $errors->has('county_area') ? ' has-error' : '' }}">
+          <label for="code">county area</label>
+          <input type="text" name="county_area" class="form-control"  disabled value="{{ $zipcode->county_area  }}">
+          
+          @if ($errors->has('county_area'))
+                                  <span class="help-block">
+                                  <strong>{{ $errors->first('county_area') }}</strong>
+                              </span>
+                              @endif
+        </div>
+      <div class="form-group{{ $errors->has('code') ? ' has-error' : '' }}">
+        <label for="code">code</label>
+        <input type="text" name="code" class="form-control"  disabled value="{{ $zipcode->code  }}">
+        
+        @if ($errors->has('code'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('code') }}</strong>
+                            </span>
+                            @endif
+      </div>
+      
+      <div class="form-group {{ $errors->has('latitude') ? ' has-error' : '' }}">
+      
+        <label for="latitude">latitude </label>
+         <input type="text" name="latitude" placehoder="latitude" class="form-control"  disabled value="{{$zipcode->latitude}}" />
+         <!-- <input type="text" name="state_abbr" placehoder="Start Date" class="form-control" id="state_abbr"/> -->
+        @if ($errors->has('latitude'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('latitude') }}</strong>
+                            </span>
+                            @endif
+      </div>
+      <div class="form-group">
+          <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+            <input type="checkbox" class="custom-control-input" name="toggleswitch" id="customSwitch3">
+            <label class="custom-control-label" for="customSwitch3">Disable zipcode</label>
+          </div>
+</div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+     
+</div>          
       </div>
       
       </form>   

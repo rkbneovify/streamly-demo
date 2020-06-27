@@ -26,6 +26,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 
 
+
 Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admin')->group(function(){
     
     
@@ -76,10 +77,14 @@ Route::post('insertchannel','Admin\ChannelController@store')->name('insertchanne
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
     // Zipcode Routes
     Route::get('zipcode', 'ZipcodeController@index');
+    Route::get('allowedzipcode', 'ZipcodeController@allowedZipcodes');
     Route::get('/zipcode/view/{id}', 'ZipcodeController@show');
-    Route::post('zipcode/update', 'ZipcodeController@updateRole');
+    Route::get('/zipcode/edit/{id}', 'ZipcodeController@edit');
+    //Route::post('zipcode/update', 'ZipcodeController@updateRole');
+    Route::put('zipcodeupdate/{id}','ZipcodeController@update')->name('zipcodeupdate');
     Route::delete('zipcode/destroy', 'ZipcodeController@massDestroy')->name('zipcode.massDestroy');
     Route::get('zipcode/category', 'ZipcodeController@categoryData');
+    Route::get('zipcode/allowedzipdata', 'ZipcodeController@allowedZipdata');
 
 Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
     Route::delete('zipcode/{id}/delete', 'ZipcodeController@deleteRole');
@@ -105,6 +110,7 @@ Route::get('/livetv/{channel}', 'Pages\LiveTv@showChannel');
 Route::get('/faq', 'Pages\Faq@showPage');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
+Route::get('/verified', 'HomeController@verified');
 
 Route::post('/insertpay','Pages\Payment@pay')->name('insertpay');//send form data here
 
