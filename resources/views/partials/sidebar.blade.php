@@ -126,6 +126,12 @@
                   <p>Zipcode manage</p>
                 </a>
               </li>
+              <li class="nav-item">
+              <a href=" {{ url('/admin/allowedzipcode') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Allowed Zipcode</p>
+                </a>
+              </li>
             </ul>
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">

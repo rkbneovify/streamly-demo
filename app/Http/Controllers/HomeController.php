@@ -44,6 +44,12 @@ class HomeController extends Controller
 
         return view('frontend.home', compact('login'));
     }
+    public function verified()
+    {
+        
+
+        return view('frontend.verified');
+    }
 
     public function createUser(Request $request){
 
@@ -59,7 +65,8 @@ class HomeController extends Controller
             'user-email' => 'required|string|email|max:255|unique:users,email',
             'user-password' => 'required|string|min:8',
             'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
-        ], [], $attributeNames);
+            'zip_code'=>'required|exists:zipcodes,zipcode,status,1'
+        ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
 
         /*if ( $validatedData->fails() ) {
             return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
@@ -69,7 +76,7 @@ class HomeController extends Controller
             'name' => $request['name'],
             'email' => $request['user-email'],
             'password' => Hash::make($request['user-password']),
-            'zip_code' => $request['zip_code'],
+            'zipcode' => $request['zip_code'],
             'email_verified_at'=>null
         ]);
 
