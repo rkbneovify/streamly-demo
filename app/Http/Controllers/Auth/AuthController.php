@@ -57,7 +57,7 @@ class AuthController extends Controller
 
         $FRONTEND_URL=env('FRONTEND_URL');
 
-        $account_verification_link=$FRONTEND_URL.'/auth/verify?token='.$verification_code;
+        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
 
         $html='<html>
             Hi, '.$User->name.'<br><br>
@@ -140,9 +140,10 @@ class AuthController extends Controller
         if($user) {
             $user->email_verified_at = $email_verified_at;
             $user->save();
-            
+            if($request->wantsJson()){
             $response = array('success' =>true ,'response_code'=>200,'message'=>'Account successfully verified');
-            return response()->json($response, 200);
+            return response()->json($response, 200);}
+            else {  return view('frontend.verified'); }
 
         }else{
             $response = array('success' =>false ,'response_code'=>401,'message'=>'Invalid verification token');

@@ -9,6 +9,9 @@ use App\User;
 use App\Models\RoleUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Crypt;
+use Mail;
+use Exception;
 
 class HomeController extends Controller
 {
@@ -41,6 +44,12 @@ class HomeController extends Controller
 
         return view('frontend.home', compact('login'));
     }
+    public function verified()
+    {
+        
+
+        return view('frontend.verified');
+    }
 
     public function createUser(Request $request){
 
@@ -56,7 +65,8 @@ class HomeController extends Controller
             'user-email' => 'required|string|email|max:255|unique:users,email',
             'user-password' => 'required|string|min:8',
             'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
-        ], [], $attributeNames);
+            'zip_code'=>'required|exists:zipcodes,zipcode,status,1'
+        ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
 
         /*if ( $validatedData->fails() ) {
             return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
@@ -66,7 +76,8 @@ class HomeController extends Controller
             'name' => $request['name'],
             'email' => $request['user-email'],
             'password' => Hash::make($request['user-password']),
-            'zip_code' => $request['zip_code'],
+            'zipcode' => $request['zip_code'],
+            'email_verified_at'=>null
         ]);
 
         $role = RoleUser::create([
@@ -74,7 +85,31 @@ class HomeController extends Controller
             'role_id' => $this->DEFAULT_ROLE_ID,
         ]);
 
-        return redirect()->back()->with('message', 'Your account has been successfully registered!');
+
+        $verification_code=Crypt::encrypt($User->email);
+
+        $FRONTEND_URL=env('FRONTEND_URL');
+
+        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+        $html='<html>
+            Hi, '.$User->name.'<br><br>
+
+            Thank you for registering on '.env('APP_NAME').'.
+
+            Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
+        </html>';
+      try{
+        Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
+            $message->to($request['user-email'], $User->name)
+            ->subject(env('APP_NAME').': Account Verification');
+            // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+        });} catch (Exception $ex) {
+             //$ex->getMessage();
+             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+            // return "We've got errors!".json_encode($ex->getMessage(), true);
+        }
+
+        return redirect('/')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
     }
 
     public function logout()
