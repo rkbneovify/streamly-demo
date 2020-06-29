@@ -78,7 +78,8 @@ class User extends Authenticatable implements JWTSubject
             'email' => 'required|unique:users',
             'password' => 'required|max:255',
             'dob'=>'date|date_format:Y-m-d',
-            'gender'=>'max:1'
+            'gender'=>'max:1',
+            
         ]);
     }
 
