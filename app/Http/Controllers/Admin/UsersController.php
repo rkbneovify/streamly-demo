@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\SessionTable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -13,6 +13,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use JWTAuth;
 
 class UsersController extends Controller
 {     
@@ -151,5 +152,75 @@ class UsersController extends Controller
         User::whereIn('id', request('ids'))->delete();
 
         return response(null, 204);
+    }
+
+    public function activeSession(){
+        // $user = JWTAuth::user();//all the user info
+        $uid= 6;
+        //  $user['id'];
+        //and get the number of last connected device
+    //     $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+    //     ->where([
+    //     ['status', '=', '1'],
+    //     ['users_id', '=', $uid],
+    //      ])->orderBy('connected_devices', 'asc');
+    //     $s='';$numofdevice='';
+    // $s=$prevConnectDevicecount->toSql();
+    // echo $s; 
+    // $numofdevice=$prevConnectDevicecount->count();
+   
+     
+        //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+        //  return response()->json($response, 200);
+         //get the users with there session
+         $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
+        return view('admin.users.sessions', compact('allSession'));
+    }
+
+    public function connecteddevice($id)
+    {
+        $user = User::find($id);
+        $roles = Role::get(); //get all roles
+        $userRoles = $user->roles->pluck('id')->toArray();
+        //dd($roles);
+        $allSession=SessionTable::with('user')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        ->where([
+        ['status', '=', '1'],
+        ['users_id', '=', $id],
+         ])->orderBy('connected_devices', 'asc')->get();
+        return view('admin.users.connected',compact('allSession'));
+    }
+
+     public function sessiondestroy($id,$tokenString)
+    {   
+        $myarr=[];
+        array_push($myarr,$id );  
+       // print_r($myarr);
+        $user= SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
+        SessionTable::where([
+        ['status', '=', '1'],
+        ['connected_devices', '!=', '1'],
+         ])
+->update([
+    'connected_devices' => DB::raw('`connected_devices` - 1 ')
+]);
+//print_r($user); exit;
+config([
+  'jwt.blacklist_enabled' => true
+]);
+// JWTAuth::parseToken()->invalidate();
+
+JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
+        
+         if($user){
+            return redirect('admin/users/session/')->with('info','User Session Deleted Successfully');
+                      
+        
+        }else{
+            return redirect('admin/users/session/')->with('info','User Session Not found');
+            
+        }
+
+        
     }
 }

@@ -52,7 +52,12 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>User</p>
                 </a>
-              </li>
+              </li><li class="nav-item">
+                <a href=" {{ url('/admin/users/session') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>User sessions</p>
+                  </a>
+                </li>
             </ul>
           </li>
           
@@ -119,6 +124,12 @@
               <a href=" {{ url('/admin/zipcode') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Zipcode manage</p>
+                </a>
+              </li>
+              <li class="nav-item">
+              <a href=" {{ url('/admin/allowedzipcode') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Allowed Zipcode</p>
                 </a>
               </li>
             </ul>
