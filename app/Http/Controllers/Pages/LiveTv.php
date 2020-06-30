@@ -41,7 +41,7 @@ class LiveTv extends Controller
     //   $Allgenre=Genre::selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(name), ',', '\",\"'), '\"]') AS JSON ) AllGenre")->get()->toArray();
     //   print_r($Allgenre); //       exit;
 
-    	return view('frontend.pages.livetv', compact('login','pagechannel','Allgenre'));
+    	return view('frontend.pages.livetv', compact('login','pagechannel'));
 
     }
 

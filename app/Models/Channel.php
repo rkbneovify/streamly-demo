@@ -46,9 +46,15 @@ protected $appends = ['logo'];
     }
 
     public function getLogoAttribute($size=null)
-{ 
+{ if ($this->image) {
     $imagePath=asset("/uploads/channellogo/".$this->image);
-   return $imagePath;
+    return $imagePath;
+} else {
+    $imagePath=asset("/uploads/channellogo/notfound.png");
+    return $imagePath;
+}
+
+   
 }
 // public function getGenrenameAttribute($value)
 // {
