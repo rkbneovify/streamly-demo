@@ -135,166 +135,22 @@
 
 @section('content')
 	<section class="page-section">
+		@foreach($pagechannel as $key => $user)
 		<div class="container">
-				<h4 class="section-heading">Live News</h4>
+				<h4 class="section-heading">{{$key}}</h4>
 				<div class="row">
 					<div class="live-news-carousel owl-carousel">
+						@foreach ($user as $channeldet)
 						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
+							<img src="{{  $channeldet->logo}}">
+							<p>{{  $channeldet->callSign}}</p>
 						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
+						@endforeach
 					</div>
 				</div>
 		</div>
+    @endforeach
 
-
-		<div class="container">
-				<h4 class="section-heading">Sports</h4>
-				<div class="row">
-					<div class="live-news-carousel arrow-custom-car owl-carousel">
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-					</div>
-				</div>
-		</div>
-
-		<div class="container">
-				<h4 class="section-heading">Kids</h4>
-				<div class="row">
-					<div class="live-news-carousel arrow-custom-car owl-carousel">
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-					</div>
-				</div>
-		</div>
-
-		<div class="container">
-				<h4 class="section-heading">Movies</h4>
-				<div class="row">
-					<div class="live-news-carousel arrow-custom-car owl-carousel">
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/NoPath.png') }}">
-							<p>Commercial news</p>
-						</div>
-						<div class="live-news-item">
-							<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-							<p>Commercial news</p>
-						</div>
-					</div>
-				</div>
-		</div>
 		
 	</section>
 	
