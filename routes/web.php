@@ -53,6 +53,8 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
      Route::get('/subscriptionpack/create', 'Admin\SubscriptionPackController@create');
     Route::put('subscriptionpackupdate/{id}','Admin\SubscriptionPackController@update')->name('subscriptionpackupdate');
     Route::delete('subscriptionpack/destroy/{id}','Admin\SubscriptionPackController@destroy');
+
+    Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
@@ -120,3 +122,8 @@ Route::get('/ffmpeg', 'VideoAnylyzerController@index');
 Route::get('/ffmpeg2', 'VideoAnylyzerController@probeAudioFile');
 Route::get('/ffmpeg3', 'VideoAnylyzerController@testFprobe');
 Route::get('/ffmpeg4', 'VideoAnylyzerController@testProbeOnRemoteFile');
+Route::get('/stripesync', function (Request $request) {
+    Artisan::call('stripe:sync-renewals');
+    
+    return redirect('admin/subscriptions')->with('info',Artisan::output());
+ });

@@ -48,11 +48,13 @@
                         
                         
             <form method="POST" enctype="multipart/form-data" action="{{ url('admin/insertsubscriptionpack') }}">
-                      
+              
+              @if($errors->first('plan_id')) <p class="text-danger text-sm danger_text">Please refresh this page and try again.</p> @endif
+                 
         
         {{ csrf_field() }}
             <div class="card-body">
-              <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+              {{-- <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name">Name</label>
                 
               <input type="text" name="name"    class="form-control"   >
@@ -61,9 +63,13 @@
                                         <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                     @endif
-              </div>
-              
-              <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
+              </div> --}}
+              <div class="form-group">
+                <label for="">Plan name: <span class="text-red text-md">*</span></label>
+                <input type="text" class="form-control" value="{{old('plan_name')}}" name="plan_name" id="" placeholder="Enter Plan Name...">
+                @if($errors->first('plan_name')) <p class="text-danger text-sm danger_text">{{ $errors->first('plan_name') }}</p> @endif
+            </div>
+              {{-- <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
                 <label for="duration">Duration(in months)</label>
                 <input type="text" name="duration" class="form-control"  >
                 
@@ -72,8 +78,45 @@
                                         <strong>{{ $errors->first('duration') }}</strong>
                                     </span>
                                     @endif
-              </div>
-              <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
+              </div> --}}
+
+              <div class="form-group">
+                <label for="">Interval:</label>
+                <select name="plan_interval" id="plan_interval">
+                    <option value="day">Daily</option>
+                    <option value="month">Monthly</option>
+                    <option value="year">Yearly</option>
+                    <option value="week">Weekly</option>
+                    <option value="3-month">Every 3 months</option>
+                    <option value="6-month">Every 6 months</option>
+                    <option value="custom" id="custom_interval">Custom</option>
+                </select>
+                    <div class="custom" style="display: none">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="interval_count" value="0" maxlength="3" class="" id="interval_count" style="width: 5%">
+                        <select name="coustom_interval" id="custom_interval">
+                            <option value="month" id="mnth">months</option>
+                            <option value="week" id="week">weeks</option>
+                            <option value="day" id="day">days</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="form-group{{ $errors->has('product') ? ' has-error' : '' }}">
+              <label for="product">Products coming from stripe dashboard</label>
+
+              <select name="product" id="product" class="form-control">
+                @foreach($Product as $id => $pack)
+                <option value="{{ $pack->id }}">
+                  {{ $pack->name }}
+                </option>
+                @endforeach
+              </select>
+              @if ($errors->has('product'))
+              <span class="help-block">
+                <strong>{{ $errors->first('product') }}</strong>
+              </span>
+              @endif
+            </div>
+              {{-- <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
                 <label for="rate">Rate($)</label>
                 <input type="text" name="rate" class="form-control" >
                 
@@ -82,7 +125,14 @@
                                         <strong>{{ $errors->first('rate') }}</strong>
                                     </span>
                                     @endif
-              </div>
+              </div> --}}
+
+
+              <div class="form-group">
+                <label for="">Amount: <span class="text-red text-md">*</span></label><span id="symbol"> $</span>
+                <input type="text" class="form-control amount" value="{{old('plan_amount')}}" name="plan_amount" id="plan_amount" placeholder="5.25">
+                @if($errors->first('plan_amount')) <p class="text-danger text-sm danger_text">{{ $errors->first('plan_amount') }}</p> @endif
+            </div>
               
             </div>
             <!-- /.card-body -->
@@ -109,3 +159,60 @@
   </div>
   <!-- /.content-wrapper -->
   @endsection
+  
+@section('scripts')
+
+<script>
+$(document).on('change','#plan_interval',function(e){
+  var interval = $('#plan_interval').val();
+  if(interval == 'custom'){
+      $("#interval_count").val(0);
+      $('.custom').css('display','block');
+  }
+  else{
+      $("#interval_count").val(0);
+      $('.custom').css('display','none');
+  }
+});
+
+
+$('#interval_count').keypress(function (e) {
+    var regex = new RegExp("^[0-9]+$");
+    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+    if (regex.test(str)) {
+        return true;
+    }else{
+        alert("Only number is allowed.");
+    }
+    e.preventDefault();
+    return false;
+});
+
+
+$('#interval_count').on('blur',function () {
+    if(this.value > 12 && this.value <= 52){
+        $('#week').css('display','block');
+        $('#week')
+            .removeAttr('selected')
+            .attr('selected', true);
+        $('#mnth').css('display','none');
+    }else if(this.value > 52 && this.value <= 365){
+        $('#day')
+            .removeAttr('selected')
+            .attr('selected', true);
+        $('#week').css('display','none');
+    }else if(this.value <=12){
+
+        $('#mnth').css('display','block');
+        $('#week').css('display','block');
+
+        $('#mnth')
+            .removeAttr('selected')
+            .attr('selected', true);
+    }else{
+        $('#interval_count').val(0);
+        alert("Please input valid days.");
+    }
+});
+</script>
+@stop

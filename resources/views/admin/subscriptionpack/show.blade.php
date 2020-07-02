@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>View Subscription Pack</h1>
+            <h1>View Subscription Plan</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">View Subscription Pack</li>
+              <li class="breadcrumb-item active">View Subscription Plan</li>
             </ol>
           </div>
         </div>
@@ -54,7 +54,7 @@
               <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                 <label for="name">Name</label>
                 
-              <input type="text" name="name" disabled   class="form-control"  disabled value={{ $subscriptionpack->name }}>
+              <input type="text" name="name" disabled   class="form-control"  disabled value={{ $plan->nickname }}>
                 @if ($errors->has('name'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -64,7 +64,7 @@
               
               <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
                 <label for="duration">Duration</label>
-                <input type="text" name="duration" class="form-control" disabled value={{ $subscriptionpack->duration  }}>
+                <input type="text" name="duration" class="form-control" disabled value="{{ $plan->interval_count  }} {{$plan->interval }}">
                 
                 @if ($errors->has('duration'))
                                         <span class="help-block">
@@ -74,7 +74,7 @@
               </div>
               <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
                 <label for="rate">Rate($)</label>
-                <input type="text" name="rate" class="form-control" disabled value={{ $subscriptionpack->rate  }}>
+                <input type="text" name="rate" class="form-control" disabled value="{{ $plan->currency  }} {{ $plan->amount/100  }}">
                 
                 @if ($errors->has('rate'))
                                         <span class="help-block">
@@ -83,14 +83,14 @@
                                     @endif
               </div>
               
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
+              <div class="form-group {{ $errors->has('created') ? ' has-error' : '' }}">
               
-                <label for="start_date">Created on</label>
-                 <input type="text" name="start_date" placehoder="Start Date" class="form-control" disabled value={{$subscriptionpack->created_on}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
+                <label for="created">Created on</label>
+                 <input type="text" name="created" placehoder="Start Date" class="form-control" disabled value={{date('m/d/Y H:i:s',$plan->created)}} />
+                 <!-- <input type="text" name="created" placehoder="Start Date" class="form-control" id="created"/> -->
+                @if ($errors->has('created'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                        <strong>{{ $errors->first('created') }}</strong>
                                     </span>
                                     @endif
               </div>

@@ -50,16 +50,36 @@
                       
         
         {{ csrf_field() }}
-            <div class="card-body">
-              <div class="form-group{{ $errors->has('subscriptionpack_id') ? ' has-error' : '' }}">
-                <label for="subscriptionpack_id">Subscription</label>
+            <div class="card-body col-md-12">
+              {{-- <div class="form-group{{ $errors->has('stripe_plan') ? ' has-error' : '' }}">
+                <label for="stripe_plan">Subscription</label>
                 
-              <input type="text" name="subscriptionpack_id" disabled   class="form-control"  disabled value={{ $subscription->subscriptionpack->name }}>
-                @if ($errors->has('subscriptionpack_id'))
+              <input type="text" name="stripe_plan" disabled   class="form-control"  disabled value={{ $subscription->subscriptionpack->name }}>
+                @if ($errors->has('stripe_plan'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('subscriptionpack_id') }}</strong>
+                                        <strong>{{ $errors->first('stripe_plan') }}</strong>
                                     </span>
                                     @endif
+              </div> --}}
+
+              <div class="form-group{{ $errors->has('product') ? ' has-error' : '' }}">
+                <label for="product">Plans coming from stripe dashboard</label>
+  
+                <select name="product" id="product" class="form-control" disabled>
+                  
+                  @foreach($plans as $id => $pack)
+                  @if($subscription->stripe_plan==$pack->id)
+                  <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
+                  @else
+                  <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
+                  @endif 
+                  @endforeach
+                </select>
+                @if ($errors->has('product'))
+                <span class="help-block">
+                  <strong>{{ $errors->first('product') }}</strong>
+                </span>
+                @endif
               </div>
               
               <div class="form-group{{ $errors->has('users_id') ? ' has-error' : '' }}">
@@ -73,21 +93,21 @@
                                     @endif
               </div>
               
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
+              <div class="form-group {{ $errors->has('created_at') ? ' has-error' : '' }}">
               
-                <label for="start_date">start date</label>
-                 <input type="date" name="start_date" placehoder="Start Date" class="form-control" disabled value={{$subscription->start_date}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
+                <label for="created_at">start date</label>
+                 <input type="date" name="created_at" placehoder="Start Date" class="form-control" disabled value={{$subscription->created_at}} />
+                 <!-- <input type="text" name="created_at" placehoder="Start Date" class="form-control" id="created_at"/> -->
+                @if ($errors->has('created_at'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                        <strong>{{ $errors->first('created_at') }}</strong>
                                     </span>
                                     @endif
               </div>
               <div class="form-group">
                 <label for="inputProjectLeader">expiry date</label>
-                <!-- <input type="text" placehoder="End Date" name="expiry_date" id="end_date" class="form-control"/> -->
-                <input type="date" placehoder="End Date" name="expiry_date" class="form-control" disabled value={{$subscription->expiry_date}}/>
+                <!-- <input type="text" placehoder="End Date" name="renews_at" id="end_date" class="form-control"/> -->
+                <input type="date" placehoder="End Date" name="renews_at" class="form-control" disabled value={{$subscription->renews_at}}/>
               </div>
             </div>
             <!-- /.card-body -->

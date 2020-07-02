@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>SubscriptionPack</h1> {{ session()->get( 'info' ) }}
+            <h1>Plan</h1> {{ session()->get( 'info' ) }}
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">SubscriptionPack</li>
+              <li class="breadcrumb-item active">Subscription Plan</li>
             </ol>
           </div>
         </div>
@@ -23,13 +23,13 @@
     <!-- Main content -->
     <section class="content">
     <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptionpack/create') }} ">
-                                        Add new subscription pack
+                                        Add new subscription plan
                                     </a>
 
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">SubscriptionPack</h3>
+          <h3 class="card-title">SubscriptionPlan</h3>
 
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -46,15 +46,20 @@
                           #
                       </th>
                       <th style="width: 20%">
-                          Name
+                        Product
                       </th>
                       <th style="width: 20%">
-                          Duration(in months)
+                        Nickname
                       </th>
                       <th style="width: 20%">
-                          Rate
+                          Duration
+                      </th>
+                      <th style="width: 20%">
+                          Rate ($)
                       </th><th style="width: 20%">
-                      Created on
+                      Created on(m/d/Y H:i:s)
+                      </th><th style="width: 20%">
+                        Active
                       </th>
                       
                       <th style="width: 20%">
@@ -63,26 +68,35 @@
                   </tr>
               </thead>
               <tbody>
-              @forelse ($subscriptionpack as $subscriptionpack)
+              @forelse ($plan as $plan)
               <tr>
               <td>#</td>
               
-    <td>{{ $subscriptionpack->name }}</td>
-    <td>{{ $subscriptionpack->duration }}</td>
-    <td>{{ $subscriptionpack->rate }}</td>
-    <td>{{ $subscriptionpack->created_on }}</td>
+    <td>
+      @foreach($product as $id => $pack)
+     
+      {{ ( $pack->id == $plan->product) ? $pack->name : '' }}
+        
+      
+      @endforeach
+    </td>
+    <td>{{ $plan->nickname }}</td>
+    <td>{{ $plan->interval_count }}-{{ $plan->interval }}</td>
+    <td>{{ $plan->currency}} {{ $plan->amount/100 }}</td>
+    <td>{{ date('m/d/Y H:i:s',$plan->created) }}</td>
+    <td>{{ $plan->active }}</td>
     
     <td>
                                 
-                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptionpack/view', $subscriptionpack->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptionpack/view', $plan->id) }}">
                                         {{ trans('view') }}
                                     </a>
 
-                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptionpack/edit', $subscriptionpack->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptionpack/edit', $plan->id) }}">
                                         {{ trans('edit') }}
                                     </a>
 
-                                    <form action="{{ url('admin/subscriptionpack/destroy', $subscriptionpack->id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/subscriptionpack/destroy', $plan->id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="Delete">
