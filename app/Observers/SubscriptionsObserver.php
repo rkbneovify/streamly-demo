@@ -1,25 +1,26 @@
 <?php
 
 namespace App\Observers;
-
-use App\Models\Subscription;
+use DB;
+use Exception;
+use Carbon\Carbon;
+use Laravel\Cashier\Subscription;
 
 class SubscriptionsObserver
 {
     /**
-     * Handle the subscription "created" event.
+     * Handle the laravel cashier subscription "created" event.
      *
      * @param  \App\Subscription  $subscription
      * @return void
      */
     public function created(Subscription $subscription)
     {
-       if ($subscription->stripe_plan == 'yearly') {
-          $subscription->renews_at = Carbon::now()->addYear();
-       }
-       elseif ($subscription->stripe_plan == 'price_1Gr90hLqTwOy7LECCw9EzmLs') {
-          $subscription->renews_at = Carbon::now()->addMonth();
-       }
+       
+          $subscription->renews_at = Carbon::createFromTimestamp($subscription->current_period_end);
+       
+       
+       
  
        $subscription->save();
     }
@@ -67,4 +68,6 @@ class SubscriptionsObserver
     {
         //
     }
+
+    
 }

@@ -29,8 +29,8 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Subscription</h3>
-
+          <h3 class="card-title">Subscription</h3>  <div class="text-center">
+            <a  class=" btn btn-xs btn-warning" href="{{ url('stripesync') }}">Stripe Expiry Date Sync</a></div>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fas fa-minus"></i></button>
@@ -71,7 +71,25 @@
               <td>#</td>
               
     <td>{{ $user->user->name }}</td>
-    <td>{{ $user->stripe_plan }}</td>
+    {{-- <select name="product" id="product" class="form-control" disabled>
+                  
+      @foreach($plans as $id => $pack)
+      @if($user->stripe_plan==$pack->id)
+      <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
+      @else
+      <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
+      @endif 
+      @endforeach
+    </select> --}}
+    {{-- <td>{{ $user->stripe_plan }}</td> --}}
+    <td>
+      @foreach($plans as $id => $pack)
+     
+      {{ ( $pack->id == $user->stripe_plan) ? $pack->nickname : '' }}
+        
+      
+      @endforeach
+    </td>
     <td>{{ $user->created_at }}</td>
     <td>{{ $user->renews_at }}</td>
     <td >
@@ -79,7 +97,7 @@
     </td>
     <td>
                                 
-                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $user->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $user->user_id) }}">
                                         {{ trans('view') }}
                                     </a>
 
@@ -87,11 +105,11 @@
                                         {{ trans('edit') }}
                                     </a>
 
-                                    <!-- <form action="{{ url('admin/subscriptions/destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/subscriptions/destroy', $user->user_id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                    </form> -->
+                                        <input type="submit" class="btn btn-xs btn-danger" value="Cancel">
+                                    </form>
                           
                                 
                             </td></tr>
