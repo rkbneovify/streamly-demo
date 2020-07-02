@@ -85,7 +85,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {	
         $ua = $request->server('HTTP_USER_AGENT');
-        $deviceid= $request->input('deviceid') ?? 'Null';
+        $deviceid= $request->input('deviceid') ?? 'Not Applicable';
        
         $deviceDetails=$ua.'#~'.$deviceid;
         $credentials = request(['email', 'password']);

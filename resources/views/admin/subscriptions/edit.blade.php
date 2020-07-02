@@ -51,41 +51,41 @@
             @method('PUT')
             {{---dd($subscription)---}}
             <div class="card-body">
-            <div class="form-group{{ $errors->has('subscriptionpack_id') ? ' has-error' : '' }}">
+            <div class="form-group{{ $errors->has('stripe_plan') ? ' has-error' : '' }}">
                                 
                        
                                 <div class="col-md-6">
-                                <label for="subscriptionpack_id" class="col-md-4 control-label">Subscription packs</label>
-                                <select name="subscriptionpack_id" id="subscriptionpack_id" class="form-control" >
-                    @foreach($packs as   $key => $value)
-                        <option value="{{ $key }}"  {{ ( $key == $subscription->subscriptionpack_id) ? 'selected' : '' }}>
-                            {{ $value }}
+                                <label for="stripe_plan" class="col-md-4 control-label">Subscription packs</label>
+                                <select name="stripe_plan" id="stripe_plan" class="form-control" >
+                    @foreach($plans as   $key => $value)
+                        <option value="{{ $value->id }}"  {{ ( $value->id == $subscription->stripe_plan) ? 'selected' : '' }}>
+                            {{ $value->nickname }}
                         </option>
                     @endforeach
                 </select>
 
-                                    @if ($errors->has('subscriptionpack_id'))
+                                    @if ($errors->has('stripe_plan'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('subscriptionpack_id') }}</strong>
+                                        <strong>{{ $errors->first('stripe_plan') }}</strong>
                                     </span>
                                     @endif
                                 </div>
                             </div>
               
               
-              <div class="form-group{{ $errors->has('users_id') ? ' has-error' : '' }}">
-                <label for="users_id">User</label>
+              <div class="form-group col-md-6{{ $errors->has('user_id') ? ' has-error' : '' }}">
+                <label for="user_id">User</label>
                 
-                <select name="users_id" id="users_id" class="form-control" >
+                <select name="user_id" id="user_id" class="form-control" >
                     @foreach($user as   $key => $value)
-                        <option value="{{ $key }}"  {{ ( $key == $subscription->users_id) ? 'selected' : '' }}>
+                        <option value="{{ $key }}"  {{ ( $key == $subscription->user_id) ? 'selected' : '' }} disabled>
                             {{ $value }}
                         </option>
                     @endforeach
                 </select>
-                @if ($errors->has('users_id'))
+                @if ($errors->has('user_id'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('users_id') }}</strong>
+                                        <strong>{{ $errors->first('user_id') }}</strong>
                                     </span>
                                     @endif
               </div>
@@ -93,31 +93,31 @@
                     <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                       <input type="checkbox" class="custom-control-input" name="toggleswitch" id="customSwitch3">
                       <label class="custom-control-label" for="customSwitch3">Disable subscription</label>
-                    </div>
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
+                    </div></div>
+              {{-- <div class="form-group col-md-6 {{ $errors->has('created_at') ? ' has-error' : '' }}">
               
-                <label for="start_date">start date</label>
-                 <input type="date" name="start_date" placehoder="Start Date" class="form-control" value={{$subscription->start_date}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
+                <label for="created_at">start date</label>
+                 <input type="date" name="created_at" placehoder="Start Date" class="form-control" value={{$subscription->created_at}} />
+                 <!-- <input type="text" name="created_at" placehoder="Start Date" class="form-control" id="created_at"/> -->
+                @if ($errors->has('created_at'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                        <strong>{{ $errors->first('created_at') }}</strong>
                                     </span>
                                     @endif
-              </div> <div class="form-group {{ $errors->has('expiry_date') ? ' has-error' : '' }}">
+              </div> <div class="form-group col-md-6 {{ $errors->has('renews_at') ? ' has-error' : '' }}">
               
-                <label for="expiry_date">Expiry date</label>
-                 <input type="date" name="expiry_date" placehoder="Start Date" class="form-control" value={{$subscription->expiry_date}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('expiry_date'))
+                <label for="renews_at">Expiry date</label>
+                 <input type="date" name="renews_at" placehoder="Start Date" class="form-control" value={{$subscription->renews_at}} />
+                 <!-- <input type="text" name="created_at" placehoder="Start Date" class="form-control" id="created_at"/> -->
+                @if ($errors->has('renews_at'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('expiry_date') }}</strong>
+                                        <strong>{{ $errors->first('renews_at') }}</strong>
                                     </span>
                                     @endif
-              </div>
+              </div> --}}
               
              
-</div>
+
               
             </div>
             <!-- /.card-body -->

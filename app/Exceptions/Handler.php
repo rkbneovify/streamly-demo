@@ -68,6 +68,10 @@ class Handler extends ExceptionHandler
         return response()->json(['success'=>false,'response_code'=>405, 'error'=>$exception->getMessage(), 'message' =>'Method not allowed.'], 405);   
     }
 
+    if($exception instanceof \Stripe\Exception\ApiConnectionException||$exception instanceof \Stripe\Exception\ApiErrorException||$exception instanceof \Stripe\Exception\RateLimitException||$exception instanceof \Stripe\Exception\InvalidRequestException||$exception instanceof \Stripe\Exception\AuthenticationException){
+        return response()->json(['message'=>$exception->getMessage()]);
+    }
+
         return parent::render($request, $exception);
     }
 }

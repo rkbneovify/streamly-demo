@@ -46,24 +46,25 @@
                             </div>
                         @endif
                         
-                        <form action="{{ url("admin/subscriptionpackupdate", [$subscriptionpack->id]) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ url("admin/subscriptionpackupdate", [$plan->id]) }}" method="POST" enctype="multipart/form-data">
                         @csrf
             @method('PUT')
             <div class="card-body">
-              <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+              <div class="form-group{{ $errors->has('nickname') ? ' has-error' : '' }}">
                 <label for="name">Name</label>
                 
-              <input type="text" name="name"    class="form-control"   value={{ $subscriptionpack->name }}>
+              <input type="text" name="nickname"    class="form-control"   value={{ $plan->nickname }}>
                 @if ($errors->has('name'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('nickname') }}</strong>
                                     </span>
                                     @endif
               </div>
               
+              
               <div class="form-group{{ $errors->has('duration') ? ' has-error' : '' }}">
-                <label for="duration">Duration(in months)</label>
-                <input type="text" name="duration" class="form-control"  value={{ $subscriptionpack->duration  }}>
+                <label for="duration">Duration</label>
+                <input type="text" name="duration" class="form-control" disabled value="{{ $plan->interval_count  }} {{$plan->interval }}">
                 
                 @if ($errors->has('duration'))
                                         <span class="help-block">
@@ -73,7 +74,7 @@
               </div>
               <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
                 <label for="rate">Rate($)</label>
-                <input type="text" name="rate" class="form-control"  value={{ $subscriptionpack->rate  }}>
+                <input type="text" name="rate" class="form-control" disabled value="{{ $plan->currency  }} {{ $plan->amount/100  }}">
                 
                 @if ($errors->has('rate'))
                                         <span class="help-block">
@@ -81,15 +82,14 @@
                                     </span>
                                     @endif
               </div>
+              <div class="form-group {{ $errors->has('created') ? ' has-error' : '' }}">
               
-              <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
-              
-                <label for="start_date">Created on</label>
-                 <input type="text" name="start_date" placehoder="Start Date" class="form-control"  value={{$subscriptionpack->created_on}} />
-                 <!-- <input type="text" name="start_date" placehoder="Start Date" class="form-control" id="start_date"/> -->
-                @if ($errors->has('start_date'))
+                <label for="created">Created on</label>
+                 <input type="text" name="created" placehoder="Start Date" class="form-control" disabled value={{date('m/d/Y H:i:s',$plan->created)}} />
+                 <!-- <input type="text" name="created" placehoder="Start Date" class="form-control" id="created"/> -->
+                @if ($errors->has('created'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('start_date') }}</strong>
+                                        <strong>{{ $errors->first('created') }}</strong>
                                     </span>
                                     @endif
               </div>
