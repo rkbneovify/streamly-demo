@@ -9,13 +9,14 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
 // use App\Models\Genre;
 class LiveTv extends Controller
-{
+{ 
     public function showPage(){
 
     	if( Auth::check()){
             $login = true;
         } else {
             $login = false;
+            return redirect('/');
         }
 
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
