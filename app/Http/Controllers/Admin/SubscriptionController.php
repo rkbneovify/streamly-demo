@@ -272,7 +272,8 @@ class SubscriptionController extends Controller
         try{
         $user->subscription('main')->cancelNow();
         return redirect('admin/subscriptions')->with('info','Subscription Cancel Successfully'.$user);
-    }catch( Exception $e ){return redirect('admin/subscriptions')->with('info','Error'.json_encode($e->getMessage(), true)); }
+    }catch( Exception $e ){
+        return redirect('admin/subscriptions')->with('info','Error'.json_encode($e->getMessage(), true)); }
         
 
         
