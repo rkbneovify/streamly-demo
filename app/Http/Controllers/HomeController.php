@@ -38,6 +38,10 @@ class HomeController extends Controller
     {
         if( Auth::check()){
             $login = true;
+            $user=Auth::user();
+            if (!$user->subscribed('main')) {
+                return redirect('/payment');
+            } else {   return redirect('/livetv');}
         } else {
             $login = false;
         }

@@ -47,7 +47,7 @@ class Setting extends Controller
              ])
          ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
          ->first();
-         if(true){
+         if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
             
