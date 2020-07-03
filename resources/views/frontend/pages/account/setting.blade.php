@@ -110,26 +110,15 @@
 			});
 		});
 	</script>
+	<script type="text/javascript">
+		@if (count($errors) > 0)
+		jQuery('#changePassword').modal('show');
+		@endif
+		</script>
 @endsection
 
 @section('content')
-
-	<div class="modal fade" id="removeDevice">
-	    <div class="modal-dialog">
-			<div class="modal-content">
-
-				<div class="modal-body text-center">
-					<h4>Remove Device</h4>
-					<p>Samsung smart TV - 43 inch will be removed. Would you like to continue?</p>
-					<div>
-						<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a>
-						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
-					</div>
-				</div>
-
-			</div>
-	    </div>
-	</div>
+	
 
 	<div class="modal fade" id="cancelSubscription">
 	    <div class="modal-dialog">
@@ -137,9 +126,14 @@
 
 				<div class="modal-body text-center">
 					<h4>Cancel Subscription</h4>
-					<p>Are you sure you want to cancel your Streamly live TV at $69/mo. pack?</p>
+					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
 					<div>
-						<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a>
+						<form action="{{ url('user/subscriptions/destroy', Auth::user()->id) }}" method="POST">
+							<input type="hidden" name="_method" value="DELETE">
+															<input type="hidden" name="_token" value="{{ csrf_token() }}">
+															<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete">
+														</form>
+						{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
 					</div>
 				</div>
@@ -153,24 +147,40 @@
 			<div class="modal-content">
 
 				<div class="modal-body text-center">
-					<form class="text-left">
-						<div class="form-group">
+					@if (count($errors) > 0)
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+					 <form action="{{ url("/userupdate", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+						<div class="form-group {{ $errors->has('old_password') ? ' has-error' : '' }}">
 							<label for="oldpassword">Old Password</label>
-							<input type="password" class="form-control" name="oldpassword" id="oldpassword">
+							<input type="password" class="form-control" name="old_password" id="oldpassword">
 						</div>
 
-						<div class="form-group">
+						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
 							<label for="newpassword">New Password</label>
-							<input type="text" class="form-control" name="newpassword" id="newpassword">
+							<input type="text" class="form-control" name="password" id="newpassword">
 						</div>
 
-						<div class="form-group">
+						<div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 							<label for="cnewpassword">New Password</label>
-							<input type="password" class="form-control" name="cnewpassword" id="cnewpassword">
+							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
 						</div>
 
 						<div class="text-center">
-							<a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a>
+							<button type="submit" class="btn btn-sm" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">
+								Update
+							</button>
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
 						</div>
 					</form>
 				</div>
@@ -180,17 +190,42 @@
 	</div>
 
 	<section class="page-section">
+
+@if(session()->has('message'))
+<div class="alert alert-success alert-dismissible alert-position">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ session()->get('message') }}
+</div>
+@endif
 		<div class="container">
 				<h2 class="section-heading text-center">Account Settings</h2>
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>Device Management:</li>
-							<li>1. Samsung smart TV - 43 inch <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
-							<li>2. Sony bravia smart TV - 56 inch <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
-							<li>3. Apple iPhone - XR <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
-							<li>4. Samsung Note 10 <i class="fa fa-trash pull-right remove-device light-brown" aria-hidden="true"></i></li>
-							<li>5. Apple iPhone - XS max <i class="fa fa-trash remove-device pull-right light-brown" aria-hidden="true"></i></li>
+							@foreach($allSession as $key => $user)
+							<li> {{$key+1}}. {{ $user->device_name ?? '' }} <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
+							<div class="modal fade" id="removeDevice">
+								<div class="modal-dialog">
+								<div class="modal-content">
+						 
+									<div class="modal-body text-center">
+										<h4>Remove Device</h4>
+										<p>{{ $user->device_name ?? '' }} inch will be removed. Would you like to continue?</p>
+										<div>
+											<form action="{{ url('user/sessiondestroy', $user->id.'/'.$user->access_token) }}" method="POST">
+												<input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+											{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
+											<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete"></form>
+											<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+										</div>
+									</div>
+					
+								</div>
+								</div>
+						</div>@endforeach
+							
 						</ul>
 					</div>
 				</div>
@@ -200,8 +235,8 @@
 						<ul class="setting-card">
 							<li>Profile Management</li>
 							<li>
-								Username:
-								<span class="pull-right">Minashau_123 <i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
+								Email:
+							<span class="pull-right">{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
 							</li>
 							<li>
 								Password:
@@ -218,15 +253,17 @@
 						<ul class="setting-card">
 							<li>
 								Current Pack
-								<b><span class="pull-right">Streamly live Tv at $ 69/mo.</span></b>
+								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
 							</li>
 							<li>
-								Streamly live Tv at $ 69/mo.
-								<b><span class="pull-right">24, May 2020</span></b>
+								{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}
+								<b><span class="pull-right">{{$subscription->created_at ?? ''}}</span></b>
 							</li>
 							<li>
-								Payment method
-								<b><span class="pull-right">46xx xxx xxxx 5685 <i class="fa fa-edit light-brown" aria-hidden="true"></i></span></b>
+								Payment method 
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></span></b>
+								
 							</li>
 							<li>
 								<a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a>

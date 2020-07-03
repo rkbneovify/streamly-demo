@@ -115,7 +115,10 @@ Route::get('/faq', 'Pages\Faq@showPage');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 Route::get('/verified', 'HomeController@verified');
+Route::delete('user/sessiondestroy/{id}/{access_token}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
+Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');
 
+Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay','Pages\Payment@pay')->name('insertpay');//send form data here
 
 Route::get('/ffmpeg', 'VideoAnylyzerController@index');
