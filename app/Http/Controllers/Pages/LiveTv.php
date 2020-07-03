@@ -39,14 +39,12 @@ class LiveTv extends Controller
       //$pagechannel->toArray(); 
     
         
-    //   $Allgenre=Genre::selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(name), ',', '\",\"'), '\"]') AS JSON ) AllGenre")->get()->toArray();
-    //   print_r($Allgenre); //       exit;
 
     	return view('frontend.pages.livetv', compact('login','pagechannel'));
 
     }
 
-    public function showChannel(){
+    public function showChannel($callSign,$genre){
 
     	if( Auth::check()){
             $login = true;
@@ -54,20 +52,57 @@ class LiveTv extends Controller
             $login = false;
         }
         
-    	return view('frontend.pages.livetvchannel', compact('login'));
+
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        ->whereIn('channels.callSign', function($query)
+    {
+        $query->select('CallSign')
+              ->from('gracenotechannels');
+              
+    })
+    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+       
+    
+       
+      $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+      
+    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre'));
 
     }
 
     public function showAllPage()
-    {
+    { 
 
         if( Auth::check()){
             $login = true;
         } else {
             $login = false;
         }
+
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
         
-        return view('frontend.pages.alllivetvchannel', compact('login'));
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        ->whereIn('channels.callSign', function($query)
+    {
+        $query->select('CallSign')
+              ->from('gracenotechannels');
+              
+    })
+    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+       
+    
+       
+      $pagechannel=$record->get();
+        
+        return view('frontend.pages.alllivetvchannel', compact('login','pagechannel'));
 
     }
 }

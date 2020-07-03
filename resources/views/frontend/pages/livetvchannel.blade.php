@@ -218,38 +218,14 @@
 			<h4 class="section-heading">Similar Channels</h4>
 			<div class="row">
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
+					@foreach ($relatedchannel as $channeldet)
+					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}"><div class="live-news-item">
+						<img src="{{  $channeldet->logo}}">
+						<p>{{  $channeldet->callSign}}</p>
+					</div> </a>
+					@endforeach
 					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/newsmaxtv.png') }}">
-						<p>Commercial news</p>
-					</div>
+					
 				</div>
 			</div>
 		</div>
