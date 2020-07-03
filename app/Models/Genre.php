@@ -17,6 +17,9 @@ class Genre extends Model
     * Database table name
     */
     protected $table = 'genre';
+    protected $casts = [
+        'AllGenre' => 'array',
+      ];
 
     /**
     * Mass assignable columns

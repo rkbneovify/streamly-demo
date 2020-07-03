@@ -16,6 +16,9 @@ use Hash;
 use Mail;
 use Carbon\Carbon;
 use Validator;
+use App\Models\Channel;
+use Illuminate\Support\Facades\DB;
+use App\Models\Genre;
 class APIController extends Controller
 {
     /**
@@ -273,6 +276,38 @@ public function login(Request $request)
         $file = file_get_contents('PrivacyPolicy.txt');
         $response = array('success' =>true ,'response_code'=>200,'data'=>$file,'message'=>'Privacy policy');
         return response()->json($response, 200);
+    }
+
+    public function genrename()
+    {
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        
+        
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        ->whereIn('channels.callSign', function($query)
+    {
+        $query->select('CallSign')
+              ->from('gracenotechannels');
+              
+    })
+    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+    
+       
+      $data=$record->get()->groupBy('genrename');
+      $a=$data->keys();
+      
+      $response = [
+        'success' => true,
+        
+        'allGenre'=>$a,
+        'data' => $data,
+        'message' => 'Channel with genre feteched successfully.',
+        'response_code'=>200,
+    ];
+    return response()->json($response, 200);
     }
 
 
