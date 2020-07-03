@@ -38,6 +38,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::get('me', 'Auth\AuthController@me');
+    Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
     Route::put('updateprofile','Auth\AuthController@updateprofile');
        //zipcodes
