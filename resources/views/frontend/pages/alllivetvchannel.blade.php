@@ -12,7 +12,12 @@
 		body{
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
-
+		 img {
+		    display: block;
+		    width: auto;
+		    margin: 0 auto;
+		    height: 1.5rem;
+		}
 
 		.full-width {
 			background: #000000 0% 0% no-repeat padding-box;
@@ -84,7 +89,30 @@
 
 		<div class="container" style="margin-top: 4%;">
 			<h4 class="section-heading">Live News - All channels</h4>
-			<div class="row">
+			@foreach($pagechannel->chunk(6) as $chunk)
+    <div class="row">
+        @foreach($chunk as $channeldet)
+				<div class="col-md-2">
+					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
+					<div class="live-news-item">
+						<img src="{{ $channeldet->logo }}">
+						<p>{{  $channeldet->callSign}}</p>
+					</div>
+					</a>
+				</div>
+        @endforeach
+    </div>
+@endforeach
+			{{-- <div class="row">
+				
+				@foreach ($pagechannel as $channeldet)
+				<div class="col-md-2">
+					<div class="live-news-item">
+						<img src="{{ $channeldet->logo }}">
+						<p>{{  $channeldet->callSign}}</p>
+					</div>
+				</div>
+				@endforeach
 
 				<div class="col-md-2">
 					<div class="live-news-item">
@@ -113,95 +141,8 @@
 						<p>Commercial news</p>
 					</div>
 				</div>
+			</div>  --}}
 
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-			</div>
 
 			</div>
 		</div>
