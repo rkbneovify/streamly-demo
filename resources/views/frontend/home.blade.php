@@ -62,15 +62,27 @@
         }
     </style>
 @endsection
+@section('stylesheets-bottom')
 
+<script type="text/javascript">
+    @if ($errors->has('email'))
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenav").classList.add("show");
+@endif
+@if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code'))
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenavRegister").classList.add("show");
+@endif
+</script>
+@endsection
 @section('content')
-    
-    @if($errors->any())
+    {{-- {{$errors}} --}}
+    {{-- @if($errors->any())
         <div class="alert alert-danger alert-dismissible alert-position">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Error!</strong> {{$errors->first()}}
         </div>
-    @endif
+    @endif --}}
 
     @if(session()->has('message'))
         <div class="alert alert-success alert-dismissible alert-position">
@@ -96,13 +108,19 @@
 
         <div class="container" style="padding: 0px 50px;">
             <div class="row mt-4">
+                @if($errors->has('email'))
+        <div class="alert alert-danger alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> {{$errors->first()}}
+        </div>
+    @endif
                 <h4 class="login_txt">Log In</h4>    
                 <form action="login" method="post" class="login-form mt-3">
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                         <label for="email" class="control-label">Email</label>
                         <input type="email" id="email" name="email" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
                         <label for="password" class="control-label">Password</label>
                         <input type="password" id="password" name="password" class="form-control">
                     </div>
@@ -145,6 +163,15 @@
 
         <div class="container" style="padding: 0px 50px;">
             <div class="row mt-4">
+                @if($errors->any())
+        <div class="alert alert-danger alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> @foreach ($errors->all() as $message) 
+                {{$message}}
+            
+            @endforeach
+        </div>
+    @endif 
                 <h4 class="login_txt">Create Your Account</h4>    
                 <form action="user/register" method="post" class="login-form mt-3">
                     <div class="form-group">
