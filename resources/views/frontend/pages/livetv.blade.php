@@ -141,10 +141,10 @@
 				<div class="row">
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
-						<div class="live-news-item">
+						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}"><div class="live-news-item">
 							<img src="{{  $channeldet->logo}}">
 							<p>{{  $channeldet->callSign}}</p>
-						</div>
+						</div> </a>
 						@endforeach
 					</div>
 				</div>
