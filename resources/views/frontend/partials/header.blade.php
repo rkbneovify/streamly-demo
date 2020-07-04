@@ -41,7 +41,7 @@
                                     <a class="dropdown-item" href="/account/settings">{{ Auth::user()->name }}</a>
                                     <a class="dropdown-item" href="/account/settings">Account Settings</a>
                                     <a class="dropdown-item" href="#">Download app</a>
-                                    <a class="dropdown-item" href="#">Help & Support</a>
+                                    <a class="dropdown-item" href="/faq">Help & Support</a>
                                     <a class="dropdown-item js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a>
                                 </div>
                             </li>   
