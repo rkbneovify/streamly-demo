@@ -62,13 +62,15 @@ class SubscriptionPackController extends Controller
     }  
     public function viewPlan(Request $request){
       //  \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-// $plans = \Stripe\Plan::all();
+$plans = \Stripe\Plan::all(['active'=>false]);
 // $plans = \Stripe\Product::retrieve('prod_HQU40biTPvAPfe');
 // $plans = \Stripe\Price::retrieve('price_1Gr90hLqTwOy7LECCw9EzmLs');
-$plans = \Stripe\Product::all();
+// $plans = \Stripe\Product::all();
 // $plans = \Stripe\Subscription::all(['expand' => ['data.customer']]);
+// $plans = \Stripe\Subscription::all();
 // $plans = \Stripe\Plan::all(['expand' => ['data.product']]);
-return $plans;
+
+return $plans->data;
     }
     public function createPlan(Request $request)
     {

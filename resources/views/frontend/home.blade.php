@@ -216,6 +216,8 @@
     </div>
 
 
+
+
 	<!-- Select Plan-->
     <section class="page-section" id="services">
         <div class="container">
@@ -223,11 +225,12 @@
                 <h2 class="section-heading">Select Your Plan</h2>
             </div>
             <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
+                @foreach ($plans->data as $plan)
                 <div class="col-sm-4 select-plan-card">
                 	<div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
-                		<p>Streamly live TV</p>
+                		<p>{{ $plan->nickname }}</p>
 
-                		<h3>$ 69/ Month.</h3>
+                    <h3>$ {{$plan->amount_decimal/100}}/ {{$plan->interval_count}} {{$plan->interval}}</h3>
 
                 		<hr/>
 
@@ -250,7 +253,7 @@
 
                 		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" {{$selectPLanLink}} >SELECT PLAN</a>
                 	</div>
-                </div>
+                </div> @endforeach
             </div>
         </div>
     </section>
