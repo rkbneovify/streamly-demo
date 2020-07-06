@@ -192,8 +192,17 @@ return $plans;
      */
     public function update(Request $request, $id){
         $nickname=$request['nickname'];
+        if ($request->has('toggleswitch')) {
+            // $archived="helllo block user on";
+             $status = false;
+            // $user->is_active=0;
+         } else{
+            // $archived="bye block off";
+             //$user->is_active=1;
+             $status = true;
+         }
         try {
-        $plan = \Stripe\Plan::update($id,['nickname'=>$nickname]);
+        $plan = \Stripe\Plan::update($id,['nickname'=>$nickname,'active'=>$status]);
         return redirect('admin/subscriptionpack')->with('info','subscription plan with id ' . $id . ' Updated.');
         } catch (Exception $e) {
         

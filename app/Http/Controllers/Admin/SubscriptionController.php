@@ -83,9 +83,12 @@ class SubscriptionController extends Controller
             $newSubscription = $user->newSubscription('main', $product)->create($request->payment_method, ['email' => $user->email]);
             return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully');
         } catch ( IncompletePayment $exception ){
-            return redirect()->back()->with(['info' => $exception->getMessage()]);
+            return redirect()->back()->with('info',json_encode($exception->getMessage(), true));
         }catch ( Exception $exception ){
-            return redirect()->back()->with(['info' => $exception->getMessage()]);
+            
+
+            return redirect()->back()->with('info',json_encode($exception->getMessage(), true));
+          //  return redirect()->back()->with(['info' => $exception->getMessage()]);
         }
 
     }
