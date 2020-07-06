@@ -247,13 +247,13 @@
 						</ul>
 					</div>
 				</div>
-
+				{{-- {{show_currency_symbol( $plan->currency) ?? ''}} --}}
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>
 								Current Pack
-								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
+								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at {{ $plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
 							</li>
 							<li>
 								{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}

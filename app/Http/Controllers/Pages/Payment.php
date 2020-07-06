@@ -12,26 +12,39 @@ class Payment extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
     }
-    public function showPage(){
+    public function showPage($stripeplanID){
 
     	if( Auth::check()){
             $login = true;
         } else {
             $login = false;
         }
+        $plandetails = \Stripe\Plan::retrieve($stripeplanID);
+        
+    	return view('frontend.pages.payment', compact('login','stripeplanID','plandetails'));
+        
+    }
+    public function showPlan(){
+        $plans = \Stripe\Plan::all(['active'=>true]);
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
 
-    	return view('frontend.pages.payment', compact('login'));
+    	return view('frontend.pages.plans', compact('login','plans'));
         
     }
 
-    public function pay(Request $request) {
+    public function pay(Request $request,$StripeplanId) {
         
         $user = auth()->user();
         //echo $user;exit;
  
         try {
-            $newSubscription = $user->newSubscription('main', 'price_1Gr90hLqTwOy7LECCw9EzmLs')->create($request->payment_method, ['email' => $user->email]);
+            $newSubscription = $user->newSubscription('main', $StripeplanId)->create($request->payment_method, ['email' => $user->email]);
         } catch ( IncompletePayment $exception ){
             return redirect()->back()->with(['error_message' => $exception->getMessage()]);
         }
