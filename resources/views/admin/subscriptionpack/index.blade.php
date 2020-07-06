@@ -84,7 +84,15 @@
     <td>{{ $plan->interval_count }}-{{ $plan->interval }}</td>
     <td>{{ $plan->currency}} {{ $plan->amount/100 }}</td>
     <td>{{ date('m/d/Y H:i:s',$plan->created) }}</td>
-    <td>{{ $plan->active }}</td>
+    <td>
+      {{-- {{ $plan->active }}     --}}
+                         @if ($plan->active==true)
+      <span class="badge badge-success">Active</span>
+@elseif ($plan->active==false)
+<span class="badge badge-danger">Inactive</span>
+@else
+unknown
+@endif</td>
     
     <td>
                                 

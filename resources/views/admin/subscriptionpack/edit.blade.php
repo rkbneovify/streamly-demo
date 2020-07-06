@@ -93,6 +93,13 @@
                                     </span>
                                     @endif
               </div>
+
+              <div class="form-group">
+                <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                  <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
+                  <label class="custom-control-label" for="customSwitch3">Block Plan</label>
+                </div>
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
