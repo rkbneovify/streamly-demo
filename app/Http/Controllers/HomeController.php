@@ -27,6 +27,7 @@ class HomeController extends Controller
     public function __construct()
     {
         // $this->middleware('auth');
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
     }
 
     /**
@@ -35,18 +36,19 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
+    { $plans = \Stripe\Plan::all(['active'=>true]);
+        //$plans=$plans->data;
         if( Auth::check()){
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                return redirect('/payment');
+                return redirect('/selectplan');
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
         }
 
-        return view('frontend.home', compact('login'));
+        return view('frontend.home', compact('login','plans'));
     }
     public function verified()
     {

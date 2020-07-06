@@ -173,7 +173,7 @@
 
 
 	<section class="page-section">
-
+{{$channelData}}
 		<div class="full-width">
 			<div class="container">
 				<div class="row">
@@ -187,7 +187,7 @@
 						</video>
 
 						<div class="channel-detail">
-							<p>Times Now Global</p>
+							<p>{{$channelData[0]->callSign}}</p>
 						</div>
 					</div>
 				</div>

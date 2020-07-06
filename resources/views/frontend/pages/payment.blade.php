@@ -91,8 +91,8 @@
 								<table class="table table-sm table-borderless" style="margin-top: 1rem;">
 									<tbody>
 										<tr>
-											<td>Streamly live TV</td>
-											<th class="text-right" style="padding-right: 1rem;">$ 69/ mo.</th>
+											<td>{{$plandetails->nickname}}</td>
+											<th class="text-right" style="padding-right: 1rem;">$ {{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</th>
 										</tr>
 										<tr>
 											<td>Tax</td>
@@ -107,7 +107,7 @@
 											Total
 										</div>
 										<div class="col-md-6 padding-L-rem text-right" style="font-weight: bold;">
-											$ 69
+											$ {{$plandetails->amount/100}}
 										</div>
 									</div>
 								</div>
@@ -145,7 +145,7 @@
                                 </div>
                             </div>
                         @endif
-								<form id="signup-form" action="{{ url('insertpay') }}" method="post" class="mt-3 text-left" style="padding: 2rem;">
+								<form id="signup-form" action="{{ url('insertpay', [$stripeplanID]) }}" method="post" class="mt-3 text-left" style="padding: 2rem;">
 				                    {{-- <div class="form-group">
 				                        <label for="card" class="control-label">Card Number</label>
 				                        <input type="text" id="card" name="card" class="form-control">
@@ -197,7 +197,7 @@
                     
                         <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
                             <p class="font-bold mb-2">Thanks for being a customer!</p>
-                            <p>You Are Subscribed to the Starter Plan.</p>
+                            <p>You Are Subscribed to the {{$plandetails->nickname}}.</p>
                         </div>
 
                     @endif
@@ -217,7 +217,7 @@
 
         <script>
             const stripe = Stripe('{{ env("STRIPE_KEY") }}');
-            console.log(stripe);
+           // console.log(stripe);
 
             const elements = stripe.elements();
             const cardElement = elements.create('card');

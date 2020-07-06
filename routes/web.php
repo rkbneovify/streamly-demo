@@ -107,10 +107,14 @@ Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google
 Route::get('/google/login', 'HomeController@handleGoogleCallback');
 Route::post('/user/register', 'HomeController@createUser');
 
-Route::get('/payment', 'Pages\Payment@showPage');
+Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage');
+Route::get('/selectplan', 'Pages\Payment@showPlan');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
+Route::get('/currentepisode', 'Pages\LiveTv@getcurrentepisode');
 Route::get('/livetv/list', 'Pages\LiveTv@showAllPage');
 Route::get('/livetv/{channel}/{genre}', 'Pages\LiveTv@showChannel');
+Route::get('/videojs', 'Pages\LiveTv@videojs');
+Route::get('/videojs2', 'Pages\LiveTv@videojs2');
 Route::get('/faq', 'Pages\Faq@showPage');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
@@ -119,7 +123,7 @@ Route::delete('user/sessiondestroy/{id}/{access_token}', 'Pages\Account\Setting@
 Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
-Route::post('/insertpay','Pages\Payment@pay')->name('insertpay');//send form data here
+Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
 
 Route::get('/ffmpeg', 'VideoAnylyzerController@index');
 Route::get('/ffmpeg2', 'VideoAnylyzerController@probeAudioFile');

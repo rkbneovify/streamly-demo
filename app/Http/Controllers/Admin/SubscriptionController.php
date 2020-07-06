@@ -66,7 +66,7 @@ class SubscriptionController extends Controller
     public function create()
     {    
          $users = User::where('is_active','=','1')->get();
-         $plans = \Stripe\Plan::all();
+         $plans = \Stripe\Plan::all(['active'=>true]);
          $plans->data;
          $pack = SubscriptionPack::where('is_active','=','1')->get();
          return view('admin.subscriptions.create', compact('users','pack','plans'));

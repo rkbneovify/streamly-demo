@@ -144,7 +144,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
     
         try{
         $user->subscription('main')->cancelNow();
-        return redirect('account/settings')->with('message','Subscription Cancel Successfully'.$user);
+        return redirect('account/settings')->with('message','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }
         
