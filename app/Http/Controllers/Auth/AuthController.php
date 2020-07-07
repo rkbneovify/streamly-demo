@@ -208,6 +208,25 @@ class AuthController extends Controller
        // return response()->json($user_data);
     }
 
+    public function tvprofile()
+    {        
+        $user=JWTAuth::user();
+       $data=[ "name"=>$user->name,
+       "email"=>$user->email, 
+       "created"=>$user->created_at,"version"=>"1.0.0"];
+        $response = [
+            'success' => true,
+            
+            'data' => $data,
+            'message' => 'Users Profile',
+            'response_code'=>200,
+        ];
+        return response()->json($response, 200);
+       // $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
+        
+       // return response()->json($user_data);
+    }
+
 
     /**
      * Update the profile data.

@@ -40,6 +40,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
+    Route::get('tvprofile', 'Auth\AuthController@tvprofile');
     Route::put('updateprofile','Auth\AuthController@updateprofile');
        //zipcodes
        Route::get('zipcode', 'ZipcodeController@zipjson');
