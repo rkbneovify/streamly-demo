@@ -45,6 +45,12 @@ enum CustomPopUp:Int {
     case profile = 0, registrdDevice, support,policies,logOut
 }
 
+/// for Categories
+enum CategoriesSelect:Int {
+
+    case all = 11, recent, myChannels,sports,news,movies,kids
+}
+
 enum AppStoryboard : String {
 
     /// we can add number if name

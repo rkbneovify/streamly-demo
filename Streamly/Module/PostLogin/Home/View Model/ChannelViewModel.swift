@@ -13,12 +13,12 @@ class ChannelViewModel {
   var channel: Channel
   var channelNumberText: String
   var nameText: String
-  var image: UIImage?
+  var logo: String?
 
   init(channel: Channel) {
     self.channel = channel
     self.channelNumberText = "Ch \(channel.number)"
     self.nameText = "Ch.\(channel.number)"
-    self.image = UIImage(named: channel.name.lowercased())
+    self.logo = channel.logo
   }
 }

@@ -30,10 +30,16 @@ class ListingProfileCell: UITableViewCell {
     }
 
     // MARK: - Helpers
-    func configureCell(_ header:String, _ data:String,flag:Bool)
+    func configureCell(_ header:String, _ data:String,flag:Bool,item:Int)
     {
         self.headerLbl.text = header
         self.dataLbl.text = data
+        if !flag
+        {
+        self.headerLbl.text = "\(item + 1). \(header)"
+         self.headerLbl.textAlignment = .left
+        }
+
         self.dataLbl.font =  !flag ?  UIFont.init(name: "HelveticaNeue-Medium", size: 22.0) : UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
 
     }

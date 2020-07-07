@@ -32,10 +32,11 @@ struct EPGResponse : Codable {
 
 struct ChannelDetails : Codable {
 
-
+    let id:Int?
     let StationName :String?
     let url :String?
     let logo :String?
+    let CallSign:String?
     let programs :[ProgramArray]?
 
     enum CodingKeys: String, CodingKey {
@@ -44,6 +45,8 @@ struct ChannelDetails : Codable {
         case url = "url"
         case logo = "logo"
         case programs = "programs"
+        case CallSign = "CallSign"
+        case id = "id"
 
 
     }
@@ -51,6 +54,8 @@ struct ChannelDetails : Codable {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         StationName = try values.decodeIfPresent(String.self, forKey: .StationName)
+        CallSign = try values.decodeIfPresent(String.self, forKey: .CallSign)
+        id = try values.decodeIfPresent(Int.self, forKey: .id)
         url = try values.decodeIfPresent(String.self, forKey: .url)
         logo = try values.decodeIfPresent(String.self, forKey: .logo)
         programs = try values.decodeIfPresent([ProgramArray].self, forKey: .programs)

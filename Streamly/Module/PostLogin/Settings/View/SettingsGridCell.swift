@@ -20,7 +20,7 @@ class SettingsGridCell: UICollectionViewCell {
 
     // MARK: Properties
 
-    var representedDataItem: ChannelArray?
+    var representedDataItem: ChannelDetails?
     static let reuseIdentifier = "SettingsGridCell"
     weak var delegate:Scroll?
     
@@ -28,6 +28,7 @@ class SettingsGridCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.content.layer.cornerRadius = 8.0
         self.unSelectedCell()
         
         

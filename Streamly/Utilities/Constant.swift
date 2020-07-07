@@ -68,6 +68,7 @@ class Constant: NSObject
         static let userName = "userName"
         static let token = "tokan"
         static let createdAt = "createdAt"
+        static let email = "email"
 
     }
 }

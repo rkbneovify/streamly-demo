@@ -40,13 +40,18 @@ class SettingsVC: UIViewController {
     override func viewDidLayoutSubviews() {
         
         self.channellsBtn.setBtnProperties(self.channellsBtn)
-        self.liveTVBtn.setBtnProperties(self.liveTVBtn)
+      //  self.liveTVBtn.setBtnProperties(self.liveTVBtn)
         self.view.backgroundColor = UIColor.channelBox
         self.collectionView.layoutSubviews()
         self.collectionView.layoutIfNeeded()
     }
 
      // MARK: Actions
+
+    @IBAction func backBtn(_ sende:UIButton)
+    {
+        self.navigationController?.popViewController(animated: true)
+    }
     
     // MARK: Helpers
     

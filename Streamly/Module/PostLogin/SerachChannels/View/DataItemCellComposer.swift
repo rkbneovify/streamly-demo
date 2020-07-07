@@ -24,14 +24,14 @@ class DataItemCellComposer {
 
     // MARK: Implementation
     
-    func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelArray) {
+    func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelDetails) {
         // Cancel any queued operations to process images for the cell.
         let queue = operationQueue(forCell: cell)
         queue.cancelAllOperations()
         
         // Set the cell's properties.
-        cell.representedDataItem = dataItem
-        cell.label.text = dataItem.name ?? ""
+     //   cell.representedDataItem = dataItem
+        cell.label.text = dataItem.StationName ?? ""
         cell.imageView.alpha = 1.0
        // cell.imageView.image =  UIImage(named: "hbo")
        cell.imageView.sd_setImage(with: URL(string: dataItem.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))

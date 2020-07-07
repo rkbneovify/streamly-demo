@@ -108,7 +108,7 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 5
         {
-            self.showSimpleAlertWithMessage("For registration, please visit http://100.26.190.92")
+            self.showSimpleAlertWithMessage("For registration, Please visit streamlytv.com")
 
         }
     }
@@ -144,6 +144,7 @@ extension LoginVC
                     Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
+                      Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response?.user?.created_at ?? "", key: Constant.UserDefault.createdAt)
                     selfStrong.removeSpinner()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
@@ -164,4 +165,25 @@ extension LoginVC
     }
 }
 
+extension LoginVC {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if userIDField.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+                self.userIDField.layer.borderColor = UIColor.clear.cgColor
+                self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
+               }, completion: nil)
+
+        } else if passwordField.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+              self.passwordField.layer.borderColor = UIColor.clear.cgColor
+                self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+               }, completion: nil)
+           }
+        else {
+            self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
+                           self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+        }
+
+    }
+}
 

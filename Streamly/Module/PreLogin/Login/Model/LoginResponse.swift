@@ -51,16 +51,19 @@ struct User:Codable {
 
     let name        :   String?
     let created_at    : String?
+    let email         : String?
 
     enum CodingKeys : String, CodingKey {
 
         case name = "name"
         case created_at = "created_at"
+        case email = "email"
     }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         name = try values.decodeIfPresent(String.self, forKey: .name)
+        email = try values.decodeIfPresent(String.self, forKey: .email)
         created_at = try values.decodeIfPresent(String.self, forKey: .created_at)
     }
 }

@@ -22,7 +22,7 @@ class PopUPTvVC: UIViewController {
     {
         didSet{
             if isProfile ?? false {
-                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.createdAt)))")]
+                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.createdAt)))")]
             }
         }
     }
@@ -53,7 +53,7 @@ class PopUPTvVC: UIViewController {
 
     override func viewWillLayoutSubviews() {
         
-        self.backView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        self.backView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         self.okButton.setBtnProperties(self.okButton)
 
     }
@@ -117,10 +117,10 @@ extension PopUPTvVC:UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =  tableView.dequeueReusableCell(withIdentifier: ListingProfileCell.reuseIdentifier, for: indexPath) as? ListingProfileCell else {return UITableViewCell()}
         if isProfile ?? false{
-            cell.configureCell(profileItemArr?[indexPath.item].heading ?? "N/A", profileItemArr?[indexPath.item].data ?? "N/A",flag: true)
+            cell.configureCell(profileItemArr?[indexPath.item].heading ?? "N/A", profileItemArr?[indexPath.item].data ?? "N/A",flag: true,item:indexPath.row)
         }
         else {
-            cell.configureCell(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",flag: false)
+            cell.configureCell(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",flag: false,item:indexPath.row)
         }
         return cell
     }

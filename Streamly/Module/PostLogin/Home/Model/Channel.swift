@@ -12,10 +12,14 @@ class Channel: CustomStringConvertible {
   var number: Int
   var name: String
   var programs: [Program]?
+  var logo:String
+  var url:String
 
-  init(number: Int, name: String) {
+    init(number: Int, name: String,logo:String,url:String) {
     self.number = number
     self.name = name
+    self.logo = logo
+    self.url  = url
   }
 
   var description: String {

@@ -30,17 +30,17 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3GB-Ii-i3v">
-                                <rect key="frame" x="1671" y="109.5" width="195" height="56"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3GB-Ii-i3v">
+                                <rect key="frame" x="1866" y="109.5" width="0.0" height="56"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="195" id="DdC-wy-NZB"/>
+                                    <constraint firstAttribute="width" id="DdC-wy-NZB"/>
                                     <constraint firstAttribute="height" constant="56" id="lWa-3b-d6z"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
                                 <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="26"/>
-                                <state key="normal" title="LIVE TV">
+                                <state key="normal">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
@@ -61,22 +61,34 @@
                                     <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsGridCell" id="PZs-2d-iZd" customClass="SettingsGridCell" customModule="StreamlyTV" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hlK-hi-ve9" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlK-hi-ve9" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
-                                            <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
-                                                    <rect key="frame" x="101" y="51" width="78" height="90"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
+                                                    <rect key="frame" x="12" y="61" width="87" height="94"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="94" id="CcI-DZ-VzD"/>
+                                                        <constraint firstAttribute="width" constant="87" id="OJP-rZ-mpF"/>
+                                                    </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
-                                                    <rect key="frame" x="8" y="209" width="272" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
+                                                    <rect key="frame" x="5" y="219" width="101" height="31"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="31" id="dEc-bj-0o0"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="SFY-LH-mTw" firstAttribute="leading" secondItem="hlK-hi-ve9" secondAttribute="leading" constant="5" id="3oM-ri-SgX"/>
+                                                <constraint firstItem="gRM-Jd-QTU" firstAttribute="top" secondItem="hlK-hi-ve9" secondAttribute="top" constant="61" id="daP-CP-JvA"/>
+                                                <constraint firstItem="gRM-Jd-QTU" firstAttribute="centerX" secondItem="hlK-hi-ve9" secondAttribute="centerX" id="lGq-EL-OXM"/>
+                                                <constraint firstItem="SFY-LH-mTw" firstAttribute="centerX" secondItem="gRM-Jd-QTU" secondAttribute="centerX" id="o7m-3X-Mgh"/>
+                                                <constraint firstItem="SFY-LH-mTw" firstAttribute="top" secondItem="gRM-Jd-QTU" secondAttribute="bottom" constant="64" id="oQY-m4-ct7"/>
+                                                <constraint firstAttribute="trailing" secondItem="SFY-LH-mTw" secondAttribute="trailing" constant="5" id="qpT-II-Av9"/>
+                                            </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
                                                     <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -100,19 +112,26 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
-                                <rect key="frame" x="1451" y="109.5" width="210" height="56"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
+                                <rect key="frame" x="1646" y="107.5" width="210" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="210" id="8z3-xh-e5T"/>
-                                    <constraint firstAttribute="height" constant="56" id="9m1-ly-lab"/>
+                                    <constraint firstAttribute="height" constant="60" id="9m1-ly-lab"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="24" maxY="20"/>
-                                <inset key="imageEdgeInsets" minX="-20" minY="20" maxX="29" maxY="26"/>
-                                <state key="normal" title="CHANNELS">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
+                                <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
+                                <inset key="titleEdgeInsets" minX="-29" minY="0.0" maxX="-34" maxY="6"/>
+                                <inset key="imageEdgeInsets" minX="-24" minY="30" maxX="36" maxY="33"/>
+                                <state key="normal" title="Go Back" image="backIcon"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="backBtn:" destination="MD2-Du-5fo" eventType="primaryActionTriggered" id="F3g-BH-v7t"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -168,8 +187,8 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="817" height="178"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlx-2R-Uc3">
-                                                            <rect key="frame" x="20" y="71" width="0.0" height="36"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E205B9BD-49C9-4DF3-A9BF-D07C9334344D" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jlx-2R-Uc3">
+                                                            <rect key="frame" x="20" y="71" width="244" height="36"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="36" id="Akb-HK-pbg"/>
@@ -178,7 +197,7 @@
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lou1234" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qhq-ed-KIo">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="com.streamly.TVApp.Streamly; build:4; tvOS 13.3.0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qhq-ed-KIo">
                                                             <rect key="frame" x="469" y="72" width="328" height="34"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="34" id="9dB-A5-FFi"/>
@@ -208,7 +227,7 @@
                                                         <constraint firstItem="jlx-2R-Uc3" firstAttribute="leading" secondItem="b1a-el-mDA" secondAttribute="leading" constant="20" id="gF0-Zf-jG9"/>
                                                         <constraint firstAttribute="trailing" secondItem="qhq-ed-KIo" secondAttribute="trailing" constant="20" id="kv4-20-xLz"/>
                                                         <constraint firstItem="PrM-CH-kWi" firstAttribute="leading" secondItem="qhq-ed-KIo" secondAttribute="leading" id="lYi-1B-aN9"/>
-                                                        <constraint firstItem="qhq-ed-KIo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="jlx-2R-Uc3" secondAttribute="trailing" constant="205" id="tLl-W1-ZFC"/>
+                                                        <constraint firstItem="qhq-ed-KIo" firstAttribute="leading" secondItem="jlx-2R-Uc3" secondAttribute="trailing" constant="205" id="tLl-W1-ZFC"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -370,5 +389,113 @@
             </objects>
             <point key="canvasLocation" x="4221" y="365"/>
         </scene>
+        <!--Home NewVC-->
+        <scene sceneID="Psf-EA-DcQ">
+            <objects>
+                <viewController storyboardIdentifier="HomeNewVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kvk-zF-QCt" customClass="HomeNewVC" customModule="StreamlyTV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qFG-24-5j1"/>
+                        <viewControllerLayoutGuide type="bottom" id="Gsn-nh-NWU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="VlV-PK-P8U">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="120" sectionHeaderHeight="66" sectionFooterHeight="66" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-oq-br4">
+                                <rect key="frame" x="15" y="290" width="297" height="722"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="297" id="qtZ-Wk-UVP"/>
+                                </constraints>
+                                <color key="separatorColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="channelListCell" rowHeight="120" id="aYu-gf-2le" customClass="ChannelListCell" customModule="StreamlyTV" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="66" width="297" height="120"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYu-gf-2le" id="Ge6-Cb-SyD">
+                                            <rect key="frame" x="0.0" y="0.0" width="297" height="120"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hbo" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-ZP-Jy8">
+                                                    <rect key="frame" x="12" y="31" width="86" height="58"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="58" id="Rd2-Ch-iNz"/>
+                                                        <constraint firstAttribute="width" constant="86" id="y6Y-cZ-qQo"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="05" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFB-hc-pTL">
+                                                    <rect key="frame" x="113" y="31" width="23" height="23"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="23" id="kXo-KU-9uT"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MTV- USA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bx-0B-9dS">
+                                                    <rect key="frame" x="113" y="56" width="124" height="31"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" red="0.31516915559999997" green="0.34531611200000001" blue="0.35312271119999999" alpha="0.74165239726027399" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="UFB-hc-pTL" secondAttribute="trailing" constant="2" id="EKA-gT-pu9"/>
+                                                <constraint firstItem="1bx-0B-9dS" firstAttribute="leading" secondItem="UFB-hc-pTL" secondAttribute="leading" id="c6Q-rH-Z0x"/>
+                                                <constraint firstItem="8cl-ZP-Jy8" firstAttribute="centerY" secondItem="Ge6-Cb-SyD" secondAttribute="centerY" id="eSJ-41-7bL"/>
+                                                <constraint firstItem="UFB-hc-pTL" firstAttribute="leading" secondItem="8cl-ZP-Jy8" secondAttribute="trailing" constant="15" id="eUA-Fe-hI1"/>
+                                                <constraint firstItem="UFB-hc-pTL" firstAttribute="top" secondItem="8cl-ZP-Jy8" secondAttribute="top" id="fX6-YA-oRf"/>
+                                                <constraint firstItem="1bx-0B-9dS" firstAttribute="top" secondItem="UFB-hc-pTL" secondAttribute="bottom" constant="2" id="kjr-0y-jFU"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1bx-0B-9dS" secondAttribute="trailing" constant="2" id="mhv-7s-Lh5"/>
+                                                <constraint firstAttribute="bottom" secondItem="1bx-0B-9dS" secondAttribute="bottom" constant="33" id="tPy-HK-jNF"/>
+                                                <constraint firstItem="8cl-ZP-Jy8" firstAttribute="leading" secondItem="Ge6-Cb-SyD" secondAttribute="leading" constant="12" id="wEx-LO-Z5G"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <outlet property="ChannelName" destination="1bx-0B-9dS" id="VEv-vC-Qxl"/>
+                                            <outlet property="channelNo" destination="UFB-hc-pTL" id="ZDY-VQ-ZbL"/>
+                                            <outlet property="logoImage" destination="8cl-ZP-Jy8" id="5sV-iX-jqj"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
+                                <rect key="frame" x="320" y="290" width="1580" height="722"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="EpgGridLayout" customModule="StreamlyTV" customModuleProvider="target"/>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="mpq-oq-br4" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="15" id="1GS-Vx-eId"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" constant="8" symbolic="YES" id="5nt-DL-VNn"/>
+                            <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="20" symbolic="YES" id="G8C-CD-dJK"/>
+                            <constraint firstItem="Gsn-nh-NWU" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="bottom" constant="8" symbolic="YES" id="cqB-Fp-keM"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="top" id="d5T-Ck-NuK"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="lWc-X0-ia7"/>
+                            <constraint firstItem="mpq-oq-br4" firstAttribute="top" secondItem="qFG-24-5j1" secondAttribute="bottom" constant="230" id="vho-XN-3mV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="N5C-Rj-iQe"/>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="bvZ-gg-zYn" id="M2X-hi-bfK"/>
+                        <outlet property="tableView" destination="mpq-oq-br4" id="jct-19-TZk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Yx7-NN-7ak" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6204" y="365"/>
+        </scene>
     </scenes>
+    <resources>
+        <image name="backIcon" width="56" height="56"/>
+        <image name="hbo" width="69" height="52"/>
+    </resources>
 </document>

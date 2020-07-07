@@ -18,6 +18,9 @@ class LogOUTView: NibView {
     
     //MARK: properties
     weak var delegate:CustomViews?
+  //  override var canBecomeFocused: Bool {
+     //   return true
+   // }
     
     //MARK: LifeCycle
     override func layoutSubviews() {
@@ -30,5 +33,21 @@ class LogOUTView: NibView {
     
     @IBAction func ButtonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)
+    }
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if noButton.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+                self.noButton.layer.borderColor = UIColor.clear.cgColor
+                self.yesButton.layer.borderColor = UIColor.white.cgColor
+               }, completion: nil)
+
+        } else if yesButton.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+              self.yesButton.layer.borderColor = UIColor.clear.cgColor
+                self.noButton.layer.borderColor = UIColor.white.cgColor
+               }, completion: nil)
+           }
+
     }
 }

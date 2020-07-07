@@ -65,7 +65,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 488
         let customView = LogOUTView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
         backView.addSubview(customView)
@@ -77,7 +77,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 574
         let customView = SupportView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
         customView.contactInfo = data
@@ -95,7 +95,7 @@ class PopUPViewsVC: UIViewController {
         self.backView.isHidden = true
         self.policiesView.isHidden = false
         self.okBtn.setBtnProperties(self.okBtn)
-        policiesView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        policiesView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         policiesView.cornerRadius = 10.0
         txtview.isSelectable = true
         txtview.isUserInteractionEnabled = true
@@ -218,7 +218,7 @@ extension  PopUPViewsVC:UITextViewDelegate
             self.okBtn.isHidden = false
         }
         
-        if (scrollView.contentOffset.y < 0){
+        if (scrollView.contentOffset.y < 10){
             //reach top
             self.okBtn.isHidden = true
         }

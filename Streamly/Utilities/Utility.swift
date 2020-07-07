@@ -40,7 +40,54 @@ class Utility {
 
         return  UserDefaults.standard.string(forKey: key) ?? "N/A"
        }
+    //
 
+   static func getDateFromTimeStamp(_ timeStamp : Double) -> TimeInterval? {
+
+            let date = NSDate(timeIntervalSince1970: timeStamp)
+
+            let dayTimePeriodFormatter = DateFormatter()
+            dayTimePeriodFormatter.dateFormat = "HH:mm"
+            dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
+            dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
+         // UnComment below to get only time
+        //  dayTimePeriodFormatter.dateFormat = "hh:mm a"
+
+            let dateString = dayTimePeriodFormatter.string(from: date as Date)
+
+            let fullNameArr = dateString.components(separatedBy: ":")
+            guard let hour = Int(fullNameArr[0]) else {return nil}
+            guard let min = Int(fullNameArr[1]) else {return nil}
+
+
+            return TimeInterval((hour * 60 * 60) + (min * 60))
+        }
+
+
+    static func dayDifference(from interval : TimeInterval) -> Bool?
+      {
+          let date = NSDate(timeIntervalSince1970: interval)
+
+
+          let dayTimePeriodFormatter = DateFormatter()
+          dayTimePeriodFormatter.dateFormat = "dd:mm"
+          dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
+          dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
+          // UnComment below to get only time
+          //  dayTimePeriodFormatter.dateFormat = "hh:mm a"
+
+          let dateString = dayTimePeriodFormatter.string(from: date as Date)
+
+          let fullNameArr = dateString.components(separatedBy: ":")
+          guard let day = Int(fullNameArr[0]) else {return nil}
+          if day  > 1
+          {
+              return false
+          }
+          return true
+
+
+      }
       // MARK: Convenience
 
         /*

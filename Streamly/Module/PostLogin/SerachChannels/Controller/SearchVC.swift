@@ -14,6 +14,7 @@ class SearchVC: UIViewController {
     // MARK: Properties
     
     static let storyboardIdentifier = "SearchVC"
+  //  var searchController: UISearchController!
     private let cellComposer = DataItemCellComposer()
     var filterString = "" {
         didSet {
@@ -22,24 +23,24 @@ class SearchVC: UIViewController {
 
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
-                filtterdChannelList = self.channelList?.message?.data
+                filtterdChannelList = self.channelList?.data
             }
             else {
-                filtterdChannelList = self.channelList?.message?.data?.filter { ($0.name?.localizedStandardContains(filterString) ?? false) }
+                filtterdChannelList = self.channelList?.data?.filter { ($0.StationName?.localizedStandardContains(filterString) ?? false) }
             }
 
             // Reload the collection view to reflect the changes.
             collectionView?.reloadData()
         }
     }
-    var channelList:ChannelResponse?
+    var channelList:EPGResponse?
       {
           didSet
           {
-              self.collectionView.reloadData()
+            self.filtterdChannelList = channelList?.data
           }
       }
-     var filtterdChannelList:[ChannelArray]?
+     var filtterdChannelList:[ChannelDetails]?
      lazy var viewModel: SearchDataViewModel = {
           return SearchDataViewModel()
       }()
@@ -62,32 +63,34 @@ class SearchVC: UIViewController {
 
     private func initialSetup()
     {
+
+        self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()
-        self.makeApiCall()
-        self.initVM()
+//        self.makeApiCall()
+//        self.initVM()
     }
 
-    private func makeApiCall(){
-        self.showSpinner(onView: self.view)
-          viewModel.delegate = self
-          viewModel.getSearchData()
-
-      }
-
-      private func initVM() {
-
-          viewModel.searchData = { contactModel in
-            self.channelList = contactModel
-            self.filtterdChannelList = contactModel.message?.data
-          //  debugPrint(self.channelList?.message?.data?[0])
-
-              self.removeSpinner()
-
-
-          }
-
-      }
+//    private func makeApiCall(){
+//        self.showSpinner(onView: self.view)
+//          viewModel.delegate = self
+//          viewModel.getSearchData()
+//
+//      }
+//
+//      private func initVM() {
+//
+//          viewModel.searchData = { contactModel in
+//            self.channelList = contactModel
+//            self.filtterdChannelList = contactModel.message?.data
+//          //  debugPrint(self.channelList?.message?.data?[0])
+//
+//              self.removeSpinner()
+//
+//
+//          }
+//
+//      }
 
 }
 
@@ -128,8 +131,9 @@ extension SearchVC:UICollectionViewDelegate
         let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
         guard let url = URL(string: item.url ?? "") else {return}
         viewController.url = url
-        self.present(viewController, animated:true, completion:nil)
-
+        self.present(viewController, animated: true, completion: nil)
+        
+        
     }
 }
 
