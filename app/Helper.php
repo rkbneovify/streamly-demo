@@ -9,6 +9,9 @@ use Jenssegers\Agent\Agent;
     ['status', '=', '1'],
     ['users_id', '=', $user_id],
      ])->get()->toArray();
+     if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
+      $termAndCondition=true;
+   } else {$termAndCondition=false;}
         //check if there's no entry by this used id
         if ((count($active_session)==0)) {
          //new entry of sessionTable
@@ -40,7 +43,8 @@ use Jenssegers\Agent\Agent;
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'device_info'=>$deviceDetails,
-            'user'=>$userInfo
+            'user'=>$userInfo,
+            'termandcondition'=>$termAndCondition
             
           
           
@@ -92,7 +96,7 @@ use Jenssegers\Agent\Agent;
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'device_info'=>$deviceDetails,
-            'user'=>$userInfo,
+            'user'=>$userInfo,'termandcondition'=>false
             
           ],200)->send();}
         
