@@ -118,6 +118,8 @@ Route::get('/videojs2', 'Pages\LiveTv@videojs2');
 Route::get('/faq', 'Pages\Faq@showPage');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
+Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
+Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
 Route::delete('user/sessiondestroy/{id}/{access_token}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');

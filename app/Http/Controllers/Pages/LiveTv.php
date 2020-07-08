@@ -70,10 +70,11 @@ class LiveTv extends Controller
        
     $channelData= Gracenote::where('CallSign', $callSign)->get();
     
-       
+    $url= Channel::where('callSign', $callSign)->pluck('url');
+   // print_r($url); exit;
       $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
       
-    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData'));
+    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url'));
 
     }
 
