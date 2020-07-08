@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Crypt;
 use Mail;
 use Exception;
+use App\Models\Zipcode;
+// use GuzzleHttp\Client;
 
 class HomeController extends Controller
 {
@@ -49,6 +51,83 @@ class HomeController extends Controller
         }
 
         return view('frontend.home', compact('login','plans'));
+    }
+    
+    public function location(Request $request)
+    {     
+        $LAT= $request['latitude'];
+        $LON = $request['longitude'];
+        try {
+        $client = new \GuzzleHttp\Client();
+        // $url = "http://nominatim.openstreetmap.org/reverse?email=myemail@myserver.com&format=xml&lat=-23.56320001&lon=-46.66140002&zoom=27&addressdetails=1";
+        $response = $client->get('http://nominatim.openstreetmap.org/reverse?email=contact@streamlytv.com&format=json&lat='.$LAT.'&lon='.$LON.'&zoom=27&addressdetails=1');
+       
+       $jsonfile=$response->getBody();
+       if (!json_decode($jsonfile, TRUE)) {return false;}
+       else{
+        $resp = json_decode($jsonfile, true);
+    }
+       // $data = json_decode($jsonfile, true); 
+        // return $resp; exit;
+         if( isset($resp['address']['postcode'] ) ){
+            $zipcode= $resp['address']['postcode'];
+            $nameArr = ['zipcode' => $zipcode];
+            $validator = Validator::make($nameArr, 
+        [
+            'zipcode' => 'required|exists:zipcodes,zipcode,status,1'
+        ], 
+        [
+            'zipcode.exists'=>'You are away from the zipcode proximity'
+        ]
+    );
+    if ($validator->fails()) {
+        return $validator->errors();
+    }
+         
+        return $resp;
+        }
+        return $resp;
+        echo "NO zipcode found do radius search";
+        $Alldata = Zipcode::select('zipcode', 'latitude', 'longitude')->where('status',1)->get();
+        foreach($Alldata as $data){
+           echo $data->latitude; echo "\n";echo "nnnj";
+           computeDistance($data->latitude, $data->longitude, $resp['lat'], $resp['lon'], $radius = 6378137);
+           exit;
+        }
+
+       // computeDistance($lat1, $lng1, $lat2, $lng2, $radius = 6378137);
+        
+        // return $resp;
+    }
+    catch (\GuzzleHttp\Exception\RequestException $e) {
+        /**
+         * Here we actually catch the instance of GuzzleHttp\Psr7\Response
+         * (find it in ./vendor/guzzlehttp/psr7/src/Response.php) with all
+         * its own and its 'Message' trait's methods. See more explanations below.
+         *
+         * So you can have: HTTP status code, message, headers and body.
+         * Just check the exception object has the response before.
+         */
+        
+        if ($e->hasResponse()) {
+            $response = $e->getResponse();
+            // var_dump($response->getStatusCode()); // HTTP status code;
+            // var_dump($response->getReasonPhrase()); // Response message;
+            return $response->getBody(); // Body, normally it is JSON;
+            // var_dump(json_decode((string) $response->getBody())); // Body as the decoded JSON;
+            // var_dump($response->getHeaders()); // Headers array;
+            // var_dump($response->hasHeader('Content-Type')); // Is the header presented?
+            // var_dump($response->getHeader('Content-Type')[0]); // Concrete header value;
+        }
+        else {return   json_encode($e->getMessage(), true);}
+    } catch (Exception $ex) {
+        
+        return json_encode($ex->getMessage(), true);
+       
+   }
+
+        // $response = new GuzzleHttp\Client();('http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat=28.7441&lon=77.0732&zoom=27&addressdetails=1');
+        
     }
     public function verified()
     {
@@ -155,5 +234,7 @@ class HomeController extends Controller
 
         return redirect('/');
     }
+   
+    
 
 }

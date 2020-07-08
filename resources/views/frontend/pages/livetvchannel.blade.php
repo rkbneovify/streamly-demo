@@ -11,10 +11,48 @@
 	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 	<script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
 
-	<script src="//vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>
+	{{-- <script src="//vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>
 	<link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
-	<script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
+	<script src="//vjs.zencdn.net/5.4.6/video.min.js"></script> --}}
+	
+    <!-- video.js -->
+    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
 
+    <!-- Brightcove DVRUX plugin -->
+    <link href="//players.brightcove.net/videojs-live-dvrux/1/videojs-live-dvrux.min.css" rel="stylesheet">
+    <script src="//players.brightcove.net/videojs-live-dvrux/1/videojs-live-dvrux.min.js"></script>
+
+    <!-- Brightcove quality picker -->
+    <link href="//players.brightcove.net/videojs-quality-menu/1/videojs-quality-menu.css" rel="stylesheet">
+    <script src="//players.brightcove.net/videojs-quality-menu/1/videojs-quality-menu.min.js"></script>
+
+		<script src="https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"></script>
+		
+    <script>
+			var options = {
+					plugins: {
+							// JSON config added by Brightcove player generator
+							streamrootHls: {
+									hlsjsConfig: {
+											// Your Hls.js config
+									},
+									// captionConfig: {
+									//     line: -1,
+									//     align: 'center',
+									//     position: 50,
+									//     size: 40,
+									// }
+							},
+							qualityMenu: {
+									useResolutionLabels: true
+							}
+					}
+			};
+			var player = videojs('example-video', options);
+			player.qualityMenu();
+			player.dvrux();
+	</script>
 	<script>
 		
 		$(document).ready(function() {
@@ -173,18 +211,16 @@
 
 
 	<section class="page-section">
-{{$channelData}}
+{{-- {{$channelData}} --}}
 		<div class="full-width">
 			<div class="container">
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-						<video id="example_video_1" class="video-js vjs-default-skin"
-						  controls preload="auto" width="640" height="264"
-						  poster="//vjs.zencdn.net/v/oceans.png"
-						  data-setup='{"example_option":true}'>
-						 <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
-						</video>
+						<video id="example-video" width="600" height="300" class="video-js vjs-default-skin" controls autoplay muted>
+							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
+							<source src="http://cdn.streamlytv.com/live/APL/interlink.m3u8" type="application/x-mpegURL"/>
+					</video>
 
 						<div class="channel-detail">
 							<p>{{$channelData[0]->callSign}}</p>
