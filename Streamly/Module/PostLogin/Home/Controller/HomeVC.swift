@@ -159,9 +159,9 @@ class HomeVC: UIViewController {
     private func initVM() {
 
         viewModel.epgData = { epgModel in
-            //    self.removeSpinner()
+        self.removeSpinner()
             self.channels = epgModel
-            // self.setCollectionViewData()
+
         }
 
     }
@@ -244,12 +244,13 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func settingsAction(_ sender:UIButton){
-        
+//
         let settingVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
         settingVc.channelList = self.channels
+        settingVc.genrsList = self.channelsList
         self.navigationController?.pushViewController(settingVc, animated: true)
 //        let settingVc = SettingsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
-//              //  settingVc.channelList = self.channels
+//
 //                self.navigationController?.pushViewController(settingVc, animated: true)
         
     }

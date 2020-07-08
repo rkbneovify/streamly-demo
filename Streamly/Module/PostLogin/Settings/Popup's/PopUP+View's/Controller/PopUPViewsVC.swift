@@ -65,7 +65,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 488
         let customView = LogOUTView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+        customView.backgroundColor = UIColor.clear
         customView.cornerRadius = 10.0
         customView.delegate = self
         backView.addSubview(customView)
@@ -77,7 +77,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 574
         let customView = SupportView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+        customView.backgroundColor = UIColor.clear
         customView.cornerRadius = 10.0
         customView.delegate = self
         customView.contactInfo = data
@@ -95,7 +95,7 @@ class PopUPViewsVC: UIViewController {
         self.backView.isHidden = true
         self.policiesView.isHidden = false
         self.okBtn.setBtnProperties(self.okBtn)
-        policiesView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+        policiesView.backgroundColor = UIColor.clear
         policiesView.cornerRadius = 10.0
         txtview.isSelectable = true
         txtview.isUserInteractionEnabled = true

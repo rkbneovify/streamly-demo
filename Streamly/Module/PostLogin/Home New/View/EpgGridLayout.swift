@@ -23,9 +23,9 @@ class EpgGridLayout: UICollectionViewLayout
     
     let weekTimeInterval : TimeInterval = (60 * 60 * 24 * 3)
     let TILE_WIDTH : CGFloat = 395
-    let TILE_HEIGHT : CGFloat = 120
+    let TILE_HEIGHT : CGFloat = 100
     
-    var channels : EPGResponse?
+    var channels : [ChannelDetails]?
     
     override init() {
         super.init()
@@ -54,7 +54,7 @@ class EpgGridLayout: UICollectionViewLayout
         calculateFramesForAllPrograms()
         let newLayoutInfo = NSMutableDictionary()
         let cellLayoutInfo = NSMutableDictionary()
-        guard let channels = channels?.data else { return }
+        guard let channels = channels else { return }
         
         for section in 0..<channels.count {
             let channel = channels[section]
@@ -100,7 +100,7 @@ class EpgGridLayout: UICollectionViewLayout
     }
     
     func calculateFramesForAllPrograms() {
-        guard let channels = channels?.data else { return }
+        guard let channels = channels else { return }
         for i in 0..<channels.count {
             xPos = 0
             let channel = channels[i]
@@ -116,11 +116,9 @@ class EpgGridLayout: UICollectionViewLayout
                 let rectString = NSCoder.string(for: frame)
                 let indexPath = IndexPath(item: index, section: i)
                 framesInfo?[indexPath] = rectString
-                xPos = xPos+tileSize.width
-                    //+ 9.0
+                xPos = xPos+tileSize.width + 9.0
             }
-            yPos += TILE_HEIGHT
-                //+ 9.0
+            yPos += TILE_HEIGHT + 14.0
         }
     }
     
@@ -128,9 +126,10 @@ class EpgGridLayout: UICollectionViewLayout
         guard let infoDic = framesInfo, let rectString = infoDic[indexPath] as? String else { return CGRect.zero }
         return NSCoder.cgRect(for: rectString)
     }
+
     
     override var collectionViewContentSize : CGSize {
-        guard let channels = channels?.data else { return CGSize.zero }
+        guard let channels = channels else { return CGSize.zero }
         
         let intervals = epgEndTime.timeIntervalSince(epgStartTime)
         let numberOfHours = CGFloat(intervals / 3600)

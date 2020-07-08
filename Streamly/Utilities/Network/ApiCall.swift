@@ -76,7 +76,7 @@ open class ApiCall {
 
     @discardableResult
     public static func getChannelList(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
-        let url: String! = "http://streamlytv.com/api/auth/channellist"
+        let url: String! = "http://streamlytv.com/api/auth/channelgenre"
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json"]
         let requestParameter = RequestParameter.createRequestParameter(url, method: .get, headers: headers, parameters: nil)

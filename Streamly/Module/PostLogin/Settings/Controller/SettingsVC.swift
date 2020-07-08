@@ -40,8 +40,7 @@ class SettingsVC: UIViewController {
     override func viewDidLayoutSubviews() {
         
         self.channellsBtn.setBtnProperties(self.channellsBtn)
-      //  self.liveTVBtn.setBtnProperties(self.liveTVBtn)
-        self.view.backgroundColor = UIColor.channelBox
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bacgroundImage")!)
         self.collectionView.layoutSubviews()
         self.collectionView.layoutIfNeeded()
     }

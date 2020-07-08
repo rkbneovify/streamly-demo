@@ -20,16 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Navigate to root
         // check login validation
-
-//        if let tabController = window?.rootViewController as? UITabBarController {
-//                          tabController.viewControllers?.append(packagedSearchController())
-//                      }
         self.setupAudio()
         Switcher.updateRootVC()
-
-
-
-        // Override point for customization after application launch.
         return true
     }
 

@@ -46,7 +46,7 @@ class Constant: NSObject
     class func navigateToRootHome()
     {
         guard let app = appDelegate else {return}
-        let loginVc = HomeVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let loginVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
         let rootViewController = appDelegate?.window!.rootViewController as! UINavigationController
         rootViewController.setViewControllers([loginVc], animated: false)
         rootViewController.isNavigationBarHidden = true

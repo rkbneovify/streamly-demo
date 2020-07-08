@@ -113,17 +113,17 @@
                                 </cells>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
-                                <rect key="frame" x="1646" y="107.5" width="210" height="60"/>
+                                <rect key="frame" x="1616" y="107.5" width="240" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="210" id="8z3-xh-e5T"/>
+                                    <constraint firstAttribute="width" constant="240" id="8z3-xh-e5T"/>
                                     <constraint firstAttribute="height" constant="60" id="9m1-ly-lab"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
                                 <inset key="titleEdgeInsets" minX="-29" minY="0.0" maxX="-34" maxY="6"/>
-                                <inset key="imageEdgeInsets" minX="-24" minY="30" maxX="36" maxY="33"/>
-                                <state key="normal" title="Go Back" image="backIcon"/>
+                                <inset key="imageEdgeInsets" minX="-31" minY="30" maxX="36" maxY="33"/>
+                                <state key="normal" title="CHANNELS" image="channelIcon"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="2"/>
@@ -397,20 +397,20 @@
                         <viewControllerLayoutGuide type="top" id="qFG-24-5j1"/>
                         <viewControllerLayoutGuide type="bottom" id="Gsn-nh-NWU"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="VlV-PK-P8U">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VlV-PK-P8U">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="120" sectionHeaderHeight="66" sectionFooterHeight="66" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-oq-br4">
-                                <rect key="frame" x="15" y="290" width="297" height="722"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="120" sectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-oq-br4">
+                                <rect key="frame" x="15" y="339" width="297" height="681"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="297" id="qtZ-Wk-UVP"/>
+                                    <constraint firstAttribute="width" constant="297" id="EmE-vQ-pc5"/>
                                 </constraints>
-                                <color key="separatorColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="separatorColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="channelListCell" rowHeight="120" id="aYu-gf-2le" customClass="ChannelListCell" customModule="StreamlyTV" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="66" width="297" height="120"/>
+                                        <rect key="frame" x="0.0" y="1" width="297" height="120"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYu-gf-2le" id="Ge6-Cb-SyD">
                                             <rect key="frame" x="0.0" y="0.0" width="297" height="120"/>
@@ -466,26 +466,166 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
-                                <rect key="frame" x="320" y="290" width="1580" height="722"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
+                                <rect key="frame" x="312" y="339" width="1593" height="681"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="EpgGridLayout" customModule="StreamlyTV" customModuleProvider="target"/>
                                 <cells/>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jte-II-w2x">
+                                <rect key="frame" x="1668" y="35" width="232" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="232" id="wGv-7I-a3X"/>
+                                    <constraint firstAttribute="height" constant="60" id="wtr-hl-QcH"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
+                                <inset key="titleEdgeInsets" minX="-29" minY="3" maxX="-25" maxY="6"/>
+                                <inset key="imageEdgeInsets" minX="-24" minY="30" maxX="36" maxY="33"/>
+                                <state key="normal" title="SETTINGS" image="starIcon">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="settingsAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="NAt-rg-KKk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kL9-t4-knR">
+                                <rect key="frame" x="36" y="40" width="50" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="kL9-t4-knR" secondAttribute="height" multiplier="1:1" id="XUQ-qV-XJj"/>
+                                    <constraint firstAttribute="height" constant="50" id="Zya-ob-ZY7"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" backgroundImage="magnifyingglass" catalog="system">
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="17" scale="default"/>
+                                </state>
+                                <connections>
+                                    <action selector="searchAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="TPk-0a-CdJ"/>
+                                </connections>
+                            </button>
+                            <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fnz-5i-nxU">
+                                <rect key="frame" x="145" y="40" width="1193" height="50"/>
+                                <subviews>
+                                    <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
+                                        <rect key="frame" x="0.0" y="0.0" width="103" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="All">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="ceF-UH-uYX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
+                                        <rect key="frame" x="123" y="0.0" width="161" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="RECENT">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
+                                        <rect key="frame" x="304" y="0.0" width="225" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="MY CHANNELS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="eSC-uB-25r"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
+                                        <rect key="frame" x="549" y="0.0" width="161" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="SPORTS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="9Wr-QY-Zbz"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
+                                        <rect key="frame" x="730" y="0.0" width="139" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="NEWS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="Nha-c4-WT4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
+                                        <rect key="frame" x="889" y="0.0" width="157" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="MOVIES">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="JNx-td-sHJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
+                                        <rect key="frame" x="1066" y="0.0" width="127" height="50"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="KIDS">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="TAO-rA-xL7"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Pmg-YQ-CuJ"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="mpq-oq-br4" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="15" id="1GS-Vx-eId"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" constant="8" symbolic="YES" id="5nt-DL-VNn"/>
-                            <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="20" symbolic="YES" id="G8C-CD-dJK"/>
-                            <constraint firstItem="Gsn-nh-NWU" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="bottom" constant="8" symbolic="YES" id="cqB-Fp-keM"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="top" id="d5T-Ck-NuK"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="lWc-X0-ia7"/>
-                            <constraint firstItem="mpq-oq-br4" firstAttribute="top" secondItem="qFG-24-5j1" secondAttribute="bottom" constant="230" id="vho-XN-3mV"/>
+                            <constraint firstItem="kL9-t4-knR" firstAttribute="top" secondItem="VlV-PK-P8U" secondAttribute="top" constant="40" id="3QD-ga-q1R"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="top" id="LPX-Aa-vkQ"/>
+                            <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
+                            <constraint firstItem="jte-II-w2x" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="67" id="N2N-2b-Wum"/>
+                            <constraint firstItem="jte-II-w2x" firstAttribute="centerY" secondItem="Zmj-0g-1sp" secondAttribute="centerY" id="NaB-ko-2JC"/>
+                            <constraint firstItem="Gsn-nh-NWU" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="bottom" id="VgE-qP-BUs"/>
+                            <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>
+                            <constraint firstAttribute="trailing" secondItem="jte-II-w2x" secondAttribute="trailing" constant="20" id="e1v-cC-9j6"/>
+                            <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="15" id="fDy-DM-noT"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" id="fTS-EM-Gb3"/>
+                            <constraint firstItem="kL9-t4-knR" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="hdv-kY-3FB"/>
+                            <constraint firstItem="mpq-oq-br4" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="15" id="shb-ig-feC"/>
+                            <constraint firstItem="mpq-oq-br4" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="bottom" constant="249" id="ua5-yq-FQB"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="zAZ-VK-MoS"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="N5C-Rj-iQe"/>
+                        <viewLayoutGuide key="safeArea" id="NNg-TT-3ij"/>
                     </view>
                     <connections>
+                        <outlet property="allButton" destination="y3R-ZS-Kv1" id="fds-2o-K5H"/>
                         <outlet property="collectionView" destination="bvZ-gg-zYn" id="M2X-hi-bfK"/>
+                        <outlet property="kidsButton" destination="Zmj-0g-1sp" id="8iq-gV-Ba5"/>
+                        <outlet property="moviesButton" destination="oLO-kz-qie" id="m4f-Cq-X7l"/>
+                        <outlet property="myChannelButton" destination="NKZ-70-gmn" id="jZQ-HI-kAc"/>
+                        <outlet property="newsButton" destination="1ND-ri-Uex" id="cgl-n4-psM"/>
+                        <outlet property="recentButton" destination="H0o-Yq-cc0" id="lt2-ed-KQy"/>
+                        <outlet property="searchButton" destination="kL9-t4-knR" id="IyI-Wf-JEJ"/>
+                        <outlet property="settingsButton" destination="jte-II-w2x" id="0H1-b2-SiC"/>
+                        <outlet property="sportsButton" destination="Zw9-jI-w5U" id="tbk-NV-Mwy"/>
                         <outlet property="tableView" destination="mpq-oq-br4" id="jct-19-TZk"/>
                     </connections>
                 </viewController>
@@ -495,7 +635,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="backIcon" width="56" height="56"/>
+        <image name="channelIcon" width="56" height="56"/>
         <image name="hbo" width="69" height="52"/>
+        <image name="magnifyingglass" catalog="system" width="32" height="28"/>
+        <image name="starIcon" width="56" height="56"/>
     </resources>
 </document>

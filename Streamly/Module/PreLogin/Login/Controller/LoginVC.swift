@@ -168,20 +168,30 @@ extension LoginVC
 extension LoginVC {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if userIDField.isFocused{
-               coordinator.addCoordinatedAnimations({ () -> Void in
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.userIDField.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
-               }, completion: nil)
+            }, completion: nil)
 
         } else if passwordField.isFocused{
-               coordinator.addCoordinatedAnimations({ () -> Void in
-              self.passwordField.layer.borderColor = UIColor.clear.cgColor
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
+                self.passwordField.layer.borderColor = UIColor.clear.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
-               }, completion: nil)
-           }
+            }, completion: nil)
+        }
+        else if registerNowBtn.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.registerNowBtn.layer.borderColor = UIColor.clear.cgColor
+                self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
+                self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+            }, completion: nil)
+        }
         else {
+            self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
             self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
-                           self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+            self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
         }
 
     }
