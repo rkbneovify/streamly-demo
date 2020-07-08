@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Subscription;
 use Illuminate\Support\Arr;
+use Mail;
 
 class Setting extends Controller
 {   public function __construct()
@@ -150,5 +151,35 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         
 
         
+    }
+
+    public function BugReportView(){
+        return view('frontend.pages.account.bugreport');
+    }
+    public function sendBugReport(Request $request)
+    {     $User=Auth::user();
+        $FRONTEND_URL=env('FRONTEND_URL');
+        $html='<html>
+        Hi, '.$User->name.'<br><br>
+
+        Error Report of'.env('APP_NAME').'.
+        <br><br>
+        User Email:'.$request['email_input'].'.<br><br>
+        Bug Severity:'.$request['bug_severity'].'.<br>
+        Occurrence:'.$request['occurrence'].'.<br>
+        Debug info:'.$request['debug_info'].'.<br>
+        Details:'.$request['details'].'.<br>
+    </html>';
+    try{
+        Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
+            $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+            ->subject(env('APP_NAME').': Feedback/Bug Report');
+            // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+        });} catch (Exception $ex) {
+             //$ex->getMessage();
+             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+            // return "We've got errors!".json_encode($ex->getMessage(), true);
+        }
+        return redirect()->back()->with('message', "Feedback Sent!");
     }
 }
