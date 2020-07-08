@@ -219,7 +219,7 @@
 					<div class="col-md-8 col-centered">
 						<video id="example-video" width="600" height="300" class="video-js vjs-default-skin" controls autoplay muted>
 							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
-							<source src="http://cdn.streamlytv.com/live/APL/interlink.m3u8" type="application/x-mpegURL"/>
+							<source src={{$url[0]->url}} type="application/x-mpegURL"/>
 					</video>
 
 						<div class="channel-detail">
