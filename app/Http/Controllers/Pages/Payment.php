@@ -20,6 +20,8 @@ class Payment extends Controller
             $login = true;
         } else {
             $login = false;
+
+            return redirect()->route('home');
         }
         $plandetails = \Stripe\Plan::retrieve($stripeplanID);
         
@@ -32,6 +34,7 @@ class Payment extends Controller
             $login = true;
         } else {
             $login = false;
+            return redirect()->route('home');
         }
 
     	return view('frontend.pages.plans', compact('login','plans'));
