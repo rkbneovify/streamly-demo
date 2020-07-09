@@ -125,11 +125,13 @@
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{{ session()->get('message') }}
 </div>
+@endif
 @if(session()->has('message'))
 <div class="alert alert-danger alert-dismissible alert-position">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{{ session()->get('message') }}
 </div>
+@endif
 <div class="container">
 				<h1>Bug Report Form</h1>
 				<p>Use this form to report any bugs you may find. Here is what each of the "bug severity" options mean:</p>
