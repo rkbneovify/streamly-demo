@@ -22,6 +22,7 @@ class Setting extends Controller
     {
         
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        
     }
     // Account Settings page
     public function showSettingpage(){
@@ -30,6 +31,7 @@ class Setting extends Controller
             $login = true;
         } else {
             $login = false;
+            return redirect()->route('home');
         }
        $id= Auth::user()->id;
         $userinfo = User::find($id);
@@ -154,6 +156,13 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
     }
 
     public function BugReportView(){
+        if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+
         return view('frontend.pages.account.bugreport');
     }
     public function sendBugReport(Request $request)

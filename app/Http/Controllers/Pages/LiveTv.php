@@ -17,7 +17,7 @@ class LiveTv extends Controller
             $login = true;
         } else {
             $login = false;
-            return redirect('/');
+            return redirect()->route('home');
         }
 
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
@@ -51,6 +51,7 @@ class LiveTv extends Controller
             $login = true;
         } else {
             $login = false;
+            return redirect()->route('home');
         }
         
 
@@ -85,6 +86,7 @@ class LiveTv extends Controller
             $login = true;
         } else {
             $login = false;
+            return redirect()->route('home');
         }
 
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
