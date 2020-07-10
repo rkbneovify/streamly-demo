@@ -27,7 +27,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse']]);
     }
 
     public function index()
@@ -275,6 +275,14 @@ public function login(Request $request)
        // echo json_encode( explode("\r\n",file_get_contents('data.txt')) );
         $file = file_get_contents('PrivacyPolicy.txt');
         $response = array('success' =>true ,'response_code'=>200,'data'=>$file,'message'=>'Privacy policy');
+        return response()->json($response, 200);
+    }
+    
+    public function termofuse()
+    { $breakingpoint= '#~';
+       // echo json_encode( explode("\r\n",file_get_contents('data.txt')) );
+        $file = file_get_contents('Termofuse.txt');
+        $response = array('success' =>true ,'response_code'=>200,'data'=>$file,'message'=>'Term of use');
         return response()->json($response, 200);
     }
 

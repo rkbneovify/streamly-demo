@@ -54,6 +54,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('connecteddevice', 'APIController@connecteddevice');
     Route::get('support', 'APIController@support');
     Route::get('privacypol', 'APIController@privacypol');
+    Route::get('termofuse', 'APIController@termofuse');
 });
 
 // Superadmin Routes
