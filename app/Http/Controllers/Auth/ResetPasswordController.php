@@ -58,6 +58,12 @@ class ResetPasswordController extends Controller
                 $response = array('success' => false,'message'=>'Password reset token is invalid');
                 return response()->json($response, 400);                
             }
+        } else {
+            if ($response == Password::PASSWORD_RESET) {
+                return redirect('/')->with('message', 'Password reset successfull.');    
+            }    else {
+                return redirect('/')->with('message', 'Password reset token is invalid.');           
+            }
         }
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can

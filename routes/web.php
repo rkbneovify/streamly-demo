@@ -27,6 +27,7 @@ Route::get('/', 'HomeController@index')->name('home');
 
 
 
+
 Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admin')->group(function(){
     
     
@@ -106,6 +107,8 @@ Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google
 
 Route::get('/google/login', 'HomeController@handleGoogleCallback');
 Route::post('/user/register', 'HomeController@createUser');
+
+Route::post('/forgotpassword', 'Auth\ForgotPasswordController@webgetResetToken');
 
 Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage');
 Route::get('/selectplan', 'Pages\Payment@showPlan');
