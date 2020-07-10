@@ -67,4 +67,45 @@ class ForgotPasswordController extends Controller
             return response()->json($response, 200);
         }
     }
+
+    public function webgetResetToken(Request $request)
+    {  
+        $attributeNames = array(
+            'forgotpassword-email' => 'Email',
+         );
+ 
+         $validatedData = $request->validate([
+            
+             'forgotpassword-email'=>'required|exists:users,email,is_active,1'
+         ], ['forgotpassword-email.exists'=>'Email not found'], $attributeNames);
+        
+    
+            $user = User::where('email', $request->input('forgotpassword-email'))->first();
+        //print_r($user);exit;
+        if (!$user) {
+            return redirect('/')->with('message',trans('passwords.user'));
+        }
+        $token = $this->broker()->createToken($user);
+            $FRONTEND_URL=env('FRONTEND_URL');
+
+            $password_reset_link=$FRONTEND_URL.'/password/reset?token='.$token;
+
+            $html='<html>
+                Hi, '.$user->name.'<br><br>
+
+                You have requested to reset password on '.env('APP_NAME').'.
+
+                Here is your Password reset link. Click on below link to reset your password <br><br><a href="'.$password_reset_link.'" target=_blank >'.$password_reset_link.'</a>
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
+                $message->to($request->email, $user->name)
+                ->subject(env('APP_NAME').': Password Reset');
+            });
+
+            return redirect('/')->with('message', 'Password reset link sent on your email.');
+           // return response()->json($response, 200);
+        
+    }
+   
 }

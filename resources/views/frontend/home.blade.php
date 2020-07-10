@@ -74,6 +74,20 @@
     document.getElementById("mySidenavRegister").classList.add("show");
 @endif
 </script>
+{{-- <script>
+    jQuery(document).ready(function(){
+        
+
+        jQuery('.forgot-password').on('click', function(){
+            jQuery('#resetPassword').modal('show');
+        });
+    });
+</script> --}}
+{{-- <script type="text/javascript">
+    @if ($errors->has('forgotpassword-email'))
+    jQuery('#resetPassword').modal('show');
+    @endif
+    </script> --}}
 @endsection
 @section('content')
     {{-- {{$errors}} --}}
@@ -129,7 +143,7 @@
                         <input type="checkbox" class="form-check-input" id="remember-me">
                         <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
 
-                        <label class="no-font-s float-right">Forgot password?</label>
+                        <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password">Forgot password?</a></label>
                     </div>
 
                     <div class="form-group mt-3">
@@ -215,7 +229,47 @@
 
     </div>
 
+{{--   
+	<div class="modal fade" id="resetPassword">
+        
+	    <div class="modal-dialog">
+			<div class="modal-content"><h3 class="login_txt" style="
+                padding-left: 20px;
+                padding-top: 20px;
+            ">Forget password</h3>
+				<div class="modal-body text-center">
+					@if (count($errors) > 0)
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+          {{-- <form action="{{ url('/forgotpassword') }}" method="POST"> --}}
+             {{-- <form method="POST" action="{{ route('password.email') }}"> --}}
+            {!! csrf_field() !!}
+						{{-- <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
+							<label for="email" class="control-label">Send reset password link at                        </label>
+							
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}">
+						</div>
 
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-lg login-btn" >
+								Email me!
+							</button> --}}
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+						{{-- </div>
+					</form>
+				</div>
+
+			</div>
+	    </div>
+	</div> --}} --}}
 
 
 	<!-- Select Plan-->
