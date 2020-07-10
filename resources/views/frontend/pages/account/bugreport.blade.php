@@ -136,10 +136,10 @@
 				<h1>Bug Report Form</h1>
 				<p>Use this form to report any bugs you may find. Here is what each of the "bug severity" options mean:</p>
 				<ol>
-					<li><div id="minor">Minor:</div> These are bugs that don't really affect the game's playability. Things like missing or broken textures would fit into this category.</li>
-					<li><div id="moderate">Moderate:</div> The moderate category would include bugs that affect the functionality of some of the game's less important features. For example, a problem with an object the player can pick up would fall under the moderate category.</li>
-					<li><div id="major">Major:</div> A major bug affects the playability of the game's more important feature. A door not opening would be an example of a major bug.</li>
-					<li><div id="game_breaking">Game-breaking:</div> A game-breaking bug is a glitch that makes the game unplayable, either immediately after launch or during gameplay. Game crashes (especially persistent crashes) or other issues that make the game completely unplayable would fall under this category.</li>
+					<li><div id="minor">Minor:</div> These are bugs that don't really affect the app's playability. Things like missing or broken textures would fit into this category.</li>
+					<li><div id="moderate">Moderate:</div> The moderate category would include bugs that affect the functionality of some of the app's less important features. For example, a problem with an object the player can pick up would fall under the moderate category.</li>
+					<li><div id="major">Major:</div> A major bug affects the playability of the app's more important feature. A door not opening would be an example of a major bug.</li>
+					<li><div id="app_breaking">app-breaking:</div> A app-breaking bug is a glitch that makes the app unplayable, either immediately after launch or during appplay. app crashes (especially persistent crashes) or other issues that make the app completely unplayable would fall under this category.</li>
 				</ol>
 			</div>
 			<div class="container">
@@ -154,7 +154,7 @@
 							<option value="Minor">Minor</option>
 							<option value="Moderate">Moderate</option>
 							<option value="Major">Major</option>
-							<option value="Game-breaking">Game-breaking</option>
+							<option value="app-breaking">App-breaking</option>
 						</select></div>
 					<div class="form-group">
 						<p>How often does it occur?</p>
