@@ -108,7 +108,7 @@
                       <input type="checkbox" class="form-check-input" id="remember-me">
                       <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
 
-                      <label class="no-font-s float-right">Forgot password?</label>
+                      <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password">Forgot password?</a></label>
                   </div>
 
                   <div class="form-group mt-3">
