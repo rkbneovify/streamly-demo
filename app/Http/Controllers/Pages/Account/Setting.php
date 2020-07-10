@@ -163,7 +163,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
             return redirect()->route('home');
         }
 
-        return view('frontend.pages.account.bugreport');
+        return view('frontend.pages.account.bugreport', compact('login'));
     }
     public function sendBugReport(Request $request)
     {     $User=Auth::user();
