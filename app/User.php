@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Validator;
 use DB;
 use Laravel\Cashier\Billable;
+use App\Models\Channel;
 
 
 class User extends Authenticatable implements JWTSubject
@@ -98,6 +99,12 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany('App\Models\Role', 'role_user');
     }
+
+    public function favorites()
+{
+    return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->withTimeStamps();
+}
+
     // public function subscriptions()
     // {
     //     return $this->hasMany(Subscription::class,'users_id');

@@ -80,6 +80,76 @@
 		    line-height: 1;
 		}
 	</style>
+		<script>
+		
+			$(document).ready(function() {
+			
+			$.ajaxSetup({
+	
+	headers: {
+	
+			'X-CSRF-TOKEN': $("input[name=_token]").val()
+	
+	}
+	
+	});
+			
+			$(document).on('click','.btn-submit',function(e){
+	
+	
+	e.preventDefault();
+	let channelid = $(this).data('id');
+	
+	
+	$.ajax({
+	
+		 type:'POST',
+	
+		 url:"{{ url('favorite') }}",
+	
+		 data:{channelid:channelid,
+		 },
+	
+		 success:function(data){
+		$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+	
+		 }
+	
+	});
+	
+	
+	
+	});	
+	$(document).on('click','.btn-remove',function(e){
+		
+	
+	
+	
+	e.preventDefault();
+	let channelid = $(this).data('id');
+	
+	$.ajax({
+	
+		 type:'POST',
+	
+		 url:"{{ url('unfavorite') }}",
+	
+		 data:{channelid:channelid,
+		 },
+	
+		 success:function(data){
+	
+		$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+	
+		 }
+	
+	});
+	
+	
+	
+	});
+			});
+		</script>
 @endsection
 
 @section('content')
@@ -88,60 +158,41 @@
 	<section class="page-section custom-row">
 
 		<div class="container" style="margin-top: 4%;">
-			<h4 class="section-heading">Live News - All channels</h4>
+			<h4 class="section-heading">All channels</h4>
 			@foreach($pagechannel->chunk(6) as $chunk)
     <div class="row">
         @foreach($chunk as $channeldet)
 				<div class="col-md-2">
-					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
+				
 					<div class="live-news-item">
+						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
 						<img src="{{ $channeldet->logo }}">
-						<p>{{  $channeldet->callSign}}</p>
+						<p>{{  $channeldet->callSign}}</p></a>
+						<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                
+
+							<input type="hidden" name="channelid" value="{{$channeldet->id}}" class="form-control">
+	
+	@if (Auth::check())
+	<div class="panel-footer" id="{{ $channeldet->id }}">
+	{{-- {{ $channeldet->id }} --}}
+	@if ($channeldet->favorited())	
+	<p>Added to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
+	@else
+	<p>Add to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
+	@endif
+	
+	</div>
+	@endif
+	</form>
 					</div>
-					</a>
+					
 				</div>
         @endforeach
     </div>
 @endforeach
-			{{-- <div class="row">
-				
-				@foreach ($pagechannel as $channeldet)
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ $channeldet->logo }}">
-						<p>{{  $channeldet->callSign}}</p>
-					</div>
-				</div>
-				@endforeach
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<div class="live-news-item">
-						<img src="{{ asset('frontend/img/NoPath.png') }}">
-						<p>Commercial news</p>
-					</div>
-				</div>
-			</div>  --}}
+		
 
 
 			</div>

@@ -129,6 +129,10 @@ Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy')
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
+Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');
+Route::post('unfavorite/', 'Pages\LiveTv@unFavoriteChannel');
+Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
+
 
 Route::get('/ffmpeg', 'VideoAnylyzerController@index');
 Route::get('/ffmpeg2', 'VideoAnylyzerController@probeAudioFile');

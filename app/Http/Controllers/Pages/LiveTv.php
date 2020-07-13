@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Channel;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
-// use App\Models\Genre;
+use App\Models\Genre;
 class LiveTv extends Controller
 { 
     public function showPage(){
@@ -164,5 +164,46 @@ $record  = Gracenote::select("CallSign","StationName","image")
         // return response()->json($record->toSql());
         return response()->json($response, 200); exit;
     }
+
+    public function favoriteChannel(Request $request)
+{ //echo "hggh";exit; 
+    $input = $request->all();
+    $channelid = $request->input('channelid');
+    // $gdg=Auth::user();
+    // return response()->json(['success'=>'Got Simple Ajax Request.','channelid'=>$channelid,'user'=>$gdg]);
+    Auth::user()->favorites()->syncWithoutDetaching($channelid);
+
+    return back();
+}
+
+/**
+ * Unfavorite a particular post
+ *
+ * @param  Post $post
+ * @return Response
+ */
+public function unFavoriteChannel(Request $request)
+{  
+    $input = $request->all();
+    $channelid = $request->input('channelid');
+    Auth::user()->favorites()->detach($channelid);
+
+    return back();
+}
+
+public function myFavorites()
+{ if( Auth::check()){
+    $login = true;
+    $genres = Genre::pluck('name', 'id');
+    $myFavorites = Auth::user()->favorites;
+   // $arrVal=explode(',',$myFavorites->genres);
+ //dd($myFavorites[0]->name);exit;
+    return view('frontend.pages.my_favorites', compact('myFavorites','genres','login'));
+} else {
+    $login = false;
+    return redirect()->route('home');
+}
+
+}
     
 }
