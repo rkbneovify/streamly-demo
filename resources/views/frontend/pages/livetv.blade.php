@@ -33,6 +33,15 @@
 		});*/
 		$(document).ready(function() {
 		var owl = $('.owl-carousel');
+		$.ajaxSetup({
+
+headers: {
+
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+
+}
+
+});
 			owl.owlCarousel({
 				
 				loop:true,
@@ -54,9 +63,65 @@
 			            loop:false
 			        }
 			    }
-			})
+			});
+		
+		$(document).on('click','.btn-submit',function(e){
+
+
+e.preventDefault();
+let channelid = $(this).data('id');
+
+
+$.ajax({
+
+	 type:'POST',
+
+	 url:"{{ url('favorite') }}",
+
+	 data:{channelid:channelid,
+	 },
+
+	 success:function(data){
+	$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+
+	 }
+
+});
+
+
+
+});	
+$(document).on('click','.btn-remove',function(e){
+	
+
+
+
+e.preventDefault();
+let channelid = $(this).data('id');
+
+$.ajax({
+
+	 type:'POST',
+
+	 url:"{{ url('unfavorite') }}",
+
+	 data:{channelid:channelid,
+	 },
+
+	 success:function(data){
+
+	$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+
+	 }
+
+});
+
+
+
+});
 		});
 	</script>
+
 	<style>
 
 		body{
@@ -141,10 +206,29 @@
 				<div class="row">
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
-						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}"><div class="live-news-item">
-							<img src="{{  $channeldet->logo}}">
-							<p>{{  $channeldet->callSign}}</p>
-						</div> </a>
+						
+						<div class="live-news-item">
+							<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}"><img src="{{  $channeldet->logo}}">
+							<p>{{  $channeldet->callSign}}</p></a>
+							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                
+
+                <input type="hidden" name="channelid" value="{{$channeldet->id}}" class="form-control">
+
+@if (Auth::check())
+<div class="panel-footer" id="{{ $channeldet->id }}">
+		{{-- {{ $channeldet->id }} --}}
+		@if ($channeldet->favorited())	
+		<p>Added to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
+		@else
+		<p>Add to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
+		@endif
+		
+</div>
+@endif
+</form>
+						</div> 
 						@endforeach
 					</div>
 				</div>

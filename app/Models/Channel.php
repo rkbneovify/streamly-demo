@@ -1,7 +1,8 @@
 <?php
 namespace App\Models;
-
+use App\Models\FavouriteChannel;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 /**
    @property varchar $name name
 @property varchar $url url
@@ -55,6 +56,13 @@ protected $appends = ['logo'];
 }
 
    
+}
+
+public function favorited()
+{
+    return (bool) FavouriteChannel::where('user_id', Auth::id())
+                        ->where('channels_id', $this->id)
+                        ->first();
 }
 // public function getGenrenameAttribute($value)
 // {
