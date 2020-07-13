@@ -318,6 +318,84 @@ public function login(Request $request)
     return response()->json($response, 200);
     }
 
+    public function favoriteChannel(Request $request)
+    { try { 
+        $input = $request->all();
+        $channelid = $request->input('channelid');
+        JWTAuth::user()->favorites()->syncWithoutDetaching($channelid);
+        $response = [
+            'success' => true,
+            'data' => 'Channel id '.$channelid.' added' ,
+            'message' => 'Successfully added to favourite channel','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+    } catch (Exception $exception) {
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Some Error occured',
+            'error'=>$exception->getMessage(),
+            'response_code'=>500,
+            
+        ], 500);
+    }
+        
+    }
+    
+    /**
+     * Unfavorite a particular post
+     *
+     * @param  Post $post
+     * @return Response
+     */
+    public function unFavoriteChannel(Request $request)
+    {  try { 
+        $input = $request->all();
+        $channelid = $request->input('channelid');
+        JWTAuth::user()->favorites()->detach($channelid);
+        $response = [
+            'success' => true,
+            'data' => 'Channel id '.$channelid.' removed' ,
+            'message' => 'Successfully removed from favourite channel list','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+    } catch (Exception $exception) {
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Some Error occured',
+            'error'=>$exception->getMessage(),
+            'response_code'=>500,
+            
+        ], 500);
+    }
+    
+        
+    }
+    
+    public function myFavorites()
+    { try { 
+        // $genres = Genre::pluck('name', 'id');
+        $myFavorites = JWTAuth::user()->favorites;
+        $response = [
+            'success' => true,
+            'data' => $myFavorites,
+            'message' => 'My favourits.','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+    } catch (Exception $exception) {
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Some Error occured',
+            'error'=>$exception->getMessage(),
+            'response_code'=>500,
+            
+        ], 500);
+    }
+    
+    }
+
 
 
     
