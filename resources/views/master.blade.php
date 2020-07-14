@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Streamly</title>
 
   <!-- Font Awesome Icons -->
@@ -57,4 +57,18 @@
     margin-right: 5px;
     margin-top: 5px;
     padding: 0 5px;
+}
+.dotred {
+  height: 10px;
+  width: 10px;
+  background-color: #DB3545;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dotgreen {
+  height: 10px;
+  width: 10px;
+  background-color: #27A844;
+  border-radius: 50%;
+  display: inline-block;
 }</style>

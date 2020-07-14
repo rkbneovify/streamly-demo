@@ -64,8 +64,9 @@ class Setting extends Controller
     	return view('frontend.pages.account.setting', compact('login','allSession','subscription','plan','userinfo'));
     }
 
-    public function sessiondestroy($id,$tokenString)
-    {   
+    public function sessiondestroy($id,Request $request)
+    {   $input=$request->only('access_token');
+        $tokenString=$input['access_token'];
         $myarr=[];
         array_push($myarr,$id );  
        // print_r($myarr);

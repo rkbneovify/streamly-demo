@@ -213,9 +213,10 @@
 										<h4>Remove Device</h4>
 										<p>{{ $user->device_name ?? '' }} inch will be removed. Would you like to continue?</p>
 										<div>
-											<form action="{{ url('user/sessiondestroy', $user->id.'/'.$user->access_token) }}" method="POST">
+											<form action="{{ url('user/sessiondestroy', $user->id) }}" method="POST">
 												<input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+																				<input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="access_token" value="{{ $user->access_token }}">
 											{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 											<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete"></form>
 											<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
@@ -248,6 +249,7 @@
 					</div>
 				</div>
 				{{-- {{show_currency_symbol( $plan->currency) ?? ''}} --}}
+				@if (Auth::user()->subscribed('main')) 
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
@@ -271,13 +273,31 @@
 						</ul>
 					</div>
 				</div>
-
+				@else
 				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Current Pack
+								<b><span class="pull-right">		No Pack Subscribed</span></b>
+							</li>
+							
+							<li>
+								Select Plan
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  href="/selectplan">Select plan</a></span></b>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+        @endif
+				{{-- <div class="row setting-cards mt-5">
 					<div class="text-center col-centered col-md-8">
 						<a class="btn btn-lg account-save-btn" href="javascript:void(0)">SAVE CHANGES</a>
 						<a class="btn btn-lg account-cancel-btn ml-4" style="width: 12rem;" href="javascript:void(0)">Cancel</a>
 					</div>
-				</div>
+				</div> --}}
 		</div>
 		
 	</section>
