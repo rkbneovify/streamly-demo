@@ -91,9 +91,10 @@
                           {{-- <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
                           <a class="btn btn-xs btn-info" href="{{ url('admin/users/connected', $user->users_id) }}">Edit</a> --}}
                           
-                                    <form action="{{ url('admin/users/sessiondestroy', $user->id.'/'.$user->access_token) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/users/sessiondestroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="access_token" value="{{ $user->access_token }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="Delete">
                                     </form>
                                 

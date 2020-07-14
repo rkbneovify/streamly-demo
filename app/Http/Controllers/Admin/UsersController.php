@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use JWTAuth;
 
+use Yajra\DataTables\DataTables;
+
 class UsersController extends Controller
 {     
     public function __construct()
@@ -136,11 +138,13 @@ class UsersController extends Controller
     {
         $user= User::whereId($id)->delete(); 
          if($user){
-            return redirect('admin/users')->with('info','User Deleted Successfully');
+            return response()->json(['success'=>'User deleted successfully.']);
+          //  return redirect('admin/users')->with('info','User Deleted Successfully');
                       
         
         }else{
-            return redirect('admin/users')->with('info','User Not found');
+            return response()->json(['success'=>'User Not found.']);
+           // return redirect('admin/users')->with('info','User Not found');
             
         }
 
@@ -191,8 +195,9 @@ class UsersController extends Controller
         return view('admin.users.connected',compact('allSession'));
     }
 
-     public function sessiondestroy($id,$tokenString)
-    {   
+     public function sessiondestroy($id,Request $request)
+    {   $input=$request->only('access_token');
+      $tokenString=$input['access_token'];
         $myarr=[];
         array_push($myarr,$id );  
        // print_r($myarr);
@@ -213,14 +218,27 @@ config([
 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
         
          if($user){
-            return redirect('admin/users/session/')->with('info','User Session Deleted Successfully');
+            return redirect()->back()->with('info','User Session Deleted Successfully');
                       
         
         }else{
-            return redirect('admin/users/session/')->with('info','User Session Not found');
+            return redirect()->back()->with('info','User Session Not found');
             
         }
 
         
+    }
+
+    public function UserAjaxData()
+    {  
+
+
+        return DataTables::of(User::with('roles'))
+        
+        ->addColumn('action', function($row) {
+            return ' <a href="/admin/users/edit/'. $row->id .'" class="btn btn-xs btn-primary">View/Edit</a> <a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
+        })
+        ->addIndexColumn()
+        ->make(true);
     }
 }
