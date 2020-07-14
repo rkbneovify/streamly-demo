@@ -111,10 +111,10 @@ $(function() {
         {       
             "render": function(data, type, row) {
                 if (row.status==1) {
-                    return '<span class="badge badge-success">Active</span>';
+                  return '<span class="dotgreen"></span> Active';
                 }
                 else if (row.status==0) {
-                    return '<span class="badge badge-danger">Inactive</span>';
+                  return '<span class="dotred"></span> Inactive';
                 }
                 else {
                     return '<span class="label label-default">unknown</span>';

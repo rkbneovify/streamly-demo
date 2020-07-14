@@ -22,20 +22,18 @@
 
     <!-- Main content -->
     <section class="content">
-    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
-                                        Add new subscription
-                                    </a>
 
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Subscription</h3>  <div class="text-center">
-            <a  class=" btn btn-xs btn-warning" href="{{ url('stripesync') }}">Stripe Expiry Date Sync</a></div>
+            </div>
           <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-              <i class="fas fa-minus"></i></button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-              <i class="fas fa-times"></i></button>
+            
+    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
+      Add new subscription
+  </a>
+  <a  class=" btn btn-xs btn-warning" href="{{ url('stripesync') }}">Stripe Expiry Date Sync</a>
           </div>
         </div>
         <div class="card-body p-0">
@@ -70,7 +68,7 @@
               <tr>
               <td>#</td>
               
-    <td>{{ $user->user->name }}</td>
+    <td>{{ $user->user->name ??''}}</td>
     {{-- <select name="product" id="product" class="form-control" disabled>
                   
       @foreach($plans as $id => $pack)
@@ -90,10 +88,10 @@
       
       @endforeach
     </td>
-    <td>{{ $user->created_at }}</td>
-    <td>{{ $user->renews_at }}</td>
+    <td>{{ $user->created_at ??'' }}</td>
+    <td>{{ $user->renews_at ??'' }}</td>
     <td >
-                            {{$user->stripe_status}}
+                            {{$user->stripe_status??''}}
     </td>
     <td>
                                 

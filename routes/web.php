@@ -58,6 +58,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    Route::get('user/data', 'Admin\UsersController@UserAjaxData');
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
@@ -66,7 +67,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
 Route::get('/users/edit/{id}', 'Admin\UsersController@edit');
 Route::put('userupdate/{id}','Admin\UsersController@update')->name('userupdate');
 Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
-Route::delete('users/sessiondestroy/{id}/{access_token}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
+Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
 
 
   //channel
@@ -89,6 +90,7 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
     Route::put('zipcodeupdate/{id}','ZipcodeController@update')->name('zipcodeupdate');
     Route::delete('zipcode/destroy', 'ZipcodeController@massDestroy')->name('zipcode.massDestroy');
     Route::get('zipcode/category', 'ZipcodeController@categoryData');
+    
     Route::get('zipcode/allowedzipdata', 'ZipcodeController@allowedZipdata');
 
 Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
@@ -124,7 +126,7 @@ Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
-Route::delete('user/sessiondestroy/{id}/{access_token}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
+Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
