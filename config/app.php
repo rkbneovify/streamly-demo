@@ -242,6 +242,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
+        'LogActivity' => App\Helpers\LogActivity::class,
 
 
     ],

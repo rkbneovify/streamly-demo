@@ -101,6 +101,10 @@ Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
 Route::get('/hlsmonitor', 'VideoAnylyzerController@test2');
 });
 
+Route::get('add-to-log', 'HomeController@myTestAddToLog');
+
+Route::get('logActivity', 'HomeController@logActivity');
+
 
 
 
