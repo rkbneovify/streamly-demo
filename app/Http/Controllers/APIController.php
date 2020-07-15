@@ -19,6 +19,7 @@ use Validator;
 use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
+use App\Models\RecentChannel;
 class APIController extends Controller
 {
     /**
@@ -379,8 +380,8 @@ public function login(Request $request)
         $myFavorites = JWTAuth::user()->favorites;
         $response = [
             'success' => true,
-            'data' => $myFavorites,
-            'message' => 'My favourits.','response_code'=>200,
+            'data' => $myFavorites->unique('id'),
+            'message' => 'My favourites.','response_code'=>200,
         ];
         return response()->json($response, 200);
     } catch (Exception $exception) {
@@ -396,7 +397,81 @@ public function login(Request $request)
     
     }
 
+    public function addToRecent(Request $request){
+        $limit = 10;
+        try { $id =JWTAuth::user()->id;
+            $count = RecentChannel::where('user_id','=',$id)->count();
+if($count >=  $limit){
+    RecentChannel::where('user_id','=',$id)->orderBy('created_at','desc')->skip(5)->delete();
+}
+        $now = Carbon::now('utc')->toDateTimeString();
+       
+        
+        $channelid = $request->input('channelids');
+       
+        $channels= preg_split('/,/', $channelid, -1, PREG_SPLIT_NO_EMPTY);
+        $channelArr= array_unique($channels, SORT_NUMERIC);
+        $model=new RecentChannel;
+    
+        
 
+foreach ($channelArr as $value) {
+    $model->updateOrCreate(
+        [
+            'channels_id' => $value,
+            'user_id'  => $id,
+            'updated_at'=> $now
+        ],
+        [
+            'channels_id' => $value,
+            'user_id' => $id,
+            'created_at'=> $now,
+            'updated_at'=> $now
+        ]
+    );
+}
+
+        
+     $response = [
+        'success' => true,
+        //'data' => $count,
+        'message' => 'Added to recent','response_code'=>200,
+    ];
+     
+     return response()->json($response,200);}
+     catch (Exception $exception) {
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Some Error occured',
+            'error'=>$exception->getMessage(),
+            'response_code'=>500,
+            
+        ], 500);
+    }
 
     
+}
+public function myRecents()
+    { try { 
+        // $genres = Genre::pluck('name', 'id');
+        $recentschannel = JWTAuth::user()->recentschannel;
+        $response = [
+            'success' => true,
+            'data' => $recentschannel,
+            'message' => 'My Recent.','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+    } catch (Exception $exception) {
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Some Error occured',
+            'error'=>$exception->getMessage(),
+            'response_code'=>500,
+            
+        ], 500);
+    }
+    
+    }
 }
