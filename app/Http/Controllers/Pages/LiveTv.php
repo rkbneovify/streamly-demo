@@ -205,5 +205,23 @@ public function myFavorites()
 }
 
 }
+
+public function showRecent()
+    { 
+
+        if( Auth::check()){
+            $login = true;
+            $genres = Genre::pluck('name', 'id');
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+
+       
+      $myRecent=Auth::user()->recentschannel;
+        
+        return view('frontend.pages.recentchannel',compact('myRecent','genres','login'));
+
+    }
     
 }

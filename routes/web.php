@@ -121,6 +121,7 @@ Route::get('/selectplan', 'Pages\Payment@showPlan');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
 Route::get('/currentepisode', 'Pages\LiveTv@getcurrentepisode');
 Route::get('/livetv/list', 'Pages\LiveTv@showAllPage');
+Route::get('/livetv/recent', 'Pages\LiveTv@showRecent');
 Route::get('/livetv/{channel}/{genre}', 'Pages\LiveTv@showChannel');
 Route::get('/videojs', 'Pages\LiveTv@videojs');
 Route::get('/videojs2', 'Pages\LiveTv@videojs2');
