@@ -42,10 +42,12 @@
                                     <a class="dropdown-item" href="/account/settings">Account Settings</a>
                                     @if (Auth::user()->subscribed('main')) 
                                     <a class="dropdown-item" href="/my_favorites">My favorites</a>
+                                    <a class="dropdown-item" href="/livetv/recent">My recents</a>
                                     @endif
                                     <a class="dropdown-item" href="#">Download app</a>
                                     <a class="dropdown-item" href="/faq">Help & Support</a>
-                                    <a class="dropdown-item js-scroll-trigger btn-login" onclick="logoutUser(event)" href="javascript:void(0)">Logout</a>
+                                    <a class="dropdown-item js-scroll-trigger btn-login logouttheuser"  href="javascript:void(0)">Logout</a>
+                                    
                                 </div>
                             </li>   
                         </ul>
@@ -60,3 +62,21 @@
         </div>
     </div>
 </nav>
+
+
+<div class="modal fade" id="Logout">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <h4>Logout </h4>
+                <p>Are you sure you want to logout?</p>
+                <div>
+                    <a class="btn btn-sm" href="javascript:void(0)" onclick="logoutUser(event)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a>
+                    <a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

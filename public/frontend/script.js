@@ -88,3 +88,11 @@ window.setTimeout(function() {
         $(this).remove();
     });
 }, 3000);
+
+jQuery(document).ready(function(){
+
+    jQuery('.logouttheuser').on('click', function(){
+        jQuery('#Logout').modal('show');
+    });
+
+});
