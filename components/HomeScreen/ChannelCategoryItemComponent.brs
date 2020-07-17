@@ -25,7 +25,6 @@ end sub
        centery = (60 - focuslerect.height)/2
        
        m.focus.translation = [ centerx, centery ]
-'      
       
     end sub
   

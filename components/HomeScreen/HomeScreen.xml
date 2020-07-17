@@ -23,21 +23,21 @@
              visible="false">
           
            <Poster
-            id="channelBackgroundposter" 
-             
+            id="channelBackgroundposter"             
             height="1080"
             width="1920"
             loadwidth="1280"  
             loadHeight="720"    
             loadDisplayMode = "scaleTofill"            
              /> 
-                        
+             
+     <Poster id= "searchPoster"/>                   
      <TimeGrid id="timeGrid"/>
      
-     
+     <!--  translation= "[1417,44]" -->
       <Poster
           uri="pkg:/images/home/profileSetting.png"
-          translation= "[1417,44]"
+          translation= "[1657,44]"
           loadDisplayMode="scaletofill"
           height="56"
           width="56">
@@ -47,7 +47,7 @@
              translation= "[70,10]"/>
       </Poster>
       
-      <Poster
+     <!--  <Poster
           uri="pkg:/images/home/backNavIcon.png"
           translation= "[1657,44]"
           height="56"
@@ -59,7 +59,7 @@
              id="pressbackLabel"
             
              translation= "[70,10]"/>
-      </Poster>
+      </Poster> -->
       
       <!-- <Poster
           id=""

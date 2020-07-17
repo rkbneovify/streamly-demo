@@ -29,21 +29,21 @@
 	 
       </Poster>
       <Rectangle id="opcitythumpnail" translation= "[0,0]" width="1920" height="1080" color="#000000" opacity=".62" />
-      <Poster
+    <!--   <Poster
           uri="pkg:/images/home/ChannelMenu.png"
           translation= "[80,55]"
           width="56"
-          height="56">
+          height="56"> -->
       
-       <Label text="CHANNEL GUIDE"
+     <!--   <Label text="CHANNEL GUIDE"
                id="channelGuide"             
                translation= "[80,10]">
                <Label text="( Press * button )"
                id="pressmenuButton"             
                translation= "[230,8]"/> 
-               </Label>             
-      </Poster>
-      
+               </Label>  -->            
+      <!-- </Poster>
+       -->
       <Poster
           uri="pkg:/images/streamly_logo.png"
           translation= "[1541,44]"

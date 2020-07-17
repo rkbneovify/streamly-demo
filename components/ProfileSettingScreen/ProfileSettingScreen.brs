@@ -6,6 +6,7 @@ sub init()
  
  'dialog
  m.dialogbackgndUri = m.top.findNode("dialogbackgndUri")
+' m.dialogbackgndUri.uri = "pkg:/images/home/borderwhite3.png"
  m.logoutView = m.top.findNode("logoutView")
  m.profileView = m.top.findNode("profileView")
  m.NoButton = m.top.findNode("NoButton")
@@ -16,23 +17,26 @@ sub init()
  m.labelNo = m.top.findNode("labelNo")
 
 
-  font = getFont(30, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+  font = getFont(36, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
   m.Lbaelok.font = font 
   m.labelYes.font = font
   m.labelNo.font = font
-  m.logoutText.font = getFont(32, "pkg:/fonts/HelveticaNeueMedium.ttf")
+  m.logoutText.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
   textTranslate()
 
 '  m.ProfileTask = CreateObject("roSGNode", "TrackerTask")
 '  m.ProfileTask.control="init"
    m.logout = false
 
+
+
 '  dialog error
    m.ErrorDialogView = m.top.findNode("ErrorDialogView")
    m.buttonClick = m.top.findNode("buttonClick")
+   m.buttonClick.horizAlign="center"
+   m.buttonClick.vertAlign="center"
    m.messageBody = m.top.findNode("messageBody")
-  
-
+   
     m.YesButton.observeField("buttonSelected","logoutApiCall")
     m.NoButton.observeField("buttonSelected","closeDialog")
    'loader
@@ -42,20 +46,22 @@ sub init()
     m.LoginBusySpinner.observeField("visible", "showspinner")
     m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
     m.LoginBusySpinner.visible = false
- 
- 
+     
     m.ok = m.top.findNode("ok")
     m.ok.observeField("buttonSelected","closeDialog")
  
- m.dialogOptions = m.top.findNode("dialogOptions")
+  m.dialogOptions = m.top.findNode("dialogOptions")
+  m.registredDevicesMarkup = m.top.findNode("registredDevicesMarkup")
+ 
  
  initMrkupWithData()
-' SupportDialog()
-' m.top.observeField("visible","setfocus")
+ 
+ 
  m.top.observeField("focusedChild","OnFocusChildChange")
  m.ProfileCategory.setFocus(true)   
- SupportDialog()
+ initSupportDialog()
  privicyPolicy()
+ 
 end sub
 
 sub textTranslate()
@@ -69,20 +75,16 @@ sub logoutApiCall()
  ApiCallFor("Sign out","POST")
 end sub
 
+
 sub closeScreen()
-?"ProfileScreen::closeScreen";
-'m.buttonClick.observeField("buttonSelected","closeScreen")
-m.buttonClick.unobserveField("buttonSelected")
-   if m.buttonClick.hasFocus() and m.logout = true
-       
+?"ProfileScreen::closeScreen"; 
        ?"ProfileSetting::if:close screen::" 
        m.logout = false
        m.buttonClick.setFocus(false)
        m.ErrorDialogView.visible = false
        
        m.top.logout = true
-    
-    end if
+
 end sub
 sub closeDialog()
  ?"ProfileSetting:: close dialog"   
@@ -130,7 +132,8 @@ sub initMrkupWithData()
  
 sub initDialogMrkupWithData(event as object)
 ?"ProfileSetting::MarkuGrid:init(): event pos: ";event.getData()
- 
+ m.dialogOptions.visible = false
+  m.registredDevicesMarkup.visible = false
  if  event.getData() = 0
       m.ProfileCategory.setFocus(false)
      ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text,"GET")
@@ -160,7 +163,6 @@ sub initDialogMrkupWithData(event as object)
      showDialog("Sign out",true,false)
  end if
 
- 
 end sub
 
 sub ApiCallFor(callto as String, callType as String)
@@ -171,9 +173,8 @@ sub ApiCallFor(callto as String, callType as String)
      m.ProfileTask.callto = callto
      m.ProfileTask.callType = callType
       
-     m.ProfileTask.observeField("response","responseAPI")
-     
-     m.ProfileTask.observeField("response","responseAPI")
+     m.ProfileTask.observeField("response","responseAPI")     
+'     m.ProfileTask.observeField("response","responseAPI")
      m.ProfileTask.control = "RUN" 'Run the task node 
      
 end sub 
@@ -189,15 +190,27 @@ sub responseAPI(event as object)
     if m.ProfileTask.callto = "Account" 
        marupContent = createObject("roSGNode", "ContentNode")  
        userData = responseData.data
-       for each data  in userData.Keys()
-         ?"data: "data
-         ?"userData[data]: "userData[data]
-         if userData[data] <> invalid        
-            assoArray = createObject("roAssociativeArray")    
-            assoArray[data+":"] =   userData[data].ToStr()          
-            marupContent.createChild("ContentNode").addFields(assoArray)
-          end if
-        end for  
+        
+       if userData.name <> invalid        
+            
+            marupContent.createChild("ContentNode").addFields({"Username:":userData.name.ToStr()})
+       end if
+       if userData.email <> invalid        
+        marupContent.createChild("ContentNode").addFields({"Email:":userData.email.ToStr()})
+       end if
+       if userData.version <> invalid        
+        marupContent.createChild("ContentNode").addFields({"Version:":userData.version.ToStr()})
+       end if
+       
+       if userData.created <> invalid        
+           marupContent.createChild("ContentNode").addFields({"Build Date:":userData.created.ToStr()})
+       end if
+  
+        m.dialogOptions.itemSize = [816,52]
+
+        
+'         marupContent.createChild("ContentNode").addFields(assoArray)
+        m.dialogOptions.visible = true 
         m.dialogOptions.content = marupContent
         showDialog("Account",true,false) 
     else if m.ProfileTask.callto = "Sign out" 
@@ -221,37 +234,32 @@ sub responseAPI(event as object)
             count=count+1
            end if        
         end for
-        m.dialogOptions.content = marupContent
+       
+        m.registredDevicesMarkup.visible = true
+        m.registredDevicesMarkup.content = marupContent
         showDialog("Registered Devices",true,false)
     
     else if m.ProfileTask.callto = "Support" 
         ?"Profile::responseData.message:";responseData.data
         ?"Profile::responseData.message:";responseData.message
-'            "message": "For help and support call the numbers below"
-   
+'            "message": "For help and support call the numbers below"   
                  
          m.TextLabel.text = responseData.message
-         contactText = ""
-         for each contacNo in responseData.data
-              contactText = contactText +contacNo+chr(10)  
-         end for
-         m.contactNumber.text = contactText
-         m.top.appendChild(m.DialogNode)
-         m.OkButton.setFocus(true)
+'         contactText = ""
+'         for each contacNo in responseData.data
+'              contactText = contactText +contacNo+chr(10)  
+'         end for
+     if responseData.data.email<> invalid
+         m.contactNumber.text = responseData.data.email
+         m.top.appendChild(m.SupportDialog)
+         m.HelpButton.setFocus(true)
+     end if
          
          
-         
-'      02181
-'      jbl to gwl
-      
-'      SupportDialog()
-'       m.DialogNode.visible = true
-'       m.OkButton.setFocus(true)
-'       m.top.appendChild(m.DialogNode)
      
     else if m.ProfileTask.callto = "Privacy & Policy"
          ?"Profile::responseData.message:";responseData
-         
+'        name, email,created_at
          m.ScrolableText.text = responseData.data.Replace("\n",chr(10))
          m.top.appendChild(m.DialogNodePoster)
          m.ScrolableText.setFocus(true)
@@ -261,7 +269,7 @@ sub responseAPI(event as object)
    ?"error dialog to show the error:";responseData
 '    showDialog("",false,false)
      
-    showDialogError(true , responseData.Failure, "Something error")
+    showDialogError(true , responseData.Failure, "Ok")
  end if
 
 end sub
@@ -279,8 +287,8 @@ sub privicyPolicy()
     m.ScrolableText.width = 1183
     m.ScrolableText.height = 500
     m.ScrolableText.translation = [50,60]
-    m.ScrolableText.font = "font:SmallBoldSystemFont"
-    m.ScrolableText.text = "Roku now offers Nielsen audience measurement software on the Roku platform. You may choose to turn on these Nielsen audience measurement features in your channel. By doing so, you acknowledge and agree: &#xA; &#xA;YOU MAY NOT ENABLE THE NIELSEN AUDIENCE MEASUREMENT FEATURES IF YOU DO NOT AGREE TO ABOVE. PLEASE CONTACT ROKU OR NIELSEN FOR FURTHER INFORMATION. Roku now offers Nielsen audience measurement software on the Roku platform. You may choose to turn on these Nielsen audience measurement features in your channel. By doing so, you acknowledge and agree: &#xA; Roku now offers Nielsen audience measurement software on the Roku platform. You may choose to turn on these Nielsen audience measurement features in your channel. By doing so, you acknowledge and agree: &#xA;"
+    m.ScrolableText.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.ScrolableText.text = ""
     m.ScrolableText.horizAlign = "left" 
     m.ScrolableText.vertAlign = "top"
     
@@ -289,95 +297,98 @@ sub privicyPolicy()
     m.OkButton1.observeField("buttonSelected","closePrivicyPolicy")  
 '    m.OkButton.setFocus(true)           
                  m.OkButton1.translation= [466,592]
-                 m.OkButton1.minWidth  = "280"
-                 m.OkButton1.maxWidth  = "280"                
+                 m.OkButton1.minWidth  = "270"
+                 m.OkButton1.maxWidth  = "270"                
                  m.OkButton1.focusedTextColor="#FFFFFF"
                  m.OkButton1.height = "84"              
                  m.OkButton1.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
                  m.OkButton1.showFocusFootprint="true"             
                  m.OkButton1.iconUri=""
                  m.OkButton1.focusedIconUri=""
-                 m.OkButton1.focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
+                 m.OkButton1.focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
 '                 m.OkButton.horizAlign="center"
                  okLabel =  m.OkButton1.createChild("Label")
                         okLabel.horizAlign="center"
                         okLabel.height = "84"
-                        okLabel.width  = "280"
+                        okLabel.width  = "270"
                         okLabel.vertAlign = "center"
                         okLabel.text="OK" 
+                        font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf")
+                        okLabel.font = font 
 
 end sub
   
-
-sub SupportDialog()
-
-     m.DialogNode = createObject("roSGNode", "Poster")
-'     m.top.appendChild(m.DialogNode)
-'     m.DialogNode.visible =false
-     m.DialogNode.width = 1223
-     m.DialogNode.height = 574
-     m.DialogNode.uri = "pkg:/images/profile/dialogBackground.png"
-     m.DialogNode.translation = [349,224]
-     
-     m.TextLabel = m.DialogNode.createChild("Label")
-'     m.TextLabel.text = "For Help and Support You can call us on below numbers."
-     m.TextLabel.translation = [0, 87]
-     m.TextLabel.width = 1223
-     m.TextLabel.height = 100
-     m.TextLabel.horizAlign = "Center" 
-     m.TextLabel.vertAlign = "Center"     
-     
-    m.contactNumber = m.DialogNode.createChild("ScrollableText") 
-    m.contactNumber.width = 1223
-    m.contactNumber.height = 200
-    m.contactNumber.translation = [0, 150]
-    m.contactNumber.font = "font:SmallBoldSystemFont"
-    m.contactNumber.horizAlign = "Center" 
-    m.contactNumber.vertAlign = "Center"
-   
-   
-     
-     
-'     m.contactNumber = m.DialogNode.createChild("Label")
-'     text ="+1-548965-51 (24*7) " '&#xA; 1-1800-815065-00"
-'     m.contactNumber.text = text
-'     m.contactNumber.translation = [423, 226]
-'     m.contactNumber.width =0
-'     m.contactNumber.height = 0
-'     m.contactNumber.numLines = 0
-     
-    m.OkButton = m.DialogNode.createChild("Button")
-    m.OkButton.observeField("buttonSelected","closeOkDialog")  
-'    m.OkButton.setFocus(true)           
-                 m.OkButton.translation= [466,429]
-                 m.OkButton.minWidth  = "280"
-                 m.OkButton.maxWidth  = "280"                
-                 m.OkButton.focusedTextColor="#FFFFFF"
-                 m.OkButton.height = "84"              
-                 m.OkButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                 m.OkButton.showFocusFootprint="true"             
-                 m.OkButton.iconUri=""
-                 m.OkButton.focusedIconUri=""
-'                 m.OkButton.horizAlign="center"
-                 okLabel =  m.OkButton.createChild("Label")
-                        okLabel.horizAlign="center"
-                        okLabel.height = "84"
-                        okLabel.width  = "280"
-                        okLabel.vertAlign = "center"
-                        okLabel.text="OK"                          
-end sub
 sub closeOkDialog()
 ?"closeOkDialog"
-  if m.OkButton.hasFocus()  and m.top.isInFocusChain()
+  if m.HelpButton.hasFocus()  and m.top.isInFocusChain()
      
-     m.OkButton.setFocus(false)
-     m.top.removeChild(m.DialogNode)                   
+'     m.HelpButton.setFocus(false)
+     m.top.removeChild(m.SupportDialog)                   
      m.ProfileCategory.setFocus(true)
  
   else  
     
   end if 
 end sub
+
+sub initSupportDialog()
+
+     m.SupportDialog = createObject("roSGNode", "Poster")
+'     m.SupportDialog.visible = false
+     m.SupportDialog.width = 1223
+     m.SupportDialog.height = 370
+     m.SupportDialog.uri = "pkg:/images/profile/dialogBackground.png"
+     m.SupportDialog.translation = [(1920-m.SupportDialog.boundingRect().width)/2,(1080-m.SupportDialog.boundingRect().height)/2]
+     
+     m.LayoutGroup = m.SupportDialog.createChild("LayoutGroup")
+     m.LayoutGroup.translation = [50, 80]
+     m.LayoutGroup.layoutDirection = "vert"
+     m.LayoutGroup.itemSpacings = [10]
+'     m.LayoutGroup .horizAlignment ="vert"
+'      m.LayoutGroup .vertAlignment ="center"
+     m.TextLabel = m.LayoutGroup.createChild("Label")
+'     m.TextLabel.translation = [0, 87]
+     m.TextLabel.width = 1023
+     m.TextLabel.height = 0
+     m.TextLabel.horizAlign = "Center" 
+     m.TextLabel.vertAlign = "Center"     
+     m.TextLabel.text = "For Help and Support You can mail us on below Contact."
+     m.TextLabel.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf")
+     
+    m.contactNumber = m.LayoutGroup.createChild("ScrollableText") 
+    m.contactNumber.width = 1223
+    m.contactNumber.height = 80
+'    m.contactNumber.translation = [0, 150]
+    m.contactNumber.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.contactNumber.horizAlign = "Center" 
+    m.contactNumber.vertAlign = "Center"
+'    m.contactNumber.text ="Shahjad.305@gmail.com"
+'    m.contactNumber.translation = [500,0]   
+    
+    
+    m.HelpButton = m.SupportDialog.createChild("Button")
+    m.HelpButton.observeField("buttonSelected","closeOkDialog")  
+              
+'                 m.OkButton.translation= [466,429]
+                 m.HelpButton.minWidth  = "280"
+                 m.HelpButton.maxWidth  = "280"                
+                 m.HelpButton.focusedTextColor="#FFFFFF"
+                 m.HelpButton.height = "84"              
+                 m.HelpButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                 m.HelpButton.showFocusFootprint="true"             
+                 m.HelpButton.iconUri=""
+                 m.HelpButton.focusedIconUri=""
+                 okLabel =  m.HelpButton.createChild("Label")
+                        okLabel.horizAlign="center"
+                        okLabel.height = "84"
+                        okLabel.width  = "280"
+                        okLabel.vertAlign = "center"
+                        okLabel.text="OK" 
+                   font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf")
+                        okLabel.font = font             
+    m.HelpButton.translation = [(1223 -m.HelpButton.boundingRect().width)/2,250]                                      
+end sub
+
  
 sub showDialog(dialogView as String , show as boolean ,focus as boolean) 
  ?"ProfileSetting::showDialog"
@@ -393,14 +404,24 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
         m.logoutView.visible = show
         m.Dialog.visible = show
         
-     else if dialogView = "Account" or dialogView = "Registered Devices"
+     else if dialogView = "Account" 
         
         m.dialogbackgndUri.width = 1223
-        m.dialogbackgndUri.height = 724
+        m.dialogbackgndUri.height = 640       
+        m.profileView.visible = show
+        m.Dialog.visible = show
+        m.ok.translation= [471,510]
+        m.ok.setFocus(true)
+          
+     else if dialogView = "Registered Devices"
+        
+        m.dialogbackgndUri.width = 1223
+        m.dialogbackgndUri.height = 714
         
         m.profileView.visible = show
         m.Dialog.visible = show
         m.ok.setFocus(true) 
+        m.ok.translation= [471,590]
      else if dialogView = ""
      
      end if
@@ -411,13 +432,7 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
  
 end sub
  
- 
-'sub setfocus()
-'  ?"ProfileScreen: m.top.visible ";m.top.visible
-'  if m.top.visible  = true
-'    m.ProfileCategory.setFocus(true)
-'  end if 
-'end sub 
+
 sub showspinner(event as object)
 ?"ProfileSetting::showspinner:event : ";event
 
@@ -459,7 +474,8 @@ sub showDialogError(visible as boolean , text as String, buttontext as String)
     m.buttonClick.text = buttontext
 '    m.buttonClick.getCh
     m.buttonClick.observeField("buttonSelected","closeScreen")
-   
+    m.buttonClick.setFocus(true)
+    m.logout = true
  else 
     m.buttonClick.setFocus(visible)
     m.ErrorDialogView.visible = visible
@@ -496,7 +512,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 
 '    m.OkButton
 '      
-     else if  m.OkButton.hasFocus()  and key="back"          
+     else if  m.HelpButton.hasFocus()  and key="back"          
                  
            closeOkDialog()
       
@@ -507,8 +523,8 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
        m.buttonClick.setFocus(false)
        m.ErrorDialogView.visible =false
        m.top.logout = true
-       m.logout = false
-       
+       m.logout = true
+
        return true
     else  if m.YesButton.hasFocus() and key = "left"
         m.YesButton.setFocus(false)   

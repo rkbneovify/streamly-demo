@@ -1,4 +1,5 @@
 sub init()
+
   ?"login init()"
     m.SignInLabel = m.top.findNode("SignInLabel")
     m.UsernamEditText = m.top.findNode("UsernamEditText")
@@ -6,12 +7,11 @@ sub init()
     m.SignInButton = m.top.findNode("SignInButton")
     
     'loader
-    m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
-    m.LoaderBackground = m.top.findNode("LoaderBackground")    
-    m.LoginBusySpinner.observeField("visible", "showspinner")
-    m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
-    m.LoginBusySpinner.visible = false
-      
+'    m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
+'    m.LoaderBackground = m.top.findNode("LoaderBackground")    
+'    m.LoginBusySpinner.observeField("visible", "showspinner")
+'    m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+'    m.LoginBusySpinner.visible = false     
  
     m.UsernamPoster = m.top.findNode("UsernamPoster")
     m.PasswordPoster = m.top.findNode("PasswordPoster") 
@@ -40,16 +40,97 @@ sub init()
     UsernameFont  = getFont(24,"pkg:/fonts/HelveticaNeueMedium.ttf") 
     m.UsernamLable.font = UsernameFont
     m.PasswordLable.font = UsernameFont
-
+    
+    initSupportDialog()
+    needHelp()
     rememberMe()
     dontHaveAccount()
 
     m.top.observeField("focusedChild","OnFocusChildChange")
 
     m.setFocus=false
-    initDialogforCreateAccount()
+    
+    
+    initApi()
 
+   'loader
+    m.LoaderBackground = m.top.createChild("Rectangle")
+    m.LoaderBackground.color="0x000000FF"
+    m.LoaderBackground.visible = false
+    m.LoaderBackground.opacity="0.65"   
+    m.LoaderBackground.width = 1920
+    m.LoaderBackground.height = 1080
+    
+    m.LoginBusySpinner = m.LoaderBackground.createChild("BusySpinner")    
+    m.LoginBusySpinner.observeField("visible", "showspinner")
+    m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+    
+    centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
+    centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
+    m.LoginBusySpinner.translation = [ centerx, centery ]
+    
+    m.needHelpText = ""
 end sub
+sub initApi()
+?""    
+     m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node   
+'     ApiCallFor(callto,"GET")
+     m.ProfileTask.callto = "Support"
+     m.ProfileTask.callType = "GET"
+      
+     m.ProfileTask.observeField("response","responseAPI")
+          
+end sub
+sub responseAPI(event as object)
+  responseData = event.getData()
+  ?"ProfileScreen::responseAPI: event: ";responseData
+    showspinner(false)
+    m.SupportDialog.visible = true
+    m.needHelpText = "helpSupport"
+    m.TextLabel.text = responseData.message
+
+     if responseData.data.email<> invalid
+         m.contactNumber.text = responseData.data.email
+         m.top.appendChild(m.SupportDialog)
+         m.HelpButton.setFocus(true)
+     end if
+   m.HelpButton.setFocus(true) 
+ end sub 
+ 
+sub needHelp()
+?"needhelp:"
+
+   m.needHelpButton = m.top.findNode("needHelpButton")    
+   m.needHelpButton.translation =[560,455]
+   m.needHelpButton.textFont =  getFont(24,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+   m.needHelpButton.focusedTextFont =  getFont(26 , "pkg:/fonts/HelveticaNeueMedium.ttf") 
+   m.needHelpButton.text ="Need help ?"
+
+'   m.needHelpButton.observeField("buttonSelected","")  
+
+   m.needHelpButton.minWidth  = "220"
+   m.needHelpButton.maxWidth  = "220"      
+   m.needHelpButton.textColor = "#000000"          
+   m.needHelpButton.focusedTextColor="#0db5ba"
+   m.needHelpButton.height = "45"   
+   m.needHelpButton.focusBitmapUri = "pkg:/images/transparentimg.png"
+            
+   m.needHelpButton.iconUri=""
+   m.needHelpButton.focusedIconUri=""
+   
+   m.needHelpButton.observeField("buttonSelected","showSupportDialog")
+
+   
+end sub
+
+sub showSupportDialog()
+?"showSupportDialog"
+'      m.top.appendChild( m.LoaderBackground ) 
+ m.ProfileTask.control = "RUN"
+ showspinner(true)
+ m.needHelpButton.setFocus(false)
+end sub  
+
 sub dontHaveAccount()
     
     m.dontHaveAccountLAbel = m.top.findNode("registerLabel")
@@ -58,16 +139,15 @@ sub dontHaveAccount()
     m.dontHaveAccountLAbel.color = "#000000"
     m.dontHaveAccountLAbel.Font= getFont(26,"pkg:/fonts/HelveticaNeueMedium.ttf") 
  
-    
     m.OkButton1 = m.dontHaveAccountLAbel.createChild("Button")
     m.OkButton1.observeField("buttonSelected","showDialogforCreateAccount")  
 '    m.OkButton.setFocus(true)           
-                 m.OkButton1.translation= [250,-5]
-                 m.OkButton1.minWidth  = "180"
-                 m.OkButton1.maxWidth  = "180"                
+                 m.OkButton1.translation= [260,-5]
+                 m.OkButton1.minWidth  = "200"
+                 m.OkButton1.maxWidth  = "200"                
                  m.OkButton1.focusedTextColor="#FFFFFF"
-                 m.OkButton1.height = "45"              
-                 m.OkButton1.focusBitmapUri="pkg:/images/Login/createAccountFocus.png"
+                 m.OkButton1.height = "50"              
+                 m.OkButton1.focusBitmapUri="pkg:/images/Login/createAccountFocus1.png"
                  m.OkButton1.showFocusFootprint="true"             
                  m.OkButton1.iconUri=""
                  m.OkButton1.focusedIconUri=""
@@ -77,68 +157,135 @@ sub dontHaveAccount()
                         okLabel.horizAlign="center"
                         okLabel.height = "45"
                         okLabel.color ="#004E92"
-                        okLabel.width  = "180"
+                        okLabel.width  = "200"
                         okLabel.vertAlign = "center"
                         okLabel.text="Register now"
-                        okLabel.font = getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf")     
+                        okLabel.font = getFont(26,"pkg:/fonts/HelveticaNeueMedium.ttf")      
 end sub
  
 sub showDialogforCreateAccount()
-    m.top.appendChild(m.DialogNodePoster)
-    m.OkButton.setFocus(true) 
-end sub
-   
+'    m.top.appendChild(m.DialogNodePoster)
+ m.needHelpText = "registerNow"
+ showdialog("Sign up for the best experience","Please go to http://streamlytv.com for creating new account.",true,"","")   
+'    m.OkButton.setFocus(true) 
+end sub   
  
-sub initDialogforCreateAccount()
-?"showDialogforCreateAccount ;";
 
-    m.DialogNodePoster = createObject("roSGNode", "Poster")
-    m.DialogNodePoster.width = 1223
-    m.DialogNodePoster.height = 554
-    m.DialogNodePoster.uri = "pkg:/images/profile/dialogBackground.png"
-    m.DialogNodePoster.translation = [389,324]
-    
-    m.labelTitle = m.DialogNodePoster.createChild("Label") 
-    m.labelTitle.text = "Sign up for the best experience"
-    m.labelTitle.font =  getFont(44,"pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
-    m.labelTitle.width = 1223
-    m.labelTitle.height = 40
-    m.labelTitle.horizAlign="center"
-    m.labelTitle.vertAlign = "center"     
-    m.labelTitle.translation = [0,50]
+sub initSupportDialog()
      
-    m.ScrolableText = m.DialogNodePoster.createChild("ScrollableText") 
-    m.ScrolableText.width = 1183
-    m.ScrolableText.height = 300
-    m.ScrolableText.translation = [50,130]
-    m.ScrolableText.font = "font:SmallBoldSystemFont"
-    m.ScrolableText.text = "Create account to see your favorite Sports Channels, Movies, News and much more." + chr(10) + chr(10) + "Just Go to the Website for sign up Now: " + chr(10) + "https://www.StreamlyTv.com/account"
-    m.ScrolableText.horizAlign = "center" 
-    m.ScrolableText.vertAlign = "center"
+     m.dialogHeight = 350
+     m.dialogWidth = 1223 
+   
+     m.SupportDialog = m.top.createChild("Poster")
+     m.SupportDialog.visible = false
+     m.SupportDialog.width = m.dialogWidth
+     m.SupportDialog.height = m.dialogHeight
+     m.SupportDialog.uri = "pkg:/images/profile/dialogBackground.png"
+     m.SupportDialog.translation = [(1920 -m.dialogWidth)/2,(1080 -m.dialogHeight)/2]
+     
+     m.LayoutGroup = m.SupportDialog.createChild("LayoutGroup")
+     m.LayoutGroup.translation = [0 , 50]
+     m.LayoutGroup.layoutDirection = "vert"
+     m.LayoutGroup.itemSpacings = [0]
+     m.TextLabel = m.LayoutGroup.createChild("Label")
+     m.TextLabel.width = m.dialogWidth 
+'     * (83.6/100)
+     m.TextLabel.font = getFont(35,"pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf") 
+     m.TextLabel.height = 50
+     m.TextLabel.horizAlign = "Center" 
+     m.TextLabel.vertAlign = "Center"     
+     
+    m.contactNumber = m.LayoutGroup.createChild("Label")
     
+    m.contactNumber.translation = [0,0]
+    m.contactNumber.width = m.dialogWidth
+    m.contactNumber.height = m.dialogHeight * (25/100)
+'    m.contactNumber.translation = [0, 150]
+'    m.contactNumber.font = "font:SmallBoldSystemFont"
+    m.contactNumber.horizAlign = "Center" 
+    m.contactNumber.vertAlign = "Center"
+    m.contactNumber.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf") 
     
-    m.OkButton = m.DialogNodePoster.createChild("Button")
-    m.OkButton.observeField("buttonSelected","closeshowDialogforCreateAccoun") 
-           
-                 m.OkButton.translation= [470,440]
-                 m.OkButton.minWidth  = "240"
-                 m.OkButton.maxWidth  = "240"                
-                 m.OkButton.focusedTextColor="#FFFFFF"
-                 m.OkButton.height = "74"              
-                 m.OkButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                 m.OkButton.showFocusFootprint="true"             
-                 m.OkButton.iconUri=""
-                 m.OkButton.focusedIconUri=""
-                 m.OkButton.focusFootprintBitmapUri = "pkg:/images/profile/button1focus.png"
-'                 m.OkButton.horizAlign="center"
-                 okLabel =  m.OkButton.createChild("Label")
-                        okLabel.horizAlign="center"
-                        okLabel.height = "74"
-                        okLabel.width  = "240"
-                        okLabel.vertAlign = "center"
-                        okLabel.text="OK" 
-    
+    m.HelpButton = m.SupportDialog.createChild("Button")
+    m.HelpButton.observeField("buttonSelected","closeDialog")  
+            
+'                 m.OkButton.translation= [466,429]
+    m.HelpButton.minWidth  = "280"
+    m.HelpButton.maxWidth  = "280"                
+    m.HelpButton.focusedTextColor="#FFFFFF"
+    m.HelpButton.height = "84"              
+    m.HelpButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+    m.HelpButton.showFocusFootprint="true"             
+    m.HelpButton.iconUri=""
+    m.HelpButton.focusedIconUri=""
+    okLabel =  m.HelpButton.createChild("Label")
+    okLabel.horizAlign="center"
+    okLabel.height = "84"
+    okLabel.width  = "280"
+    okLabel.vertAlign = "center"
+    okLabel.text="OK"        
+    okLabel.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+    m.HelpButton.translation = [(m.dialogWidth -m.HelpButton.boundingRect().width)/2,m.dialogHeight * (65/100)]                                      
+
 end sub
+
+sub initTermDialog()
+     
+     m.dialogHeight = 750
+     m.dialogWidth = 1223 
+   
+     m.termDialog = m.top.createChild("Poster")
+     m.termDialog.visible = false
+     m.termDialog.width = m.dialogWidth
+     m.termDialog.height = m.dialogHeight
+     m.termDialog.uri = "pkg:/images/profile/dialogBackground.png"
+     m.termDialog.translation = [(1920 -m.dialogWidth)/2,(1080 -m.dialogHeight)/2]
+     
+     m.LayoutGroup = m.termDialog.createChild("LayoutGroup")
+     m.LayoutGroup.translation = [0 , 50]
+     m.LayoutGroup.layoutDirection = "vert"
+     m.LayoutGroup.itemSpacings = [0]
+     m.TextLabel = m.LayoutGroup.createChild("Label")
+     m.TextLabel.width = m.dialogWidth 
+'     * (83.6/100)
+     m.TextLabel.font = getFont(35,"pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf") 
+     m.TextLabel.height = 50
+     m.TextLabel.horizAlign = "Center" 
+     m.TextLabel.vertAlign = "Center"     
+     
+    m.termConditionText = m.LayoutGroup.createChild("ScrollableText")
+    
+    m.termConditionText.translation = [0,0]
+    m.termConditionText.width = m.dialogWidth
+    m.termConditionText.height = m.dialogHeight * (25/100)
+'    m.contactNumber.translation = [0, 150]
+'    m.contactNumber.font = "font:SmallBoldSystemFont"
+    m.termConditionText.horizAlign = "Center" 
+    m.termConditionText.vertAlign = "Center"
+    m.termConditionText.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+    
+    m.TermButton = m.termDialog.createChild("Button")
+    m.TermButton.observeField("buttonSelected","closeDialog")  
+            
+'                 m.OkButton.translation= [466,429]
+    m.TermButton.minWidth  = "280"
+    m.TermButton.maxWidth  = "280"                
+    m.TermButton.focusedTextColor="#FFFFFF"
+    m.TermButton.height = "84"              
+    m.TermButton.focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+    m.TermButton.showFocusFootprint="true"             
+    m.TermButton.iconUri=""
+    m.TermButton.focusedIconUri=""
+    okLabel =  m.TermButton.createChild("Label")
+    okLabel.horizAlign="center"
+    okLabel.height = "84"
+    okLabel.width  = "280"
+    okLabel.vertAlign = "center"
+    okLabel.text="OK"        
+    okLabel.font = getFont(36,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+    m.HelpButton.translation = [(m.dialogWidth -m.HelpButton.boundingRect().width)/2,m.dialogHeight * (75/100)]                                      
+
+end sub 
 
 sub closeshowDialogforCreateAccoun()
 ?"closeshowDialogforCreateAccoun"
@@ -161,8 +308,8 @@ sub rememberMe()
      m.remenberCheckList.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
      m.remenberCheckList.color="#000000"
      m.remenberCheckList.focusedColor="#0db5ba"
-     m.remenberCheckList.Font= getFont(20,"pkg:/fonts/HelveticaNeueMedium.ttf") 
-     m.remenberCheckList.focusedFont = getFont(30,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+     m.remenberCheckList.Font= getFont(24,"pkg:/fonts/HelveticaNeueMedium.ttf") 
+     m.remenberCheckList.focusedFont = getFont(26,"pkg:/fonts/HelveticaNeueMedium.ttf") 
      checklistNode = createObject("roSGNode", "ContentNode") 
      contentNode = checklistNode.createChild("ContentNode")
      contentNode.Title = "Remember me"
@@ -221,19 +368,19 @@ sub LoginValidation()
                    
                    LoginProcess()
                else
-                   showdialog("Error ","Password length should not grater than 10",true,"","")     
+                   showdialog("Error","Password length should not grater than 10",true,"","")     
                end if
            else
-               showdialog("Error ","Please fill the Password",true,"","")
+               showdialog("Error","Please fill the Password",true,"","")
            end if
           
        else
           
-           showdialog("Error ","Please Enter Valid email",true,"","")
+           showdialog("Error","Please Enter Valid email",true,"","")
        end if 
      
   else 
-     showdialog("Error ","Please fill the user name first",true,"","")
+     showdialog("Error","Please fill the user name first",true,"","")
   end if   
   
 end sub
@@ -242,10 +389,9 @@ sub LoginProcess()
  
  ?"LoginProcess: ";
  
-
-' m.LoginBusySpinner.control="start"
- m.LoginBusySpinner.visible=true
- m.LoginTask  = CreateObject("roSGNode", "LoginTask")
+ showspinner(true)
+  
+  m.LoginTask  = CreateObject("roSGNode", "LoginTask")
  
  
    data=""
@@ -274,30 +420,33 @@ end sub
 sub LoginResponse()
 
 ?"LoginResponse :m.LoginTask: ";m.LoginTask.response
+showspinner(false)
 m.loginsuccess = false
   if m.LoginTask.response.response_code = 200
         
         setAccountToken(m.LoginTask.response.access_token)  
         m.loginsuccess = true
         buttons = []
-        buttons.Push("OK")         
-        showdialog(m.LoginTask.response.message,m.LoginTask.response.connected_device , false,buttons ,"dialogButtonResponse" )
+        buttons.Push("OK")
+        
+        if m.LoginTask.response.termandcondition = true
+         showdialogTermCondition(m.LoginTask.response.message,m.LoginTask.response.connected_device , false,buttons ,"dialogButtonResponse" )
+        else 
+         showdialog(m.LoginTask.response.message,m.LoginTask.response.connected_device , false,buttons ,"dialogButtonResponse" )        
+        end if
+                        
   else
         buttons = []
         buttons.Push("OK")
-        buttons.Push("Cancel")
-        showdialog("Login Error",m.LoginTask.response.message , true,buttons ,"")
+'        buttons.Push("Cancel")
+        showdialog("Login Error",m.LoginTask.response.Failure , true,buttons ,"")
 
   end if
-
-'m.LoginBusySpinner.control="stop"
-m.LoginBusySpinner.visible=false
 
 end sub
 
 sub dialogButtonResponse()
- ?"dialogButtonResponse: "m.dialog.buttonSelected
-  
+ ?"dialogButtonResponse: "m.dialog.buttonSelected  
    if  m.loginsuccess = true and m.dialog.buttonSelected = 0
      m.dialog.close=true
      m.top.visible = false
@@ -306,102 +455,63 @@ sub dialogButtonResponse()
 end sub
 
 sub showspinner(event as object)
-?"showspinner:event : ";event
+'?"showspinner:event : ";event.getData()
+m.LoaderBackground.visible = event
+      if event     
 
-      if(event.getData() = true)
-        
-        centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
-        centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
-        m.LoginBusySpinner.translation = [ centerx, centery ]
-        
-        m.LoaderBackground.width = 1920
-        m.LoaderBackground.height = 1080         
-        m.LoaderBackground.visible=true
-        
-        m.LoginBusySpinner.control = "start"
-        
-      else  if(event.getData() = false)
-        
-        m.LoaderBackground.visible=false
-        m.LoginBusySpinner.control = "stop"
-      
+        m.LoginBusySpinner.control = "start"       
+      else         
+        m.LoginBusySpinner.control = "stop"      
       end if
       
 end sub
 
 sub showdialog(title as String,message as string , optionsDialog as boolean,buttons as object,onserveField as object)
-      
-      ?"showDialog: message: ";message
-
-      m.dialog = createObject("roSGNode", "Dialog")
-      m.dialog.backgroundUri = "pkg:/images/Login/backGroundBox.png" 
-      m.dialog.title = title
-      
-      m.dialog.iconUri ="pkg:/images/Login/error_16.png"
-      titleFont  = CreateObject("roSGNode", "Font") 
-      titleFont.uri = "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf"
-      titleFont.size = 44    
-    
-      m.dialog.titleFont = titleFont
-'      m.dialog.iconUri=""
-           
-       m.dialog.titleColor = "#004E92"  
-       m.dialog. messageColor = "#000000"
-       m.dialog.dividerUri = "pkg:/images/Login/horizontal_line80.png"
-      
-      if onserveField <> ""   
-    
-           for each button in buttons
-              m.dialog.buttonGroup.createChild("Button")
-     
-'             print "button ";button        
-              m.dialog.buttonGroup.getChild( m.dialog.buttonGroup.getChildCount()-1).text = button 
-              m.dialog.buttonGroup.getChild( m.dialog.buttonGroup.getChildCount()-1).focusedTextColor = "0xffffffff"             
-           end for
-     
-         m.dialog.buttonGroup.setFields( {
-          focusBitmapUri : "pkg:/images/Login/buttonFoucs.png"
-          focusFootprintBitmapUri : "pkg:/images/Login/buttonFoucsFootprint.png"
-         
-          iconuri :""
-          focusedIconUri : ""
-          textColor : "#000000"
-          showFocusFootprint : "true"
-          
-         })
-         
-'      m.dialog.graphicWidth = 300
-'      m.dialog.graphicHeight = 300
-  end if
-     
-    if onserveField <> "" then
-          
-       if message <> "" m.dialog.message = "   "+message
        
-       m.dialog.observeField("buttonSelected","dialogButtonResponse")
-       m.dialog.observeField("wasClosed","closeDialog")
-    else
-      m.dialog.optionsDialog = optionsDialog
-      if message <> "" m.dialog.message = "   "+message+" ( Press * To Dismiss )"  
-      m.dialog.observeField("wasClosed","closeDialog")               
-    end if
-     
-      m.top.dialog = m.dialog
+    ?"showDialog: message: ";message    
+    m.HelpButton.setFocus(true)
+    m.contactNumber.text = message
+    m.TextLabel.text = title
+    m.SupportDialog.visible = true 
 
 end sub
+
+sub showdialogTermCondition(title as String,message as string , optionsDialog as boolean,buttons as object,onserveField as object)
+       
+    m.dialogHeight = 800
+    m.dialogWidth = 1223
+       
+    ?"showDialog: message: ";message    
+    m.HelpButton.setFocus(true)
+    m.contactNumber.text = message
+    m.TextLabel.text = title
+    m.SupportDialog.visible = true 
+
+end sub
+
 sub closeDialog()
  ?"closeDialog true"
- 
+ ?"m.needHelpText:";m.needHelpText
  if m.loginsuccess = true
-    'm.top.visible = false
-    
-      
+    'm.top.visible = false 
       m.top.ExitView = true
-'      LoginScreen = CreateObject("roSGNode", "LoginScreen")
-'      m.LoginScreen.close = true
+
+ else if m.needHelpText  = "helpSupport"
+    
+    m.SupportDialog.visible = false
+    m.HelpButton.setFocus(false) 
+    m.needHelpButton.setFocus(true)
+ else if m.needHelpText  = "registerNow"
+    m.SupportDialog.visible = false
+    m.OkButton1.setFocus(true)
+ else 
+   m.HelpButton.setFocus(false)
+   m.SupportDialog.visible = false 
+   m.SignInButton.setFocus(true)
  end if
+ m.needHelpText = ""
  
- m.dialog.close=true
+' m.dialog.close=true
 end sub
 
 sub cursorPosition(event as object)
@@ -423,8 +533,7 @@ sub FieldText(event as object)
   
        m.UsernamEditText.text = event.getData()
        m.UsernamEditText.active=true       
-       m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition
- 
+       m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition 
  end if
 end sub
 
@@ -474,12 +583,19 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
   
   result = false
   if press
-  
-   if  m.OkButton.hasFocus()
+    
+    if m.needHelpButton.hasFocus() and key ="left"
+       m.remenberCheckList.setFocus(true)
+       return true
+    else if m.remenberCheckList.hasFocus() and key ="right"
+       m.needHelpButton.setFocus(true)
+       return true       
+    else  if ( m.HelpButton.hasFocus() and key ="back")
    
-    closeshowDialogforCreateAccoun()
-     return true 
-   else if key="down" 
+       closeDialog()
+'     closeshowDialogforCreateAccoun()
+     return true  
+    else if key="down" 
             
        ?"Login: if: "
     
@@ -494,10 +610,11 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
       m.remenberCheckList.setFocus(true)
       onTextBoxActive("")
       return true
-     else if  m.remenberCheckList.hasFocus()
+     else if  ( m.remenberCheckList.hasFocus() or  m.needHelpButton.hasFocus() )
          
          ?"SignInButton: true"
        m.remenberCheckList.setFocus(false)
+       m.needHelpButton.setFocus(false)
        
        m.SignInButton.setFocus(true)
              
@@ -572,11 +689,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
  else if m.UsernamEditText.hasFocus() and key="OK"
      
      ?"keyboard open for email field"
-           
-'      m.UsernamEditText.active = false
-'      m.PasswordEditText.active=false
-      
-'      m.TextField="UsernamEditText"
+
       m.UsernamEditText.setFocus(false)      
       m.UsernamEditText.active=true
        onTextBoxActive("username")

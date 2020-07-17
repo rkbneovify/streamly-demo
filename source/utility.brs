@@ -1,71 +1,62 @@
-Function getAccountToken() as dynamic
- sec = CreateObject("roRegistrySection", "Authentication")
- return sec.Read("accountToken")
-end Function
+function getAccountToken() as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("accountToken")
+end function
 
-Function setAccountToken(accountToken as String) as dynamic
-  sec = CreateObject("roRegistrySection", "Authentication")
-  sec.Write("accountToken",accountToken)
-end Function
+function setAccountToken(accountToken as String) as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("accountToken", accountToken)
+end function
 
-Function getUserName() as dynamic
- sec = CreateObject("roRegistrySection", "Authentication")
- return sec.Read("UserName")
-end Function
+function getUserName() as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("UserName")
+end function
 
-Function setUserName(userName as String) as dynamic
-  sec = CreateObject("roRegistrySection", "Authentication")
-  sec.Write("UserName",userName)
-end Function
+function setUserName(userName as String) as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("UserName", userName)
+end function
 
+function getUserPassword() as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("UserPassword")
+end function
 
-Function getUserPassword() as dynamic
- sec = CreateObject("roRegistrySection", "Authentication")
- return sec.Read("UserPassword")
-end Function
+function setUserPassword(UserPassword as String) as Dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("UserPassword", UserPassword)
+end function
 
-Function setUserPassword(UserPassword as String) as dynamic
-  sec = CreateObject("roRegistrySection", "Authentication")
-  sec.Write("UserPassword",UserPassword)
-end Function
+function getFont(fontSize as Integer, fontUri as String) as Object
+    Font = CreateObject("roSGNode", "Font")
+    Font.uri = fontUri
+    Font.size = fontSize
+    return Font
+end function
 
-
-Function getFont(fontSize as integer, fontUri as string) as object
-
-     Font  = CreateObject("roSGNode", "Font") 
-     Font.uri = fontUri
-     Font.size = fontSize
-     return Font
-end Function
-
-
-Function APICall(url as string, callType as String ,data as object,parameters as object) as object
-?"APICall:"
+function APICall(url as String, callType as String, data as Object, parameters as Object) as Object
+    ? "APICall:"
     requestObject = CreateObject("roUrlTransfer")
-    
-   urlParameters=""
-   if parameters<>invalid and parameters.Count()>0
-   
-     for each parameter in parameters.Keys()
-'     ?"parameter:";parameter
-'     ?"parameters value";parameters[parameter]
-'     ?" "+parameter+":"+parameters[parameter]
-            urlParameters=(parameter).toStr()+"="+(parameters[parameter]).toStr()+"&"+ urlParameters
-    end for
-    
-    
-   end if
-   
-   if urlParameters<>""
-     url =url+"?"+urlParameters
-     requestObject.SetUrl(url)
-     else
-     requestObject.SetUrl(url)
-   end if
-    
-    ?"request url:";url
-    requestObject.addHeader("Content-Type","application/json")
-    requestObject.addHeader("Authorization","Bearer "+getAccountToken())
+
+?"parameters tessting:";parameters
+    urlParameters = ""
+    if parameters <> invalid and parameters.Count() > 0
+        for each parameter in parameters.Keys()
+            urlParameters = (parameter).toStr() + "=" + (parameters[parameter]).toStr() + "&" + urlParameters
+        end for
+    end if
+
+    if urlParameters <> ""
+        url = url + "?" + urlParameters
+        requestObject.SetUrl(url)
+    else
+        requestObject.SetUrl(url)
+    end if
+
+    ? "request url:"; url
+    requestObject.addHeader("Content-Type", "application/json")
+    requestObject.addHeader("Authorization", "Bearer " + getAccountToken())
     requestObject.setCertificatesFile("common:/certs/ca-bundle.crt")
     requestObject.initClientCertificates()
     requestObject.enableEncodings(true)
@@ -74,123 +65,109 @@ Function APICall(url as string, callType as String ,data as object,parameters as
     port = CreateObject("roMessagePort")
     requestObject.setMessagePort(port)
 '    requestObject.addHeader("Content-Type","application/json") 
-    
-    if callType="POST" 
-     ?"APICall:::POST CALL"
-       requestObject.SetRequest(callType) 
-       body = FormatJSON(data)
-       
-       
-       req = requestObject.AsyncPostFromString(body)
-  
-     else if callType="GET"
-       ?"APICall:::GET CALL"
-      requestObject.SetRequest(callType) 
-      req = requestObject.AsyncGetToString()
-        
-     end if
+    if callType = "POST"
+        ? "APICall:::POST CALL"
+        requestObject.SetRequest(callType)
+        body = FormatJson(data)
 
-     if req
-       while true
-         msg = wait(0, port)
-          if type(msg) = "roUrlEvent"
-       
-              code = msg.GetResponseCode()              
-              responseJson={}
-                
-              if code = 200
-                               
-                 JsonResponse = ParseJson(msg.GetString()) 
-                 
-                 responseJson["responseCode"] = msg.GetResponseCode()
-                 responseJson["data"] = JsonResponse
-                 
+        req = requestObject.AsyncPostFromString(body)
+    else if callType = "GET"
+        ? "APICall:::GET CALL"
+        requestObject.SetRequest(callType)
+        req = requestObject.AsyncGetToString()
+    end if
+
+    if req
+        while true
+            msg = Wait(0, port)
+            if Type(msg) = "roUrlEvent"
+                code = msg.GetResponseCode()
+                responseJson = {}
+
+                if code = 200
+                    JsonResponse = ParseJson(msg.GetString())
+
+                    responseJson["responseCode"] = msg.GetResponseCode()
+                    responseJson["data"] = JsonResponse
+
 '                 ?"APICall::JsonResponse: ";JsonResponse
-'                
-                 return JsonResponse
-                
-              else                                
-                 responseJson["responseCode"] = msg.GetResponseCode()
-                 responseJson["data"] =  ParseJson(msg.GetString()) 
-                 responseJson["Failure"] =  msg.GetFailureReason()
-                 
-'                 ?"APICall::JsonResponse: ";responseJson
-'                
-                 return responseJson
-              
-              end if  
-               
-          else
-           ?"APICall::ResponseCode: ";msg.GetResponseCode() 
-           ?"APICall::FailureReason: ";msg.GetFailureReason()
-           
-          end if
-       end while  
-     else
-      ?"req: ";req
-     
-     end if
-   
-end Function
 
-Function getBaseUrl()
+                    return JsonResponse
+                else
+                    responseJson["responseCode"] = msg.GetResponseCode()
+                    responseJson["data"] =  ParseJson(msg.GetString())
+                    responseJson["Failure"] =  msg.GetFailureReason()
+
+'                 ?"APICall::JsonResponse: ";responseJson
+
+                    return responseJson
+                end if
+            else
+                ? "APICall::ResponseCode: "; msg.GetResponseCode()
+                ? "APICall::FailureReason: "; msg.GetFailureReason()
+            end if
+        end while
+    else
+        ? "req: "; req
+    end if
+end function
+
+function getBaseUrl()
  return "http://100.26.190.92/"
 ' return "https://b86ed54d.ngrok.io/"
-'http://100.26.190.92/
- 
-end Function
+'    return "http://streamlytv.com/"
+end function
 
-Function profileUrl()
- return "api/auth/profile"
-end Function
+function profileUrl()
+' return "api/auth/profile"
+    return "api/auth/tvprofile"
+end function
 
+function logoutUrl()
+    return "api/auth/logout"
+end function
+function loginUrl()
+    return "api/auth/login"
+end function
 
-Function logoutUrl()
- return "api/auth/logout"
-end Function
-Function loginUrl()
- return "api/auth/login"
-end Function
+function connectedDeviceUrl() as String
+    return "api/auth/connecteddevice"
+end function
 
-Function connectedDeviceUrl() as String
+function getChannelListUrl() as String
+    return "api/auth/channellist"
+end function
 
-return "api/auth/connecteddevice"
-        
-end Function
+function getchannelSearchUrl() as String
+    return "/api/auth/search"
+end function
 
-Function getChannelListUrl() as String
+function getchannelschdeuleUrl() as String
+    return "api/auth/channelschdeule"
+end function
 
-return "api/auth/channellist"
+function getsupportUrl() as String
+    return "/api/auth/support"
+end function
 
-end Function
+function getprivacypolUrl() as String
+    return "api/auth/privacypol"
+end function
 
-Function getchannelSearchUrl() as String
+function getBaseUrlTemp() as String
+    return "http://ab8c26b210d7.ngrok.io/"
+end function
 
-return "/api/auth/search"
+function getDeviceInfo() as Object
+    ? "getDeviceInfo"
+    return CreateObject("roDeviceInfo")
+end function
 
-end Function
-
-Function getchannelschdeuleUrl() as String
- return "api/auth/channelschdeule"
-end Function
-
-Function getsupportUrl() as String
- return "/api/auth/support"
-end Function
-
-Function getprivacypolUrl() as String
- return "api/auth/privacypol"
-end Function
-
-Function getBaseUrlTemp() as String
- return "http://ab8c26b210d7.ngrok.io/"
-end Function
-
-Function getDeviceInfo() as object
- ?"getDeviceInfo"
- return createObject("roDeviceInfo")
-end Function
-
-
+function getRecentUrl() as Object
+    return "api/auth/my_recents"
+end function
+function addRecentUrl() as Object
+    return "api/auth/addtorecent"
+end function
 
 

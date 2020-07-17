@@ -12,7 +12,7 @@ Function init()
 
     initLoadingBar()
 
-    m.pressmenuButton.Font.size="20"
+'    m.pressmenuButton.Font.size="20"
      m.trickInterval=0
 end Function
 
@@ -96,7 +96,7 @@ end sub
 Function initProgressBar()
   'progress bar nodes'
   
-  m.pressmenuButton = m.top.findNode("pressmenuButton")
+'  m.pressmenuButton = m.top.findNode("pressmenuButton")
   m.playPause = m.top.findNode("playPause")
   m.thumbnailVideoImage = m.top.findNode("thumbnailVideoImage")
   m.opcitythumpnail = m.top.findNode("opcitythumpnail")
