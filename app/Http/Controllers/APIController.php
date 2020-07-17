@@ -432,9 +432,10 @@ foreach ($channelArr as $value) {
 }
 
         
+$recentschannel = JWTAuth::user()->recentschannel;
      $response = [
         'success' => true,
-        //'data' => $count,
+        'data' => $recentschannel,
         'message' => 'Added to recent','response_code'=>200,
     ];
      

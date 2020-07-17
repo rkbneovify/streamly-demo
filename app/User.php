@@ -107,7 +107,7 @@ class User extends Authenticatable implements JWTSubject
 
 public function recentschannel()
 {
-    return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->distinct();
+    return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->latest()->take(10)->distinct();
 }
 
     // public function subscriptions()
