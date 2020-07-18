@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +33,7 @@ public class RegisterDeviceDialog extends Dialog {
     private Button btnOK;
     private RecyclerView rvDeviceModel;
     private Context context;
-    private ProgressDialog dialog;
+    private ProgressBar progressBar;
     private String auth_token;
     List<RegisterDeviceType> list=new ArrayList<RegisterDeviceType>();
 
@@ -65,9 +67,9 @@ public class RegisterDeviceDialog extends Dialog {
     }
 
     private void connectedDevice() {
-        dialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<ConnectedDeviceModel> call=apiInterface.getConnectedDevice(NetworkKeys.KEY_BEARER +auth_token,NetworkKeys.KEY_APP_JSON);
+        Call<ConnectedDeviceModel> call=apiInterface.getConnectedDevice(NetworkKeys.KEY_BEARER +auth_token);
         call.enqueue(new Callback<ConnectedDeviceModel>() {
             @Override
             public void onResponse(Call<ConnectedDeviceModel> call, Response<ConnectedDeviceModel> response) {
@@ -78,7 +80,7 @@ public class RegisterDeviceDialog extends Dialog {
                        List<Datum> datalist= response.body().getData();
 
                        for (int i=0;i<datalist.size();i++){
-                           list.add(new RegisterDeviceType(datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId()));
+                           list.add(new RegisterDeviceType(i+1+". "+datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId()));
                        }
                         RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,list);
                         rvDeviceModel.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
@@ -103,14 +105,16 @@ public class RegisterDeviceDialog extends Dialog {
                     Log.e(TAG, "Exception "+ex);
                 }
                 Log.e(TAG,"connected Devices "+response.code()+"");
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOK.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<ConnectedDeviceModel> call, Throwable t) {
                 Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
                 CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOK.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -119,7 +123,7 @@ public class RegisterDeviceDialog extends Dialog {
     private void initViews() {
         btnOK=findViewById(R.id.btn_ok);
         rvDeviceModel=findViewById(R.id.rv_device_model);
-        dialog= CommonUtility.custom_loader(context);
+        progressBar=findViewById(R.id.progress_bar);
     }
 
 

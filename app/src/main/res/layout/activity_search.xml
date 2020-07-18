@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".search_channels.SearchActivity"
+    android:background="@drawable/blur_background">
+
+
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="8dp"
+                android:visibility="gone"
+                android:theme="@style/appProgress"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_6sdp"
+                    android:layout_margin="@dimen/_3sdp"
+                    android:background="@drawable/white_border">
+
+
+                        <EditText
+                            android:id="@+id/ed_search"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/md_white_1000"
+                            android:layout_margin="@dimen/_3sdp"
+                            android:textSize="@dimen/_12sdp"
+                            android:textColorHint="@color/md_white_1000"
+                            android:maxLines="1"
+                            android:hint=" Search Channels"
+                            android:drawableRight="@drawable/ic_search"
+                            android:background="@null"
+                            android:maxLength="30"/>
+
+
+                    </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12sp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp">
+                    <requestFocus/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                </LinearLayout>
+        </FrameLayout>
+</layout>

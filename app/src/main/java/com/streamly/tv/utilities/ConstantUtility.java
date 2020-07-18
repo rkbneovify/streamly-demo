@@ -1,9 +1,16 @@
 package com.streamly.tv.utilities;
 
+import org.jetbrains.annotations.Nullable;
+
 public class ConstantUtility {
 
 
-
+    public static final String STREAM_URL="streamUrl";
+    @Nullable
+//    public static final String CHANNELLIST=ApiConfig.BASE_URL+"channellist";
+    public static final String CHANNELLIST=ApiConfig.BASE_URL+"channelgenre";
+    @Nullable
+    public static final String CHANNELDAYSSCHEDULE=ApiConfig.BASE_URL+"channeldayschdeule";
 
     private ConstantUtility() {
         throw new IllegalStateException("Utility class");

@@ -1,136 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".MainActivity"
-    android:background="@drawable/white_transparent">
+<layout>
 
-<!--    android:background="@drawable/person_singing"-->
-
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_8ssp"
+        android:layout_height="match_parent"
+        android:background="@drawable/blur_background"
         android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <!--    android:background="@drawable/person_singing"-->
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/all"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/my_channels"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/sports"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/news"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/movies"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/Kids"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_9ssp" />
-
-        <TextView
-            android:id="@+id/setting_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_12sdp"
-            android:layout_marginRight="@dimen/_16sdp"
-            android:text="@string/settings"
-            android:textStyle="bold"
-            android:textAlignment="viewEnd"
-            android:textColor="@drawable/text_focus"
-            android:textSize="@dimen/_16ssp" />
+            android:layout_marginTop="@dimen/_8ssp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.91"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/image_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_6sdp"
+                android:background="@drawable/options_foucs"
+                android:orientation="horizontal"
+                android:padding="@dimen/_2sdp">
+
+                <ImageView
+                    android:layout_width="@dimen/_12sdp"
+                    android:layout_height="@dimen/_12sdp"
+                    android:background="@drawable/ic_search"
+                    android:textAlignment="center"
+                    android:textAllCaps="true" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/text_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/all"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/recent"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_my_channels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/my_channels"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
 
 
-   <!-- <TextView
-        android:id="@+id/setting_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/settings"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textColor="@drawable/text_focus"
-        android:textSize="@dimen/_16ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.91"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+            <TextView
+                android:id="@+id/text_sports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/sports"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_news"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/news"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_movies"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/movies"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_kids"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/Kids"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/setting_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_foucs"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/settings"
+                android:textAlignment="viewEnd"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
 
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_265sdp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:context=".MainActivity"
-        tools:deviceIds="tv" />
+            <TextView
+                android:id="@+id/go_back_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_6sdp"
+                android:layout_marginRight="@dimen/_6sdp"
+                android:background="@drawable/options_foucs"
+                android:drawableLeft="@drawable/ic_go_back"
+                android:padding="@dimen/_2sdp"
+                android:text=" Go Back"
+                android:textAlignment="viewEnd"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_265sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:context=".MainActivity"
+            tools:deviceIds="tv" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

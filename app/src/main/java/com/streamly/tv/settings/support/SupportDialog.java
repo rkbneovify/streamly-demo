@@ -2,13 +2,13 @@ package com.streamly.tv.settings.support;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +19,6 @@ import com.streamly.tv.retrofit_clients.ApiClient;
 import com.streamly.tv.retrofit_clients.ApiInterface;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
-import com.streamly.tv.utilities.NetworkKeys;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -31,9 +30,8 @@ public class SupportDialog extends Dialog {
     private static final String TAG=SupportDialog.class.getSimpleName();
     private Context context;
     private Button btnOk;
-    private String auth_token;
-    private ProgressDialog dialog;
     private RecyclerView rvSupport;
+    private ProgressBar progressBar;
     private List<SupportTextType> list=new ArrayList<>();
 
     public SupportDialog(@NonNull Context context) {
@@ -49,7 +47,6 @@ public class SupportDialog extends Dialog {
         CommonUtility.checkInternetConnection(context);
         initViews();
 
-        auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null);
         if (ConstantUtility.isNetworkConnected) {
             getSupportDetails();
         }else {
@@ -68,23 +65,22 @@ public class SupportDialog extends Dialog {
     private void initViews() {
         btnOk=findViewById(R.id.btn_ok);
         rvSupport=findViewById(R.id.rv_support);
-        dialog= CommonUtility.custom_loader(context);
+        progressBar=findViewById(R.id.progress_bar);
     }
 
     private void getSupportDetails() {
-
+        progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<SupportModel> call=apiInterface.getSupportNumbers(NetworkKeys.KEY_BEARER +auth_token,NetworkKeys.KEY_APP_JSON);
+        Call<SupportModel> call=apiInterface.getSupportNumbers();
         call.enqueue(new Callback<SupportModel>() {
             @Override
             public void onResponse(Call<SupportModel> call, Response<SupportModel> response) {
                 try {
                     if (response.isSuccessful() && response.body() != null) {
 
-                        List<String> datalist= response.body().getData();
-                        for (int i=0;i<datalist.size();i++){
-                            list.add(new SupportTextType(datalist.get(i)));
-                        }
+                     Data datalist= response.body().getData();
+                     list.add(new SupportTextType(datalist.getEmail()));
+
                         SupportAdpater supportAdpater=new SupportAdpater(context,list);
                         rvSupport.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
                         rvSupport.setAdapter(supportAdpater);
@@ -107,12 +103,15 @@ public class SupportDialog extends Dialog {
                     Log.e(TAG, "Exception "+ex);
                 }
                 Log.e(TAG,"support_numbers "+response.code()+"");
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOk.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<SupportModel> call, Throwable t) {
-
+                Log.e(TAG, "Throwables  "+t);
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOk.setVisibility(View.VISIBLE);
             }
         });
     }

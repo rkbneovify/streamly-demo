@@ -8,6 +8,7 @@
             <item name="colorPrimary">@color/colorPrimary</item>
             <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
             <item name="colorAccent">@color/colorAccent</item>
+            <item name="android:fontFamily">@font/helvetica_neue_thin</item>
         </style>
 
 
@@ -28,13 +29,13 @@
         <item name="android:textColorSecondary">@color/appcolor</item>
     </style>
 
-    <style name="orangeProgress" parent="Theme.AppCompat.Dialog">
-        <item name="colorPrimary">@color/appcolor</item>
-        <item name="colorPrimaryDark">@color/appcolor</item>
-        <item name="colorAccent">@color/appOrangecolor</item>
-        <item name="android:textColor">@color/appcolor</item>
-        <item name="android:itemBackground">@color/appOrangecolor</item>
-        <item name="android:textColorSecondary">@color/appOrangecolor</item>
+    <style name="appProgress" parent="Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/app_blue_dark</item>
+        <item name="colorPrimaryDark">@color/app_blue_dark</item>
+        <item name="colorAccent">@color/app_blue_dark</item>
+        <item name="android:textColor">@color/app_blue_dark</item>
+        <item name="android:itemBackground">@color/app_blue_dark</item>
+        <item name="android:textColorSecondary">@color/app_blue_dark</item>
     </style>
 
 

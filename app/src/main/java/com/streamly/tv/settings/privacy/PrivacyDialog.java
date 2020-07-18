@@ -2,13 +2,13 @@ package com.streamly.tv.settings.privacy;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.streamly.tv.R;
@@ -28,8 +28,8 @@ public class PrivacyDialog extends Dialog {
     private Context context;
     private Button btnOk;
     private TextView tvPrivacy;
-    private ProgressDialog dialog;
     private String auth_token;
+    private ProgressBar progressBar;
 
     public PrivacyDialog(@NonNull Context context) {
         super(context);
@@ -51,21 +51,18 @@ public class PrivacyDialog extends Dialog {
             CommonUtility.showToast(context,ConstantUtility.CHECK_INTERNET_CONNECTION);
         }
 
-
-
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancel();
             }
         });
-
-
     }
 
     private void getPrivacyPolicy() {
+        progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<PrivacyPolicyModel> call=apiInterface.getPoliciesText(NetworkKeys.KEY_BEARER +auth_token,NetworkKeys.KEY_APP_JSON);
+        Call<PrivacyPolicyModel> call=apiInterface.getPoliciesText(NetworkKeys.KEY_BEARER +auth_token);
         call.enqueue(new Callback<PrivacyPolicyModel>() {
             @Override
             public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
@@ -94,12 +91,15 @@ public class PrivacyDialog extends Dialog {
                     Log.e(TAG, "Exception "+ex);
                 }
                 Log.e(TAG,"connected Devices "+response.code()+"");
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOk.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<PrivacyPolicyModel> call, Throwable t) {
                 Log.e(TAG,"failure " +t);
+                progressBar.setVisibility(View.INVISIBLE);
+                btnOk.setVisibility(View.VISIBLE);
 
             }
         });
@@ -109,6 +109,6 @@ public class PrivacyDialog extends Dialog {
     private void initViews() {
         btnOk=findViewById(R.id.btn_ok);
         tvPrivacy=findViewById(R.id.tv_privacy);
-        dialog= CommonUtility.custom_loader(context);
+        progressBar=findViewById(R.id.progress_bar);
     }
 }

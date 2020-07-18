@@ -10,15 +10,12 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.streamly.tv.R;
+import com.streamly.tv.utilities.ConstantUtility;
 
 public class PlayerActivity extends FragmentActivity {
     private ProgressDialog pDialog;
     private VideoView videoview;
-    //    private String vid_url ="http://66.210.244.230/live/test/index.m3u8";
-    //    private String vid_url ="http://streamlytv.com/live/CMTV/interlink.m3u8";
-    //    private String vid_url ="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
-    private String vid_url ="http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8";
-    //    private String vid_url ="http://streamlytv.com/live/TNT/interlink.m3u8";
+    private String vid_url ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +23,11 @@ public class PlayerActivity extends FragmentActivity {
         setContentView(R.layout.activity_player);
 
         videoview = findViewById(R.id.videoView);
+
+
+        vid_url=getIntent().getStringExtra("from");
+        Log.e("video_URL",vid_url+"");
+
         pDialog = new ProgressDialog(this);
         pDialog.setTitle("Video Stream");
         pDialog.setMessage("Buffering...");

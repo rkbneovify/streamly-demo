@@ -4,8 +4,9 @@
 <!--        android:drawable="@drawable/layout_border" /> &lt;!&ndash; pressed &ndash;&gt;-->
 
     <item android:state_focused="true"
-        android:drawable="@drawable/splash_background" /> <!-- focused -->
+        android:drawable="@drawable/signin_background" /> <!-- focused -->
+
 
     <!--    <item android:state_hovered="true" android:drawable="@drawable/white_transparent" /> &lt;!&ndash; hovered &ndash;&gt;-->
-    <item android:drawable="@drawable/white_border" /> <!-- default -->
+    <item android:drawable="@drawable/white_btn_background" /> <!-- default -->
 </selector>

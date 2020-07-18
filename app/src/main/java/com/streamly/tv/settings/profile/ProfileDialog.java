@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import com.streamly.tv.R;
 import com.streamly.tv.local_storage.TokenStorage;
@@ -29,8 +29,8 @@ public class ProfileDialog extends Dialog {
     private Button btnOk;
     private Context context;
     private String auth_token;
-    private ProgressDialog dialog;
     private TextView userName,userEmail,buildDate;
+    private ProgressBar progressBar;
 
     public ProfileDialog(@NonNull Context context) {
         super(context);
@@ -43,7 +43,6 @@ public class ProfileDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_profile);
         CommonUtility.checkInternetConnection(context);
-        dialog= CommonUtility.custom_loader(context);
 
         initViews();
         auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null);
@@ -67,12 +66,13 @@ public class ProfileDialog extends Dialog {
         userName=findViewById(R.id.text_name);
         userEmail=findViewById(R.id.text_email);
         buildDate=findViewById(R.id.text_updated_date);
+        progressBar=findViewById(R.id.progress_bar);
     }
 
     private void getUserProfile() {
-        dialog.show();
+        progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<ProfileModel> call=apiInterface.getUserProfile("Bearer "+auth_token,"application/json");
+        Call<ProfileModel> call=apiInterface.getUserProfile("Bearer "+auth_token);
 
         call.enqueue(new Callback<ProfileModel>() {
             @Override
@@ -104,7 +104,7 @@ public class ProfileDialog extends Dialog {
                     Log.e(TAG, "Exception "+ex);
                 }
                 Log.e(TAG,"profileResponCode "+response.code()+"");
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
 
             }
 
@@ -112,11 +112,10 @@ public class ProfileDialog extends Dialog {
             public void onFailure(Call<ProfileModel> call, Throwable t) {
                 Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
                 CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);
-                dialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
 
     }
-
 
 }

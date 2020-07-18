@@ -75,7 +75,7 @@ public class SignOutDialog extends Dialog {
     private void sigOutCall() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<LogInModel> call=apiInterface.postLogOutCall("Bearer "+auth_token,"application/json");
+        Call<LogInModel> call=apiInterface.postLogOutCall("Bearer "+auth_token);
         call.enqueue(new Callback<LogInModel>() {
             @Override
             public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {

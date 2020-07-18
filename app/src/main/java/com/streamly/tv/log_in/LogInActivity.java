@@ -13,12 +13,12 @@ import com.streamly.tv.MainActivity;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.retrofit_clients.ApiClient;
 import com.streamly.tv.retrofit_clients.ApiInterface;
+import com.streamly.tv.settings.support.SupportDialog;
 import com.streamly.tv.utilities.ApiConfig;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
 import com.streamly.tv.R;
 import com.streamly.tv.databinding.ActivityLogInBinding;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +40,18 @@ public class LogInActivity extends FragmentActivity {
         dialog= CommonUtility.custom_loader(LogInActivity.this);
         TokenStorage.clearSharedToken(LogInActivity.this);
 //        logInBinding.edUserName.setText("sahilkashyap64@gmail.com");
+
+
+        logInBinding.txtNeedHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SupportDialog supportDialog=new SupportDialog(LogInActivity.this);
+                supportDialog.show();
+
+            }
+        });
+
         logInBinding.edUserName.setText("arun@gmail.com");
         logInBinding.edPassword.setText("123456789");
         logInBinding.btnSignIn.setOnClickListener(new View.OnClickListener() {

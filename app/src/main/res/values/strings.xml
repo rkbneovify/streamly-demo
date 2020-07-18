@@ -52,7 +52,7 @@
 
     <string name="programguide_day_selector_title">Select the desired day</string>
     <string name="programguide_day_time_selector_title">Select the desired time of day</string>
-    <string name="channels">Channels</string>
+    <string name="channels"> Channels</string>
     <string name="email">Email</string>
     <string name="all">All</string>
     <string name="my_channels">My Channels</string>
@@ -81,5 +81,6 @@
         It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
         This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
         The sample string has an artificial indent level introduced for illustrating this feature.</string>
+    <string name="recent">RECENT</string>
 
 </resources>

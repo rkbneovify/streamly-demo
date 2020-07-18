@@ -15,6 +15,17 @@ public class Datum {
     @SerializedName("StationName")
     private String mStationName;
 
+    @SerializedName("id")
+    private String mId;
+
+    public String getmId() {
+        return mId;
+    }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+
     public String getCallSign() {
         return mCallSign;
     }

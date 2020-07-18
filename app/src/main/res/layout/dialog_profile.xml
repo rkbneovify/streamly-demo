@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/_310sdp"
+    android:layout_width="@dimen/_320sdp"
     android:layout_height="@dimen/_170sdp"
-    android:orientation="vertical"
-    android:layout_gravity="center"
     android:paddingLeft="@dimen/_10sdp"
     android:paddingRight="@dimen/_10sdp"
     android:paddingTop="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
+    android:orientation="vertical"
+    android:layout_gravity="center"
     android:background="@drawable/white_transparent">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center">
 
 
     <LinearLayout
@@ -25,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="@string/username_profile"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_10ssp"
             android:textAlignment="center"
             android:layout_marginTop="@dimen/_5sdp"/>
 
@@ -40,7 +51,7 @@
             android:layout_width="@dimen/_100sdp"
             android:layout_height="wrap_content"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_7ssp"
+            android:textSize="@dimen/_8ssp"
             android:layout_marginTop="@dimen/_5sdp"/>
 
             <TextView
@@ -69,7 +80,7 @@
             android:layout_height="wrap_content"
             android:text="@string/email"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_10ssp"
             android:textAlignment="center"
             android:layout_marginTop="@dimen/_5sdp"/>
 
@@ -84,7 +95,7 @@
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_7ssp"
+                android:textSize="@dimen/_8ssp"
                 android:layout_marginTop="@dimen/_5sdp" />
 
             <TextView
@@ -112,7 +123,7 @@
             android:layout_height="wrap_content"
             android:text="@string/version"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_10ssp"
             android:textAlignment="center"
             android:layout_marginTop="@dimen/_5sdp"/>
 
@@ -127,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:text="1.01"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_7ssp"
+                android:textSize="@dimen/_8ssp"
                 android:layout_marginTop="@dimen/_5sdp"/>
 
             <TextView
@@ -141,7 +152,6 @@
 
     </LinearLayout>
 
-<!--    -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -155,7 +165,7 @@
             android:layout_height="wrap_content"
             android:text="@string/build_date"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_10ssp"
             android:layout_marginTop="@dimen/_5sdp"
             android:textAlignment="center"/>
 
@@ -170,7 +180,7 @@
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_7ssp"
+                android:textSize="@dimen/_8ssp"
                 android:layout_marginTop="@dimen/_5sdp"/>
 
             <TextView
@@ -187,17 +197,33 @@
 
     <Button
         android:id="@+id/btn_ok"
-        android:layout_width="@dimen/_50sdp"
+        android:layout_width="@dimen/_70sdp"
         android:layout_height="@dimen/_20sdp"
+        android:elevation="@dimen/_3sdp"
         android:background="@drawable/signin_background"
         android:text="@string/ok"
         android:textAlignment="center"
         android:layout_gravity="center"
         android:textAllCaps="false"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/_7ssp"
+        android:textSize="@dimen/_8ssp"
         android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
         android:padding="@dimen/_2sdp" />
 
 
 </LinearLayout>
+</ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="@dimen/_6sdp"
+        android:minHeight="@dimen/_30sdp"
+        android:minWidth="@dimen/_60sdp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/progress_bar_color" />
+
+</FrameLayout>

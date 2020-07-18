@@ -7,7 +7,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".settings.SettingsActivity"
-android:background="@drawable/person_singing">
+ android:background="@drawable/blur_background">
 
 <!-- TODO: Update blank fragment layout -->
 <TextView
@@ -31,11 +31,12 @@ android:background="@drawable/person_singing">
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_36sdp"
         android:layout_marginTop="@dimen/_24sdp"
+        android:padding="@dimen/_2sdp"
         android:text="  Channels"
         android:textAllCaps="true"
         android:textAlignment="center"
         android:drawableLeft="@drawable/ic_channel_icon"
-        android:textColor="@drawable/text_focus"
+        android:background="@drawable/options_foucs"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.91"
@@ -183,9 +184,6 @@ android:background="@drawable/person_singing">
                 android:textSize="@dimen/_8ssp"
                 android:layout_marginTop="@dimen/_12sdp" />
         </LinearLayout>
-
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

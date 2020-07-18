@@ -6,6 +6,7 @@
 
 
 
+    <color name="progress_bar_color">#004E92</color>
     <color name="programguide_header_background">#202020</color>
     <color name="programguide_content_background">#000000</color>
     <color name="programguide_footer_background">#202020</color>

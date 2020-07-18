@@ -1,128 +1,125 @@
 package com.streamly.tv;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.streamly.tv.epg.ChannellistModel;
-import com.streamly.tv.epg.Datum;
-import com.streamly.tv.epg.SimpleChannel;
+import com.streamly.tv.databinding.ActivityMainBinding;
+import com.streamly.tv.epg.kids.KidsFragment;
+import com.streamly.tv.epg.movies.MoviesFragment;
+import com.streamly.tv.epg.news.NewsFragment;
+import com.streamly.tv.epg.sports.SportFragment;
 import com.streamly.tv.local_storage.TokenStorage;
-import com.streamly.tv.log_in.LogInActivity;
-import com.streamly.tv.retrofit_clients.ApiClient;
-import com.streamly.tv.retrofit_clients.ApiInterface;
+import com.streamly.tv.search_channels.SearchActivity;
 import com.streamly.tv.settings.SettingsActivity;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
-import com.streamly.tv.utilities.NetworkKeys;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG=MainActivity.class.getSimpleName();
-    String auth_token;
-
-
+    String authToken;
+    ActivityMainBinding mainBinding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize the 310 backport lib. Usually you do this in your application object
         AndroidThreeTen.init(this);
-        setContentView(R.layout.activity_main);
-         auth_token = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
+//        setContentView(R.layout.activity_main);
+         mainBinding= DataBindingUtil.setContentView(this, R.layout.activity_main);
+        authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
+         Log.e(TAG,"authToken "+authToken);
 
-       /* getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new EpgFragment())
-                .commit();*/
-
+         initViews();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new EpgFragment())
+                .replace(R.id.fragment_container, new EpgFragment(MainActivity.this))
                 .commit();
 
 
-        findViewById(R.id.setting_text).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    }
+
+    private void initViews() {
+        mainBinding.imageSearch.setOnClickListener(this);
+        mainBinding.textAll.setOnClickListener(this);
+        mainBinding.textRecent.setOnClickListener(this);
+        mainBinding.textMyChannels.setOnClickListener(this);
+        mainBinding.textSports.setOnClickListener(this);
+        mainBinding.textNews.setOnClickListener(this);
+        mainBinding.textMovies.setOnClickListener(this);
+        mainBinding.textKids.setOnClickListener(this);
+        mainBinding.settingText.setOnClickListener(this);
+        mainBinding.goBackText.setOnClickListener(this);
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+
+            case R.id.image_search:
+                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                break;
+
+            case R.id.text_all:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new EpgFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.text_recent:
+                CommonUtility.showToast(MainActivity.this,"Work in Progress");
+                break;
+
+            case R.id.text_my_channels:
+                CommonUtility.showToast(MainActivity.this,"Work in Progress");
+                break;
+
+            case R.id.text_sports:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new SportFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.text_news:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new NewsFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.text_movies:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new MoviesFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.text_kids:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new KidsFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.setting_text:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 finish();
+                break;
 
-            }
-        });
-
-
-    }
-
-
-
-    public void getChannelList(){
-
-        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<ChannellistModel> call=apiInterface.getChannelList(NetworkKeys.KEY_BEARER +auth_token,NetworkKeys.KEY_APP_JSON);
-
-        call.enqueue(new Callback<ChannellistModel>() {
-            @Override
-            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
-
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-
-
-//                        List<SimpleChannel> stringList=new ArrayList<>();
-                        List<Datum> list=new ArrayList<>();
-                       list=response.body().getData();
-
-                       for (int i=0;i<list.size();i++){
-
-                           list.get(i).getCallSign();
-                       }
-
-                    } else if (response.code() == 401) {
-                        CommonUtility.showToast(MainActivity.this, response.body().getMessage());
-                        TokenStorage.clearSharedToken(MainActivity.this);
-                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
-                        finish();
-                    }else if (response.code()==404){
-                        TokenStorage.clearSharedToken(MainActivity.this);
-                        CommonUtility.showToast(MainActivity.this,ConstantUtility.SESSION_EXPIRED);
-                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
-                        finish();
-                    } else if (response.code() == 500) {
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                    }
-                }catch(Exception ex){
-                    ex.printStackTrace();
-                    Log.e(TAG, "Exception "+ex);
-                }
-                Log.e(TAG,"support_numbers "+response.code()+"");
-            }
-
-            @Override
-            public void onFailure(Call<ChannellistModel> call, Throwable t) {
-                Log.e(TAG,"Throwable "+t+"");
-            }
-        });
-
-
+            case R.id.go_back_text:
+               finish();
+                break;
+        }
 
     }
+
+
 }
 
 

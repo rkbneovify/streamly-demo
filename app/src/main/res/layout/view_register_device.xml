@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:text="1. Samsung smart tv -43 inch"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_10ssp"
             android:layout_marginStart="@dimen/_5sdp"/>
 
         <LinearLayout
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="54845-8654-849"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_5ssp"
+                android:textSize="@dimen/_8ssp"
                 android:padding="@dimen/_1sdp"/>
 
             <TextView

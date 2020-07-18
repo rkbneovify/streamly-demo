@@ -1,7 +1,5 @@
-
 package com.streamly.tv.settings.support;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 
@@ -9,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class SupportModel {
 
     @SerializedName("data")
-    private List<String> mData;
+    private Data mData;
     @SerializedName("message")
     private String mMessage;
     @SerializedName("response_code")
@@ -17,11 +15,11 @@ public class SupportModel {
     @SerializedName("success")
     private Boolean mSuccess;
 
-    public List<String> getData() {
+    public Data getData() {
         return mData;
     }
 
-    public void setData(List<String> data) {
+    public void setData(Data data) {
         mData = data;
     }
 
