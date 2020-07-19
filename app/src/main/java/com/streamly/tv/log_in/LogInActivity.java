@@ -66,22 +66,9 @@ public class LogInActivity extends FragmentActivity {
                         CommonUtility.showToast(LogInActivity.this,ConstantUtility.WRONG_EMAIL);
 
                     } else if (logInBinding.edPassword.getText().toString().matches("")){
-                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_PASSWORD);
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_PASSW);
 
                     }else {
-                        /*dialog.show();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                startActivity(new Intent(LogInActivity.this, MainActivity.class));
-                                finish();
-
-                                logInBinding.edUserName.setText("");
-                                logInBinding.edPassword.setText("");
-
-                            }
-                        },3000);*/
                         signInCall();
                     }
 
@@ -134,7 +121,6 @@ public class LogInActivity extends FragmentActivity {
               }catch (Exception e){
                     e.printStackTrace();
                     Log.e(TAG,"Exception: "+e.toString());
-//                    Toast.makeText(LogInActivity.this, ConstantUtility.INCORRECT_CREDENTIALS, Toast.LENGTH_SHORT).show();
                 } dialog.dismiss();
                 Log.e(TAG,"ResponCode "+response.code()+"");
             }
@@ -146,11 +132,4 @@ public class LogInActivity extends FragmentActivity {
             }
         });
     }
-
-
-//    @Override
-//    public void onBackPressed() {
-////        super.onBackPressed();
-//
-//    }
 }

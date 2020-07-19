@@ -16,7 +16,7 @@ public class ConstantUtility {
         throw new IllegalStateException("Utility class");
     }
     // Global variable used to store network state
-    public static boolean isNetworkConnected = false;
+    public static final boolean isNetworkConnected = false;
 
     public static final String PREF_DATA="pref_data";
     public static final String LOADING ="Loading..." ;
@@ -24,7 +24,7 @@ public class ConstantUtility {
     public final static String INCORRECT_CREDENTIALS ="Incorrect Username or Password";
     public static final String SERVER_ISSUE ="Server issue, try after sometime";
     public static final String FILL_EMAIL = "Fill Email ID";
-    public static final String FILL_PASSWORD ="Fill Password";
+    public static final String FILL_PASSW ="Fill Password";
     public static final String WRONG_EMAIL = "Wrong email, Please check your email Id";
     public static final String SESSION_EXPIRED ="Session expired, Please re-login";
     public static final String MAX_USER_LOGIN="Your account is in use on 5 devices. Please stop playing on other devices to continue";
