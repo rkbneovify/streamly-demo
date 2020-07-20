@@ -429,6 +429,48 @@ $reco=$record->get();
     //     'clients' => $this->transformClientCollection($api)
     //  ], 200);
     }
+  //channel with 7 day of schdule
+    public function frontEpgchannelDaysSchedule(){
+$imagePath=url("/uploads/channellogo/");
+
+DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select(["CallSign","id","StationName AS name","url",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') events")
+->fromSub(function ($query) {
+    $query->select('gracenote.StationName','gracenote.CallSign','gracenote.EventTitle','gracenote.StartDateTime','gracenote.EndDateTime','channels.id','channels.image','channels.url')
+    ->from('gracenote')
+    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)')
+    ->orderBy('gracenote.StartDateTime', 'asc');
+}, 'sub')
+
+->orderBy('CallSign', 'asc')
+->groupBy('CallSign','StationName','image','url','id');
+    
+$reco=$record->get();   
+     if ($reco->isEmpty()) {
+        $response = [
+            'success' => false,
+            'data' => 'Empty',
+            'message' => 'Channel not found.',
+            'response_code'=>404,
+        ];
+        return response()->json($response, 404);
+    }  
+
+        $response = [
+            'success' => true,
+            'date'=>date("Y-m-d"),
+            'data' => $reco,
+           
+            'message' => 'Schedule data for 3 days found',
+            'response_code'=>200,
+        ];
+       
+    return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+ 
+    }
 
 
 public function transformClientCollection($api)
