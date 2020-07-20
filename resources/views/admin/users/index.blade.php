@@ -265,7 +265,7 @@ $(function() {
         columns: [
             { data: 'DT_RowIndex', name: 'id' },
             { data: 'name', name: 'name' },
-            { data: 'contact', name: 'contact' },
+            { data: 'roles', name: 'roles' },
             { data: 'email', name: 'email' },
             { data: 'is_active', name: 'is_active' ,orderable:false},
             {data: 'action', name: 'action', orderable: false, searchable: false}

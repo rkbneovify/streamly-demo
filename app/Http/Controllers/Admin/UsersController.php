@@ -234,7 +234,13 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
 
 
         return DataTables::of(User::with('roles'))
-        
+        ->addColumn('roles', function ($row) {
+            $options = '';
+            foreach ($row->roles as $role){
+                $options .= $role->display_name;
+            }
+           return $options;
+            })
         ->addColumn('action', function($row) {
             return ' <a href="/admin/users/edit/'. $row->id .'" class="btn btn-xs btn-primary">View/Edit</a> <a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
         })

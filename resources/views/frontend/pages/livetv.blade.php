@@ -43,7 +43,7 @@ headers: {
 
 });
 			owl.owlCarousel({
-				
+				slideBy: 6,
 				loop:true,
 			    margin:20,
 			    nav: true,

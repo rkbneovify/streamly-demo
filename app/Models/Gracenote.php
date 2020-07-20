@@ -58,6 +58,7 @@ class Gracenote extends Model
 
 protected $casts = [
     'programs' => 'array',
+    'events' => 'array',
   ];
 public function gracenotechannel()
     {
