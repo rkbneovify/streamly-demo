@@ -223,5 +223,30 @@ public function showRecent()
         return view('frontend.pages.recentchannel',compact('myRecent','genres','login'));
 
     }
+
+    public function  epgScreen(){
+        $imagePath=url("/uploads/channellogo/");
+
+DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select("CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->fromSub(function ($query) {
+    $query->select('gracenote.StationName','gracenote.CallSign','gracenote.EventTitle','gracenote.StartDateTime','gracenote.EndDateTime','channels.id','channels.image','channels.url')
+    ->from('gracenote')
+    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)')
+    ->orderBy('gracenote.StartDateTime', 'asc');
+}, 'sub')
+
+->orderBy('CallSign', 'asc')
+->groupBy('CallSign','StationName','image','url','id');
+$record->get();
+        return view('frontend.pages.epg',compact('record'));
+    }
+
+    public function  epgScreen2(){
+        return view('frontend.pages.epg3');
+    }
     
 }

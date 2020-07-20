@@ -131,7 +131,7 @@
 						<form action="{{ url('user/subscriptions/destroy', Auth::user()->id) }}" method="POST">
 							<input type="hidden" name="_method" value="DELETE">
 															<input type="hidden" name="_token" value="{{ csrf_token() }}">
-															<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete">
+															<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Yes">
 														</form>
 						{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
@@ -172,7 +172,7 @@
 						</div>
 
 						<div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-							<label for="cnewpassword">New Password</label>
+							<label for="cnewpassword">Confirm New Password</label>
 							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
 						</div>
 

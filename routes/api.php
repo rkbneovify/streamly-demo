@@ -27,7 +27,7 @@ Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::post('auth/register', 'Auth\AuthController@register');
-Route::get('auth/verify', 'Auth\AuthController@verify');
+Route::get('auth/verify', 'Auth\AuthController@verify')->middleware(['web']);
 Route::post('auth/location', 'HomeController@location');
 
 
@@ -50,6 +50,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('channellist', 'Admin\ChannelController@channeljson');
     Route::post('channelschdeule', 'Admin\ChannelController@channelschedulejson');
     Route::get('channeldayschdeule', 'Admin\ChannelController@channelDaysSchedule');
+    Route::get('frontendepg', 'Admin\ChannelController@frontEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
     Route::get('support', 'APIController@support');
