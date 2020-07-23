@@ -147,6 +147,8 @@ Route::get('/ffmpeg3', 'VideoAnylyzerController@testFprobe');
 Route::get('/ffmpeg4', 'VideoAnylyzerController@testProbeOnRemoteFile');
 Route::get('/epgviewr', 'Pages\LiveTv@epgScreen');
 Route::get('/epgviewr2', 'Pages\LiveTv@epgScreen2');
+
+Route::get('/react', 'HomeController@webReact');
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     

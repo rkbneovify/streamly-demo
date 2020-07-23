@@ -434,14 +434,16 @@ $reco=$record->get();
 $imagePath=url("/uploads/channellogo/");
 
 DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select(["CallSign","id","StationName AS name","url",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+$record  = Gracenote::select(["id","StationName AS name","url",DB::raw("CONCAT('$imagePath/',`image`) icon")])
 
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') events")
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', (UNIX_TIMESTAMP(StartDateTime)*1000),'end', (UNIX_TIMESTAMP(EndDateTime)*1000) ) Order By StartDateTime ), ']') events")
 ->fromSub(function ($query) {
     $query->select('gracenote.StationName','gracenote.CallSign','gracenote.EventTitle','gracenote.StartDateTime','gracenote.EndDateTime','channels.id','channels.image','channels.url')
     ->from('gracenote')
     ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)')
+    // ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 DAY)')
+    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s') ")
+   
     ->orderBy('gracenote.StartDateTime', 'asc');
 }, 'sub')
 
