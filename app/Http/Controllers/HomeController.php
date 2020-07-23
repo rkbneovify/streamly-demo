@@ -267,6 +267,16 @@ class HomeController extends Controller
         return view('logActivity',compact('logs'));
 
     }
+
+    public function webReact()
+
+    {
+
+       // $logs = LogActivity::logActivityLists();
+
+        return view('app');
+
+    }
     
 
 }
