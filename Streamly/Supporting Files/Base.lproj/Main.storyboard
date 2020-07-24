@@ -6,6 +6,17 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </array>
+        <array key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+        </array>
+        <array key="Lato-Medium.ttf">
+            <string>Lato-Medium</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--LoginVC-->
         <scene sceneID="IcQ-fi-X8t">
@@ -37,24 +48,24 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="873" height="720"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign In" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWd-ny-HIG">
-                                                        <rect key="frame" x="127" y="40" width="145" height="53"/>
+                                                        <rect key="frame" x="127" y="40" width="132" height="53"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="53" id="1yQ-i1-BJO"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="44"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="44"/>
                                                         <color key="textColor" red="0.0" green="0.30588235294117649" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Syg-xH-Mku">
                                                         <rect key="frame" x="127" y="137" width="620" height="29"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="24"/>
                                                         <color key="textColor" red="0.039215686274509803" green="0.039215686274509803" blue="0.039215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g7Z-qZ-utB">
+                                                    <textField opaque="NO" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="g7Z-qZ-utB">
                                                         <rect key="frame" x="127" y="177" width="620" height="94"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="94" id="F4t-a9-xs6"/>
@@ -75,29 +86,29 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G6J-zO-Jpw">
-                                                        <rect key="frame" x="127" y="299" width="110" height="29"/>
+                                                        <rect key="frame" x="127" y="299" width="102" height="29"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="24"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember me" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3A-mh-nxK">
-                                                        <rect key="frame" x="177" y="467" width="150" height="26"/>
+                                                        <rect key="frame" x="177" y="467" width="140" height="26"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="26" id="dz1-nq-3P1"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="22"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F0E-Oc-jn2">
-                                                        <rect key="frame" x="223" y="660" width="242" height="26"/>
+                                                        <rect key="frame" x="333" y="660" width="196" height="26"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="26" id="rrN-4c-HWE"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="19"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -151,38 +162,14 @@
                                                             <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="kWC-ka-rhx"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGh-M6-aXv">
-                                                        <rect key="frame" x="551" y="457" width="196" height="46"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="196" id="GRM-wC-IMx"/>
-                                                            <constraint firstAttribute="height" constant="46" id="Rds-tt-STt"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
-                                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                                        <state key="normal" title="Need help?">
-                                                            <color key="titleColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                        </state>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
-                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
-                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="MXs-Aj-hae"/>
-                                                        </connections>
-                                                    </button>
                                                     <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Ti-Zk-8Fg">
-                                                        <rect key="frame" x="491" y="650" width="208" height="46"/>
+                                                        <rect key="frame" x="547" y="650" width="200" height="46"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="46" id="VC9-3O-SQu"/>
-                                                            <constraint firstAttribute="width" constant="208" id="pH0-rS-rc4"/>
+                                                            <constraint firstAttribute="width" constant="200" id="pH0-rS-rc4"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="Register Now">
                                                             <color key="titleColor" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -213,7 +200,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="84" id="lex-Ma-kVW"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="Sign in"/>
                                                         <userDefinedRuntimeAttributes>
@@ -231,6 +218,63 @@
                                                             <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="9Nb-e9-u3w"/>
                                                         </connections>
                                                     </button>
+                                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nGh-M6-aXv">
+                                                        <rect key="frame" x="551" y="457" width="196" height="46"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="196" id="GRM-wC-IMx"/>
+                                                            <constraint firstAttribute="height" constant="46" id="Rds-tt-STt"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="22"/>
+                                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                        <state key="normal" title="Need help?">
+                                                            <color key="titleColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="MXs-Aj-hae"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8St-FZ-CcW">
+                                                        <rect key="frame" x="127" y="650" width="123" height="46"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="123" id="PIO-eS-ZKF"/>
+                                                            <constraint firstAttribute="height" constant="46" id="bDN-iB-I98"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
+                                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                        <state key="normal" title="T&amp;C">
+                                                            <color key="titleColor" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                                <real key="value" value="1"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                                <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="P8l-K5-BQF"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
@@ -239,18 +283,21 @@
                                                     <constraint firstItem="G6J-zO-Jpw" firstAttribute="top" secondItem="g7Z-qZ-utB" secondAttribute="bottom" constant="28" id="5VS-87-WAd"/>
                                                     <constraint firstItem="xwG-Uj-qcV" firstAttribute="top" secondItem="G6J-zO-Jpw" secondAttribute="bottom" constant="11" id="7yl-o3-Xd6"/>
                                                     <constraint firstItem="xwG-Uj-qcV" firstAttribute="leading" secondItem="G6J-zO-Jpw" secondAttribute="leading" id="8b6-ok-rc0"/>
+                                                    <constraint firstItem="6Ti-Zk-8Fg" firstAttribute="trailing" secondItem="MJZ-82-KwY" secondAttribute="trailing" id="Aqy-ei-70q"/>
                                                     <constraint firstItem="E3A-mh-nxK" firstAttribute="centerY" secondItem="ayw-3D-E63" secondAttribute="centerY" id="Jl5-6Y-C1Z"/>
                                                     <constraint firstItem="xwG-Uj-qcV" firstAttribute="trailing" secondItem="g7Z-qZ-utB" secondAttribute="trailing" id="Kye-Pz-mV0"/>
                                                     <constraint firstItem="WWd-ny-HIG" firstAttribute="top" secondItem="Jpm-NJ-b0I" secondAttribute="top" constant="40" id="LGJ-aX-hwP"/>
                                                     <constraint firstItem="Syg-xH-Mku" firstAttribute="leading" secondItem="WWd-ny-HIG" secondAttribute="leading" id="Ms4-O9-Kq2"/>
                                                     <constraint firstItem="MJZ-82-KwY" firstAttribute="top" secondItem="ayw-3D-E63" secondAttribute="bottom" constant="33" id="T47-h7-nzy"/>
                                                     <constraint firstItem="F0E-Oc-jn2" firstAttribute="top" secondItem="MJZ-82-KwY" secondAttribute="bottom" constant="46" id="U32-7h-fS2"/>
+                                                    <constraint firstItem="8St-FZ-CcW" firstAttribute="centerY" secondItem="6Ti-Zk-8Fg" secondAttribute="centerY" id="UbC-6h-iVN"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="WWd-ny-HIG" secondAttribute="trailing" constant="10" id="XOP-Eq-TX2"/>
                                                     <constraint firstItem="ayw-3D-E63" firstAttribute="leading" secondItem="xwG-Uj-qcV" secondAttribute="leading" id="axw-ee-9j0"/>
                                                     <constraint firstItem="6Ti-Zk-8Fg" firstAttribute="centerY" secondItem="F0E-Oc-jn2" secondAttribute="centerY" id="bKv-Cr-MrP"/>
                                                     <constraint firstItem="WWd-ny-HIG" firstAttribute="leading" secondItem="Jpm-NJ-b0I" secondAttribute="leading" constant="127" id="d1O-qV-cra"/>
                                                     <constraint firstItem="MJZ-82-KwY" firstAttribute="leading" secondItem="ayw-3D-E63" secondAttribute="leading" id="dOO-6x-sdX"/>
                                                     <constraint firstItem="MJZ-82-KwY" firstAttribute="trailing" secondItem="nGh-M6-aXv" secondAttribute="trailing" id="eSL-SL-6Se"/>
+                                                    <constraint firstItem="8St-FZ-CcW" firstAttribute="leading" secondItem="MJZ-82-KwY" secondAttribute="leading" id="ikY-7J-Csy"/>
                                                     <constraint firstItem="nGh-M6-aXv" firstAttribute="centerY" secondItem="E3A-mh-nxK" secondAttribute="centerY" id="j6H-A8-Ykg"/>
                                                     <constraint firstItem="Syg-xH-Mku" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="g7Z-qZ-utB" secondAttribute="trailing" id="l1Y-qh-0bw"/>
                                                     <constraint firstItem="E3A-mh-nxK" firstAttribute="leading" secondItem="ayw-3D-E63" secondAttribute="trailing" constant="16" id="laT-31-Kxw"/>
@@ -258,10 +305,9 @@
                                                     <constraint firstItem="ayw-3D-E63" firstAttribute="top" secondItem="xwG-Uj-qcV" secondAttribute="bottom" constant="30" id="moM-ne-7x6"/>
                                                     <constraint firstItem="g7Z-qZ-utB" firstAttribute="leading" secondItem="Syg-xH-Mku" secondAttribute="leading" id="oVG-zK-P3h"/>
                                                     <constraint firstItem="G6J-zO-Jpw" firstAttribute="leading" secondItem="g7Z-qZ-utB" secondAttribute="leading" id="t9H-3c-x5n"/>
-                                                    <constraint firstItem="F0E-Oc-jn2" firstAttribute="leading" secondItem="MJZ-82-KwY" secondAttribute="leading" multiplier="1.6" constant="20" id="vIL-Th-fHb"/>
                                                     <constraint firstAttribute="bottom" secondItem="F0E-Oc-jn2" secondAttribute="bottom" constant="34" id="w7z-iT-BWh"/>
                                                     <constraint firstItem="Syg-xH-Mku" firstAttribute="top" secondItem="WWd-ny-HIG" secondAttribute="bottom" constant="44" id="wUz-0X-uMK"/>
-                                                    <constraint firstItem="6Ti-Zk-8Fg" firstAttribute="leading" secondItem="F0E-Oc-jn2" secondAttribute="trailing" constant="26" id="ymP-gm-8L3"/>
+                                                    <constraint firstItem="6Ti-Zk-8Fg" firstAttribute="leading" secondItem="F0E-Oc-jn2" secondAttribute="trailing" constant="18" id="ymP-gm-8L3"/>
                                                 </constraints>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -323,6 +369,7 @@
                         <outlet property="registerNowBtn" destination="6Ti-Zk-8Fg" id="6eI-V6-5u5"/>
                         <outlet property="rembemberMe" destination="ayw-3D-E63" id="xrU-ML-0us"/>
                         <outlet property="signBtn" destination="MJZ-82-KwY" id="h1b-s5-zRp"/>
+                        <outlet property="terms" destination="8St-FZ-CcW" id="HIt-4x-b9d"/>
                         <outlet property="userIDField" destination="g7Z-qZ-utB" id="0NB-Ys-zuc"/>
                     </connections>
                 </viewController>
@@ -472,17 +519,17 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkS-OL-cQ8">
-                                <rect key="frame" x="1643" y="35" width="232" height="60"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lkS-OL-cQ8">
+                                <rect key="frame" x="1643" y="30" width="232" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="232" id="CHs-zK-Vrk"/>
-                                    <constraint firstAttribute="height" constant="60" id="agw-3X-CL4"/>
+                                    <constraint firstAttribute="height" constant="70" id="agw-3X-CL4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
-                                <inset key="titleEdgeInsets" minX="-29" minY="3" maxX="-25" maxY="6"/>
-                                <inset key="imageEdgeInsets" minX="-24" minY="30" maxX="36" maxY="33"/>
+                                <inset key="titleEdgeInsets" minX="-29" minY="3" maxX="-24" maxY="6"/>
+                                <inset key="imageEdgeInsets" minX="-29" minY="33" maxX="29" maxY="37"/>
                                 <state key="normal" title="SETTINGS" image="starIcon">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -583,7 +630,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Mji-eU-2n3"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="33"/>
+                                                    <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="33"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>

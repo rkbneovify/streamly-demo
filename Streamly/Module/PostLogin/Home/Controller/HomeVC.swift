@@ -138,14 +138,14 @@ class HomeVC: UIViewController {
             self.searchButton.setBackgroundImage(image, for: .highlighted)
         }
         
-        self.allButton.setBtnProperties(self.allButton)
-        self.recentButton.setBtnProperties(self.recentButton)
-        self.myChannelButton.setBtnProperties(self.myChannelButton)
-        self.sportsButton.setBtnProperties(self.sportsButton)
-        self.newsButton.setBtnProperties(self.newsButton)
-        self.moviesButton.setBtnProperties(self.moviesButton)
-        self.kidsButton.setBtnProperties(self.kidsButton)
-        self.settingsButton.setBtnProperties(self.settingsButton)
+        self.allButton.setBtnProperties(self.allButton, false)
+        self.recentButton.setBtnProperties(self.recentButton, false)
+        self.myChannelButton.setBtnProperties(self.myChannelButton, false)
+        self.sportsButton.setBtnProperties(self.sportsButton, false)
+        self.newsButton.setBtnProperties(self.newsButton, false)
+        self.moviesButton.setBtnProperties(self.moviesButton, false)
+        self.kidsButton.setBtnProperties(self.kidsButton, false)
+        self.settingsButton.setBtnProperties(self.settingsButton, false)
         
     }
 

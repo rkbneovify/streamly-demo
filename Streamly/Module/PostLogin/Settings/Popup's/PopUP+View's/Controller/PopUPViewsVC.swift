@@ -11,6 +11,8 @@ import UIKit
 class PopUPViewsVC: UIViewController {
     
     // MARK: Outlets
+    @IBOutlet weak var termsView: UIView!
+    @IBOutlet weak var vieww:GradientView!
     @IBOutlet weak var backView:UIView!
     @IBOutlet weak var backViewHeight: NSLayoutConstraint!
     @IBOutlet weak var txtview:UITextView!
@@ -19,12 +21,23 @@ class PopUPViewsVC: UIViewController {
             txtview.delegate = self
         }
     }
+
+    @IBOutlet weak var termsTextView: UITextView!
+        {
+        didSet {
+            termsTextView.delegate = self
+        }
+    }
+    @IBOutlet weak var goBackbtn: UIButton!
+    @IBOutlet weak var acceptBtn: UIButton!
     @IBOutlet weak var policiesView:UIView!
     @IBOutlet weak var okBtn:UIButton!
     
     // MARK:  propertis
     var item:Int?
-    var contactInfo:ContactResponseData?
+    var termsdata = ""
+    var isfromLogin = false
+    var contactInfo:ContactResponse?
     var privacyData:PrivacyResponseData?
     var logOut:LogoutResponseData?
     lazy var viewModel: ContactDataViewModel = {
@@ -54,6 +67,8 @@ class PopUPViewsVC: UIViewController {
             self.policiesViewSetup()
         case CustomPopUp.logOut.rawValue:
             self.logOUTViewSetup()
+        case CustomPopUp.terms.rawValue:
+            self.termsPopUpSetup()
         default:
             return
             
@@ -65,21 +80,23 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 488
         let customView = LogOUTView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.clear
+        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
         backView.addSubview(customView)
     }
     
-    private func supportViewSetup(_ data:ContactResponseData)
+    private func supportViewSetup(_ data:ContactResponse)
     {
         
         self.backViewHeight.constant = 574
+        self.view.layoutIfNeeded()
         let customView = SupportView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.clear
+        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
+        customView.isflag = isfromLogin
         customView.contactInfo = data
         backView.addSubview(customView)
     }
@@ -94,13 +111,34 @@ class PopUPViewsVC: UIViewController {
         self.makeAPiCallPrivacy()
         self.backView.isHidden = true
         self.policiesView.isHidden = false
-        self.okBtn.setBtnProperties(self.okBtn)
-        policiesView.backgroundColor = UIColor.clear
+        self.okBtn.setBtnProperties(self.okBtn, false)
+        policiesView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         policiesView.cornerRadius = 10.0
         txtview.isSelectable = true
         txtview.isUserInteractionEnabled = true
         txtview.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
     }
+    private func termsPopUpSetup(){
+        self.vieww.firstColor = UIColor.firstGradientColor
+        self.vieww.secondColor = UIColor.secondGradientColor
+        if self.termsdata == ""
+        {
+            self.makeAPiCallTerms()
+        }
+        else {
+            self.termsTextView.text = self.termsdata
+        }
+        self.backView.isHidden = true
+        self.policiesView.isHidden = true
+        self.termsView.isHidden = false
+        self.goBackbtn.setBtnProperties(self.goBackbtn, true)
+        self.acceptBtn.setBtnProperties(self.acceptBtn, true)
+        termsView.cornerRadius = 10.0
+        termsTextView.isSelectable = true
+        termsTextView.isUserInteractionEnabled = true
+        termsTextView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
+    }
+    
     
     private func makeApiCall()
     {
@@ -124,6 +162,14 @@ class PopUPViewsVC: UIViewController {
     {
         self.showSpinner(onView: self.view)
         viewModel.getPrivacy()
+        viewModel.delegate = self
+        self.initVMPrivacy()
+    }
+
+    private func makeAPiCallTerms()
+    {
+        self.showSpinner(onView: self.view)
+        viewModel.getTerms()
         viewModel.delegate = self
         self.initVMPrivacy()
     }
@@ -168,7 +214,7 @@ class PopUPViewsVC: UIViewController {
             }
             if dataprivacy.success ?? false
             {
-                self.txtview.text = dataprivacy.data ?? ""
+                self.item == 3 ? (self.txtview.text = dataprivacy.data ?? "") : (self.termsTextView.text = dataprivacy.data ?? "")
             }
             
         }
@@ -181,7 +227,14 @@ class PopUPViewsVC: UIViewController {
     
     //MARK: Actions
     @IBAction func actionBtns(_ sender: UIButton) {
-        self.dissmissView()
+        if sender.tag == 88
+        {
+         // for open home while accept terms
+        }
+
+        else {
+            self.dissmissView()
+        }
     }
 }
 
@@ -215,18 +268,58 @@ extension  PopUPViewsVC:UITextViewDelegate
         
         if (scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height)) {
             //reach bottom
-            self.okBtn.isHidden = false
+            if item == 5
+            {
+                self.acceptBtn.isHidden = false
+                self.goBackbtn.isHidden = false
+            }
+            else {
+                self.okBtn.isHidden = false
+            }
+
         }
         
         if (scrollView.contentOffset.y < 10){
             //reach top
-            self.okBtn.isHidden = true
+            if item == 5
+            {
+                self.acceptBtn.isHidden = true
+                self.goBackbtn.isHidden = true
+            }
+            else {
+                self.okBtn.isHidden = true
+            }
         }
         
         if (scrollView.contentOffset.y >= 0 && scrollView.contentOffset.y < (scrollView.contentSize.height - scrollView.frame.size.height)){
-            self.okBtn.isHidden = true
+            if item == 5
+            {
+                self.acceptBtn.isHidden = true
+                self.goBackbtn.isHidden = true
+            }
+            else {
+                self.okBtn.isHidden = true
+            }
             //not top and not bottom
         }
     }
 }
 
+extension PopUPViewsVC
+{
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if acceptBtn.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+                self.acceptBtn.layer.borderColor = UIColor.clear.cgColor
+                self.goBackbtn.layer.borderColor = UIColor.black.cgColor
+               }, completion: nil)
+
+        } else if goBackbtn.isFocused{
+               coordinator.addCoordinatedAnimations({ () -> Void in
+             self.acceptBtn.layer.borderColor = UIColor.black.cgColor
+             self.goBackbtn.layer.borderColor = UIColor.clear.cgColor
+               }, completion: nil)
+           }
+
+    }
+}

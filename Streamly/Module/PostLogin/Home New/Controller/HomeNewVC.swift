@@ -80,7 +80,7 @@ class HomeNewVC: UIViewController {
         collectionView.register(programNib, forCellWithReuseIdentifier: "programCell")
         collectionView.delegate = self
         collectionView.dataSource = self
-        self.configureButtons()
+       // self.configureButtons()
         self.makeApiCall()
                self.initVM()
                DispatchQueue.global(qos: .background).async
@@ -93,24 +93,22 @@ class HomeNewVC: UIViewController {
     }
 
     private func configureButtons()
-       {
-           if let image = UIImage(systemName: "magnifyingglass")
-           {
-               self.searchButton.setBackgroundImage(image, for: .normal)
-               self.searchButton.setBackgroundImage(image, for: .focused)
-               self.searchButton.setBackgroundImage(image, for: .highlighted)
-           }
+    {
 
-           self.allButton.setBtnProperties(self.allButton)
-           self.recentButton.setBtnProperties(self.recentButton)
-           self.myChannelButton.setBtnProperties(self.myChannelButton)
-           self.sportsButton.setBtnProperties(self.sportsButton)
-           self.newsButton.setBtnProperties(self.newsButton)
-           self.moviesButton.setBtnProperties(self.moviesButton)
-           self.kidsButton.setBtnProperties(self.kidsButton)
-           self.settingsButton.setBtnProperties(self.settingsButton)
+      //  self.allButton.set
 
-       }
+
+        self.allButton.layer.borderWidth = 0.0
+        self.recentButton.layer.borderWidth = 0.0
+        self.myChannelButton.layer.borderWidth = 0.0
+        self.sportsButton.layer.borderWidth = 0.0
+        self.newsButton.layer.borderWidth = 0.0
+        self.moviesButton.layer.borderWidth = 0.0
+        self.kidsButton.layer.borderWidth = 0.0
+        self.settingsButton.layer.borderWidth = 0.0
+        self.searchButton.layer.borderWidth = 0.0
+
+    }
 
     private func setupEPGLayout()
     {
@@ -120,11 +118,13 @@ class HomeNewVC: UIViewController {
         layout.epgEndTime = layout.epgStartTime.addingTimeInterval(layout.weekTimeInterval)
         layout.layoutInfo = NSMutableDictionary()
         layout.framesInfo = NSMutableDictionary()
-        collectionView.setCollectionViewLayout(layout, animated: true)
-        collectionView.reloadData()
+        collectionView.setCollectionViewLayout(layout, animated: false)
         self.tableView.reloadData()
         self.tableView.layoutIfNeeded()
+        collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
+        self.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+
     }
 
     private func selectCategories(_ sender:Int)
@@ -272,21 +272,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as? ProgramCollectionViewCell else {return UICollectionViewCell()}
-//
-//        programCell.layer.borderWidth = 1
-//        programCell.layer.borderColor = UIColor.lightGray.cgColor
 
         guard let channel = filteredList?[indexPath.section], let programs = channel.programs else { return UICollectionViewCell() }
 
         programCell.configureWithModel(program: programs[indexPath.item])
         return programCell
-     //   cell.programTIme.text = ""
-//        let activityView = UIActivityIndicatorView(style: .large)
-//           activityView.center = CGPoint(x: cell.contentView.frame.size.width / 2, y: cell.contentView.frame.size.height / 2)
-//           cell.contentView.addSubview(activityView)
-     //  cell.contentView.center = CGPoint(x: cell.contentView.frame.size.width / 2, y: cell.contentView.frame.size.height / 2)
-
-
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -335,6 +325,99 @@ extension HomeNewVC {
         if let _ = timer {
             timer!.invalidate()
             timer = nil
+        }
+    }
+}
+
+extension HomeNewVC{
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if settingsButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.settingsButton.layer.borderWidth = 3.0
+                self.settingsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+            }, completion: nil)
+        }
+        else if searchButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.searchButton.layer.borderWidth = 3.0
+                self.searchButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+            }, completion: nil)
+        }
+            else if allButton.isFocused{
+                       coordinator.addCoordinatedAnimations({ () -> Void in
+                           self.configureButtons()
+                           self.allButton.layer.borderWidth = 3.0
+                           self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                       }, completion: nil)
+                   }
+            else if recentButton.isFocused{
+                coordinator.addCoordinatedAnimations({ () -> Void in
+                    self.configureButtons()
+                    self.recentButton.layer.borderWidth = 3.0
+                    self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                }, completion: nil)
+            }
+            else if myChannelButton.isFocused{
+                coordinator.addCoordinatedAnimations({ () -> Void in
+                    self.configureButtons()
+                    self.myChannelButton.layer.borderWidth = 3.0
+                    self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                }, completion: nil)
+            }
+
+            else if sportsButton.isFocused{
+                         coordinator.addCoordinatedAnimations({ () -> Void in
+                             self.configureButtons()
+                             self.sportsButton.layer.borderWidth = 3.0
+                             self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                         }, completion: nil)
+                     }
+            else if newsButton.isFocused{
+                                   coordinator.addCoordinatedAnimations({ () -> Void in
+                                       self.configureButtons()
+                                       self.newsButton.layer.borderWidth = 3.0
+                                       self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                                   }, completion: nil)
+                               }
+            else if moviesButton.isFocused{
+                                            coordinator.addCoordinatedAnimations({ () -> Void in
+                                                self.configureButtons()
+                                                self.moviesButton.layer.borderWidth = 3.0
+                                                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                                            }, completion: nil)
+                                        }
+            else if kidsButton.isFocused{
+                                                     coordinator.addCoordinatedAnimations({ () -> Void in
+                                                         self.configureButtons()
+                                                         self.kidsButton.layer.borderWidth = 3.0
+                                                         self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+                                                     }, completion: nil)
+                                                 }
+
+
+
+        else {
+             self.configureButtons()
         }
     }
 }

@@ -53,8 +53,8 @@ class PopUPTvVC: UIViewController {
 
     override func viewWillLayoutSubviews() {
         
-        self.backView.backgroundColor = UIColor.clear
-        self.okButton.setBtnProperties(self.okButton)
+        self.backView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+        self.okButton.setBtnProperties(self.okButton, false)
 
     }
 

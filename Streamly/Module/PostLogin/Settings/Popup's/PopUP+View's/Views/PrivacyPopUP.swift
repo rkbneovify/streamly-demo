@@ -30,7 +30,7 @@ class PrivacyPopUP: NibView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.okButton.setBtnProperties(self.okButton)
+        self.okButton.setBtnProperties(self.okButton, false)
         
     }
 

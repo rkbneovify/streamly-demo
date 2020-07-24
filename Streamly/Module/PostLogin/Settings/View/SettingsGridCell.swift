@@ -28,7 +28,6 @@ class SettingsGridCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.content.layer.cornerRadius = 8.0
         self.unSelectedCell()
         
         
@@ -58,12 +57,13 @@ class SettingsGridCell: UICollectionViewCell {
                 self.unSelectedCell()
             }
             else {
+                self.content.layer.cornerRadius = 8.0
                 self.content.firstColor = UIColor.firstGradientColor
                 self.content.secondColor = UIColor.secondGradientColor
-                self.content.layer.borderWidth = 1.0
-                self.content.layer.borderColor = UIColor.black.cgColor
+                self.content.layer.borderWidth = 0.0
+              //  self.content.layer.borderColor = UIColor.black.cgColor
                 self.content.layer.shadowColor = UIColor.black.cgColor
-                self.content.layer.shadowRadius = 2.0
+                self.content.layer.shadowRadius = 5.0
                 self.content.layer.shadowOpacity = 0.9
                 self.content.layer.shadowOffset = CGSize(width: 0, height: 0)
 
@@ -84,9 +84,11 @@ class SettingsGridCell: UICollectionViewCell {
 
     private func unSelectedCell()
     {
+         self.content.layer.cornerRadius = 8.0
         self.content.layer.borderWidth = 0.0
         self.content.layer.shadowRadius = 0.0
         self.content.layer.shadowOpacity = 0
+        self.content.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
         self.content.firstColor = UIColor.channelBox
         self.content.secondColor = UIColor.channelBox
     }

@@ -18,7 +18,7 @@ class LoginRequest: NSObject {
     func userLogin(complition: @escaping (LoginResponse?, String?) -> Swift.Void) {
         let parameter:[String:String] = ["email": self.email ?? "", "password": self.password ?? "","deviceid":deviceID ?? ""]
         let headers:HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
-        AF.request("http://streamlytv.com/api/auth/login", method: .post, parameters: parameter, encoding: URLEncoding.default, headers: headers).responseJSON{ (response) in
+        AF.request("https://streamlytv.com/api/auth/login", method: .post, parameters: parameter, encoding: URLEncoding.default, headers: headers).responseJSON{ (response) in
             debugPrint(response)
             guard let data = response.data else {return}
             do {

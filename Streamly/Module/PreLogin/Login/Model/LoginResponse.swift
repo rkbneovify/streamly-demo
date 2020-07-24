@@ -16,6 +16,7 @@ struct LoginResponse : Codable {
     let message             :String?
     let status              :Int?
     let response_code       :Int?
+    let termandcondition    :Bool?
     let token_type          :String?
     let user                :User?
     
@@ -30,6 +31,7 @@ struct LoginResponse : Codable {
         case response_code = "response_code"
         case token_type = "token_type"
         case user = "user"
+        case termandcondition = "termandcondition"
     }
     
     init(from decoder: Decoder) throws {
@@ -42,7 +44,8 @@ struct LoginResponse : Codable {
         device_info = try values.decodeIfPresent(String.self, forKey: .device_info)
         token_type = try values.decodeIfPresent(String.self, forKey: .token_type)
         response_code = try values.decodeIfPresent(Int.self, forKey: .response_code)
-        user          = try values.decodeIfPresent(User.self, forKey: .user)
+        user = try values.decodeIfPresent(User.self, forKey: .user)
+        termandcondition  = try values.decodeIfPresent(Bool.self, forKey: .termandcondition)
     }
     
 }

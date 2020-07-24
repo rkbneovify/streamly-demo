@@ -64,6 +64,7 @@ class SearchVC: UIViewController {
     private func initialSetup()
     {
 
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bacgroundImage")!)
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()

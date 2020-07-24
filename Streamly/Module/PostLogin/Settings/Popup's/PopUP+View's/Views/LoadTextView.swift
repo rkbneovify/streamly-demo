@@ -29,19 +29,10 @@ class LoadTextView: NibView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.okButton.setBtnProperties(self.okButton)
+        self.okButton.setBtnProperties(self.okButton, false)
         textView.isSelectable = true
         textView.isUserInteractionEnabled = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
-
-       // textView.text = """
-//<form action="/action_page.php">
-//          <label for="username">Username: </label>
-//          <input type="text" id="username" name="username"><br>
-//          <input type="submit" value="Submit">
-//        </form>
-//""".htmlToString
-
     }
 
 

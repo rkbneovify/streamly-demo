@@ -51,6 +51,9 @@ class EpgGridLayout: UICollectionViewLayout
 //    }
     
     override func prepare() {
+        guard let collectionView = collectionView else {
+                  return
+              }
         calculateFramesForAllPrograms()
         let newLayoutInfo = NSMutableDictionary()
         let cellLayoutInfo = NSMutableDictionary()
@@ -64,6 +67,13 @@ class EpgGridLayout: UICollectionViewLayout
                 let indexPath = IndexPath(item: index, section: section)
                 let itemAttributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
                 itemAttributes.frame = frameForItemAtIndexPath(indexPath)
+                if section == 0 {
+                                   var frame = itemAttributes.frame
+                                   frame.origin.y = collectionView.contentOffset.y
+                                   itemAttributes.frame = frame
+                               }
+
+                              
                 cellLayoutInfo[indexPath] = itemAttributes
             }
         }
@@ -116,7 +126,8 @@ class EpgGridLayout: UICollectionViewLayout
                 let rectString = NSCoder.string(for: frame)
                 let indexPath = IndexPath(item: index, section: i)
                 framesInfo?[indexPath] = rectString
-                xPos = xPos+tileSize.width + 9.0
+                xPos = xPos+tileSize.width
+                    //+ 9.0
             }
             yPos += TILE_HEIGHT + 14.0
         }
@@ -140,6 +151,7 @@ class EpgGridLayout: UICollectionViewLayout
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         return !collectionView!.bounds.size.equalTo(newBounds.size)
     }
+    
     override func invalidateLayout() {
         xPos = 0
         yPos = 0

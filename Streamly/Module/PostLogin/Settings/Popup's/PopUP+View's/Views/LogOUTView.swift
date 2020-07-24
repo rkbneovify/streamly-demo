@@ -25,8 +25,8 @@ class LogOUTView: NibView {
     //MARK: LifeCycle
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.noButton.setBtnProperties(self.noButton)
-        self.yesButton.setBtnProperties(self.yesButton)
+        self.noButton.setBtnProperties(self.noButton , false)
+        self.yesButton.setBtnProperties(self.yesButton , false)
     }
     
     //MARK: Actions

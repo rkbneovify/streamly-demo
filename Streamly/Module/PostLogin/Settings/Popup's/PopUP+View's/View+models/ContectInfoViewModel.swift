@@ -11,7 +11,7 @@ import Foundation
 class ContactDataViewModel: NSObject {
 
     var privacyResponseData:((PrivacyResponseData)->())?
-    var contactData:((ContactResponseData)->())?
+    var contactData:((ContactResponse)->())?
     var logoutdata:((LogoutResponseData)->())?
     weak var delegate:HandleError?
    
@@ -60,13 +60,28 @@ class ContactDataViewModel: NSObject {
                self.delegate?.handleError(error?.localizedDescription ?? "")
            }
        }
+
+    func getTerms() {
+              ApiCall.getTermsData(success: { data
+                  in
+                  if let privacyModel = DataParserPrivacy.parseContactData(data!) {
+                      self.privacyResponseData!((privacyModel))
+                      print(privacyModel)
+                  }
+                  debugPrint("Success")
+              }) { (error, data, code)  in
+
+                  debugPrint("failure")
+                  self.delegate?.handleError(error?.localizedDescription ?? "")
+              }
+          }
 }
 
 class DataParserContact {
 
-    static func parseContactData(_ data: Data) -> ContactResponseData? {
+    static func parseContactData(_ data: Data) -> ContactResponse? {
         do {
-            let contactModelElement = try JSONDecoder().decode(ContactResponseData.self, from: data)
+            let contactModelElement = try JSONDecoder().decode(ContactResponse.self, from: data)
 
 
             return contactModelElement

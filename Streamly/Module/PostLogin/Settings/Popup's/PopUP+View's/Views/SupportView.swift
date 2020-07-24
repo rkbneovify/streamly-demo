@@ -20,11 +20,18 @@ class SupportView: NibView {
     //MARK: Properties
     
     weak var delegate:CustomViews?
-    var contactInfo:ContactResponseData? {
+    var isflag = false
+    var contactInfo:ContactResponse? {
         didSet {
             self.msgLbl.text = contactInfo?.message ?? "N/A"
-            self.firstLbl.text = contactInfo?.data?[0]
-            self.secondLbl.text = contactInfo?.data?[1]
+            if isflag{
+            self.firstLbl.text = contactInfo?.data?.email
+            self.secondLbl.text = ""
+            }
+            else {
+            self.firstLbl.text = contactInfo?.data?.num1
+            self.secondLbl.text = contactInfo?.data?.num2
+            }
         }
     }
     
@@ -32,7 +39,7 @@ class SupportView: NibView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.okButton.setBtnProperties(self.okButton)
+        self.okButton.setBtnProperties(self.okButton, false)
     }
     
     

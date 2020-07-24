@@ -10,9 +10,10 @@ import UIKit
 
 class ProgramCollectionViewCell: UICollectionViewCell {
     
-     @IBOutlet weak var titleLabel: UILabel!
-      @IBOutlet weak var scheduleLabel: UILabel!
-      @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var gradientView: GradientView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var scheduleLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
 
       override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,9 +31,9 @@ class ProgramCollectionViewCell: UICollectionViewCell {
       }
 
       func setup() {
-        self.backgroundColor = UIColor.clear
-        self.layer.borderWidth = 0.5
-        self.layer.borderColor = UIColor.clear.cgColor
+       // self.backgroundColor = UIColor.clear
+      //  self.layer.borderWidth = 0.5
+     //   self.layer.borderColor = UIColor.clear.cgColor
       }
 
     func configureWith(program: Program) {
@@ -48,8 +49,19 @@ class ProgramCollectionViewCell: UICollectionViewCell {
 
     func configureWithModel(program: ProgramArray) {
     //   let viewModel = ProgramViewModel(program: program)
+//        if program.startDate.timeIntervalSince1970 <= Date().timeIntervalSince1970
+//        {
+//            self.gradientView.firstColor = UIColor.firstGradientColor
+//            self.gradientView.secondColor = UIColor.secondGradientColor
+//        }
+//        else {
+//            self.gradientView.firstColor = UIColor.clear
+//            self.gradientView.secondColor = UIColor.clear
+//        }
+
 
         self.titleLabel.text = program.title ?? ""
+        self.durationLabel.text = "\(program.startDate.string(format: "HH:mm"))"
           // self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
           // self.durationLabel.text = "\(program.duration)"
 

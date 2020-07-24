@@ -5,6 +5,14 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </array>
+        <array key="Lato-Medium.ttf">
+            <string>Lato-Medium</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SupportView" customModule="StreamlyTV" customModuleProvider="target">
             <connections>
@@ -21,32 +29,32 @@
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For Help and Support You can call us on below numbers." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lM1-jq-s71">
                     <rect key="frame" x="50" y="100" width="1123" height="36"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
+                    <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="30"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1-548965-51 (24*7)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rsc-1j-qTP">
-                    <rect key="frame" x="454" y="173" width="315" height="41"/>
+                    <rect key="frame" x="450" y="173" width="323" height="41"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="41" id="fkR-ez-LnF"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
+                    <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="34"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="+1-548965-51 (24*7)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ui-Xa-rU9">
-                    <rect key="frame" x="454" y="256" width="315" height="41"/>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
+                    <rect key="frame" x="450" y="256" width="323" height="41"/>
+                    <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="34"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcS-iq-jR7">
-                    <rect key="frame" x="471.5" y="372" width="280" height="84"/>
+                    <rect key="frame" x="471.5" y="377" width="280" height="84"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="280" id="UBu-UP-kwM"/>
                         <constraint firstAttribute="height" constant="84" id="eji-EO-C8E"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                    <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
                     <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                     <state key="normal" title="Ok"/>
                     <userDefinedRuntimeAttributes>
@@ -68,10 +76,10 @@
                 <constraint firstItem="Rsc-1j-qTP" firstAttribute="centerX" secondItem="lM1-jq-s71" secondAttribute="centerX" id="UBf-h3-XK6"/>
                 <constraint firstItem="hcS-iq-jR7" firstAttribute="centerX" secondItem="7ui-Xa-rU9" secondAttribute="centerX" id="ihi-kk-tAX"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="ldf-1y-J6b"/>
-                <constraint firstItem="hcS-iq-jR7" firstAttribute="top" secondItem="7ui-Xa-rU9" secondAttribute="bottom" constant="75" id="nYb-Go-kqW"/>
+                <constraint firstItem="hcS-iq-jR7" firstAttribute="top" secondItem="7ui-Xa-rU9" secondAttribute="bottom" constant="80" id="nYb-Go-kqW"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="obM-nv-eyz"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="snc-BZ-4xE"/>
-                <constraint firstItem="7ui-Xa-rU9" firstAttribute="height" secondItem="Rsc-1j-qTP" secondAttribute="height" id="u8T-vX-ehP"/>
+                <constraint firstItem="7ui-Xa-rU9" firstAttribute="height" relation="lessThanOrEqual" secondItem="Rsc-1j-qTP" secondAttribute="height" id="u8T-vX-ehP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="82" y="218"/>

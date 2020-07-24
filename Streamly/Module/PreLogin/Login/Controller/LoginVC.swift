@@ -17,6 +17,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var needHelpBtn:     UIButton!
     @IBOutlet weak var registerNowBtn:  UIButton!
     @IBOutlet weak var signBtn:         GradientBUtton!
+    @IBOutlet weak var terms:           UIButton!
 
     //MARK: Properties
     var remeberMeFlag:Bool?
@@ -40,6 +41,13 @@ class LoginVC: UIViewController {
         }
     }
 
+    var privacyData:PrivacyResponseData?
+       var logOut:LogoutResponseData?
+       lazy var viewModel: ContactDataViewModel = {
+           return ContactDataViewModel()
+       }()
+     var termsData = ""
+
     //MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,16 +63,26 @@ class LoginVC: UIViewController {
     {
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
-         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
+        self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
 
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
+        self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
+        self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
+        self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
+
 
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
-          self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+        self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.signBtn.setTitleColor(UIColor.white, for: .focused)
-         self.signBtn.setTitleColor(UIColor.white, for: .highlighted)
+        self.signBtn.setTitleColor(UIColor.white, for: .highlighted)
+
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeAPiCallTerms()
+
+        }
 
 
     }
@@ -78,6 +96,36 @@ class LoginVC: UIViewController {
             remeberMeFlag = true
         }
     }
+    private func openTermsPopUp()
+    {
+        let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        popUPViewsVC.modalPresentationStyle = .overCurrentContext
+        popUPViewsVC.item = 5
+        popUPViewsVC.termsdata = self.termsData
+        self.present(popUPViewsVC, animated:true, completion:nil)
+    }
+
+    private func makeAPiCallTerms()
+       {
+        viewModel.getTerms()
+          // viewModel.delegate = self
+           self.initVMPrivacy()
+       }
+
+    private func initVMPrivacy()
+       {
+           viewModel.privacyResponseData = { privacyModel in
+            self.privacyData = privacyModel
+               guard let dataprivacy = self.privacyData else {
+                   return
+               }
+               if dataprivacy.success ?? false
+               {
+                self.termsData = dataprivacy.data ?? ""
+               }
+
+           }
+       }
 
     //MARK: Action
     @IBAction func btnActions( _ sender:UIButton)
@@ -97,6 +145,7 @@ class LoginVC: UIViewController {
             let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
             popUPViewsVC.modalPresentationStyle = .overCurrentContext
             popUPViewsVC.item = 2
+            popUPViewsVC.isfromLogin = true
             //popUPViewsVC.contactInfo = contactInfo
             self.present(popUPViewsVC, animated:true, completion:nil)
         }
@@ -109,6 +158,11 @@ class LoginVC: UIViewController {
         else if sender.tag == 5
         {
             self.showSimpleAlertWithMessage("For registration, Please visit streamlytv.com")
+
+        }
+        else if sender.tag == 6
+        {
+            self.openTermsPopUp()
 
         }
     }
@@ -144,12 +198,20 @@ extension LoginVC
                     Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
-                      Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)
+                    Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response?.user?.created_at ?? "", key: Constant.UserDefault.createdAt)
                     selfStrong.removeSpinner()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                        Switcher.updateRootVC()
-                    })
+                    if !(true) {
+                        //                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                        //                            self?.openTermsPopUp()
+                        //                        })
+                    }
+                    else {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                            Switcher.updateRootVC()
+                        })
+                    }
+
                 }
                 else {
                     guard let error = response?.message else{return}
@@ -169,29 +231,35 @@ extension LoginVC {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if userIDField.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
-                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
+                self.terms.layer.borderColor = UIColor.gray.cgColor
+                self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.userIDField.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
 
         } else if passwordField.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
-                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
+                self.terms.layer.borderColor = UIColor.gray.cgColor
+                self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.passwordField.layer.borderColor = UIColor.clear.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
         }
         else if registerNowBtn.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
+                self.terms.layer.borderColor = UIColor.gray.cgColor
                 self.registerNowBtn.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
         }
         else {
-            self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
-            self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
-            self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.terms.layer.borderColor = UIColor.clear.cgColor
+                self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
+                self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
+                self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+            }, completion: nil)
         }
 
     }

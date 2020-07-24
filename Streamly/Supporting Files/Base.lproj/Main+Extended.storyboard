@@ -7,6 +7,17 @@
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </array>
+        <array key="Lato-Light.ttf">
+            <string>Lato-Light</string>
+        </array>
+        <array key="Lato-Medium.ttf">
+            <string>Lato-Medium</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--SettingsVC-->
         <scene sceneID="bV5-QA-9GX">
@@ -26,7 +37,7 @@
                                     <constraint firstAttribute="width" constant="140" id="I5U-vw-rRz"/>
                                     <constraint firstAttribute="height" constant="47" id="vdL-NB-iZI"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="40"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -44,12 +55,12 @@
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                             </button>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="pWo-tk-kMo">
-                                <rect key="frame" x="120" y="405" width="1680" height="270"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" dataMode="prototypes" id="pWo-tk-kMo">
+                                <rect key="frame" x="120" y="405" width="1680" height="284"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="270" id="ISO-EY-Oqt"/>
+                                    <constraint firstAttribute="height" constant="284" id="ISO-EY-Oqt"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="70" minimumInteritemSpacing="70" id="TQ4-wG-OGn">
                                     <size key="itemSize" width="280" height="282"/>
@@ -65,18 +76,18 @@
                                             <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
-                                                    <rect key="frame" x="12" y="61" width="87" height="94"/>
+                                                    <rect key="frame" x="10" y="61" width="87" height="94"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="94" id="CcI-DZ-VzD"/>
                                                         <constraint firstAttribute="width" constant="87" id="OJP-rZ-mpF"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
-                                                    <rect key="frame" x="5" y="219" width="101" height="31"/>
+                                                    <rect key="frame" x="5" y="219" width="97" height="31"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="31" id="dEc-bj-0o0"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                                                    <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -112,17 +123,17 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
-                                <rect key="frame" x="1616" y="107.5" width="240" height="60"/>
+                            <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="trk-TA-CcH">
+                                <rect key="frame" x="1601" y="100" width="255" height="75"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="8z3-xh-e5T"/>
-                                    <constraint firstAttribute="height" constant="60" id="9m1-ly-lab"/>
+                                    <constraint firstAttribute="width" constant="255" id="8z3-xh-e5T"/>
+                                    <constraint firstAttribute="height" constant="75" id="9m1-ly-lab"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="30"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
-                                <inset key="titleEdgeInsets" minX="-29" minY="0.0" maxX="-34" maxY="6"/>
-                                <inset key="imageEdgeInsets" minX="-31" minY="30" maxX="36" maxY="33"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="21" maxX="35" maxY="21"/>
+                                <inset key="titleEdgeInsets" minX="-35" minY="0.0" maxX="-55" maxY="3"/>
+                                <inset key="imageEdgeInsets" minX="-27" minY="44" maxX="33" maxY="43"/>
                                 <state key="normal" title="CHANNELS" image="channelIcon"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -193,7 +204,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="36" id="Akb-HK-pbg"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
+                                                            <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="30"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -203,7 +214,7 @@
                                                                 <constraint firstAttribute="height" constant="34" id="9dB-A5-FFi"/>
                                                                 <constraint firstAttribute="width" constant="328" id="p7Q-u9-Q3d"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -303,18 +314,18 @@
                         <viewControllerLayoutGuide type="top" id="gMl-FB-DC6"/>
                         <viewControllerLayoutGuide type="bottom" id="Gqc-Kh-moq"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="aUP-VW-ZWc">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="aUP-VW-ZWc" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afK-en-bN6">
                                 <rect key="frame" x="343.5" y="140" width="1233" height="800"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="pW7-vb-ZOf">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pW7-vb-ZOf">
                                         <rect key="frame" x="10" y="10" width="1213" height="626"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
+                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button hidden="YES" opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZJ-7v-ov9">
@@ -323,7 +334,7 @@
                                             <constraint firstAttribute="width" constant="280" id="4Jy-XF-qiD"/>
                                             <constraint firstAttribute="height" constant="84" id="VVd-2J-HMt"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Ok"/>
                                         <userDefinedRuntimeAttributes>
@@ -360,23 +371,120 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U6H-Da-B6x">
+                                <rect key="frame" x="343.5" y="140" width="1233" height="800"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Terms of uses" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EZI-hB-sfh">
+                                        <rect key="frame" x="30" y="30" width="293" height="53"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="53" id="T3d-yr-XNs"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="44"/>
+                                        <color key="textColor" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VPd-Zj-JSz">
+                                        <rect key="frame" x="10" y="103" width="1213" height="547"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <button hidden="YES" opaque="NO" tag="88" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4jW-vy-bMP">
+                                        <rect key="frame" x="168.5" y="680" width="280" height="84"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="84" id="LYx-pg-LQX"/>
+                                            <constraint firstAttribute="width" constant="280" id="vUJ-wR-WmM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Accept">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="actionBtns:" destination="kW5-g8-alf" eventType="primaryActionTriggered" id="vaj-wg-vQb"/>
+                                        </connections>
+                                    </button>
+                                    <button hidden="YES" opaque="NO" tag="89" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZeT-xP-bP6">
+                                        <rect key="frame" x="785" y="680" width="280" height="84"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="84" id="dZo-Gg-ebE"/>
+                                            <constraint firstAttribute="width" constant="280" id="ha9-vI-njq"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Go Back">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="actionBtns:" destination="kW5-g8-alf" eventType="primaryActionTriggered" id="wZB-WB-VsA"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.92156862750000001" green="0.92156862750000001" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="EZI-hB-sfh" firstAttribute="top" secondItem="U6H-Da-B6x" secondAttribute="top" constant="30" id="3PK-VR-cXi"/>
+                                    <constraint firstAttribute="bottom" secondItem="4jW-vy-bMP" secondAttribute="bottom" constant="36" id="3dY-AV-v7Z"/>
+                                    <constraint firstItem="VPd-Zj-JSz" firstAttribute="leading" secondItem="U6H-Da-B6x" secondAttribute="leading" constant="10" id="90z-DC-VpK"/>
+                                    <constraint firstItem="4jW-vy-bMP" firstAttribute="top" secondItem="VPd-Zj-JSz" secondAttribute="bottom" constant="30" id="Feu-f1-2FZ"/>
+                                    <constraint firstItem="ZeT-xP-bP6" firstAttribute="centerX" secondItem="VPd-Zj-JSz" secondAttribute="centerX" multiplier="1.5" id="GDb-QY-VOl"/>
+                                    <constraint firstItem="EZI-hB-sfh" firstAttribute="leading" secondItem="U6H-Da-B6x" secondAttribute="leading" constant="30" id="Ize-TV-hnp"/>
+                                    <constraint firstItem="4jW-vy-bMP" firstAttribute="centerX" secondItem="VPd-Zj-JSz" secondAttribute="centerX" multiplier="0.5" id="Kss-lt-UYc"/>
+                                    <constraint firstAttribute="trailing" secondItem="VPd-Zj-JSz" secondAttribute="trailing" constant="10" id="MeT-QN-xLe"/>
+                                    <constraint firstItem="VPd-Zj-JSz" firstAttribute="top" secondItem="EZI-hB-sfh" secondAttribute="bottom" constant="20" id="uBU-Me-2cQ"/>
+                                    <constraint firstItem="ZeT-xP-bP6" firstAttribute="bottom" secondItem="4jW-vy-bMP" secondAttribute="bottom" id="zwL-Um-3OI"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="afK-en-bN6" firstAttribute="centerY" secondItem="Gft-0u-SYX" secondAttribute="centerY" id="E3y-RU-Q6o"/>
-                            <constraint firstItem="afK-en-bN6" firstAttribute="centerX" secondItem="Gft-0u-SYX" secondAttribute="centerX" id="HVf-da-Hdu"/>
+                            <constraint firstItem="U6H-Da-B6x" firstAttribute="height" secondItem="afK-en-bN6" secondAttribute="height" id="8A3-1y-q2q"/>
+                            <constraint firstItem="afK-en-bN6" firstAttribute="centerY" secondItem="aUP-VW-ZWc" secondAttribute="centerY" id="E3y-RU-Q6o"/>
+                            <constraint firstItem="U6H-Da-B6x" firstAttribute="width" secondItem="afK-en-bN6" secondAttribute="width" id="Ecf-ag-WzJ"/>
+                            <constraint firstItem="afK-en-bN6" firstAttribute="centerX" secondItem="aUP-VW-ZWc" secondAttribute="centerX" id="HVf-da-Hdu"/>
+                            <constraint firstItem="U6H-Da-B6x" firstAttribute="centerX" secondItem="afK-en-bN6" secondAttribute="centerX" id="PKp-cF-oZT"/>
                             <constraint firstItem="Ysm-0k-7JK" firstAttribute="centerY" secondItem="aUP-VW-ZWc" secondAttribute="centerY" id="VxY-jm-ZpY"/>
                             <constraint firstItem="lZJ-7v-ov9" firstAttribute="centerX" secondItem="Ysm-0k-7JK" secondAttribute="centerX" id="ddX-x9-hC0"/>
+                            <constraint firstItem="U6H-Da-B6x" firstAttribute="centerY" secondItem="afK-en-bN6" secondAttribute="centerY" id="ltI-G4-4Pb"/>
                             <constraint firstItem="Ysm-0k-7JK" firstAttribute="centerX" secondItem="aUP-VW-ZWc" secondAttribute="centerX" id="mY1-lf-8fm"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Gft-0u-SYX"/>
+                        <viewLayoutGuide key="safeArea" id="lBl-EK-quL"/>
                     </view>
                     <connections>
+                        <outlet property="acceptBtn" destination="4jW-vy-bMP" id="Cqj-7h-jAP"/>
                         <outlet property="backView" destination="Ysm-0k-7JK" id="mT1-8J-M1l"/>
                         <outlet property="backViewHeight" destination="e8h-2s-zHU" id="3bs-wm-6dU"/>
+                        <outlet property="goBackbtn" destination="ZeT-xP-bP6" id="9rv-Na-yB2"/>
                         <outlet property="okBtn" destination="lZJ-7v-ov9" id="O7u-W4-dj8"/>
                         <outlet property="policiesView" destination="afK-en-bN6" id="HVE-7f-hhs"/>
+                        <outlet property="termsTextView" destination="VPd-Zj-JSz" id="KtA-hZ-1Gi"/>
+                        <outlet property="termsView" destination="U6H-Da-B6x" id="Rn2-JT-5Oh"/>
                         <outlet property="txtview" destination="pW7-vb-ZOf" id="hFV-up-EKq"/>
+                        <outlet property="vieww" destination="aUP-VW-ZWc" id="3VX-16-2sA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6uW-Dz-CNN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -467,22 +575,22 @@
                                 </prototypes>
                             </tableView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
-                                <rect key="frame" x="312" y="339" width="1593" height="681"/>
+                                <rect key="frame" x="321" y="339" width="1584" height="681"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="EpgGridLayout" customModule="StreamlyTV" customModuleProvider="target"/>
                                 <cells/>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jte-II-w2x">
-                                <rect key="frame" x="1668" y="35" width="232" height="60"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jte-II-w2x">
+                                <rect key="frame" x="1668" y="27.5" width="232" height="75"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="232" id="wGv-7I-a3X"/>
-                                    <constraint firstAttribute="height" constant="60" id="wtr-hl-QcH"/>
+                                    <constraint firstAttribute="height" constant="75" id="wtr-hl-QcH"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <inset key="contentEdgeInsets" minX="39" minY="27" maxX="24" maxY="25"/>
-                                <inset key="titleEdgeInsets" minX="-29" minY="3" maxX="-25" maxY="6"/>
-                                <inset key="imageEdgeInsets" minX="-24" minY="30" maxX="36" maxY="33"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="21" maxX="35" maxY="21"/>
+                                <inset key="titleEdgeInsets" minX="-35" minY="0.0" maxX="-50" maxY="3"/>
+                                <inset key="imageEdgeInsets" minX="-27" minY="44" maxX="33" maxY="43"/>
                                 <state key="normal" title="SETTINGS" image="starIcon">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
@@ -490,7 +598,7 @@
                                     <action selector="settingsAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="NAt-rg-KKk"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kL9-t4-knR">
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kL9-t4-knR">
                                 <rect key="frame" x="36" y="40" width="50" height="50"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -498,7 +606,8 @@
                                     <constraint firstAttribute="height" constant="50" id="Zya-ob-ZY7"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" backgroundImage="magnifyingglass" catalog="system">
+                                <inset key="imageEdgeInsets" minX="6" minY="8" maxX="-1" maxY="3"/>
+                                <state key="normal" image="search">
                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="17" scale="default"/>
                                 </state>
                                 <connections>
@@ -506,84 +615,126 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fnz-5i-nxU">
-                                <rect key="frame" x="145" y="40" width="1193" height="50"/>
+                                <rect key="frame" x="145" y="40" width="1184" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
-                                        <rect key="frame" x="0.0" y="0.0" width="103" height="50"/>
+                                    <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
+                                        <rect key="frame" x="0.0" y="0.0" width="102" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="All">
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="ceF-UH-uYX"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
-                                        <rect key="frame" x="123" y="0.0" width="161" height="50"/>
+                                    <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
+                                        <rect key="frame" x="122" y="0.0" width="159" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="RECENT">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
-                                        <rect key="frame" x="304" y="0.0" width="225" height="50"/>
+                                    <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
+                                        <rect key="frame" x="301" y="0.0" width="223" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="MY CHANNELS">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="eSC-uB-25r"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
-                                        <rect key="frame" x="549" y="0.0" width="161" height="50"/>
+                                    <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
+                                        <rect key="frame" x="544" y="0.0" width="159" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="SPORTS">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="9Wr-QY-Zbz"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
-                                        <rect key="frame" x="730" y="0.0" width="139" height="50"/>
+                                    <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
+                                        <rect key="frame" x="723" y="0.0" width="139" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="NEWS">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="Nha-c4-WT4"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
-                                        <rect key="frame" x="889" y="0.0" width="157" height="50"/>
+                                    <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
+                                        <rect key="frame" x="882" y="0.0" width="156" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="MOVIES">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="JNx-td-sHJ"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
-                                        <rect key="frame" x="1066" y="0.0" width="127" height="50"/>
+                                    <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
+                                        <rect key="frame" x="1058" y="0.0" width="126" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="KIDS">
-                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <state key="focused">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="TAO-rA-xL7"/>
@@ -607,7 +758,7 @@
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>
                             <constraint firstAttribute="trailing" secondItem="jte-II-w2x" secondAttribute="trailing" constant="20" id="e1v-cC-9j6"/>
                             <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="15" id="fDy-DM-noT"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" id="fTS-EM-Gb3"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" constant="9" id="fTS-EM-Gb3"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="hdv-kY-3FB"/>
                             <constraint firstItem="mpq-oq-br4" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="15" id="shb-ig-feC"/>
                             <constraint firstItem="mpq-oq-br4" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="bottom" constant="249" id="ua5-yq-FQB"/>
@@ -637,7 +788,7 @@
     <resources>
         <image name="channelIcon" width="56" height="56"/>
         <image name="hbo" width="69" height="52"/>
-        <image name="magnifyingglass" catalog="system" width="32" height="28"/>
+        <image name="search" width="40" height="40"/>
         <image name="starIcon" width="56" height="56"/>
     </resources>
 </document>

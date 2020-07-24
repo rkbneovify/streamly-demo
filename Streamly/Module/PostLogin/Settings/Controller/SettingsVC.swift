@@ -16,7 +16,7 @@ class SettingsVC: UIViewController {
     lazy var viewModel: ContactDataViewModel = {
         return ContactDataViewModel()
     }()
-    var contactInfo:ContactResponseData?
+    var contactInfo:ContactResponse?
     
     // MARK: Outlets
     
@@ -39,7 +39,7 @@ class SettingsVC: UIViewController {
     
     override func viewDidLayoutSubviews() {
         
-        self.channellsBtn.setBtnProperties(self.channellsBtn)
+       // self.channellsBtn.setBtnProperties(self.channellsBtn, false)
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bacgroundImage")!)
         self.collectionView.layoutSubviews()
         self.collectionView.layoutIfNeeded()
@@ -114,7 +114,7 @@ extension SettingsVC:UICollectionViewDelegate {
 extension SettingsVC:Scroll {
     
     func scrollCollectionView(_ index: Int) {
-        self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [.centeredHorizontally, .centeredVertically], animated: true)
+    //    self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: [.centeredHorizontally, .centeredVertically], animated: true)
     }
     
 }
@@ -157,5 +157,22 @@ extension SettingsVC{
         popUPViewsVC.item = item
         popUPViewsVC.contactInfo = contactInfo
         self.present(popUPViewsVC, animated:true, completion:nil)
+    }
+}
+extension SettingsVC{
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if channellsBtn.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+
+                self.channellsBtn.layer.borderWidth = 3.0
+                self.channellsBtn.layer.borderColor = UIColor.secondGradientColor.cgColor
+            
+
+            }, completion: nil)
+        }
+        else {
+            self.channellsBtn.layer.borderWidth = 0.0
+            self.channellsBtn.layer.borderColor = UIColor.clear.cgColor
+        }
     }
 }

@@ -42,7 +42,7 @@ enum ValidationErrorMessages:String
 
 enum CustomPopUp:Int {
     
-    case profile = 0, registrdDevice, support,policies,logOut
+    case profile = 0, registrdDevice, support,policies,logOut,terms
 }
 
 /// for Categories

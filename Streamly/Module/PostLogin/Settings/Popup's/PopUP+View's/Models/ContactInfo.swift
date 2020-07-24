@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct ContactResponseData : Codable {
+struct ContactResponse : Codable {
 
-    let data : [String]?
+    let data :ContactResponseData?
     let message : String?
 
     enum CodingKeys: String, CodingKey {
@@ -22,8 +22,33 @@ struct ContactResponseData : Codable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        data = try values.decodeIfPresent([String].self, forKey: .data)
+        data = try values.decodeIfPresent(ContactResponseData.self, forKey: .data)
         message = try values.decodeIfPresent(String.self, forKey: .message)
+
+    }
+
+
+}
+
+struct ContactResponseData : Codable {
+
+    let email : String?
+    let num1 : String?
+    let num2 : String?
+
+    enum CodingKeys: String, CodingKey {
+
+        case email = "email"
+        case num1 = "num1"
+        case num2 = "num2"
+
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        email = try values.decodeIfPresent(String.self, forKey: .email)
+        num1 = try values.decodeIfPresent(String.self, forKey: .num1)
+        num2 = try values.decodeIfPresent(String.self, forKey: .num2)
 
     }
 

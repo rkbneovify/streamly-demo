@@ -300,10 +300,13 @@ public extension UIDevice {
 extension UIButton
 {
     /// for the EPG menu categories
-     func setBtnProperties(_ button:UIButton)
+    func setBtnProperties(_ button:UIButton,_ flag:Bool)
     {
         button.setTitleColor(UIColor.white, for: .focused)
         button.setTitleColor(UIColor.white, for: .highlighted)
+        if flag {
+            button.setTitleColor(UIColor.black, for: .normal)
+        }
         button.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
         button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         button.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: button.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
@@ -339,5 +342,12 @@ extension UITableView {
     func restore() {
         self.backgroundView = nil
 
+    }
+}
+extension Date {
+    func string(format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        return formatter.string(from: self)
     }
 }
