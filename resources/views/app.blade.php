@@ -76,7 +76,7 @@
 <script async src="{{ asset('frontend/bootstrap.min.js') }}" ></script>
 <link rel="stylesheet" href="{{ asset('frontend/style.css') }}" />
 <script>window.addEventListener('load', function() {
-     alert($);
+     
     jQuery('.logouttheuser').on('click', function(){
         jQuery('#Logout').modal('show');
     });
