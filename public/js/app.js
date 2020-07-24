@@ -66374,8 +66374,8 @@ var TVGuide = /*#__PURE__*/function (_Component) {
     _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     _this.handleScroll = _this.handleScroll.bind(_assertThisInitialized(_this));
     _this.handleKeyPress = _this.handleKeyPress.bind(_assertThisInitialized(_this));
-    _this.epgData = new _utils_EPGData__WEBPACK_IMPORTED_MODULE_3__["default"]();
-    console.log('lookforfoo', _this.epgData);
+    _this.epgData = new _utils_EPGData__WEBPACK_IMPORTED_MODULE_3__["default"](); // console.log('lookforfoo',this.epgData);
+
     _this.epgUtils = new _utils_EPGUtils__WEBPACK_IMPORTED_MODULE_4__["default"]();
     _this.scrollX = 0;
     _this.scrollY = 0;
@@ -66395,9 +66395,9 @@ var TVGuide = /*#__PURE__*/function (_Component) {
     _this.mChannelLayoutWidth = 90;
     _this.mChannelLayoutBackground = '#323232'; //this.mEventLayoutBackground = '#4f4f4f';
 
-    _this.mEventLayoutBackground = '#234054'; //this.mEventLayoutBackgroundCurrent = '#4f4f4f';
+    _this.mEventLayoutBackground = '#004E92'; //this.mEventLayoutBackgroundCurrent = '#4f4f4f';
 
-    _this.mEventLayoutBackgroundCurrent = '#234054';
+    _this.mEventLayoutBackgroundCurrent = '#004E92';
     _this.mEventLayoutBackgroundFocus = 'rgba(65,182,230,1)';
     _this.mEventLayoutTextColor = '#d6d6d6';
     _this.mEventLayoutTextSize = 20;
@@ -66755,7 +66755,11 @@ var TVGuide = /*#__PURE__*/function (_Component) {
       this.setEventDrawingRectangle(channelPosition, event.start, event.end, drawingRect); // Background
       //mPaint.setColor(event.isCurrent() ? mEventLayoutBackgroundCurrent : mEventLayoutBackground);
 
-      canvas.fillStyle = event.isCurrent ? this.mEventLayoutBackgroundCurrent : this.mEventLayoutBackground;
+      var gradient = canvas.createLinearGradient(177, 375, 0, 0);
+      gradient.addColorStop(0, "rgb(0, 4, 40)");
+      gradient.addColorStop(1, "rgb(0, 78, 146)");
+      canvas.fillStyle = gradient;
+      canvas.fillStyle = event.isCurrent ? gradient : this.mEventLayoutBackground;
 
       if (channelPosition == this.getFocusedChannelPosition()) {
         var focusedEventPosition = this.getFocusedEventPosition();
@@ -66765,7 +66769,10 @@ var TVGuide = /*#__PURE__*/function (_Component) {
           // console.log('event',event);
 
           if (focusedEvent == event) {
-            canvas.fillStyle = this.mEventLayoutBackgroundFocus;
+            var gradient = canvas.createLinearGradient(177, 375, 0, 0);
+            gradient.addColorStop(0, "rgb(0, 4, 40)");
+            gradient.addColorStop(1, "rgb(0, 78, 146)");
+            canvas.fillStyle = gradient;
           }
         } else if (event.isCurrent) {
           this.focusedEventPosition = this.epgData.getEventPosition(channelPosition, event);
@@ -67094,7 +67101,7 @@ _defineProperty(TVGuide, "HOURS_IN_VIEWPORT_MILLIS", 2 * 60 * 60 * 1000);
 
 _defineProperty(TVGuide, "TIME_LABEL_SPACING_MILLIS", 30 * 60 * 1000);
 
-_defineProperty(TVGuide, "VISIBLE_CHANNEL_COUNT", 6);
+_defineProperty(TVGuide, "VISIBLE_CHANNEL_COUNT", 10);
 
 _defineProperty(TVGuide, "VERTICAL_SCROLL_BOTTOM_PADDING_ITEM", 2);
 
@@ -67601,7 +67608,8 @@ var MockDataService = /*#__PURE__*/function () {
   }, {
     key: "getMockDataRaw",
     value: function getMockDataRaw() {
-      var url = 'http://127.0.0.1:8000/api/auth/frontendepg';
+      //    let url= 'https://streamlytv.com/api/auth/frontendepg';
+      var url = action + '/api/auth/frontendepg';
       fetch(url).then(function (u) {
         return u.json();
       }).then(function (json) {

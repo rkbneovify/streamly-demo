@@ -248,5 +248,20 @@ $record->get();
     public function  epgScreen2(){
         return view('frontend.pages.epg3');
     }
+
+    public function webReact()
+
+    { if( Auth::check()){
+        $login = true;
+    } else {
+        $login = false;
+        return redirect()->route('home');
+    }
+
+       // $logs = LogActivity::logActivityLists();
+
+        return view('app',compact('login'));
+
+    }
     
 }

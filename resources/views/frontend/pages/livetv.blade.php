@@ -239,3 +239,17 @@ $.ajax({
 	</section>
 	
 @endsection
+
+<script>
+	(function () {
+			var base_url = window.location.origin;
+	let url=base_url+'/api/auth/frontendepg';
+			fetch(url).then(
+	function(u){ return u.json();}
+	).then(
+	function(json){
+			localStorage.setItem("mychanneldata", JSON.stringify(json.data)); 
+	}
+	)
+})();
+	</script>

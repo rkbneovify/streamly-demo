@@ -16,7 +16,7 @@ export default class TVGuide extends Component {
     static HOURS_IN_VIEWPORT_MILLIS = 2 * 60 * 60 * 1000;     // 2 hours
     static TIME_LABEL_SPACING_MILLIS = 30 * 60 * 1000;        // 30 minutes
 
-    static VISIBLE_CHANNEL_COUNT = 6; // No of channel to show at a time
+    static VISIBLE_CHANNEL_COUNT = 10; // No of channel to show at a time
     static VERTICAL_SCROLL_BOTTOM_PADDING_ITEM = 2;
     static VERTICAL_SCROLL_TOP_PADDING_ITEM = 2;
 
@@ -26,7 +26,7 @@ export default class TVGuide extends Component {
         this.handleScroll = this.handleScroll.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.epgData = new EPGData();
-        console.log('lookforfoo',this.epgData);
+        // console.log('lookforfoo',this.epgData);
         this.epgUtils = new EPGUtils();
 
         this.scrollX = 0;
@@ -51,9 +51,9 @@ export default class TVGuide extends Component {
         this.mChannelLayoutBackground = '#323232';
 
         //this.mEventLayoutBackground = '#4f4f4f';
-        this.mEventLayoutBackground = '#234054';
+        this.mEventLayoutBackground = '#004E92';
         //this.mEventLayoutBackgroundCurrent = '#4f4f4f';
-        this.mEventLayoutBackgroundCurrent = '#234054';
+        this.mEventLayoutBackgroundCurrent = '#004E92';
         this.mEventLayoutBackgroundFocus = 'rgba(65,182,230,1)';
         this.mEventLayoutTextColor = '#d6d6d6';
         this.mEventLayoutTextSize = 20;
@@ -406,8 +406,11 @@ export default class TVGuide extends Component {
 
         // Background
         //mPaint.setColor(event.isCurrent() ? mEventLayoutBackgroundCurrent : mEventLayoutBackground);
-        
-        canvas.fillStyle = event.isCurrent ? this.mEventLayoutBackgroundCurrent : this.mEventLayoutBackground;
+        var gradient = canvas.createLinearGradient(177, 375, 0, 0);
+        gradient.addColorStop(0, "rgb(0, 4, 40)");
+        gradient.addColorStop(1, "rgb(0, 78, 146)");
+        canvas.fillStyle = gradient;
+        canvas.fillStyle = event.isCurrent ? gradient : this.mEventLayoutBackground;
         if (channelPosition == this.getFocusedChannelPosition()) {
             let focusedEventPosition = this.getFocusedEventPosition();
             if (focusedEventPosition != -1) {
@@ -417,7 +420,10 @@ export default class TVGuide extends Component {
                 
                 // console.log('event',event);
                 if (focusedEvent == event) {
-                    canvas.fillStyle = this.mEventLayoutBackgroundFocus;
+                    var gradient = canvas.createLinearGradient(177, 375, 0, 0);
+                    gradient.addColorStop(0, "rgb(0, 4, 40)");
+                    gradient.addColorStop(1, "rgb(0, 78, 146)");
+                    canvas.fillStyle = gradient;
                 }
 
             } else if (event.isCurrent) {

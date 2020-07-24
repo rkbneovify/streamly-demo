@@ -79,7 +79,8 @@ export default class MockDataService {
         return start + rand.nextInt((end - start) + 1);
     }*/
     static  getMockDataRaw( ) {
-       let url= 'https://streamlytv.com/api/auth/frontendepg';
+    //    let url= 'https://streamlytv.com/api/auth/frontendepg';
+    let url=action+'/api/auth/frontendepg'
         fetch(url).then(
             function(u){ return u.json();}
             ).then(
