@@ -12,19 +12,20 @@
         	<div class="col-sm-2">
         		<h6>BROWSE</h6>
         		<ul>
-        			<li>Live TV</li>
-        			<li>Live News</li>
-        			<li>Live Sports</li>
-        			<li>Live Movies</li>
-        			<li>Kids</li>
+        			<li><a href="livetv" style="color:#C5C5C5">Live TV</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Live News</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Live Sports</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Live Movies</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Kids</a></li>
         		</ul>
         	</div>
         	<div class="col-sm-2">
         		<h6>HELP</h6>
         		<ul>
-        			<li>Account and Billing</li>
-        			<li>Plans and Pricing</li>
+        			<li><a href="/account/settings" style="color:#C5C5C5">Account and Billing</a></li>
+        			<li><a href="/selectplan" style="color:#C5C5C5">Plans and Pricing</a></li>
         			<li>Supported Devices</li>
+        			<li><a href="/account/settings/bug" style="color:#C5C5C5">Report a bug</a></li>
         			<li>Accessibility</li>
         		</ul>
         	</div>
@@ -33,8 +34,8 @@
         		<ul>
         			<li>Contact us</li>
         			<li>Help and support</li>
-        			<li>Terms of use</li>
-        			<li>Privacy Policy</li>
+        			<li><a href="faq" style="color:#C5C5C5">Terms of use</a></li>
+        			<li><a href="faq" style="color:#C5C5C5">Privacy Policy</a></li>
         		</ul>
         	</div>
         	<div class="col-sm-3 pos-relative">

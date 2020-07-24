@@ -268,15 +268,7 @@ class HomeController extends Controller
 
     }
 
-    public function webReact()
-
-    {
-
-       // $logs = LogActivity::logActivityLists();
-
-        return view('app');
-
-    }
+   
     
 
 }
