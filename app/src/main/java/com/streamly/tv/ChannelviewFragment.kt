@@ -300,13 +300,6 @@ class ChannelviewFragment(context:Context) : ProgramGuideFragment<ChannelviewFra
                             verticallist.add(verticalBean)
                         }
 
-                        /*for (p in 0 until verticallist.size) {
-                            Log.e(TAG, ":::>>>channelname: " + verticallist[p].headerTitle)
-                            for (q in 0 until verticallist[p].allItemsInSection!!.size) {
-                                Log.e(TAG, ":::>>>>showname: " + verticallist[p].allItemsInSection!![q].title)
-                            }
-                        }*/
-
                         val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
 
                         var k = 0

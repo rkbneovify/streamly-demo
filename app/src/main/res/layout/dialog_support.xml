@@ -33,6 +33,7 @@
             android:text="@string/support_text"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_10ssp"
+            android:textStyle="bold"
             android:textAlignment="center"
             android:gravity="center"
             android:layout_marginTop="@dimen/_20sdp"/>

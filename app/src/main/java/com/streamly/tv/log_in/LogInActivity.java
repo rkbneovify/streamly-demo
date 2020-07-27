@@ -39,8 +39,6 @@ public class LogInActivity extends FragmentActivity {
 
         dialog= CommonUtility.custom_loader(LogInActivity.this);
         TokenStorage.clearSharedToken(LogInActivity.this);
-//        logInBinding.edUserName.setText("sahilkashyap64@gmail.com");
-
 
         logInBinding.txtNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override
