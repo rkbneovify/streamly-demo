@@ -1,5 +1,13 @@
 sub init()
     ? "Home init()"
+    
+    'show loading
+    m.processPoster = m.top.createChild("Poster")
+'    deviceinfo = getDeviceInfo()
+'    ?"deviceinfo:"; deviceinfo.getDisplaySize().w 
+    m.processPoster.height = 1080
+    m.processPoster.width = 1920
+    m.processPoster.uri = "pkg:/images/SplashHD.png"
 
     m.ChannelsGroup = m.top.findNode("ChannelsGroup")
     m.timeGride = m.top.findNode("timeGrid")
@@ -23,7 +31,7 @@ sub init()
     m.searchPoster.visible = true
     m.focusPoster = m.searchPoster.createChild("Poster")
     m.focusPoster.id = "focusPoster"
-    m.focusPoster.translation = [ - 10, - 10]
+    m.focusPoster.translation = [- 10, - 10]
     m.focusPoster.uri = ""
     m.focusPoster.height = 60
     m.focusPoster.width = 75
@@ -43,7 +51,8 @@ sub init()
 
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
 
-    ' channel ,episode api call '   
+    ' channel ,episode api call ' 
+      
     reqApiCAll({ "page": 1 })
 
     font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -90,7 +99,6 @@ sub init()
     m.top.observeField("visible", "setFocus")
 
     m.timeGride.visible = true
-    m.timeGride.setFocus(true)
 
     ' prgrams Api call timer
     m.lazyLoadingTimer = CreateObject("roSGNode", "Timer")
@@ -207,6 +215,7 @@ end sub
 
 sub StartContentLoading()
     ? "StartContentLoading; "
+    
     if m.channelListData < m.ChannelData[m.channelNameString].Count() and m.timeGride.content <> invalid
         if m.channelListData < 10
             m.timeGride.numRows = m.channelListData + 1
@@ -221,6 +230,7 @@ sub StartContentLoading()
     else if m.channelListData = 0 then
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
     end if
+    m.processPoster.visible = false
 end sub
 
 sub getChannelDAta(channelnode as Object, channelData as Object)
@@ -252,10 +262,13 @@ end sub
 sub reqApiCAll(page)
     m.ChannelEpisodeTask = CreateObject("roSGNode", "ChannelEpisodeTask")
     m.ChannelEpisodeTask.observeField("ChannelData", "ChannelResponseData")
-    m.ChannelEpisodeTask.control = "RUN"
+    m.ChannelEpisodeTask.control = "RUN" 
 end sub
 sub ChannelResponseData()
 ' ?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
+   
+   m.top.signalBeacon("AppLaunchComplete")
+   m.timeGride.setFocus(true)
     m.ChannelData = m.ChannelEpisodeTask.ChannelData
     initGrigData(m.ChannelData)
     m.channelListData = 0

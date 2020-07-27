@@ -113,9 +113,9 @@ function APICall(url as String, callType as String, data as Object, parameters a
 end function
 
 function getBaseUrl()
- return "http://100.26.190.92/"
+' return "http://100.26.190.92/"
 ' return "https://b86ed54d.ngrok.io/"
-'    return "http://streamlytv.com/"
+    return "https://streamlytv.com/"
 end function
 
 function profileUrl()
@@ -126,6 +126,12 @@ end function
 function logoutUrl()
     return "api/auth/logout"
 end function
+
+function termOfUse()
+    return "api/auth/termofuse"
+end function
+
+
 function loginUrl()
     return "api/auth/login"
 end function

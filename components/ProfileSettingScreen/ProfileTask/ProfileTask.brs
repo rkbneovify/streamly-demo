@@ -41,6 +41,12 @@ sub getProfile()
          jsonResponse = APICall(getBaseUrl()+logoutUrl(), m.top.callType ,m.top.data,m.top.parameters)
          ?"getProfile: jsonResponse: ";jsonResponse
          m.top.response = jsonResponse
+  
+  else if m.top.callto = "termofuse"
+
+         jsonResponse = APICall(getBaseUrl()+termOfUse(), m.top.callType ,m.top.data,m.top.parameters)
+         ?"getProfile: jsonResponse: ";jsonResponse
+         m.top.response = jsonResponse
   end if   
 
 end sub

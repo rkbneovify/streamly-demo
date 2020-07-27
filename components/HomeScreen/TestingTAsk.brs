@@ -22,7 +22,7 @@ sub ChannnleAPI()
    ?"programdata: count: ";programdata.Count()
     length =  programdata.Count()
     timemin =0
-    for i=0 to length-1-50
+    for i=0 to length-1
        
     prograom = programdata[i]
 '   ?"prograom ;";prograom

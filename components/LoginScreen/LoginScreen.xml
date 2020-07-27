@@ -125,6 +125,7 @@
 	          
 	          />
 	          
+	          <Button id ="termConditionButton"/>
 	          <Label  id="registerLabel"/>
 	  
 	  </Poster>
