@@ -13,7 +13,9 @@ use Crypt;
 use Mail;
 use Exception;
 use App\Models\Zipcode;
+use App\Models\Map;
 use App\Helpers\LogActivity;
+use Illuminate\Support\Facades\DB;
 // use GuzzleHttp\Client;
 
 class HomeController extends Controller
@@ -130,6 +132,111 @@ class HomeController extends Controller
         // $response = new GuzzleHttp\Client();('http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat=28.7441&lon=77.0732&zoom=27&addressdetails=1');
         
     }
+    public function geofence(Request $request)
+    {     
+        $LAT= $request['latitude'];
+        $LON = $request['longitude'];
+
+       $query= Map::select('zcta5ce10 AS zipcode')
+        ->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
+        ->get();
+      
+        if((count($query)==0)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Not within zipcode boundary',
+                
+                'response_code'=>500,
+                
+            ], 500);
+        } else{
+            $zipcode=$query->pluck('zipcode');
+            $nameArr = ['zipcode' => $zipcode];
+            $validator = Validator::make($nameArr, 
+        [
+            'zipcode' => 'required|exists:zipcodes,zipcode,status,1'
+        ], 
+        [
+            'zipcode.exists'=>'You are away from the zipcode proximity'
+        ]
+    );
+    if ($validator->fails()) {
+        return $validator->errors();
+    }
+    $response = [
+        'success' => true,
+        'data' => $zipcode[0],
+        'message' => $zipcode[0].' Zipcode is allowed.','response_code'=>200,
+    ];
+    return response()->json($response, 200); 
+        }
+    
+        
+   }
+ public function simplequeryrun(Request $request){
+    $LAT= $request['latitude'];
+    $LON = $request['longitude'];
+//    DB::raw("ST_AsGeoJSON(`SHAPE`) sh"))http://geojson.tools/
+      $query= Map::select('zcta5ce10 AS zipcode',DB::raw("ST_AsGeoJSON(`SHAPE`) shape"))->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
+     ->get();
+    
+     $response = [
+        'success' => true,
+        'data' => $query,
+        'response_code'=>200,
+    ];
+    return response()->json($response, 200); 
+ }
+
+ public function allowedZipcode(Request $request){
+    $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
+    # Build GeoJSON feature collection array
+$geojson = array(
+    'type'      => 'FeatureCollection',
+    
+    // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
+    'features'  => array()
+ );
+    if($data->isEmpty()){
+        $response = [
+            'success' => false,
+            'data' => $data,
+            'message'=>'No zipcode is allowed',
+            'response_code'=>200,
+        ];
+        return response()->json($response, 200); 
+    }
+    
+      foreach($data as $fieldnam) {
+        $properties =  array(
+            'color'=> 'red',
+            'title' => $fieldnam['zipcode']
+            
+        );
+        
+        $feature = array(
+            'type' => 'Feature',
+            'properties' => $properties,
+            
+            'geometry' => $fieldnam->shape,
+             
+       );
+                        
+  
+    
+         array_push($geojson['features'], $feature);
+     }
+     $response = [
+        'success' => true,
+        // 'data' => $data,
+        'geojson' => $geojson,
+        // 'myarr' => $myarr,
+        'response_code'=>200,
+    ];
+    return response()->json($response, 200); 
+    // return response()->json($response, 200, [], JSON_NUMERIC_CHECK|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+ }
+     
     public function verified()
     {
         
