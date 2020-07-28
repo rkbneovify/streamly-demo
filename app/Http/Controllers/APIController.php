@@ -268,7 +268,7 @@ public function login(Request $request)
     public function support()
     { $supportnumber=[];
         $supportnumber=['email'=>'contact@streamlytv.com','num1'=>'1234656477','num2'=>'773727828'];
-        $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>'For help and support call the numbers below');
+        $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>'For help and support contact on email below');
         return response()->json($response, 200);
     }
     public function privacypol()

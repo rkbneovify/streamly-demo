@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Zipcode;
 
 
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 
@@ -22,13 +23,13 @@ class ZipcodeController extends Controller
      */
     public function index()
     { 
-        $zipcodes = Zipcode::paginate(10);
+        $zipcodes = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
        
        return view('admin.zipcodes.index', compact('zipcodes'));
     }  
     public function allowedZipcodes()
     { 
-        $zipcodes = Zipcode::paginate(10);
+        $zipcodes = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
        
        return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
     }  
@@ -164,20 +165,61 @@ class ZipcodeController extends Controller
     }
 
     public function categoryData()
-    {
-        return DataTables::of(Zipcode::query())
+    { $data = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+        return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
         ->make(true);
     }
     public function allowedZipdata()
-    {  $data = Zipcode::where('status',1)->get();
+    {  $data = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
         ->make(true);
+    }
+
+    public function map()
+    {  $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
+        # Build GeoJSON feature collection array
+    $geojson = array(
+        'type'      => 'FeatureCollection',
+        
+        // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
+        'features'  => array()
+     );
+        if($data->isEmpty()){
+            $response = [
+                'success' => false,
+                'data' => $data,
+                'message'=>'No zipcode is allowed',
+                'response_code'=>200,
+            ];
+            return response()->json($response, 200); 
+        }
+        
+          foreach($data as $fieldnam) {
+            $properties =  array(
+                'color'=> 'red',
+                'title' => $fieldnam['zipcode']
+                
+            );
+            
+            $feature = array(
+                'type' => 'Feature',
+                'properties' => $properties,
+                
+                'geometry' => $fieldnam->shape,
+                 
+           );
+                            
+      
+        
+             array_push($geojson['features'], $feature);
+         }
+        return view('admin.zipcodes.map', compact('geojson'));
     }
     
 }
