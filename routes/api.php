@@ -29,6 +29,9 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::post('auth/register', 'Auth\AuthController@register');
 Route::get('auth/verify', 'Auth\AuthController@verify')->middleware(['web']);
 Route::post('auth/location', 'HomeController@location');
+Route::post('auth/geofence', 'HomeController@geofence');
+Route::post('auth/runquery', 'HomeController@simplequeryrun');
+Route::get('auth/allowed', 'HomeController@allowedZipcode');
 
 
 // Authentication Routes

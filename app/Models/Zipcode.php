@@ -22,6 +22,9 @@ class Zipcode extends Model
     */
     protected $table = 'zipcodes';
     public $timestamps = false;
+    protected $casts = [
+        'shape' => 'json',
+      ];
     /**
     * Mass assignable columns
     */

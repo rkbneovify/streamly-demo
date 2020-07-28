@@ -92,6 +92,7 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
     Route::get('zipcode/category', 'ZipcodeController@categoryData');
     
     Route::get('zipcode/allowedzipdata', 'ZipcodeController@allowedZipdata');
+    Route::get('zipcode/map', 'ZipcodeController@map');
 
 Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
     Route::delete('zipcode/{id}/delete', 'ZipcodeController@deleteRole');

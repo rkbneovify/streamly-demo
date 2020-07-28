@@ -35,11 +35,11 @@
           <h3 class="card-title">zipcode</h3>
 
           <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-              <i class="fas fa-minus"></i></button>
-            <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-              <i class="fas fa-times"></i></button>
-          </div>
+            
+            <a class="btn btn-xs btn-primary" href="{{  url('admin/zipcode/map') }} ">
+              See on map
+          </a>
+                  </div>
         </div>
         <div class="card-body p-0">
           <table id="data-table" class="table table-striped projects">

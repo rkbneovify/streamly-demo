@@ -131,7 +131,12 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Allowed Zipcode</p>
                 </a>
-              </li>
+              </li><li class="nav-item">
+                <a href=" {{ url('/admin/zipcode/map') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Allowed Zipcode on map</p>
+                  </a>
+                </li>
             </ul>
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">
