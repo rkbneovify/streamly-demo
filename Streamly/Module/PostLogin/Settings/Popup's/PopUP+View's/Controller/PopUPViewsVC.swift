@@ -21,7 +21,7 @@ class PopUPViewsVC: UIViewController {
             txtview.delegate = self
         }
     }
-
+    
     @IBOutlet weak var termsTextView: UITextView!
         {
         didSet {
@@ -89,7 +89,11 @@ class PopUPViewsVC: UIViewController {
     private func supportViewSetup(_ data:ContactResponse)
     {
         
-        self.backViewHeight.constant = 574
+        self.backViewHeight.constant = 500
+        if isfromLogin
+            {
+                self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        }
         self.view.layoutIfNeeded()
         let customView = SupportView()
         customView.frame = backView.bounds
@@ -132,7 +136,7 @@ class PopUPViewsVC: UIViewController {
         self.policiesView.isHidden = true
         self.termsView.isHidden = false
         self.goBackbtn.setBtnProperties(self.goBackbtn, true)
-        self.acceptBtn.setBtnProperties(self.acceptBtn, true)
+        //self.acceptBtn.setBtnProperties(self.acceptBtn, true)
         termsView.cornerRadius = 10.0
         termsTextView.isSelectable = true
         termsTextView.isUserInteractionEnabled = true
@@ -165,7 +169,7 @@ class PopUPViewsVC: UIViewController {
         viewModel.delegate = self
         self.initVMPrivacy()
     }
-
+    
     private func makeAPiCallTerms()
     {
         self.showSpinner(onView: self.view)
@@ -229,9 +233,9 @@ class PopUPViewsVC: UIViewController {
     @IBAction func actionBtns(_ sender: UIButton) {
         if sender.tag == 88
         {
-         // for open home while accept terms
+            // for open home while accept terms
         }
-
+            
         else {
             self.dissmissView()
         }
@@ -270,20 +274,20 @@ extension  PopUPViewsVC:UITextViewDelegate
             //reach bottom
             if item == 5
             {
-                self.acceptBtn.isHidden = false
+                // self.acceptBtn.isHidden = false
                 self.goBackbtn.isHidden = false
             }
             else {
                 self.okBtn.isHidden = false
             }
-
+            
         }
         
         if (scrollView.contentOffset.y < 10){
             //reach top
             if item == 5
             {
-                self.acceptBtn.isHidden = true
+                // self.acceptBtn.isHidden = true
                 self.goBackbtn.isHidden = true
             }
             else {
@@ -294,7 +298,7 @@ extension  PopUPViewsVC:UITextViewDelegate
         if (scrollView.contentOffset.y >= 0 && scrollView.contentOffset.y < (scrollView.contentSize.height - scrollView.frame.size.height)){
             if item == 5
             {
-                self.acceptBtn.isHidden = true
+                // self.acceptBtn.isHidden = true
                 self.goBackbtn.isHidden = true
             }
             else {
@@ -308,18 +312,22 @@ extension  PopUPViewsVC:UITextViewDelegate
 extension PopUPViewsVC
 {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if acceptBtn.isFocused{
-               coordinator.addCoordinatedAnimations({ () -> Void in
-                self.acceptBtn.layer.borderColor = UIColor.clear.cgColor
-                self.goBackbtn.layer.borderColor = UIColor.black.cgColor
-               }, completion: nil)
-
-        } else if goBackbtn.isFocused{
-               coordinator.addCoordinatedAnimations({ () -> Void in
-             self.acceptBtn.layer.borderColor = UIColor.black.cgColor
-             self.goBackbtn.layer.borderColor = UIColor.clear.cgColor
-               }, completion: nil)
-           }
-
+        if goBackbtn.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                
+                self.goBackbtn.layer.borderColor = UIColor.clear.cgColor
+            }, completion: nil)
+            
+        }
+        else {
+            self.goBackbtn.layer.borderColor = UIColor.black.cgColor
+        }
+        //else if goBackbtn.isFocused{
+        //               coordinator.addCoordinatedAnimations({ () -> Void in
+        //             self.acceptBtn.layer.borderColor = UIColor.black.cgColor
+        //             self.goBackbtn.layer.borderColor = UIColor.clear.cgColor
+        //               }, completion: nil)
+        //           }
+        
     }
 }

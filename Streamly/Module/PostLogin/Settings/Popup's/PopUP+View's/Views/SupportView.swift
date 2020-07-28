@@ -14,7 +14,6 @@ class SupportView: NibView {
     
     @IBOutlet weak var okButton  :    UIButton!
     @IBOutlet weak var firstLbl  :    UILabel!
-    @IBOutlet weak var secondLbl :    UILabel!
     @IBOutlet weak var msgLbl    :    UILabel!
     
     //MARK: Properties
@@ -26,11 +25,11 @@ class SupportView: NibView {
             self.msgLbl.text = contactInfo?.message ?? "N/A"
             if isflag{
             self.firstLbl.text = contactInfo?.data?.email
-            self.secondLbl.text = ""
+          //  self.secondLbl.text = ""
             }
             else {
-            self.firstLbl.text = contactInfo?.data?.num1
-            self.secondLbl.text = contactInfo?.data?.num2
+            self.firstLbl.text = contactInfo?.data?.email
+            //self.secondLbl.text = contactInfo?.data?.num2
             }
         }
     }

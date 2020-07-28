@@ -18,6 +18,7 @@ class HomeNewVC: UIViewController {
         }
     }
     var genrsList: ChannelListResponse?
+    var recentData: RecentData?
     var filteredList:[ChannelDetails]?
     {
         didSet{
@@ -27,8 +28,8 @@ class HomeNewVC: UIViewController {
     var selectedCategories = 0
     var timer:Timer?
     lazy var viewModel: EPGViewModel = {
-           return EPGViewModel()
-       }()
+        return EPGViewModel()
+    }()
     override var preferredFocusedView: UIView? {
         get {
             return self.allButton
@@ -71,23 +72,29 @@ class HomeNewVC: UIViewController {
         invalidateTimer()
     }
 
-     // MARK: - Helper
-     private func intialSetup()
-     {
+    // MARK: - Helper
+    private func intialSetup()
+    {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         let programNib = UINib(nibName: "ProgramCollectionViewCell", bundle: Bundle.main)
         collectionView.register(programNib, forCellWithReuseIdentifier: "programCell")
         collectionView.delegate = self
         collectionView.dataSource = self
-       // self.configureButtons()
+        // self.configureButtons()
         self.makeApiCall()
-               self.initVM()
-               DispatchQueue.global(qos: .background).async
-                   {
-                       self.makeApiCallChannelList()
-                       self.initVMList()
-               }
+        self.initVM()
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeApiCallChannelList()
+                self.initVMList()
+        }
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeApiCallRecent()
+                self.initVMRecent()
+        }
+
 
 
     }
@@ -95,7 +102,7 @@ class HomeNewVC: UIViewController {
     private func configureButtons()
     {
 
-      //  self.allButton.set
+        //  self.allButton.set
 
 
         self.allButton.layer.borderWidth = 0.0
@@ -135,7 +142,10 @@ class HomeNewVC: UIViewController {
             self.filteredList = self.channelList?.data
             self.selectedCategories = CategoriesSelect.all.rawValue
         case  CategoriesSelect.recent.rawValue:
-            debugPrint("recent")
+            guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
+            guard  self.selectedCategories != CategoriesSelect.recent.rawValue else {return}
+            self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
+            self.selectedCategories = CategoriesSelect.recent.rawValue
         case  CategoriesSelect.myChannels.rawValue:
             debugPrint("myChannels")
         case  CategoriesSelect.sports.rawValue:
@@ -167,26 +177,33 @@ class HomeNewVC: UIViewController {
 
     }
 
-    private func makeApiCall(){
-           self.showSpinner(onView: self.view)
-           viewModel.delegate = self
-           viewModel.getEPGData()
+    private func loadRecentData(_ categories:[RecentDetails]) -> [ChannelDetails]?
+    {
+        let mainArray = self.channelList?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
+        return mainArray
 
-       }
-
-       private func initVM() {
-
-           viewModel.epgData = { epgModel in
-           self.removeSpinner()
-               self.channelList = epgModel
-
-           }
     }
 
-       private func makeApiCallChannelList(){
-           viewModel.getChannelList()
+    private func makeApiCall(){
+        self.showSpinner(onView: self.view)
+        viewModel.delegate = self
+        viewModel.getEPGData()
 
-       }
+    }
+
+    private func initVM() {
+
+        viewModel.epgData = { epgModel in
+            self.removeSpinner()
+            self.channelList = epgModel
+
+        }
+    }
+
+    private func makeApiCallChannelList(){
+        viewModel.getChannelList()
+
+    }
 
     private func initVMList() {
 
@@ -197,7 +214,21 @@ class HomeNewVC: UIViewController {
 
     }
 
-     // MARK: - IBActions
+    private func makeApiCallRecent(){
+        viewModel.getRecentData()
+
+    }
+
+    private func initVMRecent() {
+
+        viewModel.recentData = { recentModel in
+
+            self.recentData = recentModel
+        }
+
+    }
+
+    // MARK: - IBActions
     @IBAction func searchAction(_ sender:UIButton){
 
         let viewVC =  SearchVC.instantiateFromAppStoryboard(appStoryboard: .Main)
@@ -280,15 +311,15 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let ch = channels![indexPath.section]
-//        let program = ch.programs![indexPath.row]
-//        let message = "\(ch.channelName!) - \(program.name!)"
-//        let alert = UIAlertController(title: "Alert", message: message, preferredStyle:.alert)
-//        let alertAction = UIAlertAction(title: "Ok", style: .default) {  (alert:UIAlertAction) in
-//            self.dismiss(animated: true, completion: nil)
-//        }
-//        alert.addAction(alertAction)
-//        self .present(alert, animated: true, completion: nil)
+        //        let ch = channels![indexPath.section]
+        //        let program = ch.programs![indexPath.row]
+        //        let message = "\(ch.channelName!) - \(program.name!)"
+        //        let alert = UIAlertController(title: "Alert", message: message, preferredStyle:.alert)
+        //        let alertAction = UIAlertAction(title: "Ok", style: .default) {  (alert:UIAlertAction) in
+        //            self.dismiss(animated: true, completion: nil)
+        //        }
+        //        alert.addAction(alertAction)
+        //        self .present(alert, animated: true, completion: nil)
     }
 }
 
@@ -349,75 +380,75 @@ extension HomeNewVC{
 
             }, completion: nil)
         }
-            else if allButton.isFocused{
-                       coordinator.addCoordinatedAnimations({ () -> Void in
-                           self.configureButtons()
-                           self.allButton.layer.borderWidth = 3.0
-                           self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+        else if allButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.allButton.layer.borderWidth = 3.0
+                self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                       }, completion: nil)
-                   }
-            else if recentButton.isFocused{
-                coordinator.addCoordinatedAnimations({ () -> Void in
-                    self.configureButtons()
-                    self.recentButton.layer.borderWidth = 3.0
-                    self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            }, completion: nil)
+        }
+        else if recentButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.recentButton.layer.borderWidth = 3.0
+                self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                }, completion: nil)
-            }
-            else if myChannelButton.isFocused{
-                coordinator.addCoordinatedAnimations({ () -> Void in
-                    self.configureButtons()
-                    self.myChannelButton.layer.borderWidth = 3.0
-                    self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            }, completion: nil)
+        }
+        else if myChannelButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.myChannelButton.layer.borderWidth = 3.0
+                self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                }, completion: nil)
-            }
+            }, completion: nil)
+        }
 
-            else if sportsButton.isFocused{
-                         coordinator.addCoordinatedAnimations({ () -> Void in
-                             self.configureButtons()
-                             self.sportsButton.layer.borderWidth = 3.0
-                             self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-
-
-                         }, completion: nil)
-                     }
-            else if newsButton.isFocused{
-                                   coordinator.addCoordinatedAnimations({ () -> Void in
-                                       self.configureButtons()
-                                       self.newsButton.layer.borderWidth = 3.0
-                                       self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+        else if sportsButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.sportsButton.layer.borderWidth = 3.0
+                self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                                   }, completion: nil)
-                               }
-            else if moviesButton.isFocused{
-                                            coordinator.addCoordinatedAnimations({ () -> Void in
-                                                self.configureButtons()
-                                                self.moviesButton.layer.borderWidth = 3.0
-                                                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            }, completion: nil)
+        }
+        else if newsButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.newsButton.layer.borderWidth = 3.0
+                self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                                            }, completion: nil)
-                                        }
-            else if kidsButton.isFocused{
-                                                     coordinator.addCoordinatedAnimations({ () -> Void in
-                                                         self.configureButtons()
-                                                         self.kidsButton.layer.borderWidth = 3.0
-                                                         self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            }, completion: nil)
+        }
+        else if moviesButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.moviesButton.layer.borderWidth = 3.0
+                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
 
 
-                                                     }, completion: nil)
-                                                 }
+            }, completion: nil)
+        }
+        else if kidsButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+                self.kidsButton.layer.borderWidth = 3.0
+                self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+
+
+            }, completion: nil)
+        }
 
 
 
         else {
-             self.configureButtons()
+            self.configureButtons()
         }
     }
 }

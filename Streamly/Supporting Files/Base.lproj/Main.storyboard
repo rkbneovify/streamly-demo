@@ -437,7 +437,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="categoriesAction:" destination="Eyd-tc-C2G" eventType="primaryActionTriggered" id="ub3-dn-zK9"/>
+                                            <action selector="categoriesAction:" destination="Eyd-tc-C2G" eventType="primaryActionTriggered" id="HTH-Vl-uNL"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hSL-up-Py5">

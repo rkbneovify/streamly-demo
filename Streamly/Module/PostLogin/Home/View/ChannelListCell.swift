@@ -33,7 +33,7 @@ class ChannelListCell: UITableViewCell {
     // MARK: - Helpers
     func configureCell(_ logo:String, _ channelName:String,item:Int)
     {
-        self.channelNo.text = "\(item + 1)"
+        self.channelNo.text = "\(item)"
         self.ChannelName.text = channelName
         self.logoImage.sd_setImage(with: URL(string: logo), placeholderImage: UIImage(named: "Logo2"))
         // self.imageLogo.image = UIImage(named: logo)

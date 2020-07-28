@@ -11,6 +11,7 @@ import Foundation
 class EPGViewModel: NSObject {
 
     var epgData:((EPGResponse)->())?
+    var recentData:((RecentData)->())?
     var channelData:((ChannelListResponse)->())?
     weak var delegate:HandleError?
 
@@ -43,6 +44,21 @@ class EPGViewModel: NSObject {
             self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
+
+    func getRecentData() {
+        ApiCall.getRecentData(success: { data
+            in
+            if let recentModel = EPGDataParser.parserecentData(data!) {
+                self.recentData!((recentModel))
+                //debugPrint(epgModel)
+            }
+            debugPrint("Success")
+        }) { (error, data, code)  in
+
+            debugPrint("failure")
+            self.delegate?.handleError(error?.localizedDescription ?? "")
+        }
+    }
 }
 
 class EPGDataParser {
@@ -61,6 +77,7 @@ class EPGDataParser {
 
     static func parseChannelData(_ data: Data) -> ChannelListResponse? {
            do {
+
                let contactModelElement = try JSONDecoder().decode(ChannelListResponse.self, from: data)
 
 
@@ -70,4 +87,17 @@ class EPGDataParser {
            }
            return nil
        }
+
+    static func parserecentData(_ data: Data) -> RecentData? {
+        do {
+
+            let contactModelElement = try JSONDecoder().decode(RecentData.self, from: data)
+
+
+            return contactModelElement
+        } catch {
+            debugPrint(error)
+        }
+        return nil
+    }
 }

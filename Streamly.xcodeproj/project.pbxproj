@@ -30,6 +30,7 @@
 		AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */; };
 		AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */; };
 		AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4B5E4024A514E80031AB15 /* ChannelList.swift */; };
+		AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DD07424D0971D00FC4D0A /* RecentData.swift */; };
 		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
 		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
 		AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA54082F2491F84F000D5F76 /* LogOutModel.swift */; };
@@ -170,6 +171,7 @@
 		AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+ImageName.swift"; sourceTree = "<group>"; };
 		AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+SampleData.swift"; sourceTree = "<group>"; };
 		AA4B5E4024A514E80031AB15 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
+		AA4DD07424D0971D00FC4D0A /* RecentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentData.swift; sourceTree = "<group>"; };
 		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
 		AA54082F2491F84F000D5F76 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
@@ -284,8 +286,10 @@
 		AA19D0F324AF98E4005B488D /* Home New */ = {
 			isa = PBXGroup;
 			children = (
+				AA72AF7D2473F12F00906796 /* View */,
+				AA2DB89A246EAD56003848FE /* View Model */,
+				AA2DB899246EAD4C003848FE /* Model */,
 				AA2EF2AF24B6D820004EBF06 /* Controller */,
-				AADAB1E724B434F400D92C43 /* View */,
 			);
 			path = "Home New";
 			sourceTree = "<group>";
@@ -293,9 +297,6 @@
 		AA2DB897246EAD2D003848FE /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				AA72AF7D2473F12F00906796 /* View */,
-				AA2DB89A246EAD56003848FE /* View Model */,
-				AA2DB899246EAD4C003848FE /* Model */,
 				AA2DB898246EAD3B003848FE /* Controller */,
 			);
 			path = Home;
@@ -317,6 +318,7 @@
 				AA72AF712473EEB500906796 /* Schedule.json */,
 				AA07E87C24A209CB00D37ABF /* EpgModel.swift */,
 				AA4B5E4024A514E80031AB15 /* ChannelList.swift */,
+				AA4DD07424D0971D00FC4D0A /* RecentData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -435,6 +437,8 @@
 		AA72AF7D2473F12F00906796 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				AADAB1E824B4350C00D92C43 /* EpgGridLayout.swift */,
+				AA19D0F424AF9908005B488D /* ChannelListCell.swift */,
 				AA72AF7B2473F0E100906796 /* EPGCollectionViewLayout.swift */,
 				AA72AF7E2473F2F300906796 /* EPGCollectionViewCell.swift */,
 				AA105C732497678900CF075B /* EPGCollectionViewCell.xib */,
@@ -445,7 +449,8 @@
 				AA72AF8A2473F5E600906796 /* TimeCollectionViewCell.swift */,
 				AA105C88249767C100CF075B /* TimeCollectionViewCell.xib */,
 			);
-			path = View;
+			name = View;
+			path = ../Home/View;
 			sourceTree = "<group>";
 		};
 		AA741F0B246ABBF00090A0F7 /* Module */ = {
@@ -739,15 +744,6 @@
 				AAD5954E2472705B00BC5E6C /* Rechability.swift */,
 			);
 			path = Reachebility;
-			sourceTree = "<group>";
-		};
-		AADAB1E724B434F400D92C43 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				AADAB1E824B4350C00D92C43 /* EpgGridLayout.swift */,
-				AA19D0F424AF9908005B488D /* ChannelListCell.swift */,
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		AAFC43E72480EEC9000928C0 /* SerachChannels */ = {
@@ -1120,6 +1116,7 @@
 				AA352CB524813B01009ACD55 /* DataItemCellComposer.swift in Sources */,
 				AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */,
 				AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */,
+				AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */,
 				AA5408322492208F000D5F76 /* LoadTextView.swift in Sources */,
 				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
 				AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */,

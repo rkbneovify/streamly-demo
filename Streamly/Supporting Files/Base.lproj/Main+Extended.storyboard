@@ -76,14 +76,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
-                                                    <rect key="frame" x="10" y="61" width="87" height="94"/>
+                                                    <rect key="frame" x="9" y="61" width="87" height="94"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="94" id="CcI-DZ-VzD"/>
                                                         <constraint firstAttribute="width" constant="87" id="OJP-rZ-mpF"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
-                                                    <rect key="frame" x="5" y="219" width="97" height="31"/>
+                                                    <rect key="frame" x="5" y="219" width="95" height="31"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="31" id="dEc-bj-0o0"/>
                                                     </constraints>
@@ -418,7 +418,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" tag="89" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZeT-xP-bP6">
-                                        <rect key="frame" x="785" y="680" width="280" height="84"/>
+                                        <rect key="frame" x="476.5" y="680" width="280" height="84"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="84" id="dZo-Gg-ebE"/>
@@ -426,7 +426,7 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <state key="normal" title="Go Back">
+                                        <state key="normal" title="Accept">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -451,7 +451,7 @@
                                     <constraint firstAttribute="bottom" secondItem="4jW-vy-bMP" secondAttribute="bottom" constant="36" id="3dY-AV-v7Z"/>
                                     <constraint firstItem="VPd-Zj-JSz" firstAttribute="leading" secondItem="U6H-Da-B6x" secondAttribute="leading" constant="10" id="90z-DC-VpK"/>
                                     <constraint firstItem="4jW-vy-bMP" firstAttribute="top" secondItem="VPd-Zj-JSz" secondAttribute="bottom" constant="30" id="Feu-f1-2FZ"/>
-                                    <constraint firstItem="ZeT-xP-bP6" firstAttribute="centerX" secondItem="VPd-Zj-JSz" secondAttribute="centerX" multiplier="1.5" id="GDb-QY-VOl"/>
+                                    <constraint firstItem="ZeT-xP-bP6" firstAttribute="centerX" secondItem="VPd-Zj-JSz" secondAttribute="centerX" id="GDb-QY-VOl"/>
                                     <constraint firstItem="EZI-hB-sfh" firstAttribute="leading" secondItem="U6H-Da-B6x" secondAttribute="leading" constant="30" id="Ize-TV-hnp"/>
                                     <constraint firstItem="4jW-vy-bMP" firstAttribute="centerX" secondItem="VPd-Zj-JSz" secondAttribute="centerX" multiplier="0.5" id="Kss-lt-UYc"/>
                                     <constraint firstAttribute="trailing" secondItem="VPd-Zj-JSz" secondAttribute="trailing" constant="10" id="MeT-QN-xLe"/>
@@ -460,7 +460,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.066887842465753425" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="U6H-Da-B6x" firstAttribute="height" secondItem="afK-en-bN6" secondAttribute="height" id="8A3-1y-q2q"/>
                             <constraint firstItem="afK-en-bN6" firstAttribute="centerY" secondItem="aUP-VW-ZWc" secondAttribute="centerY" id="E3y-RU-Q6o"/>
@@ -615,10 +615,10 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fnz-5i-nxU">
-                                <rect key="frame" x="145" y="40" width="1184" height="50"/>
+                                <rect key="frame" x="145" y="40" width="1178" height="50"/>
                                 <subviews>
                                     <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
-                                        <rect key="frame" x="0.0" y="0.0" width="102" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="104" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -636,7 +636,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
-                                        <rect key="frame" x="122" y="0.0" width="159" height="50"/>
+                                        <rect key="frame" x="124" y="0.0" width="156" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -649,9 +649,12 @@
                                         <state key="focused">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
+                                        <connections>
+                                            <action selector="categoriesAction:" destination="kvk-zF-QCt" eventType="primaryActionTriggered" id="0S5-mb-2X5"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
-                                        <rect key="frame" x="301" y="0.0" width="223" height="50"/>
+                                        <rect key="frame" x="300" y="0.0" width="222" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -669,7 +672,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
-                                        <rect key="frame" x="544" y="0.0" width="159" height="50"/>
+                                        <rect key="frame" x="542" y="0.0" width="154" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -687,7 +690,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
-                                        <rect key="frame" x="723" y="0.0" width="139" height="50"/>
+                                        <rect key="frame" x="716" y="0.0" width="139" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -705,7 +708,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
-                                        <rect key="frame" x="882" y="0.0" width="156" height="50"/>
+                                        <rect key="frame" x="875" y="0.0" width="157" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -723,7 +726,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
-                                        <rect key="frame" x="1058" y="0.0" width="126" height="50"/>
+                                        <rect key="frame" x="1052" y="0.0" width="126" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>

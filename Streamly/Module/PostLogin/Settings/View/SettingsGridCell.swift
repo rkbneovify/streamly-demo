@@ -88,7 +88,7 @@ class SettingsGridCell: UICollectionViewCell {
         self.content.layer.borderWidth = 0.0
         self.content.layer.shadowRadius = 0.0
         self.content.layer.shadowOpacity = 0
-        self.content.backgroundColor = UIColor.gray.withAlphaComponent(0.3)
+        self.content.backgroundColor = UIColor.white.withAlphaComponent(0.33)
         self.content.firstColor = UIColor.channelBox
         self.content.secondColor = UIColor.channelBox
     }
