@@ -66,22 +66,22 @@ end sub
 sub termConditionUI()
     ? "termConditionUI";
 
-    m.dialogHeight = 750
-    m.dialogWidth = 1223
+    m.dialogHeight = 800
+    m.dialogWidth = 1300
 
     m.termCondition = m.top.createChild("Poster")
     m.termCondition.visible = false
     m.termCondition.width = m.dialogWidth
     m.termCondition.height = m.dialogHeight
-    m.termCondition.uri = "pkg:/images/profile/dialogBackground.png"
+    m.termCondition.uri = "pkg:/images/Login/backGroundBox.png"
     m.termCondition.translation = [(1920 - m.dialogWidth) / 2, (1080 - m.dialogHeight) / 2]
 
-    LayoutGroup = m.SupportDialog.createChild("LayoutGroup")
-    LayoutGroup.translation = [0, 50]
+    LayoutGroup = m.termCondition.createChild("LayoutGroup")
+    LayoutGroup.translation = [40, 40]
     LayoutGroup.layoutDirection = "vert"
-    LayoutGroup.itemSpacings = [0]
+'    LayoutGroup.itemSpacings = [20]
     m.termConditionTitle = LayoutGroup.createChild("Label")
-    m.termConditionTitle.width = m.dialogWidth
+    m.termConditionTitle.width = m.dialogWidth - 40
     m.termConditionTitle.text = "Term of uses"
     m.termConditionTitle.color = "#004E92"
     m.termConditionTitle.font = getFont(35, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
@@ -91,15 +91,15 @@ sub termConditionUI()
 
     m.termConditionScrollText = LayoutGroup.createChild("ScrollableText")
 
-    m.termConditionScrollText.translation = [0, 0]
-    m.termConditionScrollText.width = m.dialogWidth
-    m.termConditionScrollText.height = m.dialogHeight * (75 / 100)
+'    m.termConditionScrollText.translation = [0, 0]
+    m.termConditionScrollText.width = m.dialogWidth - 40
+    m.termConditionScrollText.height = m.dialogHeight * (70 / 100)
 '    m.contactNumber.translation = [0, 150]
 '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.termConditionScrollText.horizAlign = "Left"
-    m.termConditionScrollText.vertAlign = "Center"
-    m.termConditionScrollText.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
-
+    m.termConditionScrollText.vertAlign = "top"
+    m.termConditionScrollText.font = getFont(36, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+    m.termConditionScrollText.color = "#000000"
     m.termConditionDialogButton = m.termCondition.createChild("Button")
     m.termConditionDialogButton.observeField("buttonSelected", "closeDialog")
 
@@ -107,8 +107,9 @@ sub termConditionUI()
     m.termConditionDialogButton.minWidth = "280"
     m.termConditionDialogButton.maxWidth = "280"
     m.termConditionDialogButton.focusedTextColor = "#FFFFFF"
-    m.termConditionDialogButton.height = "84"
+    m.termConditionDialogButton.height = "90"
     m.termConditionDialogButton.focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+    m.termConditionDialogButton.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
     m.termConditionDialogButton.showFocusFootprint = "true"
     m.termConditionDialogButton.iconUri = ""
     m.termConditionDialogButton.focusedIconUri = ""
@@ -117,9 +118,10 @@ sub termConditionUI()
     okLabel.height = "84"
     okLabel.width = "280"
     okLabel.vertAlign = "center"
-    okLabel.text = "OK"
+    okLabel.text = "Accept"
     okLabel.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
-    m.HelpButton.translation = [(m.dialogWidth - m.HelpButton.boundingRect().width) / 2, m.dialogHeight * (65 / 100)]
+    okLabel.color = "#000000"
+    m.termConditionDialogButton.translation = [(m.dialogWidth - m.termConditionDialogButton.boundingRect().width) / 2, m.dialogHeight * (88 / 100)]
 end sub
 
 sub initApi()
@@ -138,7 +140,8 @@ sub responseAPI(event as Object)
         m.needHelpText = "termofuse"
         ? "termofuse:"; responseData
         m.termCondition.visible = true
-        m.termConditionScrollText.text = responseData.data
+        m.termConditionScrollText.text =  responseData.data
+        m.termConditionScrollText.setFocus(true)
     else if m.ProfileTask.callto = "Support"
         m.SupportDialog.visible = true
         m.needHelpText = "helpSupport"
@@ -634,8 +637,11 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 '            if m.ProfileTask.callto = "termofuse"
 '     closeshowDialogforCreateAccoun()
             return true
-        else if (m.termConditionButton.hasFocus() and key = "back")
+        else if ((m.termConditionButton.hasFocus() or m.termConditionScrollText.hasFocus()) and key = "back")
             closeDialog()
+            return true
+        else if ((m.termConditionDialogButton.hasFocus() or m.termConditionScrollText.hasFocus()) and key = "back")
+            m.termConditionDialogButton.setFocus(true)
             return true
         else if (key = "left" and m.registerNow.hasFocus())
             m.termConditionButton.setFocus(true)
