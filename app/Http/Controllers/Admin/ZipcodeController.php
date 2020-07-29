@@ -23,13 +23,13 @@ class ZipcodeController extends Controller
      */
     public function index()
     { 
-        $zipcodes = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+        $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
        
        return view('admin.zipcodes.index', compact('zipcodes'));
     }  
     public function allowedZipcodes()
     { 
-        $zipcodes = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+        $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
        
        return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
     }  
@@ -165,7 +165,7 @@ class ZipcodeController extends Controller
     }
 
     public function categoryData()
-    { $data = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    { $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
@@ -173,7 +173,7 @@ class ZipcodeController extends Controller
         ->make(true);
     }
     public function allowedZipdata()
-    {  $data = Zipcode::join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
+    {  $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
