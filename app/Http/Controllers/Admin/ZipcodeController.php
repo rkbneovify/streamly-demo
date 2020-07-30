@@ -22,16 +22,18 @@ class ZipcodeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    { 
-        $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+    {   
+        // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+        // return view('admin.zipcodes.index', compact('zipcodes'));
        
-       return view('admin.zipcodes.index', compact('zipcodes'));
+       return view('admin.zipcodes.index');
     }  
     public function allowedZipcodes()
     { 
-        $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+        // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
        
-       return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
+    //    return view('admin.zipcodes.allowedzipcode', compact('zipcodes'));
+       return view('admin.zipcodes.allowedzipcode');
     }  
    
     public function zipjson() 
@@ -165,7 +167,7 @@ class ZipcodeController extends Controller
     }
 
     public function categoryData()
-    { $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    { $data = Zipcode::select('zipcodes.*')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
@@ -173,7 +175,7 @@ class ZipcodeController extends Controller
         ->make(true);
     }
     public function allowedZipdata()
-    {  $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
+    {  $data = Zipcode::select('zipcodes.*')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
@@ -182,7 +184,7 @@ class ZipcodeController extends Controller
     }
 
     public function map()
-    {  $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
+    {  $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         # Build GeoJSON feature collection array
     $geojson = array(
         'type'      => 'FeatureCollection',
