@@ -167,7 +167,7 @@ class ZipcodeController extends Controller
     }
 
     public function categoryData()
-    { $data = Zipcode::select('zipcodes.*')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+    { $data = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
             return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
