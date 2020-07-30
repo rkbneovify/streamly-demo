@@ -179,10 +179,11 @@ class HomeController extends Controller
 //    DB::raw("ST_AsGeoJSON(`SHAPE`) sh"))http://geojson.tools/
       $query= Map::select('zcta5ce10 AS zipcode',DB::raw("ST_AsGeoJSON(`SHAPE`) shape"))->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
      ->get();
-    
+    //  $data = Zipcode::select('zipcodes.*')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->toSql();
      $response = [
         'success' => true,
         'data' => $query,
+        // 'sds' => $data,
         'response_code'=>200,
     ];
     return response()->json($response, 200); 
