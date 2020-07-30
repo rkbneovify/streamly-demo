@@ -136,33 +136,22 @@ class HomeController extends Controller
     {     
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
-
-       $query= Map::select('zcta5ce10 AS zipcode')
+    
+       $query= Zipcode::select('map.zcta5ce10 AS zipcode')
         ->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
-        ->get();
+        ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
       
         if((count($query)==0)){
             return response()->json([
                 'success' => false,
                 'message' => 'Not within zipcode boundary',
                 
-                'response_code'=>500,
+                'response_code'=>403,
                 
-            ], 500);
+            ], 403);
         } else{
             $zipcode=$query->pluck('zipcode');
-            $nameArr = ['zipcode' => $zipcode];
-            $validator = Validator::make($nameArr, 
-        [
-            'zipcode' => 'required|exists:zipcodes,zipcode,status,1'
-        ], 
-        [
-            'zipcode.exists'=>'You are away from the zipcode proximity'
-        ]
-    );
-    if ($validator->fails()) {
-        return $validator->errors();
-    }
+     
     $response = [
         'success' => true,
         'data' => $zipcode[0],
