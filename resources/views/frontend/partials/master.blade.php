@@ -37,3 +37,63 @@
 
 </body>
 </html>
+
+
+<style>
+	#search_list{position: absolute;
+    width: auto; 
+    background: white;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+
+    /* border: 1px solid gray; */
+
+    /*This is relative to the navbar now*/
+    left: 0;
+    right: 0;
+    top: 40px;}
+	
+		 
+			.dddd{display: flex;
+			flex: auto;
+			flex-direction: column;
+			min-width: 0;
+			max-height: none;
+			padding: 6px 0;}
+	
+	
+	
+	</style>
+	<script type="text/javascript">
+			$(document).ready(function () {
+			 
+							$('#search-btn-header').on('keyup',function() {
+											var query = $(this).val(); 
+											$.ajax({
+													 
+															url:"{{ route('autocomplete') }}",
+									
+															type:"GET",
+													 
+															data:{'search':query},
+													 
+															success:function (data) {
+																	console.log(data);
+																			$('#search_list').html(data);
+															}
+											})
+											// end of ajax call
+							});
+	
+							
+							$(document).on('click', 'li', function(){
+									
+											var value = $(this).text();
+											$('#search').val(value);
+											$('#search_list').html("");
+											// alert(value);
+							});
+			});
+	</script>

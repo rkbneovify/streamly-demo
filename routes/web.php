@@ -21,7 +21,8 @@ Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
 
 
-
+Route::get('search', 'HomeController@search')->name('search');
+Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 
 
