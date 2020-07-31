@@ -16,6 +16,7 @@ use App\Models\Zipcode;
 use App\Models\Map;
 use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
+use App\Models\Channel;
 // use GuzzleHttp\Client;
 
 class HomeController extends Controller
@@ -162,7 +163,7 @@ class HomeController extends Controller
     
         
    }
- public function simplequeryrun(Request $request){
+   public function simplequeryrun(Request $request){
     $LAT= $request['latitude'];
     $LON = $request['longitude'];
 //    DB::raw("ST_AsGeoJSON(`SHAPE`) sh"))http://geojson.tools/
@@ -354,7 +355,7 @@ $geojson = array(
      * @return \Illuminate\Http\Response
 
      */
-
+    
     public function logActivity()
 
     {
@@ -363,6 +364,96 @@ $geojson = array(
 
         return view('logActivity',compact('logs'));
 
+    }
+
+    public function search()
+    {
+        
+
+        return view('frontend.search');
+    }
+    public function autocomplete(Request $request)
+    { 
+//          $search = request()->get('search');
+//          $data = Channel::select("callSign")
+//         ->where('callSign', 'LIKE', "%{$search}%")        
+//                 ->get();
+//                 $result = json_encode($data ); 
+//    return $result;
+        // return response()->json($data);
+        $q=$request->search;
+        if($request->ajax()) {
+            $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url','gracenotechannels.StationName')
+        
+     ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+     
+     ->join('gracenotechannels', 'channels.callSign', '=', 'gracenotechannels.CallSign')
+     ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+     ->where(function($query) use ($q) {
+        $query->where('channels.callSign', 'LIKE', '%'.$q.'%')
+            
+            ->orWhere('gracenotechannels.StationName', 'LIKE', '%'.$q.'%');
+    })
+    //  ->where('channels.callSign', 'LIKE',  '%'.$request->search.'%')
+     
+ ->groupBy('channels.id','gracenotechannels.StationName') ->orderBy('channels.callSign', 'asc');
+       
+      $data=$record->get();
+            // $data = Channel::where('callSign', 'LIKE', $request->search.'%')
+            //     ->get();
+           
+            $output = '';  $FRONTEND_URL=env('FRONTEND_URL');
+            
+            if (count($data)>0) {
+              
+                $output = '<ul class="list-group" style="display: block; position: relative; z-index: 1">';
+              
+                foreach ($data as $row){
+                    $url=$FRONTEND_URL.'/livetv/'.$row->callSign.'/'.$row->genrename['0'];
+                //     $output .= '<li class="list-group-item">
+                //     '.$row->callSign.'<div class="live-news-item">
+                //     <a href='.$url.'>
+                //     <img src='.$row->logo.'>
+                //     <p>'.$row->callSign.'</p></a>
+            
+                // </div>
+                //     </li>';
+                    
+                    $output .= '<li class="list-group-item">
+                    <div class="dddd">
+                    <a href='.$url.'>
+                    <img style="	display: block;
+                    width: auto;
+                    margin: 0 auto;
+                    height: 1.5rem;" src='.$row->logo.'>
+                    '.$row->callSign.'
+                   
+                    </a>
+                    '.$row->StationName.'
+                </div>
+                    </li>';
+
+
+                    // <a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
+					// 	<img src="{{ $channeldet->logo }}">
+                    // 	<p>{{  $channeldet->callSign}}</p></a>
+                    // <div class="live-news-item">
+					// 	<a href="http://127.0.0.1:8000/livetv/AETVP/Others">
+					// 	<img src="http://127.0.0.1:8000/uploads/channellogo/AETV.png">
+					// 	<p>AETVP</p></a>
+				
+					// </div>
+                }
+              
+                $output .= '</ul>';
+            }
+            else {
+             
+                $output .= '<li class="list-group-item">'.'No results'.'</li>';
+            }
+           
+            return $output;
+        }
     }
 
    
