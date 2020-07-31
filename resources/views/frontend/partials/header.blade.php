@@ -25,9 +25,10 @@
                             <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" />
 
                             <input type="text" name="search" class="form-control" id="search-btn-header" placeholder="Search channels or shows">
+                            <div id="search_list"></div>  
                         </div>
                     </li>
-
+                    
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list-4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>

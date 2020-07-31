@@ -203,7 +203,7 @@ class ChannelController extends Controller
             'name'=>'required',
             'url'=>'required',
             'genre_id'=>'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         $input = $request->only('name', 'url', 'genre_id');
         if ($request->has('toggleswitch')) {
