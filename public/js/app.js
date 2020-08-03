@@ -66996,9 +66996,9 @@ var TVGuide = /*#__PURE__*/function (_Component) {
               if (channelPosition != this.epgData.getChannelCount() - TVGuide.VERTICAL_SCROLL_BOTTOM_PADDING_ITEM) {
                 this.scrollY = this.getScrollY(false) + dy;
               }
-            }
+            } // console.log(channelPosition);
 
-            console.log(channelPosition);
+
             this.focusedChannelPosition = channelPosition;
           }
 

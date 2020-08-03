@@ -650,7 +650,7 @@ export default class TVGuide extends Component {
                             this.scrollY = this.getScrollY(false) + dy;
                         }
                     }
-                    console.log(channelPosition);
+                   // console.log(channelPosition);
                     this.focusedChannelPosition = channelPosition;
 
                 }
