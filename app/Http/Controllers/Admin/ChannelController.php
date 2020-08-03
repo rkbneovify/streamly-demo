@@ -354,21 +354,21 @@ $record  = Gracenote::select("CallSign","StationName","image")
       ->rawColumns(['photo', 'action'])
         ->make(true);
     }
-
-  //channel with 7 day of schdule
-    public function channelDaysSchedule(){
-      //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
-    //   select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
-    //   SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
+    
+//channel with 7 day of schdule
+public function channelDaysSchedule(){
+    //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
+  //   select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
+  //   SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
 // select count(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign
 // select GROUP_CONCAT(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign   
 //$record  = Gracenote::select('StationName','CallSign','EventTitle','EventDescription','StartDateTime','EndDateTime')->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
 // SELECT CallSign,StationName,
-        // JSON_ARRAYAGG(
-        //     JSON_OBJECT(
-        //         'title', EventTitle,
-        //         'start', StartDateTime,'end', EndDateTime )
-        // ) AS programs
+      // JSON_ARRAYAGG(
+      //     JSON_OBJECT(
+      //         'title', EventTitle,
+      //         'start', StartDateTime,'end', EndDateTime )
+      // ) AS programs
 //     FROM gracenote
 //     GROUP BY CallSign,StationName
 // $record  = Gracenote::select('CallSign',DB::raw("JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs"))
@@ -378,19 +378,23 @@ $record  = Gracenote::select("CallSign","StationName","image")
 $imagePath=url("/uploads/channellogo/");
 
 DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+$record  = Gracenote::select("sub.callSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
 ->fromSub(function ($query) {
-    $query->select('gracenote.StationName','gracenote.CallSign','gracenote.EventTitle','gracenote.StartDateTime','gracenote.EndDateTime','channels.id','channels.image','channels.url')
-    ->from('gracenote')
-    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 DAY)')
-    ->orderBy('gracenote.StartDateTime', 'asc');
+  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,"callSign") callSign'),
+  DB::raw('IFNULL(gracenote.EventTitle,"EventTitle") EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
+  DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id','channels.image','channels.url')
+  ->from('gracenote')
+  ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+  ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
+  AND DATE_ADD(NOW()
+  , INTERVAL 3 DAY) or `channels`.`callSign` IS NULL')
+  ->orderBy('gracenote.StartDateTime', 'asc');
 }, 'sub')
 
-->orderBy('CallSign', 'asc')
-->groupBy('CallSign','StationName','image','url','id');
+->orderBy('sub.callSign', 'asc')
+->groupBy('sub.callSign','StationName','image','url','id');
 // SELECT CallSign,StationName,
 // GROUP_CONCAT(
 //   JSON_OBJECT('title', EventTitle,
@@ -400,35 +404,36 @@ $record  = Gracenote::select("CallSign","id","StationName","url",DB::raw("CONCAT
 //     FROM gracenote
 //     GROUP BY CallSign,StationName
 // ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
-    
-$reco=$record->get();   
-     if ($reco->isEmpty()) {
-        $response = [
-            'success' => false,
-            'data' => 'Empty',
-            'message' => 'Channel not found.',
-            'response_code'=>404,
-        ];
-        return response()->json($response, 404);
-    }  
-        // return response()->json($record->toSql());
-        // return json_encode($api);
+  
+// $reco=$record->toSql(); echo $reco;exit; 
+$reco=$record->get(); //echo $reco;exit; 
+   if ($reco->isEmpty()) {
+      $response = [
+          'success' => false,
+          'data' => 'Empty',
+          'message' => 'Channel not found.',
+          'response_code'=>404,
+      ];
+      return response()->json($response, 404);
+  }  
+      // return response()->json($record->toSql());
+      // return json_encode($api);
 
-        $response = [
-            'success' => true,
-            'date'=>date("Y-m-d"),
-            'data' => $reco,
-           
-            'message' => 'Schedule data for 3 days found',
-            'response_code'=>200,
-        ];
-        // return response()->json($reco);
-       
-    return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-    //  return  response()->json([
-    //     'clients' => $this->transformClientCollection($api)
-    //  ], 200);
-    }
+      $response = [
+          'success' => true,
+          'date'=>date("Y-m-d"),
+          'data' => $reco,
+         
+          'message' => 'Schedule data for 3 days found',
+          'response_code'=>200,
+      ];
+      // return response()->json($reco);
+     
+  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+  //  return  response()->json([
+  //     'clients' => $this->transformClientCollection($api)
+  //  ], 200);
+  }
   //channel with 7 day of schdule
     public function frontEpgchannelDaysSchedule(){
 $imagePath=url("/uploads/channellogo/");
@@ -438,17 +443,19 @@ $record  = Gracenote::select(["id","StationName AS name","url",DB::raw("CONCAT('
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', (UNIX_TIMESTAMP(StartDateTime)*1000),'end', (UNIX_TIMESTAMP(EndDateTime)*1000) ) Order By StartDateTime ), ']') events")
 ->fromSub(function ($query) {
-    $query->select('gracenote.StationName','gracenote.CallSign','gracenote.EventTitle','gracenote.StartDateTime','gracenote.EndDateTime','channels.id','channels.image','channels.url')
+    $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,"callSign") callSign'),
+    DB::raw('IFNULL(gracenote.EventTitle,"EventTitle") EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
+    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 1 DAY) EndDateTime'),'channels.id','channels.image','channels.url')
     ->from('gracenote')
-    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    // ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 DAY)')
-    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s') ")
-   
+    ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
+    AND DATE_ADD(NOW()
+    , INTERVAL 1 DAY) or `channels`.`callSign` IS NULL')
     ->orderBy('gracenote.StartDateTime', 'asc');
-}, 'sub')
+  }, 'sub')
 
-->orderBy('CallSign', 'asc')
-->groupBy('CallSign','StationName','image','url','id');
+->orderBy('sub.callSign', 'asc')
+->groupBy('sub.callSign','StationName','image','url','id');
     
 $reco=$record->get();   
      if ($reco->isEmpty()) {
