@@ -97,7 +97,7 @@ class PopUPViewsVC: UIViewController {
         self.view.layoutIfNeeded()
         let customView = SupportView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+      //  customView.backgroundColor = UIColor.init(hex: "#000000")?.withAlphaComponent(0.5)
         customView.cornerRadius = 10.0
         customView.delegate = self
         customView.isflag = isfromLogin

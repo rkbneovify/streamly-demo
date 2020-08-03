@@ -148,14 +148,38 @@ class PlayerVC: AVPlayerViewController {
     // MARK: Properties
     let overlayView = UIView(frame: CGRect(x: (appDelegate?.window?.frame.width ?? 0) - 400, y: 50, width: 200, height: 200))
     var url:URL?
+    var isfromRcent = true
+    weak var delegatee:AddRecentData?
+    var recentData: RecentData?
+    var idS = ""
+    lazy var viewModel: EPGViewModel = {
+        return EPGViewModel()
+    }()
 
     // MARK: LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initialSetup()
-        
 
+        if !isfromRcent
+        {
+            self.callAPI()
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+
+
+        /// set the data into HomeNewVC
+        if !isfromRcent
+        {
+            guard let data = self.recentData else {
+                return
+            }
+            self.delegatee?.addRecentData(data)
+        }
     }
 
     // MARK: Helpers
@@ -165,14 +189,37 @@ class PlayerVC: AVPlayerViewController {
         contentOverlayView?.addSubview(overlayView)
 
         player = AVPlayer(url: url!)
-       //   NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlay(_:)), name: NSNotification.Name.AVPlayerItemPlaybackStalled, object: nil)
+        //   NotificationCenter.default.addObserver(self, selector: #selector(playerItemFailedToPlay(_:)), name: NSNotification.Name.AVPlayerItemPlaybackStalled, object: nil)
         
         player?.play()
+    }
+
+    private func callAPI()
+    {
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeApiCallRecent()
+                self.initVMRecent()
+        }
+    }
+
+    private func makeApiCallRecent(){
+        viewModel.postRecentData(idS)
+
+    }
+
+    private func initVMRecent() {
+
+        viewModel.recentData = { recentModel in
+
+            self.recentData = recentModel
+        }
+
     }
     
     @objc func playerItemFailedToPlay(_ notification: Notification) {
         self.player?.play()
-        let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+        _ = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
 
     }
 }

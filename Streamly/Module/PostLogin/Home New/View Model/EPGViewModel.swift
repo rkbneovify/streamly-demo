@@ -59,6 +59,21 @@ class EPGViewModel: NSObject {
             self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
+
+    func postRecentData(_ ids:String) {
+        ApiCall.postRecentData(ids,success: { data
+            in
+            if let recentModel = EPGDataParser.parserecentData(data!) {
+                self.recentData!((recentModel))
+                //debugPrint(epgModel)
+            }
+            debugPrint("Success")
+        }) { (error, data, code)  in
+
+            debugPrint("failure")
+            self.delegate?.handleError(error?.localizedDescription ?? "")
+        }
+    }
 }
 
 class EPGDataParser {

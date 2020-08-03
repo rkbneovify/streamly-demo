@@ -101,5 +101,16 @@ open class ApiCall {
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
 
+    @discardableResult
+    public static func postRecentData(_ ids:String,success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+          let url: String! = "https://streamlytv.com/api/auth/addtorecent"
+          let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+          let param:[String:String] = ["channelids":ids]
+          let headers = ["Authorization": "Bearer \(token)","Accept": "application/json"]
+          let requestParameter = RequestParameter.createRequestParameter(url, method: .post, headers: headers, parameters: param)
+          return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+      }
+
+
 }
 

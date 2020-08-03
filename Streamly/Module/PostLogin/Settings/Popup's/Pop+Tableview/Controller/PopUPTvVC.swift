@@ -116,6 +116,8 @@ extension PopUPTvVC:UITableViewDataSource
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell =  tableView.dequeueReusableCell(withIdentifier: ListingProfileCell.reuseIdentifier, for: indexPath) as? ListingProfileCell else {return UITableViewCell()}
+        cell.backgroundColor = UIColor.clear
+        cell.contentView.backgroundColor = UIColor.clear
         if isProfile ?? false{
             cell.configureCell(profileItemArr?[indexPath.item].heading ?? "N/A", profileItemArr?[indexPath.item].data ?? "N/A",flag: true,item:indexPath.row)
         }

@@ -26,6 +26,7 @@ class HomeNewVC: UIViewController {
         }
     }
     var selectedCategories = 0
+    var recentIDs:[Int] = []
     var timer:Timer?
     lazy var viewModel: EPGViewModel = {
         return EPGViewModel()
@@ -224,6 +225,7 @@ class HomeNewVC: UIViewController {
         viewModel.recentData = { recentModel in
 
             self.recentData = recentModel
+            self.recentIDs = self.recentData?.data?.map { $0.id ?? 0} ?? []
         }
 
     }
@@ -238,9 +240,11 @@ class HomeNewVC: UIViewController {
 
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
+
         viewVC.channelList = self.channelList
         guard let rootViewController = view.window?.rootViewController else { fatalError("Unable to get root view controller.") }
         viewVC.channelList = self.channelList
+       // searchController.view.backgroundColor = UIColor.li
         rootViewController.present(searchController, animated: true, completion: nil)
     }
 
@@ -280,11 +284,16 @@ extension HomeNewVC : UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
         let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
         if let channel = self.filteredList?[indexPath.row]
         {
+            self.recentIDs.append(channel.id ?? 0)
             guard let url = URL(string: channel.url ?? "") else {return}
             viewController.url = url
+            viewController.delegatee = self
+            viewController.idS = self.recentIDs.map(String.init).joined(separator: ",")
+            viewController.isfromRcent = selectedCategories == 12 ? true : false
             self.present(viewController, animated:true, completion:nil)
         }
     }
@@ -451,4 +460,13 @@ extension HomeNewVC{
             self.configureButtons()
         }
     }
+}
+
+extension HomeNewVC:AddRecentData
+{
+    func addRecentData(_ data: RecentData) {
+        self.recentData = data
+    }
+
+
 }

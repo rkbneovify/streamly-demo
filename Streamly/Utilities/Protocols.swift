@@ -23,3 +23,7 @@ protocol HandleError:NSObject {
     func handleError(_ message:String)
 }
 
+protocol AddRecentData:NSObject {
+    func addRecentData(_ data:RecentData)
+}
+

@@ -510,7 +510,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="120" sectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-oq-br4">
-                                <rect key="frame" x="15" y="339" width="297" height="681"/>
+                                <rect key="frame" x="15" y="339" width="297" height="741"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="297" id="EmE-vQ-pc5"/>
@@ -575,7 +575,7 @@
                                 </prototypes>
                             </tableView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
-                                <rect key="frame" x="321" y="339" width="1584" height="681"/>
+                                <rect key="frame" x="321" y="339" width="1584" height="741"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="EpgGridLayout" customModule="StreamlyTV" customModuleProvider="target"/>
                                 <cells/>
@@ -757,7 +757,7 @@
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="67" id="N2N-2b-Wum"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="centerY" secondItem="Zmj-0g-1sp" secondAttribute="centerY" id="NaB-ko-2JC"/>
-                            <constraint firstItem="Gsn-nh-NWU" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="bottom" id="VgE-qP-BUs"/>
+                            <constraint firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="VAm-CN-IQU"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>
                             <constraint firstAttribute="trailing" secondItem="jte-II-w2x" secondAttribute="trailing" constant="20" id="e1v-cC-9j6"/>
                             <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="15" id="fDy-DM-noT"/>

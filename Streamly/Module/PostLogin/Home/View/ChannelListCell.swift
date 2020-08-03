@@ -21,6 +21,8 @@ class ChannelListCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.channelNo.font = UIFont(name:"Lato-Light",size:20)
+        self.ChannelName.font = UIFont(name:"Lato-Medium",size:26)
         // Initialization code
     }
 
