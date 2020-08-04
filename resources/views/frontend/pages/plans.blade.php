@@ -2,8 +2,11 @@
 
 @section('stylesheets')
     <style>
-        .grow { transition: all .2s ease-in-out; }
-.grow:hover { transform: scale(1.1); }
+        .grow { transition: width 2s;}
+.grow:hover {     width: 300px;
+     background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+     
+}
         .sidenav {
             height: 100%;
             width: 0%;

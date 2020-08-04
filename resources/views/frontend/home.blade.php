@@ -2,8 +2,11 @@
 
 @section('stylesheets')
     <style>
-        .grow { transition: all .2s ease-in-out; }
-.grow:hover { transform: scale(1.1); }
+               .grow { transition: width 2s;}
+.grow:hover {     width: 300px;
+     background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+     
+}
         .sidenav {
             height: 100%;
             width: 0%;
@@ -191,22 +194,22 @@
                 <form action="user/register" method="post" class="login-form mt-3">
                     <div class="form-group">
                         <label for="name" class="control-label">Name</label>
-                        <input type="text" id="name" name="name" class="form-control">
+                        <input type="text" id="name" name="name" class="form-control" value="{{old('name')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="control-label">Email</label>
-                        <input type="email" id="user-email" name="user-email" class="form-control">
+                        <input type="email" id="user-email" name="user-email" class="form-control" value="{{old('user-email')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="password" class="control-label">Password</label>
-                        <input type="password" id="user-password" name="user-password" class="form-control">
+                        <input type="password" id="user-password" name="user-password" class="form-control" value="{{old('user-password')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="zip-code" class="control-label">Home zip code</label>
-                        <input type="text" id="zip-code" name="zip_code" class="form-control">
+                        <input type="text" id="zip-code" name="zip_code" class="form-control" value="{{old('zip_code')}}">
                     </div>
 
                     <span class="remove-p-a-r">By clicking “REGISTER” you agree to the Streamly <br />
