@@ -261,7 +261,8 @@ $geojson = array(
             'email' => $request['user-email'],
             'password' => Hash::make($request['user-password']),
             'zipcode' => $request['zip_code'],
-            'email_verified_at'=>null
+            'email_verified_at'=>null,
+            'is_active'=>0
         ]);
 
         $role = RoleUser::create([

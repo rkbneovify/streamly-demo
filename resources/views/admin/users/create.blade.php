@@ -211,7 +211,20 @@
                       @endif
                     
                   </div>
-                      
+                  <div class="form-group{{ $errors->has('gender') ? ' has-error' : '' }}">
+                    <label for="gender" class="col-md-4 control-label">gender</label>
+      
+      
+                    <input id="gender" type="text" class="form-control" name="gender"  required
+                      autofocus>
+      
+                    @if ($errors->has('gender'))
+                    <span class="help-block">
+                      <strong>{{ $errors->first('gender') }}</strong>
+                    </span>
+                    @endif
+      
+                  </div> 
 
                      
                     </div>
