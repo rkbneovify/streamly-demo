@@ -2,7 +2,8 @@
 
 @section('stylesheets')
     <style>
-        
+        .grow { transition: all .2s ease-in-out; }
+.grow:hover { transform: scale(1.1); }
         .sidenav {
             height: 100%;
             width: 0%;
@@ -75,7 +76,7 @@
     <div class="container">
         <div class="masthead-heading">100+ Cable TV Channels One Low Price!</div>
         <div class="masthead-subheading">Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's</div>
-        <a class="btn btn-primary btn-xl js-scroll-trigger" href="#services">START TODAY</a>
+        <a class="btn btn-primary btn-xl js-scroll-trigger grow" href="#services">START TODAY</a>
     </div>
 </header>
 
