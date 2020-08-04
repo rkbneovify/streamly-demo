@@ -382,9 +382,9 @@ $record  = Gracenote::select("sub.callSign","id","StationName","url",DB::raw("CO
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
 ->fromSub(function ($query) {
-  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,"callSign") callSign'),
-  DB::raw('IFNULL(gracenote.EventTitle,"EventTitle") EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
-  DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id','channels.image','channels.url')
+  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+  DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
+  DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
   ->from('gracenote')
   ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
   ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
@@ -443,9 +443,9 @@ $record  = Gracenote::select(["id","StationName AS name","url",DB::raw("CONCAT('
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', (UNIX_TIMESTAMP(StartDateTime)*1000),'end', (UNIX_TIMESTAMP(EndDateTime)*1000) ) Order By StartDateTime ), ']') events")
 ->fromSub(function ($query) {
-    $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,"callSign") callSign'),
-    DB::raw('IFNULL(gracenote.EventTitle,"EventTitle") EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
-    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 1 DAY) EndDateTime'),'channels.id','channels.image','channels.url')
+    $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+    DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
+    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 1 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
     ->from('gracenote')
     ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
