@@ -63,6 +63,16 @@
     </style>
 @endsection
 @section('stylesheets-bottom')
+<script type="text/javascript">
+	@if ($errors->has('email'))
+	// document.getElementById("mySidenav").style.width = "34%";
+	document.getElementById("mySidenav").classList.add("show");
+@endif
+@if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code'))
+	// document.getElementById("mySidenav").style.width = "34%";
+	document.getElementById("mySidenavRegister").classList.add("show");
+@endif
+</script>
 	<style>
 		nav#mainNav {
 			background-color: #004E92;
@@ -157,16 +167,6 @@
 	</style>
 
 
-<script type="text/javascript">
-	@if ($errors->has('email'))
-	// document.getElementById("mySidenav").style.width = "34%";
-	document.getElementById("mySidenav").classList.add("show");
-@endif
-@if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code'))
-	// document.getElementById("mySidenav").style.width = "34%";
-	document.getElementById("mySidenavRegister").classList.add("show");
-@endif
-</script>
 @endsection
 
 @section('content')
@@ -185,14 +185,15 @@
 
 	<div class="container" style="padding: 0px 50px;">
 			<div class="row mt-4">
-					@if($errors->has('email'))
-	<div class="alert alert-danger alert-dismissible alert-position">
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<strong>Error!</strong> {{$errors->first()}}
-	</div>
-@endif
+				@if($errors->has('email'))
+        <div class="alert alert-danger alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> {{$errors->first()}}
+        </div>
+    @endif
 					<h4 class="login_txt">Log In</h4>    
-					<form action="login" method="post" class="login-form mt-3">
+					<form action="{{ env("APP_URL") }}/login"  method="post" class="login-form mt-3">
+						@csrf
 							<div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
 									<label for="email" class="control-label">Email</label>
 									<input type="email" id="email" name="email" class="form-control">
@@ -240,17 +241,17 @@
 
 	<div class="container" style="padding: 0px 50px;">
 			<div class="row mt-4">
-					@if($errors->any())
-	<div class="alert alert-danger alert-dismissible alert-position">
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			<strong>Error!</strong> @foreach ($errors->all() as $message) 
-					{{$message}}
-			
-			@endforeach
-	</div>
-@endif 
+				@if($errors->any())
+        <div class="alert alert-danger alert-dismissible alert-position">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> @foreach ($errors->all() as $message) 
+                {{$message}}
+            
+            @endforeach
+        </div>
+    @endif 
 					<h4 class="login_txt">Create Your Account</h4>    
-					<form action="user/register" method="post" class="login-form mt-3">
+					<form action="{{ env("APP_URL") }}/user/register" method="post" class="login-form mt-3">
 							<div class="form-group">
 									<label for="name" class="control-label">Name</label>
 									<input type="text" id="name" name="name" class="form-control">
@@ -296,7 +297,15 @@
 				<h2 class="section-heading text-center">Account successfully verified</h2>
 				
 
-
+				@if ($errors->any())
+				<div class="alert alert-danger">
+						<ul>
+								@foreach ($errors->all() as $error)
+										<li>{{ $error }}</li>
+								@endforeach
+						</ul>
+				</div>
+		@endif
 
 		</div>
 		
