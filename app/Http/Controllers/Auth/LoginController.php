@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\User;
+use Illuminate\Validation\ValidationException;
+
 
 class LoginController extends Controller
 {
@@ -50,8 +53,11 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-{
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_active' => '1']))
+{ $user = User::where('email',$request->email)->first();
+    if( $user && !$user->email_verified_at){
+        throw ValidationException::withMessages([$this->username() => __('Verify your email')]);
+    }
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
     {
         // Updated this line
         return $this->sendLoginResponse($request);
@@ -64,6 +70,7 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request, 'auth.failed_status');
     }
 }
+
 
 
 }
