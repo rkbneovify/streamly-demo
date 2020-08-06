@@ -28,7 +28,7 @@ class Gracenote extends Model
     * Database table name
     */
     protected $table = 'gracenote';
-
+   
     /**
     * Mass assignable columns
     */
@@ -58,7 +58,7 @@ class Gracenote extends Model
 
 protected $casts = [
     'programs' => 'array',
-    'events' => 'array',
+    'events' => 'array','genrename' => 'array',
   ];
 public function gracenotechannel()
     {
