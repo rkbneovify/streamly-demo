@@ -33,7 +33,7 @@ class ChannelController extends Controller
     
     public function channeljson() 
     {   
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
         // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
         // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
         // ->selectRaw("GROUP_CONCAT(g.name) genrename")
@@ -41,12 +41,12 @@ class ChannelController extends Controller
         // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
         
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
               
-    })
+    // })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
     //JSON_ARRAY
@@ -59,6 +59,7 @@ class ChannelController extends Controller
     $response = [
         'success' => true,
         'data'=>$pagechannel, 
+        // 'data'=>$pagechannel->count(), 
         'message' => 'Channel with genre successfully fetched',
         'response_code'=>200,
     ];
@@ -438,13 +439,13 @@ $reco=$record->get(); //echo $reco;exit;
 $imagePath=url("/uploads/channellogo/");
 
 DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select(["id","StationName AS name","url",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+$record  = Gracenote::select(["id","StationName AS name","url","genres",DB::raw("CONCAT('$imagePath/',`image`) icon")])
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', (UNIX_TIMESTAMP(StartDateTime)*1000),'end', (UNIX_TIMESTAMP(EndDateTime)*1000) ) Order By StartDateTime ), ']') events")
 ->fromSub(function ($query) {
     $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
     DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
-    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
+    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url','channels.genres')
     ->from('gracenote')
     ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
    
@@ -454,9 +455,9 @@ AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m
   }, 'sub')
 
 ->orderBy('sub.callSign', 'asc')
-->groupBy('sub.callSign','StationName','image','url','id');
+->groupBy('sub.callSign','StationName','image','url','id','genres');
     
-$reco=$record->get();   
+$reco=$record->get();  
      if ($reco->isEmpty()) {
         $response = [
             'success' => false,
