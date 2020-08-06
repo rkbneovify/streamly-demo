@@ -387,12 +387,11 @@ $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url"
   DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
   ->from('gracenote')
   ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-  ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
-  AND DATE_ADD(NOW()
-  , INTERVAL 3 DAY) or `channels`.`callSign` IS NULL')
-  ->orderBy('gracenote.StartDateTime', 'asc');
-}, 'sub')
 
+  ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+  AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+   ->orderBy('gracenote.StartDateTime', 'asc');
+    }, 'sub')
 ->orderBy('sub.callSign', 'asc')
 ->groupBy('sub.callSign','StationName','image','url','id');
 // SELECT CallSign,StationName,
@@ -445,13 +444,13 @@ $record  = Gracenote::select(["id","StationName AS name","url",DB::raw("CONCAT('
 ->fromSub(function ($query) {
     $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
     DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,NOW()) StartDateTime'),
-    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 1 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
+    DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
     ->from('gracenote')
     ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw('gracenote.`StartDateTime` BETWEEN NOW()
-    AND DATE_ADD(NOW()
-    , INTERVAL 1 DAY) or `channels`.`callSign` IS NULL')
-    ->orderBy('gracenote.StartDateTime', 'asc');
+   
+->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+ ->orderBy('gracenote.StartDateTime', 'asc');
   }, 'sub')
 
 ->orderBy('sub.callSign', 'asc')
