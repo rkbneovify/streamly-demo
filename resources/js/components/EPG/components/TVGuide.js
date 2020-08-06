@@ -671,6 +671,12 @@ export default class TVGuide extends Component {
                     this.focusedChannelPosition = channelPosition;
                 }
                 break;
+                case 13 :
+                    let titled = this.epgData.getChannel(this.getFocusedChannelPosition()).url;
+                    window.open(titled, '_blank');
+                //console.log('enter key pressed',titled);
+                
+                break;
         }
 
 
@@ -718,7 +724,7 @@ export default class TVGuide extends Component {
         window.addEventListener("scroll", function(event) {
         }, false);
         return (
-            <div id="wrapper" ref="epg" tabIndex='-1' onKeyDown={this.handleKeyPress} className={Styles.background}>
+            <div id="wrapper" ref="epg" tabIndex='-1' onClick={this.handleClick} onKeyDown={this.handleKeyPress} className={Styles.background}>
                 <div className="programguide-contents">
                         <canvas
                             ref = "canvas"
