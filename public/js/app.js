@@ -67022,6 +67022,12 @@ var TVGuide = /*#__PURE__*/function (_Component) {
           }
 
           break;
+
+        case 13:
+          var titled = this.epgData.getChannel(this.getFocusedChannelPosition()).url;
+          window.open(titled, '_blank'); //console.log('enter key pressed',titled);
+
+          break;
       }
 
       this.ctx.clearRect(0, 0, this.getWidth(), this.getHeight());
@@ -67075,6 +67081,7 @@ var TVGuide = /*#__PURE__*/function (_Component) {
         id: "wrapper",
         ref: "epg",
         tabIndex: "-1",
+        onClick: this.handleClick,
         onKeyDown: this.handleKeyPress,
         className: _styles_app_css__WEBPACK_IMPORTED_MODULE_5___default.a.background
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
