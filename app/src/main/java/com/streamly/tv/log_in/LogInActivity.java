@@ -14,6 +14,7 @@ import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.retrofit_clients.ApiClient;
 import com.streamly.tv.retrofit_clients.ApiInterface;
 import com.streamly.tv.settings.support.SupportDialog;
+import com.streamly.tv.termsofuses.TermsOfUses;
 import com.streamly.tv.utilities.ApiConfig;
 import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
@@ -45,6 +46,7 @@ public class LogInActivity extends FragmentActivity {
             public void onClick(View v) {
 
                 SupportDialog supportDialog=new SupportDialog(LogInActivity.this);
+                supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                 supportDialog.show();
 
             }
@@ -85,6 +87,15 @@ public class LogInActivity extends FragmentActivity {
                         +" for creating new account", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        logInBinding.btnTermsUses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TermsOfUses terms=new TermsOfUses(LogInActivity.this);
+                terms.show();
+            }
+        });
     }
 
     private void signInCall() {
@@ -96,7 +107,9 @@ public class LogInActivity extends FragmentActivity {
             @Override
             public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {
                 try {
+                    Log.e(TAG, "resCode "+response.code());
                 if (response.isSuccessful() && response.body()!=null){
+
                     String access_token=response.body().getAccessToken();
                     TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN,access_token);
                     CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
@@ -124,7 +137,8 @@ public class LogInActivity extends FragmentActivity {
             }
             @Override
             public void onFailure(Call<LogInModel> call, Throwable t) {
-                Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
+                Log.e(TAG,"failure: "+t.getMessage());
+                Log.e(TAG,"failRequest: "+call.request());
                 CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
                 dialog.dismiss();
             }

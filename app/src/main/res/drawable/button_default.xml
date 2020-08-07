@@ -4,7 +4,7 @@
     android:layout_width="wrap_content">
     <item>
         <shape android:shape="rectangle">
-            <!--<gradient
+          <!--  <gradient
                 android:endColor="#65ffffff"
                 android:centerColor="#90ffffff"
                 android:startColor="#65ffffff"

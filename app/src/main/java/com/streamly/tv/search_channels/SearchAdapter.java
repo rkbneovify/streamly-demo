@@ -117,7 +117,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-
             channelLayout=   itemView.findViewById(R.id.channel_layout);
             channelLogo=   itemView.findViewById(R.id.channel_logo);
             channelName= itemView.findViewById(R.id.channel_name);

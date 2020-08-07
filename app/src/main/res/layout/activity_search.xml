@@ -20,9 +20,11 @@
 
 
             <LinearLayout
+                android:id="@+id/layout_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -44,6 +46,7 @@
                             android:textSize="@dimen/_12sdp"
                             android:textColorHint="@color/md_white_1000"
                             android:maxLines="1"
+                            android:inputType="text"
                             android:hint=" Search Channels"
                             android:drawableRight="@drawable/ic_search"
                             android:background="@null"
@@ -69,5 +72,25 @@
                 </LinearLayout>
 
                 </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_internet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_internet"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_18ssp" />
+
+    </LinearLayout>
         </FrameLayout>
 </layout>

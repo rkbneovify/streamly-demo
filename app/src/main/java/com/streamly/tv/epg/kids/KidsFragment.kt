@@ -114,6 +114,8 @@ class KidsFragment (context: Context): ProgramGuideFragment<KidsFragment.SimpleP
         } else {
             Log.e(TAG, "Open detail page " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
                     + "<<>>" + innerSchedule.id)
+
+
         }
     }
 

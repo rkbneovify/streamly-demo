@@ -7,6 +7,7 @@ import com.streamly.tv.settings.privacy.PrivacyPolicyModel;
 import com.streamly.tv.settings.profile.profilemodel.ProfileModel;
 import com.streamly.tv.settings.registerdevice.ConnectedDeviceModel;
 import com.streamly.tv.settings.support.SupportModel;
+import com.streamly.tv.termsofuses.TermsModel;
 import com.streamly.tv.utilities.NetworkKeys;
 import com.streamly.tv.log_in.LogInModel;
 import io.reactivex.Observable;
@@ -19,6 +20,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
+    @Headers("Accept: application/json")
     @POST("login")
     Call<LogInModel> postLogInCall(@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASSWORD) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
 
@@ -55,9 +57,14 @@ public interface ApiInterface {
     @GET("channeldayschdeule")//api/auth/channeldayschdeule
     Call<ChannelScheduleModel> gotScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
+
     @Headers("Accept: application/json")
-    @GET("channeldayschdeule")//api/auth/channeldayschdeule
+    @GET("oldchanneldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    /*@Headers("Accept: application/json")
+    @GET("channeldayschdeule")//api/auth/channeldayschdeule
+    Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);*/
 
 
     @Headers("Accept: application/json")
@@ -67,5 +74,10 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @GET("channelgenre")
     Call<ChannelGenreModel> getChannelGenre(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+
+    @Headers("Accept: application/json")
+    @GET("termofuse")
+    Call<TermsModel> getTermofuse();
 
 }

@@ -10,6 +10,7 @@ import com.streamly.tv.MainActivity;
 import com.streamly.tv.R;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.log_in.LogInActivity;
+import com.streamly.tv.settings.SettingsActivity;
 import com.streamly.tv.utilities.ConstantUtility;
 import com.streamly.tv.utilities.NetworkUtils;
 
@@ -34,6 +35,7 @@ public class SplashActivity extends FragmentActivity {
             public void run() {
                 if (auth_token != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
                 }else {
                     startActivity(new Intent(SplashActivity.this, LogInActivity.class));

@@ -2,6 +2,7 @@ package com.streamly.tv.search_channels;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import com.streamly.tv.epg.ChannellistModel;
 import com.streamly.tv.epg.Datum;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.log_in.LogInActivity;
+import com.streamly.tv.receivers.NetworkStateReceiver;
 import com.streamly.tv.retrofit_clients.ApiClient;
 import com.streamly.tv.retrofit_clients.ApiInterface;
 import com.streamly.tv.utilities.CommonUtility;
@@ -27,22 +29,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends FragmentActivity {
+public class SearchActivity extends FragmentActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
     private static final String TAG= SearchActivity.class.getSimpleName();
     String authToken;
     ActivitySearchBinding searchBinding;
     List<SearchModel> searchList=new ArrayList<>();
     SearchAdapter  searchAdapter;
+    NetworkStateReceiver networkStateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_search);
+
         searchBinding= DataBindingUtil.setContentView(this, R.layout.activity_search);
+
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(this);
+        this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+
         authToken = TokenStorage.readSharedToken(SearchActivity.this, ConstantUtility.AUTH_TOKEN, null);
-
-        getChannelList();
-
 
         searchBinding.edSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -64,6 +69,7 @@ public class SearchActivity extends FragmentActivity {
 
 
     private void getChannelList() {
+        searchBinding.layoutSearch.setVisibility(View.VISIBLE);
         searchBinding.progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
         Call<ChannellistModel> call=apiInterface.getChannelList("Bearer "+authToken);
@@ -119,4 +125,25 @@ public class SearchActivity extends FragmentActivity {
         });
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        networkStateReceiver.removeListener(this);
+        this.unregisterReceiver(networkStateReceiver);
+    }
+
+    @Override
+    public void networkAvailable() {
+        searchBinding.layoutInternet.setVisibility(View.INVISIBLE);
+        getChannelList();
+
+    }
+
+    @Override
+    public void networkUnavailable() {
+        searchBinding.layoutSearch.setVisibility(View.INVISIBLE);
+        searchBinding.layoutInternet.setVisibility(View.VISIBLE);
+
+    }
 }

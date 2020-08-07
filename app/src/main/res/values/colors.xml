@@ -35,6 +35,8 @@
     <color name="programguide_button_focused">#1565c0</color>
     <color name="programguide_button_default">#707070</color>
 
+    <color name="testColor">#000000</color>
+
     <color name="button_orange">#FBA942</color>
     <color name="md_yellow">#FFA52D</color>
     <color name="transparent">#80FFFFFF</color>
@@ -49,6 +51,7 @@
     <color name="app_fade_white">#EBEBEB</color>
     <color name="app_text">#0A0A0A</color>
     <color name="app_grey">#707070</color>
+    <color name="app_focus">#0db5ba</color>
 
     <color name="md_red_50">#FFEBEE</color>
     <color name="md_red_100">#FFCDD2</color>

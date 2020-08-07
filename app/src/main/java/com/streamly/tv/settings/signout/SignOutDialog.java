@@ -45,6 +45,8 @@ public class SignOutDialog extends Dialog {
         initViews();
 
 
+//        btnNo.requestFocus();
+        btnNo.requestFocus();
 
         btnNo.setOnClickListener(new View.OnClickListener() {
             @Override

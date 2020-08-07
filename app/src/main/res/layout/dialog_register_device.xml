@@ -33,26 +33,25 @@
         tools:listitem="@layout/view_register_device" />
 
 
-            <Button
-                android:id="@+id/btn_ok"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:elevation="@dimen/_3sdp"
-                android:layout_gravity="bottom|center"
-                android:background="@drawable/signin_background"
-                android:text="@string/ok"
-                android:visibility="gone"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/color_white"
-                android:textSize="@dimen/_8ssp"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_8sdp"
-                android:padding="@dimen/_2sdp" />
-
         </LinearLayout>
     </ScrollView>
 
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:elevation="@dimen/_6sdp"
+        android:layout_gravity="bottom|center"
+        android:background="@drawable/button_states"
+        android:text="@string/ok"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/_8ssp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:padding="@dimen/_2sdp" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

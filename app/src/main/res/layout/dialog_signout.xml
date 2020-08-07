@@ -35,36 +35,36 @@
         android:gravity="center"
         android:padding="@dimen/_6sdp"
         android:layout_marginTop="@dimen/_14sdp">
+<!--        <requestFocus/>-->
 
         <Button
             android:id="@+id/btn_no"
             android:layout_width="@dimen/_70sdp"
             android:layout_height="@dimen/_20sdp"
-            android:elevation="@dimen/_3sdp"
+            android:elevation="@dimen/_6sdp"
             android:text="@string/no"
+            android:textStyle="bold"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_8ssp"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:layout_marginRight="@dimen/_6sdp"
-            android:background="@drawable/logout_button_focus"/>
+            android:background="@drawable/button_states" />
 
 
         <Button
             android:id="@+id/btn_yes"
             android:layout_width="@dimen/_70sdp"
             android:layout_height="@dimen/_20sdp"
-            android:elevation="@dimen/_3sdp"
+            android:elevation="@dimen/_6sdp"
             android:text="@string/yes"
+            android:textStyle="bold"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_8ssp"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:layout_marginLeft="@dimen/_6sdp"
-            android:background="@drawable/logout_button_focus"
-            android:focusedByDefault="true">
-            <requestFocus/>
-        </Button>
+            android:background="@drawable/button_states"/>
 
     </LinearLayout>
 

@@ -14,7 +14,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="settings">Settings</string>
     <string name="account">Account</string>
-    <string name="register_device">Registered Device</string>
+    <string name="register_device">Registered Devices</string>
     <string name="support">Support</string>
     <string name="privacy"><![CDATA[Privacy & Policy]]></string>
     <string name="sign_out">Sign Out</string>
@@ -82,5 +82,9 @@
         This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
         The sample string has an artificial indent level introduced for illustrating this feature.</string>
     <string name="recent">RECENT</string>
+    <string name="no_internet">No Internet found. Check your connection or try again.</string>
+    <string name="termsofuses">Terms of uses</string>
+    <string name="accept">Accept</string>
+    <string name="terms"><![CDATA[T & C]]></string>
 
 </resources>

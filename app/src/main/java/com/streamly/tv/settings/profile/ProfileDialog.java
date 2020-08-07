@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -61,12 +62,31 @@ public class ProfileDialog extends Dialog {
         });
     }
 
+    public static int getColorWithAlpha(int color, float ratio) {
+        int newColor = 0;
+        int alpha = Math.round(Color.alpha(color) * ratio);
+        int r = Color.red(color);
+        int g = Color.green(color);
+        int b = Color.blue(color);
+        newColor = Color.argb(alpha, r, g, b);
+        return newColor;
+    }
+
     private void initViews() {
+//        findViewById(R.id.fram_layout).setBackgroundColor(0x00000000);
+//        Log.e(TAG, "opacityValue "+findViewById(R.id.frame_layout).getBackground().getOpacity());
+
         btnOk=findViewById(R.id.btn_ok);
         userName=findViewById(R.id.text_name);
         userEmail=findViewById(R.id.text_email);
         buildDate=findViewById(R.id.text_updated_date);
         progressBar=findViewById(R.id.progress_bar);
+        findViewById(R.id.layout_name).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void getUserProfile() {

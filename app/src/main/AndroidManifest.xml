@@ -36,7 +36,8 @@
             </intent-filter>
         </activity>
         -->
-        <activity android:name=".settings.SettingsActivity" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
+        <activity android:name=".settings.SettingsActivity"
+            android:windowSoftInputMode="stateAlwaysVisible"/> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
         <!--  -->
         <!-- </activity> -->
         <activity android:name=".log_in.LogInActivity"></activity>

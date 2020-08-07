@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.9.6'
     implementation 'com.google.android.exoplayer:extension-rtmp:2.9.6'
 
+
     //removed
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.16'

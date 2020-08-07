@@ -2,11 +2,11 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/_320sdp"
-    android:layout_height="@dimen/_170sdp"
+    android:layout_height="@dimen/_180sdp"
     android:paddingLeft="@dimen/_10sdp"
     android:paddingRight="@dimen/_10sdp"
     android:paddingTop="@dimen/_12sdp"
-    android:paddingBottom="@dimen/_4sdp"
+    android:paddingBottom="@dimen/_3sdp"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:background="@drawable/white_transparent">
@@ -24,6 +24,7 @@
 
 
     <LinearLayout
+        android:id="@+id/layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -199,9 +200,10 @@
         android:id="@+id/btn_ok"
         android:layout_width="@dimen/_70sdp"
         android:layout_height="@dimen/_20sdp"
-        android:elevation="@dimen/_3sdp"
-        android:background="@drawable/signin_background"
+        android:elevation="@dimen/_6sdp"
+        android:background="@drawable/button_states"
         android:text="@string/ok"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:layout_gravity="center"
         android:textAllCaps="false"
