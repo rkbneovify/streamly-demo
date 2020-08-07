@@ -69,7 +69,7 @@
                   
                   @foreach($plans as $id => $pack)
                   @if($subscription->stripe_plan==$pack->id)
-                  <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
+                  <option value="{{ $pack->id }}" selected="true" >{{ $pack->nickname }}</option>
                   @else
                   <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
                   @endif 
@@ -84,8 +84,14 @@
               
               <div class="form-group{{ $errors->has('users_id') ? ' has-error' : '' }}">
                 <label for="users_id">User</label>
-                <input type="text" name="users_id" class="form-control" disabled value={{ $subscription->user->name  }}>
-                
+                {{-- <input type="text" name="users_id" class="form-control" disabled value={{ $subscription->user->name  }}> --}}
+                <select name="user_id" id="user_id" class="form-control" >
+                  @foreach($user as   $key => $value)
+                      <option value="{{ $key }}"  {{ ( $key == $subscription->user_id) ? 'selected' : '' }} disabled>
+                          {{ $value }}
+                      </option>
+                  @endforeach
+              </select>
                 @if ($errors->has('users_id'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('users_id') }}</strong>
