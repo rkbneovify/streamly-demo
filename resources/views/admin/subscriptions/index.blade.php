@@ -64,46 +64,54 @@
                   </tr>
               </thead>
               <tbody>
-              @forelse ($users as $user)
+              @forelse ($subscriptions as $subscription)
               <tr>
               <td>#</td>
               
-    <td>{{ $user->user->name ??''}}</td>
+    <td>
+      
+       @foreach($users as   $key => $value)
+                       {{ ( $key == $subscription->user_id) ? $value  : '' }} 
+                       
+                  @endforeach
+    </td>
     {{-- <select name="product" id="product" class="form-control" disabled>
                   
       @foreach($plans as $id => $pack)
-      @if($user->stripe_plan==$pack->id)
+      @if($subscription->stripe_plan==$pack->id)
       <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
       @else
       <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
       @endif 
       @endforeach
     </select> --}}
-    {{-- <td>{{ $user->stripe_plan }}</td> --}}
+    {{-- <td>{{ $subscription->stripe_plan }}</td> --}}
+    
+    
     <td>
       @foreach($plans as $id => $pack)
      
-      {{ ( $pack->id == $user->stripe_plan) ? $pack->nickname : '' }}
+      {{ ( $pack->id == $subscription->stripe_plan) ? $pack->nickname : '' }}
         
       
       @endforeach
     </td>
-    <td>{{ $user->created_at ??'' }}</td>
-    <td>{{ $user->renews_at ??'' }}</td>
+    <td>{{ $subscription->created_at ??'' }}</td>
+    <td>{{ $subscription->renews_at ??'' }}</td>
     <td >
-                            {{$user->stripe_status??''}}
+                            {{$subscription->stripe_status??''}}
     </td>
     <td>
                                 
-                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $user->user_id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $subscription->id) }}">
                                         {{ trans('view') }}
                                     </a>
 
-                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptions/edit', $user->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptions/edit', $subscription->id) }}">
                                         {{ trans('edit') }}
                                     </a>
 
-                                    <form action="{{ url('admin/subscriptions/destroy', $user->user_id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                    <form action="{{ url('admin/subscriptions/destroy', $subscription->user_id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="Cancel">

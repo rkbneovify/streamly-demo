@@ -32,11 +32,11 @@ class SubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {    
-        $users = Subscription::with('user')->paginate(20);
+    {    $users = User::all()->pluck('name', 'id');
+        $subscriptions = Subscription::paginate(20);
         $plans = \Stripe\Plan::all();
          $plans->data;//Customers::with('country')->paginate(20);
-        return view('admin.subscriptions.index', compact('users','plans'));
+        return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
         
     }    /**
      * Display the specified resource.
@@ -47,14 +47,14 @@ class SubscriptionController extends Controller
      */
     public function show($id)
     {   //$subscription = Subscription::find($id); 
-       $users = User::all()->pluck('name', 'id');
+       $user = User::all()->pluck('name', 'id');
         $subscription = Subscription::find($id);
         $plans = \Stripe\Plan::all();
          $plans->data;
        // dd($subscription);
        // $pack = SubscriptionPack::all()->pluck('name', 'id');
 
-        return view('admin.subscriptions.show', compact('subscription','users','plans'));
+        return view('admin.subscriptions.show', compact('subscription','user','plans'));
 
 
     }    /**
