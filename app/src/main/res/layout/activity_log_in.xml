@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sign_in"
                 android:textAlignment="center"
-                android:textStyle="bold"
+                android:fontFamily="@font/helvetica_neue_bold"
                 android:textColor="@color/app_blue_light"
                 android:textSize="@dimen/_12ssp" />
 
@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/username"
                 android:textColor="@color/md_black_1000"
+                android:fontFamily="@font/helvetica_neue_medium"
                 android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_5sdp"/>
 
@@ -53,6 +54,7 @@
                 android:layout_width="@dimen/_160sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:background="@drawable/edittext_states"
+                android:fontFamily="@font/helvetica_neue_regular"
                 android:inputType="text"
                 android:textSize="@dimen/_7ssp"
                 android:maxLength="40"
@@ -69,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/password"
                 android:textColor="@color/md_black_1000"
+                android:fontFamily="@font/helvetica_neue_medium"
                 android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_5sdp"/>
 
@@ -77,6 +80,7 @@
                 android:layout_width="@dimen/_160sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:background="@drawable/edittext_states"
+                android:fontFamily="@font/helvetica_neue_regular"
                 android:inputType="textPassword"
                 android:maxLength="40"
                 android:maxLines="1"
@@ -101,6 +105,7 @@
                 android:text="@string/remember"
                 android:textSize="@dimen/_7ssp"
                 android:layout_gravity="left"
+                android:fontFamily="@font/helvetica_neue_medium"
                 android:textColor="@drawable/text_states"
                 android:theme="@style/MyCheckbox" />
 
@@ -111,6 +116,7 @@
                     android:layout_height="match_parent"
                     android:text="@string/need_help"
                     android:textColor="@drawable/text_states"
+                    android:fontFamily="@font/helvetica_neue_medium"
                     android:textSize="@dimen/_7ssp"
                     android:padding="@dimen/_2sdp"
                     android:layout_gravity="right"
@@ -127,6 +133,7 @@
                 android:background="@drawable/signin_focused"
                 android:text="@string/signIn"
                 android:textAlignment="center"
+                android:fontFamily="@font/helvetica_neue_bold"
                 android:textAllCaps="false"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/_7ssp"
@@ -147,6 +154,7 @@
                     android:layout_height="@dimen/_15sdp"
                     android:background="@drawable/register_background"
                     android:text="@string/terms"
+                    android:fontFamily="@font/helvetica_neue_medium"
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@drawable/register_background"
@@ -161,6 +169,7 @@
                 android:text="@string/register_account"
                 android:textColor="@color/md_black_1000"
                 android:textSize="@dimen/_7ssp"
+                android:fontFamily="@font/helvetica_neue_medium"
                 android:layout_marginLeft="@dimen/_2sdp"
                 android:layout_marginRight="@dimen/_2sdp"/>
 
@@ -171,6 +180,7 @@
                     android:layout_height="@dimen/_15sdp"
                     android:background="@drawable/register_background"
                     android:text="@string/register_now"
+                    android:fontFamily="@font/helvetica_neue_medium"
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@drawable/register_background"

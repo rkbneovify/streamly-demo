@@ -60,8 +60,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         {
             case R.id.account :
                 ProfileDialog profileDialog=new ProfileDialog(this);
-//                profileDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                profileDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                profileDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 profileDialog.show();
             break;
 

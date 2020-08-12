@@ -17,9 +17,10 @@ tools:context=".settings.SettingsActivity"
     android:layout_marginStart="@dimen/_36sdp"
     android:layout_marginTop="@dimen/_24sdp"
     android:text="@string/settings"
+    android:fontFamily="@font/helvetica_neue_light"
     android:textAlignment="center"
     android:textColor="@color/md_white_1000"
-    android:textSize="@dimen/_14ssp"
+    android:textSize="@dimen/_12ssp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,9 +36,10 @@ tools:context=".settings.SettingsActivity"
         android:text="  Channels"
         android:textAllCaps="true"
         android:textAlignment="center"
+        android:fontFamily="@font/helvetica_neue_light"
         android:drawableLeft="@drawable/ic_channel_icon"
         android:background="@drawable/options_states"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_12ssp"
         android:textColor="@color/md_white_1000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.91"
@@ -60,15 +62,16 @@ tools:context=".settings.SettingsActivity"
 
         <LinearLayout
             android:id="@+id/account"
-            android:layout_width="@dimen/_75sdp"
+            android:layout_width="@dimen/_76sdp"
             android:layout_height="@dimen/_70sdp"
             android:gravity="center"
             android:orientation="vertical"
+            android:padding="@dimen/_2sdp"
             android:background="@drawable/layout_focus">
 
         <ImageView
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
             android:src="@drawable/ic_noun_account"
             android:contentDescription="@string/account"/>
 
@@ -77,24 +80,26 @@ tools:context=".settings.SettingsActivity"
             android:layout_height="wrap_content"
             android:text="@string/account"
             android:textAlignment="center"
+            android:fontFamily="@font/helvetica_neue_medium"
             android:textColor="@color/md_white_1000"
-            android:textSize="@dimen/_8ssp"
+            android:textSize="@dimen/_7ssp"
             android:layout_marginTop="@dimen/_16sdp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/register_device"
-            android:layout_width="@dimen/_75sdp"
+            android:layout_width="@dimen/_76sdp"
             android:layout_height="@dimen/_70sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/_26sdp"
+            android:padding="@dimen/_2sdp"
             android:background="@drawable/layout_focus">
 
 
             <ImageView
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
                 android:src="@drawable/ic_register_devices"
                 android:contentDescription="@string/register_device"/>
 
@@ -104,23 +109,25 @@ tools:context=".settings.SettingsActivity"
                 android:text="@string/register_device"
                 android:textAlignment="center"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_8ssp"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_16sdp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/support"
-            android:layout_width="@dimen/_75sdp"
+            android:layout_width="@dimen/_76sdp"
             android:layout_height="@dimen/_70sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/_26sdp"
+            android:padding="@dimen/_2sdp"
             android:background="@drawable/layout_focus">
 
 
             <ImageView
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
                 android:src="@drawable/ic_noun_support"
                 android:contentDescription="@string/support"/>
 
@@ -130,23 +137,25 @@ tools:context=".settings.SettingsActivity"
                 android:text="@string/support"
                 android:textAlignment="center"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_8ssp"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_16sdp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/privacy"
-            android:layout_width="@dimen/_75sdp"
+            android:layout_width="@dimen/_76sdp"
             android:layout_height="@dimen/_70sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/_26sdp"
+            android:padding="@dimen/_2sdp"
             android:background="@drawable/layout_focus">
 
 
             <ImageView
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
                 android:src="@drawable/ic_noun_policies"
                 android:contentDescription="@string/privacy"/>
 
@@ -156,23 +165,25 @@ tools:context=".settings.SettingsActivity"
                 android:text="@string/privacy"
                 android:textAlignment="center"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_8ssp"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_16sdp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/sign_out"
-            android:layout_width="@dimen/_75sdp"
+            android:layout_width="@dimen/_76sdp"
             android:layout_height="@dimen/_70sdp"
             android:gravity="center"
             android:orientation="vertical"
             android:layout_marginStart="@dimen/_26sdp"
+            android:padding="@dimen/_2sdp"
             android:background="@drawable/layout_focus">
 
 
             <ImageView
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
                 android:src="@drawable/ic_noun_sign_out"
                 android:contentDescription="@string/sign_out"/>
 
@@ -182,9 +193,12 @@ tools:context=".settings.SettingsActivity"
                 android:text="@string/sign_out"
                 android:textAlignment="center"
                 android:textColor="@color/md_white_1000"
-                android:textSize="@dimen/_8ssp"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:textSize="@dimen/_7ssp"
                 android:layout_marginTop="@dimen/_16sdp" />
         </LinearLayout>
+
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

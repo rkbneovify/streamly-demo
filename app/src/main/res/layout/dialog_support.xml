@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/_12sdp"
     android:paddingRight="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
-    android:background="@drawable/white_transparent">
+    android:background="@drawable/dialog_background">
 
 
     <ScrollView
@@ -36,6 +36,7 @@
             android:textStyle="bold"
             android:textAlignment="center"
             android:gravity="center"
+            android:fontFamily="@font/helvetica_neue_medium"
             android:layout_marginTop="@dimen/_20sdp"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -58,6 +59,7 @@
         android:layout_height="@dimen/_20sdp"
         android:elevation="@dimen/_6sdp"
         android:background="@drawable/button_states"
+        android:fontFamily="@font/helvetica_neue_bold"
         android:text="@string/ok"
         android:textStyle="bold"
         android:textAlignment="center"

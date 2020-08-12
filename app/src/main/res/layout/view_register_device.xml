@@ -15,6 +15,7 @@
             android:text="1. Samsung smart tv -43 inch"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_10ssp"
+            android:fontFamily="@font/helvetica_neue_medium"
             android:layout_marginStart="@dimen/_5sdp"/>
 
         <LinearLayout
@@ -31,6 +32,7 @@
                 android:text="54845-8654-849"
                 android:textColor="@color/md_white_1000"
                 android:textSize="@dimen/_8ssp"
+                android:fontFamily="@font/helvetica_neue_regular"
                 android:padding="@dimen/_1sdp"/>
 
             <TextView

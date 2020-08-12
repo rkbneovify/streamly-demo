@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/_12sdp"
     android:paddingRight="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
-    android:background="@drawable/white_transparent">
+    android:background="@drawable/dialog_background">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -24,6 +24,7 @@
         android:text="@string/sure_signout"
         android:textColor="@color/md_white_1000"
         android:textSize="@dimen/_10ssp"
+        android:fontFamily="@font/helvetica_neue_medium"
         android:textAlignment="center"
         android:padding="@dimen/_8sdp"/>
 
@@ -45,6 +46,7 @@
             android:text="@string/no"
             android:textStyle="bold"
             android:textColor="@color/md_white_1000"
+            android:fontFamily="@font/helvetica_neue_bold"
             android:textSize="@dimen/_8ssp"
             android:textAlignment="center"
             android:textAllCaps="false"
@@ -60,6 +62,7 @@
             android:text="@string/yes"
             android:textStyle="bold"
             android:textColor="@color/md_white_1000"
+            android:fontFamily="@font/helvetica_neue_bold"
             android:textSize="@dimen/_8ssp"
             android:textAlignment="center"
             android:textAllCaps="false"
