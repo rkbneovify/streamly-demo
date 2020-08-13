@@ -9,7 +9,7 @@ sub ChannnleAPI()
 
         m.top.callType="POST"      
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
-  ?"programData: ";programData
+  ' ?"programData: ";programData
 'sleep(4000)
 ?"API End call";   
 
@@ -19,7 +19,7 @@ sub ChannnleAPI()
     
     content = m.top.content
     channleNode = content.getChild(m.top.id.ToInt())
-   ?"programdata: count: ";programdata.Count()
+  '  ?"programdata: count: ";programdata.Count()
     length =  programdata.Count()
     timemin =0
     for i=0 to length-1
@@ -37,9 +37,9 @@ sub ChannnleAPI()
     end if       
     end for
     
-    m.top.programData = programData  
+'    m.top.programData = programData  
   end if
-   
+   m.top.programData = [] 
 
 end sub
  

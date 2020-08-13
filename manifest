@@ -11,5 +11,5 @@ splash_screen_sd=pkg:/images/SplashSD.png
 splash_color=#121212
 ui_resolutions=FHD
 splash_rsg_optimization=1
-host=192.168.43.182
+host=192.168.43.172
 port=54321

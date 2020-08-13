@@ -8,7 +8,7 @@ sub ChannnleAPI()
 
     jsonResponse = APICall(getBaseUrl() + getChannelListUrl(), m.top.callType, m.top.data, m.top.parameters)
     ? "ChannnleAPI: jsonResponse"; jsonResponse.data
-    ? "ChannnleAPI: jsonResponse.Count(): "; jsonResponse.data.Count()
+'    ? "ChannnleAPI: jsonResponse.Count(): "; jsonResponse.data.Count()
 '     m.top.categoryChannels
     channles = jsonResponse.data
     categoryChannels = CreateObject("roAssociativeArray")
@@ -45,6 +45,7 @@ sub ChannnleAPI()
      ?"categoryChannels[ALL][0]";categoryChannels["ALL"][0]
     recentResponse = APICall(getBaseUrl() + getRecentUrl(), "GET", invalid, invalid)
     ? "recentResponse:"; recentResponse.data
+    categoryChannels["Recent"]=invalid
     if (recentResponse.response_code = 200 and recentResponse.data <> invalid and recentResponse.data.Count() > 0)
         categoryChannels["Recent"] = recentResponse.data
     end if

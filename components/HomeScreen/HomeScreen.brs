@@ -1,6 +1,8 @@
 sub init()
     ? "Home init()"
     
+    
+    
     'show loading
     m.processPoster = m.top.createChild("Poster")
 '    deviceinfo = getDeviceInfo()
@@ -103,7 +105,7 @@ sub init()
     ' prgrams Api call timer
     m.lazyLoadingTimer = CreateObject("roSGNode", "Timer")
     m.lazyLoadingTimer.repeat = false
-    m.lazyLoadingTimer.duration = 3
+    m.lazyLoadingTimer.duration = .2
     m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
 '    m.lazyLoadingTimer.control = "start"
 '    m.ChannelData = createObject("roArray")
@@ -200,17 +202,17 @@ end sub
 
 sub channelFocused(event as Object)
     ? "channelFocused:"; event.getData()
-
-    if event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
-        if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
-        channelnode = event.getRoSGNode().content
-        getChannelDAta(channelnode, m.ChannelData[m.channelNameString][m.channelListData])
-
-        if m.channelListData < 10
-            m.timeGride.numRows = m.channelListData + 1
-        end if
-        m.channelListData += 1
-    end if
+'m.lazyLoadingTimer.control = "start"
+'    if m.channelListData < 10 and event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
+'        if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
+'        channelnode = event.getRoSGNode().content
+'        getChannelDAta(channelnode, m.ChannelData[m.channelNameString][m.channelListData])
+'
+'        if m.channelListData < 10
+'            m.timeGride.numRows = m.channelListData + 1
+'        end if
+'        m.channelListData += 1
+'    end if
 end sub
 
 sub StartContentLoading()
@@ -227,6 +229,7 @@ sub StartContentLoading()
         content = CreateObject("roSGNode", "ContentNode")
         m.timeGride.content = content
         getChannelDAta(m.timeGride.content, m.ChannelData[m.channelNameString][m.channelListData])
+        m.channelListData +=1
     else if m.channelListData = 0 then
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
     end if
@@ -264,6 +267,7 @@ sub reqApiCAll(page)
     m.ChannelEpisodeTask.observeField("ChannelData", "ChannelResponseData")
     m.ChannelEpisodeTask.control = "RUN" 
 end sub
+
 sub ChannelResponseData()
 ' ?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
    
@@ -274,6 +278,11 @@ sub ChannelResponseData()
     m.channelListData = 0
     m.channelNameString = "ALL"
     m.lazyLoadingTimer.control = "start"
+    
+'    this = {}
+'    this.epgContent
+'    this.channelIndexUpdate
+'    this.categorySring
 end sub
 
 function playVideo(url as String, channelid as String) as Void
@@ -339,12 +348,14 @@ sub initGrigData(channels as Object)
 end sub
 sub categorySelcted(event as Object)
     ? "categorySelcted: "; event.getRoSGNode().content.getChild(event.getData())
-    if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
+    
+'    if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
     m.timeGride.content = CreateObject("roSGNode", "ContentNode")
     m.channelNameString = event.getRoSGNode().content.getChild(event.getData()).title
     m.channelListData = 0
     m.ChannelCategoryMarkuGrid.setFocus(false)
     m.timeGride.setFocus(true)
+    m.lazyLoadingTimer.control = "start"
 end sub
 
 function programSelected(event as Object) as Object
