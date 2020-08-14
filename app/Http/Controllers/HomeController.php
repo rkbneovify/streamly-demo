@@ -138,7 +138,7 @@ class HomeController extends Controller
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
     
-       $query= Zipcode::select('map.zcta5ce10 AS zipcode')
+      $query= Zipcode::select('map.zcta5ce10 AS zipcode')
         ->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
         ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
       
@@ -234,6 +234,14 @@ $geojson = array(
 
         return view('frontend.verified');
     }
+    
+    public function checkAvailabilty()
+    {
+        
+        $login = false; 
+        return view('frontend.checkavailbilty',compact('login'));
+        // return view('frontend.verified');
+    }
 
     public function createUser(Request $request){
 
@@ -326,6 +334,7 @@ $geojson = array(
             $newUser->name              = $user->getName();
             $newUser->email             = $user->getEmail();
             $newUser->email_verified_at = now();
+            $newUser->is_active = 1;
             $newUser->avatar            = $user->getAvatar();
             $newUser->save();
 

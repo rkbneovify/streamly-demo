@@ -139,6 +139,7 @@ class AuthController extends Controller
 
         if($user) {
             $user->email_verified_at = $email_verified_at;
+            $user->is_active = 1;
             $user->save();
             if($request->wantsJson()){
             $response = array('success' =>true ,'response_code'=>200,'message'=>'Account successfully verified');

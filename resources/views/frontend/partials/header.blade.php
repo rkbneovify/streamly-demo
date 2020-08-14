@@ -56,6 +56,7 @@
 
                 @else
 
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger btn-login"  href="/checkAvailabilty"><b>Check Availbilty</b></a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger btn-login" onclick="openNav(event)" href="javascript:void(0)">Log In</a></li>
 
                 @endif
