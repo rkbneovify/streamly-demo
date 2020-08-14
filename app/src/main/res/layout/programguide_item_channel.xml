@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
+        android:fontFamily="@font/helvetica_neue_medium"
         tools:text="NPO Zappelin Xtra" />
 
     <ImageView

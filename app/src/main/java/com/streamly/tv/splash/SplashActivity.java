@@ -34,8 +34,8 @@ public class SplashActivity extends FragmentActivity {
             @Override
             public void run() {
                 if (auth_token != null) {
-//                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
                 }else {
                     startActivity(new Intent(SplashActivity.this, LogInActivity.class));
