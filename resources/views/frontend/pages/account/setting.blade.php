@@ -249,7 +249,26 @@
 					</div>
 				</div>
 				{{-- {{show_currency_symbol( $plan->currency) ?? ''}} --}}
-				@if (Auth::user()->subscribed('main')) 
+				@if (Auth::user()->subscription('main')->cancelled())
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Current Pack
+								<b><span class="pull-right">You canceled you subscription</span></b>
+							</li>
+							
+							<li>
+								Select Plan
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  href="/selectplan">Select plan</a></span></b>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+				
+				@elseif (Auth::user()->subscribed('main')) 
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
@@ -273,6 +292,7 @@
 						</ul>
 					</div>
 				</div>
+				
 				@else
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">

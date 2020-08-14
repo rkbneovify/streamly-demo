@@ -89,6 +89,7 @@
     function logoutUser() {
     window.location.href = '/logout';
 }
+console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
 </script>
 
 @include('frontend.partials.footer')

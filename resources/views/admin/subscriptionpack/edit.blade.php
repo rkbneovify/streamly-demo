@@ -95,6 +95,26 @@
               </div>
 
               <div class="form-group">
+                <label for="">Trial period days: <span class="text-red text-md">*</span></label>
+                <input type="text" class="form-control amount" value="{{ $plan->trial_period_days }}" name="trial_period_days" id="trial_period_days" placeholder="10">
+                @if($errors->first('trial_period_days')) <p class="text-danger text-sm danger_text">{{ $errors->first('trial_period_days') }}</p> @endif
+            </div>
+            <div class="form-row">
+              <div class="col-md-6">
+                  <div class='form-group cvc required'>
+                      <label class='control-label'>Text 1</label>
+                      <textarea name="text1" class='form-control' rows="5" cols="20">{{$plan->metadata->text1}}</textarea>
+                      <small class="help-block" style="display:none;"></small>
+                  </div>
+              </div><div class="col-md-6">
+                  <div class='form-group zip required'>
+                      <label class='control-label'>Text 2</label>
+                      <textarea name="text2" class='form-control' rows="5" cols="20">{{$plan->metadata->text2}}</textarea>
+                      <small id="ziphelp" ></small>
+                  </div>
+              </div>
+          </div>
+              <div class="form-group">
                 <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                   <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
                   <label class="custom-control-label" for="customSwitch3">Block Plan</label>

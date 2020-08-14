@@ -56,6 +56,9 @@
                       </th>
                       <th style="width: 20%">
                           Rate ($)
+                      </th>
+                      <th style="width: 20%">
+                          Trial days
                       </th><th style="width: 20%">
                       Created on(m/d/Y H:i:s)
                       </th><th style="width: 20%">
@@ -83,6 +86,7 @@
     <td>{{ $plan->nickname }}</td>
     <td>{{ $plan->interval_count }}-{{ $plan->interval }}</td>
     <td>{{ $plan->currency}} {{ $plan->amount/100 }}</td>
+    <td>{{ $plan->trial_period_days??'no trial days'}}</td>
     <td>{{ date('m/d/Y H:i:s',$plan->created) }}</td>
     <td>
       {{-- {{ $plan->active }}     --}}

@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Subscription;
 use App\Models\SubscriptionPack;
+use App\Models\Zipcode;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use Stripe\Coupon;
 
 use Laravel\Cashier\Exceptions\IncompletePayment;
 
@@ -74,14 +76,48 @@ class SubscriptionController extends Controller
         
     }  
     public function store(Request $request) {
-        //dd($request);exit;
+        // dd($request);exit;
         $user = User::find($request['users_id']);
          //echo trim($user);exit;
         //echo $user;exit;
-        $product=$request['product'];
+        $productfullString=$request['product'];
+        // $product=$request['product'];
+       $explodedstring= explode("#~",$productfullString);
+       $product=$explodedstring[0];
+       $trial_days=$explodedstring[1];
+        $coupon=$request['coupon'];
+        // $trial_days=$request['trial_days'];
+        
+         
         try {
-            $newSubscription = $user->newSubscription('main', $product)->create($request->payment_method, ['email' => $user->email]);
+               // check already subscribed and if already subscribed with picked plan
+        if( $user->subscribed('main') && ! $user->subscribedToPlan($product, 'main') ) {
+
+            // swap if different plan attempt
+            $user->subscription('main')->swap($product);
+            return redirect('admin/subscriptions')->with('info','Subscriber existed ,so plan is swapped ');
+        }else {
+            
+            // if user has a coupon, create new subscription with coupon applied
+            if( $coupon = $request->get('coupon') ) {
+             
+             $user->newSubscription( 'main', $product)->trialDays($trial_days)
+                 ->withCoupon($coupon)
+                 ->create($request->payment_method, ['email' => $user->email]);
+                 return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully with coupon');
+ 
+         } else {
+            if(!empty($trial_days)){
+             // Create subscription
+             $newSubscription = $user->newSubscription('main', $product)
+             
+             ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);
+             return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully');}
+               $newSubscription = $user->newSubscription('main', $product)
+            // ->withCoupon($coupon)
+            ->create($request['payment_method'], ['email' => $user->email]);
             return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully');
+         }}
         } catch ( IncompletePayment $exception ){
             return redirect()->back()->with('info',json_encode($exception->getMessage(), true));
         }catch ( Exception $exception ){
@@ -196,7 +232,7 @@ class SubscriptionController extends Controller
         $userid=$request['user_id'];
         $user = User::find($userid);
         try{
-        $user->subscription('main')->swap($product);
+        $user->subscription('main')->skipTrial()->swap($product);
         return redirect('admin/subscriptions')->with('info','Subscription updated Successfully');
         } catch ( Exception $e ){
             return redirect('admin/subscriptions')->with('info','Subscription Error'.json_encode($e->getMessage(), true));
@@ -273,8 +309,8 @@ class SubscriptionController extends Controller
     {  $user = User::find($id);
     
         try{
-        $user->subscription('main')->cancelNow();
-        return redirect('admin/subscriptions')->with('info','Subscription Cancel Successfully'.$user);
+        $user->subscription('main')->skipTrial()->cancelNow();
+        return redirect('admin/subscriptions')->with('info','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('admin/subscriptions')->with('info','Error'.json_encode($e->getMessage(), true)); }
         
@@ -289,5 +325,42 @@ class SubscriptionController extends Controller
         $user->save();
   
         return response()->json(['success'=>'Status change successfully.']);
+    }
+
+    public function ajaxCheck(Request $request)
+    { //dd($request);
+        
+        if($request->has('coupon')){
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            try {
+               $status= Coupon::retrieve($request->input('coupon'));
+               if($status->amount_off) {
+                $price =  $status->currency . ' ' . $status->amount_off/100 . ' ' . $status->duration;
+            } else {
+                if( $status->duration == 'repeating' ) {
+                    $duration = '(' . $status->duration_in_months . ' months)';
+                } else {
+                    $duration = '(forever)';
+                }
+                $price = $status->percent_off . '% for ' . $duration;
+            }
+            } catch (\Stripe\Error\InvalidRequest $e) {
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
+            return response()->json(['message' => 'Coupon is valid! &'.$price], 200);
+
+        }
+        if($request->has('zip')){
+            $data = Zipcode::select('zipcode')->where([
+                ['status', '=', '1'],
+                ['zipcode', '=',$request['zip'] ]
+            ])->count();
+            
+            if($data==0){
+                return response()->json(['message' => 'Zipcode not allowed or invalid'], 404);
+            }
+            return response()->json(['message' => 'Zipcode allowed'], 200); 
+
+        }
     }
 }

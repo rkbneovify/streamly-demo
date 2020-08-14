@@ -105,7 +105,8 @@ return $plans->data;
         "currency" => "USD", 
         "amount" => $amount, 
         "interval" => $interval, 
-        "interval_count" => $interval_count));
+        "interval_count" => $interval_count,
+        'trial_period_days' => $request->trial_period_days));
     } catch (Exception $e) {
         print_r($e);
     }
@@ -130,7 +131,7 @@ return $plans->data;
      */
     public function store(Request $request)
     {
-      
+       // dd($request);exit;
         $amount = number_format($request->plan_amount, 2);
         $amount = (int) ($amount * 100);
         $interval = strtolower($request->plan_interval);
@@ -156,7 +157,8 @@ return $plans->data;
         "amount" => $amount, 
         "interval" => $interval, 
         "interval_count" => $interval_count,
-        "product"=>$product_id));
+        "product"=>$product_id,
+        "trial_period_days" => $request->trial_period_days,"metadata" => ["text1" => $request["text1"],"text2" => $request["text2"]]));
         
         return redirect('admin/subscriptionpack')->with('info','SubscriptionPack Added Successfully');
     } catch (Exception $e) {
@@ -204,7 +206,7 @@ return $plans->data;
              $status = true;
          }
         try {
-        $plan = \Stripe\Plan::update($id,['nickname'=>$nickname,'active'=>$status]);
+        $plan = \Stripe\Plan::update($id,['nickname'=>$nickname,'active'=>$status,'trial_period_days' => $request->trial_period_days,'metadata' => ['text1' => $request['text1'],'text2' => $request['text2']]]);
         return redirect('admin/subscriptionpack')->with('info','subscription plan with id ' . $id . ' Updated.');
         } catch (Exception $e) {
         

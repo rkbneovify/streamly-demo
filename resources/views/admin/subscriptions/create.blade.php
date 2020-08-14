@@ -57,9 +57,10 @@
 
               <select name="product" id="product" class="form-control">
                 @foreach($plans as $id => $pack)
-                <option value="{{ $pack->id }}">
+                <option value="{{ $pack->id."#~".$pack->trial_period_days }}">
                   {{ $pack->nickname }}
                 </option>
+                
                 @endforeach
               </select>
               @if ($errors->has('product'))
@@ -101,21 +102,39 @@
                                     </span>
                                     @endif
               </div>
-
-              <div class="form-group">
-                <label for="card-element" class="block text-gray-700 text-sm font-bold mb-2">
-                    Name on Card
-                </label>
-                <input type="text" name="name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        </div>
+              
+        
+        <div class="form-row">
+          <div class="col-md-6">
+              <div class='form-group cvc required'>
+                  <label class='control-label'>Coupon Code</label>
+                  <input autocomplete='off' class='form-control' placeholder='Coupon code' name="coupon" type='text'>
+                  <small class="help-block" style="display:none;"></small>
+              </div>
+          </div><div class="col-md-6">
+              <div class='form-group zip required'>
+                  <label class='control-label'>Credit card zip</label>
+                  <input autocomplete='off' class='form-control'  name="zip" type='number'>
+                  <small id="ziphelp" ></small>
+              </div>
+          </div>
+      </div> <div class="form-row"><div class="col-md-6">
         <div class="form-group">
-            <label for="card-element" class="block text-gray-700 text-sm font-bold mb-2">
-                Credit Card Info
-            </label>
-            <!-- Stripe Elements Placeholder -->
-            <div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
-            <div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
-        </div>
+          <label for="card-element" class="control-label">
+              Name on Card
+          </label>
+          <input type="text" name="name" id="name" class="form-control">
+  </div></div>
+        <div class="col-md-6">
+       
+      <div class="form-group">
+        <label for="card-element" class="block text-gray-700 text-sm font-bold mb-2">
+            Credit Card Info
+        </label>
+        <!-- Stripe Elements Placeholder -->
+        <div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
+        <div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
+    </div></div></div>
               
               {{-- <div class="form-group {{ $errors->has('start_date') ? ' has-error' : '' }}">
               
@@ -149,7 +168,7 @@
       <div class="row">
         <div class="col-12">
           
-          <button type="submit" id="card-button" class="btn btn-success">
+          <button type="submit" id="card-button"  class=" btn btn-success">
                                         Save
                                     </button>
                                     <a href="{{ url('admin/subscriptions') }}" class="btn btn-secondary">Cancel</a>
@@ -169,11 +188,76 @@
 <script src="https://js.stripe.com/v3/"></script>
 
         <script>
+          $(function() {
+
+$('body').on('blur','[name="coupon"]',function(){
+    $coupon = $(this);
+    if($coupon.val().length > 0) { // check if user typed anything
+  // $coupon.val($coupon.val().toUpperCase()); // I make all my coupons uppercase
+  
+  $.ajax({
+							 
+    url:"{{ route('ajax-check') }}",
+
+    type:"GET",
+    data:{coupon: $coupon.val()},
+    dataType: 'json',
+    success: function (data) {
+      $coupon.closest('.form-group')
+      .removeClass('has-error') // just in case
+      .addClass('has-success')
+      .find('.help-block').text(data.message).show();
+    },
+    error:function(){ 
+      $coupon.closest('.form-group')
+      .removeClass('has-success') // just in case
+      .addClass('has-error')
+      .find('.help-block').text(data.responseJSON.message).show();
+  $coupon.val(''); // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
+    }
+});
+}
+});
+
+$('body').on('focusout','[name="zip"]',function(){
+    $zip = $(this);
+    if($zip.val().length > 0) { // check if user typed anything
+  $.ajax({
+							 
+    url:"{{ route('ajax-check') }}",
+
+    type:"GET",
+    data:{zip: $zip.val()},
+    dataType: 'json',
+    success: function (data) {
+      $('#card-button').prop('disabled', false);
+      $('#ziphelp').html('<p>'+data.message+'</p>');
+    },
+    error:function(xhr, status, error){ 
+      if(xhr.status==404) {
+        // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
+        $('#card-button').prop('disabled', true);
+      $('#ziphelp').html('<p>'+xhr.responseJSON.message+'</p>');
+              
+  
+    }
+       // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
+    }
+});
+}
+});
+
+// disable spaces for specific inputs
+$('body').on('keydown','[name="username"],[name="email"],[name="coupon"]',function(e){
+    return e.which !== 32;
+});
+
+});
             const stripe = Stripe('{{ env("STRIPE_KEY") }}');
-            console.log(stripe);
+           // console.log(stripe);
 
             const elements = stripe.elements();
-            const cardElement = elements.create('card');
+            const cardElement = elements.create('card',{hidePostalCode: true});
 
             cardElement.mount('#card-element');
 
@@ -193,7 +277,11 @@
                     cardError.textContent = '';
                 }
             });
-
+// Update an element with details collected elsewhere on your page
+var myPostalCodeField = document.querySelector('input[name="zip"]');
+myPostalCodeField.addEventListener('change', function(event) {
+  cardElement.update({value: {postalCode: event.target.value}});
+});
             var form = document.getElementById('signup-form');
 
             form.addEventListener('submit', async (e) => {
