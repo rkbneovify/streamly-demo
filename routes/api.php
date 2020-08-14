@@ -65,6 +65,7 @@ Route::post('unfavorite/', 'APIController@unFavoriteChannel');
 Route::get('my_favorites', 'APIController@myFavorites');
 Route::get('my_recents', 'APIController@myRecents');
 Route::post('addtorecent', 'APIController@addToRecent');
+ Route::get('getdrmkey', 'Admin\BuyDRMController@index');
 });
 
 // Superadmin Routes

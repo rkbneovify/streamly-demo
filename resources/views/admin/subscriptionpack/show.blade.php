@@ -94,6 +94,21 @@
                                     </span>
                                     @endif
               </div>
+              <div class="form-row">
+                <div class="col-md-6">
+                    <div class='form-group cvc required'>
+                        <label class='control-label'>Text 1</label>
+                        <textarea name="text1" class='form-control' rows="5" cols="20" disabled>{{$plan->metadata->text1}}</textarea>
+                        <small class="help-block" style="display:none;"></small>
+                    </div>
+                </div><div class="col-md-6">
+                    <div class='form-group zip required'>
+                        <label class='control-label'>Text 2</label>
+                        <textarea name="text2" class='form-control' rows="5" cols="20" disabled>{{$plan->metadata->text2}}</textarea>
+                        <small id="ziphelp" ></small>
+                    </div>
+                </div>
+            </div>
             </div>
             <!-- /.card-body -->
           </div>

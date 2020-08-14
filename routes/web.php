@@ -42,6 +42,8 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     Route::post('insertquotation','Admin\SubscriptionController@store')->name('insertquotation');
     Route::put('subscriptionupdate/{id}','Admin\SubscriptionController@update')->name('subscriptionupdate');
     Route::delete('subscriptions/destroy/{id}','Admin\SubscriptionController@destroy');
+
+
     //gracenote
     Route::get('/channels', 'Admin\GracenoteController@index');//gracenote
     Route::get('/channels/create', 'Admin\GracenoteController@create');//gracenote
@@ -101,6 +103,8 @@ Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
  //hls anaylzer
 
 Route::get('/hlsmonitor', 'VideoAnylyzerController@test2');
+
+Route::get('/frontendtext', 'Admin\FrontendTextController@index');//frontendtext
 });
 
 Route::get('add-to-log', 'HomeController@myTestAddToLog');
@@ -133,6 +137,7 @@ Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
+Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');
 
@@ -151,6 +156,7 @@ Route::get('/epgviewr', 'Pages\LiveTv@epgScreen');
 Route::get('/epgviewr2', 'Pages\LiveTv@epgScreen2');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
+Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     

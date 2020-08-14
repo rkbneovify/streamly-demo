@@ -44,12 +44,14 @@ class Setting extends Controller
         ['users_id', '=', $id],
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
-         $subscription = Subscription::where([
-            ['stripe_status', '=', 'active'],
-            ['user_id', '=', $id],
-             ])
-         ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
-         ->first();
+        //  $subscription = Subscription::where([
+        //     // ['stripe_status', '=', 'canceled'],
+        //     ['user_id', '=', $id],
+        //      ])
+        //  ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
+        //  ->first();
+        $subscription=Auth::user()->subscriptions()->first();
+         
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
@@ -58,6 +60,7 @@ class Setting extends Controller
             $stripe_plan=$subscription->stripe_plan;
          
             $plan = \Stripe\Plan::retrieve($stripe_plan);
+           // dd($plan);
             
          }
          
@@ -147,7 +150,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
     {  $user = User::find($id);
     
         try{
-        $user->subscription('main')->cancelNow();
+        $user->subscription('main')->skipTrial()->cancelNow();
         return redirect('account/settings')->with('message','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }

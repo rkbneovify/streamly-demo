@@ -292,12 +292,12 @@
 
                 		<hr/>
 
-                		<ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
-                			<li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
-                			<li>Lorem Ipsum is simply dummy text of the printing</li>
-                			<li>Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</li>
-
-                		</ul>
+                        <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
+                            <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
+                            <li>{{$plan->metadata->text1??'Lorem Ipsum is simply dummy text of the printing'}}</li>
+                            <li>{{$plan->metadata->text2??"Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"}}</li>
+        
+                          </ul>
 
                         <?php
 

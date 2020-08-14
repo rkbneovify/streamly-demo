@@ -210,16 +210,16 @@
               @foreach ($plans->data as $plan)
               <div class="col-sm-4 select-plan-card">
                 <div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
-                  <p>{{ $plan->nickname }}</p>
+                <p>{{ $plan->nickname }} </p>
 
                   <h3>$ {{$plan->amount_decimal/100}}/ {{$plan->interval_count}} {{$plan->interval}}</h3>
 
                   <hr/>
 
                   <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
-                    <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</li>
-                    <li>Lorem Ipsum is simply dummy text of the printing</li>
-                    <li>Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</li>
+                    <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
+                    <li>{{$plan->metadata->text1??'Lorem Ipsum is simply dummy text of the printing'}}</li>
+                    <li>{{$plan->metadata->text2??"Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"}}</li>
 
                   </ul>
 
@@ -237,6 +237,7 @@
           </div>
       </div>
   </section>
+  <section class="page-section"></section>
   @endsection
   <script>
     (function () {

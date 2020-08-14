@@ -93,6 +93,9 @@
 										<tr>
 											<td>{{$plandetails->nickname}}</td>
 											<th class="text-right" style="padding-right: 1rem;">$ {{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</th>
+										</tr><tr>
+											<td>Trial</td>
+											<th class="text-right" style="padding-right: 1rem;">{{$plandetails->trial_period_days??'no trials'}} days</th>
 										</tr>
 										<tr>
 											<td>Tax</td>
@@ -175,16 +178,34 @@
 													 <div class="form-group">
 														<label for="card-element" class="control-label">Name on Card</label>
 														<input type="text" id="name" name="name" class="form-control">
+														
 												</div>
+											
+												<div class="form-row">
+													<div class="col-md-6">
+															<div class='form-group cvc required'>
+																	<label class='control-label'>Coupon Code</label>
+																	<input autocomplete='off' class='form-control' placeholder='Coupon code' name="coupon" type='text'>
+																	<small class="help-block" style="display:none;"></small>
+															</div>
+													</div><div class="col-md-6">
+															<div class='form-group zip required'>
+																	<label class='control-label'>Credit card zip</label>
+																	<input autocomplete='off' class='form-control'  name="zip" type='number'>
+																	<small id="ziphelp" ></small>
+															</div>
+													</div>
+											</div>
 				                    <!-- Stripe Elements Placeholder -->
 														<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 														<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
 												</div>
+												
 				                    <span class="remove-p-a-r">
-				                    	you will be charged $69/mo plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
+				                    	you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 				                    </span>
-
-				                    <div class="form-group mt-3">
+													<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">	
+													<div class="form-group mt-3">
 				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
 				                        	<span style="width: 100%;">SUBMIT</span>
 				                        </button>
@@ -193,7 +214,9 @@
 				                    {!! csrf_field() !!}
 												</form>
 												<!-- Otherwise if the user is subscribed, show them a success message -->
-												@else
+										
+
+                    	@else
                     
                         <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
                             <p class="font-bold mb-2">Thanks for being a customer!</p>
@@ -216,11 +239,78 @@
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
+					       $(function() {
+
+$('body').on('blur','[name="coupon"]',function(){
+    $coupon = $(this);
+    if($coupon.val().length > 0) { // check if user typed anything
+  // $coupon.val($coupon.val().toUpperCase()); // I make all my coupons uppercase
+  
+  $.ajax({
+							 
+    url:"{{ route('ajax-check') }}",
+
+    type:"GET",
+    data:{coupon: $coupon.val()},
+    dataType: 'json',
+    success: function (data) {
+      $coupon.closest('.form-group')
+      .removeClass('has-error') // just in case
+      .addClass('has-success')
+			
+      .find('.help-block').css('color', 'green').text(data.message).show();
+    },
+    error:function(){ 
+      $coupon.closest('.form-group')
+      .removeClass('has-success') // just in case
+      .addClass('has-error')
+			
+      .find('.help-block').css('color', 'red').text(data.responseJSON.message).show();
+  $coupon.val(''); // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
+    }
+});
+}
+});
+
+$('body').on('focusout','[name="zip"]',function(){
+    $zip = $(this);
+    if($zip.val().length > 0) { // check if user typed anything
+  $.ajax({
+							 
+    url:"{{ route('ajax-check') }}",
+
+    type:"GET",
+    data:{zip: $zip.val()},
+    dataType: 'json',
+    success: function (data) {
+      $('#card-button').prop('disabled', false);
+      $('#ziphelp').html('<p style="color:green">'+data.message+'</p>');
+    },
+    error:function(xhr, status, error){ 
+      if(xhr.status==404) {
+        // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
+        $('#card-button').prop('disabled', true);
+      $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+'</p>');
+              
+  
+    }
+       // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
+    }
+});
+}
+});
+
+// disable spaces for specific inputs
+$('body').on('keydown','[name="username"],[name="email"],[name="coupon"]',function(e){
+    return e.which !== 32;
+});
+
+});
             const stripe = Stripe('{{ env("STRIPE_KEY") }}');
            // console.log(stripe);
 
             const elements = stripe.elements();
-            const cardElement = elements.create('card');
+            const cardElement = elements.create('card',{hidePostalCode: true});
 
             cardElement.mount('#card-element');
 
@@ -240,7 +330,11 @@
                     cardError.textContent = '';
                 }
             });
-
+ // Update an element with details collected elsewhere on your page
+var myPostalCodeField = document.querySelector('input[name="zip"]');
+myPostalCodeField.addEventListener('change', function(event) {
+  cardElement.update({value: {postalCode: event.target.value}});
+});
             var form = document.getElementById('signup-form');
 
             form.addEventListener('submit', async (e) => {
