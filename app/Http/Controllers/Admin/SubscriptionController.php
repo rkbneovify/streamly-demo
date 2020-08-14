@@ -335,7 +335,7 @@ class SubscriptionController extends Controller
             try {
                $status= Coupon::retrieve($request->input('coupon'));
                if($status->amount_off) {
-                $price =  $status->currency . ' ' . $status->amount_off/100 . ' ' . $status->duration;
+                $price =  $status->currency . ' ' . $status->amount_off/100 . ' Off ' . $status->duration;
             } else {
                 if( $status->duration == 'repeating' ) {
                     $duration = '(' . $status->duration_in_months . ' months)';
@@ -347,7 +347,7 @@ class SubscriptionController extends Controller
             } catch (\Stripe\Error\InvalidRequest $e) {
                 return response()->json(['message' => $e->getMessage()], 400);
             }
-            return response()->json(['message' => 'Coupon is valid! &'.$price], 200);
+            return response()->json(['message' => 'Coupon is valid! & '.$price], 200);
 
         }
         if($request->has('zip')){
