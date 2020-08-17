@@ -39,6 +39,9 @@ class BuyDRMController extends Controller
                 'success' => true,
                 'response_code'=>200,
                 'data' => $encoded_auth_xml,
+                'widevinelicense'=>'https://wv-keyos.licensekeyserver.com/',
+                'playreadylicense'=>'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx',
+
                 'message' => 'DRM authentication key successfully retreived.'
             ];
     
