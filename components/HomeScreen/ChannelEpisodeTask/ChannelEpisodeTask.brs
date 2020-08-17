@@ -7,7 +7,7 @@ sub ChannnleAPI()
     m.top.callType = "GET"
 
     jsonResponse = APICall(getBaseUrl() + getChannelListUrl(), m.top.callType, m.top.data, m.top.parameters)
-    ? "ChannnleAPI: jsonResponse"; jsonResponse.data
+    ? "ChannnleAPI: jsonResponse"; jsonResponse
 '    ? "ChannnleAPI: jsonResponse.Count(): "; jsonResponse.data.Count()
 '     m.top.categoryChannels
     channles = jsonResponse.data
@@ -18,7 +18,7 @@ sub ChannnleAPI()
 
     for i = 0 to channles.Count()
         if channles[i] <> invalid
-            ? "channles[i].genrename ;"; channles[i].genrename
+            ' ? "channles[i].genrename ;"; channles[i].genrename
             if channles[i].genrename <> invalid
                 for each genre in channles[i].genrename
                     if categoryChannels[genre] <> invalid
@@ -42,9 +42,9 @@ sub ChannnleAPI()
     
      
     
-     ?"categoryChannels[ALL][0]";categoryChannels["ALL"][0]
+    '  ?"categoryChannels[ALL][0]";categoryChannels["ALL"][0]
     recentResponse = APICall(getBaseUrl() + getRecentUrl(), "GET", invalid, invalid)
-    ? "recentResponse:"; recentResponse.data
+    ' ? "recentResponse:"; recentResponse.data
     categoryChannels["Recent"]=invalid
     if (recentResponse.response_code = 200 and recentResponse.data <> invalid and recentResponse.data.Count() > 0)
         categoryChannels["Recent"] = recentResponse.data

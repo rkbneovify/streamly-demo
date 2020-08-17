@@ -1,3 +1,5 @@
+
+
 function getAccountToken() as Dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
     return sec.Read("accountToken")
@@ -39,7 +41,7 @@ function APICall(url as String, callType as String, data as Object, parameters a
     ? "APICall:"
     requestObject = CreateObject("roUrlTransfer")
 
-?"parameters tessting:";parameters
+' ?"parameters tessting:";parameters
     urlParameters = ""
     if parameters <> invalid and parameters.Count() > 0
         for each parameter in parameters.Keys()

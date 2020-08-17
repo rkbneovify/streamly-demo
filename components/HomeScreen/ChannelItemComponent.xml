@@ -54,7 +54,7 @@ end sub
            <Label
             id="title"
             height="50"
-            width="200"                  
+            width="120"                  
            
             translation="[150,35]"
             />            

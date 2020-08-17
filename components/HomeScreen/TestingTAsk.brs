@@ -9,7 +9,7 @@ sub ChannnleAPI()
 
         m.top.callType="POST"      
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
-  ' ?"programData: ";programData
+  ?"programData: ";programData
 'sleep(4000)
 ?"API End call";   
 

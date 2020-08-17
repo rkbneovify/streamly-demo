@@ -95,6 +95,7 @@
 	                  width="620"
 	                  uri="pkg:/images/Login/borderon.png" 
 	           >
+			
 	           <!-- text = "123456789" -->
 	              <TextEditBox
 	               

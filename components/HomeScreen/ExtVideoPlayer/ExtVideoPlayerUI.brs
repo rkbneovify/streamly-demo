@@ -23,7 +23,6 @@ end Function
 
 Function handleStateChange(msg)
 ?"handleStateChange: msg.getData(): ";msg.getData() 
- 
   if type(msg) = "roSGNodeEvent" and msg.getField() = "state"
   
       
@@ -80,13 +79,13 @@ sub showHideThumbnail()
 ?"m.top.thumbnailImage: ";m.top.thumbnailImage
  if m.top.thumbnailImage <>""
      
-     m.thumbnailVideoImage.uri = m.top.thumbnailImage
-     m.thumbnailVideoImage.visible = true
+    '  m.thumbnailVideoImage.uri = m.top.thumbnailImage
+    '  m.thumbnailVideoImage.visible = true
      m.opcitythumpnail.visible = true
       
  else
 
-     m.thumbnailVideoImage.visible = false
+    '  m.thumbnailVideoImage.visible = false
      m.opcitythumpnail.visible = false
 
  end if
@@ -98,7 +97,7 @@ Function initProgressBar()
   
 '  m.pressmenuButton = m.top.findNode("pressmenuButton")
   m.playPause = m.top.findNode("playPause")
-  m.thumbnailVideoImage = m.top.findNode("thumbnailVideoImage")
+  ' m.thumbnailVideoImage = m.top.findNode("thumbnailVideoImage")
   m.opcitythumpnail = m.top.findNode("opcitythumpnail")
   
   m.headerIcons = m.top.findNode("headerIcons")

@@ -1,4 +1,4 @@
 APPNAME = Streamly
-include app.mk
+include ./app.mk
 
 

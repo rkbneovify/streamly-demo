@@ -18,17 +18,13 @@
 
 <children>
     <Group id="headerIcons">
-      <Poster
+      <!-- <Poster
           uri="pkg:/images/home/ChannelMenu.png"
           id="thumbnailVideoImage"
           translation= "[0,0]"
           width="1920"
-          height="1080">
-          
-          
-	 
-      </Poster>
-      <Rectangle id="opcitythumpnail" translation= "[0,0]" width="1920" height="1080" color="#000000" opacity=".62" />
+          height="1080"/> -->
+                <Rectangle id="opcitythumpnail" translation= "[0,0]" width="1920" height="1080" color="#000000" opacity=".62" />
     <!--   <Poster
           uri="pkg:/images/home/ChannelMenu.png"
           translation= "[80,55]"

@@ -1,7 +1,9 @@
 
 sub INIT()
     ? "login init()"
+    
     m.SignInLabel = m.top.findNode("SignInLabel")
+    ' m.SignInLabel.ali
     m.UsernamEditText = m.top.findNode("UsernamEditText")
     m.PasswordEditText = m.top.findNode("PasswordEditText")
     m.SignInButton = m.top.findNode("SignInButton")
