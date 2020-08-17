@@ -26,7 +26,7 @@ class Payment extends Controller
         $plandetails = \Stripe\Plan::retrieve($stripeplanID);
         
        
-        if (Auth::user()->subscription('main')->cancelled()){
+        if (Auth::user()->subscription('main') && Auth::user()->subscription('main')->cancelled() ){
         return view('frontend.pages.paymentcancelled', compact('login','stripeplanID','plandetails'));
     }else{
         return view('frontend.pages.payment', compact('login','stripeplanID','plandetails'));
