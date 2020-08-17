@@ -249,7 +249,7 @@
 					</div>
 				</div>
 				{{-- {{show_currency_symbol( $plan->currency) ?? ''}} --}}
-				@if (Auth::user()->subscription('main')->cancelled())
+				@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->cancelled())
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
