@@ -155,6 +155,9 @@ Route::get('/ffmpeg4', 'VideoAnylyzerController@testProbeOnRemoteFile');
 Route::get('/epgviewr', 'Pages\LiveTv@epgScreen');
 Route::get('/epgviewr2', 'Pages\LiveTv@epgScreen2');
 
+
+Route::get('/drm', 'Admin\BuyDRMController@WidevinePlayer');
+
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 Route::get('/stripesync', function (Request $request) {
