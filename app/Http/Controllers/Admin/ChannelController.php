@@ -10,6 +10,8 @@ use App\Models\Gracenotechannel;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+use Carbon\Carbon;
+
 //use App\Traits\ImageUpload;programs
 /**
  * Description of ChannelController
@@ -577,5 +579,144 @@ $reco=$record->get();
   //     'clients' => $this->transformClientCollection($api)
   //  ], 200);
   }
+
+    //channel with 7 day of schdule
+  public function timezoneEpgchannelDaysSchedule(){
+
+    // $date = Carbon::parse('2018-08-19 10:43:15', 'UTC');echo "\n";
+    // echo($date->timezone->getName());echo "\n";
+    // echo($date->format('n/j/y g:i A'));echo "\n";
+    
+    // $date->setTimezone('America/Denver');
+    
+    // echo($date->timezone->getName());echo "\n";
+    // echo($date->format('n/j/y g:i A'));
+    // exit;
+    $imagePath=url("/uploads/channellogo/");
+    $input=url('livetv/');
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));//SET @@session.time_zone = "+00:00";
+    $record  = Gracenote::select(["sub.id","sub.callSign","StationName AS name","genres",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+    ->selectRaw(" concat( '[', group_concat(json_object( 'start',(UNIX_TIMESTAMP(StartDateTimewithTimezon)*1000),'end',(UNIX_TIMESTAMP(EndDateTimewithTimezon)*1000),'TimeZoneName',TimeZoneName,'title', EventTitle ) Order By StartDateTime ), ']') events")
+    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, sub.genres)"), DB::raw('>'),DB::raw('0'))
+    ->fromSub(function ($query) {
+        $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+        DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+        DB::raw('IFNULL(gracenote.EndDateTime,NOW()+INTERVAL 3 DAY) EndDateTime'),DB::raw('IFNULL(gracenote.TimeZoneName,TimeZoneName) TimeZoneName'),
+        'channels.id','channels.genres',DB::raw('IFNULL(channels.image,"notfound.png") image'),
+        DB::raw(" CASE TimeZoneName
+        		WHEN 'Pacific Observing' THEN CONVERT_TZ(StartDateTime,'US/Pacific','Asia/Calcutta')
+                WHEN 'Eastern Observing' THEN CONVERT_TZ(StartDateTime,'US/Eastern','Asia/Calcutta')
+                WHEN 'Central Observing' THEN CONVERT_TZ(StartDateTime,'US/Central','Asia/Calcutta')
+        
+                ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'),'US/Pacific','Asia/Calcutta')
+        	end StartDateTimewithTimezon"),DB::raw(" CASE TimeZoneName
+        		WHEN 'Pacific Observing' THEN CONVERT_TZ(EndDateTime,'US/Pacific','Asia/Calcutta')
+                WHEN 'Eastern Observing' THEN CONVERT_TZ(EndDateTime,'US/Eastern','Asia/Calcutta')
+                WHEN 'Central Observing' THEN CONVERT_TZ(EndDateTime,'US/Central','Asia/Calcutta')
+        
+                ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s'),'US/Pacific','Asia/Calcutta')
+        	end EndDateTimewithTimezon"),
+
+        'channels.url')
+        ->from('gracenote')
+        ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+       
+    ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+    AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+     ->orderBy('gracenote.StartDateTime', 'asc');
+      }, 'sub')
+    
+    ->orderBy('sub.callSign', 'asc')
+    ->groupBy('sub.callSign','StationName','image','sub.id','genres');
+        
+   $reco=$record->get()->map(function ($address) use ($input) {
+
+                 
+    $address['url'] = $input.'/'.$address['callSign'].'/'.$address['genrename']['0'] ;
+
+    return $address;
+
+});//exit; // echo $reco; exit;
+         if ($reco->isEmpty()) {
+            $response = [
+                'success' => false,
+                'data' => 'Empty',
+                'message' => 'Channel not found.',
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }  
+    
+            $response = [
+                'success' => true,
+                'date'=>date("Y-m-d"),
+                'data' => $reco,
+               
+                'message' => 'Schedule data for 3 days found',
+                'response_code'=>200,
+            ];
+           
+        return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+     
+        }
+        public function frontEpgchannelDaysSchedule2(){
+            $imagePath=url("/uploads/channellogo/");
+            $input=url('livetv/');
+            DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+            $record  = Gracenote::select(["sub.id","sub.callSign","StationName AS name","TimeZoneName","genres",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', StartDateTime,'end', EndDateTime ) Order By StartDateTime ), ']') events")
+            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, sub.genres)"), DB::raw('>'),DB::raw('0'))
+            ->fromSub(function ($query) {
+                $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(gracenote.TimeZoneName,"US/Pacific") TimeZoneName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") ) StartDateTime'),
+                DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.genres',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
+                ->from('gracenote')
+                ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+               
+            ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+            AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+             ->orderBy('gracenote.StartDateTime', 'asc');
+              }, 'sub')
+            
+            ->orderBy('sub.callSign', 'asc')
+            ->groupBy('sub.callSign','StationName','image','sub.id','genres');
+                
+           $reco=$record->get()->map(function ($address) use ($input) {
+        
+                         
+            $address['url'] = $input.'/'.$address['callSign'].'/'.$address['genrename']['0'] ;
+             if($address['TimeZoneName']=="Pacific Observing"){
+                // $address['eventcount']=count($address->events);
+                
+                
+               
+             }
+            return $address;
+        
+        });//exit; // echo $reco; exit;
+                 if ($reco->isEmpty()) {
+                    $response = [
+                        'success' => false,
+                        'data' => 'Empty',
+                        'message' => 'Channel not found.',
+                        'response_code'=>404,
+                    ];
+                    return response()->json($response, 404);
+                }  
+            
+                    $response = [
+                        'success' => true,
+                        'date'=>date("Y-m-d"),
+                        'data' => $reco,
+                       
+                        'message' => 'Schedule data for 3 days found',
+                        'response_code'=>200,
+                    ];
+                   
+                return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+             
+                }
 
 }
