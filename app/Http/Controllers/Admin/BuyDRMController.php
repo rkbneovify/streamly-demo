@@ -99,7 +99,7 @@ class BuyDRMController extends Controller
         try {
             // Create authentication XML generator instance.
             $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+2 minutes');
+            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
           
             // Crate Simple PR license
             $pr_lic = $auth_xml_generator->newSimpleLicense();
@@ -134,7 +134,7 @@ class BuyDRMController extends Controller
         try {
             // Create authentication XML generator instance.
             $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+2 minutes');
+            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
           
             // Crate Simple PR license
             $pr_lic = $auth_xml_generator->newSimpleLicense();
