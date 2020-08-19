@@ -7,65 +7,62 @@
 		}
 	</style>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <link href="//s3.amazonaws.com/cdn.keyos.com/html5/videojs/6.13.0/video-js.min.css" rel="stylesheet">
- 
-  <!--Video.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/videojs/6.13.0/video.min.js"></script>
- 
-  <!--Dash.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/dashjs/2.9.3/dash.all.min.js"></script>
- 
-  <!--Dash.js plugin for Video.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-dash/2.11.0/videojs-dash.min.js"></script>
-	<script>
-		$('document').ready(function(){
-			var player = videojs('player');
-			player.ready(function() {
-				player.src({
-					src: 'https://channelstore.streamlytv.com/streamly/APLHDP.stream/manifest.mpd',
-					type: 'application/dash+xml',
-	 
-					keySystemOptions: [{
-						name: 'com.widevine.alpha',
-						options: {
-							serverURL: '//wv-keyos.licensekeyserver.com/',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}'}
-						}
-					}, {
-						name: 'com.microsoft.playready',
-						options: {
-							serverURL: '//pr-keyos.licensekeyserver.com/core/rightsmanager.asmx',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}' }
-						}
-					}]
-				});
-	 
-				player.play();
+<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
+  
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 
-        $("#change").on('click', function () {
-                  var new_url = $("#myInput").val();
-									player.pause();
-                  player.src({type: 'application/dash+xml', src: new_url,	keySystemOptions: [{
-						name: 'com.widevine.alpha',
-						options: {
-							serverURL: '//wv-keyos.licensekeyserver.com/',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}'}
-						}
-					}, {
-						name: 'com.microsoft.playready',
-						options: {
-							serverURL: '//pr-keyos.licensekeyserver.com/core/rightsmanager.asmx',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}' }
-						}
-					}]});
-									player.play();
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
+{{-- <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
+<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+	
+
+<script>
+	$('document').ready(function(){
+		var player = videojs('player', {autoplay: true});
+	
+		player.httpSourceSelector();
+
+					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
+					player.eme({
+							// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
+							emeHeaders: {
+									'customdata': '{{$encoded_auth_xml}}'
+							}
+					});
+
+					player.on('ready', function() {
+							// Setup dash + pr/wv
+							var wvprDashSrc = {
+									src: 'https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd',
+									type: 'application/dash+xml',
+									keySystems: {
+											'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+											'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+									}
+							};
+
+							// Set the source to the player to init/start the playback.
+							player.src(wvprDashSrc);
+
+							$("#change").on('click', function () {
+								var new_url = $("#myInput").val();
+								var changeIn = {
+									src: new_url,
+									type: 'application/dash+xml',
+									keySystems: {
+											'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+											'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+									}
+							};
+								
+								player.src(changeIn);
                 });
-
-			});
-		});
-			
-		</script>
+					});
+	});
+		
+	</script>
 
 	<style>
 
@@ -77,7 +74,7 @@
 		    display: block;
 		    width: auto;
 		    margin: 0 auto;
-		    height: 1.5rem;
+		    height: 1.5rem;https://github.com/jfujita/videojs-http-source-selector/blob/master/index.html
 		}
 
 		.owl-item {
