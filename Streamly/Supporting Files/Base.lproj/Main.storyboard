@@ -4,19 +4,9 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Lato-Bold.ttf">
-            <string>Lato-Bold</string>
-        </array>
-        <array key="Lato-Light.ttf">
-            <string>Lato-Light</string>
-        </array>
-        <array key="Lato-Medium.ttf">
-            <string>Lato-Medium</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--LoginVC-->
         <scene sceneID="IcQ-fi-X8t">
@@ -48,18 +38,18 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="873" height="720"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign In" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WWd-ny-HIG">
-                                                        <rect key="frame" x="127" y="40" width="132" height="53"/>
+                                                        <rect key="frame" x="127" y="40" width="145" height="53"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="53" id="1yQ-i1-BJO"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="44"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="44"/>
                                                         <color key="textColor" red="0.0" green="0.30588235294117649" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Syg-xH-Mku">
                                                         <rect key="frame" x="127" y="137" width="620" height="29"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="24"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                                         <color key="textColor" red="0.039215686274509803" green="0.039215686274509803" blue="0.039215686274509803" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -86,29 +76,29 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </textField>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G6J-zO-Jpw">
-                                                        <rect key="frame" x="127" y="299" width="102" height="29"/>
+                                                        <rect key="frame" x="127" y="299" width="110" height="29"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="24"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remember me" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E3A-mh-nxK">
-                                                        <rect key="frame" x="177" y="467" width="140" height="26"/>
+                                                        <rect key="frame" x="177" y="467" width="150" height="26"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="26" id="dz1-nq-3P1"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="22"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F0E-Oc-jn2">
-                                                        <rect key="frame" x="333" y="660" width="196" height="26"/>
+                                                        <rect key="frame" x="320" y="660" width="209" height="26"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="26" id="rrN-4c-HWE"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="19"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="19"/>
                                                         <color key="textColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
@@ -169,7 +159,7 @@
                                                             <constraint firstAttribute="height" constant="46" id="VC9-3O-SQu"/>
                                                             <constraint firstAttribute="width" constant="200" id="pH0-rS-rc4"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="Register Now">
                                                             <color key="titleColor" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -200,7 +190,7 @@
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="84" id="lex-Ma-kVW"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="Sign in"/>
                                                         <userDefinedRuntimeAttributes>
@@ -225,7 +215,7 @@
                                                             <constraint firstAttribute="width" constant="196" id="GRM-wC-IMx"/>
                                                             <constraint firstAttribute="height" constant="46" id="Rds-tt-STt"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="22"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="22"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="Need help?">
                                                             <color key="titleColor" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -249,7 +239,7 @@
                                                             <constraint firstAttribute="width" constant="123" id="PIO-eS-ZKF"/>
                                                             <constraint firstAttribute="height" constant="46" id="bDN-iB-I98"/>
                                                         </constraints>
-                                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="20"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
                                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                                         <state key="normal" title="T&amp;C">
                                                             <color key="titleColor" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -606,48 +596,64 @@
                                 <rect key="frame" x="20" y="20" width="1880" height="1040"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="40" minimumInteritemSpacing="40" id="BIc-fH-1hP">
-                                    <size key="itemSize" width="300" height="370"/>
+                                    <size key="itemSize" width="280" height="282"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="60" minY="60" maxX="60" maxY="60"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DataItemCell" translatesAutoresizingMaskIntoConstraints="NO" id="8lU-eh-JeP" customClass="DataItemCollectionViewCell" customModule="StreamlyTV" customModuleProvider="target">
-                                        <rect key="frame" x="60" y="60" width="300" height="370"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                            <rect key="frame" x="0.0" y="0.0" width="300" height="370"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="DataItemCell" id="1oT-S6-ANk" customClass="DataItemCollectionViewCell" customModule="StreamlyTV" customModuleProvider="target">
+                                        <rect key="frame" x="60" y="60" width="280" height="268"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="ToF-ZJ-F8K" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UDn-MS-gGt">
-                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="280"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7dk-Md-YtC">
+                                                    <rect key="frame" x="96.5" y="61" width="87" height="94"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="280" id="Rl9-GB-FNe"/>
+                                                        <constraint firstAttribute="width" constant="87" id="HWs-8i-xxE"/>
+                                                        <constraint firstAttribute="height" constant="94" id="rbX-lQ-nZo"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mje-KO-1Gq">
-                                                    <rect key="frame" x="0.0" y="329" width="0.0" height="40"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mQr-BR-Ulq">
+                                                    <rect key="frame" x="5" y="219" width="270" height="31"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="40" id="Mji-eU-2n3"/>
+                                                        <constraint firstAttribute="height" constant="31" id="D7C-I8-qhV"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="33"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstItem="UDn-MS-gGt" firstAttribute="top" secondItem="8lU-eh-JeP" secondAttribute="top" id="3fp-LK-Yps"/>
-                                            <constraint firstItem="mje-KO-1Gq" firstAttribute="leading" secondItem="8lU-eh-JeP" secondAttribute="leading" id="6cK-K8-w3Y"/>
-                                            <constraint firstAttribute="trailing" secondItem="UDn-MS-gGt" secondAttribute="trailing" id="LuO-wY-RWu"/>
-                                            <constraint firstItem="mje-KO-1Gq" firstAttribute="top" secondItem="UDn-MS-gGt" secondAttribute="bottom" constant="49" id="PRR-UC-nMh"/>
-                                            <constraint firstAttribute="trailing" secondItem="mje-KO-1Gq" secondAttribute="trailing" id="SEF-m7-vlc"/>
-                                            <constraint firstItem="mje-KO-1Gq" firstAttribute="centerX" secondItem="UDn-MS-gGt" secondAttribute="centerX" id="h6c-8a-K8G"/>
-                                            <constraint firstItem="UDn-MS-gGt" firstAttribute="leading" secondItem="8lU-eh-JeP" secondAttribute="leading" id="i3y-R9-ZOb"/>
-                                        </constraints>
+                                            <color key="backgroundColor" red="0.49803921569999998" green="0.49803921569999998" blue="0.49803921569999998" alpha="0.39000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <constraints>
+                                                <constraint firstItem="mQr-BR-Ulq" firstAttribute="centerX" secondItem="7dk-Md-YtC" secondAttribute="centerX" id="6RK-LI-kCW"/>
+                                                <constraint firstItem="mQr-BR-Ulq" firstAttribute="leading" secondItem="ToF-ZJ-F8K" secondAttribute="leading" constant="5" id="72b-QG-oGV"/>
+                                                <constraint firstAttribute="trailing" secondItem="mQr-BR-Ulq" secondAttribute="trailing" constant="5" id="7uW-8U-Osa"/>
+                                                <constraint firstItem="7dk-Md-YtC" firstAttribute="top" secondItem="ToF-ZJ-F8K" secondAttribute="top" constant="61" id="Bn6-6i-C00"/>
+                                                <constraint firstItem="7dk-Md-YtC" firstAttribute="centerX" secondItem="ToF-ZJ-F8K" secondAttribute="centerX" id="QzG-vM-Vjn"/>
+                                                <constraint firstItem="mQr-BR-Ulq" firstAttribute="top" secondItem="7dk-Md-YtC" secondAttribute="bottom" constant="64" id="ory-gH-ROg"/>
+                                            </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                    <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                    <color key="value" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </userDefinedRuntimeAttribute>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="isHorizontal" value="NO"/>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                    <real key="value" value="8"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </collectionViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <size key="customSize" width="280" height="268"/>
                                         <connections>
-                                            <outlet property="imageView" destination="UDn-MS-gGt" id="P63-Uc-dh2"/>
-                                            <outlet property="label" destination="mje-KO-1Gq" id="EPU-oa-Ndm"/>
+                                            <outlet property="content" destination="ToF-ZJ-F8K" id="EdG-Sf-UC2"/>
+                                            <outlet property="imageView" destination="7dk-Md-YtC" id="7cu-kQ-baP"/>
+                                            <outlet property="label" destination="mQr-BR-Ulq" id="fWl-FE-X1R"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>

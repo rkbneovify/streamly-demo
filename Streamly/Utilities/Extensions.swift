@@ -370,10 +370,33 @@ extension UITableView {
 
     }
 }
+extension TimeZone {
+    static let gmt = TimeZone(secondsFromGMT: 0)!
+}
+extension Formatter {
+    static let date = DateFormatter()
+}
+
 extension Date {
     func string(format: String) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         return formatter.string(from: self)
     }
+
 }
+
+extension UIView {
+    func screenshot() -> UIImage {
+        return UIGraphicsImageRenderer(size: bounds.size).image { _ in
+            drawHierarchy(in: CGRect(origin: .zero, size: bounds.size), afterScreenUpdates: true)
+        }
+    }
+}
+public extension CGFloat {
+    func pointsToPixel() -> CGFloat {
+        return self * UIScreen.main.scale
+    }
+
+}
+

@@ -10,19 +10,21 @@ import UIKit
 
 class ProgramCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var gradientView: GradientView!
     @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var scheduleLabel: UILabel!
-    @IBOutlet weak var durationLabel: UILabel!
 
       override func awakeFromNib() {
         super.awakeFromNib()
+        self.setup()
+        gradientView.layer.cornerRadius = 8
+        gradientView.clipsToBounds = true
         // Initialization code
       }
 
       required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setup()
+      //  self.setup()
       }
 
       override init(frame: CGRect) {
@@ -30,43 +32,45 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         self.setup()
       }
 
-      func setup() {
+      func setup()
+      {
+        gradientView.borderWidth = 1.0
+        gradientView.firstColor = UIColor.clear
+        gradientView.secondColor = UIColor.clear
        // self.backgroundColor = UIColor.clear
       //  self.layer.borderWidth = 0.5
      //   self.layer.borderColor = UIColor.clear.cgColor
       }
 
-    func configureWith(program: Program) {
-    let viewModel = ProgramViewModel(program: program)
-        
-        self.titleLabel.text = viewModel.titleString
-       // self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
-       // self.durationLabel.text = "\(program.duration)"
-
-      //  self.scheduleLabel.textColor = UIColor.gray
-     //   self.durationLabel.textColor = UIColor.gray
-      }
-
-    func configureWithModel(program: ProgramArray) {
-    //   let viewModel = ProgramViewModel(program: program)
-//        if program.startDate.timeIntervalSince1970 <= Date().timeIntervalSince1970
-//        {
-//            self.gradientView.firstColor = UIColor.firstGradientColor
-//            self.gradientView.secondColor = UIColor.secondGradientColor
-//        }
-//        else {
-//            self.gradientView.firstColor = UIColor.clear
-//            self.gradientView.secondColor = UIColor.clear
-//        }
-
-
+  
+    func configureWithModel(program: ProgramArray,row : Int)
+    {
         self.titleLabel.text = program.title ?? ""
-        self.durationLabel.text = "\(program.startDate.string(format: "HH:mm"))"
-          // self.scheduleLabel.text = "\(viewModel.startTimeString) - \(viewModel.endTimeString)"
-          // self.durationLabel.text = "\(program.duration)"
+        self.timeLabel.text = "\(Utility.getDateFromTimeStampByFormat(from: program.start ?? 0.0) ?? "") - \(Utility.getDateFromTimeStampByFormat(from: program.end ?? 0.0) ?? "")"
 
-         //  self.scheduleLabel.textColor = UIColor.gray
-        //   self.durationLabel.textColor = UIColor.gray
-         }
     }
+
+    // MARK: UIFocusEnvironment
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        /*
+         Update the label's alpha value using the `UIFocusAnimationCoordinator`.
+         This will ensure all animations run alongside each other when the focus
+         changes.
+         */
+        coordinator.addCoordinatedAnimations({
+            if !self.isFocused {
+                self.setup()
+            }
+            else {
+
+                self.gradientView.borderWidth = 0.0
+                self.gradientView.firstColor = UIColor.init(red: 0/255, green: 4/255, blue: 10/255, alpha: 0.7)
+                self.gradientView.secondColor = UIColor.init(red: 0/255, green: 78/255, blue: 146/255, alpha: 1)
+
+
+            }
+        }, completion: nil)
+    }
+}
 

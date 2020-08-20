@@ -80,7 +80,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 488
         let customView = LogOUTView()
         customView.frame = backView.bounds
-        customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+       // customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
         backView.addSubview(customView)
@@ -97,7 +97,7 @@ class PopUPViewsVC: UIViewController {
         self.view.layoutIfNeeded()
         let customView = SupportView()
         customView.frame = backView.bounds
-      //  customView.backgroundColor = UIColor.init(hex: "#000000")?.withAlphaComponent(0.5)
+      //  customView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         customView.cornerRadius = 10.0
         customView.delegate = self
         customView.isflag = isfromLogin
@@ -116,7 +116,7 @@ class PopUPViewsVC: UIViewController {
         self.backView.isHidden = true
         self.policiesView.isHidden = false
         self.okBtn.setBtnProperties(self.okBtn, false)
-        policiesView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+       // policiesView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
         policiesView.cornerRadius = 10.0
         txtview.isSelectable = true
         txtview.isUserInteractionEnabled = true

@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Navigate to root
         // check login validation
         self.setupAudio()
+
+        Address.sharedInstance.cordnates()
         Switcher.updateRootVC()
         return true
     }
@@ -92,13 +94,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupAudio()
     {
         let audioSession = AVAudioSession.sharedInstance()
-           do {
-               try audioSession.setCategory(.playback, mode: .moviePlayback)
-           }
-           catch {
-               debugPrint("Setting category to AVAudioSessionCategoryPlayback failed.")
-           }
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+        }
+        catch {
+            print("Setting category to AVAudioSessionCategoryPlayback failed.")
+        }
     }
+
+    
 
   
 

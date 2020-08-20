@@ -26,8 +26,8 @@ class DataItemCellComposer {
     
     func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelDetails) {
         // Cancel any queued operations to process images for the cell.
-        let queue = operationQueue(forCell: cell)
-        queue.cancelAllOperations()
+//        let queue = operationQueue(forCell: cell)
+//        queue.cancelAllOperations()
         
         // Set the cell's properties.
      //   cell.representedDataItem = dataItem
@@ -83,49 +83,49 @@ class DataItemCellComposer {
         Returns the `NSOperationQueue` for a given cell. Creates and stores a new
         queue if one doesn't already exist.
     */
-    private func operationQueue(forCell cell: DataItemCollectionViewCell) -> OperationQueue {
-        if let queue = operationQueues[cell] {
-            return queue
-        }
-        
-        let queue = OperationQueue()
-        operationQueues[cell] = queue
-        
-        return queue
-    }
-    
-    /**
-        Loads a UIImage for a given name and returns a version that has been drawn
-        into a `CGBitmapContext`.
-    */
-    private func processImage(named imageName: String) -> UIImage? {
-        // Load the image.
-        guard let image = UIImage(named: imageName) else { return nil }
-        
-        /*
-            We only need to process jpeg images. Do no processing if the image
-            name doesn't have a jpg suffix.
-        */
-        guard imageName.hasSuffix(".jpg") else { return image }
-        
-        // Create a `CGColorSpace` and `CGBitmapInfo` value that is appropriate for the device.
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
-        
-        // Create a bitmap context of the same size as the image.
-        let imageWidth = Int(Float(image.size.width))
-        let imageHeight = Int(Float(image.size.height))
-        
-        let bitmapContext = CGContext(data: nil, width: imageWidth, height: imageHeight, bitsPerComponent: 8, bytesPerRow: imageWidth * 4, space: colorSpace, bitmapInfo: bitmapInfo)
-        
-        // Draw the image into the graphics context.
-        guard let imageRef = image.cgImage else { fatalError("Unable to get a CGImage from a UIImage.") }
-        bitmapContext?.draw(imageRef, in: CGRect(origin: CGPoint.zero, size: image.size))
-        
-        // Create a new `CGImage` from the contents of the graphics context.
-        guard let newImageRef = bitmapContext?.makeImage() else { return image }
-        
-        // Return a new `UIImage` created from the `CGImage`.
-        return UIImage(cgImage: newImageRef)
-    }
+//    private func operationQueue(forCell cell: DataItemCollectionViewCell) -> OperationQueue {
+//        if let queue = operationQueues[cell] {
+//            return queue
+//        }
+//
+//        let queue = OperationQueue()
+//        operationQueues[cell] = queue
+//
+//        return queue
+//    }
+//
+//    /**
+//        Loads a UIImage for a given name and returns a version that has been drawn
+//        into a `CGBitmapContext`.
+//    */
+//    private func processImage(named imageName: String) -> UIImage? {
+//        // Load the image.
+//        guard let image = UIImage(named: imageName) else { return nil }
+//
+//        /*
+//            We only need to process jpeg images. Do no processing if the image
+//            name doesn't have a jpg suffix.
+//        */
+//        guard imageName.hasSuffix(".jpg") else { return image }
+//
+//        // Create a `CGColorSpace` and `CGBitmapInfo` value that is appropriate for the device.
+//        let colorSpace = CGColorSpaceCreateDeviceRGB()
+//        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+//
+//        // Create a bitmap context of the same size as the image.
+//        let imageWidth = Int(Float(image.size.width))
+//        let imageHeight = Int(Float(image.size.height))
+//
+//        let bitmapContext = CGContext(data: nil, width: imageWidth, height: imageHeight, bitsPerComponent: 8, bytesPerRow: imageWidth * 4, space: colorSpace, bitmapInfo: bitmapInfo)
+//
+//        // Draw the image into the graphics context.
+//        guard let imageRef = image.cgImage else { fatalError("Unable to get a CGImage from a UIImage.") }
+//        bitmapContext?.draw(imageRef, in: CGRect(origin: CGPoint.zero, size: image.size))
+//
+//        // Create a new `CGImage` from the contents of the graphics context.
+//        guard let newImageRef = bitmapContext?.makeImage() else { return image }
+//
+//        // Return a new `UIImage` created from the `CGImage`.
+//        return UIImage(cgImage: newImageRef)
+//    }
 }

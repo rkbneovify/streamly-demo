@@ -11,6 +11,7 @@ import Foundation
 class EPGViewModel: NSObject {
 
     var epgData:((EPGResponse)->())?
+    var geoData:((GeoFenceAddress)->())?
     var recentData:((RecentData)->())?
     var channelData:((ChannelListResponse)->())?
     weak var delegate:HandleError?
@@ -41,7 +42,7 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
 
             debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+           // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
 
@@ -56,7 +57,7 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
 
             debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+           // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
 
@@ -71,7 +72,22 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
 
             debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+           // self.delegate?.handleError(error?.localizedDescription ?? "")
+        }
+    }
+
+    func postAddressData() {
+        ApiCall.postAddress(success: { data
+            in
+            if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
+                self.geoData!((geoModel))
+                //debugPrint(epgModel)
+            }
+            debugPrint("Success")
+        }) { (error, data, code)  in
+
+            debugPrint("failure")
+           // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
 }
@@ -107,6 +123,19 @@ class EPGDataParser {
         do {
 
             let contactModelElement = try JSONDecoder().decode(RecentData.self, from: data)
+
+
+            return contactModelElement
+        } catch {
+            debugPrint(error)
+        }
+        return nil
+    }
+
+    static func parseGeoFenceData(_ data: Data) -> GeoFenceAddress? {
+        do {
+
+            let contactModelElement = try JSONDecoder().decode(GeoFenceAddress.self, from: data)
 
 
             return contactModelElement

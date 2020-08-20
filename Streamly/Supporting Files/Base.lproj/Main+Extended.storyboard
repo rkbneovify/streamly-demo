@@ -7,17 +7,6 @@
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Lato-Bold.ttf">
-            <string>Lato-Bold</string>
-        </array>
-        <array key="Lato-Light.ttf">
-            <string>Lato-Light</string>
-        </array>
-        <array key="Lato-Medium.ttf">
-            <string>Lato-Medium</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--SettingsVC-->
         <scene sceneID="bV5-QA-9GX">
@@ -37,7 +26,7 @@
                                     <constraint firstAttribute="width" constant="140" id="I5U-vw-rRz"/>
                                     <constraint firstAttribute="height" constant="47" id="vdL-NB-iZI"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="40"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="40"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -76,22 +65,23 @@
                                             <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
-                                                    <rect key="frame" x="9" y="61" width="87" height="94"/>
+                                                    <rect key="frame" x="12" y="61" width="87" height="94"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="94" id="CcI-DZ-VzD"/>
                                                         <constraint firstAttribute="width" constant="87" id="OJP-rZ-mpF"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SFY-LH-mTw">
-                                                    <rect key="frame" x="5" y="219" width="95" height="31"/>
+                                                    <rect key="frame" x="5" y="219" width="101" height="31"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="31" id="dEc-bj-0o0"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="26"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="SFY-LH-mTw" firstAttribute="leading" secondItem="hlK-hi-ve9" secondAttribute="leading" constant="5" id="3oM-ri-SgX"/>
                                                 <constraint firstItem="gRM-Jd-QTU" firstAttribute="top" secondItem="hlK-hi-ve9" secondAttribute="top" constant="61" id="daP-CP-JvA"/>
@@ -113,7 +103,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                         </collectionViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="0.39000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
                                         <size key="customSize" width="280" height="268"/>
                                         <connections>
                                             <outlet property="content" destination="hlK-hi-ve9" id="gKE-wL-25F"/>
@@ -129,7 +119,7 @@
                                     <constraint firstAttribute="width" constant="255" id="8z3-xh-e5T"/>
                                     <constraint firstAttribute="height" constant="75" id="9m1-ly-lab"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="30"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="30"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="21" maxX="35" maxY="21"/>
                                 <inset key="titleEdgeInsets" minX="-35" minY="0.0" maxX="-55" maxY="3"/>
@@ -204,7 +194,7 @@
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="36" id="Akb-HK-pbg"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="30"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -214,7 +204,7 @@
                                                                 <constraint firstAttribute="height" constant="34" id="9dB-A5-FFi"/>
                                                                 <constraint firstAttribute="width" constant="328" id="p7Q-u9-Q3d"/>
                                                             </constraints>
-                                                            <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -271,7 +261,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.55000000000000004" alpha="0.94999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Glo-Ez-oNj" firstAttribute="leading" secondItem="zB2-b4-jey" secondAttribute="leading" constant="203" id="0Nq-to-yvb"/>
                                     <constraint firstAttribute="bottom" secondItem="MWa-xd-NtZ" secondAttribute="bottom" constant="51" id="7kG-oB-9jz"/>
@@ -325,7 +315,7 @@
                                         <rect key="frame" x="10" y="10" width="1213" height="626"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button hidden="YES" opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZJ-7v-ov9">
@@ -334,7 +324,7 @@
                                             <constraint firstAttribute="width" constant="280" id="4Jy-XF-qiD"/>
                                             <constraint firstAttribute="height" constant="84" id="VVd-2J-HMt"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Ok"/>
                                         <userDefinedRuntimeAttributes>
@@ -347,7 +337,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.47450980392156861" green="0.47450980392156861" blue="0.47450980392156861" alpha="0.94999999999999996" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="800" id="AZ9-8L-qaE"/>
                                     <constraint firstAttribute="bottom" secondItem="lZJ-7v-ov9" secondAttribute="bottom" constant="50" id="BN2-bA-iMF"/>
@@ -387,7 +377,7 @@
                                         <rect key="frame" x="10" y="103" width="1213" height="547"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <button hidden="YES" opaque="NO" tag="88" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4jW-vy-bMP">
@@ -397,7 +387,7 @@
                                             <constraint firstAttribute="height" constant="84" id="LYx-pg-LQX"/>
                                             <constraint firstAttribute="width" constant="280" id="vUJ-wR-WmM"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Accept">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -424,7 +414,7 @@
                                             <constraint firstAttribute="height" constant="84" id="dZo-Gg-ebE"/>
                                             <constraint firstAttribute="width" constant="280" id="ha9-vI-njq"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="Accept">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -505,79 +495,14 @@
                         <viewControllerLayoutGuide type="top" id="qFG-24-5j1"/>
                         <viewControllerLayoutGuide type="bottom" id="Gsn-nh-NWU"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VlV-PK-P8U">
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VlV-PK-P8U">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="120" sectionHeaderHeight="1" sectionFooterHeight="1" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-oq-br4">
-                                <rect key="frame" x="15" y="339" width="297" height="741"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="297" id="EmE-vQ-pc5"/>
-                                </constraints>
-                                <color key="separatorColor" systemColor="systemPurpleColor" red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="channelListCell" rowHeight="120" id="aYu-gf-2le" customClass="ChannelListCell" customModule="StreamlyTV" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1" width="297" height="120"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="aYu-gf-2le" id="Ge6-Cb-SyD">
-                                            <rect key="frame" x="0.0" y="0.0" width="297" height="120"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="hbo" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-ZP-Jy8">
-                                                    <rect key="frame" x="12" y="31" width="86" height="58"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="58" id="Rd2-Ch-iNz"/>
-                                                        <constraint firstAttribute="width" constant="86" id="y6Y-cZ-qQo"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="05" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFB-hc-pTL">
-                                                    <rect key="frame" x="113" y="31" width="23" height="23"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="23" id="kXo-KU-9uT"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MTV- USA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1bx-0B-9dS">
-                                                    <rect key="frame" x="113" y="56" width="124" height="31"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
-                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" red="0.31516915559999997" green="0.34531611200000001" blue="0.35312271119999999" alpha="0.74165239726027399" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="UFB-hc-pTL" secondAttribute="trailing" constant="2" id="EKA-gT-pu9"/>
-                                                <constraint firstItem="1bx-0B-9dS" firstAttribute="leading" secondItem="UFB-hc-pTL" secondAttribute="leading" id="c6Q-rH-Z0x"/>
-                                                <constraint firstItem="8cl-ZP-Jy8" firstAttribute="centerY" secondItem="Ge6-Cb-SyD" secondAttribute="centerY" id="eSJ-41-7bL"/>
-                                                <constraint firstItem="UFB-hc-pTL" firstAttribute="leading" secondItem="8cl-ZP-Jy8" secondAttribute="trailing" constant="15" id="eUA-Fe-hI1"/>
-                                                <constraint firstItem="UFB-hc-pTL" firstAttribute="top" secondItem="8cl-ZP-Jy8" secondAttribute="top" id="fX6-YA-oRf"/>
-                                                <constraint firstItem="1bx-0B-9dS" firstAttribute="top" secondItem="UFB-hc-pTL" secondAttribute="bottom" constant="2" id="kjr-0y-jFU"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="1bx-0B-9dS" secondAttribute="trailing" constant="2" id="mhv-7s-Lh5"/>
-                                                <constraint firstAttribute="bottom" secondItem="1bx-0B-9dS" secondAttribute="bottom" constant="33" id="tPy-HK-jNF"/>
-                                                <constraint firstItem="8cl-ZP-Jy8" firstAttribute="leading" secondItem="Ge6-Cb-SyD" secondAttribute="leading" constant="12" id="wEx-LO-Z5G"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                    <real key="value" value="8"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <outlet property="ChannelName" destination="1bx-0B-9dS" id="VEv-vC-Qxl"/>
-                                            <outlet property="channelNo" destination="UFB-hc-pTL" id="ZDY-VQ-ZbL"/>
-                                            <outlet property="logoImage" destination="8cl-ZP-Jy8" id="5sV-iX-jqj"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
-                                <rect key="frame" x="321" y="339" width="1584" height="741"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="EpgGridLayout" customModule="StreamlyTV" customModuleProvider="target"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" contentInsetAdjustmentBehavior="always" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
+                                <rect key="frame" x="36" y="236.5" width="1884" height="843.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <viewLayoutGuide key="safeArea" id="lcD-0T-ye1"/>
+                                <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="CustomCollectionViewLayout" customModule="StreamlyTV" customModuleProvider="target"/>
                                 <cells/>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jte-II-w2x">
@@ -586,7 +511,7 @@
                                     <constraint firstAttribute="width" constant="232" id="wGv-7I-a3X"/>
                                     <constraint firstAttribute="height" constant="75" id="wtr-hl-QcH"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="28"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <inset key="contentEdgeInsets" minX="40" minY="21" maxX="35" maxY="21"/>
                                 <inset key="titleEdgeInsets" minX="-35" minY="0.0" maxX="-50" maxY="3"/>
@@ -615,14 +540,14 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fnz-5i-nxU">
-                                <rect key="frame" x="145" y="40" width="1178" height="50"/>
+                                <rect key="frame" x="145" y="40" width="1198" height="50"/>
                                 <subviews>
                                     <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
-                                        <rect key="frame" x="0.0" y="0.0" width="104" height="50"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="116" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <state key="normal" title="All">
+                                        <state key="normal" title="ALL">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <state key="highlighted">
@@ -636,9 +561,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
-                                        <rect key="frame" x="124" y="0.0" width="156" height="50"/>
+                                        <rect key="frame" x="136" y="0.0" width="159" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="RECENT">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -654,9 +579,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
-                                        <rect key="frame" x="300" y="0.0" width="222" height="50"/>
+                                        <rect key="frame" x="315" y="0.0" width="223" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="MY CHANNELS">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -672,9 +597,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
-                                        <rect key="frame" x="542" y="0.0" width="154" height="50"/>
+                                        <rect key="frame" x="558" y="0.0" width="159" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="SPORTS">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -690,9 +615,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
-                                        <rect key="frame" x="716" y="0.0" width="139" height="50"/>
+                                        <rect key="frame" x="737" y="0.0" width="139" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="NEWS">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -708,9 +633,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
-                                        <rect key="frame" x="875" y="0.0" width="157" height="50"/>
+                                        <rect key="frame" x="896" y="0.0" width="156" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="MOVIES">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -726,9 +651,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
-                                        <rect key="frame" x="1052" y="0.0" width="126" height="50"/>
+                                        <rect key="frame" x="1072" y="0.0" width="126" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" name="Lato-Medium" family="Lato" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <state key="normal" title="KIDS">
                                             <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -753,19 +678,16 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="top" secondItem="VlV-PK-P8U" secondAttribute="top" constant="40" id="3QD-ga-q1R"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="mpq-oq-br4" secondAttribute="top" id="LPX-Aa-vkQ"/>
+                            <constraint firstAttribute="bottom" secondItem="bvZ-gg-zYn" secondAttribute="bottom" id="3X6-1b-aef"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="67" id="N2N-2b-Wum"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="centerY" secondItem="Zmj-0g-1sp" secondAttribute="centerY" id="NaB-ko-2JC"/>
-                            <constraint firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="VAm-CN-IQU"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="jte-II-w2x" secondAttribute="bottom" constant="134" id="UXP-fi-7fE"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>
                             <constraint firstAttribute="trailing" secondItem="jte-II-w2x" secondAttribute="trailing" constant="20" id="e1v-cC-9j6"/>
-                            <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" constant="15" id="fDy-DM-noT"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="mpq-oq-br4" secondAttribute="trailing" constant="9" id="fTS-EM-Gb3"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="hdv-kY-3FB"/>
-                            <constraint firstItem="mpq-oq-br4" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="15" id="shb-ig-feC"/>
-                            <constraint firstItem="mpq-oq-br4" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="bottom" constant="249" id="ua5-yq-FQB"/>
-                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="bottom" secondItem="mpq-oq-br4" secondAttribute="bottom" id="zAZ-VK-MoS"/>
+                            <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="iSA-Na-7u9"/>
+                            <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" id="mNp-rY-U3c"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NNg-TT-3ij"/>
                     </view>
@@ -780,7 +702,6 @@
                         <outlet property="searchButton" destination="kL9-t4-knR" id="IyI-Wf-JEJ"/>
                         <outlet property="settingsButton" destination="jte-II-w2x" id="0H1-b2-SiC"/>
                         <outlet property="sportsButton" destination="Zw9-jI-w5U" id="tbk-NV-Mwy"/>
-                        <outlet property="tableView" destination="mpq-oq-br4" id="jct-19-TZk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yx7-NN-7ak" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -790,7 +711,6 @@
     </scenes>
     <resources>
         <image name="channelIcon" width="56" height="56"/>
-        <image name="hbo" width="69" height="52"/>
         <image name="search" width="40" height="40"/>
         <image name="starIcon" width="56" height="56"/>
     </resources>

@@ -16,6 +16,9 @@ let passwordMaxLimit = 10
 let mobileMaxLimit = 15
 let mobileMinLimit = 8
 
+//Header count EPG 4 * 48 + 1(Header date)
+let daysData = 193
+
 //Mark: Constant Text
 let appName = "Streamly"
 
@@ -34,6 +37,7 @@ class Constant: NSObject
     {
         guard let app = appDelegate else {return}
         let loginVc = LoginVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+//        let loginVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
         let rootViewController = appDelegate?.window!.rootViewController as! UINavigationController
         rootViewController.setViewControllers([loginVc], animated: false)
         rootViewController.isNavigationBarHidden = true

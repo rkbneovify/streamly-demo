@@ -5,137 +5,230 @@
 //  Created by Jerald Abille on 3/22/18.
 //  Copyright © 2018 Jerald Abille. All rights reserved.
 //
-
 import UIKit
 
-class EPGCollectionViewLayout: UICollectionViewLayout {
- let cellWidth = 395.0
-  let cellHeight = 120.0
-  var cellAttributesDictionary = Dictionary<IndexPath, UICollectionViewLayoutAttributes>()
-  var contentSize = CGSize.zero
-  var dataSourceDidUpdate = true
+protocol GetChannelData
+{
+    func getProgramAt(channelIndex : Int)-> (channelName : String?, programArray : [ProgramArray]?)
+}
 
-  var channels: [Channel]?
-  var programs: [Program]?
+class CustomCollectionViewLayout: UICollectionViewLayout {
 
-  override var collectionViewContentSize: CGSize {
-    return self.contentSize
-  }
+    var itemAttributes = [[UICollectionViewLayoutAttributes]]()
+    var itemsSize = [[CGSize]]()
+    var contentSize: CGSize = .zero
+    var delegate : GetChannelData!
+    let weekTimeInterval : TimeInterval = (60 * 60 * 24 * 3)
+    let TILE_WIDTH : CGFloat = 408
+    let TILE_HEIGHT : CGFloat = 125
+    let ACTUAL_HOUR : TimeInterval = 3600.0
 
-  override func prepare() {
+    override func prepare() {
+        guard let collectionView = collectionView else {
+            return
+        }
 
-    if !dataSourceDidUpdate {
-      let xOffset = collectionView!.contentOffset.x
-      let yOffset = collectionView!.contentOffset.y
+        let headerview = collectionView.viewWithTag(1019)
 
-      if let sectionCount = collectionView?.numberOfSections, sectionCount > 0 {
-        for section in 0...sectionCount - 1 {
-          if let rowCount = collectionView?.numberOfItems(inSection: section), rowCount > 0 {
-            // The first row.
-            if section == 0 {
-              for item in 0...rowCount - 1 {
+
+        if collectionView.numberOfSections == 0 {
+            return
+        }
+
+        if itemAttributes.count != collectionView.numberOfSections {
+            generateItemAttributes(collectionView: collectionView)
+            return
+        }
+
+        for section in 0..<collectionView.numberOfSections {
+            for item in 0..<collectionView.numberOfItems(inSection: section) {
+                if section != 0 && item != 0 {
+                    continue
+                }
+
+                let attributes = layoutAttributesForItem(at: IndexPath(item: item, section: section))!
+                if section == 0 {
+                    var frame = attributes.frame
+                    frame.origin.y = collectionView.contentOffset.y
+                    attributes.frame = frame
+
+                    var frame1 = headerview?.frame
+                    frame1!.origin.y = collectionView.contentOffset.y
+                    headerview!.frame = frame1!
+                }
+
+                if item == 0 {
+                    var frame = attributes.frame
+                    frame.origin.x = collectionView.contentOffset.x
+                    attributes.frame = frame
+
+                    var frame1 = headerview?.frame
+                    frame1!.origin.x = collectionView.contentOffset.x
+                    headerview!.frame = frame1!
+                }
+            }
+        }
+
+    }
+
+    override var collectionViewContentSize: CGSize
+    {
+        return contentSize
+    }
+
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        return itemAttributes[indexPath.section][indexPath.item]
+    }
+
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        var attributes = [UICollectionViewLayoutAttributes]()
+        for section in itemAttributes {
+            let filteredArray = section.filter { obj -> Bool in
+                return rect.intersects(obj.frame)
+            }
+
+            attributes.append(contentsOf: filteredArray)
+        }
+
+        return attributes
+    }
+
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        return true
+    }
+}
+
+// MARK: - Helpers
+extension CustomCollectionViewLayout {
+
+    func generateItemAttributes(collectionView: UICollectionView)
+    {
+        var xOffset: CGFloat = 0
+        var yOffset: CGFloat = 0
+        var maxX: CGFloat = 0
+
+        itemAttributes = []
+        itemsSize = []
+
+        for section in 0..<collectionView.numberOfSections
+        {
+            var dataArrayAtSection : (channelName : String?, programArray : [ProgramArray]?)
+            dataArrayAtSection = ((section == 0) ? ("",[]) : delegate.getProgramAt(channelIndex: section))
+            calculateItemSizes(section: section, dataArray: (dataArrayAtSection.programArray))
+            var sectionAttributes: [UICollectionViewLayoutAttributes] = []
+
+            let loopCount = (section == 0) ? daysData : (dataArrayAtSection.programArray?.count ?? 0)
+
+            for item in 0...(loopCount) {
+                let itemSize = itemsSize[section][item]
                 let indexPath = IndexPath(item: item, section: section)
-                if let attributes = cellAttributesDictionary[indexPath] {
-                  var frame = attributes.frame
-                  if item == 0 {
-                    frame.origin.x = xOffset + 40.0
-                  }
-                    frame.origin.y = yOffset + 23.0
-                  attributes.frame = frame
+                let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
 
+                if item == 1 && section != 0
+                {
+                    var comp: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+                    comp.timeZone = TimeZone(abbreviation: "UTC")!
+                    let d1 = Calendar.current.date(from: comp)!
+
+                    let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].start ?? 0))
+                    let intervals = d2.timeIntervalSince(d1)
+                    let numberOfHours = CGFloat(intervals / 3600)
+                    xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 2)
                 }
-              }
-            } else {
-              let indexPath = IndexPath(item: 0, section: section)
-              if let attributes = cellAttributesDictionary[indexPath] {
-                var frame = attributes.frame
-                frame.origin.x = xOffset + 40.0
-                attributes.frame = frame
-              }
-            }
-          }
-        }
-      }
-      return
-    }
 
-    dataSourceDidUpdate = false
+                attributes.frame = CGRect(x: xOffset, y: yOffset, width: itemSize.width, height: itemSize.height).integral
 
-    if let sectionCount = collectionView?.numberOfSections, sectionCount > 0 {
-      for section in 0...sectionCount - 1 {
-        var channel: Channel?
-        if section > 0 {
-          if let ch = self.channels?[section - 1] {
-            channel = ch
-          }
-        }
-        if let rowCount = collectionView?.numberOfItems(inSection: section), rowCount > 0 {
-          for item in 0...rowCount - 1 {
-            var program: Program?
-            if section > 0 && item > 0 {
-              if let _ = channel {
-                if let prog = channel!.programs?[item - 1] {
-                  program = prog
+                if section == 0 && item == 0 {
+                    // First cell should be on top
+                    attributes.zIndex = 1024
+                } else if section == 0 || item == 0 {
+                    // First row/column should be above other cells
+                    attributes.zIndex = 1022
                 }
-              }
+                let headerview = collectionView.viewWithTag(1019)
+                if section == 0 {
+                    var frame = attributes.frame
+                    frame.origin.y = collectionView.contentOffset.y
+                    attributes.frame = frame
+                    var frame1 = headerview?.frame
+                    frame1!.origin.y = collectionView.contentOffset.y
+                    headerview!.frame = frame1!
+                }
+
+                if item == 0 {
+                    var frame = attributes.frame
+                    frame.origin.x = collectionView.contentOffset.x
+                    attributes.frame = frame
+                    var frame1 = headerview?.frame
+                    frame1!.origin.x = collectionView.contentOffset.x
+                    headerview!.frame = frame1!
+                }
+
+                sectionAttributes.append(attributes)
+
+                xOffset += itemSize.width
+                if item == ((section == 0) ? daysData : (dataArrayAtSection.programArray?.count ?? 0))
+                {
+                    xOffset = 0
+                    yOffset += itemSize.height
+                }
             }
 
-            let cellIndex = IndexPath(item: item, section: section)
-            var xPos = Double(item) * cellWidth
-            let yPos = Double(section) * cellHeight
-
-            let cellAttributes = UICollectionViewLayoutAttributes(forCellWith: cellIndex)
-            cellAttributes.frame = CGRect(x: xPos, y: yPos, width: cellWidth - 9.0, height: cellHeight)
-            let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
-            cellAttributes.frame = insetFrame
-
-            if let _ = program {
-              xPos = (cellWidth * (program!.schedule.start / 60 / 60) + cellWidth)
-                let width = (program!.duration / 60 / 60) * cellWidth
-                cellAttributes.frame = CGRect(x: xPos, y: yPos, width: width - 9.0, height: cellHeight)
-                let insetFrame = cellAttributes.frame.insetBy(dx: 0.0, dy: 9.0)
-                cellAttributes.frame = insetFrame
-            }
-
-            if section == 0 && item == 0 {
-              cellAttributes.zIndex = 4
-            } else if section == 0 {
-              cellAttributes.zIndex = 3
-            } else if item == 0 {
-              cellAttributes.zIndex = 2
-            } else {
-              cellAttributes.zIndex = 1
-            }
-
-            cellAttributesDictionary[cellIndex] = cellAttributes
-          }
+            itemAttributes.append(sectionAttributes)
         }
-      }
+
+        if let attributes = itemAttributes.last?.last
+        {
+            maxX = (attributes.frame.maxX > maxX) ? attributes.frame.maxX : maxX
+            contentSize = CGSize(width: maxX + 50, height: attributes.frame.maxY)
+        }
     }
 
-    let contentWidth = Double(collectionView!.numberOfItems(inSection: 0)) * cellWidth
-    let contentHeight = Double(collectionView!.numberOfSections) * cellHeight
-    self.contentSize = CGSize(width: contentWidth, height: contentHeight + 30)
-  }
+    func calculateItemSizes(section : Int,dataArray : [ProgramArray]?)
+    {
+        var arrayOfCGSize = [CGSize]()
+        let loopCount = (section == 0) ? daysData : (dataArray?.count ?? 0)
 
-  override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-    var attributesInRect = [UICollectionViewLayoutAttributes]()
-    for cellAttributes in cellAttributesDictionary.values {
-      if rect.intersects(cellAttributes.frame) {
-        attributesInRect.append(cellAttributes)
-      }
+        for item in 0...(loopCount)
+        {
+            if section == 0 || item == 0
+            {
+                arrayOfCGSize.append(sizeForItemWithColumnIndex(section: section, item: item))
+            }
+            else
+            {
+                arrayOfCGSize.append(sizeForItemWithColumnIndex(section: section, item: item, programData: dataArray?[item-1]))
+            }
+        }
+        itemsSize.append(arrayOfCGSize)
     }
 
-    return attributesInRect
-  }
-
-  override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-    return cellAttributesDictionary[indexPath]!
-  }
-
-  override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-    return true
-  }
-
-
+    func sizeForItemWithColumnIndex(section: Int,item: Int, programData : ProgramArray? = nil) -> CGSize
+    {
+        var width: CGFloat
+        var height = TILE_HEIGHT
+        if item == 0 && section == 0
+        {
+            width = 297
+            height = 58
+        }
+        else if section == 0
+        {
+            width = 408
+            height = 58
+        }
+        else if item == 0
+        {
+            width = 297
+        }
+        else
+        {
+            let d1 = Date.init(timeIntervalSince1970: programData?.start ?? 0)
+            let d2 = Date.init(timeIntervalSince1970: programData?.end ?? 0) // April 27,
+            let intervals = d2.timeIntervalSince(d1)
+            let numberOfHours = CGFloat(intervals / 3600)
+            width = CGFloat(numberOfHours) * (TILE_WIDTH * 2)
+        }
+        return CGSize(width: width, height: height)
+    }
 }

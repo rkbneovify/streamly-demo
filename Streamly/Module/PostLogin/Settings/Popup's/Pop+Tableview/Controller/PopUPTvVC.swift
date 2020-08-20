@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 
+
 class PopUPTvVC: UIViewController {
 
     // MARK: - Outlets
@@ -22,7 +23,7 @@ class PopUPTvVC: UIViewController {
     {
         didSet{
             if isProfile ?? false {
-                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.createdAt)))")]
+                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))")]
             }
         }
     }
@@ -53,7 +54,7 @@ class PopUPTvVC: UIViewController {
 
     override func viewWillLayoutSubviews() {
         
-        self.backView.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+      //  self.backView.alpha = 0.8
         self.okButton.setBtnProperties(self.okButton, false)
 
     }

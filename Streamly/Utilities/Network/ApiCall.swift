@@ -111,6 +111,16 @@ open class ApiCall {
           return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
       }
 
-
+    @discardableResult
+    public static func postAddress(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let url: String! = "https://streamlytv.com/api/auth/geofence"
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let param:[String:String] = ["latitude":"\(Address.sharedInstance.latitude ?? 0.0)","longitude":"\(Address.sharedInstance.longitude ?? 0.0)"]
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json"]
+        let requestParameter = RequestParameter.createRequestParameter(url, method: .post, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    
 }
 
