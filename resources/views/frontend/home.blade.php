@@ -319,7 +319,7 @@
 <section class="page-section bg-light" id="portfolio">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-heading">Available channel</h2>
+            <h2 class="section-heading">Available Channels</h2>
         </div>
         <div class="">
            
