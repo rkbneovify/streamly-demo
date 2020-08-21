@@ -20,6 +20,7 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Models\RecentChannel;
+use App\Models\FrontendText;
 class APIController extends Controller
 {
     /**
@@ -266,9 +267,14 @@ public function login(Request $request)
     }
 
     public function support()
-    { $supportnumber=[];
-        $supportnumber=['email'=>'contact@streamlytv.com','num1'=>'1234656477','num2'=>'773727828'];
-        $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>'For help and support contact on email below');
+    {  $frontendjson = FrontendText::find(1)->frontendjson;
+        $supportemail=$frontendjson['supportemail']??'contact@streamlytv.com';
+       $supportphone= $frontendjson['supportphone']??'1234656477';
+       $supportphone2= $frontendjson['supportphone2']??'773727828';
+       $message= $frontendjson['supportapitext']??'For help and support contact on email below';
+        $supportnumber=[];
+        $supportnumber=['email'=>$supportemail,'num1'=>$supportphone,'num2'=>$supportphone2];
+        $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>$message);
         return response()->json($response, 200);
     }
     public function privacypol()

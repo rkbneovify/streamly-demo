@@ -15,8 +15,8 @@ class FrontendText extends Model
     protected $table = 'frontend_text';
     public $timestamps = false;
     protected $casts = [
-        
-        'frontendjson' => 'array'
+        'id' => 'int',
+     'frontendjson' => 'array'
    ];
     /**
     * Mass assignable columns

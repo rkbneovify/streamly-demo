@@ -66798,7 +66798,16 @@ var TVGuide = /*#__PURE__*/function (_Component) {
       //mPaint.getTextBounds(event.getTitle(), 0, event.getTitle().length(), mMeasuringRect);
 
       drawingRect.top += (drawingRect.bottom - drawingRect.top) / 2 + 10 / 2;
-      var title = event.title;
+      var d = new Date(event.start);
+      var endtim = new Date(event.end);
+      var options = {
+        timeStyle: 'short',
+        hour12: false
+      };
+      var ds = d.toLocaleString('en', options);
+      var endtime = endtim.toLocaleString('en', options);
+      var title = event.title + ' (' + ds + '-' + endtime + ')'; // let title = event.title;
+
       /*title = title.substring(0,
        mPaint.breakText(title, true, drawingRect.right - drawingRect.left, null));*/
 
