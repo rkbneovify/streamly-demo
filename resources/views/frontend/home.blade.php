@@ -315,8 +315,45 @@
             </div>
         </div>
     </section>
+<!-- Channel logo Grid-->
+<section class="page-section bg-light" id="portfolio">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading">Available channel</h2>
+        </div>
+        <div class="">
+           
+            <div class="grid-container">
+                @foreach ($pagechannel as $channeldet)
+                <div class="item1"> 
+                    <img style='height: 100%; width: 100%; object-fit: contain' src="{{  $channeldet->logo}}">
+                </div>
+                @endforeach
+                
 
+              </div>
+        </div>
+    </div>
+</section>
+<style>
 
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto ;
+      grid-gap: 5px;
+      /* background-color: #2196F3; */
+      padding: 10px;
+    }
+    
+    .grid-container > div {
+        border-radius: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      padding: 10px 0;
+      font-size: 15px;
+      
+    }
+    </style>
     <!-- Portfolio Grid-->
     <section class="page-section bg-light" id="portfolio">
         <div class="container">
