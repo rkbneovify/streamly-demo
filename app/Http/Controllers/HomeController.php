@@ -43,6 +43,20 @@ class HomeController extends Controller
      */
     public function index()
     { $plans = \Stripe\Plan::all(['active'=>true]);
+        $imagePath=asset("/uploads/channellogo/notfound.png");
+        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+  
+    ->orderBy('callSign', 'asc')
+    ->groupBy('channels.id');
+       
+       
+       $pagechannel=$record->get()->reject(function($element) use($imagePath) {
+        return $element->logo == $imagePath;
+    }); 
+       
         //$plans=$plans->data;
         if( Auth::check()){
             $login = true;
@@ -54,7 +68,7 @@ class HomeController extends Controller
             $login = false;
         }
 
-        return view('frontend.home', compact('login','plans'));
+        return view('frontend.home', compact('login','plans','pagechannel'));
     }
     
     public function location(Request $request)
