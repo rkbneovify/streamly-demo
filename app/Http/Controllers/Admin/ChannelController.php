@@ -49,7 +49,7 @@ class ChannelController extends Controller
     //           ->from('gracenotechannels');
               
     // })
-    ->orderBy('channels.name', 'asc')
+    ->orderBy('callSign', 'asc')
     ->groupBy('channels.id');
        
     //JSON_ARRAY
@@ -688,8 +688,13 @@ $reco=$record->get();
                          
             $address['url'] = $input.'/'.$address['callSign'].'/'.$address['genrename']['0'] ;
              if($address['TimeZoneName']=="Pacific Observing"){
-                // $address['eventcount']=count($address->events);
+                $address['eventcount']=count($address->events);
                 
+                foreach($address->events as $element){
+                    
+                    $address= array_push($element, "manzana", "arándano");
+                    
+                }
                 
                
              }

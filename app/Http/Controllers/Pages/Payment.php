@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\FrontendText;
 
 use Laravel\Cashier\Exceptions\IncompletePayment;
 class Payment extends Controller
@@ -25,11 +26,11 @@ class Payment extends Controller
         }
         $plandetails = \Stripe\Plan::retrieve($stripeplanID);
         
-       
+        $frontendjson = FrontendText::find(1)->frontendjson;
         if (Auth::user()->subscription('main') && Auth::user()->subscription('main')->cancelled() ){
-        return view('frontend.pages.paymentcancelled', compact('login','stripeplanID','plandetails'));
+        return view('frontend.pages.paymentcancelled', compact('login','stripeplanID','plandetails','frontendjson'));
     }else{
-        return view('frontend.pages.payment', compact('login','stripeplanID','plandetails'));
+        return view('frontend.pages.payment', compact('login','stripeplanID','plandetails','frontendjson'));
     }
         
         
