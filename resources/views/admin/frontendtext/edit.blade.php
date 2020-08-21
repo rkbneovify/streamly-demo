@@ -8,12 +8,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>User Edit</h1>
+          <h1>Frontend Edit</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">User Edit</li>
+            <li class="breadcrumb-item active">Frontend Edit</li>
           </ol>
         </div>
       </div>
@@ -47,66 +47,86 @@
             </ul>
           </div>
           @endif
-          <form action="{{ url("admin/userupdate", ) }}" method="POST" enctype="multipart/form-data">
+          @if(session()->has('message'))
+    <div class="alert alert-success">
+        {{ session()->get('message') }}
+    </div>
+@endif
+          <form action="{{ url("admin/fronttextupdate", ) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
 
         </div>
-            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-              <label for="name" class="col-md-4 control-label">Name</label>
+        {{-- {{dd($frontendjson)}} --}}
+            <div class="form-group{{ $errors->has('billingdetailspage') ? ' has-error' : '' }}">
+              <label for="billingdetailspage" class="col-md-4 control-label">Billing details page</label>
 
+              <textarea name="billingdetailspage" class='form-control' rows="5" cols="20">{{$frontendjson['billingdetailspage']}}</textarea>
+              {{-- <input id="billingdetailspage" type="text" class="form-control" name="billingdetailspage" value="{{$frontendjson['billingdetailspage']}}" 
+                autofocus> --}}
 
-              <input id="display_name" type="text" class="form-control" name="name" value="{{$frontendjson['0']->sex}}" required
-                autofocus>
-
-              @if ($errors->has('name'))
+              @if ($errors->has('billingdetailspage'))
               <span class="help-block">
-                <strong>{{ $errors->first('name') }}</strong>
+                <strong>{{ $errors->first('billingdetailspage') }}</strong>
               </span>
               @endif
             </div>
             
-            <div class="form-group{{ $errors->has('contact') ? ' has-error' : '' }}">
-              <label for="contact" class="col-md-4 control-label">contact</label>
+            <div class="form-group{{ $errors->has('supportapitext') ? ' has-error' : '' }}">
+              <label for="supportapitext" class="col-md-4 control-label">Support Api message</label>
 
 
-              <input id="display_name" type="text" class="form-control" name="name" value="{{$frontendjson['0']->skills}}" required
+              <input id="supportapitext" type="text" class="form-control" name="supportapitext" value="{{$frontendjson['supportapitext']}}" 
                 autofocus>
 
-              @if ($errors->has('contact'))
+              @if ($errors->has('supportapitext'))
               <span class="help-block">
-                <strong>{{ $errors->first('contact') }}</strong>
+                <strong>{{ $errors->first('supportapitext') }}</strong>
               </span>
               @endif
 
             </div>
           
 
-            <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
-              <label for="country" class="col-md-4 control-label">country</label>
+            <div class="form-group{{ $errors->has('supportemail') ? ' has-error' : '' }}">
+              <label for="supportemail" class="col-md-4 control-label">Support email</label>
 
 
-             <input id="display_name" type="text" class="form-control" name="name" value="{{$frontendjson['0']->id}}" required
+             <input id="supportemail" type="text" class="form-control" name="supportemail" value="{{$frontendjson['supportemail']}}" 
                 autofocus>
 
-              @if ($errors->has('country'))
+              @if ($errors->has('supportemail'))
               <span class="help-block">
-                <strong>{{ $errors->first('country') }}</strong>
+                <strong>{{ $errors->first('supportemail') }}</strong>
               </span>
               @endif
 
             </div> 
-            <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
-              <label for="country" class="col-md-4 control-label">country</label>
+            <div class="form-group{{ $errors->has('supportphone') ? ' has-error' : '' }}">
+              <label for="supportphone" class="col-md-4 control-label">Support phone</label>
 
 
-             <input id="display_name" type="text" class="form-control" name="name" value="{{$frontendjson}}" required
+             <input id="display_name" type="text" class="form-control" name="supportphone" value="{{$frontendjson['supportphone']}}" 
                 autofocus>
 
-              @if ($errors->has('country'))
+              @if ($errors->has('supportphone'))
               <span class="help-block">
-                <strong>{{ $errors->first('country') }}</strong>
+                <strong>{{ $errors->first('supportphone') }}</strong>
+              </span>
+              @endif
+
+            </div> 
+            <div class="form-group{{ $errors->has('supportphone2') ? ' has-error' : '' }}">
+              <label for="supportphone" class="col-md-4 control-label">Support phone2</label>
+
+
+             <input id="display_name" type="text" class="form-control" name="supportphone2" value="{{$frontendjson['supportphone2']}}" 
+                autofocus>
+
+              @if ($errors->has('supportphone2'))
+              <span class="help-block">
+                <strong>{{ $errors->first('supportphone2') }}</strong>
               </span>
               @endif
 

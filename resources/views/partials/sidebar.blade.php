@@ -138,6 +138,14 @@
                   </a>
                 </li>
             </ul>
+            <li class="nav-item ">
+              <a href=" {{ url('/admin/frontendtext') }}"  class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+                <p>
+                Frontend Text
+                </p>
+              </a>
+            </li>
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">
               <a href=" {{ url('/admin/subscriptionpack') }}" class="nav-link">
@@ -145,7 +153,7 @@
                   <p>Subscriptionpack manage</p>
                 </a>
               </li>
-            </ul> -->
+            </ul> 
           </li>
           @endrole
           <!-- <li class="nav-item has-treeview">

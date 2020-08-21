@@ -200,10 +200,16 @@
 														<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 														<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
 												</div>
-												
+											@if	(empty($frontendjson['billingdetailspage']))
 				                    <span class="remove-p-a-r">
 				                    	you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
-				                    </span>
+														</span>
+														@else
+                    
+														<span class="remove-p-a-r">
+				                  {{$frontendjson['billingdetailspage']}}	</span>
+		
+												@endif
 													<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">	
 													<div class="form-group mt-3">
 				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">

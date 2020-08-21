@@ -103,8 +103,10 @@ Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
  //hls anaylzer
 
 Route::get('/hlsmonitor', 'VideoAnylyzerController@test2');
-
+Route::get('/frontendtext/create', 'Admin\FrontendTextController@create');
 Route::get('/frontendtext', 'Admin\FrontendTextController@index');//frontendtext
+Route::post('insertfrontendtext','Admin\FrontendTextController@store')->name('insertfrontendtext');
+Route::put('fronttextupdate','Admin\FrontendTextController@update')->name('fronttextupdate');
 });
 
 Route::get('add-to-log', 'HomeController@myTestAddToLog');
