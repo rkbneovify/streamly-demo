@@ -151,6 +151,31 @@ class HomeController extends Controller
     {     
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
+        $client = new \GuzzleHttp\Client(['base_uri' => 'http://localhost:6750/']);
+        $response=$client->request('GET', 'geofenceturf', [
+            'query' => ['lat' => $LAT,'lon'=>$LON]
+        ]);
+        
+        
+       $jsonfile=$response->getBody();
+       $resp = json_decode($jsonfile, true);
+
+if($resp['response_code']=='200'){
+return response()->json($resp, 200); 
+
+}
+ else{
+    return response()->json($resp, 403); 
+ }
+      
+    
+        
+   }
+
+   public function oldgeofence(Request $request)
+    {     
+        $LAT= $request['latitude'];
+        $LON = $request['longitude'];
     
       $query= Zipcode::select('map.zcta5ce10 AS zipcode')
         ->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
@@ -177,6 +202,7 @@ class HomeController extends Controller
     
         
    }
+
    public function simplequeryrun(Request $request){
     $LAT= $request['latitude'];
     $LON = $request['longitude'];
