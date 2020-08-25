@@ -137,6 +137,12 @@
                     <p>Allowed Zipcode on map</p>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a href=" {{ url('/admin/zipcode/checkfenceweb') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Check coordinate on map</p>
+                    </a>
+                  </li>
             </ul>
             <li class="nav-item ">
               <a href=" {{ url('/admin/frontendtext') }}"  class="nav-link">

@@ -33,9 +33,32 @@ class ChannelController extends Controller
         return view('admin.channels.index', compact('record'));
     }  
     
-    public function channeljson() 
-    {   
-        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
+    public function channeljson(Request $request) 
+    {   $ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+            $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
+            // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+            // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+            // ->selectRaw("GROUP_CONCAT(g.name) genrename")
+            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
+            
+            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        //     ->whereIn('channels.callSign', function($query)
+        // {
+        //     $query->select('CallSign')
+        //           ->from('gracenotechannels');
+                  
+        // })
+        ->orderBy('callSign', 'asc')
+        ->groupBy('channels.id');
+            }else{
+        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.dash_url as url')
         // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
         // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
         // ->selectRaw("GROUP_CONCAT(g.name) genrename")
@@ -50,7 +73,7 @@ class ChannelController extends Controller
               
     // })
     ->orderBy('callSign', 'asc')
-    ->groupBy('channels.id');
+    ->groupBy('channels.id');}
        
     //JSON_ARRAY
        
@@ -80,8 +103,18 @@ class ChannelController extends Controller
    })
     ->orderBy('created_at', 'desc')
     ->simplepaginate(12); */
-
-  $channel = Channel::where('name', 'LIKE', "%{$search}%")->Paginate(16);
+    $ua = $request->server('HTTP_USER_AGENT');
+    $iPod    = stripos($ua,"iPod");
+    $iPhone  = stripos($ua,"iPhone");
+    $iPad    = stripos($ua,"iPad");
+    $iPadOS = stripos($ua,"Macintosh");
+    $appletv = stripos($ua,"appletv");
+    if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+        $channel = Channel::select('id', 'callSign', 'url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+    }else{
+        $channel = Channel::select('id', 'callSign', 'dash_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+    }
+ 
   //$author = Author::where('name', 'LIKE', "%{$search}%")->Paginate(16);
   //$genre = Genre::where('name', 'LIKE', "%{$search}%")->Paginate(16);
 
@@ -360,7 +393,7 @@ $record  = Gracenote::select("CallSign","StationName","image")
     }
     
 //channel with 7 day of schdule
-public function channelDaysSchedule(){
+public function channelDaysSchedule(Request $request){
     //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
   //   select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
   //   SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
@@ -380,8 +413,14 @@ public function channelDaysSchedule(){
 // $record  = Gracenote::select('CallSign','StationName',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime )SEPARATOR '|' ) AS programs "))->groupBy('CallSign','StationName');
 // SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', sub.StartDateTime,'end', sub.EndDateTime ) ) AS programs FROM ( SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC ) AS sub GROUP BY sub.CallSign 
 $imagePath=url("/uploads/channellogo/");
-
-DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$ua = $request->server('HTTP_USER_AGENT');
+$iPod    = stripos($ua,"iPod");
+$iPhone  = stripos($ua,"iPhone");
+$iPad    = stripos($ua,"iPad");
+$iPadOS = stripos($ua,"Macintosh");
+$appletv = stripos($ua,"appletv");
+if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
 
 ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
@@ -398,6 +437,27 @@ $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url"
     }, 'sub')
 ->orderBy('sub.callSign', 'asc')
 ->groupBy('sub.callSign','StationName','image','url','id');
+    } else {
+        DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select("sub.callSign as CallSign","id","StationName","dash_url as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->fromSub(function ($query) {
+  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+  DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+  DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.dash_url')
+  ->from('gracenote')
+  ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+
+  ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+  AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+   ->orderBy('gracenote.StartDateTime', 'asc');
+    }, 'sub')
+->orderBy('sub.callSign', 'asc')
+->groupBy('sub.callSign','StationName','image','dash_url','id');
+    }
+    
+
 // SELECT CallSign,StationName,
 // GROUP_CONCAT(
 //   JSON_OBJECT('title', EventTitle,

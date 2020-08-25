@@ -223,6 +223,48 @@ class ZipcodeController extends Controller
          }
         return view('admin.zipcodes.map', compact('geojson'));
     }
+
+    public function webfenceturf()
+    {   $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
+        # Build GeoJSON feature collection array
+    $geojson = array(
+        'type'      => 'FeatureCollection',
+        
+        // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
+        'features'  => array()
+     );
+        if($data->isEmpty()){
+            $response = [
+                'success' => false,
+                'data' => $data,
+                'message'=>'No zipcode is allowed',
+                'response_code'=>200,
+            ];
+            return response()->json($response, 200); 
+        }
+        
+          foreach($data as $fieldnam) {
+            $properties =  array(
+                'color'=> 'red',
+                'title' => $fieldnam['zipcode']
+                
+            );
+            
+            $feature = array(
+                'type' => 'Feature',
+                'properties' => $properties,
+                
+                'geometry' => $fieldnam->shape,
+                 
+           );
+                            
+      
+        
+             array_push($geojson['features'], $feature);
+         }
+
+        return view('admin.zipcodes.mapfence',compact('geojson'));
+    }
     
 }
 

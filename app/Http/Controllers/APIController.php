@@ -293,8 +293,14 @@ public function login(Request $request)
         return response()->json($response, 200);
     }
 
-    public function genrename()
-    {
+    public function genrename(Request $request )
+    { $ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
         
         
@@ -311,7 +317,25 @@ public function login(Request $request)
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
     
        
-      $data=$record->get()->groupBy('genrename');
+      $data=$record->get()->groupBy('genrename');} else{
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.dash_url as url')
+        
+        
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        ->whereIn('channels.callSign', function($query)
+    {
+        $query->select('CallSign')
+              ->from('gracenotechannels');
+              
+    })
+    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+    
+       
+      $data=$record->get()->groupBy('genrename'); 
+      }
       $a=$data->keys();
       
       $response = [
@@ -380,10 +404,34 @@ public function login(Request $request)
         
     }
     
-    public function myFavorites()
-    { try { 
-        // $genres = Genre::pluck('name', 'id');
+    public function myFavorites(Request $request)
+    { try {   
+        $ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
         $myFavorites = JWTAuth::user()->favorites;
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+            $myFavorites->map(function ($address)  {
+
+              unset($address['dash_url']);
+                return $address;
+            
+            });
+        }else{
+        
+        $myFavorites->map(function ($address)  {
+
+                 
+            $address['url'] = $address['dash_url'];
+          unset($address['dash_url']);
+            return $address;
+        
+        });
+    }
+        
         $response = [
             'success' => true,
             'data' => $myFavorites->unique('id'),
@@ -436,9 +484,33 @@ foreach ($channelArr as $value) {
         ]
     );
 }
-
+$ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
         
 $recentschannel = JWTAuth::user()->recentschannel;
+if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+    $recentschannel->map(function ($address)  {
+
+      unset($address['dash_url']);
+        return $address;
+    
+    });
+}else{
+
+$recentschannel->map(function ($address)  {
+
+         
+    $address['url'] = $address['dash_url'];
+  unset($address['dash_url']);
+    return $address;
+
+});
+}
+
      $response = [
         'success' => true,
         'data' => $recentschannel,
@@ -459,10 +531,36 @@ $recentschannel = JWTAuth::user()->recentschannel;
 
     
 }
-public function myRecents()
+public function myRecents(Request $request)
     { try { 
-        // $genres = Genre::pluck('name', 'id');
+        
+        $ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
         $recentschannel = JWTAuth::user()->recentschannel;
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+            $recentschannel->map(function ($address)  {
+
+              unset($address['dash_url']);
+                return $address;
+            
+            });
+        }else{
+        
+        $recentschannel->map(function ($address)  {
+
+                 
+            $address['url'] = $address['dash_url'];
+          unset($address['dash_url']);
+            return $address;
+        
+        });
+    }
+       
+
         $response = [
             'success' => true,
             'data' => $recentschannel,
