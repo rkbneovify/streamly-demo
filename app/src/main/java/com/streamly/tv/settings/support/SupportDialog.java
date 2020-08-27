@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,7 @@ public class SupportDialog extends Dialog {
     private RecyclerView rvSupport;
     private ProgressBar progressBar;
     private List<SupportTextType> list=new ArrayList<>();
+    private TextView messageText;
 
     public SupportDialog(@NonNull Context context) {
         super(context);
@@ -66,6 +68,7 @@ public class SupportDialog extends Dialog {
         btnOk=findViewById(R.id.btn_ok);
         rvSupport=findViewById(R.id.rv_support);
         progressBar=findViewById(R.id.progress_bar);
+        messageText=findViewById(R.id.message_text);
     }
 
     private void getSupportDetails() {
@@ -81,9 +84,12 @@ public class SupportDialog extends Dialog {
                      Data datalist= response.body().getData();
                      list.add(new SupportTextType(datalist.getEmail()));
 
+                        messageText.setText(response.body().getMessage());
+
                         SupportAdpater supportAdpater=new SupportAdpater(context,list);
                         rvSupport.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
                         rvSupport.setAdapter(supportAdpater);
+                        btnOk.setVisibility(View.VISIBLE);
 
                     } else if (response.code() == 401) {
                         CommonUtility.showToast(context, response.body().getMessage());

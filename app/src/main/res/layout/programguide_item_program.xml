@@ -33,7 +33,8 @@
         android:layout_height="match_parent"
         tools:text="Item title"
         android:fontFamily="@font/helvetica_neue_medium"
-        android:background="@drawable/splash_background"/>
+        android:background="#00ffffff"/>
+<!--        android:background="@drawable/splash_background"/>-->
 
     <ProgressBar
         android:id="@+id/progress"

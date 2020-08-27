@@ -7,9 +7,9 @@ import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
 import android.widget.Toast
-import com.egeniq.androidtvprogramguide.ProgramGuideFragment
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
+import com.streamly.tv.ProgramGuideFragment
+import com.streamly.tv.entity.ProgramGuideChannel
+import com.streamly.tv.entity.ProgramGuideSchedule
 import com.streamly.tv.HomeBean
 import com.streamly.tv.VerticalHomeBean
 import com.streamly.tv.local_storage.TokenStorage
@@ -138,7 +138,7 @@ class NewsFragment (context: Context): ProgramGuideFragment<NewsFragment.SimpleP
         setState(State.Loading)
          MIN_CHANNEL_START_TIME = localDate.atStartOfDay().withHour(2).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
          MAX_CHANNEL_START_TIME = localDate.atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-         MIN_CHANNEL_END_TIME = localDate.atStartOfDay().withHour(72).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
+         MIN_CHANNEL_END_TIME = localDate.atStartOfDay().withHour(23).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
          MAX_CHANNEL_END_TIME = localDate.plusDays(1).atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
 
        val authToken = TokenStorage.readSharedToken(eContext, ConstantUtility.AUTH_TOKEN, null)

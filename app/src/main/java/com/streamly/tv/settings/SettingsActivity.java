@@ -12,7 +12,6 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import com.streamly.tv.MainActivity;

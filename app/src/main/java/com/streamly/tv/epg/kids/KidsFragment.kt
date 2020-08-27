@@ -7,14 +7,11 @@ import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
 import android.widget.Toast
-import com.egeniq.androidtvprogramguide.ProgramGuideFragment
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
+import com.streamly.tv.ProgramGuideFragment
+import com.streamly.tv.entity.ProgramGuideChannel
+import com.streamly.tv.entity.ProgramGuideSchedule
 import com.streamly.tv.HomeBean
 import com.streamly.tv.VerticalHomeBean
-import com.streamly.tv.epg.Datum
-import com.streamly.tv.epg.channelgenre.Comedy
-import com.streamly.tv.epg.channelgenre.Kid
 import com.streamly.tv.local_storage.TokenStorage
 import com.streamly.tv.playervideo.PlayerActivity
 import com.streamly.tv.retrofit_clients.ApiClient

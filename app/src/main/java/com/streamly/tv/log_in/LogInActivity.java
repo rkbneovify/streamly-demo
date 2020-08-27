@@ -53,6 +53,7 @@ public class LogInActivity extends FragmentActivity {
         });
 
         logInBinding.edUserName.setText("arun@gmail.com");
+//        logInBinding.edUserName.setText("sahilkashyap64@gmail.com");
         logInBinding.edPassword.setText("123456789");
         logInBinding.btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

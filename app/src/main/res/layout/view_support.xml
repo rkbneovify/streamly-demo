@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="@dimen/_4sdp"
     android:gravity="center">
+<!--    android:layout_margin="@dimen/_4sdp"-->
 
     <TextView
         android:id="@+id/tv_support"
@@ -16,7 +16,7 @@
         android:textSize="@dimen/_10ssp"
         android:textStyle="bold"
         android:fontFamily="@font/helvetica_neue_medium"
-        android:textAlignment="center"
-        android:padding="@dimen/_6sdp"/>
+        android:textAlignment="center" />
+<!--    android:padding="@dimen/_6sdp"-->
 
 </LinearLayout>

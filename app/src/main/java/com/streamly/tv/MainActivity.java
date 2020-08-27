@@ -9,14 +9,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.streamly.tv.databinding.ActivityMainBinding;
+import com.streamly.tv.epg.comedy.ComedyFragment;
+import com.streamly.tv.epg.family.FamilyFragment;
 import com.streamly.tv.epg.kids.KidsFragment;
 import com.streamly.tv.epg.movies.MoviesFragment;
 import com.streamly.tv.epg.news.NewsFragment;
+import com.streamly.tv.epg.others.OtherFragment;
 import com.streamly.tv.epg.sports.SportFragment;
 import com.streamly.tv.local_storage.TokenStorage;
 import com.streamly.tv.search_channels.SearchActivity;
 import com.streamly.tv.settings.SettingsActivity;
-import com.streamly.tv.utilities.CommonUtility;
 import com.streamly.tv.utilities.ConstantUtility;
 
 
@@ -37,19 +39,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
          initViews();
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new EpgFragment(MainActivity.this))
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EpgFragment(MainActivity.this))
                 .commit();
-
-
 
     }
 
     private void initViews() {
         mainBinding.imageSearch.setOnClickListener(this);
         mainBinding.textAll.setOnClickListener(this);
-        mainBinding.textRecent.setOnClickListener(this);
-        mainBinding.textMyChannels.setOnClickListener(this);
+        mainBinding.textOthers.setOnClickListener(this);
+        mainBinding.textFamily.setOnClickListener(this);
+        mainBinding.textComedy.setOnClickListener(this);
         mainBinding.textSports.setOnClickListener(this);
         mainBinding.textNews.setOnClickListener(this);
         mainBinding.textMovies.setOnClickListener(this);
@@ -75,12 +75,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         .commit();
                 break;
 
-            case R.id.text_recent:
-                CommonUtility.showToast(MainActivity.this,"Work in Progress");
+            case R.id.text_others:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new OtherFragment(MainActivity.this))
+                        .commit();
                 break;
 
-            case R.id.text_my_channels:
-                CommonUtility.showToast(MainActivity.this,"Work in Progress");
+            case R.id.text_family:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new FamilyFragment(MainActivity.this))
+                        .commit();
                 break;
 
             case R.id.text_sports:
@@ -92,6 +96,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.text_news:
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new NewsFragment(MainActivity.this))
+                        .commit();
+                break;
+
+            case R.id.text_comedy:
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ComedyFragment(MainActivity.this))
                         .commit();
                 break;
 

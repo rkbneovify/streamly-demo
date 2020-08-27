@@ -1,26 +1,18 @@
 package com.streamly.tv
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
-import com.egeniq.androidtvprogramguide.ProgramGuideFragment
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
-import com.streamly.tv.epg.ChannellistModel
-import com.streamly.tv.epg.Datum
+import com.streamly.tv.entity.ProgramGuideChannel
+import com.streamly.tv.entity.ProgramGuideSchedule
 import com.streamly.tv.local_storage.TokenStorage
-import com.streamly.tv.log_in.LogInActivity
 import com.streamly.tv.playervideo.PlayerActivity
 import com.streamly.tv.retrofit_clients.ApiClient
 import com.streamly.tv.retrofit_clients.ApiInterface
-import com.streamly.tv.utilities.CommonUtility
 import com.streamly.tv.utilities.ConstantUtility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -30,9 +22,6 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 

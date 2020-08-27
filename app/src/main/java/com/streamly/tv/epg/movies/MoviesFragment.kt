@@ -7,9 +7,9 @@ import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
 import android.widget.Toast
-import com.egeniq.androidtvprogramguide.ProgramGuideFragment
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
+import com.streamly.tv.ProgramGuideFragment
+import com.streamly.tv.entity.ProgramGuideChannel
+import com.streamly.tv.entity.ProgramGuideSchedule
 import com.streamly.tv.HomeBean
 import com.streamly.tv.VerticalHomeBean
 import com.streamly.tv.local_storage.TokenStorage

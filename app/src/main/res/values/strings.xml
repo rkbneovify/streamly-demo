@@ -55,7 +55,7 @@
     <string name="channels"> Channels</string>
     <string name="email">Email</string>
     <string name="all">All</string>
-    <string name="my_channels">My Channels</string>
+    <string name="comedy">Comedy</string>
     <string name="sports">Sports</string>
     <string name="news">News</string>
     <string name="movies">Movies</string>
@@ -81,10 +81,11 @@
         It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
         This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
         The sample string has an artificial indent level introduced for illustrating this feature.</string>
-    <string name="recent">RECENT</string>
+    <string name="others">Others</string>
     <string name="no_internet">No Internet found. Check your connection or try again.</string>
     <string name="termsofuses">Terms of uses</string>
     <string name="accept">Accept</string>
     <string name="terms"><![CDATA[T & C]]></string>
+    <string name="family">Family</string>
 
 </resources>

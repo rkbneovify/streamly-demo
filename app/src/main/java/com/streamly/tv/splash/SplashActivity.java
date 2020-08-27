@@ -27,8 +27,8 @@ public class SplashActivity extends FragmentActivity {
         network.registerNetworkCallback();
 
 //        Log.e("auth_token ",""+TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null));
-
 //        TokenStorage.clearSharedToken(SplashActivity.this);
+
         auth_token = TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -43,9 +43,6 @@ public class SplashActivity extends FragmentActivity {
                 }
             }
         },3000);
-
-
-
 
 
     }

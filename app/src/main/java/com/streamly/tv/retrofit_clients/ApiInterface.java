@@ -3,6 +3,7 @@ package com.streamly.tv.retrofit_clients;
 import com.streamly.tv.channelschedule.ChannelScheduleModel;
 import com.streamly.tv.epg.ChannellistModel;
 import com.streamly.tv.epg.channelgenre.ChannelGenreModel;
+import com.streamly.tv.playervideo.DrmKeyModel;
 import com.streamly.tv.settings.privacy.PrivacyPolicyModel;
 import com.streamly.tv.settings.profile.profilemodel.ProfileModel;
 import com.streamly.tv.settings.registerdevice.ConnectedDeviceModel;
@@ -59,7 +60,8 @@ public interface ApiInterface {
 
 
     @Headers("Accept: application/json")
-    @GET("oldchanneldayschdeule")//api/auth/channeldayschdeule
+//    @GET("oldchanneldayschdeule")//api/auth/channeldayschdeule
+    @GET("channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     /*@Headers("Accept: application/json")
@@ -79,5 +81,10 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @GET("termofuse")
     Call<TermsModel> getTermofuse();
+
+
+    @Headers("Accept: application/json")
+    @GET("getdrmkey")
+    Call<DrmKeyModel> getDrmKey(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
 }

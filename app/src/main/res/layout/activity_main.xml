@@ -57,8 +57,9 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/_9ssp" />
 
+
             <TextView
-                android:id="@+id/text_recent"
+                android:id="@+id/text_others"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_8sdp"
@@ -66,13 +67,14 @@
                 android:background="@drawable/options_states"
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:padding="@dimen/_2sdp"
-                android:text="@string/recent"
+                android:text="@string/others"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textSize="@dimen/_9ssp" />
 
+
             <TextView
-                android:id="@+id/text_my_channels"
+                android:id="@+id/text_family"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_8sdp"
@@ -80,11 +82,10 @@
                 android:background="@drawable/options_states"
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:padding="@dimen/_2sdp"
-                android:text="@string/my_channels"
+                android:text="@string/family"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textSize="@dimen/_9ssp" />
-
 
             <TextView
                 android:id="@+id/text_sports"
@@ -100,6 +101,7 @@
                 android:textAllCaps="true"
                 android:textSize="@dimen/_9ssp" />
 
+
             <TextView
                 android:id="@+id/text_news"
                 android:layout_width="wrap_content"
@@ -110,6 +112,20 @@
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:padding="@dimen/_2sdp"
                 android:text="@string/news"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/text_comedy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:background="@drawable/options_states"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/comedy"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textSize="@dimen/_9ssp" />

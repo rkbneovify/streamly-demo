@@ -1,7 +1,7 @@
 package com.streamly.tv.epg;
 
 import android.text.Spanned;
-import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel;
+import com.streamly.tv.entity.ProgramGuideChannel;
 
 public class SimpleChannel implements ProgramGuideChannel {
      String  id;
