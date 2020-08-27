@@ -40,7 +40,8 @@ class ChannelController extends Controller
         $iPad    = stripos($ua,"iPad");
         $iPadOS = stripos($ua,"Macintosh");
         $appletv = stripos($ua,"appletv");
-        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+        $Android = stripos($ua,"Android");
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
             $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
             // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
             // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
@@ -109,7 +110,8 @@ class ChannelController extends Controller
     $iPad    = stripos($ua,"iPad");
     $iPadOS = stripos($ua,"Macintosh");
     $appletv = stripos($ua,"appletv");
-    if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+$Android = stripos($ua,"Android");
+if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
         $channel = Channel::select('id', 'callSign', 'url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
     }else{
         $channel = Channel::select('id', 'callSign', 'dash_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
@@ -419,7 +421,8 @@ $iPhone  = stripos($ua,"iPhone");
 $iPad    = stripos($ua,"iPad");
 $iPadOS = stripos($ua,"Macintosh");
 $appletv = stripos($ua,"appletv");
-if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv) {
+$Android = stripos($ua,"Android");
+if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
 
