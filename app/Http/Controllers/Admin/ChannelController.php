@@ -26,6 +26,10 @@ class ChannelController extends Controller
      * @param  Index  $request
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('jwt.verify', ['except' => ['index','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData']]);
+    }
     public function index()
     {  
         $record = Channel::with('genre')->paginate(10);
