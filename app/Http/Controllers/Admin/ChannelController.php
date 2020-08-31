@@ -61,6 +61,7 @@ class ChannelController extends Controller
         if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
             $response = [
                 'success' => true,
+                'useragent'=>$ua,
                 'data'=>'m3u8 links', 
                 // 'data'=>$pagechannel->count(), 
                 'message' => 'For apple devices',
@@ -71,6 +72,7 @@ class ChannelController extends Controller
         }else{
             $response = [
                 'success' => true,
+                'useragent'=>$ua,
                 'data'=>'mpd links', 
                 // 'data'=>$pagechannel->count(), 
                 'message' => 'For non-apple devices',
