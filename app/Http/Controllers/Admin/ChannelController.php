@@ -47,6 +47,7 @@ class ChannelController extends Controller
         $appletv = stripos($ua,"appletv");
         $Android = stripos($ua,"Android");
         $Roku = stripos($ua,"Roku");
+        $Darwin = stripos($ua,"Darwin");
         if($Roku){
             $response = [
                 'success' => true,
@@ -58,7 +59,7 @@ class ChannelController extends Controller
             // return response()->json($reco);
             return response()->json($response, 200);  
         }
-        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
+        if( $iPod ||$Darwin|| $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
             $response = [
                 'success' => true,
                 'useragent'=>$ua,
