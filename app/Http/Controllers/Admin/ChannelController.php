@@ -28,13 +28,57 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData']]);
+        $this->middleware('jwt.verify', ['except' => ['index','checkdevice','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData']]);
     }
     public function index()
     {  
         $record = Channel::with('genre')->paginate(10);
         
         return view('admin.channels.index', compact('record'));
+    }  
+
+    public function checkdevice(Request $request)
+    {  
+        $ua = $request->server('HTTP_USER_AGENT');
+        $iPod    = stripos($ua,"iPod");
+        $iPhone  = stripos($ua,"iPhone");
+        $iPad    = stripos($ua,"iPad");
+        $iPadOS = stripos($ua,"Macintosh");
+        $appletv = stripos($ua,"appletv");
+        $Android = stripos($ua,"Android");
+        $Roku = stripos($ua,"Roku");
+        if($Roku){
+            $response = [
+                'success' => true,
+                'data'=>'ism links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For roku devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);  
+        }
+        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
+            $response = [
+                'success' => true,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else{
+            $response = [
+                'success' => true,
+                'data'=>'mpd links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For non-apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }
     }  
     
     public function channeljson(Request $request) 
