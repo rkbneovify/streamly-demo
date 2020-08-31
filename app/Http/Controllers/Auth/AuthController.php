@@ -93,7 +93,9 @@ class AuthController extends Controller
         if(empty(request('email')) || empty(request('password'))){
             return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
         }
-    
+        $expirationInMinutes = 43800;//one month in minutes
+        JWTAuth::factory()->setTTL($expirationInMinutes);
+
         if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json(['success'=>false,'message' => 'Invalid credentials','response_code'=>401], 401);
         }
@@ -183,6 +185,12 @@ class AuthController extends Controller
     public function me()
     {        
         $user=JWTAuth::user();
+
+// use Tymon\JWTAuth\Facades\JWTAuth;
+    //     $token = $request->bearerToken();
+    // $apy = JWTAuth::getPayload($token)->toArray();
+
+    // 'payload'=>$apy,
         $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
         
         return response()->json($user_data);

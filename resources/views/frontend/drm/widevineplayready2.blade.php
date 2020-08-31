@@ -74,7 +74,7 @@
 		    display: block;
 		    width: auto;
 		    margin: 0 auto;
-		    height: 1.5rem;https://github.com/jfujita/videojs-http-source-selector/blob/master/index.html
+		    height: 1.5rem;
 		}
 
 		.owl-item {
