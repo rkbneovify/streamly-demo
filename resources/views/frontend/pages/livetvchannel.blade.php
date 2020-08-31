@@ -11,52 +11,19 @@
 	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 	<script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
 
-	{{-- <script src="//vjs.zencdn.net/ie8/1.1.1/videojs-ie8.min.js"></script>
-	<link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
-	<script src="//vjs.zencdn.net/5.4.6/video.min.js"></script> --}}
 	
-    <!-- video.js -->
-    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
-    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
+  
+{{-- <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/jquery/3.3.1/jquery.min.js"></script> --}}
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 
-    <!-- Brightcove DVRUX plugin -->
-    <link href="//players.brightcove.net/videojs-live-dvrux/1/videojs-live-dvrux.min.css" rel="stylesheet">
-    <script src="//players.brightcove.net/videojs-live-dvrux/1/videojs-live-dvrux.min.js"></script>
-
-    <!-- Brightcove quality picker -->
-    <link href="//players.brightcove.net/videojs-quality-menu/1/videojs-quality-menu.css" rel="stylesheet">
-    <script src="//players.brightcove.net/videojs-quality-menu/1/videojs-quality-menu.min.js"></script>
-
-		<script src="https://cdn.streamroot.io/videojs-hlsjs-plugin/1/stable/videojs-hlsjs-plugin.js"></script>
-		
-    <script>
-			var options = {
-					plugins: {
-							// JSON config added by Brightcove player generator
-							streamrootHls: {
-									hlsjsConfig: {
-											// Your Hls.js config
-									},
-									// captionConfig: {
-									//     line: -1,
-									//     align: 'center',
-									//     position: 50,
-									//     size: 40,
-									// }
-							},
-							qualityMenu: {
-									useResolutionLabels: true
-							}
-					}
-			};
-			var player = videojs('example-video', options);
-			player.qualityMenu();
-			player.dvrux();
-	</script>
-	<script>
-		
-		$(document).ready(function() {
-			var owl = $('.owl-carousel');
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
+{{-- <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
+<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+<script>
+	$('document').ready(function(){
+		var owl = $('.owl-carousel');
 			owl.owlCarousel({
 				slideBy: 6,
 				loop:true,
@@ -78,8 +45,39 @@
 			            loop:false
 			        }
 			    }
-			})
-		});
+			});
+		var player = videojs('player', {autoplay: true});
+	
+		player.httpSourceSelector();
+
+					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
+					player.eme({
+							// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
+							emeHeaders: {
+									'customdata': '{{$encoded_auth_xml}}'
+							}
+					});
+
+					player.on('ready', function() {
+							// Setup dash + pr/wv
+							var wvprDashSrc = {
+									src: '{{$url[0]->url}}',
+									// src: 'https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd',
+									type: 'application/dash+xml',
+									keySystems: {
+											'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+											'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+									}
+							};
+
+							// Set the source to the player to init/start the playback.
+							player.src(wvprDashSrc);
+							
+
+					});
+	});
+		
+		
 	</script>
 	<style>
 
@@ -217,9 +215,9 @@
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-						<video id="example-video" width="600" height="300" class="video-js vjs-default-skin" controls autoplay muted>
+						<video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
 							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
-							<source src={{$url[0]->url}} type="application/x-mpegURL"/>
+							<source src="" type="application/x-mpegURL"/>
 					</video>
 
 						<div class="channel-detail">

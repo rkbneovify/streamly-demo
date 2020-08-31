@@ -26,7 +26,8 @@
 
 @include('frontend.partials.footer')
 <script  src="{{ asset('frontend/jquery-3.5.1.min.js') }}" ></script> 
-<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script>
+{{-- <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script> --}}
+<script  src="{{ asset('frontend/jquery-ui.min.js') }}" ></script> 
 <script  src="{{ asset('frontend/popper.min.js') }}" ></script> 
 <script  src="{{ asset('frontend/bootstrap.min.js') }}" ></script>
 

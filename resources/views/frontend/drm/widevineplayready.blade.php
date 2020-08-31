@@ -35,7 +35,7 @@
 						player.on('ready', function() {
                 // Setup dash + pr/wv
                 var wvprDashSrc = {
-                    src: 'https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd',
+                    src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd',
                     type: 'application/dash+xml',
                     keySystems: {
                         'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',

@@ -9,6 +9,7 @@ use App\Models\Channel;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
+use KeyOSAuthXMLGenerator;
 class LiveTv extends Controller
 { 
     public function showPage(){
@@ -46,7 +47,29 @@ class LiveTv extends Controller
     }
 
     public function showChannel($callSign,$genre){
-
+        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
+        
+     
+        try {
+            // Create authentication XML generator instance.
+            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
+            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
+          
+            // Crate Simple PR license
+            $pr_lic = $auth_xml_generator->newSimpleLicense();
+          
+            // Create WV license
+            $wv_lic = $auth_xml_generator->newWidevineLicense();
+          
+            // Create FP license
+            $fp_lic = $auth_xml_generator->newFairPlayLicense();
+         
+             
+            // Generate Authentication XML.
+            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
+            
+    
+         
     	if( Auth::check()){
             $login = true;
         } else {
@@ -75,8 +98,11 @@ class LiveTv extends Controller
    // print_r($url); exit;
       $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
       
-    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url'));
-
+    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+    }catch(Exception $e) {
+            
+            return $e->getMessage();
+          }
     }
 
     public function showAllPage()
