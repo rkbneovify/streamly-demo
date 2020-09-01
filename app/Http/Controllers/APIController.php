@@ -301,7 +301,9 @@ public function login(Request $request)
         $iPadOS = stripos($ua,"Macintosh");
         $appletv = stripos($ua,"appletv");
         $Android = stripos($ua,"Android");
-        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {
+        
+        $Darwin = stripos($ua,"Darwin");
+        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)   {
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
         
         
@@ -415,7 +417,9 @@ public function login(Request $request)
         $appletv = stripos($ua,"appletv");
         $Android = stripos($ua,"Android");
         $myFavorites = JWTAuth::user()->favorites;
-        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {
+
+        $Darwin = stripos($ua,"Darwin");
+        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
             $myFavorites->map(function ($address)  {
 
               unset($address['dash_url']);
@@ -493,9 +497,10 @@ $ua = $request->server('HTTP_USER_AGENT');
         $iPadOS = stripos($ua,"Macintosh");
         $appletv = stripos($ua,"appletv");
         $Android = stripos($ua,"Android");
+        $Darwin = stripos($ua,"Darwin");
         
 $recentschannel = JWTAuth::user()->recentschannel;
-if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)    {
     $recentschannel->map(function ($address)  {
 
       unset($address['dash_url']);
@@ -544,9 +549,11 @@ public function myRecents(Request $request)
         $iPadOS = stripos($ua,"Macintosh");
         $appletv = stripos($ua,"appletv");
         $Android = stripos($ua,"Android");
+        $Darwin = stripos($ua,"Darwin");
+        
        
         $recentschannel = JWTAuth::user()->recentschannel;
-        if( $iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {
+        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)   {
             $recentschannel->map(function ($address)  {
 
               unset($address['dash_url']);
