@@ -83,8 +83,20 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
-    {	
-        $ua = $request->server('HTTP_USER_AGENT');
+    {	//create new agent instance
+        $agent = new Agent();
+        
+        //check if agent is robot
+        if ($agent->isRobot()) {
+            $ua= $agent->robot();
+        } else{ //if agent is not robot then get agent browser and platform like Chrome in Linux
+            $ua = $agent->browser() . " in " . $agent->platform();
+            //if agent browser and platform not obtained, then we check the agent technology
+            if ($agent == ' in ') {
+                $ua =  request()->header('User-Agent');
+            }}
+        
+        // $ua = $request->server('HTTP_USER_AGENT');
         $deviceid= $request->input('deviceid') ?? 'Not Applicable';
        
         $deviceDetails=$ua.'#~'.$deviceid;
