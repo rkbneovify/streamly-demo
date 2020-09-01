@@ -28,19 +28,20 @@
         }
   </style>
   <link rel="stylesheet" href="{{ asset('frontend/controlbar/controlbar.css') }}">
-  <script src="http://cdn.dashjs.org/v3.1.2/dash.all.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/3.1.2/dash.mss.min.js"></script>
+	<script src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
+	<script src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script>
 <script src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
 	
 
 <script> var player,firstLoad = true;
-
+ 
   function init() {
       player = dashjs.MediaPlayer().create();
       // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
       player.updateSettings({
           // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
           'streaming': {
+						'liveDelay': 10,
               //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
               //determine which assets to request in order to perfom adaptive streaming of the content.
               //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
@@ -288,6 +289,7 @@
       </div>
       
 <div> example:
+       <p>https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd</p>
        <p>http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest</p>
        <p>http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest</p>
        <p>https://vm2.dashif.org/livesim/testpic_2s/Manifest.mpd</p>
