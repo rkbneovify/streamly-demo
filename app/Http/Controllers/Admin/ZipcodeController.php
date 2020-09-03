@@ -134,11 +134,11 @@ class ZipcodeController extends Controller
      }
     $model = Zipcode::find($id);
     if(!$model){
-        return redirect('admin/zipcode')->with('info','zipcode with id ' . $id . ' cannot be found.'); 
+        return redirect('admin/allowedzipcode')->with('info','zipcode with id ' . $id . ' cannot be found.'); 
     }
     else{$model->update($input); //update the subscription info
 
-        return redirect('admin/zipcode')->with('info','zipcode updated Successfully');
+        return redirect('admin/allowedzipcode')->with('info','zipcode updated Successfully');
    }
     }    /**
      * Delete a  resource from  storage.
