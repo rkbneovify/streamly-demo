@@ -1,17 +1,17 @@
 Sub INIT() 'This function retrieves and parses the feed and stores each content item in a ContentNode
-    print "API Call INIT: ";m.top.state
+    ' print "API Call INIT: ";m.top.state
     m.top.functionName = "ChannnleAPI"    
 end Sub
 
 sub ChannnleAPI()
-?"ChannnleAPI"
-?"API start call"
+' ?"ChannnleAPI"
+' ?"API start call"
 
         m.top.callType="POST"      
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
-  ?"programData: ";programData
+  ' ?"pr-ogramData: ";programData
 'sleep(4000)
-?"API End call";   
+' ?"API End call";   
 
   if programData.response_code = 200
     
@@ -42,4 +42,3 @@ sub ChannnleAPI()
    m.top.programData = [] 
 
 end sub
- 

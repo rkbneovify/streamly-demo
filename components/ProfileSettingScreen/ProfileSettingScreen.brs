@@ -1,12 +1,13 @@
 sub init()
 
  m.ProfileCategory = m.top.findNode("ProfileCategory")
- m.Dialog = m.top.findNode("Dialog")
+'  m.Dialog = m.top.findNode("Dialog")
 ' m.ProfileSettingScreen = CreateObject("roSGNode", "ProfileSettingScreen")
  
  'dialog
- m.dialogbackgndUri = m.top.findNode("dialogbackgndUri")
-' m.dialogbackgndUri.uri = "pkg:/images/home/borderwhite3.png"
+'  m.dialogbackgndUri = m.top.findNode("dialogbackgndUri")
+ ' m.dialogbackgndUri.uri = "pkg:/images/home/borderwhite3.png"
+ 
  m.logoutView = m.top.findNode("logoutView")
  m.profileView = m.top.findNode("profileView")
  m.NoButton = m.top.findNode("NoButton")
@@ -15,6 +16,10 @@ sub init()
  m.Lbaelok = m.top.findNode("Lbaelok")
  m.labelYes = m.top.findNode("labelYes")
  m.labelNo = m.top.findNode("labelNo")
+'  m.logoutView.height =724
+'  m.logoutView.width =1223
+'  m.logoutView.translation =[(1920-1223)/2,(1080-724)/2]
+
 
 
   font = getFont(36, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
@@ -159,7 +164,7 @@ sub initDialogMrkupWithData(event as object)
     
  else if event.getData() = 4 'Logout api call 
      m.ProfileCategory.setFocus(false)
-     m.YesButton.setFocus(true)
+     m.NoButton.setFocus(true)
      showDialog("Sign out",true,false)
  end if
 
@@ -202,8 +207,10 @@ sub responseAPI(event as object)
         marupContent.createChild("ContentNode").addFields({"Version:":userData.version.ToStr()})
        end if
        
-       if userData.created <> invalid        
-           marupContent.createChild("ContentNode").addFields({"Build Date:":userData.created.ToStr()})
+       if userData.created <> invalid   
+        date = CreateObject("roDateTime")     
+        date.FromISO8601String(userData.created.ToStr())
+           marupContent.createChild("ContentNode").addFields({"Build Date:":date.AsDateString("short-date")})
        end if
   
         m.dialogOptions.itemSize = [816,52]
@@ -399,34 +406,40 @@ sub showDialog(dialogView as String , show as boolean ,focus as boolean)
   if  show
      if dialogView = "Sign out"
         
-        m.dialogbackgndUri.width = 1223
-        m.dialogbackgndUri.height = 488
+        m.logoutView.width = 1223
+        m.logoutView.height = 488
         m.logoutView.visible = show
-        m.Dialog.visible = show
+        ' m.Dialog.visible = show
+        m.logoutView.translation = [(1920-m.logoutView.boundingRect().width)/2,(1080-m.logoutView.boundingRect().height)/2]
+
         
      else if dialogView = "Account" 
         
-        m.dialogbackgndUri.width = 1223
-        m.dialogbackgndUri.height = 640       
+        m.profileView.width = 1223
+        m.profileView.height = 640       
         m.profileView.visible = show
-        m.Dialog.visible = show
+        ' m.profileView.translation = [(1920-1223)/2,(1080-640)/2]
+        m.profileView.translation = [(1920-m.profileView.boundingRect().width)/2,(1080-m.profileView.boundingRect().height)/2]
+
+        ' m.Dialog.visible = show
         m.ok.translation= [471,510]
         m.ok.setFocus(true)
           
      else if dialogView = "Registered Devices"
         
-        m.dialogbackgndUri.width = 1223
-        m.dialogbackgndUri.height = 714
+        m.profileView.width = 1223
+        m.profileView.height = 714
         
         m.profileView.visible = show
-        m.Dialog.visible = show
+        m.profileView.translation = [(1920-m.profileView.boundingRect().width)/2,(1080-m.profileView.boundingRect().height)/2]
+        ' m.Dialog.visible = show
         m.ok.setFocus(true) 
         m.ok.translation= [471,590]
      else if dialogView = ""
      
      end if
   else
-    m.Dialog.visible = show
+    ' m.Dialog.visible = show
     m.ProfileCategory.setFocus(focus)
   end if
  
@@ -497,7 +510,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
     result = false    
     if press
     
-      if m.ScrolableText.hasFocus() and key="down"
+      if m.ScrolableText.hasFocus() and ( key="down" or key="OK" )
          m.OkButton1.setFocus(true)
          return true 
      else  if m.OkButton1.hasFocus() and  key="up"

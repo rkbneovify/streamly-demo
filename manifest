@@ -11,5 +11,7 @@ splash_screen_sd=pkg:/images/SplashSD.png
 splash_color=#121212
 ui_resolutions=FHD
 splash_rsg_optimization=1
+requires_widevine_drm=1
+requires_widevine_version=1.0
 host=192.168.43.172
 port=54321

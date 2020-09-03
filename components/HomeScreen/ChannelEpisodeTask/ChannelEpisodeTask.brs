@@ -14,13 +14,15 @@ sub ChannnleAPI()
     categoryChannels = CreateObject("roAssociativeArray")
 
     categoryChannels["ALL"] = channles
-    categoryChannels["Recent"] = []
+    categoryChannels["RECENT"] = []
 
     for i = 0 to channles.Count()
         if channles[i] <> invalid
             ' ? "channles[i].genrename ;"; channles[i].genrename
+
             if channles[i].genrename <> invalid
                 for each genre in channles[i].genrename
+                     genre = UCase(genre) 
                     if categoryChannels[genre] <> invalid
                         arrayValue =  categoryChannels[genre]
                         arrayValue[arrayValue.count()] = channles[i]
@@ -45,9 +47,9 @@ sub ChannnleAPI()
     '  ?"categoryChannels[ALL][0]";categoryChannels["ALL"][0]
     recentResponse = APICall(getBaseUrl() + getRecentUrl(), "GET", invalid, invalid)
     ' ? "recentResponse:"; recentResponse.data
-    categoryChannels["Recent"]=invalid
+    categoryChannels["RECENT"]=invalid
     if (recentResponse.response_code = 200 and recentResponse.data <> invalid and recentResponse.data.Count() > 0)
-        categoryChannels["Recent"] = recentResponse.data
+        categoryChannels["RECENT"] = recentResponse.data
     end if
 
     m.top.ChannelData = categoryChannels

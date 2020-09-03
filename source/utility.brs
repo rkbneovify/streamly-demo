@@ -38,7 +38,7 @@ function getFont(fontSize as Integer, fontUri as String) as Object
 end function
 
 function APICall(url as String, callType as String, data as Object, parameters as Object) as Object
-    ? "APICall:"
+    ' ? "APICall:"
     requestObject = CreateObject("roUrlTransfer")
 
 ' ?"parameters tessting:";parameters
@@ -56,7 +56,7 @@ function APICall(url as String, callType as String, data as Object, parameters a
         requestObject.SetUrl(url)
     end if
 
-    ? "request url:"; url
+    ' ? "request url:"; url
     requestObject.addHeader("Content-Type", "application/json")
     requestObject.addHeader("Authorization", "Bearer " + getAccountToken())
     requestObject.setCertificatesFile("common:/certs/ca-bundle.crt")
@@ -68,13 +68,13 @@ function APICall(url as String, callType as String, data as Object, parameters a
     requestObject.setMessagePort(port)
 '    requestObject.addHeader("Content-Type","application/json") 
     if callType = "POST"
-        ? "APICall:::POST CALL"
+        ' ? "APICall:::POST CALL"
         requestObject.SetRequest(callType)
         body = FormatJson(data)
 
         req = requestObject.AsyncPostFromString(body)
     else if callType = "GET"
-        ? "APICall:::GET CALL"
+        ' ? "APICall:::GET CALL"
         requestObject.SetRequest(callType)
         req = requestObject.AsyncGetToString()
     end if
@@ -92,7 +92,7 @@ function APICall(url as String, callType as String, data as Object, parameters a
                     responseJson["responseCode"] = msg.GetResponseCode()
                     responseJson["data"] = JsonResponse
 
-'                 ?"APICall::JsonResponse: ";JsonResponse
+                ' ?"APICall::JsonResponse: ";JsonResponse
 
                     return JsonResponse
                 else
@@ -100,7 +100,7 @@ function APICall(url as String, callType as String, data as Object, parameters a
                     responseJson["data"] =  ParseJson(msg.GetString())
                     responseJson["Failure"] =  msg.GetFailureReason()
 
-'                 ?"APICall::JsonResponse: ";responseJson
+                ' ?"APICall::JsonResponse: ";responseJson
 
                     return responseJson
                 end if

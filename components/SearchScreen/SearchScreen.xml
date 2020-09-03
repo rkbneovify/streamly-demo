@@ -5,6 +5,9 @@
 	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
 
   <interface>
+    <!-- Speech Recognizer callbacks -->
+    <function name="speechRecognizerDidReceiveTranscript"/>
+    
    <field id="exitView" type="boolean" />
    <field id="playChannel" type="String" />
   </interface>

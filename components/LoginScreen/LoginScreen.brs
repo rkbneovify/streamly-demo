@@ -69,11 +69,18 @@ end sub
 sub termConditionUI()
     ? "termConditionUI";
 
-    m.dialogHeight = 800
-    m.dialogWidth = 1300
+    m.dialogHeight = 730
+    m.dialogWidth = 1250
 
-    m.termCondition = m.top.createChild("Poster")
-    m.termCondition.visible = false
+    m.termConditionbackgrd  = m.top.createChild("Rectangle")
+    m.termConditionbackgrd.color = "#000000"
+    m.termConditionbackgrd.opacity = .95
+    m.termConditionbackgrd.height =1080
+    m.termConditionbackgrd.width =1920
+    m.termConditionbackgrd.visible = false
+
+    m.termCondition  = m.termConditionbackgrd.createChild("Poster")
+    
     m.termCondition.width = m.dialogWidth
     m.termCondition.height = m.dialogHeight
     m.termCondition.uri = "pkg:/images/Login/backGroundBox.png"
@@ -107,24 +114,24 @@ sub termConditionUI()
     m.termConditionDialogButton.observeField("buttonSelected", "closeDialog")
 
 '                 m.OkButton.translation= [466,429]
-    m.termConditionDialogButton.minWidth = "280"
-    m.termConditionDialogButton.maxWidth = "280"
+    m.termConditionDialogButton.minWidth = "260"
+    m.termConditionDialogButton.maxWidth = "260"
     m.termConditionDialogButton.focusedTextColor = "#FFFFFF"
-    m.termConditionDialogButton.height = "90"
+    m.termConditionDialogButton.height = "80"
     m.termConditionDialogButton.focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
     m.termConditionDialogButton.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
     m.termConditionDialogButton.showFocusFootprint = "true"
     m.termConditionDialogButton.iconUri = ""
     m.termConditionDialogButton.focusedIconUri = ""
-    okLabel =  m.termConditionDialogButton.createChild("Label")
-    okLabel.horizAlign = "center"
-    okLabel.height = "84"
-    okLabel.width = "280"
-    okLabel.vertAlign = "center"
-    okLabel.text = "Accept"
-    okLabel.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
-    okLabel.color = "#000000"
-    m.termConditionDialogButton.translation = [(m.dialogWidth - m.termConditionDialogButton.boundingRect().width) / 2, m.dialogHeight * (88 / 100)]
+    m.okLabel =  m.termConditionDialogButton.createChild("Label")
+    m.okLabel.horizAlign = "center"
+    m.okLabel.height = "80"
+    m.okLabel.width = "260"
+    m.okLabel.vertAlign = "center"
+    m.okLabel.text = "Accept"
+    m.okLabel.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.okLabel.color = "#000000"
+    m.termConditionDialogButton.translation = [(m.dialogWidth - m.termConditionDialogButton.boundingRect().width) / 2, m.dialogHeight * (85 / 100)]
 end sub
 
 sub initApi()
@@ -142,8 +149,12 @@ sub responseAPI(event as Object)
     if m.ProfileTask.callto = "termofuse"
         m.needHelpText = "termofuse"
         ? "termofuse:"; responseData
-        m.termCondition.visible = true
+        m.termConditionbackgrd.visible = true
         m.termConditionScrollText.text =  responseData.data
+        
+        ' m.termofUsesDialog = CreateObject("rosgnode","dialog")
+        ' m.termofUsesDialog.appendChild(m.termCondition)
+        ' m.top.getScene().dialog = m.termofUsesDialog
         m.termConditionScrollText.setFocus(true)
     else if m.ProfileTask.callto = "Support"
         m.SupportDialog.visible = true
@@ -255,7 +266,7 @@ end sub
 sub showDialogforCreateAccount()
 '    m.top.appendChild(m.DialogNodePoster)
     m.needHelpText = "registerNow"
-    showDialog("Sign up for the best experience", "Please go to http://streamlytv.com for creating new account.", true, "", "")
+    showDialog("Sign up for the best experience", "Please go to https://streamlytv.com for creating new account.", true, "", "")
 '    m.OkButton.setFocus(true) 
 end sub
 
@@ -557,7 +568,8 @@ sub closeDialog()
         m.registerNow.setFocus(true)
     else if m.needHelpText = "termofuse"
         ? "termofuse:"; responseData
-        m.termCondition.visible = false
+        m.okLabel.color = "#000000"
+        m.termConditionbackgrd.visible = false
         m.termConditionButton.setFocus(true)
     else
         m.HelpButton.setFocus(false)
@@ -640,6 +652,15 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
 '            if m.ProfileTask.callto = "termofuse"
 '     closeshowDialogforCreateAccoun()
             return true
+        else if (( m.termConditionDialogButton.hasFocus()) and key = "up")
+            m.okLabel.color = "#000000"
+            m.termConditionScrollText.setFocus(true)
+            return true
+            
+        else if (( m.termConditionScrollText.hasFocus()) and key = "down" or key = "OK")
+            m.okLabel.color = "#ffffff"
+            m.termConditionDialogButton.setFocus(true)
+            return true    
         else if ((m.termConditionButton.hasFocus() or m.termConditionScrollText.hasFocus()) and key = "back")
             closeDialog()
             return true

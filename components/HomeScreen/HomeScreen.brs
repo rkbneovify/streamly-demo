@@ -77,7 +77,7 @@ sub init()
     m.timeGride.contentStartTime = t
     m.timeGride.leftEdgeTargetTime = currentTime.AsSeconds()
 
-    m.timeGride.focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+    m.timeGride.focusBitmapUri = "pkg:/images/home/buttonFoucs1.9.png"
     m.timeGride.channelInfoComponentName = "ChannelItemComponent"
 
     m.timeGride.observeField("programSelected", "programSelected")
@@ -85,7 +85,7 @@ sub init()
 
     m.timeGride.programHorizMargin = 24
 '    m.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
-    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite1.png"
+    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite3.9.png"
     m.timeGride.overlayBitmapUri = ""
     m.timeGride.channelInfoBackgroundBitmapUri = ""
     m.timeGride.timeBarBitmapUri = "pkg:/images/transparentimg.png"
@@ -113,7 +113,6 @@ sub init()
     m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
 '    m.lazyLoadingTimer.control = "start"
 '    m.ChannelData = createObject("roArray")
-
     ' prgramView Update Timer
 
 '    m.programUpdateTimer = CreateObject("roSGNode", "Timer")
@@ -122,6 +121,7 @@ sub init()
 '    m.programUpdateTimer.observeField("fire", "StartProgramUpdating")    
 
     PosterBackground = m.top.createChild("Poster")
+
     PosterBackground.translation = [1411, 716]
 
     PosterBackground.height = 236
@@ -209,7 +209,7 @@ sub RestartLazyLoadingTimer()
 end sub
 
 sub channelFocused(event as Object)
-    ? "channelFocused:"; event.getData()
+    ' ? "channelFocused:"; event.getData()
 'm.lazyLoadingTimer.control = "start"
    if m.channelListData < 8 and event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
        if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
@@ -224,7 +224,7 @@ sub channelFocused(event as Object)
 end sub
 
 sub StartContentLoading()
-    ? "StartContentLoading; "
+    ' ? "StartContentLoading; "
     
     if m.channelListData < m.ChannelData[m.channelNameString].Count() and m.timeGride.content <> invalid
         
@@ -267,7 +267,7 @@ sub getChannelDAta(channelnode as Object, channelData as Object)
 end sub
 
 sub showResponse(event as Object)
-    ? "testing ::showResponse; ";
+    ' ? "testing ::showResponse; ";
     if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "stop" then m.lazyLoadingTimer.control = "start"
     event.getRoSGNode().control = "stop"
 end sub
@@ -281,8 +281,8 @@ end sub
 sub ChannelResponseData()
 ' ?"ChannelResponseData; "m.ChannelEpisodeTask.ChannelData
    
-   m.top.signalBeacon("AppLaunchComplete")
-   m.timeGride.setFocus(true)
+    m.top.signalBeacon("AppLaunchComplete")
+    m.timeGride.setFocus(true)
     m.ChannelData = m.ChannelEpisodeTask.ChannelData
     initGrigData(m.ChannelData)
     m.channelListData = 0
@@ -297,52 +297,72 @@ end sub
 
 function playVideo(url as String, channelid as String) as Void
     ? "HomeScreen:playVideo: "
-
+    m.video.thumbnailImage = ""
     if channelid <> invalid
-        m.recentTask = CreateObject("roSGNode", "recentTask")
-        m.recentTask.data = { "channelids": channelid }
-        m.recentTask.observeField("recentResponse", "recentResponseUpdate")
-        m.recentTask.control = "RUN"
+        m.RECENTTask = CreateObject("roSGNode", "RECENTTask")
+        m.RECENTTask.data = { "channelids": channelid }
+        m.RECENTTask.observeField("RECENTResponse", "RECENTResponseUpdate")
+        m.RECENTTask.control = "RUN"
     end if
     vidContent = CreateObject("RoSGNode", "ContentNode")
-' contentNode = createObject("roSGNode", "contentNode")
-' vidContent.streamFormat = "smooth"
-' ' contentNode.url = "wwww.myvideo.com/content.ism"
-' vidContent.encodingType = "encode:base64"
-' vidContent.encodingKey = "https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx" + "%%%" + "PEtleU9TQXV0aGVudGljYXRpb25YTUw+CjxEYXRhPgogIDxHZW5lcmF0aW9uVGltZT4yMDIwLTA4LTE0IDA3OjEzOjIwLjE2MzwvR2VuZXJhdGlvblRpbWU+CiAgPEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMTMgMDc6MTM6MjAuMTY0PC9FeHBpcmF0aW9uVGltZT4KICA8VW5pcXVlSWQ+ODUwN2RmMzQyNDZjMzY2M2I4NTA5YWZmY2RkNzlkYzk8L1VuaXF1ZUlkPgogIDxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+CiAgPFdpZGV2aW5lUG9saWN5IGZsX0NhblBsYXk9InRydWUiIGZsX0NhblBlcnNpc3Q9ImZhbHNlIiAvPgogIDxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPgogICAgPFNlY3VyaXR5TGV2ZWw+MTwvU2VjdXJpdHlMZXZlbD4KICA8L1dpZGV2aW5lQ29udGVudEtleVNwZWM+CiAgPEZhaXJQbGF5UG9saWN5IHBlcnNpc3RlbnQ9ImZhbHNlIiAvPgogIDxMaWNlbnNlIHR5cGU9InNpbXBsZSIgLz4KPC9EYXRhPgo8U2lnbmF0dXJlPm96dU5MOEtBV0d6eE5hRjBGVXhKMkN0WVBadk5WWTR1V2MyYkxxejUxc3dpTlQwcG52TjFTb0ZNcTJudWVuSnhZbXBzbnl2L1VBVHlrUzFkenU2RDVwZFNWR1RKRml5YmhucEE3bjdVMmhoMUpvTnM2b0FaQWFnazNJbzlxdS96VmNIWXFrdFp5Y2hidGxNdGo4Zm5OWEJWRktWNndZOVdPVWMyRnU3RG9sU1crbXBXd0xNWDBlT1VRYkY1aHEzTkQ2anh0V29xQmgwTWJYbmxydWo5b0ptWk1SUEdseTl4RHNQZjdmTGdvTjMydkVBUXN4NUlueXgzdGk1ZTA2aFlXM0NsYSs0NFM1aTY5VTZRM3JYV1djNHNvZHpXeERwN1NJNkc0K0FaMkV3ZGtVaW5ZM25zMTdrYkpLWmhWb0d5OC9LWGxpcjB2T0syaUprNWVTN0p1dz09PC9TaWduYXR1cmU+CjwvS2V5T1NBdXRoZW50aWNhdGlvblhNTD4=>"
 
     drmParams = {
         keySystem: "Widevine"
-        licenseServerURL: "https://wv-keyos.licensekeyserver.com/" 
-    }
-    vidContent.url = "https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd"
-    vidContent.StreamFormat = "dash"
+        licenseServerURL: "https://wv-keyos.licensekeyserver.com/"
+          }
+    
+    vidContent.streamformat = "dash"
     vidContent.drmParams = drmParams
+    ' vidContent.HttpHeaders=["customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="]
+    vidContent.url = "https://channelstore.streamlytv.com/streamly/ngrp:AETVP.stream_all/Manifest"
+    
 
     httpAgent = CreateObject("roHttpAgent")  
     httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
     httpAgent.InitClientCertificates()
     httpAgent.EnableCookies()
-    ' httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
-    httpAgent.AddHeader("customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA4LTE3IDE0OjE0OjI5LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDgtMTcgMTQ6MTY6MjkuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MzNjY2M1Y2E3YzJhODJlZmNhNDUzMDQxODk4OWM1Yzg8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+WElkR0dySm1uc0lKU2x1UHZ5WEliOW5XTlphWnRHaE1Nc0xRc2lOWkY5dHZBeXB5K044dWpMUHhuUFpMUUlGZng5OCs0Ynl3L21SUEw4dlZsYWNtSmtDT2o4S2dualozNlZ3L3BIeGUyOUVEaitRS1NLRGdnSXAxSkNKbXZ2cyt0WC9ucWM4dDc1bmNwaVFsTlU3eTdZc3lRMXQreXRVaFNjdmNBaDA0Y3NEM0RlSk16dFd2QkxvZDlTMkY1ZGkrRDlCWWR1OUhmeE1IUnVCb0ppTnhVWmowVVNVc0pBdkFYOFl1SnM5cHJDNzN3ejVVUndYQjFBeEt3UnpkQkhUVkt5bm0reGlVUUZTSVorbHVQKzVBeVVhM0kxdkhjMEdIL0EvTWU0VDdpUWtUeG9CanlybnlZbFVDSFZUbks0clpwVXhjbmRkZGJDVytGOVNHVVI0SXFBPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==")
-    m.video.setHttpAgent(httpAgent)
-    ' m.video.drmHttpAgent=httpAgent
-    ' m.video.Live=true    
-    ' m.video.content = vidContent
-    m.searchPoster.visible =false
-    m.video.enableUI = false
-    m.video.content = vidContent
-    m.video.setFocus(true)
+    httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
+    headers={
+        
+        "customdata":"PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDE1OjA4OjU4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMTU6MjM6NTguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZjFiMjFlMzUwMDUwMGFlNzgyNmUyM2I0N2EzNjJiMDc8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+dUxEeGpqOEJKTFBTLytFQ0N2VXFxa0Q4NDc5MG5jYURUbnRMajZZNm0zZnpWYmR0RE5NSHZURmZobU0ycHVXRm9TNWF1Y2VUZWNlZ25wNlVVanlHdkJjRjVFTTFDN1d2Tm9kNEJHcGgwbVdsOXdjaWNYRFVFcnhHbS9uTmRnc2tMeFVycmw5RkpIVmdxVkdBOC93K0JWTmgyaFdZSTdiZFJjY05tWTIxRmZabW5nTjl6Tk1pbEthdlNOMGR2MTZTK2FwdWN0TzNMWlUwSy9VeUwrMVNOTzk5a2lldlJ4MHFyN1d3VHh1Zy96LzlMWGxVbjhRVldkSnRIQmoySkJGNzRBWnVhUFIySEp4bHJQQmhKOUxIam5qNit4MUlESTJ4ZzZ1N2lyRUJZVEwxSlBDZkNBTmpJYVo3WGdSNktDbnY1TXBRQ0U4S2hyOE1qZHhHSG1xY3p3PT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
+    }
+    httpAgent.setheaders(headers)
+    '  m.video.setHttpAgent(httpAgent)
+    m.video.drmHttpAgent=httpAgent
 
-    m.video.control = "play"
-    m.video.thumbnailImage = ""
+  
+'   m.video.Live=true 
+  m.searchPoster.visible =true
+  m.video.enableUI = false
+
+    ' ?"drminfo:";getDeviceInfo(). GetDrmInfoEx()
+    ' ?"drminfo:";getDeviceInfo(). GetDrmInfoEx().Widevine     
+'     m.video.errorMsg: The connection timed out.
+' m.video.errorStr: reader pick stream error:timed out:Transfer error: Timeout was reached, response code:(0):extra:clip_id:0:source:?
+
+' vidContent.encodingType = "PlayReadyLicenseAcquisitionAndChallenge"
+' vidContent.licenseServerURL = "https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx" 
+' vidContent.streamFormat = "smooth"
+' vidContent.KeySystem="playready"
+
+vidContent.live=true  
+' vidContent.appData ="PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
+
+' vidContent.url = "https://channelstore.streamlytv.com/streamly/AETVP.stream_240p/Manifest"
+
+
+m.video.content = vidContent 
+m.video.setFocus(true)
+
+m.video.control = "play"
+
     
 end function
 
 sub videoState()
     ? "videoState"; m.video.state
     ? "completedStreamInfo"; m.video.completedStreamInfo
-    ? "videoFormat"; m.video.completedStreamInfo
+    
 
 '  if m.video.state="playing"
 '     m.video.control="pause"
@@ -360,9 +380,9 @@ sub initGrigData(channels as Object)
 
     marupContent = CreateObject("roSGNode", "ContentNode")
     marupContent.createChild("ContentNode").TITLE = "ALL"
-    marupContent.createChild("ContentNode").TITLE = "Recent"
+    marupContent.createChild("ContentNode").TITLE = "RECENT"
     for each channel in channels.Keys()
-        if channel <> "ALL" and channel <> "Recent"
+        if channel <> "ALL" and channel <> "RECENT"
             marupContent.createChild("ContentNode").TITLE = channel
         end if
     end for
@@ -449,15 +469,15 @@ function programSelected(event as Object) as Object
     return true
 end function
 
-sub recentResponseUpdate()
-    ? "m.recentTask.recentResponse;"; m.recentTask.recentResponse
+sub RECENTResponseUpdate()
+    ? "m.RECENTTask.RECENTResponse;"; m.RECENTTask.RECENTResponse
 
-    if (m.recentTask.recentResponse <> invalid and m.recentTask.recentResponse.data <> invalid)
-        m.ChannelData["Recent"] = m.recentTask.recentResponse.data
+    if (m.RECENTTask.RECENTResponse <> invalid and m.RECENTTask.RECENTResponse.data <> invalid)
+        m.ChannelData["RECENT"] = m.RECENTTask.RECENTResponse.data
     end if
 
-' m.recentTask.recentResponse
-    m.recentTask.control = "stop"
+' m.RECENTTask.RECENTResponse
+    m.RECENTTask.control = "stop"
 end sub
 
 sub VideoControl(event as Object)
@@ -532,6 +552,7 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
             SearchScreen.id = "SearchScreen"
             SearchScreen.observeField("exitView", "closeSearchScreen")
             SearchScreen.observeField("playChannel", "playSearchChannelUrl")
+            SearchScreen.setFocus(true)
         else if m.ChannelCategoryMarkuGrid.hasFocus() and key = "left"
             m.searchPoster.setFocus(true)
             m.ChannelCategoryMarkuGrid.setFocus(false)

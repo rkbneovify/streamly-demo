@@ -1,6 +1,6 @@
 sub init()
    
-   
+   m.top.setFocus(true)
    m.deviceinfo = getDeviceInfo()
    ?"deviceinfo: ";m.deviceinfo.getDisplaySize()
   
@@ -11,14 +11,31 @@ sub init()
    resultentList()
   
    setHeader()  
-     
+   
+
     'spinner
     m.spinner = m.top.CreateChild("BusySpinner")
     m.spinner.visible = false
     m.spinner.translation = [820, 460]
     m.spinner.uri = "pkg:/images/busyspinner_hd.png"
-      
+    
+    m.searchStart = m.top.CreateChild("Button")
+    m.searchStart.text="pres ok to start voice search"
+    m.searchStart.setFocus(true) 
+    ' m.searchStart.setFocus(true) 
+
+
 end sub
+
+
+function recognizer()
+  if m.recognizer = invalid
+    m.recognizer = CreateObject("roSGNode", "SpeechRecognizer")
+    m.recognizer.delegate = m.top
+  end if
+  return m.recognizer
+end function
+
 sub resultentList()
 ?"resultentList"   
    m.labelList = m.top.createChild("LabelList")   
@@ -61,7 +78,8 @@ sub searchKeyboard()
    m.Searchkeyboard.id = "Searchkeyboard"
    m.Searchkeyboard.translation = "[100,200]"
    m.Searchkeyboard.observeField("text","channelSearchText")
-   m.Searchkeyboard.setFocus(true)  
+  '  m.Searchkeyboard.setFocus(true) 
+ 
 end sub
  
 sub setScreenBackGrndimage()
@@ -130,9 +148,28 @@ sub responseAPI(event as object)
   m.spinner.visible = false
 end sub
 
+function speechRecognizerDidReceiveTranscript(transcript as String)
+  ?"speechRecognizerDidReceiveTranscript" 
+  ?"transcript:"; transcript
+   m.spinner.visible = false
+   m.searchStart.setFocus(true)
+   m.Searchkeyboard.text = transcript
+  ' m.infoLb.text = "Hold the OK button to start dictation, release it once you're done."
+end function
+
 Function onKeyEvent(key,press) as object
+?"Search screen onKeyEvent";key
 result =false
    if press
+    if key = "OK" and m.searchStart.hasFocus()
+      recognizer().callFunc("startListening", {})
+      m.spinner.visible = true
+      ' m.searchStart.setFocus(false)
+      ' m.infoLb.text = "Listening..."
+      ' m.label.text = ""
+
+      return true
+    end if
      ?"SearchScreen: ";key
      ?"m.Searchkeyboard.hasFocus(); ";m.Searchkeyboard.hasFocus()
       if key="right"  then

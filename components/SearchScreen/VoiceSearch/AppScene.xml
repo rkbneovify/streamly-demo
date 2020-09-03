@@ -1,0 +1,7 @@
+<component name="AppScene" extends="Group">
+  <interface>
+    <!-- Speech Recognizer callbacks -->
+    <function name="speechRecognizerDidReceiveTranscript"/>
+  </interface>
+  <script type="text/brightscript" uri="pkg:/components/SearchScreen/VoiceSearch/AppScene.brs"/>
+</component>

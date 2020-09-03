@@ -71,10 +71,10 @@
       
      <MarkupGrid id = "ChannelCategoryMarkuGrid"
                  itemComponentName = "ChannelCategoryItemComponent"
-                 itemSpacing = "[ -30, 0 ]" 
-                 numColumns="7" 
+                 itemSpacing = "[ -15, 0 ]" 
+                 numColumns="9" 
                  numRows="1" 
-                 itemSize="[210,60]" 
+                 itemSize="[180,60]" 
                  translation= "[100,44]"
                  drawFocusFeedback="false"/> 
       </Group>

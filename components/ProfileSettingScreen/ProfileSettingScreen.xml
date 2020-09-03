@@ -65,18 +65,14 @@
                  drawFocusFeedback="false"/> 
                  
        
-     <Group id = "Dialog" visible = "false" translation = "[ 349, 224]" >
-     
-         
        <Poster
-         id = "dialogbackgndUri"          
-         translation = "[ 0, 0 ]"
+         id = "logoutView"          
+         visible="false"
          width  = "1223"
          height = "724"
-        
-         uri="pkg:/images/profile/dialogBackground.png"    
-         loadDisplayMode = "scaleToFill" /> 
-       <Group id = "logoutView" visible="false">
+         
+          uri="pkg:/images/profile/dialogBackground.png"    
+         loadDisplayMode = "scaleToFill" >
            
          <Label
          
@@ -91,8 +87,8 @@
             <Button id="NoButton"
                  visible="true"                
                  translation= "[275,287]"
-                 minWidth  = "270"
-                 maxWidth  = "270"                
+                 minWidth  = "275"
+                 maxWidth  = "275"                
                  focusedTextColor="#FFFFFF"
                  height = "84"
                  focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
@@ -107,7 +103,7 @@
                         id="labelNo"
                         horizAlign="center"
                         height = "84"
-                        Width  = "270"
+                        Width  = "275"
                         vertAlign = "center"
                         text="No" />
              </Button>  
@@ -116,8 +112,8 @@
                 id="YesButton"
                 visible="true"                
                 translation= "[669,287]"
-                minWidth  = "270"
-                maxWidth  = "270"                
+                minWidth  = "275"
+                maxWidth  = "275"                
                 focusedTextColor="#FFFFFF"
                 height = "84"
                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
@@ -131,14 +127,26 @@
                         id="labelYes"
                         horizAlign="center"
                         height = "84"
-                        Width  = "270"
+                        Width  = "275"
                         vertAlign = "center"
                         text="Yes" />
             </Button>         
           
-        </Group>
+       
+         </Poster> 
+     <Poster
+                 
+         id = "profileView"
+         width  = "1223"
+         height = "724"
          
-       <Group id="profileView" visible="false">
+         uri="pkg:/images/profile/dialogBackground.png"    
+         loadDisplayMode = "scaleToFill" 
+         
+          visible = "false"
+           translation = "[ 349, 224]" 
+           >   
+        
           
               <MarkupList id = "dialogOptions"
                  itemComponentName = "dialogOptionsItemComponent"
@@ -160,8 +168,8 @@
                 visible="true"
                 
                 translation= "[471,589]"
-                minWidth  = "270"
-                maxWidth  = "270"
+                minWidth  = "275"
+                maxWidth  = "275"
                
                 focusedTextColor="#FFFFFF"
                 height = "84"
@@ -175,14 +183,14 @@
                 <Label  id="Lbaelok"
                         horizAlign="center"
                         height = "84"
-                        Width  = "270"
+                        Width  = "275"
                         vertAlign = "center"
                         text="OK" />
                 </Button>   
           
-       </Group>
+    
              
-     </Group>
+     </Poster>
        
        <Rectangle
                 id="LoaderBackground"
