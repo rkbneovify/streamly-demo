@@ -241,8 +241,9 @@ function getInputValue(){
           
              }else if(geom == 'Polygon') {
     let coordinates = turf.polygon(currentFeature.geometry.coordinates);
-            
+      //  console.log('polygon',coordinates);     
     found = turf.booleanPointInPolygon(point, coordinates);
+    console.log('found',found);
     if(found){
        zip=currentFeature.properties.title;
       // console.log('zipcode',zip);
@@ -271,6 +272,7 @@ return {
 };
    //--- Post values to processing page ---
    var point = turf.point([lon, lat]);
+  //  console.log('point',point);
    var result=PointwithinFeatureCollection(point);
   //  document.getElementById("myData").innerHTML =JSON.stringify(result);
   // alert(result.success);
