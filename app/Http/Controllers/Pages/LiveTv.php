@@ -76,27 +76,64 @@ class LiveTv extends Controller
             $login = false;
             return redirect()->route('home');
         }
+        $ua = request()->server('HTTP_USER_AGENT');
+$iPod    = stripos($ua,"iPod");
+$iPhone  = stripos($ua,"iPhone");
+$iPad    = stripos($ua,"iPad");
+$iPadOS = stripos($ua,"Macintosh");
+$appletv = stripos($ua,"appletv");
+$Android = stripos($ua,"Android");
+$Roku = stripos($ua,"Roku");
+$Darwin = stripos($ua,"Darwin");
+if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  { //for apple serve m3u8
+    // echo "apple device";
+    $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
         
-
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
-        
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
-              
-    })
-    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
-       
-    $channelData= Gracenote::where('CallSign', $callSign)->get();
+    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
     
-    $url= Channel::where('callSign', $callSign)->get('url');
-   // print_r($url); exit;
-      $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+    
+    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+    ->whereIn('channels.callSign', function($query)
+{
+    $query->select('CallSign')
+          ->from('gracenotechannels');
+          
+})
+->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+   
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$url= Channel::where('callSign', $callSign)->get('url');
+// print_r($url); exit;
+  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+
+}else{ 
+    // echo " non apple device";
+    //for non apple "dash_url as url"
+    $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.dash_url as url')
+        
+    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+    
+    
+    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+    ->whereIn('channels.callSign', function($query)
+{
+    $query->select('CallSign')
+          ->from('gracenotechannels');
+          
+})
+->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+   
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$url= Channel::where('callSign', $callSign)->get('dash_url as url');
+// print_r($url); exit;
+  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+
+
+}
+
+       
       
     	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
     }catch(Exception $e) {

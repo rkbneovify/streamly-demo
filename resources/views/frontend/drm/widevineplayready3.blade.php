@@ -42,6 +42,7 @@
           // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
           'streaming': {
 						'liveDelay': 10,
+						'fastSwitchEnabled': true  ,
               //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
               //determine which assets to request in order to perfom adaptive streaming of the content.
               //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
@@ -222,7 +223,7 @@
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-            <video preload="auto" id="videoPlayer"  autoplay > </video>
+            <video preload="auto" id="videoPlayer"   autoplay="" > </video>
             <div id="videoController" class="video-controller unselectable">
               <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
                   <span id="iconPlayPause" class="icon-play"></span>
