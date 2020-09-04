@@ -85,7 +85,8 @@ end function
 
 ' Just a function that makes a POST request
 function makePostRequest(url as String, body as String, headers as Object) as Object
-
+  ' m.top.progressBar =true
+  m.top.delegate.callFunc("showProgressBar", true)
   request = CreateObject("roUrlTransfer")
   request.setCertificatesFile("common:/certs/ca-bundle.crt")
   request.initClientCertificates()
@@ -96,14 +97,35 @@ function makePostRequest(url as String, body as String, headers as Object) as Ob
   request.setHeaders(headers)
   request.RetainBodyOnError(true)
 
-  timeout = 20000
-  request.asyncPostFromString(body)
-  event = wait(timeout, port)
+  ' timeout = 20000
+  req =request.asyncPostFromString(body)
 
-  response = event.getString()
-  ?"ResponseCode "event.getResponseCode()
-  ?"Response "response
-  responseObject = ParseJson(response)
+  responseObject = CreateObject("roAssociativeArray")
+  
+  if req
+    while true
+        msg = Wait(0, port)
+        if Type(msg) = "roUrlEvent"
+            code = msg.GetResponseCode()
+            responseJson = {}
+            if code = 200
+              ' event = wait(timeout, port)
+
+              response = msg.getString()
+              ?"ResponseCode "msg.getResponseCode()
+              ?"Response "response
+              responseObject = ParseJson(response)
+              
+            else
+
+            end if
+            exit while 
+            
+        end if
+         
+     end while
+   end if 
+  
   return responseObject
   
 end function
@@ -120,6 +142,6 @@ end function
 
 function kAPIKey() as String
 '  return YOUR_API_KEY
-return "AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro"
-    ' return "AIzaSyCIVM9BhvlY_PYNrcx3e1k8M3OwRXHkJHA" 
+' return "AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro"
+    return "AIzaSyCIVM9BhvlY_PYNrcx3e1k8M3OwRXHkJHA" 
 end function

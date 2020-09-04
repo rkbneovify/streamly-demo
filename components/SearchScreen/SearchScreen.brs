@@ -1,6 +1,5 @@
 sub init()
    
-   m.top.setFocus(true)
    m.deviceinfo = getDeviceInfo()
    ?"deviceinfo: ";m.deviceinfo.getDisplaySize()
   
@@ -20,21 +19,22 @@ sub init()
     m.spinner.uri = "pkg:/images/busyspinner_hd.png"
     
     m.searchStart = m.top.CreateChild("Button")
-    m.searchStart.text="pres ok to start voice search"
-    m.searchStart.setFocus(true) 
-    ' m.searchStart.setFocus(true) 
+    ' m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_focus_icon.png"
+    m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_unfocus_icon.png"
+    m.searchStart.translation =[120,130]
+    m.searchStart.showFocusFootprint =true
+    m.searchStart.minwidth=80
+    m.searchStart.maxwidth=80
+    m.searchStart.height=50
+
+    m.searchStart.focusedIconUri =""
+    m.searchStart.iconUri="" 
+    m.searchStart.setFocus(false) 
 
 
 end sub
 
 
-function recognizer()
-  if m.recognizer = invalid
-    m.recognizer = CreateObject("roSGNode", "SpeechRecognizer")
-    m.recognizer.delegate = m.top
-  end if
-  return m.recognizer
-end function
 
 sub resultentList()
 ?"resultentList"   
@@ -78,7 +78,7 @@ sub searchKeyboard()
    m.Searchkeyboard.id = "Searchkeyboard"
    m.Searchkeyboard.translation = "[100,200]"
    m.Searchkeyboard.observeField("text","channelSearchText")
-  '  m.Searchkeyboard.setFocus(true) 
+   m.Searchkeyboard.setFocus(true) 
  
 end sub
  
@@ -147,23 +147,45 @@ sub responseAPI(event as object)
 '  m.labelContent.createChild("ContentNode").title=event.getData()
   m.spinner.visible = false
 end sub
+function recognizer()
+  if m.recognizer = invalid
+    m.recognizer = CreateObject("roSGNode", "SpeechRecognizer")
+    m.recognizer.delegate = m.top
+  end if
+  return m.recognizer
+end function
 
 function speechRecognizerDidReceiveTranscript(transcript as String)
   ?"speechRecognizerDidReceiveTranscript" 
   ?"transcript:"; transcript
    m.spinner.visible = false
-   m.searchStart.setFocus(true)
+   
    m.Searchkeyboard.text = transcript
   ' m.infoLb.text = "Hold the OK button to start dictation, release it once you're done."
+
+  m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_focus_icon.png"
+  m.Searchkeyboard.setFocus(false)   
+  m.top.setFocus(true)
+end function
+
+function showProgressBar(value as object)
+
+  if value
+    m.spinner.visible = true
+  else
+    m.spinner.visible = false  
+  end if
+  
 end function
 
 Function onKeyEvent(key,press) as object
-?"Search screen onKeyEvent";key
+?"Search screen onKeyEvent";key ;"has focus";m.searchStart.hasFocus() ;"press ";press
 result =false
    if press
-    if key = "OK" and m.searchStart.hasFocus()
+    if key = "OK" and press
+      ?"start voice ..."
       recognizer().callFunc("startListening", {})
-      m.spinner.visible = true
+      ' m.spinner.visible = true
       ' m.searchStart.setFocus(false)
       ' m.infoLb.text = "Listening..."
       ' m.label.text = ""
@@ -183,6 +205,15 @@ result =false
       else if key="back" then
         m.top.exitView =true
         result = true 
+      
+      else if m.top.hasFocus() and key="down"
+        m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_unfocus_icon.png"
+        m.Searchkeyboard.setFocus(true)   
+      else if  key="up"
+        m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_focus_icon.png"
+        m.Searchkeyboard.setFocus(false)   
+        m.top.setFocus(true)
+
       end if
      result = true  
    end if

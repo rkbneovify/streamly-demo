@@ -7,6 +7,7 @@
   <interface>
     <!-- Speech Recognizer callbacks -->
     <function name="speechRecognizerDidReceiveTranscript"/>
+    <function name="showProgressBar"/>
     
    <field id="exitView" type="boolean" />
    <field id="playChannel" type="String" />

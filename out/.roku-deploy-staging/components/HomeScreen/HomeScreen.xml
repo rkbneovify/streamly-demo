@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="HomeScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/HomeScreen/HomeScreen.brs" />
+    <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	<interface>
+	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
+	  <field id="profileScreen" type = "boolean" alwaysnotify="true" />
+	  <field id="ExitView" type = "boolean" alwaysnotify="true" />
+	  
+	 
+	</interface>
+	<children>
+	 
+	<Group id="playerView">
+	  
+      <ExtVideoPlayerUI id="myVideo" width="1920" height="1080" />
+            
+	</Group> 
+
+    
+      <Group id="ChannelsGroup"
+             visible="false">
+          
+           <Poster
+            id="channelBackgroundposter"             
+            height="1080"
+            width="1920"
+            loadwidth="1280"  
+            loadHeight="720"    
+            loadDisplayMode = "scaleTofill"            
+             /> 
+             
+     <Poster id= "searchPoster"/>                   
+     <TimeGrid id="timeGrid"/>
+     
+     <!--  translation= "[1417,44]" -->
+      <Poster
+          uri="pkg:/images/home/profileSetting.png"
+          translation= "[1657,44]"
+          loadDisplayMode="scaletofill"
+          height="56"
+          width="56">
+      
+        <Label  text="SETTINGS"
+             id="Settings"
+             translation= "[70,10]"/>
+      </Poster>
+      
+     <!--  <Poster
+          uri="pkg:/images/home/backNavIcon.png"
+          translation= "[1657,44]"
+          height="56"
+          width="56"
+          loadDisplayMode="scaletofill">
+      
+        <Label 
+        text="GO Back"
+             id="pressbackLabel"
+            
+             translation= "[70,10]"/>
+      </Poster> -->
+      
+      <!-- <Poster
+          id=""
+          uri="pkg:/images/home/searchIcon.png"
+          translation= "[36,40]"
+          height="56"
+          width="56">
+      </Poster>  -->
+      
+     <MarkupGrid id = "ChannelCategoryMarkuGrid"
+                 itemComponentName = "ChannelCategoryItemComponent"
+                 itemSpacing = "[ -15, 0 ]" 
+                 numColumns="9" 
+                 numRows="1" 
+                 itemSize="[180,60]" 
+                 translation= "[100,44]"
+                 drawFocusFeedback="false"/> 
+      </Group>
+              
+ 	</children>
+</component>
