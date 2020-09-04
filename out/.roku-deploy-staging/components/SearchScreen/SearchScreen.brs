@@ -30,8 +30,6 @@ sub init()
     m.searchStart.focusedIconUri =""
     m.searchStart.iconUri="" 
     m.searchStart.setFocus(false) 
-
-
 end sub
 
 
@@ -134,7 +132,11 @@ sub responseAPI(event as object)
      for each channel in dataJson.message.data
        ?"Search::chanel details :";channel
        channelDetail=m.labelContent.createChild("ContentNode")
-       if channel.name<> invalid then channelDetail.title = channel.name
+       if channel.callSign<> invalid 
+         channelDetail.title = channel.callSign
+       else
+        channelDetail.title="other"
+       end if 
        if channel.url<> invalid then channelDetail.url = channel.url
        if channel.id<> invalid then  channelDetail.id = channel.id
      end for
@@ -185,11 +187,6 @@ result =false
     if key = "OK" and press
       ?"start voice ..."
       recognizer().callFunc("startListening", {})
-      ' m.spinner.visible = true
-      ' m.searchStart.setFocus(false)
-      ' m.infoLb.text = "Listening..."
-      ' m.label.text = ""
-
       return true
     end if
      ?"SearchScreen: ";key

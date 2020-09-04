@@ -318,9 +318,9 @@ function playVideo(url as String, channelid as String) as Void
     
 
     httpAgent = CreateObject("roHttpAgent")  
-    ' httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    ' httpAgent.InitClientCertificates()
-    ' httpAgent.EnableCookies()
+    httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
+    httpAgent.InitClientCertificates()
+    httpAgent.EnableCookies()
     httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
     headers={
         
@@ -334,7 +334,7 @@ function playVideo(url as String, channelid as String) as Void
 '   m.video.Live=true 
   m.searchPoster.visible =true
   m.video.enableUI = false
-
+  
     ' ?"drminfo:";getDeviceInfo(). GetDrmInfoEx()
     ' ?"drminfo:";getDeviceInfo(). GetDrmInfoEx().Widevine     
 '     m.video.errorMsg: The connection timed out.

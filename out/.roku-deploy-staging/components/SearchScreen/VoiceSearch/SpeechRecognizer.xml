@@ -5,8 +5,6 @@
   <interface>
     <!-- Callback listener -->
     <field id="delegate" type="node"/>
-  
-
     <function name="startListening"/>
   </interface>
 
