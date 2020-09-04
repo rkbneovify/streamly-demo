@@ -10,6 +10,7 @@ use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use KeyOSAuthXMLGenerator;
+use App\SessionTable;
 class LiveTv extends Controller
 { 
     public function showPage(){
@@ -76,6 +77,19 @@ class LiveTv extends Controller
             $login = false;
             return redirect()->route('home');
         }
+        $login_limit = 5;$user_id = Auth::user()->id;
+// echo $user_id; exit;
+//find all by user_id and and status=active
+$active_session = SessionTable::where([
+['status', '=', '1'],
+['users_id', '=', $user_id],
+ ])->get()->toArray();
+ if (count($active_session) >= $login_limit) {
+    $login = true;
+    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
+    //  $login = false; 
+        return view('frontend.deviceLimitReached',compact('login'));
+ }
         $ua = request()->server('HTTP_USER_AGENT');
 $iPod    = stripos($ua,"iPod");
 $iPhone  = stripos($ua,"iPhone");
@@ -107,6 +121,7 @@ $url= Channel::where('callSign', $callSign)->get('url');
 // print_r($url); exit;
   $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
 
+  return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
 }else{ 
     // echo " non apple device";
     //for non apple "dash_url as url"
