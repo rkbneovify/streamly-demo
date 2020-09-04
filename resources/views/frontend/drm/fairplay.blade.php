@@ -7,46 +7,72 @@
 		}
 	</style>
 
+<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
 
-  <link href="//s3.amazonaws.com/cdn.keyos.com/html5/videojs/6.13.0/video-js.min.css" rel="stylesheet">
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
+		
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
+<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+	<script type="text/javascript">
+        (function() {
+            // Init player.
+            var player = videojs('my-player');
+						player.httpSourceSelector();
+            player.eme();
+            player.on('ready', function() {
+                // Helper functions.
+                var base64DecodeUint8Array = function (a) { var b = window.atob(a), c = b.length, d = new Uint8Array(new ArrayBuffer(c)); for (i = 0; i < c; i++)d[i] = b.charCodeAt(i); return d };
+                var base64EncodeUint8Array = function (a) { for (var d, e, f, g, h, i, j, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", c = "", k = 0; k < a.length;)d = a[k++], e = k < a.length ? a[k++] : Number.NaN, f = k < a.length ? a[k++] : Number.NaN, g = d >> 2, h = (3 & d) << 4 | e >> 4, i = (15 & e) << 2 | f >> 6, j = 63 & f, isNaN(e) ? i = j = 64 : isNaN(f) && (j = 64), c += b.charAt(g) + b.charAt(h) + b.charAt(i) + b.charAt(j); return c };
+                var arrayToString = function (a) { var b = new Uint16Array(a.buffer); return String.fromCharCode.apply(null, b) };
  
-  <!--Video.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/videojs/6.13.0/video.min.js"></script>
+                // Setup hls + fp
+                var fairplayHlsSrc = {
+                    // src: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+                    src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/playlist.m3u8',
+                    type: 'application/x-mpegURL',
+                    keySystems: {
+                        'com.apple.fps.1_0': {
+                            certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
  
-  <!--Dash.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/dashjs/2.9.3/dash.all.min.js"></script>
+                            getContentId: function (emeOptions, initData) {
+                                var contentId = arrayToString(initData);
  
-  <!--Dash.js plugin for Video.js-->
-  <script src="//s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-dash/2.11.0/videojs-dash.min.js"></script>
-		<script>
-		$('document').ready(function(){
-			var player = videojs('player');
-			player.ready(function() {
-				player.src({
-					src: 'https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd',
-					type: 'application/dash+xml',
-	 
-					keySystemOptions: [{
-						name: 'com.widevine.alpha',
-						options: {
-							serverURL: '//wv-keyos.licensekeyserver.com/',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}'}
-						}
-					}, {
-						name: 'com.microsoft.playready',
-						options: {
-							serverURL: '//pr-keyos.licensekeyserver.com/core/rightsmanager.asmx',
-							httpRequestHeaders: { customdata: '{{$encoded_auth_xml}}' }
-						}
-					}]
-				});
-	 
-				player.play();
-			});
-		});
-			
-		</script>
-
+                                if (contentId.indexOf("skd://") > -1)
+                                    return contentId.split("skd://")[1].substr(0, 32);
+ 
+                                throw 'Invalid Content ID format. The format of the Content ID must be the following: skd://xxx where xxx is the Key ID in hex format.';
+                            },
+ 
+                            getLicense: function (emeOptions, contentId, keyMessage, callback) {
+                                var data = 'spc=' + base64EncodeUint8Array(keyMessage) + '&assetId=' + contentId;
+                                $.ajax({
+                                    url: 'https://fp-keyos.licensekeyserver.com/getkey',
+                                    type: 'POST',
+                                    data: data,
+                                    // If you are using proxy, please, remove 'headers' object.
+                                    headers: {
+                                        'customdata': '{{$encoded_auth_xml}}'
+                                    },
+                                    contentType: 'application/x-www-form-urlencoded',
+                                    success: function (result) {
+                                        callback(null, base64DecodeUint8Array(result));
+                                    },
+                                    error: function (err) {
+                                        callback(err);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                };
+ 
+                // Set the source to the player to init/start the playback.
+                player.src(fairplayHlsSrc);
+            });
+        })();
+    </script>
 	<style>
 
 		body{
@@ -183,10 +209,7 @@
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-							<video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
-							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
-							<source src="" type="application/x-mpegURL"/>
-					</video>
+						<video id="my-player" class="video-js" controls></video>
 
 						<div class="channel-detail">
 							<p>ghghg</p>

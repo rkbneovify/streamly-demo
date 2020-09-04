@@ -162,6 +162,8 @@ Route::get('/epgviewr2', 'Pages\LiveTv@epgScreen2');
 Route::get('/drm', 'Admin\BuyDRMController@WidevinePlayer');
 Route::get('/drm2', 'Admin\BuyDRMController@WidevinePlayer2');
 Route::get('/ism', 'Admin\BuyDRMController@WidevinePlayer3');
+Route::get('/fair', 'Admin\BuyDRMController@fairPlayer');
+Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
