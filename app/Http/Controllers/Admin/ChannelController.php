@@ -11,7 +11,7 @@ use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
-
+use KeyOSAuthXMLGenerator;
 //use App\Traits\ImageUpload;programs
 /**
  * Description of ChannelController
@@ -33,8 +33,36 @@ class ChannelController extends Controller
     public function index()
     {  
         $record = Channel::with('genre')->paginate(10);
+        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
+        // Create authentication XML generator instance.
+        $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
+        $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
+      
+        // Crate Simple PR license
+        $pr_lic = $auth_xml_generator->newSimpleLicense();
+      
+        // Create WV license
+        $wv_lic = $auth_xml_generator->newWidevineLicense();
+      
+        // Create FP license
+        $fp_lic = $auth_xml_generator->newFairPlayLicense();
+     
+         
+        // Generate Authentication XML.
+        $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
         
-        return view('admin.channels.index', compact('record'));
+        
+        $ua = request()->server('HTTP_USER_AGENT');
+$iPod    = stripos($ua,"iPod");
+$iPhone  = stripos($ua,"iPhone");
+$iPad    = stripos($ua,"iPad");
+$iPadOS = stripos($ua,"Macintosh");
+$appletv = stripos($ua,"appletv");
+$Android = stripos($ua,"Android");
+$Roku = stripos($ua,"Roku");
+$Darwin = stripos($ua,"Darwin");
+if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index', compact('record','encoded_auth_xml'));}
+        
     }  
 
     public function checkdevice(Request $request)
@@ -411,7 +439,7 @@ $record  = Gracenote::select("CallSign","StationName","image")
     }
 
     public function channelData()
-    {   
+     {  
         return DataTables::of(Channel::query())
         ->addColumn('fullName',function ($data){
             $genres = Genre::pluck('name', 'id'); 
@@ -433,7 +461,8 @@ $record  = Gracenote::select("CallSign","StationName","image")
     
         })
         ->addColumn('action', function($row) {
-            return '<a href="/admin/channelstatus/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+            return '<a 
+            class="btn btn-xs btn-primary" id="vidplay" data-toggle="modal"  >View video</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
         ->editColumn('photo', function ($row) {
             if ($row->image!='') {
