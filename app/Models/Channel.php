@@ -28,6 +28,8 @@ class Channel extends Model
     */
     protected $fillable=['name',
 'url',
+'dash_url',
+'smooth_url',
 'genre_id','status','genres','image'];
 protected $appends = ['logo'];
 

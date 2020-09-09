@@ -338,7 +338,8 @@ if($Roku){
             'genre_id'=>'required',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $input = $request->only('name', 'url', 'genre_id');
+        $input = $request->only('name', 'url','smooth_url','dash_url', 'genre_id');
+        // dd($input);
         if ($request->has('toggleswitch')) {
             // $archived="helllo block user on";
              $input['status'] = 0;

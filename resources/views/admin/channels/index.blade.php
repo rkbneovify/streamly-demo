@@ -98,7 +98,8 @@
 <div class="modal fade" id="myModal" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content" style="
+    width: 602px;">
       <div class="modal-header">
         <h4 class="modal-title">Video player</h4>
       </div>
