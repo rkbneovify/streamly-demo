@@ -127,6 +127,34 @@
               @endif
 
             </div>
+            <div class="form-group{{ $errors->has('dash_url') ? ' has-error' : '' }}">
+              <label for="dash_url" class="col-md-4 control-label">dash_url</label>
+
+
+              <input id="dash_url" type="text" class="form-control" name="dash_url" value="{{$channel->dash_url}}" required
+                autofocus>
+
+              @if ($errors->has('dash_url'))
+              <span class="help-block">
+                <strong>{{ $errors->first('dash_url') }}</strong>
+              </span>
+              @endif
+
+            </div>
+            <div class="form-group{{ $errors->has('smooth_url') ? ' has-error' : '' }}">
+              <label for="smooth_url" class="col-md-4 control-label">smooth_url</label>
+
+
+              <input id="smooth_url" type="text" class="form-control" name="smooth_url" value="{{$channel->smooth_url}}" required
+                autofocus>
+
+              @if ($errors->has('smooth_url'))
+              <span class="help-block">
+                <strong>{{ $errors->first('smooth_url') }}</strong>
+              </span>
+              @endif
+
+            </div>
 
             <div class="form-group">
               <label for="exampleInputFile">File input</label>
