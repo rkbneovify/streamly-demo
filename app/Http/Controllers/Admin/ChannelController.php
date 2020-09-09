@@ -86,8 +86,7 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
             ];
             // return response()->json($reco);
             return response()->json($response, 200);  
-        }
-        if( $iPod ||$Darwin|| $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
+        }else if( $iPod ||$Darwin|| $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
             $response = [
                 'success' => true,
                 'useragent'=>$ua,
