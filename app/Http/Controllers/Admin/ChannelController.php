@@ -122,7 +122,17 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
         $Android = stripos($ua,"Android");
         $Roku = stripos($ua,"Roku");
         $Darwin = stripos($ua,"Darwin");
-        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+        if($Roku){
+            $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.smooth_url as url')
+            
+            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            
+            
+            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        
+        ->orderBy('callSign', 'asc')
+        ->groupBy('channels.id');
+        }else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
             $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
             // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
             // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
@@ -194,7 +204,9 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
 $Android = stripos($ua,"Android");
 $Roku = stripos($ua,"Roku");
 $Darwin = stripos($ua,"Darwin");
-if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+if($Roku){
+    $channel = Channel::select('id', 'callSign', 'smooth_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+} else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
         $channel = Channel::select('id', 'callSign', 'url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
     }else{
         $channel = Channel::select('id', 'callSign', 'dash_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
@@ -508,7 +520,27 @@ $appletv = stripos($ua,"appletv");
 $Android = stripos($ua,"Android");
 $Roku = stripos($ua,"Roku");
 $Darwin = stripos($ua,"Darwin");
-if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+
+if($Roku)
+{
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+$record  = Gracenote::select("sub.callSign as CallSign","id","StationName","smooth_url as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->fromSub(function ($query) {
+$query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.smooth_url')
+->from('gracenote')
+->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+
+->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+->orderBy('gracenote.StartDateTime', 'asc');
+}, 'sub')
+->orderBy('sub.callSign', 'asc')
+->groupBy('sub.callSign','StationName','image','smooth_url','id');
+}else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
 
