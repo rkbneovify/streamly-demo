@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use KeyOSAuthXMLGenerator;
 
 class BuyDRMController extends Controller
 {   
@@ -14,27 +13,11 @@ class BuyDRMController extends Controller
 
 
     public function index(){
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
+        
         
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
+          $encoded_auth_xml = getKeyOSAuthToken();
             $response = [
                 'success' => true,
                 'response_code'=>200,
@@ -60,29 +43,10 @@ class BuyDRMController extends Controller
 
     public function WidevinePlayer2()
     {  
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        
+            
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
-    
-         
+          $encoded_auth_xml = getKeyOSAuthToken();
             return view('frontend.drm.widevineplayready2', compact('encoded_auth_xml'));
           }
           catch(Exception $e) {
@@ -95,28 +59,10 @@ class BuyDRMController extends Controller
 
     public function WidevinePlayer3()
     {  
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        
+            
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
-    
+          $encoded_auth_xml = getKeyOSAuthToken();
          
             return view('frontend.drm.widevineplayready3', compact('encoded_auth_xml'));
           }
@@ -128,28 +74,10 @@ class BuyDRMController extends Controller
         
     }   public function WidevinePlayer()
     {  
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        
+          
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
-    
+          $encoded_auth_xml = getKeyOSAuthToken();
          
             return view('frontend.drm.widevineplayready', compact('encoded_auth_xml'));
           }
@@ -163,28 +91,10 @@ class BuyDRMController extends Controller
 
     public function fairPlayer()
     {  
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
         
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
-    
+          $encoded_auth_xml = getKeyOSAuthToken();
          
             return view('frontend.drm.fairplay', compact('encoded_auth_xml'));
           }
@@ -197,28 +107,10 @@ class BuyDRMController extends Controller
     } 
     public function fairPlayer2()
     {  
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        
+            
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
-    
+          $encoded_auth_xml = getKeyOSAuthToken();
          
             return view('frontend.drm.fairplay2', compact('encoded_auth_xml'));
           }

@@ -295,15 +295,8 @@ public function login(Request $request)
 
     public function genrename(Request $request )
     { $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
-        
-        $Darwin = stripos($ua,"Darwin");
-        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)   {
+        $isDevice=isDeviceAppleRokuOthers($ua);
+        if($isDevice=='apple')   {
         $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
         
         
@@ -410,16 +403,11 @@ public function login(Request $request)
     public function myFavorites(Request $request)
     { try {   
         $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
+        $isDevice=isDeviceAppleRokuOthers($ua);
         $myFavorites = JWTAuth::user()->favorites;
 
-        $Darwin = stripos($ua,"Darwin");
-        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+    
+        if($isDevice=='apple')  {
             $myFavorites->map(function ($address)  {
 
               unset($address['dash_url']);
@@ -491,16 +479,10 @@ foreach ($channelArr as $value) {
     );
 }
 $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
-        $Darwin = stripos($ua,"Darwin");
+$isDevice=isDeviceAppleRokuOthers($ua);
         
 $recentschannel = JWTAuth::user()->recentschannel;
-if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)    {
+if($isDevice=='apple')    {
     $recentschannel->map(function ($address)  {
 
       unset($address['dash_url']);
@@ -543,17 +525,11 @@ public function myRecents(Request $request)
     { try { 
         
         $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
-        $Darwin = stripos($ua,"Darwin");
+        $isDevice=isDeviceAppleRokuOthers($ua);
         
        
         $recentschannel = JWTAuth::user()->recentschannel;
-        if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)   {
+        if($isDevice=='apple')   {
             $recentschannel->map(function ($address)  {
 
               unset($address['dash_url']);
