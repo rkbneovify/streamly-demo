@@ -9,7 +9,6 @@ use App\Models\Channel;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
-use KeyOSAuthXMLGenerator;
 use App\SessionTable;
 class LiveTv extends Controller
 { 
@@ -48,27 +47,9 @@ class LiveTv extends Controller
     }
 
     public function showChannel($callSign,$genre){
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        
      
         try {
-            // Create authentication XML generator instance.
-            $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-            $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-          
-            // Crate Simple PR license
-            $pr_lic = $auth_xml_generator->newSimpleLicense();
-          
-            // Create WV license
-            $wv_lic = $auth_xml_generator->newWidevineLicense();
-          
-            // Create FP license
-            $fp_lic = $auth_xml_generator->newFairPlayLicense();
-         
-             
-            // Generate Authentication XML.
-            $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-            
+            $encoded_auth_xml = getKeyOSAuthToken();
     
          
     	if( Auth::check()){
@@ -78,7 +59,7 @@ class LiveTv extends Controller
             return redirect()->route('home');
         }
         $login_limit = 5;$user_id = Auth::user()->id;
-// echo $user_id; exit;
+
 //find all by user_id and and status=active
 $active_session = SessionTable::where([
 ['status', '=', '1'],
@@ -91,53 +72,25 @@ $active_session = SessionTable::where([
         return view('frontend.deviceLimitReached',compact('login'));
  }
         $ua = request()->server('HTTP_USER_AGENT');
-$iPod    = stripos($ua,"iPod");
-$iPhone  = stripos($ua,"iPhone");
-$iPad    = stripos($ua,"iPad");
-$iPadOS = stripos($ua,"Macintosh");
-$appletv = stripos($ua,"appletv");
-$Android = stripos($ua,"Android");
-$Roku = stripos($ua,"Roku");
-$Darwin = stripos($ua,"Darwin");
-if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  { //for apple serve m3u8
+        $isDevice=isDeviceAppleRokuOthers($ua);
+if($isDevice=='apple')  { //for apple serve m3u8
     // echo "apple device";
-    $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
-        
-    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-    
-    
-    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    ->whereIn('channels.callSign', function($query)
-{
-    $query->select('CallSign')
-          ->from('gracenotechannels');
-          
-})
-->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+    $type='url';
+    $record = $this->showChannelFunc($type);
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
 $url= Channel::where('callSign', $callSign)->get('url');
-// print_r($url); exit;
+
   $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
 
   return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
 }else{ 
     // echo " non apple device";
     //for non apple "dash_url as url"
-    $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.dash_url as url')
-        
-    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+    $type='dash_url';
+    $record = $this->showChannelFunc($type);
     
-    
-    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    ->whereIn('channels.callSign', function($query)
-{
-    $query->select('CallSign')
-          ->from('gracenotechannels');
-          
-})
-->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
@@ -155,6 +108,23 @@ $url= Channel::where('callSign', $callSign)->get('dash_url as url');
             
             return $e->getMessage();
           }
+    }
+
+    public function showChannelFunc($type){
+       $record= Channel::select('channels.id', 'channels.callSign','channels.image', "channels.$type as url")
+        
+       ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+       
+       
+       ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+       ->whereIn('channels.callSign', function($query)
+   {
+       $query->select('CallSign')
+             ->from('gracenotechannels');
+             
+   })
+   ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+   return $record;
     }
 
     public function showAllPage()
