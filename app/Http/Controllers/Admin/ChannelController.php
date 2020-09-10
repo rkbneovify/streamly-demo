@@ -11,7 +11,6 @@ use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 use Carbon\Carbon;
-use KeyOSAuthXMLGenerator;
 //use App\Traits\ImageUpload;programs
 /**
  * Description of ChannelController
@@ -33,50 +32,19 @@ class ChannelController extends Controller
     public function index()
     {  
         $record = Channel::with('genre')->paginate(10);
-        $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-        // Create authentication XML generator instance.
-        $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
-        $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
-      
-        // Crate Simple PR license
-        $pr_lic = $auth_xml_generator->newSimpleLicense();
-      
-        // Create WV license
-        $wv_lic = $auth_xml_generator->newWidevineLicense();
-      
-        // Create FP license
-        $fp_lic = $auth_xml_generator->newFairPlayLicense();
-     
-         
-        // Generate Authentication XML.
-        $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
-        
+        $encoded_auth_xml = getKeyOSAuthToken(); 
         
         $ua = request()->server('HTTP_USER_AGENT');
-$iPod    = stripos($ua,"iPod");
-$iPhone  = stripos($ua,"iPhone");
-$iPad    = stripos($ua,"iPad");
-$iPadOS = stripos($ua,"Macintosh");
-$appletv = stripos($ua,"appletv");
-$Android = stripos($ua,"Android");
-$Roku = stripos($ua,"Roku");
-$Darwin = stripos($ua,"Darwin");
-if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index', compact('record','encoded_auth_xml'));}
+        $isDevice=isDeviceAppleRokuOthers($ua);
+if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index', compact('record','encoded_auth_xml'));}
         
     }  
 
     public function checkdevice(Request $request)
     {  
         $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
-        $Roku = stripos($ua,"Roku");
-        $Darwin = stripos($ua,"Darwin");
-        if($Roku){
+        $isDevice=isDeviceAppleRokuOthers($ua);
+        if($isDevice=='roku'){
             $response = [
                 'success' => true,
                 'data'=>'ism links', 
@@ -86,7 +54,7 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
             ];
             // return response()->json($reco);
             return response()->json($response, 200);  
-        }else if( $iPod ||$Darwin|| $iPhone||$iPad||$iPadOS ||$appletv&&!$Android){
+        }else if($isDevice=='apple'){
             $response = [
                 'success' => true,
                 'useragent'=>$ua,
@@ -113,58 +81,22 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
     
     public function channeljson(Request $request) 
     {   $ua = $request->server('HTTP_USER_AGENT');
-        $iPod    = stripos($ua,"iPod");
-        $iPhone  = stripos($ua,"iPhone");
-        $iPad    = stripos($ua,"iPad");
-        $iPadOS = stripos($ua,"Macintosh");
-        $appletv = stripos($ua,"appletv");
-        $Android = stripos($ua,"Android");
-        $Roku = stripos($ua,"Roku");
-        $Darwin = stripos($ua,"Darwin");
-        if($Roku){
-            $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.smooth_url as url')
+        $isDevice=isDeviceAppleRokuOthers($ua);
+        if($isDevice=='roku'){
             
-            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+$type='smooth_url';
+$record = $this->channeljsonFunc($type);
+           
+        }else if($isDevice=='apple')  {
+
+$type='url';
+$record = $this->channeljsonFunc($type);
             
-            
-            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        
-        ->orderBy('callSign', 'asc')
-        ->groupBy('channels.id');
-        }else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
-            $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
-            // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-            // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-            // ->selectRaw("GROUP_CONCAT(g.name) genrename")
-            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-            // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
-            
-            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        //     ->whereIn('channels.callSign', function($query)
-        // {
-        //     $query->select('CallSign')
-        //           ->from('gracenotechannels');
-                  
-        // })
-        ->orderBy('callSign', 'asc')
-        ->groupBy('channels.id');
             }else{
-        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.dash_url as url')
-        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-        // ->selectRaw("GROUP_CONCAT(g.name) genrename")
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    //     ->whereIn('channels.callSign', function($query)
-    // {
-    //     $query->select('CallSign')
-    //           ->from('gracenotechannels');
-              
-    // })
-    ->orderBy('callSign', 'asc')
-    ->groupBy('channels.id');}
+
+$type='dash_url';
+$record = $this->channeljsonFunc($type);
+   }
        
     //JSON_ARRAY
        
@@ -183,6 +115,26 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
     // return response()->json($reco);
     return response()->json($response, 200);
     }
+
+    public function channeljsonFunc($type){
+        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', "channels.$type as url")
+        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
+        // ->selectRaw("GROUP_CONCAT(g.name) genrename")
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
+        
+        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
+              
+    // })
+    ->orderBy('callSign', 'asc')
+    ->groupBy('channels.id');
+    return $record;
+    }
     //search
     public function searchapi(Request $request)
    {
@@ -195,17 +147,10 @@ if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android) {return vie
     ->orderBy('created_at', 'desc')
     ->simplepaginate(12); */
     $ua = $request->server('HTTP_USER_AGENT');
-    $iPod    = stripos($ua,"iPod");
-    $iPhone  = stripos($ua,"iPhone");
-    $iPad    = stripos($ua,"iPad");
-    $iPadOS = stripos($ua,"Macintosh");
-    $appletv = stripos($ua,"appletv");
-$Android = stripos($ua,"Android");
-$Roku = stripos($ua,"Roku");
-$Darwin = stripos($ua,"Darwin");
-if($Roku){
+    $isDevice=isDeviceAppleRokuOthers($ua);
+    if($isDevice=='roku'){
     $channel = Channel::select('id', 'callSign', 'smooth_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
-} else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+} else if($isDevice=='apple')  {
         $channel = Channel::select('id', 'callSign', 'url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
     }else{
         $channel = Channel::select('id', 'callSign', 'dash_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
@@ -262,10 +207,10 @@ if($Roku){
     public function store(Request $request)
     {
         $this->validate($request, [
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           ]);
         
-        $input = $request->only('name', 'genre_id', 'url','status');
+        $input = $request->only('name', 'genre_id', 'url', 'dash_url', 'smooth_url','status');
         $model=new Channel;
         if ($request->genres!= '') {
             $break_value = implode(",", $request->genres);
@@ -492,90 +437,35 @@ $record  = Gracenote::select("CallSign","StationName","image")
     
 //channel with 7 day of schdule
 public function channelDaysSchedule(Request $request){
-    //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
-  //   select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
-  //   SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
-// select count(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign
-// select GROUP_CONCAT(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign   
-//$record  = Gracenote::select('StationName','CallSign','EventTitle','EventDescription','StartDateTime','EndDateTime')->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
-// SELECT CallSign,StationName,
-      // JSON_ARRAYAGG(
-      //     JSON_OBJECT(
-      //         'title', EventTitle,
-      //         'start', StartDateTime,'end', EndDateTime )
-      // ) AS programs
-//     FROM gracenote
-//     GROUP BY CallSign,StationName
-// $record  = Gracenote::select('CallSign',DB::raw("JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs"))
-// $record  = Gracenote::select('CallSign',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs "),DB::raw('SEPARATOR'),DB::raw("'|'"))->groupBy('CallSign');
-// $record  = Gracenote::select('CallSign','StationName',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime )SEPARATOR '|' ) AS programs "))->groupBy('CallSign','StationName');
-// SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', sub.StartDateTime,'end', sub.EndDateTime ) ) AS programs FROM ( SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC ) AS sub GROUP BY sub.CallSign 
-$imagePath=url("/uploads/channellogo/");
+    /* SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
+    select GROUP_CONCAT(EventTitle SEPARATOR ', ' ORDER BY StartDateTime ASC) programs,CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)  group BY CallSign ORDER by CallSign
+    SELECT CallSign, JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs FROM gracenote GROUP BY CallSign
+select count(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign
+select GROUP_CONCAT(EventTitle),CallSign from gracenote WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) group BY CallSign ORDER by CallSign   
+$record  = Gracenote::select('StationName','CallSign','EventTitle','EventDescription','StartDateTime','EndDateTime')->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
+SELECT CallSign,StationName,
+      JSON_ARRAYAGG(
+          JSON_OBJECT(
+              'title', EventTitle,
+              'start', StartDateTime,'end', EndDateTime )
+      ) AS programs
+    FROM gracenote
+    GROUP BY CallSign,StationName
+$record  = Gracenote::select('CallSign',DB::raw("JSON_ARRAYAGG( JSON_OBJECT( 'title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs"))
+$record  = Gracenote::select('CallSign',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime ) ) AS programs "),DB::raw('SEPARATOR'),DB::raw("'|'"))->groupBy('CallSign');
+$record  = Gracenote::select('CallSign','StationName',DB::raw("GROUP_CONCAT( JSON_OBJECT('title', EventTitle, 'start', StartDateTime,'end', EndDateTime )SEPARATOR '|' ) AS programs "))->groupBy('CallSign','StationName');
+SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', sub.StartDateTime,'end', sub.EndDateTime ) ) AS programs FROM ( SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC ) AS sub GROUP BY sub.CallSign */
 $ua = $request->server('HTTP_USER_AGENT');
-$iPod    = stripos($ua,"iPod");
-$iPhone  = stripos($ua,"iPhone");
-$iPad    = stripos($ua,"iPad");
-$iPadOS = stripos($ua,"Macintosh");
-$appletv = stripos($ua,"appletv");
-$Android = stripos($ua,"Android");
-$Roku = stripos($ua,"Roku");
-$Darwin = stripos($ua,"Darwin");
+$isDevice=isDeviceAppleRokuOthers($ua);
 
-if($Roku)
-{
-    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("sub.callSign as CallSign","id","StationName","smooth_url as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
-
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
-->fromSub(function ($query) {
-$query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
-DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.smooth_url')
-->from('gracenote')
-->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-
-->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
-AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
-->orderBy('gracenote.StartDateTime', 'asc');
-}, 'sub')
-->orderBy('sub.callSign', 'asc')
-->groupBy('sub.callSign','StationName','image','smooth_url','id');
-}else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
-    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("sub.callSign as CallSign","id","StationName","url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
-
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
-->fromSub(function ($query) {
-  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-  DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
-  DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.url')
-  ->from('gracenote')
-  ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-
-  ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
-  AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
-   ->orderBy('gracenote.StartDateTime', 'asc');
-    }, 'sub')
-->orderBy('sub.callSign', 'asc')
-->groupBy('sub.callSign','StationName','image','url','id');
-    } else {
-        DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("sub.callSign as CallSign","id","StationName","dash_url as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
-
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
-->fromSub(function ($query) {
-  $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-  DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
-  DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),'channels.dash_url')
-  ->from('gracenote')
-  ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-
-  ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
-  AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
-   ->orderBy('gracenote.StartDateTime', 'asc');
-    }, 'sub')
-->orderBy('sub.callSign', 'asc')
-->groupBy('sub.callSign','StationName','image','dash_url','id');
+if($isDevice=='roku'){ $type='smooth_url';
+    $record = $this->channelDaysScheduleFunc($type);
+}else if($isDevice=='apple')  {
+$type='url';
+$record = $this->channelDaysScheduleFunc($type);
+} else {
+$type='dash_url';
+$record = $this->channelDaysScheduleFunc($type);
     }
     
 
@@ -617,6 +507,27 @@ $reco=$record->get(); //echo $reco;exit;
   //  return  response()->json([
   //     'clients' => $this->transformClientCollection($api)
   //  ], 200);
+  }
+
+  public function channelDaysScheduleFunc($type){
+    $imagePath=url("/uploads/channellogo/");
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+    $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+    ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+    ->fromSub(function ($query) use ($type) {
+      $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+      ->from('gracenote')
+      ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+       ->orderBy('gracenote.StartDateTime', 'asc');
+        }, 'sub')
+    ->orderBy('sub.callSign', 'asc')
+    ->groupBy('sub.callSign','StationName','image',$type,'id');
+    return $record;
   }
   //channel with 7 day of schdule
   public function frontEpgchannelDaysSchedule(){

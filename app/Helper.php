@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 
+use KeyOSAuthXMLGenerator;
 use Jenssegers\Agent\Agent;
      function checkLoginLimit($user_id,$token,$deviceDetails){
         $login_limit = 5;$userInfo = JWTAuth::user();
@@ -309,6 +310,50 @@ function computeDistance($lat1, $lng1, $lat2, $lng2, $radius = 6378137)
     $distance = 2 * asin(sqrt(pow(sin(($lat1 - $lat2) / 2), 2) + cos($lat1) * cos($lat2) * pow(sin(($lng1 - $lng2) / 2), 2)));
 
     return $distance * $radius;
+}
+
+function getKeyOSAuthToken(){
+  $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
+  try {  // Create authentication XML generator instance.
+    $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
+    $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
+  
+    // Crate Simple PR license
+    $pr_lic = $auth_xml_generator->newSimpleLicense();
+  
+    // Create WV license
+    $wv_lic = $auth_xml_generator->newWidevineLicense();
+  
+    // Create FP license
+    $fp_lic = $auth_xml_generator->newFairPlayLicense();
+ 
+     
+    // Generate Authentication XML.
+    $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($auth_xml_generator->signAuthenticationXML($auth_xml_generator->generateAuthenticationXML()));
+     return $encoded_auth_xml;
+  }
+  catch(Exception $e) {
+            
+    return $e->getMessage();
+  }
+}
+
+function isDeviceAppleRokuOthers($ua){
+  $iPod    = stripos($ua,"iPod");
+$iPhone  = stripos($ua,"iPhone");
+$iPad    = stripos($ua,"iPad");
+$iPadOS = stripos($ua,"Macintosh");
+$appletv = stripos($ua,"appletv");
+$Android = stripos($ua,"Android");
+$Roku = stripos($ua,"Roku");
+$Darwin = stripos($ua,"Darwin");
+if($Roku){
+  return 'roku';
+}else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+  return 'apple';
+ }else{
+   return 'others';
+ }
 }
 
 
