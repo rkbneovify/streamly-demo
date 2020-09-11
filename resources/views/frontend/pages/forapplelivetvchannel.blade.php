@@ -267,7 +267,7 @@
 						<video id="my-player" class="video-js" controls></video>
 
 						<div class="channel-detail">
-							<p>{{$channelData[0]->callSign}}</p>
+							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
 						</div>
 					</div>
 				</div>
