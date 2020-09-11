@@ -71,7 +71,7 @@ class HomeController extends Controller
         return view('frontend.home', compact('login','plans','pagechannel'));
     }
     
-    public function location(Request $request)
+   /* public function location(Request $request)
     {     
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
@@ -118,14 +118,7 @@ class HomeController extends Controller
         // return $resp;
     }
     catch (\GuzzleHttp\Exception\RequestException $e) {
-        /**
-         * Here we actually catch the instance of GuzzleHttp\Psr7\Response
-         * (find it in ./vendor/guzzlehttp/psr7/src/Response.php) with all
-         * its own and its 'Message' trait's methods. See more explanations below.
-         *
-         * So you can have: HTTP status code, message, headers and body.
-         * Just check the exception object has the response before.
-         */
+       
         
         if ($e->hasResponse()) {
             $response = $e->getResponse();
@@ -146,7 +139,7 @@ class HomeController extends Controller
 
         // $response = new GuzzleHttp\Client();('http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat=28.7441&lon=77.0732&zoom=27&addressdetails=1');
         
-    }
+    } */
     public function geofence(Request $request)
     {     
         $LAT= $request['latitude'];
@@ -172,7 +165,7 @@ return response()->json($resp, 200);
         
    }
 
-   public function oldgeofence(Request $request)
+   /* public function oldgeofence(Request $request)
     {     
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
@@ -201,7 +194,7 @@ return response()->json($resp, 200);
         }
     
         
-   }
+   } */
 
    public function simplequeryrun(Request $request){
     $LAT= $request['latitude'];

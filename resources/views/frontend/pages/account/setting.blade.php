@@ -128,13 +128,14 @@
 					<h4>Cancel Subscription</h4>
 					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
 					<div>
-						<form action="{{ url('user/subscriptions/destroy', Auth::user()->id) }}" method="POST">
+						<form action="{{ url('user/subscriptiondestroy', Auth::user()->id) }}" method="POST">
 							<input type="hidden" name="_method" value="DELETE">
 															<input type="hidden" name="_token" value="{{ csrf_token() }}">
 															<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Yes">
+
+						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
 														</form>
 						{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
-						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
 					</div>
 				</div>
 
@@ -218,8 +219,8 @@
 																				<input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="hidden" name="access_token" value="{{ $user->access_token }}">
 											{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
-											<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete"></form>
-											<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+											<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete">
+											<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a></form>
 										</div>
 									</div>
 					
