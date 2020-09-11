@@ -95,8 +95,8 @@
       });
       firstLoad = false;
                   
-              var url = "{{$url[0]->url}}";
-              // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
+              // var url = "{{$url[0]->url}}";
+              var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
                   player.initialize(document.querySelector("video"), url, true);
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
@@ -275,7 +275,7 @@
           </div>
 
 						<div class="channel-detail">
-							<p>{{$channelData[0]->callSign}}</p>
+							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
 						</div>
 					</div>
 				</div>
