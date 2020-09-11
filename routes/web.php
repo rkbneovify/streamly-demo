@@ -41,7 +41,7 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     Route::get('changeStatus', 'Admin\SubscriptionController@changeStatus');
     Route::post('insertquotation','Admin\SubscriptionController@store')->name('insertquotation');
     Route::put('subscriptionupdate/{id}','Admin\SubscriptionController@update')->name('subscriptionupdate');
-    Route::delete('subscriptions/destroy/{id}','Admin\SubscriptionController@destroy');
+    Route::delete('subscriptiondestroy/{id}','Admin\SubscriptionController@destroy')->name('subscriptiondestroy');;
 
 
     //gracenote
@@ -142,7 +142,7 @@ Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('send
 Route::get('/verified', 'HomeController@verified');
 Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
-Route::delete('user/subscriptions/destroy/{id}','Pages\Account\Setting@destroy');
+Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
