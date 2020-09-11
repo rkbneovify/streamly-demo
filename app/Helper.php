@@ -1,7 +1,6 @@
 <?php
 use Carbon\Carbon;
 
-use KeyOSAuthXMLGenerator;
 use Jenssegers\Agent\Agent;
      function checkLoginLimit($user_id,$token,$deviceDetails){
         $login_limit = 5;$userInfo = JWTAuth::user();
@@ -315,7 +314,7 @@ function computeDistance($lat1, $lng1, $lat2, $lng2, $radius = 6378137)
 function getKeyOSAuthToken(){
   $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
   try {  // Create authentication XML generator instance.
-    $auth_xml_generator = new KeyOSAuthXMLGenerator($certificate);
+    $auth_xml_generator = new \KeyOSAuthXMLGenerator($certificate);
     $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
   
     // Crate Simple PR license
