@@ -208,8 +208,14 @@ $.ajax({
 						@foreach ($user as $channeldet)
 						
 						<div class="live-news-item">
-							<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}"><img src="{{  $channeldet->logo}}">
-							<p>{{  $channeldet->callSign}}</p></a>
+							
+							@if (!empty($channeldet->callSign))
+							<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}">
+								@else
+								<a href="{{url('livetv/'.$channeldet->name.'/'.$key)}}">
+									@endif
+								<img src="{{  $channeldet->logo}}">
+							<p>{{  $channeldet->name??'no name'}}</p></a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

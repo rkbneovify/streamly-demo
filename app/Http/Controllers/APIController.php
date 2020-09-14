@@ -304,12 +304,12 @@ public function login(Request $request)
         
         
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
               
-    })
+    // })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
     
        
@@ -321,12 +321,12 @@ public function login(Request $request)
         
         
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
               
-    })
+    // })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
     
        
