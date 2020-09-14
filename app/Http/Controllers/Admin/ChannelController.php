@@ -210,7 +210,7 @@ $record = $this->channeljsonFunc($type);
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           ]);
         
-        $input = $request->only('name', 'genre_id', 'url', 'dash_url', 'smooth_url','status');
+        $input = $request->only('name', 'genre_id', 'url','callSign', 'dash_url', 'smooth_url','status');
         $model=new Channel;
         if ($request->genres!= '') {
             $break_value = implode(",", $request->genres);
@@ -283,7 +283,7 @@ $record = $this->channeljsonFunc($type);
             'genre_id'=>'required',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $input = $request->only('name', 'url','smooth_url','dash_url', 'genre_id');
+        $input = $request->only('name', 'url','smooth_url','callSign','dash_url', 'genre_id');
         // dd($input);
         if ($request->has('toggleswitch')) {
             // $archived="helllo block user on";
@@ -298,7 +298,7 @@ $record = $this->channeljsonFunc($type);
             $break_value = implode(",", $request->genres);
             $input['genres'] = $break_value;
         
-        }
+        } else{$input['genres']='';}
 
         
     //            $allpost= $request->post();

@@ -95,8 +95,8 @@
       });
       firstLoad = false;
                   
-              // var url = "{{$url[0]->url}}";
-              var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
+              var url = "{{$url[0]->url??'no url found'}}";
+              // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
                   player.initialize(document.querySelector("video"), url, true);
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
@@ -307,9 +307,14 @@
 			<div class="row">
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
 					@foreach ($relatedchannel as $channeldet)
-					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}"><div class="live-news-item">
+
+					@if (!empty($channeldet->callSign))
+					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}">
+						@else
+						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
+							@endif<div class="live-news-item">
 						<img src="{{  $channeldet->logo}}">
-						<p>{{  $channeldet->callSign}}</p>
+						<p>{{  $channeldet->name??'no name'}}</p>
 					</div> </a>
 					@endforeach
 					</div>
