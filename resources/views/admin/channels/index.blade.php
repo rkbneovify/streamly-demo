@@ -87,6 +87,9 @@
                       <th style="width: 20%">
                       Action
                       </th>
+                      <th style="width: 20%">
+                      Callsign
+                      </th>
                   </tr>
               </thead>
           </table>
@@ -273,6 +276,7 @@ $(function() {
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
+            { data: 'callSign', name: 'callSign',orderable: true },
         ],
         columnDefs: [
         {       

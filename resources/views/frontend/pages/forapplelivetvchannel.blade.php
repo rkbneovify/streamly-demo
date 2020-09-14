@@ -299,9 +299,14 @@
 			<div class="row">
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
 					@foreach ($relatedchannel as $channeldet)
-					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}"><div class="live-news-item">
+
+					@if (!empty($channeldet->callSign))
+					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}">
+						@else
+						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
+							@endif<div class="live-news-item">
 						<img src="{{  $channeldet->logo}}">
-						<p>{{  $channeldet->callSign}}</p>
+						<p>{{  $channeldet->name??'no name'}}</p>
 					</div> </a>
 					@endforeach
 					</div>

@@ -70,6 +70,20 @@
               @endif
 
             </div>
+            <div class="form-group{{ $errors->has('callSign') ? ' has-error' : '' }}">
+              <label for="callSign" class="col-md-4 control-label">callSign</label>
+
+
+              <input id="callSign" type="text" class="form-control" name="callSign" value="{{$channel->callSign}}"  
+                autofocus>
+
+              @if ($errors->has('callSign'))
+              <span class="help-block">
+                <strong>{{ $errors->first('callSign') }}</strong>
+              </span>
+              @endif
+
+            </div>
             <div class="form-group{{ $errors->has('genre_id') ? ' has-error' : '' }}">
               <label for="genre_id" class="col-md-4 control-label">genres id</label>
 

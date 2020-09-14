@@ -165,9 +165,13 @@
 				<div class="col-md-2">
 				
 					<div class="live-news-item">
+						@if (!empty($channeldet->callSign))
 						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
+							@else
+								<a href="{{url('livetv/'.$channeldet->name.'/'.$channeldet->genrename['0'])}}">
+									@endif
 						<img src="{{ $channeldet->logo }}">
-						<p>{{  $channeldet->callSign}}</p></a>
+						<p>{{  $channeldet->name??'no name'}}</p></a>
 						<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

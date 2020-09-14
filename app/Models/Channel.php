@@ -27,7 +27,7 @@ class Channel extends Model
     * Mass assignable columns
     */
     protected $fillable=['name',
-'url',
+'url','callSign',
 'dash_url',
 'smooth_url',
 'genre_id','status','genres','image'];

@@ -21,18 +21,18 @@ class LiveTv extends Controller
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        $record = Channel::select('channels.id', 'channels.callSign', 'channels.name','channels.image', 'channels.url')
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
         
         
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
               
-    })
+    // })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
     
@@ -111,19 +111,19 @@ $url= Channel::where('callSign', $callSign)->get('dash_url as url');
     }
 
     public function showChannelFunc($type){
-       $record= Channel::select('channels.id', 'channels.callSign','channels.image', "channels.$type as url")
+       $record= Channel::select('channels.id', 'channels.name','channels.callSign','channels.image', "channels.$type as url")
         
        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
        
        
        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-       ->whereIn('channels.callSign', function($query)
-   {
-       $query->select('CallSign')
-             ->from('gracenotechannels');
+//        ->whereIn('channels.callSign', function($query)
+//    {
+//        $query->select('CallSign')
+//              ->from('gracenotechannels');
              
-   })
-   ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+//    })
+   ->groupBy('channels.id') ->orderBy('channels.name', 'asc');
    return $record;
     }
 
@@ -137,18 +137,18 @@ $url= Channel::where('callSign', $callSign)->get('dash_url as url');
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        $record = Channel::select('channels.id','channels.name', 'channels.callSign','channels.image', 'channels.url')
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
         
         
         ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        ->whereIn('channels.callSign', function($query)
-    {
-        $query->select('CallSign')
-              ->from('gracenotechannels');
+    //     ->whereIn('channels.callSign', function($query)
+    // {
+    //     $query->select('CallSign')
+    //           ->from('gracenotechannels');
               
-    })
+    // })
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
     

@@ -416,7 +416,7 @@ $geojson = array(
         return view('frontend.search');
     }
     public function autocomplete(Request $request)
-    { 
+    { $user=Auth::user();
 //          $search = request()->get('search');
 //          $data = Channel::select("callSign")
 //         ->where('callSign', 'LIKE', "%{$search}%")        
@@ -426,20 +426,20 @@ $geojson = array(
         // return response()->json($data);
         $q=$request->search;
         if($request->ajax()) {
-            $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url','gracenotechannels.StationName')
+            $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url','channels.name')
         
      ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
      
-     ->join('gracenotechannels', 'channels.callSign', '=', 'gracenotechannels.CallSign')
+    //  ->join('gracenotechannels', 'channels.callSign', '=', 'gracenotechannels.CallSign')
      ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
      ->where(function($query) use ($q) {
         $query->where('channels.callSign', 'LIKE', '%'.$q.'%')
             
-            ->orWhere('gracenotechannels.StationName', 'LIKE', '%'.$q.'%');
+            ->orWhere('channels.name', 'LIKE', '%'.$q.'%');
     })
     //  ->where('channels.callSign', 'LIKE',  '%'.$request->search.'%')
      
- ->groupBy('channels.id','gracenotechannels.StationName') ->orderBy('channels.callSign', 'asc');
+ ->groupBy('channels.id','channels.name') ->orderBy('channels.callSign', 'asc');
        
       $data=$record->get();
             // $data = Channel::where('callSign', 'LIKE', $request->search.'%')
@@ -452,7 +452,12 @@ $geojson = array(
                 $output = '<ul class="list-group" style="display: block; position: relative; z-index: 1">';
               
                 foreach ($data as $row){
-                    $url=$FRONTEND_URL.'/livetv/'.$row->callSign.'/'.$row->genrename['0'];
+                   
+                if (!empty($row->callSign)){
+                    $url=$FRONTEND_URL.'/livetv/'.$row->callSign.'/'.$row->genrename['0'];}else{
+                        $url=$FRONTEND_URL.'/livetv/'.$row->name.'/'.$row->genrename['0']; 
+                    }
+
                 //     $output .= '<li class="list-group-item">
                 //     '.$row->callSign.'<div class="live-news-item">
                 //     <a href='.$url.'>
@@ -472,7 +477,7 @@ $geojson = array(
                     '.$row->callSign.'
                    
                     </a>
-                    '.$row->StationName.'
+                    '.$row->name.'
                 </div>
                     </li>';
 
@@ -494,7 +499,9 @@ $geojson = array(
              
                 $output .= '<li class="list-group-item">'.'No results'.'</li>';
             }
-           
+            if (!$user->subscribed('main')) {
+                return '<li class="list-group-item">you are not subscribed</li>';
+            } 
             return $output;
         }
     }
