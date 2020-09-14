@@ -147,7 +147,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
     }
 
     public function destroy($id)
-    {  $user = User::find($id);
+    {  $user = Auth::user();
     
         try{
         $user->subscription('main')->skipTrial()->cancelNow();
