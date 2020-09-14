@@ -297,7 +297,7 @@ public function login(Request $request)
     { $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
         if($isDevice=='apple')   {
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.url')
+        $record = Channel::select('channels.id','channels.image', 'channels.url',DB::raw('IFNULL(channels.callSign,channels.name) callSign'))
         
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
@@ -314,7 +314,7 @@ public function login(Request $request)
     
        
       $data=$record->get()->groupBy('genrename');} else{
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.dash_url as url')
+        $record = Channel::select('channels.id', 'channels.callSign','channels.image', 'channels.dash_url as url',DB::raw('IFNULL(channels.callSign,channels.name) callSign'))
         
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
