@@ -205,7 +205,7 @@
 			@endforeach
 	</div>
 	@empty
-	<p>You have no favorite posts.</p>
+	<p>You have no recent posts.</p>
 @endforelse
 
 </div>
