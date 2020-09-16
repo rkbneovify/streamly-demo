@@ -166,18 +166,17 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
             $login = true;
         } else {
             $login = false;
-            return redirect()->route('home');
         }
 
         return view('frontend.pages.account.bugreport', compact('login'));
     }
     public function sendBugReport(Request $request)
-    {     $User=Auth::user();
+    {    
         $FRONTEND_URL=env('FRONTEND_URL');
         $html='<html>
-        Hi, '.$User->name.'<br><br>
+        <br>
 
-        Error Report of'.env('APP_NAME').'.
+        Error Report of '.env('APP_NAME').'.
         <br><br>
         User Email:'.$request['email_input'].'.<br><br>
         Bug Severity:'.$request['bug_severity'].'.<br>
@@ -185,16 +184,31 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         Debug info:'.$request['debug_info'].'.<br>
         Details:'.$request['details'].'.<br>
     </html>';
+
+    // check if reCaptcha has been validated by Google      
+    $secret = env('GOOGLE_RECAPTCHA_SECRET');
+    $captchaId = $request->input('g-recaptcha-response');
+    
+    //sends post request to the URL and tranforms response to JSON
+    $responseCaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$captchaId));
+    
+    if($responseCaptcha->success == true){
     try{
-        Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
+        Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
             $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+        
             ->subject(env('APP_NAME').': Feedback/Bug Report');
             // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
         });} catch (Exception $ex) {
              //$ex->getMessage();
-             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+             return redirect()->back()->with('error', "We've got errors!".json_encode($ex->getMessage(), true));
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
-        return redirect()->back()->with('message', "Feedback Sent!");
+        return redirect()->back()->with('message', "Feedback Sent!");}else{
+            // send back error message
+            
+            
+            return redirect()->back()->with('error', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
+            }
     }
 }

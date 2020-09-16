@@ -17,6 +17,8 @@ use App\Models\Map;
 use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
+
+use App\Models\FrontendText;
 // use GuzzleHttp\Client;
 
 class HomeController extends Controller
@@ -275,6 +277,26 @@ $geojson = array(
         return view('frontend.checkavailbilty',compact('login'));
         // return view('frontend.verified');
     }
+    public function contactform()
+    {
+        if( Auth::check()){
+            $login = true;}else{ $login = false; }
+       
+        return view('frontend.contactform',compact('login'));
+        // return view('frontend.verified');
+    } public function helpandsupp()
+    {
+        
+        $login = false; 
+        $frontendjson = FrontendText::find(1)->frontendjson;
+        $supportemail=$frontendjson['supportemail']??'contact@streamlytv.com';
+       $supportphone= $frontendjson['supportphone']??'1234656477';
+       $supportphone2= $frontendjson['supportphone2']??'773727828';
+       $message= $frontendjson['supportapitext']??'For help and support contact on email below';
+        // return view('frontend.contactform',compact('login'));
+        return view('frontend.helpandsupport',compact('login','supportemail','supportphone','supportphone2','message'));
+        // return view('frontend.verified');
+    }
 
     public function createUser(Request $request){
 
@@ -337,7 +359,63 @@ $geojson = array(
 
         return redirect('/')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
     }
+    public function contactformsend(Request $request){
 
+        $attributeNames = array(
+           'user-email' => 'Email',
+           'name' => 'Name',
+           'formmessage' => 'Message',
+        );
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'user-email' => 'required|string|email|max:255',
+        'formmessage'=>'required|string|max:255'
+        ], [], $attributeNames);
+
+        /*if ( $validatedData->fails() ) {
+            return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
+        }*/
+ 
+    // check if reCaptcha has been validated by Google      
+    $secret = env('GOOGLE_RECAPTCHA_SECRET');
+    $captchaId = $request->input('g-recaptcha-response');
+    
+    //sends post request to the URL and tranforms response to JSON
+    $responseCaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$captchaId));
+    
+    if($responseCaptcha->success == true){
+       
+        $html='<html>
+            Hi,My name is '.$request['name'].'<br><br>
+            Email :'.$request['user-email'].'<br><br>
+
+            Message :'.$request['formmessage'].'.
+
+            . <br><br>
+        </html>';
+        // echo $html;exit;
+      try{
+        Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
+            $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+            ->subject(env('APP_NAME').': Contact Form');
+            // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+        });} catch (Exception $ex) {
+             //$ex->getMessage();
+             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+            // return "We've got errors!".json_encode($ex->getMessage(), true);
+        }
+    
+        return redirect()->back()->with('message', 'Thanks for contacting us!.');
+    }else{
+            // send back error message
+            
+            
+            return redirect()->back()->with('message', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
+            }
+
+    }
+   
     public function logout()
     {
         Auth::logout();

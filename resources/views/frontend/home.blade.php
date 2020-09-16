@@ -112,8 +112,9 @@
 	<!-- Masthead-->
 	<header class="masthead">
 	    <div class="container">
-	        <div class="masthead-heading">100+ Cable TV Channels One Low Price!</div>
-	        <div class="masthead-subheading">Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's</div>
+	        <div class="masthead-heading">Your Alternative to Cable!</div>
+	        <div class="masthead-subheading">Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </div>
+	        <div class="masthead-subheading">STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing! </div>
 	        <a class="btn btn-primary btn-xl js-scroll-trigger grow" href="#services">START TODAY</a>
 	    </div>
 	</header>
