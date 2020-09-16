@@ -10,32 +10,32 @@
                 </ul>
         	</div>
         	<div class="col-sm-2">
-        		<h6>BROWSE</h6>
+        		<h6>OUR CHANNELS</h6>
         		<ul>
-        			<li><a href="livetv" style="color:#C5C5C5">Live TV</a></li>
-        			<li><a href="livetv" style="color:#C5C5C5">Live News</a></li>
-        			<li><a href="livetv" style="color:#C5C5C5">Live Sports</a></li>
-        			<li><a href="livetv" style="color:#C5C5C5">Live Movies</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Complete List</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">News</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Sports</a></li>
+        			<li><a href="livetv" style="color:#C5C5C5">Movies</a></li>
         			<li><a href="livetv" style="color:#C5C5C5">Kids</a></li>
-        		</ul>
+        		</ul>	
         	</div>
         	<div class="col-sm-2">
         		<h6>HELP</h6>
         		<ul>
-        			<li><a href="/account/settings" style="color:#C5C5C5">Account and Billing</a></li>
-        			<li><a href="/selectplan" style="color:#C5C5C5">Plans and Pricing</a></li>
+        			<li><a href="{{ url('/account/settings') }}" style="color:#C5C5C5">Account and Billing</a></li>
+        			<li><a href="{{ url('/selectplan') }}"  style="color:#C5C5C5">Plans and Pricing</a></li>
         			<li>Supported Devices</li>
-        			<li><a href="/account/settings/bug" style="color:#C5C5C5">Report a bug</a></li>
+        			<li><a href="{{ url('/account/settings/bug') }}" style="color:#C5C5C5">Report a bug</a></li>
         			<li>Accessibility</li>
         		</ul>
         	</div>
         	<div class="col-sm-2">
         		<h6>ABOUT US</h6>
         		<ul>
-        			<li>Contact us</li>
-        			<li>Help and support</li>
-        			<li><a href="faq" style="color:#C5C5C5">Terms of use</a></li>
-        			<li><a href="faq" style="color:#C5C5C5">Privacy Policy</a></li>
+        			<li><a href="{{ url('/contactform') }}" style="color:#C5C5C5">Contact us</a></li>
+        			<li><a href="{{ url('/helpandsupport') }}" style="color:#C5C5C5">Help and support</a></li>
+        			<li><a href="{{ url('faq') }}" style="color:#C5C5C5">Terms of use</a></li>
+        			<li><a href="{{ url('faq') }}" style="color:#C5C5C5">Privacy Policy</a></li>
         		</ul>
         	</div>
         	<div class="col-sm-3 pos-relative">
