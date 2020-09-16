@@ -60,7 +60,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -362,7 +362,7 @@ template {
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   margin-bottom: 0.5rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -10072,7 +10072,7 @@ img::-moz-selection {
 
 .btn-xl {
   padding: 1.25rem 2.5rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-size: 1.125rem;
   font-weight: 700;
 }
@@ -10094,7 +10094,7 @@ img::-moz-selection {
 }
 #mainNav .navbar-toggler {
   padding: 0.75rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-size: 0.75rem;
   color: #fff;
   text-transform: uppercase;
@@ -10104,7 +10104,7 @@ img::-moz-selection {
 }
 #mainNav .navbar-brand {
   color: #fed136;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   letter-spacing: 0.0625em;
   text-transform: uppercase;
@@ -10113,7 +10113,7 @@ img::-moz-selection {
   height: 1.5rem;
 }
 #mainNav .navbar-nav .nav-item .nav-link {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-size: 0.95rem;
   color: #fff;
   letter-spacing: 0.0625em;
@@ -10179,7 +10179,7 @@ header.masthead .masthead-heading {
   font-weight: 700;
   line-height: 3.25rem;
   margin-bottom: 2rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
 }
 
 @media (min-width: 768px) {
@@ -10198,7 +10198,7 @@ header.masthead .masthead-heading {
     font-weight: 700;
     line-height: 4.5rem;
     margin-bottom: 2rem;
-    width: 50%;
+    /* width: 50%; */
   }
 }
 #portfolio .portfolio-item {
@@ -10236,7 +10236,7 @@ header.masthead .masthead-heading {
 }
 #portfolio .portfolio-item .portfolio-caption .portfolio-caption-heading {
   font-size: 1.5rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   margin-bottom: 0;
 }
@@ -10500,22 +10500,22 @@ section#contact form#contactForm .form-control:focus {
   box-shadow: none;
 }
 section#contact form#contactForm ::-webkit-input-placeholder {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   color: #ced4da;
 }
 section#contact form#contactForm :-moz-placeholder {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   color: #ced4da;
 }
 section#contact form#contactForm ::-moz-placeholder {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   color: #ced4da;
 }
 section#contact form#contactForm :-ms-input-placeholder {
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   font-weight: 700;
   color: #ced4da;
 }
@@ -10555,7 +10555,7 @@ section#contact form#contactForm :-ms-input-placeholder {
       background: transparent linear-gradient(113deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
       color: #fff;
   font-size: 0.9rem;
-  font-family: "Poppins";
+  font-family: "Poppins", sans-serif !important;
   height: 20.25rem;
   position: relative;
 }

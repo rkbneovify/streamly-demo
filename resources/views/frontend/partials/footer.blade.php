@@ -22,8 +22,12 @@
         	<div class="col-sm-2">
         		<h6>HELP</h6>
         		<ul>
-        			<li><a href="{{ url('/account/settings') }}" style="color:#C5C5C5">Account and Billing</a></li>
-        			<li><a href="{{ url('/selectplan') }}"  style="color:#C5C5C5">Plans and Pricing</a></li>
+							<li><a href="{{ url('/account/settings') }}" style="color:#C5C5C5">Account and Billing</a></li>
+							@if( isset($login) && $login)
+							<li><a href="{{ url('/selectplan') }}"  style="color:#C5C5C5">Plans and Pricing</a></li>
+							@else
+							<li><a href="{{ url('/#services') }}"  style="color:#C5C5C5">Plans and Pricing</a></li>
+							@endif
         			<li>Supported Devices</li>
         			<li><a href="{{ url('/account/settings/bug') }}" style="color:#C5C5C5">Report a bug</a></li>
         			<li>Accessibility</li>
