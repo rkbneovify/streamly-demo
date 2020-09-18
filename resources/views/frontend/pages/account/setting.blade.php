@@ -1,3 +1,5 @@
+<?php 
+use Laravel\Cashier\Cashier;?>
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
@@ -293,7 +295,29 @@
 						</ul>
 					</div>
 				</div>
-				
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Invoice
+								<b><span class="pull-right">Download</span></b>
+							</li>
+							@foreach ($invoices as $invoice)
+							<li>
+								<?php $invoicedate=date('M d, Y',$invoice->date)?>
+								{{-- {{$invoice}} --}}
+								{{$invoicedate}} {{Cashier::formatAmount($invoice->total, $invoice->currency)}}
+								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url }}">Download</a> 
+									{{-- <a href="/user/invoice/{{ $invoice->id }}">Download se</a> --}}
+								</span></b>
+								
+							</li>
+							@endforeach
+						</ul>
+					</div>
+				</div>
 				@else
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">

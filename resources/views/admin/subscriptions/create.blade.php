@@ -114,7 +114,7 @@
           </div><div class="col-md-6">
               <div class='form-group zip required'>
                   <label class='control-label'>Credit card zip</label>
-                  <input autocomplete='off' class='form-control'  name="zip" type='number'>
+                  <input autocomplete='off' class='form-control'  name="zip" type='number' required>
                   <small id="ziphelp" ></small>
               </div>
           </div>
@@ -168,7 +168,7 @@
       <div class="row">
         <div class="col-12">
           
-          <button type="submit" id="card-button"  class=" btn btn-success">
+          <button type="submit" id="card-button"  class=" btn btn-success" disabled>
                                         Save
                                     </button>
                                     <a href="{{ url('admin/subscriptions') }}" class="btn btn-secondary">Cancel</a>
@@ -189,7 +189,7 @@
 
         <script>
           $(function() {
-
+            var bt = document.getElementById('card-button');
 $('body').on('blur','[name="coupon"]',function(){
     $coupon = $(this);
     if($coupon.val().length > 0) { // check if user typed anything
@@ -230,11 +230,13 @@ $('body').on('focusout','[name="zip"]',function(){
     data:{zip: $zip.val()},
     dataType: 'json',
     success: function (data) {
+      bt.disabled = false;
       $('#card-button').prop('disabled', false);
       $('#ziphelp').html('<p>'+data.message+'</p>');
     },
     error:function(xhr, status, error){ 
       if(xhr.status==404) {
+        bt.disabled = true;
         // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
         $('#card-button').prop('disabled', true);
       $('#ziphelp').html('<p>'+xhr.responseJSON.message+'</p>');

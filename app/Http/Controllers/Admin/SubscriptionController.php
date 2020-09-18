@@ -100,10 +100,13 @@ class SubscriptionController extends Controller
             
             // if user has a coupon, create new subscription with coupon applied
             if( $coupon = $request->get('coupon') ) {
-             
+                if(!empty($trial_days)){
              $user->newSubscription( 'main', $product)->trialDays($trial_days)
                  ->withCoupon($coupon)
-                 ->create($request->payment_method, ['email' => $user->email]);
+                 ->create($request->payment_method, ['email' => $user->email]);}else{
+                    $user->newSubscription( 'main', $product)
+                        ->withCoupon($coupon)
+                        ->create($request->payment_method, ['email' => $user->email]);}
                  return redirect('admin/subscriptions')->with('info','Subscriber Added Successfully with coupon');
  
          } else {

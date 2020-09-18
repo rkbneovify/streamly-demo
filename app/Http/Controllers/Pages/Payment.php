@@ -51,7 +51,7 @@ class Payment extends Controller
     public function pay(Request $request,$StripeplanId) {
         
         $user = auth()->user();
-       
+        $trial_days=$request->trial_days;
         try {
             // check already subscribed and if already subscribed with picked plan
         if( $user->subscribed('main') && ! $user->subscribedToPlan($StripeplanId, 'main') ) {
@@ -63,17 +63,24 @@ class Payment extends Controller
             
            // if user has a coupon, create new subscription with coupon applied
            if( $coupon = $request->get('coupon') ) {
-            
-            $user->newSubscription( 'main', $StripeplanId)->trialDays($request->trial_days)
+            if(!empty($trial_days)){
+                $user->newSubscription( 'main', $StripeplanId)->trialDays($trial_days)
                 ->withCoupon($coupon)
-                ->create($request->payment_method, ['email' => $user->email]);
+                ->create($request->payment_method, ['email' => $user->email]); 
+            }else{ $user->newSubscription( 'main', $StripeplanId)
+                    ->withCoupon($coupon)
+                    ->create($request->payment_method, ['email' => $user->email]);}
+           
 
         } else {
         
             // Create subscription
-            $newSubscription = $user->newSubscription('main', $StripeplanId)
-            
-            ->trialDays($request->trial_days)->create($request->payment_method, ['email' => $user->email]);
+            if(!empty($trial_days)){
+                $newSubscription = $user->newSubscription('main', $StripeplanId)
+                
+                ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);}else{
+                    $newSubscription = $user->newSubscription('main', $StripeplanId)
+                    ->create($request->payment_method, ['email' => $user->email]);}
         }}
         } catch ( IncompletePayment $exception ){
             return redirect()->back()->with(['error_message' => $exception->getMessage()]);

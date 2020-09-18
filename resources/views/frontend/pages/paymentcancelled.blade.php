@@ -2,6 +2,9 @@
 
 @section('top-stylesheets')
 	<style>
+		button[disabled] {
+  cursor: not-allowed;
+}
 		nav#mainNav {
 			background-color: #004E92;
 		}
@@ -214,7 +217,7 @@
 				                    
 													<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">	
 													<div class="form-group mt-3">
-				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
+				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled>
 				                        	<span style="width: 100%;">SUBMIT</span>
 				                        </button>
 				                    </div>
@@ -249,6 +252,7 @@
 
         <script>
 					       $(function() {
+									var bt = document.getElementById('card-button');
 
 $('body').on('blur','[name="coupon"]',function(){
     $coupon = $(this);
@@ -292,13 +296,13 @@ $('body').on('focusout','[name="zip"]',function(){
     data:{zip: $zip.val()},
     dataType: 'json',
     success: function (data) {
-      $('#card-button').prop('disabled', false);
+			bt.disabled = false;
       $('#ziphelp').html('<p style="color:green">'+data.message+'</p>');
     },
     error:function(xhr, status, error){ 
       if(xhr.status==404) {
         // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
-        $('#card-button').prop('disabled', true);
+				bt.disabled = true;
       $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+'</p>');
               
   
