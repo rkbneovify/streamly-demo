@@ -2,6 +2,9 @@
 
 @section('top-stylesheets')
 	<style>
+				button[disabled] {
+  cursor: not-allowed;
+}
 		nav#mainNav {
 			background-color: #004E92;
 		}
@@ -82,7 +85,7 @@
 	<section class="page-section">
 		<div class="container">
 			<div class="text-center">
-				<h2 class="section-heading">Add Your Billing Details</h2>
+				<h2 class="section-heading">Add Your Billing Detailsdsjk</h2>
 				<div class="row">
 					<div class="col-md-4 text-left">
 						<div class="row subscription-box">
@@ -191,7 +194,7 @@
 													</div><div class="col-md-6">
 															<div class='form-group zip required'>
 																	<label class='control-label'>Credit card zip</label>
-																	<input autocomplete='off' class='form-control'  name="zip" type='number'>
+																	<input autocomplete='off' class='form-control'  name="zip" type='number' required>
 																	<small id="ziphelp" ></small>
 															</div>
 													</div>
@@ -246,6 +249,7 @@
 
         <script>
 					       $(function() {
+									var bt = document.getElementById('card-button');
 
 $('body').on('blur','[name="coupon"]',function(){
     $coupon = $(this);
@@ -289,13 +293,13 @@ $('body').on('focusout','[name="zip"]',function(){
     data:{zip: $zip.val()},
     dataType: 'json',
     success: function (data) {
-      $('#card-button').prop('disabled', false);
+			bt.disabled = false;
       $('#ziphelp').html('<p style="color:green">'+data.message+'</p>');
     },
     error:function(xhr, status, error){ 
       if(xhr.status==404) {
         // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
-        $('#card-button').prop('disabled', true);
+				bt.disabled = true;
       $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+'</p>');
               
   

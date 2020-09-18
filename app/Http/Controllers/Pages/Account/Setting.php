@@ -24,9 +24,26 @@ class Setting extends Controller
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         
     }
+    public function invoice(){
+        $user= Auth::user();
+    //   $invoices=  \Stripe\Invoice::all(['customer' => $user->stripe_id]);
+      $invoices = $user->invoices();
+     $firstinvoice= $user->invoices->first()->download();
+
+        return [ 'invoices' => $invoices ];
+    }
+    public function invoicePDF (Request $request, $invoiceId) {
+        $user= Auth::user();
+        
+        // return dd(\Stripe\Invoice::all(['customer' => $user->stripe_id]));
+        return Auth::user()->downloadInvoice($invoiceId, [
+            'vendor' => 'Sahil',
+            'product' => 'Your Product',
+        ]);
+    }
     // Account Settings page
     public function showSettingpage(){
-
+        $invoices='1';
     	if( Auth::check()){
             $login = true;
         } else {
@@ -61,10 +78,14 @@ class Setting extends Controller
          
             $plan = \Stripe\Plan::retrieve($stripe_plan);
            // dd($plan);
-            
+           $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+        //    $invoices = Auth::user()->invoicesIncludingPending();
+        //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
+            // ch_1HSfl3LqTwOy7LECVmOdkimy
+        //  dd($invoices);
          }
          
-    	return view('frontend.pages.account.setting', compact('login','allSession','subscription','plan','userinfo'));
+    	return view('frontend.pages.account.setting', compact('login','allSession','subscription','plan','userinfo','invoices'));
     }
 
     public function sessiondestroy($id,Request $request)
