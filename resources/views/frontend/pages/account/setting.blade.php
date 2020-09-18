@@ -304,12 +304,13 @@ use Laravel\Cashier\Cashier;?>
 							</li>
 							@foreach ($invoices as $invoice)
 							<li>
-								<?php $invoicedate=date('M d, Y',$invoice->date)?>
+								<?php if($invoice->date){
+									$invoicedate=date('M d, Y',$invoice->date);} else {$invoicedate='';}?>
 								{{-- {{$invoice}} --}}
-								{{$invoicedate}} {{Cashier::formatAmount($invoice->total, $invoice->currency)}}
+								{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}
 								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
 								{{-- {{$subscription}} --}}
-								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url }}">Download</a> 
+								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a> 
 									{{-- <a href="/user/invoice/{{ $invoice->id }}">Download se</a> --}}
 								</span></b>
 								
