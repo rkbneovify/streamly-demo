@@ -28,7 +28,7 @@
 							@else
 							<li><a href="{{ url('/#services') }}"  style="color:#C5C5C5">Plans and Pricing</a></li>
 							@endif
-        			<li>Supported Devices</li>
+        			<li><a href="{{ url('/devices') }}"  style="color:#C5C5C5">Supported Devices</a></li>
         			<li><a href="{{ url('/account/settings/bug') }}" style="color:#C5C5C5">Report a bug</a></li>
         			<li>Accessibility</li>
         		</ul>
