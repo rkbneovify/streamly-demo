@@ -284,7 +284,18 @@ $geojson = array(
        
         return view('frontend.contactform',compact('login'));
         // return view('frontend.verified');
-    } public function helpandsupp()
+    } 
+    
+    public function showSupportedDevices(){
+       
+        if( Auth::check()){
+            $login = true;}else{ $login = false; }
+       
+        return view('frontend.supporteddevice',compact('login'));
+        
+    }
+    
+    public function helpandsupp()
     {
         
         $login = false; 

@@ -144,6 +144,7 @@ Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('send
 Route::get('/verified', 'HomeController@verified');
 Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
 Route::get('/contactform', 'HomeController@contactform');
+Route::get('/devices', 'HomeController@showSupportedDevices');
 Route::get('/helpandsupport', 'HomeController@helpandsupp');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
