@@ -58,6 +58,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('oldchanneldayschdeule', 'Admin\ChannelController@oldchannelDaysSchedule');
     Route::get('frontendepg', 'Admin\ChannelController@frontEpgchannelDaysSchedule');
     Route::get('frontendepg2', 'Admin\ChannelController@frontEpgchannelDaysSchedule2');
+    Route::get('frontendepgpacific', 'Admin\ChannelController@PacificFrontEpgchannelDaysSchedule');
     Route::get('timezonefrontendepg', 'Admin\ChannelController@timezoneEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
