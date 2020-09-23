@@ -27,7 +27,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index','checkdevice','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData']]);
+        $this->middleware('jwt.verify', ['except' => ['index','checkdevice','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData','PacificFrontEpgchannelDaysSchedule']]);
     }
     public function index()
     {  
@@ -584,6 +584,121 @@ $reco=$record->get(); //echo $reco;exit;
      
         }
 
+        public function PacificFrontEpgchannelDaysSchedule(){
+
+    // $date = Carbon::parse('2018-08-19 10:43:15', 'UTC');echo "\n";
+    // echo($date->timezone->getName());echo "\n";
+    // echo($date->format('n/j/y g:i A'));echo "\n";
+    
+    // $date->setTimezone('America/Denver');
+    
+    // echo($date->timezone->getName());echo "\n";
+    // echo($date->format('n/j/y g:i A'));
+    // exit;
+    // $now = Carbon\Carbon::now('PST')->setTimezone('UTC')->addHours(2);
+    $now = Carbon::now();
+echo "$now\n";
+$this->isUtc($now);
+
+echo "Offset hours: {$now->offsetHours}\n";
+
+echo "******************************\n";
+
+$now->tz('UTC');
+echo "$now\n";
+$this->isUtc($now);
+echo "Offset hours2: {$now->offsetHours}\n";
+exit;
+    $dateUTC = Carbon::now();
+    $datePST = Carbon::now();
+    $datePST->setTimezone('America/Los_Angeles');
+   $dateUTC = Carbon::now('UTC');
+   $start  = Carbon::parse($dateUTC);
+    $end    = Carbon::parse($datePST);
+    $difference = $start->diffInHours($end, false); // set false to see the negative difference
+echo "\ndateUTC".$dateUTC;
+echo "\nPST".$datePST;
+echo "\nStartUTC".$start;
+echo "\nEndPST".$end;
+    // "\n".$datePST = Carbon::now('America/Los_Angeles');
+    // $difference = $dateUTC->diffInHours($datePST);
+   echo "\ndifference".$difference;
+   $startTime  = Carbon::parse('2018-09-18 21:12:35');
+$finishTime = Carbon::parse($startTime)->addHours(10); 
+$totalDuration = $startTime->diffInHours($finishTime);
+echo "\ntotalDuration".$totalDuration;
+exit;
+   
+    echo "PST".Carbon::now('PST');
+    echo "Los".Carbon::now('America/Los_Angeles');
+    // echo "\nPacific".Carbon::now('US\Pacific');
+    echo "\nUTC".Carbon::now('UTC');
+   echo "\nDiff".Carbon::now('America/Los_Angeles')->diffInHours(Carbon::now('UTC')); exit;
+            $imagePath=url("/uploads/channellogo/");
+            $input=url('livetv/');
+            DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+            $record  = Gracenote::select(["sub.id","sub.callSign","StationName AS name","genres",DB::raw("CONCAT('$imagePath/',`image`) icon")])
+            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', (UNIX_TIMESTAMP(StartDateTimewithTimezon)*1000),'end', (UNIX_TIMESTAMP(EndDateTimewithTimezon)*1000) ) Order By StartDateTime ), ']') events")
+            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, sub.genres)"), DB::raw('>'),DB::raw('0'))
+            ->fromSub(function ($query) {
+                $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") ) StartDateTime'),
+                DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.genres',DB::raw('IFNULL(channels.image,"notfound.png") image'),DB::raw(" CASE TimeZoneName
+                
+                WHEN 'Eastern Observing' THEN CONVERT_TZ(StartDateTime,'US/Eastern','US/Pacific')
+                WHEN 'Central Observing' THEN CONVERT_TZ(StartDateTime,'US/Central','US/Pacific')
+        
+                ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'),'UTC','US/Pacific')
+            end StartDateTimewithTimezon"),DB::raw(" CASE TimeZoneName
+            
+            WHEN 'Eastern Observing' THEN CONVERT_TZ(EndDateTime,'US/Eastern','US/Pacific')
+            WHEN 'Central Observing' THEN CONVERT_TZ(EndDateTime,'US/Central','US/Pacific')
+        
+            ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s'),'UTC','US/Pacific')
+        end EndDateTimewithTimezon"),'channels.url')
+                ->from('gracenote')
+                ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+               
+            ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+            AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+             ->orderBy('gracenote.StartDateTime', 'asc');
+              }, 'sub')
+            
+            ->orderBy('sub.callSign', 'asc')
+            ->groupBy('sub.callSign','StationName','image','sub.id','genres');
+                
+           $reco=$record->get()->map(function ($address) use ($input) {
+        
+                         
+            $address['url'] = $input.'/'.$address['callSign'].'/'.$address['genrename']['0'] ;
+        
+            return $address;
+        
+        });//exit; // echo $reco; exit;
+                 if ($reco->isEmpty()) {
+                    $response = [
+                        'success' => false,
+                        'data' => 'Empty',
+                        'message' => 'Channel not found.',
+                        'response_code'=>404,
+                    ];
+                    return response()->json($response, 404);
+                }  
+            
+                    $response = [
+                        'success' => true,
+                        'date'=>date("Y-m-d"),
+                        'data' => $reco,
+                       
+                        'message' => 'Schedule data for 3 days found',
+                        'response_code'=>200,
+                    ];
+                   
+                return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+             
+                }
+
 
 public function transformClientCollection($api)
 {
@@ -603,6 +718,16 @@ public function transformClient($clients)
     ];
 }
 
+  public function isUtc($now): void 
+  {
+      if ($now->utc) 
+      {
+          echo "Datetime is in UTC\n";
+      } else {
+      
+          echo "Datetime is not in UTC\n";
+      }
+  }
   //channel with 7 day of schdule
   public function oldchannelDaysSchedule(){
     //  SELECT * FROM `gracenote` WHERE `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) ORDER BY `gracenote`.`StartDateTime` ASC
