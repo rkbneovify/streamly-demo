@@ -64,6 +64,224 @@
             width: 100%;
             z-index: 1040;
         }
+        	
+	.css-thjkr7,
+	[data-css-thjkr7] {
+		position: relative;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		margin: 0;
+		background: -webkit-linear-gradient(98deg, #000428 0%, #004E92 100%);
+		background: -moz-linear-gradient(98deg, #000428 0%, #004E92 100%);
+		background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+		background-color: #15101E;
+		background-image: null;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+	}
+    .css-5nata0,
+	[data-css-5nata0] {
+		width: 100%;
+		height: 100%;
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 130px 0 44px;
+		position: relative;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+	}
+
+	.css-5nata0 .upper-section,
+	[data-css-5nata0] .upper-section {
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		margin-bottom: 52px;
+		-webkit-box-lines: multiple;
+		-webkit-flex-wrap: wrap;
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: row;
+		-webkit-box-pack: center;
+		-webkit-justify-content: center;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+	}
+	
+	.css-5nata0 .upper-section .content,
+	[data-css-5nata0] .upper-section .content {
+		position: absolute;
+		left: 100px;
+	}
+	
+	.css-5nata0 .upper-section .content .title,
+	[data-css-5nata0] .upper-section .content .title {
+		font-size: 48px;
+		font-weight: 800;
+		letter-spacing: 0.25px;
+		max-width: 856px;
+		margin-bottom: 20px;
+	}
+	
+	.css-5nata0 .upper-section .content .sub-title,
+	[data-css-5nata0] .upper-section .content .sub-title {
+		font-size: 18px;
+		line-height: 25px;
+		font-weight: 500;
+		letter-spacing: 0.19px;
+		max-width: 856px;
+	}
+	
+	.css-5nata0 .upper-section .content .apps,
+	[data-css-5nata0] .upper-section .content .apps {
+		margin: 26px 0 20px;
+		padding: 8px 30px;
+		font-size: 16px;
+		line-height: 21px;
+		background-color: transparent;
+		border: 2px solid #FFFFFF;
+		border-radius: 20px;
+		align-self: flex-start;
+		-webkit-align-self: flex-start;
+	}
+	
+	.css-5nata0 .upper-section .devices-preview,
+	[data-css-5nata0] .upper-section .devices-preview {
+		position: relative;
+		right: -35%;
+		width: 100%;
+		max-width: 1200px;
+	}
+	
+	.css-5nata0 .upper-section .devices-preview img,
+	[data-css-5nata0] .upper-section .devices-preview img {
+		width: 100%;
+	}
+	
+	.css-5nata0 .support-platforms img,
+	[data-css-5nata0] .support-platforms img {
+		width: 100%;
+		height: auto;
+		padding: 0 36px;
+	}
+	
+	@media(max-width: 1100px) {
+		.css-5nata0,
+		[data-css-5nata0] {
+			padding: 100px 0;
+		}
+		.css-5nata0 .upper-section .content,
+		[data-css-5nata0] .upper-section .content {
+			position: unset;
+			margin-bottom: 60px;
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			align-items: center;
+			text-align: center;
+			-webkit-box-align: center;
+			-webkit-align-items: center;
+		}
+		.css-5nata0 .upper-section .content .title br,
+		[data-css-5nata0] .upper-section .content .title br {
+			display: none;
+		}
+		.css-5nata0 .upper-section .content .apps,
+		[data-css-5nata0] .upper-section .content .apps {
+			align-self: center;
+			-webkit-align-self: center;
+		}
+		.css-5nata0 .upper-section .devices-preview,
+		[data-css-5nata0] .upper-section .devices-preview {
+			right: 0;
+		}
+	}
+	
+	@media(max-width: 768px) {
+		.css-5nata0 .upper-section .content .title,
+		[data-css-5nata0] .upper-section .content .title {
+			font-size: 32px;
+			letter-spacing: 0.34px;
+		}
+		.css-5nata0 .upper-section .content .sub-title,
+		[data-css-5nata0] .upper-section .content .sub-title {
+			font-size: 16px;
+			letter-spacing: 0.17px;
+		}
+		.css-5nata0 .upper-section .content .apps,
+		[data-css-5nata0] .upper-section .content .apps {
+			align-self: center;
+			-webkit-align-self: center;
+		}
+	}
+	
+	@media(max-width: 425px) {
+		.css-5nata0 .support-platforms img,
+		[data-css-5nata0] .support-platforms img {
+			padding: 0 10px;
+		}
+	}
+    .css-5nata0 .upper-section .content,
+	[data-css-5nata0] .upper-section .content {
+		position: absolute;
+		left: 100px;
+	}
+    .css-fxmkwd .content,
+	[data-css-fxmkwd] .content {
+		display: -webkit-box;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+		flex-grow: 1;
+		flex-direction: column;
+		-webkit-flex-grow: 1;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: column;
+	}
+    .css-5nata0 .upper-section .content, [data-css-5nata0] .upper-section .content {
+    position: absolute;
+    left: 100px;
+    color: #fff;
+}
+	
     </style>
 @endsection
 @section('stylesheets-bottom')
@@ -327,7 +545,7 @@
             <div class="grid-container">
                 @foreach ($pagechannel as $channeldet)
                 <div class="item1"> 
-                    <img style='height: 100%; width: 100%; object-fit: contain' src="{{  $channeldet->logo}}">
+                    <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet->logo}}" alt="Logo of {{$channeldet->callSign}}">
                 </div>
                 @endforeach
                 
@@ -356,7 +574,7 @@
     }
     </style>
     <!-- Portfolio Grid-->
-    <section class="page-section bg-light" id="portfolio">
+    {{-- <section class="page-section bg-light" id="portfolio">
         <div class="container">
             <div class="text-center">
                 <h2 class="section-heading">Download Our App</h2>
@@ -385,5 +603,32 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
+    {{-- <section class="page-section bg-light" id="portfolio">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-heading">Download Our App</h2>
+            </div>
+        </div>
+    </section> --}}
+
+    <div class="css-thjkr7">
+        <div class="css-5nata0">
+            <div class="upper-section">
+                <div class="content">
+                    <div class="title">Watch on all
+                        <br> your devices.</div>
+                    <div class="sub-title">Download the free Streamly apps for all your devices.
+                        <br> Watch what you want, when you want.</div>
+                    <div class="apps css-q9bl1b" style="
+                    width: 242px;
+                "><a href="{{ url('/devices') }}" style="    text-decoration: none;
+    outline: none;
+    color: unset;">See all apps and devices</a></div>
+                </div>
+                <div class="devices-preview"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/us-devices-preview.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=2 2x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=3 3x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=4 4x"></div>
+            </div>
+            <div class="support-platforms"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/platform-logos.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos@2x.png?ch=width&amp;auto=format,compress 2x"></div>
+        </div>
+    </div>
 @endsection

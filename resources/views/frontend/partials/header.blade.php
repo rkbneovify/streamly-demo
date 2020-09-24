@@ -1,7 +1,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/"><img src="{{ asset('frontend/img/streamly-logo.png') }}" /></a>
+        <a class="navbar-brand js-scroll-trigger" href="/"><img src="{{ asset('frontend/img/streamly-logo.png') }}" alt="logo of streamly" /></a>
 
         @if( isset($login) && $login)
 
