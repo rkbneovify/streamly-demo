@@ -45,7 +45,7 @@ class ChannelCollectionViewCell: UICollectionViewCell {
         self.containerView.cornerRadius = 8
         self.containerView.clipsToBounds = true
         if let _ = channel.logo {
-            self.imageView.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
+        self.imageView.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
         }
         self.channelName.text = channel.CallSign ?? ""
         self.channelNumber.text = "\(channel.id ?? 0)"

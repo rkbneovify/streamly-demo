@@ -25,16 +25,10 @@ class Switcher {
                 // Not login
                 Constant.navigateToRootLogin()
             }
-
+            
         }else{
-            //            let storyboard = Utility.getStoryboard(stroryboardName: Constant.Storyboard.main)
-            //            let noInternet = storyboard.instantiateViewController(withIdentifier: Constant.ViewController.NoInternectConnection) as? NoInternetViewController
-            //            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
-            //                       appDelegate.window?.rootViewController = noInternet
-            //
-            //                       appDelegate.window?.makeKeyAndVisible()
-
+            Constant.navigateToNoNetwork()
         }
-
+        
     }
 }

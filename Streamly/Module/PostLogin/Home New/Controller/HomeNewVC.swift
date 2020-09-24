@@ -166,6 +166,7 @@ class HomeNewVC: UIViewController {
         currentTimeLabel.textColor = UIColor.white
         currentTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(currentTimeLabel)
+        currentTimeLabel.isHidden = true
         let labelWidthConstraint = NSLayoutConstraint(item: currentTimeLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80)
         let labelHeightConstraint = NSLayoutConstraint(item: currentTimeLabel, attribute: .height, relatedBy: .equal,toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 75)
         let leadingConstraint = NSLayoutConstraint(item: currentTimeLabel, attribute: .leading, relatedBy: .equal, toItem: self.spinnerImageView, attribute: .trailing, multiplier: 1, constant: 8)
@@ -205,7 +206,7 @@ class HomeNewVC: UIViewController {
         currentView.isHidden = shouldHidden
         spinnerImageView.isHidden = shouldHidden
         liveButton.isHidden = shouldHidden
-        currentTimeLabel.isHidden = shouldHidden
+        currentTimeLabel.isHidden = true
     }
 
     private func getSnappshot(withRect : CGRect) -> UIImage
@@ -245,6 +246,7 @@ class HomeNewVC: UIViewController {
         var offset = self.collectionView.contentOffset
         offset.x = (((CGFloat(numberOfHours) * (408*2))) - (297 + 36))
         return offset
+        
     }
     
     private func setupEPGLayout()
@@ -487,9 +489,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
         debugPrint("section = " + "\(indexPath.section), " + "row = " + "\(indexPath.row)")
         if indexPath.section != 0
         {
+            guard let _ = self.geoData?.success else { return self.showSimpleAlertWithMessage("We are not serving in your area!")}
             guard let item = filteredList?[(indexPath.section - 1)] else {return}
             let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-            guard let url = URL(string: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8") else {return}
+            guard let url = URL(string: item.url ?? "") else {return}
             viewController.url = url
             self.present(viewController, animated: true, completion: nil)
         }
@@ -542,8 +545,16 @@ extension HomeNewVC {
             currentTimeLabel.text = currentTime
             var offset = self.collectionView.contentOffset
             offset.x += 13.5
-            self.collectionView.setContentOffset(offset, animated: true)
+            self.collectionView.reloadData()
+            self.collectionView.layoutIfNeeded()
+
+           DispatchQueue.main.async(execute: {
+                /* Scroll to the previous saved position */
+                self.collectionView.setContentOffset(offset, animated: false)
+            })
+
         }
+
     }
 }
 
@@ -696,7 +707,7 @@ extension HomeNewVC:UIScrollViewDelegate
             }
             else
             {
-                currentTimeLabel.isHidden = false
+                currentTimeLabel.isHidden = true
                 spinnerImageView.isHidden = false
                 currentView.isHidden = false
             }

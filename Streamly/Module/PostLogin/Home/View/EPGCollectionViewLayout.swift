@@ -223,11 +223,7 @@ extension CustomCollectionViewLayout {
         }
         else
         {
-            let d1 = Date.init(timeIntervalSince1970: programData?.start ?? 0)
-            let d2 = Date.init(timeIntervalSince1970: programData?.end ?? 0) // April 27,
-            let intervals = d2.timeIntervalSince(d1)
-            let numberOfHours = CGFloat(intervals / 3600)
-            width = CGFloat(numberOfHours) * (TILE_WIDTH * 2)
+            width = Utility.getProgrammWidth(start: programData?.start ?? 0, end: programData?.end ?? 0)
         }
         return CGSize(width: width, height: height)
     }

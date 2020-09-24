@@ -38,7 +38,7 @@ class Utility {
     
     static func retriveStringObject(key: String) -> String {
         
-        return  UserDefaults.standard.string(forKey: key) ?? "N/A"
+        return  UserDefaults.standard.string(forKey: key) ?? ""
     }
     //
     
@@ -61,7 +61,7 @@ class Utility {
     }
     
     
-    static func getDateFromTimeStampByFormat(from interval : TimeInterval,_ format:String = "hh:mm a") -> String?
+    static func getDateFromTimeStampByFormat(from interval : TimeInterval, _ format:String = "hh:mm a") -> String?
     {
         let date = NSDate(timeIntervalSince1970: interval)
         let dayTimePeriodFormatter = DateFormatter()
@@ -69,6 +69,15 @@ class Utility {
         dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
         dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
         return dayTimePeriodFormatter.string(from: date as Date)
+    }
+
+    static func getCurrentDateTime() -> String
+    {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/yyyy hh:mm a"
+        let current_date = dateFormatter.string(from: date)
+        return current_date
     }
 
     static func convertDateFormat(_ inputDate: String) -> String {
@@ -91,6 +100,16 @@ class Utility {
 
         return UIImage(cgImage: croppedCGImage)
     }
+
+    static func getProgrammWidth(start: TimeInterval, end: TimeInterval) -> CGFloat {
+        let d1 = Date.init(timeIntervalSince1970: start)
+        let d2 = Date.init(timeIntervalSince1970: end)
+        let intervals = d2.timeIntervalSince(d1)
+        let numberOfHours = CGFloat(intervals / 3600)
+        return CGFloat(numberOfHours) * (408 * 2)
+    }
+
+
     
     // MARK: Convenience
     

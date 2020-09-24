@@ -31,7 +31,7 @@ class LogOUTView: NibView {
     
     //MARK: Actions
     
-    @IBAction func ButtonActions(_ sender: UIButton) {
+    @IBAction func buttonActions(_ sender: UIButton) {
         self.delegate?.callAction(sender.tag)
     }
 

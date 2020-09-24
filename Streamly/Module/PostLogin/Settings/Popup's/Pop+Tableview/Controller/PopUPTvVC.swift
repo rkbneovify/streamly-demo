@@ -107,7 +107,7 @@ extension PopUPTvVC:UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        if ((profileItemArr?.count == 0 || profileItemArr == nil) && (deviceList?.count == 0 || deviceList == nil)) {
+        if ((profileItemArr?.isEmpty ?? true || profileItemArr == nil) && (deviceList?.isEmpty ?? true || deviceList == nil)) {
             self.tableview.setEmptyMessage("No record's found")
         } else {
             self.tableview.restore()

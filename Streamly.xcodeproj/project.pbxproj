@@ -20,13 +20,16 @@
 		AA105C94249767E700CF075B /* SupportView.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA105C96249767E700CF075B /* SupportView.xib */; };
 		AA19D0F724AF9B77005B488D /* HomeNewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA19D0F624AF9B77005B488D /* HomeNewVC.swift */; };
 		AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */; };
+		AA24D5F2251C7F0300A071AE /* TimeComparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA24D5F1251C7F0300A071AE /* TimeComparable.swift */; };
 		AA352CB424813B01009ACD55 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB024813B00009ACD55 /* DataItem.swift */; };
 		AA352CB524813B01009ACD55 /* DataItemCellComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */; };
 		AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */; };
 		AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */; };
+		AA48B9BA24F398A400B33C97 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA48B9B924F398A400B33C97 /* GoogleService-Info.plist */; };
 		AA49AC9D24DD96D70013A65E /* GeoFenceFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA49AC9C24DD96D70013A65E /* GeoFenceFlag.swift */; };
 		AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4B5E4024A514E80031AB15 /* ChannelList.swift */; };
 		AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DD07424D0971D00FC4D0A /* RecentData.swift */; };
+		AA5354E425064B0400F7564E /* NoInternetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5354E325064B0400F7564E /* NoInternetVC.swift */; };
 		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
 		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
 		AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA54082F2491F84F000D5F76 /* LogOutModel.swift */; };
@@ -143,13 +146,16 @@
 		AA105C9A249767EF00CF075B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SupportView.strings"; sourceTree = "<group>"; };
 		AA19D0F624AF9B77005B488D /* HomeNewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNewVC.swift; sourceTree = "<group>"; };
 		AA1EAF2A246BC63F00DA78A2 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		AA24D5F1251C7F0300A071AE /* TimeComparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeComparable.swift; sourceTree = "<group>"; };
 		AA352CB024813B00009ACD55 /* DataItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCellComposer.swift; sourceTree = "<group>"; };
 		AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+ImageName.swift"; sourceTree = "<group>"; };
 		AA352CB324813B00009ACD55 /* DataItem+SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+SampleData.swift"; sourceTree = "<group>"; };
+		AA48B9B924F398A400B33C97 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AA49AC9C24DD96D70013A65E /* GeoFenceFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoFenceFlag.swift; sourceTree = "<group>"; };
 		AA4B5E4024A514E80031AB15 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		AA4DD07424D0971D00FC4D0A /* RecentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentData.swift; sourceTree = "<group>"; };
+		AA5354E325064B0400F7564E /* NoInternetVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoInternetVC.swift; sourceTree = "<group>"; };
 		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
 		AA54082F2491F84F000D5F76 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
@@ -630,6 +636,7 @@
 				AA5ADDD3248E4EA1005936CE /* NibView.swift */,
 				AAD8E077248F59E000A4A66F /* Protocols.swift */,
 				AA7615FD24DB10F000C8D346 /* FetchCordinate.swift */,
+				AA24D5F1251C7F0300A071AE /* TimeComparable.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -646,6 +653,7 @@
 		AAC9C8EF246A719800708812 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AA48B9B924F398A400B33C97 /* GoogleService-Info.plist */,
 				AAC9C8C8246A700400708812 /* Info.plist */,
 				AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */,
 				AAC9C8BD246A700200708812 /* Main.storyboard */,
@@ -676,6 +684,7 @@
 			isa = PBXGroup;
 			children = (
 				AAD5954B24726FFF00BC5E6C /* Switcher.swift */,
+				AA5354E325064B0400F7564E /* NoInternetVC.swift */,
 			);
 			path = Switcher;
 			sourceTree = "<group>";
@@ -746,6 +755,7 @@
 				AAC9C8B4246A700100708812 /* Resources */,
 				73C5970DCF7BE09D9EAB70DD /* [CP] Embed Pods Frameworks */,
 				AAFD55F0246C1BDD00C204B8 /* ShellScript */,
+				AA3C2EB024F38B2D00E86667 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -871,6 +881,7 @@
 				AA5E20EE24C61758000B648F /* Lato-HeavyItalic.ttf in Resources */,
 				AA105C7F249767AE00CF075B /* ProgramCollectionViewCell.xib in Resources */,
 				AA5E20F624C61758000B648F /* Lato-Regular.ttf in Resources */,
+				AA48B9BA24F398A400B33C97 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,6 +935,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Streamly/Pods-Streamly-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		AA3C2EB024F38B2D00E86667 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		AAFD55F0246C1BDD00C204B8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1035,6 +1063,8 @@
 				AA5ADDD4248E4EA1005936CE /* NibView.swift in Sources */,
 				AA94D631248A798700EBF947 /* NetworkManagerWrapper.swift in Sources */,
 				AAC9C8F3246A7EFC00708812 /* Gradient.swift in Sources */,
+				AA5354E425064B0400F7564E /* NoInternetVC.swift in Sources */,
+				AA24D5F2251C7F0300A071AE /* TimeComparable.swift in Sources */,
 				AA5ADDCD248E4A94005936CE /* PopUPViewsVC.swift in Sources */,
 				AA72AF882473F4C000906796 /* ProgramCollectionViewCell.swift in Sources */,
 				AA1EAF2B246BC63F00DA78A2 /* Extensions.swift in Sources */,
@@ -1307,7 +1337,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1329,7 +1359,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				INFOPLIST_FILE = "Streamly/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (

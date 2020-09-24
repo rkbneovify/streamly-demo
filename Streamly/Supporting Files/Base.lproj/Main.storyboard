@@ -687,6 +687,70 @@
             </objects>
             <point key="canvasLocation" x="10250" y="120"/>
         </scene>
+        <!--No InternetVC-->
+        <scene sceneID="X9t-T4-4vx">
+            <objects>
+                <viewController storyboardIdentifier="NoInternetVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0To-5R-YG9" customClass="NoInternetVC" customModule="StreamlyTV" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="NQD-VE-1Bs"/>
+                        <viewControllerLayoutGuide type="bottom" id="G1S-VV-iZZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="T5x-yH-Ndc">
+                        <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_Wifi" translatesAutoresizingMaskIntoConstraints="NO" id="cQc-uZ-Dbe">
+                                <rect key="frame" x="835" y="250" width="250" height="256"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="256" id="Ej4-W8-6NG"/>
+                                    <constraint firstAttribute="width" constant="250" id="mRw-CI-dW6"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Internet connection" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kn7-r0-QmM">
+                                <rect key="frame" x="758.5" y="526" width="403" height="46"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="38"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hj5-SC-LQB">
+                                <rect key="frame" x="868.5" y="632" width="183" height="86"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="86" id="hyx-tz-DRg"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="40"/>
+                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                <state key="normal" title="Retry"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.0" green="0.30588235294117649" blue="0.5725490196078431" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="retry:" destination="0To-5R-YG9" eventType="primaryActionTriggered" id="Nbx-TE-9qT"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="hj5-SC-LQB" firstAttribute="centerX" secondItem="kn7-r0-QmM" secondAttribute="centerX" id="7BZ-Rq-Bb5"/>
+                            <constraint firstItem="kn7-r0-QmM" firstAttribute="top" secondItem="cQc-uZ-Dbe" secondAttribute="bottom" constant="20" id="Gva-bm-4Nv"/>
+                            <constraint firstItem="cQc-uZ-Dbe" firstAttribute="centerX" secondItem="uLX-Z2-8wd" secondAttribute="centerX" id="Q3g-z1-hRz"/>
+                            <constraint firstItem="kn7-r0-QmM" firstAttribute="centerX" secondItem="cQc-uZ-Dbe" secondAttribute="centerX" id="cSr-qJ-D3r"/>
+                            <constraint firstItem="hj5-SC-LQB" firstAttribute="top" secondItem="kn7-r0-QmM" secondAttribute="bottom" constant="60" id="i6B-NM-3iI"/>
+                            <constraint firstItem="cQc-uZ-Dbe" firstAttribute="centerY" secondItem="uLX-Z2-8wd" secondAttribute="centerY" multiplier="0.7" id="szp-pd-QEI"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="uLX-Z2-8wd"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FZ4-uD-0sW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="12262" y="120"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="k0c-i8-oDO">
             <objects>
@@ -709,6 +773,7 @@
     <resources>
         <image name="Logo" width="796" height="200"/>
         <image name="magnifyingglass" catalog="system" width="32" height="28"/>
+        <image name="no_Wifi" width="256" height="256"/>
         <image name="starIcon" width="56" height="56"/>
     </resources>
 </document>

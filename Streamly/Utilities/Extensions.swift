@@ -133,6 +133,12 @@ extension UIViewController
 //Mark: String extension
 extension String
 {
+    func toDate() -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd/MM/yyyy hh:mm a"
+        return formatter.date(from: self)
+    }
+
     func isEmptyString() -> Bool {
         let trimmedString = self.components(separatedBy: .whitespacesAndNewlines).joined(separator: "")
         return trimmedString.isEmpty

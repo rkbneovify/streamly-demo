@@ -46,7 +46,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="ButtonActions:" destination="-1" eventType="primaryActionTriggered" id="vVz-fK-fIG"/>
+                        <action selector="buttonActions:" destination="-1" eventType="primaryActionTriggered" id="DJ0-p9-99u"/>
                     </connections>
                 </button>
                 <button opaque="NO" tag="33" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="plain" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iIZ-VV-eJg">
@@ -71,7 +71,7 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
-                        <action selector="ButtonActions:" destination="-1" eventType="primaryActionTriggered" id="xvL-XP-wit"/>
+                        <action selector="buttonActions:" destination="-1" eventType="primaryActionTriggered" id="sp0-24-rls"/>
                     </connections>
                 </button>
             </subviews>

@@ -66,10 +66,11 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
 
         // Create the player item and the player to play it back in.
         let playerItem = AVPlayerItem(asset: asset)
-        playerItem.externalMetadata = sampleExternalMetaData()
-        playerItem.navigationMarkerGroups = [sampleNavigationMarkerGroup()]
-        playerItem.interstitialTimeRanges = sampleInterstitialTimeRanges()
+//        playerItem.externalMetadata = sampleExternalMetaData()
+//        playerItem.navigationMarkerGroups = [sampleNavigationMarkerGroup()]
+//        playerItem.interstitialTimeRanges = sampleInterstitialTimeRanges()
         player = AVPlayer(playerItem: playerItem)
+        player?.automaticallyWaitsToMinimizeStalling = false
         player?.play()
     }
 
@@ -142,7 +143,7 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
         var request = URLRequest(url: URL(string: requestUrl)!)
         request.httpMethod = "POST"
         request.httpBody = postData as Data
-        request.allHTTPHeaderFields = ["customdata" : "YOUR AUTHENTICATION XML IN BASE64 FORMAT HERE"]
+        request.allHTTPHeaderFields = ["customdata" : "PEtleU9TQXV0aGVudGljYXRpb25YTUw+CjxEYXRhPgogIDxHZW5lcmF0aW9uVGltZT4yMDIwLTA4LTI4IDExOjU4OjI2LjUzMjwvR2VuZXJhdGlvblRpbWU+CiAgPEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMjcgMTE6NTg6MjYuNTMzPC9FeHBpcmF0aW9uVGltZT4KICA8VW5pcXVlSWQ+MWYxNThkNmRhYjgyN2I1NWQ3ZTU4ODI1NGMwYzM1ZmU8L1VuaXF1ZUlkPgogIDxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+CiAgPFdpZGV2aW5lUG9saWN5IGZsX0NhblBsYXk9InRydWUiIGZsX0NhblBlcnNpc3Q9ImZhbHNlIiAvPgogIDxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPgogICAgPFNlY3VyaXR5TGV2ZWw+MTwvU2VjdXJpdHlMZXZlbD4KICA8L1dpZGV2aW5lQ29udGVudEtleVNwZWM+CiAgPEZhaXJQbGF5UG9saWN5IHBlcnNpc3RlbnQ9ImZhbHNlIiAvPgogIDxMaWNlbnNlIHR5cGU9InNpbXBsZSIgLz4KPC9EYXRhPgo8U2lnbmF0dXJlPmhBaHYrY05nQUJDWmZ2VVFnZGhteE9WNjQzak5YZ0M5V1NWbm52aDBaTE1iNVA5clN2UFB3SEJqekc2VVl6dFh4N3dlVzcvWURzUXJrU2hsUkVMSW5ITThFRGRSMGNBS3FxYVhDUnhhRmtGQUtxaVZmVjJsYVJTazdEUlpMUmp4bWF4S1RWcXl5RWdHdE16MDBJREovZDZRSVJzLzlFSzhkM29KNEJKSmluYWpNYzZiak9QbzRpZVhJOUdoN1p2UFdvYXJqVXg0eEhuUncvd2UvV2xuVHBsNTAvVUhwbFdaTzVoempZUS8wNlV5VXFUU1B3cUFSejh0WTFZL1JVY1NTTm4wM0IwWUxBWG5XVFRRSmJsTzBlSFBXV0doUmZqQ2NuazhEYVMyZk1HL0h4UHU5dEJJZVhWcDRBM1FER21sTkplVy80MVM4Z2tSWkJjalRoWWZQdz09PC9TaWduYXR1cmU+CjwvS2V5T1NBdXRoZW50aWNhdGlvblhNTD4="]
         let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         let task = session.dataTask(with: request) { data, response, error in

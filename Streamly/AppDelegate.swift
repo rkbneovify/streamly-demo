@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import AVFoundation
+import FirebaseCore
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,11 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // Navigate to root
-        // check login validation
-        self.setupAudio()
+        
 
+        FirebaseApp.configure()
+        self.setupAudio()
         Address.sharedInstance.cordnates()
+        // Navigate to root
+             // check login validation
         Switcher.updateRootVC()
         return true
     }

@@ -87,6 +87,12 @@ class LoginVC: UIViewController {
 
     }
 
+    private func checkRemebermeValue()
+    {
+        self.userIDField.text = Utility.retriveStringObject(key: Constant.UserDefault.userField)
+        self.passwordField.text = Utility.retriveStringObject(key: Constant.UserDefault.password)
+    }
+
     private func rembermeCheck()
     {
         if remeberMeFlag ?? false{
@@ -196,6 +202,11 @@ extension LoginVC
                 selfStrong.removeSpinner()
                 if response?.success == true {
                     Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
+                    if self?.remeberMeFlag ?? false {
+                        Utility.setStringObject(value: self?.passwordField.text ?? "", key: Constant.UserDefault.password)
+                        Utility.setStringObject(value: self?.userIDField.text ?? "", key: Constant.UserDefault.userField)
+                    }
+
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)

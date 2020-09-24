@@ -28,6 +28,9 @@ class EPGViewModel: NSObject {
 
             debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
+            if code == 401 {
+                Constant.logOut()
+            }
         }
     }
 
@@ -42,6 +45,7 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
 
             debugPrint("failure")
+            
            // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }

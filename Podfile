@@ -10,7 +10,8 @@ target 'Streamly' do
   pod 'SwiftLint'
   pod 'Alamofire'
   pod 'SDWebImage'
-  pod 'Kingfisher', '~> 5.0'
+  pod 'Firebase/Crashlytics'
+  pod 'Firebase/Analytics'
 
   target 'StreamlyTests' do
     inherit! :search_paths

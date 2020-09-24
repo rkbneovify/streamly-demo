@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="16097" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -76,7 +76,7 @@
                 <outlet property="channelName" destination="nUy-Oc-pYt" id="B5y-iJ-FLx"/>
                 <outlet property="channelNumber" destination="DoC-wm-cdg" id="OCz-YR-yYJ"/>
                 <outlet property="containerView" destination="fMH-IC-QOz" id="szQ-GU-awU"/>
-                <outlet property="imageView" destination="HDQ-7M-CTr" id="8CJ-UK-RPg"/>
+                <outlet property="imageView" destination="HDQ-7M-CTr" id="adV-ky-18T"/>
             </connections>
             <point key="canvasLocation" x="66.5" y="196"/>
         </collectionViewCell>

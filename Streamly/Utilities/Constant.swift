@@ -50,15 +50,29 @@ class Constant: NSObject
     class func navigateToRootHome()
     {
         guard let app = appDelegate else {return}
-        let loginVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        let homeVC = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
         let rootViewController = appDelegate?.window!.rootViewController as! UINavigationController
-        rootViewController.setViewControllers([loginVc], animated: false)
+        rootViewController.setViewControllers([homeVC], animated: false)
         rootViewController.isNavigationBarHidden = true
         app.window?.rootViewController!.removeFromParent()
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
     }
+
+    class func navigateToNoNetwork()
+    {
+        guard let app = appDelegate else {return}
+        let noInternetVC = NoInternetVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let rootViewController = appDelegate?.window!.rootViewController as! UINavigationController
+        rootViewController.setViewControllers([noInternetVC], animated: false)
+        rootViewController.isNavigationBarHidden = true
+        app.window?.rootViewController!.removeFromParent()
+        app.window?.rootViewController!.view.removeFromSuperview()
+        app.window?.rootViewController = nil
+        app.window?.rootViewController = rootViewController
+    }
+
 
     class func logOut()
     {
@@ -73,6 +87,8 @@ class Constant: NSObject
         static let token = "tokan"
         static let createdAt = "createdAt"
         static let email = "email"
+        static let password = "password"
+        static let userField = "userField"
 
     }
 }

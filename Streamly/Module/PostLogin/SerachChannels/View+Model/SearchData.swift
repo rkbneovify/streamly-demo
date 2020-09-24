@@ -26,6 +26,9 @@ class SearchDataViewModel: NSObject {
 
             debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
+            if code == 401 {
+                Constant.logOut()
+            }
         }
     }
 }
