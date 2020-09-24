@@ -585,6 +585,7 @@ $reco=$record->get(); //echo $reco;exit;
         }
 
         public function PacificFrontEpgchannelDaysSchedule(){
+            /*
 
     // $date = Carbon::parse('2018-08-19 10:43:15', 'UTC');echo "\n";
     // echo($date->timezone->getName());echo "\n";
@@ -597,10 +598,13 @@ $reco=$record->get(); //echo $reco;exit;
     // exit;
     // $now = Carbon\Carbon::now('PST')->setTimezone('UTC')->addHours(2);
     $now = Carbon::now();
+    // $now->tz('America/Los_Angeles'); //pacific time
+    // $now->tz('America/New_York'); //eastern time
+    $now->tz('America/Chicago'); //central time
 echo "$now\n";
 $this->isUtc($now);
 
-echo "Offset hours: {$now->offsetHours}\n";
+echo "Offset hours: {$now->getOffsetString()}\n";
 
 echo "******************************\n";
 
@@ -608,6 +612,19 @@ $now->tz('UTC');
 echo "$now\n";
 $this->isUtc($now);
 echo "Offset hours2: {$now->offsetHours}\n";
+$dtNewYork = Carbon::now()->tz('America/New_York');
+$Los_Angeles = Carbon::parse($dtNewYork, 'America/Los_Angeles');
+echo "\nActual LA time".Carbon::now()->tz('America/Los_Angeles');
+echo "\ndtNewYork".$dtNewYork;
+echo "\ndLos_Angeles".$Los_Angeles;
+ echo "\nLosangel-newyork ".$Los_Angeles->diffInHours($dtNewYork); 
+echo "\nnewyork - LA ".$dtNewYork->diffInHours($Los_Angeles); 
+ echo "\nwithsignLosangel-newyork ".$Los_Angeles->diffInHours($dtNewYork,false); 
+echo "\nwithsign newyork - LA".$dtNewYork->diffInHours($Los_Angeles,false); 
+
+$LA=Carbon::now('America/Los_Angeles');
+$NY=Carbon::now('America/New_York');
+echo "\ndiffference".$NY->diffInHours($LA,false);
 exit;
     $dateUTC = Carbon::now();
     $datePST = Carbon::now();
@@ -634,6 +651,7 @@ exit;
     // echo "\nPacific".Carbon::now('US\Pacific');
     echo "\nUTC".Carbon::now('UTC');
    echo "\nDiff".Carbon::now('America/Los_Angeles')->diffInHours(Carbon::now('UTC')); exit;
+   **/
             $imagePath=url("/uploads/channellogo/");
             $input=url('livetv/');
             DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
@@ -646,14 +664,14 @@ exit;
                 DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") ) StartDateTime'),
                 DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.genres',DB::raw('IFNULL(channels.image,"notfound.png") image'),DB::raw(" CASE TimeZoneName
                 
-                WHEN 'Eastern Observing' THEN CONVERT_TZ(StartDateTime,'US/Eastern','US/Pacific')
-                WHEN 'Central Observing' THEN CONVERT_TZ(StartDateTime,'US/Central','US/Pacific')
+                WHEN 'Eastern Observing' THEN CONVERT_TZ(StartDateTime,'US/Eastern','-03:00')
+                WHEN 'Central Observing' THEN CONVERT_TZ(StartDateTime,'US/Central','+02:00')
         
                 ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'),'UTC','US/Pacific')
             end StartDateTimewithTimezon"),DB::raw(" CASE TimeZoneName
             
-            WHEN 'Eastern Observing' THEN CONVERT_TZ(EndDateTime,'US/Eastern','US/Pacific')
-            WHEN 'Central Observing' THEN CONVERT_TZ(EndDateTime,'US/Central','US/Pacific')
+            WHEN 'Eastern Observing' THEN CONVERT_TZ(EndDateTime,'US/Eastern','-03:00')
+            WHEN 'Central Observing' THEN CONVERT_TZ(EndDateTime,'US/Central','+02:00')
         
             ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s'),'UTC','US/Pacific')
         end EndDateTimewithTimezon"),'channels.url')
@@ -726,6 +744,7 @@ public function transformClient($clients)
       } else {
       
           echo "Datetime is not in UTC\n";
+          echo "its ".$now->timezone->getName()."\n"; 
       }
   }
   //channel with 7 day of schdule

@@ -552,7 +552,7 @@ html.compatible-devices .vibrant-divider {
 
 .media_players-icon.active,
 .media_players-icon:active {
-    background-image: url(../frontend/images/icons/media-player-active.svg);
+    background-image: url(../frontend/images/icons/media-player.png);
 }
 
 .mvpds-icon-compatible-devices {
