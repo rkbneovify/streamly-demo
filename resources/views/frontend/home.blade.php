@@ -417,12 +417,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="email" class="control-label">Email</label>
+                        <label for="user-email" class="control-label">Email</label>
                         <input type="email" id="user-email" name="user-email" class="form-control" value="{{old('user-email')}}">
                     </div>
 
                     <div class="form-group">
-                        <label for="password" class="control-label">Password</label>
+                        <label for="user-password" class="control-label">Password</label>
                         <input type="password" id="user-password" name="user-password" class="form-control" value="{{old('user-password')}}">
                     </div>
 
@@ -626,9 +626,9 @@
     outline: none;
     color: unset;">See all apps and devices</a></div>
                 </div>
-                <div class="devices-preview"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/us-devices-preview.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=2 2x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=3 3x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=4 4x"></div>
+                <div class="devices-preview"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/us-devices-preview.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=2 2x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=3 3x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=4 4x" alt="image of tv guide"></div>
             </div>
-            <div class="support-platforms"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/platform-logos.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos@2x.png?ch=width&amp;auto=format,compress 2x"></div>
+            <div class="support-platforms"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/platform-logos.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos@2x.png?ch=width&amp;auto=format,compress 2x" alt="supported platform logo"></div>
         </div>
     </div>
 @endsection
