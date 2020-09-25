@@ -4,9 +4,9 @@
         <div class="row">
         	<div class="col-sm-3">
         		<ul class="social-list">
-                    <li><img src="{{ asset('frontend/img/facebook.svg') }}"></li>
-                    <li><img src="{{ asset('frontend/img/instagram.svg') }}"></li>
-                    <li><img src="{{ asset('frontend/img/twitter.svg') }}"></li>
+                    <li><img src="{{ asset('frontend/img/facebook.svg') }}" alt="Logo of fb"></li>
+                    <li><img src="{{ asset('frontend/img/instagram.svg') }}" alt="Logo of instagram"></li>
+                    <li><img src="{{ asset('frontend/img/twitter.svg') }}" alt="Logo of twitter"></li>
                 </ul>
         	</div>
         	<div class="col-sm-2">
