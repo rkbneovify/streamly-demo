@@ -284,12 +284,12 @@ $("#my_form").submit(function(event){
 							</div>
 
 							<div class="form-group">
-									<label for="email" class="control-label">Email</label>
+									<label for="user-email" class="control-label">Email</label>
 									<input type="email" id="user-email" name="user-email" class="form-control">
 							</div>
 
 							<div class="form-group">
-									<label for="password" class="control-label">Password</label>
+									<label for="user-password" class="control-label">Password</label>
 									<input type="password" id="user-password" name="user-password" class="form-control">
 							</div>
 
@@ -347,7 +347,7 @@ $("#my_form").submit(function(event){
 				{{ csrf_field() }}
 				<div class="form-group">
 						
-					<label for="email" class="control-label">Email</label>
+					<label for="email_input" class="control-label">Email</label>
 					<input type="email" id="email_input" name="email_input" class="form-control" required>
 						</div>
 			<div class="row">	<div class="form-group col-md-6">
