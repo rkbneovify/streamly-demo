@@ -1,4 +1,4 @@
-
+@extends('frontend/partials/master')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 {{-- 
     <!DOCTYPE html>
@@ -15,7 +15,7 @@
     </head> --}}
 
     <link rel="stylesheet" href="{{ asset('frontend/bootstrap.min.css') }}" />
-    @include('frontend.partials.header') 
+
 	
 <style>
     nav#mainNav {
@@ -56,16 +56,9 @@
             </div>
             
         </section>
+        </section>
     
 @endsection
-<section class="page-section">  <div class="container"><div id="dutylist"></div>
-
-                
-                    
-    
-    
-    
-            </div></section>
 <script async src="{{ asset('frontend/jquery-3.5.1.min.js') }}" ></script> 
  {{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> --}}
    
@@ -92,5 +85,3 @@
 }
 console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
 </script>
-
-@include('frontend.partials.footer')
