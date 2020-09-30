@@ -15,9 +15,7 @@ class Faq extends Controller
         } else {
             $login = false;
         }
-        $privacypol = file_get_contents('PrivacyPolicy.txt');
-        $Termofuse = file_get_contents('Termofuse.txt');
-    	return view('frontend.pages.faq', compact('login','privacypol','Termofuse'));
+    	return view('frontend.pages.faq', compact('login'));
 
     }
    
