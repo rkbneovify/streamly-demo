@@ -574,7 +574,7 @@
     }
     </style>
     <!-- Portfolio Grid-->
-    {{-- <section class="page-section bg-light" id="portfolio">
+    <section class="page-section bg-light" id="portfolio">
         <div class="container">
             <div class="text-center">
                 <h2 class="section-heading">Download Our App</h2>
@@ -610,9 +610,9 @@
                 <h2 class="section-heading">Download Our App</h2>
             </div>
         </div>
-    </section> --}}
+    </section>
 
-    <div class="css-thjkr7">
+    {{-- <div class="css-thjkr7">
         <div class="css-5nata0">
             <div class="upper-section">
                 <div class="content">
@@ -630,5 +630,5 @@
             </div>
             <div class="support-platforms"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/platform-logos.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos@2x.png?ch=width&amp;auto=format,compress 2x" alt="supported platform logo"></div>
         </div>
-    </div>
+    </div> --}}
 @endsection
