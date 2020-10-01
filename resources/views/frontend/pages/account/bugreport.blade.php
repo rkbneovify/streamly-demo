@@ -212,7 +212,7 @@ $("#my_form").submit(function(event){
 	<div class="container" style="padding: 0px 50px;">
 			<div class="row mt-4">
 				@if($errors->has('email'))
-        <div class="alert alert-danger alert-dismissible alert-position">
+         <div class="alert alert-danger alert-dismissible ">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Error!</strong> {{$errors->first()}}
         </div>
@@ -268,7 +268,7 @@ $("#my_form").submit(function(event){
 	<div class="container" style="padding: 0px 50px;">
 			<div class="row mt-4">
 				@if($errors->any())
-        <div class="alert alert-danger alert-dismissible alert-position">
+         <div class="alert alert-danger alert-dismissible ">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Error!</strong> @foreach ($errors->all() as $message) 
                 {{$message}}
@@ -321,13 +321,13 @@ $("#my_form").submit(function(event){
 <section class="page-section custom-row">
 
 @if(session()->has('message'))
-<div class="alert alert-success alert-dismissible alert-position">
+ <div class="alert alert-success alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{{ session()->get('message') }}
 </div>
 @endif
 @if(session()->has('error'))
-<div class="alert alert-danger alert-dismissible alert-position">
+ <div class="alert alert-danger alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		{{ session()->get('error') }}
 </div>
