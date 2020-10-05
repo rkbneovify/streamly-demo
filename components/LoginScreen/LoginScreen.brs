@@ -1,7 +1,7 @@
 
 sub INIT()
     ? "login init()"
-    
+
     m.SignInLabel = m.top.findNode("SignInLabel")
     ' m.SignInLabel.ali
     m.UsernamEditText = m.top.findNode("UsernamEditText")
@@ -72,15 +72,15 @@ sub termConditionUI()
     m.dialogHeight = 730
     m.dialogWidth = 1250
 
-    m.termConditionbackgrd  = m.top.createChild("Rectangle")
+    m.termConditionbackgrd = m.top.createChild("Rectangle")
     m.termConditionbackgrd.color = "#000000"
     m.termConditionbackgrd.opacity = .95
-    m.termConditionbackgrd.height =1080
-    m.termConditionbackgrd.width =1920
+    m.termConditionbackgrd.height = 1080
+    m.termConditionbackgrd.width = 1920
     m.termConditionbackgrd.visible = false
 
-    m.termCondition  = m.termConditionbackgrd.createChild("Poster")
-    
+    m.termCondition = m.termConditionbackgrd.createChild("Poster")
+
     m.termCondition.width = m.dialogWidth
     m.termCondition.height = m.dialogHeight
     m.termCondition.uri = "pkg:/images/Login/backGroundBox.png"
@@ -89,7 +89,7 @@ sub termConditionUI()
     LayoutGroup = m.termCondition.createChild("LayoutGroup")
     LayoutGroup.translation = [40, 40]
     LayoutGroup.layoutDirection = "vert"
-'    LayoutGroup.itemSpacings = [20]
+    '    LayoutGroup.itemSpacings = [20]
     m.termConditionTitle = LayoutGroup.createChild("Label")
     m.termConditionTitle.width = m.dialogWidth - 40
     m.termConditionTitle.text = "Term of uses"
@@ -101,11 +101,11 @@ sub termConditionUI()
 
     m.termConditionScrollText = LayoutGroup.createChild("ScrollableText")
 
-'    m.termConditionScrollText.translation = [0, 0]
+    '    m.termConditionScrollText.translation = [0, 0]
     m.termConditionScrollText.width = m.dialogWidth - 40
     m.termConditionScrollText.height = m.dialogHeight * (70 / 100)
-'    m.contactNumber.translation = [0, 150]
-'    m.contactNumber.font = "font:SmallBoldSystemFont"
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.termConditionScrollText.horizAlign = "Left"
     m.termConditionScrollText.vertAlign = "top"
     m.termConditionScrollText.font = getFont(36, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
@@ -113,7 +113,7 @@ sub termConditionUI()
     m.termConditionDialogButton = m.termCondition.createChild("Button")
     m.termConditionDialogButton.observeField("buttonSelected", "closeDialog")
 
-'                 m.OkButton.translation= [466,429]
+    '                 m.OkButton.translation= [466,429]
     m.termConditionDialogButton.minWidth = "260"
     m.termConditionDialogButton.maxWidth = "260"
     m.termConditionDialogButton.focusedTextColor = "#FFFFFF"
@@ -123,7 +123,7 @@ sub termConditionUI()
     m.termConditionDialogButton.showFocusFootprint = "true"
     m.termConditionDialogButton.iconUri = ""
     m.termConditionDialogButton.focusedIconUri = ""
-    m.okLabel =  m.termConditionDialogButton.createChild("Label")
+    m.okLabel = m.termConditionDialogButton.createChild("Label")
     m.okLabel.horizAlign = "center"
     m.okLabel.height = "80"
     m.okLabel.width = "260"
@@ -136,13 +136,13 @@ end sub
 
 sub initApi()
     ? ""
-    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") ' Create XML Parsing task node   
-'     ApiCallFor(callto,"GET")
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") ' Create XML Parsing task node
+    '     ApiCallFor(callto,"GET")
     m.ProfileTask.callType = "GET"
 
     m.ProfileTask.observeField("response", "responseAPI")
 end sub
-sub responseAPI(event as Object)
+sub responseAPI(event as object)
     responseData = event.getData()
     ? "ProfileScreen::responseAPI: event: "; responseData
     showspinner(false)
@@ -150,8 +150,8 @@ sub responseAPI(event as Object)
         m.needHelpText = "termofuse"
         ? "termofuse:"; responseData
         m.termConditionbackgrd.visible = true
-        m.termConditionScrollText.text =  responseData.data
-        
+        m.termConditionScrollText.text = responseData.data
+
         ' m.termofUsesDialog = CreateObject("rosgnode","dialog")
         ' m.termofUsesDialog.appendChild(m.termCondition)
         ' m.top.getScene().dialog = m.termofUsesDialog
@@ -175,11 +175,11 @@ sub needHelp()
 
     m.needHelpButton = m.top.findNode("needHelpButton")
     m.needHelpButton.translation = [560, 455]
-    m.needHelpButton.textFont =  getFont(24, "pkg:/fonts/HelveticaNeueMedium.ttf")
-    m.needHelpButton.focusedTextFont =  getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.needHelpButton.textFont = getFont(24, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.needHelpButton.focusedTextFont = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.needHelpButton.text = "Need help ?"
 
-'   m.needHelpButton.observeField("buttonSelected","")  
+    '   m.needHelpButton.observeField("buttonSelected","")
 
     m.needHelpButton.minWidth = "220"
     m.needHelpButton.maxWidth = "220"
@@ -196,7 +196,7 @@ end sub
 
 sub showSupportDialog()
     ? "showSupportDialog"
-'      m.top.appendChild( m.LoaderBackground ) 
+    '      m.top.appendChild( m.LoaderBackground )
     m.ProfileTask.callto = "Support"
     m.ProfileTask.control = "RUN"
     showspinner(true)
@@ -218,8 +218,8 @@ sub dontHaveAccount()
 
     m.registerNow = m.dontHaveAccountLAbel.createChild("Button")
     m.registerNow.observeField("buttonSelected", "showDialogforCreateAccount")
-'    m.OkButton.setFocus(true)           
-    m.registerNow.translation = [260, - 5]
+    '    m.OkButton.setFocus(true)
+    m.registerNow.translation = [260, -5]
     m.registerNow.minWidth = "200"
     m.registerNow.maxWidth = "200"
     m.registerNow.focusedTextColor = "#FFFFFF"
@@ -229,8 +229,8 @@ sub dontHaveAccount()
     m.registerNow.iconUri = ""
     m.registerNow.focusedIconUri = ""
     m.registerNow.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
-'                 m.OkButton.horizAlign="center"
-    okLabel =  m.registerNow.createChild("Label")
+    '                 m.OkButton.horizAlign="center"
+    okLabel = m.registerNow.createChild("Label")
     okLabel.horizAlign = "center"
     okLabel.height = "45"
     okLabel.color = "#004E92"
@@ -242,7 +242,7 @@ end sub
 sub termCondition()
     m.termConditionButton = m.top.findNode("termConditionButton")
     m.termConditionButton.observeField("buttonSelected", "termConditionApiCall")
-'    m.OkButton.setFocus(true)           
+    '    m.OkButton.setFocus(true)
     m.termConditionButton.translation = [127, 660]
     m.termConditionButton.minWidth = "130"
     m.termConditionButton.maxWidth = "130"
@@ -253,8 +253,8 @@ sub termCondition()
     m.termConditionButton.iconUri = ""
     m.termConditionButton.focusedIconUri = ""
     m.termConditionButton.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
-'                 m.OkButton.horizAlign="center"
-    termConditionButtonLabel =  m.termConditionButton.createChild("Label")
+    '                 m.OkButton.horizAlign="center"
+    termConditionButtonLabel = m.termConditionButton.createChild("Label")
     termConditionButtonLabel.horizAlign = "center"
     termConditionButtonLabel.height = "45"
     termConditionButtonLabel.color = "#004E92"
@@ -264,10 +264,10 @@ sub termCondition()
     termConditionButtonLabel.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 end sub
 sub showDialogforCreateAccount()
-'    m.top.appendChild(m.DialogNodePoster)
+    '    m.top.appendChild(m.DialogNodePoster)
     m.needHelpText = "registerNow"
     showDialog("Sign up for the best experience", "Please go to https://streamlytv.com for creating new account.", true, "", "")
-'    m.OkButton.setFocus(true) 
+    '    m.OkButton.setFocus(true)
 end sub
 
 sub initSupportDialog()
@@ -287,7 +287,7 @@ sub initSupportDialog()
     m.LayoutGroup.itemSpacings = [0]
     m.TextLabel = m.LayoutGroup.createChild("Label")
     m.TextLabel.width = m.dialogWidth
-'     * (83.6/100)
+    '     * (83.6/100)
     m.TextLabel.font = getFont(35, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
     m.TextLabel.height = 50
     m.TextLabel.horizAlign = "Center"
@@ -298,8 +298,8 @@ sub initSupportDialog()
     m.contactNumber.translation = [0, 0]
     m.contactNumber.width = m.dialogWidth
     m.contactNumber.height = m.dialogHeight * (25 / 100)
-'    m.contactNumber.translation = [0, 150]
-'    m.contactNumber.font = "font:SmallBoldSystemFont"
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.contactNumber.horizAlign = "Center"
     m.contactNumber.vertAlign = "Center"
     m.contactNumber.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -307,7 +307,7 @@ sub initSupportDialog()
     m.HelpButton = m.SupportDialog.createChild("Button")
     m.HelpButton.observeField("buttonSelected", "closeDialog")
 
-'                 m.OkButton.translation= [466,429]
+    '                 m.OkButton.translation= [466,429]
     m.HelpButton.minWidth = "280"
     m.HelpButton.maxWidth = "280"
     m.HelpButton.focusedTextColor = "#FFFFFF"
@@ -316,7 +316,7 @@ sub initSupportDialog()
     m.HelpButton.showFocusFootprint = "true"
     m.HelpButton.iconUri = ""
     m.HelpButton.focusedIconUri = ""
-    okLabel =  m.HelpButton.createChild("Label")
+    okLabel = m.HelpButton.createChild("Label")
     okLabel.horizAlign = "center"
     okLabel.height = "84"
     okLabel.width = "280"
@@ -343,7 +343,7 @@ sub initTermDialog()
     m.LayoutGroup.itemSpacings = [0]
     m.TextLabel = m.LayoutGroup.createChild("Label")
     m.TextLabel.width = m.dialogWidth
-'     * (83.6/100)
+    '     * (83.6/100)
     m.TextLabel.font = getFont(35, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
     m.TextLabel.height = 50
     m.TextLabel.horizAlign = "Center"
@@ -354,8 +354,8 @@ sub initTermDialog()
     m.termConditionText.translation = [0, 0]
     m.termConditionText.width = m.dialogWidth
     m.termConditionText.height = m.dialogHeight * (25 / 100)
-'    m.contactNumber.translation = [0, 150]
-'    m.contactNumber.font = "font:SmallBoldSystemFont"
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.termConditionText.horizAlign = "Center"
     m.termConditionText.vertAlign = "Center"
     m.termConditionText.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -363,7 +363,7 @@ sub initTermDialog()
     m.TermButton = m.termDialog.createChild("Button")
     m.TermButton.observeField("buttonSelected", "closeDialog")
 
-'                 m.OkButton.translation= [466,429]
+    '                 m.OkButton.translation= [466,429]
     m.TermButton.minWidth = "280"
     m.TermButton.maxWidth = "280"
     m.TermButton.focusedTextColor = "#FFFFFF"
@@ -372,7 +372,7 @@ sub initTermDialog()
     m.TermButton.showFocusFootprint = "true"
     m.TermButton.iconUri = ""
     m.TermButton.focusedIconUri = ""
-    okLabel =  m.TermButton.createChild("Label")
+    okLabel = m.TermButton.createChild("Label")
     okLabel.horizAlign = "center"
     okLabel.height = "84"
     okLabel.width = "280"
@@ -390,7 +390,8 @@ sub closeshowDialogforCreateAccoun()
 end sub
 
 sub rememberMe()
-    m.remenberCheckList =   m.top.findNode("rememberCheckList")
+
+    m.remenberCheckList = m.top.findNode("rememberCheckList")
     m.remenberCheckList.translation = [127, 455]
     m.remenberCheckList.itemSize = [300, 50]
     m.remenberCheckList.checkedIconUri = "pkg:/images/checked_icon_30.png"
@@ -406,7 +407,7 @@ sub rememberMe()
     checklistNode = CreateObject("roSGNode", "ContentNode")
     contentNode = checklistNode.createChild("ContentNode")
     contentNode.Title = "Remember me"
-    m.remenberCheckList.content =  checklistNode
+    m.remenberCheckList.content = checklistNode
     m.remenberCheckList.ObserveField("checkedState", "remeberMeUpdate")
 
     if getUserName() <> invalid and getUserPassword() <> invalid and getUserName() <> "" and getUserPassword() <> ""
@@ -414,25 +415,26 @@ sub rememberMe()
 
         m.remenberCheckList.checkedState = [m.rememberFlag]
 
-        m.UsernamEditText.text =  getUserName()
+        m.UsernamEditText.text = getUserName()
         m.PasswordEditText.text = getUserPassword()
     else
         m.rememberFlag = false
     end if
+
 end sub
 
-sub remeberMeUpdate(event as Object)
+sub remeberMeUpdate(event as object)
     ? "remeberMeUpdate: "; event.getData()[0]
     m.rememberFlag = event.getData()[0]
 end sub
 
-sub OnFocusChildChange()
-    ? "OnFocusChildChange"
-    if m.top.hasFocus() and not m.UsernamEditText.hasFocus() and m.setFocus = false
-        m.UsernamEditText.setFocus(true)
-        m.setFocus = true
-    end if
-end sub
+' sub OnFocusChildChange()
+'     ? "OnFocusChildChange"
+'     if m.top.hasFocus() and (not m.UsernamEditText.hasFocus() and m.setFocus = false)
+'         m.UsernamEditText.setFocus(true)
+'         m.setFocus = true
+'     end if
+' end sub
 
 sub LoginValidation()
     ? "LoginValidation: ";
@@ -479,14 +481,14 @@ sub LoginProcess()
     password = (m.PasswordEditText.text).Trim()
     data = {}
 
-    deviceInfo = getDeviceInfo()  ' GetDeviceUniqueId()
+    deviceInfo = getDeviceInfo() ' GetDeviceUniqueId()
 
     data["email"] = email
     data["password"] = password
     data["deviceid"] = deviceInfo.GetChannelClientId()
 
     m.LoginTask.callType = "POST"
-'   data =  "email="+email+"&password="+password+deviceid
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
     m.LoginTask.data = data
     m.LoginTask.control = "RUN"
@@ -511,21 +513,24 @@ sub LoginResponse()
     else
         buttons = []
         buttons.Push("OK")
-'        buttons.Push("Cancel")
-        showDialog("Login Error", m.LoginTask.response.Failure, true, buttons, "")
+        '        buttons.Push("Cancel")
+        showDialog("Login Error", m.LoginTask.response.message, true, buttons, "")
     end if
 end sub
 
 sub dialogButtonResponse()
     ? "dialogButtonResponse: "m.dialog.buttonSelected
     if m.loginsuccess = true and m.dialog.buttonSelected = 0
-        m.dialog.close = true
-        m.top.visible = false
+        
+        CloseScreen(m.top)
+        ShowScreen(CreateObject("roSgNode","HomeScreen"))
+        ' m.dialog.close = true
+        ' m.top.visible = false
     end if
 end sub
 
-sub showspinner(event as Object)
-' ?"showspinner:event : ";event.getData()
+sub showspinner(event as object)
+    ' ?"showspinner:event : ";event.getData()
     m.LoaderBackground.visible = event
     if event
         m.LoginBusySpinner.control = "start"
@@ -534,7 +539,7 @@ sub showspinner(event as Object)
     end if
 end sub
 
-sub showDialog(title as String, message as String, optionsDialog as Boolean, buttons as Object, onserveField as Object)
+sub showDialog(title as string, message as string, optionsDialog as boolean, buttons as object, onserveField as object)
     ? "showDialog: message: "; message
     m.HelpButton.setFocus(true)
     m.contactNumber.text = message
@@ -542,7 +547,7 @@ sub showDialog(title as String, message as String, optionsDialog as Boolean, but
     m.SupportDialog.visible = true
 end sub
 
-sub showdialogTermCondition(title as String, message as String, optionsDialog as Boolean, buttons as Object, onserveField as Object)
+sub showdialogTermCondition(title as string, message as string, optionsDialog as boolean, buttons as object, onserveField as object)
     m.dialogHeight = 800
     m.dialogWidth = 1223
 
@@ -557,7 +562,7 @@ sub closeDialog()
     ? "closeDialog true"
     ? "m.needHelpText:"; m.needHelpText
     if m.loginsuccess = true
-        ' m.top.visible = false 
+        ' m.top.visible = false
         m.top.ExitView = true
     else if m.needHelpText = "helpSupport"
         m.SupportDialog.visible = false
@@ -578,33 +583,33 @@ sub closeDialog()
     end if
     m.needHelpText = ""
 
-' m.dialog.close=true
+    ' m.dialog.close=true
 end sub
 
-sub cursorPosition(event as Object)
+sub cursorPosition(event as object)
     ? "cursorPosition: event: "; event.getData()
     if m.TextField = "UsernamEditText"
-        m.UsernamEditText.cursorPosition =  event.getData()
+        m.UsernamEditText.cursorPosition = event.getData()
     else if m.TextField = "PasswordEditText"
         m.PasswordEditText.cursorPosition = event.getData()
     end if
 end sub
 
-sub FieldText(event as Object)
+sub FieldText(event as object)
     ? "event: "; event.getData()
     if m.TextField = "PasswordEditText"
         m.PasswordEditText.text = event.getData()
         m.PasswordEditText.active = true
-        m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition
+        m.UsernamEditText.cursorPosition = m.KeyboardInput.textEditBox.cursorPosition
     else if m.TextField = "UsernamEditText"
         m.UsernamEditText.text = event.getData()
         m.UsernamEditText.active = true
-        m.UsernamEditText.cursorPosition =  m.KeyboardInput.textEditBox.cursorPosition
+        m.UsernamEditText.cursorPosition = m.KeyboardInput.textEditBox.cursorPosition
     end if
 end sub
 
-function onTextBoxActive(field as String) as Void
-'  isActive =  event
+function onTextBoxActive(field as string) as void
+    '  isActive =  event
     m.TextField = ""
     if field = "username"
         m.UsernamPoster.Uri = "pkg:/images/Login/borderof.png"
@@ -620,13 +625,13 @@ function onTextBoxActive(field as String) as Void
     end if
 end function
 
-function IsValidEmail(email as String) as Boolean
+function IsValidEmail(email as string) as boolean
     regexEmail = "^[A-Za-z0-9_%+-]+(\.[A-Za-z0-9_%+-]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$"
     return CreateObject("roRegex", regexEmail, "i").IsMatch(email)
 end function
 
-function onTextBoxActives(event as Boolean) as Void
-    isActive =  event
+function onTextBoxActives(event as boolean) as void
+    isActive = event
 
     if (isActive)
         m.PasswordPoster.Uri = "pkg:/images/Login/borderof.png"
@@ -635,142 +640,181 @@ function onTextBoxActives(event as Boolean) as Void
     end if
 end function
 
-function onKeyEvent(key as String, press as Boolean) as Boolean
+function onKeyEvent(key as string, press as boolean) as boolean
     ? "Login: key: "; key
     ? "Login: press: "; press
+    ? "m.UsernamEditText.hasFocus(): "; m.UsernamEditText.hasFocus()
 
     result = false
     if press
+
+        ' TC_Remember_needHelp_RegisterNow()
         if m.needHelpButton.hasFocus() and key = "left"
             m.remenberCheckList.setFocus(true)
             return true
+
         else if m.remenberCheckList.hasFocus() and key = "right"
             m.needHelpButton.setFocus(true)
             return true
+
         else if (m.HelpButton.hasFocus() and key = "back")
+
             closeDialog()
-'            if m.ProfileTask.callto = "termofuse"
-'     closeshowDialogforCreateAccoun()
             return true
-        else if (( m.termConditionDialogButton.hasFocus()) and key = "up")
+
+        else if (m.termConditionDialogButton.hasFocus() and key = "up")
             m.okLabel.color = "#000000"
             m.termConditionScrollText.setFocus(true)
             return true
-            
-        else if (( m.termConditionScrollText.hasFocus()) and key = "down" or key = "OK")
+
+
+        else if (m.termConditionScrollText.hasFocus() and (key = "down" or key = "OK"))
             m.okLabel.color = "#ffffff"
             m.termConditionDialogButton.setFocus(true)
-            return true    
+            return true
+
         else if ((m.termConditionButton.hasFocus() or m.termConditionScrollText.hasFocus()) and key = "back")
             closeDialog()
             return true
+
         else if ((m.termConditionDialogButton.hasFocus() or m.termConditionScrollText.hasFocus()) and key = "back")
             m.termConditionDialogButton.setFocus(true)
             return true
+
         else if (key = "left" and m.registerNow.hasFocus())
             m.termConditionButton.setFocus(true)
             return true
+
         else if (key = "right" and m.termConditionButton.hasFocus())
             m.registerNow.setFocus(true)
             return true
+
         else if key = "down"
             ? "Login: if: "
-
-            if m.SignInButton.hasFocus() then
-                ? "termConditionButton"
-'                    m.SignInButton.setFocus(false)
-                m.termConditionButton.setFocus(true)
-                return true
-            else if m.PasswordEditText.hasFocus()
-                m.PasswordEditText.setFocus(false)
-                m.remenberCheckList.setFocus(true)
-                onTextBoxActive("")
-                return true
-            else if (m.remenberCheckList.hasFocus() or m.needHelpButton.hasFocus())
-                ? "SignInButton: true"
-                m.remenberCheckList.setFocus(false)
-                m.needHelpButton.setFocus(false)
-                m.SignInButton.setFocus(true)
-                return true
-            else if m.UsernamEditText.hasFocus()
-                ? "PasswordEditText: true"
-                m.UsernamEditText.setFocus(false)
-                m.PasswordEditText.setFocus(true)
-                onTextBoxActive("password")
-                return true
-            end if
+            return pressDown()
         else if key = "up"
             ? "Login: else: "
-            if m.termConditionButton.hasFocus()
-                m.SignInButton.setFocus(true)
-                return true
-            else if m.registerNow.hasFocus() then
-                m.registerNow.setFocus(false)
-                m.SignInButton.setFocus(true)
-            else if m.PasswordEditText.hasFocus()
-                ? "UsernamEditText: true"
+            return pressUp()
 
-                m.PasswordEditText.setFocus(false)
-                m.UsernamEditText.setFocus(true)
-                onTextBoxActive("username")
+        else if (m.TextField = "UsernamEditText" or m.TextField = "PasswordEditText") and key ="back"
+            return keybordClose()    
 
-                return true
-            else if m.remenberCheckList.hasFocus()
-                m.remenberCheckList.setFocus(false)
-                m.PasswordEditText.setFocus(true)
-                onTextBoxActive("password")
-                return true
-            else if m.SignInButton.hasFocus()
-                ? "remenberCheckList: true"
-                m.remenberCheckList.setFocus(true)
-                m.SignInButton.setFocus(false)
-                return true
-            else if m.TextField = "UsernamEditText" or m.TextField = "PasswordEditText" and key = "up"
-                ? "keyboard close"
-                m.KeyboardPoster.visible = false
-                m.KeyboardInput.setFocus(false)
-                m.UsernamEditText.active = false
-                m.PasswordEditText.active = false
-'      m.TextField = ""
+        else if (m.UsernamEditText.hasFocus() and key = "OK")
 
-                if m.TextField = "UsernamEditText"
-                    m.UsernamEditText.setFocus(true)
-                else if m.TextField = "PasswordEditText"
-                    m.PasswordEditText.setFocus(true)
-                end if
+            ? "keyboard open for email field"
 
-                return true
-            end if
+
+            m.UsernamEditText.setFocus(false)
+
+            m.UsernamEditText.active = true
+
+            onTextBoxActive("username")
+
+            m.KeyboardInput.textEditBox.text = m.UsernamEditText.text
+
+            m.KeyboardInput.textEditBox.cursorPosition = (m.UsernamEditText.text).Len()
+
+            m.UsernamEditText.cursorPosition = (m.UsernamEditText.text).Len()
+
+            m.KeyboardPoster.visible = true
+
+            m.KeyboardInput.setFocus(true)
+
+            return true
+
+        else if (m.PasswordEditText.hasFocus() and key = "OK")
+
+            ? "keyboard open for password field"
+            m.TextField = "PasswordEditText"
+            m.PasswordEditText.setFocus(false)
+            onTextBoxActive("password")
+            m.PasswordEditText.active = true
+            m.KeyboardInput.textEditBox.text = m.PasswordEditText.text
+            m.KeyboardInput.textEditBox.cursorPosition = (m.PasswordEditText.text).Len()
+            m.PasswordEditText.cursorPosition = (m.PasswordEditText.text).Len()
+            m.KeyboardPoster.visible = true
+            m.KeyboardInput.setFocus(true)
+            return true
+
         end if
-    else if m.UsernamEditText.hasFocus() and key = "OK"
-        ? "keyboard open for email field"
 
-        m.UsernamEditText.setFocus(false)
-        m.UsernamEditText.active = true
-        onTextBoxActive("username")
-        m.KeyboardInput.textEditBox.text = m.UsernamEditText.text
-        m.KeyboardInput.textEditBox.cursorPosition = (m.UsernamEditText.text).Len()
-        m.UsernamEditText.cursorPosition = (m.UsernamEditText.text).Len()
-        m.KeyboardPoster.visible = true
-        m.KeyboardInput.setFocus(true)
+    end if
 
+    return result
+end function
+
+function pressDown() as boolean
+    if m.SignInButton.hasFocus() then
+        ? "termConditionButton"
+        m.termConditionButton.setFocus(true)
         return true
-    else if m.PasswordEditText.hasFocus() and key = "OK"
-        ? "keyboard open for password field"
-'      m.TextField="PasswordEditText"
+
+    else if m.PasswordEditText.hasFocus()
         m.PasswordEditText.setFocus(false)
+        m.remenberCheckList.setFocus(true)
+        onTextBoxActive("")
+        return true
+
+    else if (m.remenberCheckList.hasFocus() or m.needHelpButton.hasFocus())
+        ? "SignInButton: true"
+        m.remenberCheckList.setFocus(false)
+        m.needHelpButton.setFocus(false)
+        m.SignInButton.setFocus(true)
+        return true
+    else if m.UsernamEditText.hasFocus()
+        ? "PasswordEditText: true"
+        m.UsernamEditText.setFocus(false)
+        m.PasswordEditText.setFocus(true)
         onTextBoxActive("password")
-
-        m.PasswordEditText.active = true
-
-        m.KeyboardInput.textEditBox.text = m.PasswordEditText.text
-        m.KeyboardInput.textEditBox.cursorPosition = (m.PasswordEditText.text).Len()
-        m.PasswordEditText.cursorPosition = (m.PasswordEditText.text).Len()
-
-        m.KeyboardPoster.visible = true
-        m.KeyboardInput.setFocus(true)
-
         return true
     end if
-    return result
+end function
+
+function pressUp() as boolean
+    if m.termConditionButton.hasFocus()
+        m.SignInButton.setFocus(true)
+        return true
+    else if m.registerNow.hasFocus() then
+        m.registerNow.setFocus(false)
+        m.SignInButton.setFocus(true)
+    else if m.PasswordEditText.hasFocus()
+        ? "UsernamEditText: true"
+
+        m.PasswordEditText.setFocus(false)
+        m.UsernamEditText.setFocus(true)
+        onTextBoxActive("username")
+
+        return true
+    else if m.remenberCheckList.hasFocus()
+        m.remenberCheckList.setFocus(false)
+        m.PasswordEditText.setFocus(true)
+        onTextBoxActive("password")
+        return true
+    else if m.SignInButton.hasFocus()
+        ? "remenberCheckList: true"
+        m.remenberCheckList.setFocus(true)
+        m.SignInButton.setFocus(false)
+        return true
+    else if m.TextField = "UsernamEditText" or m.TextField = "PasswordEditText"
+        return keybordClose()
+    end if
+
+end function
+
+function keybordClose() as boolean
+    
+
+    ? "keyboard close"
+    m.KeyboardPoster.visible = false
+    m.KeyboardInput.setFocus(false)
+    m.UsernamEditText.active = false
+    m.PasswordEditText.active = false
+
+    if m.TextField = "UsernamEditText"
+        m.UsernamEditText.setFocus(true)
+    else if m.TextField = "PasswordEditText"
+        m.PasswordEditText.setFocus(true)
+    end if
+
+    return true
 end function

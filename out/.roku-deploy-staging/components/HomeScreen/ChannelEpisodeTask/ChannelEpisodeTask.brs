@@ -10,16 +10,16 @@ sub ChannnleAPI()
     ? "ChannnleAPI: jsonResponse"; jsonResponse
 '    ? "ChannnleAPI: jsonResponse.Count(): "; jsonResponse.data.Count()
 '     m.top.categoryChannels
-    channles = jsonResponse.data
+if jsonResponse.responseCode = 200
+    channles = jsonResponse.jsonResponse.data
     categoryChannels = CreateObject("roAssociativeArray")
 
     categoryChannels["ALL"] = channles
     categoryChannels["RECENT"] = []
 
     for i = 0 to channles.Count()
-        if channles[i] <> invalid
+       if channles[i] <> invalid
             ' ? "channles[i].genrename ;"; channles[i].genrename
-
             if channles[i].genrename <> invalid
                 for each genre in channles[i].genrename
                      genre = UCase(genre) 
@@ -40,10 +40,7 @@ sub ChannnleAPI()
 '    id: 88
 '    image: "AETV.png"
 '    logo: "http://streamlytv.com/uploads/channellogo/AETV.png"
-'    url: "http://cdn.streamlytv.com/live/ANE/interlink.m3u8"
-    
-     
-    
+'    url: "http://cdn.streamlytv.com/live/ANE/interlink.m3u8"  
     '  ?"categoryChannels[ALL][0]";categoryChannels["ALL"][0]
     recentResponse = APICall(getBaseUrl() + getRecentUrl(), "GET", invalid, invalid)
     ' ? "recentResponse:"; recentResponse.data
@@ -53,4 +50,14 @@ sub ChannnleAPI()
     end if
 
     m.top.ChannelData = categoryChannels
+
+else 
+    ' if jsonResponse.responseCode = 401
+    ' m.top.expiresInvalid = jsonResponse.Failure
+
+' else if jsonResponse.responseCode = -7
+    m.top.errorMessage = jsonResponse
+
+end if
+    
 end sub

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="LoginScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+<component name="LoginScreen" extends="Group" initialFocus = "UsernamEditText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
 
 	<script type="text/brightscript" uri="pkg:/components/LoginScreen/LoginScreen.brs" />
     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
-        
+<script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />        
      <interface>	
 	   <field id="ExitView" type="boolean" alwaysNotify="true"/>
 	   <field id="dialog" type="node" alwaysNotify="true"/>

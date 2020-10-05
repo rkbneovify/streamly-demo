@@ -12,6 +12,7 @@
         <field id="categoryChannels" type="roAssociativeArray" />
         <field  id="callType"  type="String" /> 
         <field  id="parameters" type="roAssociativeArray"/>
+        <field  id="errorMessage" type="roAssociativeArray"/>
      
      </interface>
 </component>

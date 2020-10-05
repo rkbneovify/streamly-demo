@@ -8,7 +8,7 @@ Sub LogAPI()
 
      jsonResponse = APICall(getBaseUrl()+loginUrl(), m.top.callType ,m.top.data,m.top.headerData) 
      ?"LoginTask: ";jsonResponse 
-     m.top.response = jsonResponse
+     m.top.response = jsonResponse.jsonResponse
      
 
 end sub 

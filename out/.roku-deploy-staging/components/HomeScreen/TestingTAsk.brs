@@ -9,13 +9,15 @@ sub ChannnleAPI()
 
         m.top.callType="POST"      
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
+      '  headers ={"User-Agent": "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"}
+      '  programData = APICallWithHeader( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters,headers)
   ' ?"pr-ogramData: ";programData
 'sleep(4000)
 ' ?"API End call";   
 
-  if programData.response_code = 200
+  if programData.responseCode = 200
     
-    programdata = programData.data[0].programs      
+    programdata = programData.jsonResponse.data[0].programs      
     
     content = m.top.content
     channleNode = content.getChild(m.top.id.ToInt())
@@ -40,5 +42,6 @@ sub ChannnleAPI()
 '    m.top.programData = programData  
   end if
    m.top.programData = [] 
+   
 
 end sub

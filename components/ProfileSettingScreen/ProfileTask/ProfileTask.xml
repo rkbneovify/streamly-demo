@@ -10,5 +10,6 @@
       <field  id="callto"  type="String" /> 
       <field  id="callType"  type="String" /> 
       <field  id="parameters"  type="roAssociativeArray" /> 
+      <field  id="errorMessage"  type="roAssociativeArray" /> 
     </interface>
 </component>

@@ -7,11 +7,11 @@ end sub
 sub recentApicall()
 ?"recentApicall:";m.top.data    
 
- addrecentResponse = APICall(getBaseUrl() + addRecentUrl(), "POST", m.top.data, m.top.parameters)
+ addrecentResponse = APICall(getBaseUrl() + m.top.url, m.top.callType, m.top.bodyData, m.top.parameters)
                      
  
- ?"addrecentResponse.data";addrecentResponse
- m.top.recentResponse = addrecentResponse
+ ?"apicall.response:";addrecentResponse.jsonResponse
+ m.top.apiResponse = addrecentResponse.jsonResponse
 end sub
   
   

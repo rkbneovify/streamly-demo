@@ -2,21 +2,26 @@
 
 sub init()
     ? "MAin init()::accessToken: "; getAccountToken()
+    ' InitScreenStack(m.global["screenStack"])
 '        setAccountToken("")  
     if getAccountToken() <> invalid and getAccountToken() <> ""
         ? "login successfully: accessToken: "; getAccountToken()
+        ' ShowScreen(m.global["screenStack"],CreateObject("roSgNode","HomeScreen"))
         m.screen = showHomeScreen()
         m.screen.observeField("ExitView", "openLoginView")
     else
         ? "expired access token: "
         m.screen = showLoginScreen()
         m.screen.observeField("ExitView", "openHomeView")
+        ' ShowScreen(m.global["screenStack"],CreateObject("roSgNode","LoginScreen"))
+
     end if
 end sub
 
 function showHomeScreen() as Object
     ? "showHomeScreen"
     if m.screen <> invalid then  m.top.removeChild(m.screen)
+    ' ShowScreen("HomeScreen")
     HomeScreen = m.top.createChild("HomeScreen")
     HomeScreen.setFocus(true)
 

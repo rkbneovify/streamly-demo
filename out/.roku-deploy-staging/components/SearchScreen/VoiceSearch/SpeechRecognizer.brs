@@ -17,6 +17,7 @@ sub runRecognizer()
   ' Set port to listen for microphone events https://sdkdocs.roku.com/display/sdkdoc/roMicrophoneEvent
   port = CreateObject("roMessagePort")
   mic.SetMessagePort(port)
+  ' mic.prompt ="abcdefghijklm"
 
   ' Start recording audio.
   ' When initiating recording for the first time within the app,
@@ -142,6 +143,6 @@ end function
 
 function kAPIKey() as String
 '  return YOUR_API_KEY
-' return "AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro"
-    return "AIzaSyCIVM9BhvlY_PYNrcx3e1k8M3OwRXHkJHA" 
+return "AIzaSyDWA5SQKwpSxIy5UOuSVhxhSzIKxD2jdt4"
+    ' return "AIzaSyCIVM9BhvlY_PYNrcx3e1k8M3OwRXHkJHA" 
 end function

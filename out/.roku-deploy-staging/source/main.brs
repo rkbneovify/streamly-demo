@@ -15,13 +15,27 @@ sub showChannelSGScreen()
     m.port = CreateObject("roMessagePort")
     screen.setMessagePort(m.port)
     scene = screen.CreateScene("MainScene")
+
+    ' screen.show()
+
+    scene.observeField("exitApp", m.port)
+    m.global = screen.getGlobalNode()
+    stack=[]
+    
+    m.global.addFields({ "screenStack": stack  })
+    
     screen.show()
+    
+
 
     while(true)
         msg = wait(0, m.port)
-    msgType = type(msg)
+        msgType = type(msg)
         if msgType = "roSGScreenEvent"
             if msg.isScreenClosed() then return
+        else if  msg.GetData() = "exitApp"
+            screen.Close()
+            screen = invalid   
         end if
     end while
 end sub

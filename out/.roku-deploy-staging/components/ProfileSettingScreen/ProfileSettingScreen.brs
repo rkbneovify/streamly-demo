@@ -81,16 +81,16 @@ sub logoutApiCall()
 end sub
 
 
-sub closeScreen()
-?"ProfileScreen::closeScreen"; 
-       ?"ProfileSetting::if:close screen::" 
-       m.logout = false
-       m.buttonClick.setFocus(false)
-       m.ErrorDialogView.visible = false
+' sub closeScreen()
+' ?"ProfileScreen::closeScreen"; 
+'        ?"ProfileSetting::if:close screen::" 
+'        m.logout = false
+'        m.buttonClick.setFocus(false)
+'        m.ErrorDialogView.visible = false
        
-       m.top.logout = true
+'        m.top.logout = true
 
-end sub
+' end sub
 sub closeDialog()
  ?"ProfileSetting:: close dialog"   
      ?"ProfileSetting::else close dialog"
@@ -179,10 +179,42 @@ sub ApiCallFor(callto as String, callType as String)
      m.ProfileTask.callType = callType
       
      m.ProfileTask.observeField("response","responseAPI")     
+     m.ProfileTask.observeField("errorMessage", "errorDialogShow")
+
 '     m.ProfileTask.observeField("response","responseAPI")
      m.ProfileTask.control = "RUN" 'Run the task node 
      
 end sub 
+
+function errorDialogShow(event as object)
+   
+  if event.getData().responseCode = 401
+  
+      m.DialogButton = popupDialog(m.top , "Error " ,event.getData().Failure)
+      m.DialogButton.observeField("buttonSelected","loginScreen")
+      m.DialogButton.setFocus(true)
+
+  else 
+      m.DialogButton = popupDialog(m.top , "Error " ,event.getData().Failure)
+      m.DialogButton.observeField("buttonSelected","closeScreen")
+      m.DialogButton.setFocus(true)
+  end if
+  
+end function
+
+function loginScreen()
+
+  m.top.ExitView = true
+
+end function
+
+function closedilogScreen()
+?"closeScreen"
+  m.top.getScene().exitApp = "exitApp"
+  closeErrorDialogShow(m.top)
+  
+end function
+
 sub responseAPI(event as object)
   responseData = event.getData()
   ?"ProfileScreen::responseAPI: event: ";responseData
@@ -533,6 +565,9 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
      
      else if m.buttonClick.hasFocus() and m.logout = true and key = "back"
        
+
+      ' ShowScreen(CreateObject("roSgNode","LoginScreen"))
+
        m.buttonClick.setFocus(false)
        m.ErrorDialogView.visible =false
        m.top.logout = true
@@ -557,7 +592,10 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         showDialog("",false,true)
         return true
      else if key="back"
-       m.top.exitView = true
+         m.top.exitView = true
+        ' CloseCurrentScreen()
+      '  ShowScreen(CreateObject("roSgNode","LoginScreen"))
+
             
      
      end if 

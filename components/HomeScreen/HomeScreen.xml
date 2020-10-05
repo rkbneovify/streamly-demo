@@ -3,6 +3,8 @@
 
 	<script type="text/brightscript" uri="pkg:/components/HomeScreen/HomeScreen.brs" />
     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+     <script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />
+
 	<interface>
 	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
 	  <field id="profileScreen" type = "boolean" alwaysnotify="true" />

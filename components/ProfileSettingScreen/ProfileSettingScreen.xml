@@ -5,6 +5,8 @@
 	
 	
 	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	<script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />
+  
 	
 	<interface>	
 	  <field id="dialog"  type="node"/>
