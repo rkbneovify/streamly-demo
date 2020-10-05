@@ -38,8 +38,9 @@
         		<ul>
         			<li><a href="{{ url('/contactform') }}" style="color:#C5C5C5">Contact us</a></li>
         			<li><a href="{{ url('/helpandsupport') }}" style="color:#C5C5C5">Help and support</a></li>
-        			<li><a href="{{ url('faq') }}" style="color:#C5C5C5">Terms of use</a></li>
-        			<li><a href="{{ url('faq') }}" style="color:#C5C5C5">Privacy Policy</a></li>
+        			<li><a href="{{ url('termsofuse') }}" style="color:#C5C5C5">Terms of use</a></li>
+        			<li><a href="{{ url('privacy') }}" style="color:#C5C5C5">Privacy Policy</a></li>
+        			<li><a href="{{ url('faq') }}" style="color:#C5C5C5">FAQ</a></li>
         		</ul>
         	</div>
         	<div class="col-sm-3 pos-relative">

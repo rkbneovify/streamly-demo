@@ -141,11 +141,10 @@
 
 @section('content')
 
-
 	<section class="page-section custom-row">
 
 		<div class="container" style="margin-top: 4%;">
-			<h4 class="section-heading text-center">Help & Support</h4>
+			<h4 class="section-heading text-center">FAQ</h4>
 			<div class="row">
 				<div class="col-centered">
 					<a href="#faq-question" class="btn btn-sm btn-default faq-btn" data-toggle="collapse">FAQ</a>
@@ -478,5 +477,5 @@
 			</div>
 		</div>
 	</section>
-	
+	<section></section>
 @endsection
