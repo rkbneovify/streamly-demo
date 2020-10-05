@@ -179,9 +179,9 @@
                   </div>
 
                   <span class="remove-p-a-r">By clicking “REGISTER” you agree to the Streamly <br />
-                      <a href="">Terms of Use</a>
+                      <a href="{{ url('termsofuse') }}">Terms of Use</a>
                       <span>and</span>
-                      <a href="">Privacy Policy</a>
+                      <a href="{{ url('privacy') }}">Privacy Policy</a>
                       <span>.</span>
                   </span>
 
