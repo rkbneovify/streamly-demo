@@ -350,7 +350,7 @@ class SubscriptionController extends Controller
             } catch (\Stripe\Error\InvalidRequest $e) {
                 return response()->json(['message' => $e->getMessage()], 400);
             }
-            return response()->json(['message' => 'Coupon is valid! & '.$price], 200);
+            return response()->json(['message' => 'Coupon is valid! & '.$price,'amountoff'=>$status->amount_off/100,'percentoff'=>$status->percent_off], 200);
 
         }
         if($request->has('zip')){

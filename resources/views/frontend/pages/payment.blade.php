@@ -4,6 +4,7 @@
 	<style>
 				button[disabled] {
   cursor: not-allowed;
+	pointer-events: all !important;
 }
 		nav#mainNav {
 			background-color: #004E92;
@@ -85,7 +86,7 @@
 	<section class="page-section">
 		<div class="container">
 			<div class="text-center">
-				<h2 class="section-heading">Add Your Billing Detailsdsjk</h2>
+				<h2 class="section-heading">Add Your Billing Detailsds</h2>
 				<div class="row">
 					<div class="col-md-4 text-left">
 						<div class="row subscription-box">
@@ -112,7 +113,7 @@
 										<div class="col-md-6 padding-L-rem">
 											Total
 										</div>
-										<div class="col-md-6 padding-L-rem text-right" style="font-weight: bold;">
+										<div class="col-md-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;">
 											$ {{$plandetails->amount/100}}
 										</div>
 									</div>
@@ -128,14 +129,14 @@
 										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
 										<span style="display: block;">Credit Card</span>
 									</div>
-									<div class="col-md-4" style="padding: 2rem;">
+									{{-- <div class="col-md-4" style="padding: 2rem;">
 										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
 										<span style="display: block;">Debit Card</span>
 									</div>
 									<div class="col-md-4" style="padding: 2rem;">
 										<img src="{{ asset('frontend/img/paypal.svg') }}">
 										<span style="display: block;">Paypal</span>
-									</div>
+									</div> --}}
 								</div>
 								{{-- {{dd(auth()->user())}} --}}
 
@@ -257,7 +258,7 @@ $('body').on('blur','[name="coupon"]',function(){
   // $coupon.val($coupon.val().toUpperCase()); // I make all my coupons uppercase
   
   $.ajax({
-							 
+		var text = document.getElementById("totalprice").textContent;				 
     url:"{{ route('ajax-check') }}",
 
     type:"GET",
@@ -269,6 +270,20 @@ $('body').on('blur','[name="coupon"]',function(){
       .addClass('has-success')
 			
       .find('.help-block').css('color', 'green').text(data.message).show();
+			if (data.amountoff != null){
+			var totprice= {{$plandetails->amount/100}}-data.amountoff;
+			document.getElementById("totalprice").textContent='$ '+totprice;
+			
+			};
+			if (data.percentoff != null){
+
+				console.log('percenttoff',data.percentoff);
+				//Calculate the percent.
+
+ var totalValue = {{$plandetails->amount/100}} * ( (100-data.percentoff) / 100 )
+			document.getElementById("totalprice").textContent='$ '+totalValue.toFixed(2);
+			
+};
     },
     error:function(){ 
       $coupon.closest('.form-group')
