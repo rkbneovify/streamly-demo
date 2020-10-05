@@ -137,6 +137,8 @@ Route::get('/livetv/{channel}/{genre}', 'Pages\LiveTv@showChannel');
 Route::get('/videojs', 'Pages\LiveTv@videojs');
 Route::get('/videojs2', 'Pages\LiveTv@videojs2');
 Route::get('/faq', 'Pages\Faq@showPage');
+Route::get('/termsofuse', 'Pages\Faq@termsofuse');
+Route::get('/privacy', 'Pages\Faq@privacy');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');

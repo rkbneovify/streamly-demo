@@ -18,5 +18,25 @@ class Faq extends Controller
     	return view('frontend.pages.faq', compact('login'));
 
     }
+    public function termsofuse(){
+
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+    	return view('frontend.pages.termofuse', compact('login'));
+
+    } 
+    public function privacy(){
+
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+    	return view('frontend.pages.privacy', compact('login'));
+
+    }
    
 }
