@@ -201,10 +201,47 @@
 															</div>
 													</div>
 											</div>
+											<div class="form-row">
+													<div class="col-md-6">
+															<div class='form-group  required'>
+																	<label class='control-label'>Address</label>
+																	<input id="address-line1" name="address_line1" class="form-control" placeholder="77 Winchester Lane" />
+															
+															</div>
+													</div><div class="col-md-6">
+															<div class='form-group  required'>
+																	<label class='control-label'>Address (cont.)</label>
+																	<input id="address-line2" name="address_line2" class="form-control" placeholder="" />
+																	
+															</div>
+													</div>
+											</div>
+											<div class="form-row">
+													<div class="col-md-6">
+															<div class='form-group  required'>
+																	<label class='control-label'>City</label>
+																	<input id="address-city" name="address_city" class="form-control" placeholder="" disabled/>
+															
+															</div>
+													</div><div class="col-md-6">
+															<div class='form-group  required'>
+																	<label class='control-label'>State</label>
+																	<input id="address-state" name="address_state" class="form-control" placeholder="" disabled/>
+																	
+															</div>
+													</div>
+											</div>
+											<div class='form-group  required'>
+												<label class='control-label'>Country</label>
+												
+        <input id="address-country" name="address_country" class="form-control" placeholder="" disabled/>
+										</div>
 				                    <!-- Stripe Elements Placeholder -->
 														<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 														<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
-												</div>
+												
+													</div>
+													
 												@if	(empty($frontendjson['billingdetailspage']))
 												<span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
@@ -313,8 +350,12 @@ $('body').on('focusout','[name="zip"]',function(){
     data:{zip: $zip.val()},
     dataType: 'json',
     success: function (data) {
+			// console.log("zip",data.city);
 			bt.disabled = false;
       $('#ziphelp').html('<p style="color:green">'+data.message+'</p>');
+			$('#address-city').val(data.city); 
+			$('#address-state').val(data.state); 
+			$('#address-country').val("US"); 
     },
     error:function(xhr, status, error){ 
       if(xhr.status==404) {
@@ -369,10 +410,16 @@ myPostalCodeField.addEventListener('change', function(event) {
 
             form.addEventListener('submit', async (e) => {
                 event.preventDefault();
-
+								var options = {
+									line1: document.getElementById('address-line1').value,
+									line2: document.getElementById('address-line2').value,
+    city: document.getElementById('address-city').value,
+    state: document.getElementById('address-state').value,
+    country: document.getElementById('address-country').value,
+  };
                 const { paymentMethod, error } = await stripe.createPaymentMethod(
                     'card', cardElement, {
-                        billing_details: { name: cardHolderName.value }
+                        billing_details: { name: cardHolderName.value,"address": options}
                     }
                 );
 
