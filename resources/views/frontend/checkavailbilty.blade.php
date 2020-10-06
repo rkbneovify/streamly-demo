@@ -80,7 +80,7 @@ $("#my_form").submit(function(event){
 							 dataType: 'json',
 							 success: function (data) {
 								 $('#card-button').prop('disabled', false);
-								 $('#ziphelp').html('<p style="color:green">'+data.message+'  <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a></p>');
+								 $('#ziphelp').html('<p style="color:green">'+data.message+' <p>City: '+data.city+'</p> <p>State: '+data.state+'</p><a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a></p>');
 							 },
 							 error:function(xhr, status, error){ 
 								 if(xhr.status==404) {

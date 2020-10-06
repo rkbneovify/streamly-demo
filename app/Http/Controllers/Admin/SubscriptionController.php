@@ -354,15 +354,15 @@ class SubscriptionController extends Controller
 
         }
         if($request->has('zip')){
-            $data = Zipcode::select('zipcode')->where([
+            $data = Zipcode::select('zipcode','city','state')->where([
                 ['status', '=', '1'],
                 ['zipcode', '=',$request['zip'] ]
-            ])->count();
+            ])->get();
             
-            if($data==0){
+            if(count($data)==0){
                 return response()->json(['message' => 'Zipcode not allowed or invalid'], 404);
             }
-            return response()->json(['message' => 'Zipcode allowed'], 200); 
+            return response()->json(['message' => 'Zipcode allowed','city'=>$data->pluck('city')->first(),'state'=>$data->pluck('state')->first()], 200); 
 
         }
     }
