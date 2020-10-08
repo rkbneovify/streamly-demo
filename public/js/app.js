@@ -66383,6 +66383,12 @@ var TVGuide = /*#__PURE__*/function (_Component) {
     _this.focusedEventPosition = -1; //this.state = {translate3d : `translate3d(${this.scrollX}px, 0px, 0px)`};
     //this.translate3d = `translate3d(${this.scrollX}px, 0px, 0px)`;
 
+    _this.state = {
+      title: "",
+      description: "",
+      endd: "",
+      strt: ""
+    };
     _this.mChannelImageCache = new Map();
     _this.mClipRect = new _models_Rect__WEBPACK_IMPORTED_MODULE_1__["default"]();
     _this.mDrawingRect = new _models_Rect__WEBPACK_IMPORTED_MODULE_1__["default"]();
@@ -66798,14 +66804,8 @@ var TVGuide = /*#__PURE__*/function (_Component) {
       //mPaint.getTextBounds(event.getTitle(), 0, event.getTitle().length(), mMeasuringRect);
 
       drawingRect.top += (drawingRect.bottom - drawingRect.top) / 2 + 10 / 2;
-      var d = new Date(event.start);
-      var endtim = new Date(event.end);
-      var options = {
-        timeStyle: 'short',
-        hour12: false
-      };
-      var ds = d.toLocaleString('en', options);
-      var endtime = endtim.toLocaleString('en', options);
+      var ds = this.handleTime(event.start);
+      var endtime = this.handleTime(event.end);
       var title = event.title + ' (' + ds + '-' + endtime + ')'; // let title = event.title;
 
       /*title = title.substring(0,
@@ -66951,6 +66951,16 @@ var TVGuide = /*#__PURE__*/function (_Component) {
       console.log("scrolling...");
     }
   }, {
+    key: "handleTime",
+    value: function handleTime(unixtime) {
+      var d = new Date(unixtime);
+      var options = {
+        timeStyle: 'short',
+        hour12: false
+      };
+      return d.toLocaleString('en', options);
+    }
+  }, {
     key: "handleKeyPress",
     value: function handleKeyPress(event) {
       var keyCode = event.keyCode;
@@ -66976,6 +66986,14 @@ var TVGuide = /*#__PURE__*/function (_Component) {
             }
           }
 
+          var strt = this.handleTime(this.focusedEvent.start);
+          var endd = this.handleTime(this.focusedEvent.end);
+          this.setState({
+            description: this.focusedEvent.description,
+            title: this.focusedEvent.title,
+            strt: strt,
+            endd: endd
+          });
           this.scrollX = this.getScrollX(false) + dx;
           break;
 
@@ -66991,6 +67009,14 @@ var TVGuide = /*#__PURE__*/function (_Component) {
             }
           }
 
+          var strt = this.handleTime(this.focusedEvent.start);
+          var endd = this.handleTime(this.focusedEvent.end);
+          this.setState({
+            description: this.focusedEvent.description,
+            title: this.focusedEvent.title,
+            strt: strt,
+            endd: endd
+          });
           this.scrollX = this.getScrollX(false) + dx;
           break;
 
@@ -67008,6 +67034,15 @@ var TVGuide = /*#__PURE__*/function (_Component) {
             } // console.log(channelPosition);
 
 
+            this.focusedEvent = this.epgData.getEvent(channelPosition, this.focusedEventPosition);
+            var strt = this.handleTime(this.focusedEvent.start);
+            var endd = this.handleTime(this.focusedEvent.end);
+            this.setState({
+              description: this.focusedEvent.description,
+              title: this.focusedEvent.title,
+              strt: strt,
+              endd: endd
+            });
             this.focusedChannelPosition = channelPosition;
           }
 
@@ -67024,9 +67059,18 @@ var TVGuide = /*#__PURE__*/function (_Component) {
               if (this.epgData.getChannelCount() - channelPosition != TVGuide.VERTICAL_SCROLL_BOTTOM_PADDING_ITEM) {
                 this.scrollY = this.getScrollY(false) + dy;
               }
-            }
+            } // console.log(channelPosition);
 
-            console.log(channelPosition);
+
+            this.focusedEvent = this.epgData.getEvent(channelPosition, this.focusedEventPosition);
+            var strt = this.handleTime(this.focusedEvent.start);
+            var endd = this.handleTime(this.focusedEvent.end);
+            this.setState({
+              description: this.focusedEvent.description,
+              title: this.focusedEvent.title,
+              strt: strt,
+              endd: endd
+            });
             this.focusedChannelPosition = channelPosition;
           }
 
@@ -67086,7 +67130,7 @@ var TVGuide = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render() {
       window.addEventListener("scroll", function (event) {}, false);
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, "Title: ", this.state.title, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Time: ", this.state.strt, "- ", this.state.endd, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Description: ", this.state.description, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "wrapper",
         ref: "epg",
         tabIndex: "-1",
@@ -67102,7 +67146,7 @@ var TVGuide = /*#__PURE__*/function (_Component) {
         style: {
           border: '1px solid'
         }
-      })));
+      }))));
     }
   }]);
 

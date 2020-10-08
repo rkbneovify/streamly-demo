@@ -42,7 +42,7 @@
     @endif
     
        
-        <section class="page-section">
+        
             {{-- {{ Auth::user()->name }}
           <p>{{$login}} </p>   --}}
             <div class="container">
@@ -55,7 +55,7 @@
     
             </div>
             
-        </section>
+        
         </section>
     
 @endsection
@@ -79,6 +79,12 @@
 {{-- <script  src="{{ asset('frontend/script.js') }}" ></script> --}}
 <script defer src="{{ asset('js/app.js') }}"></script>
 <script>
+    window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
     var action = "{{ env("APP_URL") }}"
     function logoutUser() {
     window.location.href = '/logout';

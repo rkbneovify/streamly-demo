@@ -35,7 +35,11 @@ export default class TVGuide extends Component {
         this.focusedEventPosition = -1;
         //this.state = {translate3d : `translate3d(${this.scrollX}px, 0px, 0px)`};
         //this.translate3d = `translate3d(${this.scrollX}px, 0px, 0px)`;
-
+        this.state = {
+            title: "",
+            description: "",endd: "",
+            strt:""
+          };
         this.mChannelImageCache = new Map();
 
         this.mClipRect = new Rect();
@@ -451,13 +455,9 @@ export default class TVGuide extends Component {
         // Move drawing.top so text will be centered (text is drawn bottom>up)
         //mPaint.getTextBounds(event.getTitle(), 0, event.getTitle().length(), mMeasuringRect);
         drawingRect.top += (((drawingRect.bottom - drawingRect.top) / 2) + (10/2));
-        var d = new Date(event.start);
-        var endtim = new Date(event.end);
-        var options = {
-            timeStyle:'short',hour12:false
-        };
-        var ds = d.toLocaleString('en', options);var endtime = endtim.toLocaleString('en', options);
-        
+        	
+var ds = this.handleTime(event.start);	
+var endtime = this.handleTime(event.end);	
                 let title = event.title+' ('+ds+'-'+endtime+')';
         // let title = event.title;
         /*title = title.substring(0,
@@ -614,6 +614,13 @@ export default class TVGuide extends Component {
         console.log("scrolling...");
     }
 
+    handleTime(unixtime) {	
+        let d = new Date(unixtime);	
+        let options = {	
+            timeStyle:'short',hour12:false	
+        };	
+       return d.toLocaleString('en', options);	
+    }
     handleKeyPress(event) {
         let keyCode = event.keyCode;
         /*keyCode = this.isRTL() && (keyCode == 39) ? 37 : 39;
@@ -632,6 +639,10 @@ export default class TVGuide extends Component {
                         dx =  parseInt((this.focusedEvent.end - this.focusedEvent.start) / this.mMillisPerPixel);
                     }
                 }
+             
+var strt = this.handleTime(this.focusedEvent.start);	
+var endd = this.handleTime(this.focusedEvent.end);	
+                this.setState({description: this.focusedEvent.description,title: this.focusedEvent.title,strt:strt,endd:endd});
                 this.scrollX = this.getScrollX(false) + dx;
                 break;
             case 37 :
@@ -642,7 +653,9 @@ export default class TVGuide extends Component {
                         this.focusedEventPosition = programPosition;
                         dx = (-1) * parseInt((this.focusedEvent.end - this.focusedEvent.start) / this.mMillisPerPixel);
                     }
-                }
+                }   var strt = this.handleTime(this.focusedEvent.start);	
+                var endd = this.handleTime(this.focusedEvent.end);	
+                                this.setState({description: this.focusedEvent.description,title: this.focusedEvent.title,strt:strt,endd:endd});
                 this.scrollX = this.getScrollX(false) + dx;
                 break;
             case 40 :
@@ -658,6 +671,9 @@ export default class TVGuide extends Component {
                         }
                     }
                    // console.log(channelPosition);
+                   this.focusedEvent = this.epgData.getEvent(channelPosition, this.focusedEventPosition);   var strt = this.handleTime(this.focusedEvent.start);	
+                   var endd = this.handleTime(this.focusedEvent.end);	
+                                   this.setState({description: this.focusedEvent.description,title: this.focusedEvent.title,strt:strt,endd:endd});
                     this.focusedChannelPosition = channelPosition;
 
                 }
@@ -674,7 +690,10 @@ export default class TVGuide extends Component {
                             this.scrollY = this.getScrollY(false) + dy;
                         }
                     }
-                    console.log(channelPosition);
+                    // console.log(channelPosition);
+                    this.focusedEvent = this.epgData.getEvent(channelPosition, this.focusedEventPosition);   var strt = this.handleTime(this.focusedEvent.start);	
+                    var endd = this.handleTime(this.focusedEvent.end);	
+                                    this.setState({description: this.focusedEvent.description,title: this.focusedEvent.title,strt:strt,endd:endd});
                     this.focusedChannelPosition = channelPosition;
                 }
                 break;
@@ -730,7 +749,7 @@ export default class TVGuide extends Component {
     render() {
         window.addEventListener("scroll", function(event) {
         }, false);
-        return (
+        return (<React.Fragment>Title: {this.state.title}<br />Time: {this.state.strt}- {this.state.endd}<br />Description: {this.state.description}<br />
             <div id="wrapper" ref="epg" tabIndex='-1' onClick={this.handleClick} onKeyDown={this.handleKeyPress} className={Styles.background}>
                 <div className="programguide-contents">
                         <canvas
@@ -739,7 +758,7 @@ export default class TVGuide extends Component {
                             height = {this.getHeight()}
                             style={{border:'1px solid'}}/>
                 </div>
-            </div>
+            </div></React.Fragment>
 
     )
         ;
