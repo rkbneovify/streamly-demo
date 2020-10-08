@@ -749,7 +749,7 @@ var endd = this.handleTime(this.focusedEvent.end);
     render() {
         window.addEventListener("scroll", function(event) {
         }, false);
-        return (<React.Fragment>Title: {this.state.title}<br />Time: {this.state.strt}- {this.state.endd}<br />Description: {this.state.description}<br />
+        return (<React.Fragment><strong>Title:</strong> {this.state.title}<br /><strong>Time:</strong> {this.state.strt}- {this.state.endd}<br />{this.state.description!== 'EventDescription' ? <p><strong>Description: </strong>{this.state.description}</p>:null}
             <div id="wrapper" ref="epg" tabIndex='-1' onClick={this.handleClick} onKeyDown={this.handleKeyPress} className={Styles.background}>
                 <div className="programguide-contents">
                         <canvas
