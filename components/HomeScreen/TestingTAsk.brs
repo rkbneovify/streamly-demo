@@ -11,7 +11,7 @@ sub ChannnleAPI()
        programData = APICall( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters)
       '  headers ={"User-Agent": "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19"}
       '  programData = APICallWithHeader( getBaseUrl() + getchannelschdeuleUrl() , m.top.callType ,m.top.data,m.top.parameters,headers)
-  ' ?"pr-ogramData: ";programData
+  ?"pr-ogramData: ";programData.jsonResponse
 'sleep(4000)
 ' ?"API End call";   
 

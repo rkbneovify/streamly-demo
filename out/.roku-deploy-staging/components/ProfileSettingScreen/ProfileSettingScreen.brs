@@ -16,6 +16,11 @@ sub init()
  m.Lbaelok = m.top.findNode("Lbaelok")
  m.labelYes = m.top.findNode("labelYes")
  m.labelNo = m.top.findNode("labelNo")
+ m.Settings = m.top.findNode("Settings")
+ m.pressbackLabel = m.top.findNode("pressbackLabel")
+
+ m.pressbackLabel.font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
+ m.Settings.font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
 '  m.logoutView.height =724
 '  m.logoutView.width =1223
 '  m.logoutView.translation =[(1920-1223)/2,(1080-724)/2]
@@ -319,7 +324,7 @@ sub privicyPolicy()
 '    m.DialogNodePoster.visible =false
     m.DialogNodePoster.width = 1223
     m.DialogNodePoster.height = 714
-    m.DialogNodePoster.uri = "pkg:/images/profile/dialogBackground.png"
+    m.DialogNodePoster.uri = "pkg:/images/profile/profile_dialog.png"
     m.DialogNodePoster.translation = [349,224]
     m.ScrolableText = m.DialogNodePoster.createChild("ScrollableText")
  
@@ -376,7 +381,7 @@ sub initSupportDialog()
 '     m.SupportDialog.visible = false
      m.SupportDialog.width = 1223
      m.SupportDialog.height = 370
-     m.SupportDialog.uri = "pkg:/images/profile/dialogBackground.png"
+     m.SupportDialog.uri = "pkg:/images/profile/profile_dialog.png"
      m.SupportDialog.translation = [(1920-m.SupportDialog.boundingRect().width)/2,(1080-m.SupportDialog.boundingRect().height)/2]
      
      m.LayoutGroup = m.SupportDialog.createChild("LayoutGroup")

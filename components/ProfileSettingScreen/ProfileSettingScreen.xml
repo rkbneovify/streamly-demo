@@ -28,10 +28,10 @@
        
      <Label  text="SETTINGS"
              id="Settings"
-             translation= "[151,54]"/>
+             translation= "[151,59]"/>
      
      
-      <Poster
+      <!-- <Poster
           uri="pkg:/images/home/profileSetting.png"
           translation= "[1350,50]"
           loadDisplayMode="scaletofill"
@@ -41,7 +41,7 @@
         <Label  text="CHANNELS"
              id="Channels"
              translation= "[70,10]"/>
-      </Poster>
+      </Poster> -->
       
       <Poster
           uri="pkg:/images/home/backNavIcon.png"
@@ -53,7 +53,7 @@
         <Label 
         text="LIVE TV"
              id="pressbackLabel" 
-             translation= "[70,10]"/>
+             translation= "[70,15]"/>
       </Poster>
       
       
@@ -73,7 +73,7 @@
          width  = "1223"
          height = "724"
          
-          uri="pkg:/images/profile/dialogBackground.png"    
+          uri="pkg:/images/profile/profile_dialog.png"    
          loadDisplayMode = "scaleToFill" >
            
          <Label
@@ -142,7 +142,7 @@
          width  = "1223"
          height = "724"
          
-         uri="pkg:/images/profile/dialogBackground.png"    
+         uri="pkg:/images/profile/profile_dialog.png"    
          loadDisplayMode = "scaleToFill" 
          
           visible = "false"

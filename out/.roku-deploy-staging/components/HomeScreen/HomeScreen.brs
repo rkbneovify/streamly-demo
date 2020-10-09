@@ -86,16 +86,19 @@ sub init()
     m.timeGride.observeField("programSelected", "programSelected")
     m.timeGride.observeField("channelFocused", "channelFocused")
 
-    m.timeGride.programHorizMargin = 24
-    '    m.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
-    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite3.9.png"
+    m.timeGride.programHorizMargin = 32
+    'm.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
+    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/epgbackground.png"
+    ' m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite4.png"
+   
     m.timeGride.overlayBitmapUri = ""
     m.timeGride.channelInfoBackgroundBitmapUri = ""
     m.timeGride.timeBarBitmapUri = "pkg:/images/transparentimg.png"
     m.timeGride.programTitleFocusedColor = "#ffffff"
     m.timeGride.showPastTimeScreen = true
 
-    m.timeGride.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.timeGride.itemSize =[1920, 75]
+    m.timeGride.programTitleFont = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.timeGride.channelNoDataText = "Loading..."
     m.timeGride.loadingDataText = "Loading..."
     m.timeGride.automaticLoadingDataFeedback = true
@@ -103,6 +106,7 @@ sub init()
     m.timeGride.numRows = 0
     m.timeGride.fillProgramGaps = true
     m.timeGride.translation = [0.0, 350.0]
+    ' m.timeGride.nowBackgroundBitmapUri = "pkg:/images/profile/profile_dialog.png"
     m.timeGride.vertFocusAnimationStyle = "fixedFocus"
 
     m.top.observeField("visible", "setFocus")
@@ -373,7 +377,6 @@ function playVideo(liveStreamData as object, drmKey as string) as void
 
         "customdata": drmKey
         ' "customdata":"PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTA5IDExOjU5OjE1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDkgMTI6MTQ6MTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YjNmOGU3NTBiYzIwY2VmOGEyOTJkNmE4NDE4ZDMwYTE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+Y0lyaXhMMUk5NW51UWQ4V2NwUWZmVWFNNGVBWEJQajFIS3I4WENtNkh2bDM0eWNIL0M5Y1RXSy9DaEVKQlJ4Um5XOUJhREsrZGgxZ0VGN1hMYVZRSERETmp0NklKYVJvNjduUzJjN244QjVINmlwUWRpd3E4dS8wM2tCVjRydG9EQlJWTndXUXdQbm91Wm95a1JETzdiK0hjU0tRaUhwZkQySFlKWHo0alBRb0pEb1J4VUFQNm9FYVJDUW0yNzJZUzlNaFZkYURDSGgyaW81enMwY3RsdEhkb0xqTlBqZEZvMVIyV0t1R0lmNktuK0FSVzZXeHgrbTNySzJiMlFPOCtRSG1Xb0FzTFMxcU9yMDRTZjVKdXFIMERIaUgwSlFKbkpaOTBlTUptYU9QZ052RDBRcDdDMWh1MFlqTU5mTVgrbzRyMUFyeHVCMmhOWVVyQ0tQb1hnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
-
     }
 
     httpAgent.setheaders(headers)
@@ -523,7 +526,7 @@ function programSelected(event as object) as object
     m.drmKeyApiCall.callType = "GET"
     m.drmKeyApiCall.url = drmkeyUrl()
     m.drmKeyApiCall.observeField("apiResponse", "apiResponse")
-    m.ApiCall.observeField("errorMessage", "errorDialogShow")
+    m.drmKeyApiCall.observeField("errorMessage", "errorDialogShow")
     m.drmKeyApiCall.control = "RUN"
 
     ' m.ApiCall = CreateObject("roSGNode", "ApiCall")

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="TestingTAsk" extends="Task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/HomeScreen/TestingTAsk.brs" />
+	 <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	 <interface>
+ 
+	  <field id="content" type="Node"  alwaysNotify="true"/>
+	  <field id="programData" type="roArray"  alwaysNotify="true"/>
+	  <field id="data" type="roAssociativeArray"  alwaysNotify="true"/>
+	  <field id="callType" type="string"  alwaysNotify="true"/>
+	  <field id="parameters" type="roAssociativeArray"  alwaysNotify="true"/>
+	 </interface>
+</component>

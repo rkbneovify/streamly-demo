@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="LoginScreen" extends="Group" initialFocus = "UsernamEditText" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/LoginScreen/LoginScreen.brs" />
+    <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+<script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />        
+     <interface>	
+	   <field id="ExitView" type="boolean" alwaysNotify="true"/>
+	   <field id="dialog" type="node" alwaysNotify="true"/>
+	  
+	</interface>
+	
+<children>
+        
+	  <Poster  id="LoginBackgroundImage"
+	           height="1080"
+	           width="1920"
+	          
+	           loadwidth="1280"
+	           loadheight="720"
+	           uri="pkg:/images/home/homeScreenBckgrndhd.png" 
+	           loadDisplayMode = "scaleTofill"
+	          
+	           />
+      <Poster id="logo"
+              translation= "[723,68]"
+	          height="118"
+	          width="474"
+	          uri="pkg:/images/streamly_logo.png" 
+	           />
+	  
+	 <!--  <Rectangle
+	             
+	             
+	             height="779"
+	             width="873"
+	             uri = "pkg:/images/Login/backGroundBox.png" 	                
+	   > -->
+	       <Poster   
+	                  translation = "[524,227]"                    
+	                  height="779"
+	                  width="873"
+	                  uri="pkg:/images/Login/backGroundBox.png" 
+	           >
+	    
+	          <Label
+	                 id="SignInLabel"
+	                 text="Sign In"
+	                 translation= "[127,40]"
+	                 height="53"
+	                 width="0"
+	                 color="#004E92"	      
+	          />
+	         
+	          <Label
+	                 id="UsernamLable"
+	                 text="Username"
+	                 translation= "[127,137]"
+	                 height="28"
+	                 width="130"
+	                 color="#0A0A0A"
+	                 
+	      
+	          />          
+	          <Poster id="UsernamPoster"
+                      translation = "[127,176]"
+	                  height="94"
+	                  width="620"
+	                  uri="pkg:/images/Login/borderof.png" 
+	           >
+	          <!-- text = "shahjad@gmail.com" -->
+	             <TextEditBox
+	                 id = "UsernamEditText"
+	                
+	                 translation = "[30,5]"	                 
+	                 width = "585"
+	                 textColor="#0A0A0A"
+	                 backgroundUri="pkg:/images/edittext_transparent.png" 
+	                 clearOnDownKey="false"      
+	             />
+	          </Poster>
+	          <Label
+	                 id="PasswordLable"
+	                 text="Username"
+	                 translation= "[127,298]"
+	                 height="28"
+	                 width="130"
+	                 color="#0A0A0A"
+	                    
+	          />
+	          <!-- fireTrackingEvents -->
+	           <Poster id="PasswordPoster"
+                      translation = "[127,337]"
+	                  height="94"
+	                  width="620"
+	                  uri="pkg:/images/Login/borderon.png" 
+	           >
+			
+	           <!-- text = "123456789" -->
+	              <TextEditBox
+	               
+	                 id = "PasswordEditText"
+	                 
+	                 translation = "[30,5]"
+	                 secureMode="true"
+	                 width = "585"
+	                 textColor="#0A0A0A"
+	                 backgroundUri="pkg:/images/edittext_transparent.png" 
+	                 clearOnDownKey="false"                        
+	              />
+	          </Poster>
+              <CheckList id="rememberCheckList"/>
+              <Button  id="needHelpButton"/>
+	          <Button 
+	                 id="SignInButton"
+	                 
+	                 translation= "[127,528]"
+	                 height="84"
+	                 maxwidth="620"
+	                 minwidth="620"
+	                 iconuri=""
+	                 focusedIconUri=""
+	                 focusFootprintBitmapUri = "pkg:/images/Login/signfocus.png"
+	                 focusBitmapUri = "pkg:/images/Login/signfootprint.png"        
+	                 showFocusFootprint="true"
+	          
+	          />
+	          
+	          <Button id ="termConditionButton"/>
+	          <Label  id="registerLabel"/>
+	  
+	  </Poster>
+	  
+	      
+	      <Poster   
+	                  id = "KeyboardPoster"
+	                  translation= "[0,670]"                  
+	                  height="779"
+	                  width="1920"
+	                  uri="pkg:/images/LoginBackgroundpng.png" 
+	                  visible="false"
+	            >
+	             <Keyboard 
+	                  id = "KeyboardInput"
+	                  translation= "[250,0]"
+	                  showTextEditBox="false"
+	             />
+	             
+	             
+	        </Poster>
+	            
+	            	
+	</children>
+</component>

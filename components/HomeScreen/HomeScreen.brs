@@ -86,16 +86,19 @@ sub init()
     m.timeGride.observeField("programSelected", "programSelected")
     m.timeGride.observeField("channelFocused", "channelFocused")
 
-    m.timeGride.programHorizMargin = 24
-    '    m.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
-    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite3.9.png"
+    m.timeGride.programHorizMargin = 32
+    'm.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
+    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/epgbackground.png"
+    ' m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite4.png"
+   
     m.timeGride.overlayBitmapUri = ""
     m.timeGride.channelInfoBackgroundBitmapUri = ""
     m.timeGride.timeBarBitmapUri = "pkg:/images/transparentimg.png"
     m.timeGride.programTitleFocusedColor = "#ffffff"
     m.timeGride.showPastTimeScreen = true
 
-    m.timeGride.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.timeGride.itemSize =[1920, 75]
+    m.timeGride.programTitleFont = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.timeGride.channelNoDataText = "Loading..."
     m.timeGride.loadingDataText = "Loading..."
     m.timeGride.automaticLoadingDataFeedback = true
@@ -103,6 +106,7 @@ sub init()
     m.timeGride.numRows = 0
     m.timeGride.fillProgramGaps = true
     m.timeGride.translation = [0.0, 350.0]
+    ' m.timeGride.nowBackgroundBitmapUri = "pkg:/images/profile/profile_dialog.png"
     m.timeGride.vertFocusAnimationStyle = "fixedFocus"
 
     m.top.observeField("visible", "setFocus")
@@ -186,6 +190,14 @@ sub init()
     m.AllChannelContent = CreateObject("roSGNode", "ContentNode")
 
     ' mybutton.horiz
+
+    m.global.RSG_analytics.trackEvent = {
+        google: {
+            ec: "EPG_Screen",
+            ea: "EPG_Launch"
+        }
+    }
+    
 end sub
 
 ' sub StartProgramUpdating()
@@ -314,9 +326,9 @@ end function
 
 sub closeDialog(event as object)
     ?"closeCustomDialog"
-  
     m.top.removeChild(event.getRosgNode())
     m.top.setFocus(true)
+
 end sub
 
 sub ChannelResponseData()
@@ -325,7 +337,9 @@ sub ChannelResponseData()
     m.top.signalBeacon("AppLaunchComplete")
     m.timeGride.setFocus(true)
     m.ChannelData = m.ChannelEpisodeTask.ChannelData
+
     initGrigData(m.ChannelData)
+    
     m.channelListData = 0
     m.channelNameString = "ALL"
     m.lazyLoadingTimer.control = "start"
@@ -522,7 +536,7 @@ function programSelected(event as object) as object
     m.drmKeyApiCall.callType = "GET"
     m.drmKeyApiCall.url = drmkeyUrl()
     m.drmKeyApiCall.observeField("apiResponse", "apiResponse")
-    m.ApiCall.observeField("errorMessage", "errorDialogShow")
+    m.drmKeyApiCall.observeField("errorMessage", "errorDialogShow")
     m.drmKeyApiCall.control = "RUN"
 
     ' m.ApiCall = CreateObject("roSGNode", "ApiCall")

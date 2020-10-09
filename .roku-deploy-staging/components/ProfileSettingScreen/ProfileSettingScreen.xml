@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ProfileSettingScreen" extends="Group" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/ProfileSettingScreen/ProfileSettingScreen.brs" />
+	
+	
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	<script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />
+  
+	
+	<interface>	
+	  <field id="dialog"  type="node"/>
+	  <field id="logout"  type="boolean" alwaysnotify="true"/>
+	  <field id="exitView"  type="boolean" alwaysnotify="true"/>
+	</interface>
+	
+	<children>
+	  
+	   <Poster id="LoginBackgroundImage"
+	          height="1080"
+	          width="1920"
+	          loadwidth="1280"
+	          loadheight="720"
+	          uri="pkg:/images/home/homeScreenBckgrndhd.png" 
+	          loadDisplayMode = "scaleTofill"
+	           />
+	           
+       
+     <Label  text="SETTINGS"
+             id="Settings"
+             translation= "[151,59]"/>
+     
+     
+      <!-- <Poster
+          uri="pkg:/images/home/profileSetting.png"
+          translation= "[1350,50]"
+          loadDisplayMode="scaletofill"
+          height="56"
+          width="56" >
+      
+        <Label  text="CHANNELS"
+             id="Channels"
+             translation= "[70,10]"/>
+      </Poster> -->
+      
+      <Poster
+          uri="pkg:/images/home/backNavIcon.png"
+          translation= "[1627,44]"
+          height="56"
+          width="56"
+          loadDisplayMode="scaletofill">
+      
+        <Label 
+        text="LIVE TV"
+             id="pressbackLabel" 
+             translation= "[70,15]"/>
+      </Poster>
+      
+      
+      <MarkupGrid id = "ProfileCategory"
+                 itemComponentName = "ProfileItemComponent"
+                 itemSpacing = "[ 70, 0 ]" 
+                 numColumns="7" 
+                 numRows="1" 
+                 itemSize="[280,268]" 
+                 translation= "[120,406]"
+                 drawFocusFeedback="false"/> 
+                 
+       
+       <Poster
+         id = "logoutView"          
+         visible="false"
+         width  = "1223"
+         height = "724"
+         
+          uri="pkg:/images/profile/profile_dialog.png"    
+         loadDisplayMode = "scaleToFill" >
+           
+         <Label
+         
+             id = "logoutText" 
+             text = ""
+             width  = "1223"
+             horizAlign="center"
+             vertAlign="center"
+             height = "36" 
+             translation = "[0,117]"/>             
+           
+            <Button id="NoButton"
+                 visible="true"                
+                 translation= "[275,287]"
+                 minWidth  = "275"
+                 maxWidth  = "275"                
+                 focusedTextColor="#FFFFFF"
+                 height = "84"
+                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
+                 focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                 BitmapUri =               "pkg:/images/profile/button1focus.png"
+                 showFocusFootprint="true"             
+                 iconUri=""
+                 focusedIconUri=""
+                 horizAlign="center">
+                
+                <Label   
+                        id="labelNo"
+                        horizAlign="center"
+                        height = "84"
+                        Width  = "275"
+                        vertAlign = "center"
+                        text="No" />
+             </Button>  
+            <Button 
+                
+                id="YesButton"
+                visible="true"                
+                translation= "[669,287]"
+                minWidth  = "275"
+                maxWidth  = "275"                
+                focusedTextColor="#FFFFFF"
+                height = "84"
+                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
+                focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                BitmapUri =               "pkg:/images/profile/button1focus.png"
+                iconUri=""
+                focusedIconUri=""
+                showFocusFootprint="true"
+                horizAlign="center">
+                <Label  
+                        id="labelYes"
+                        horizAlign="center"
+                        height = "84"
+                        Width  = "275"
+                        vertAlign = "center"
+                        text="Yes" />
+            </Button>         
+          
+       
+         </Poster> 
+     <Poster
+                 
+         id = "profileView"
+         width  = "1223"
+         height = "724"
+         
+         uri="pkg:/images/profile/profile_dialog.png"    
+         loadDisplayMode = "scaleToFill" 
+         
+          visible = "false"
+           translation = "[ 349, 224]" 
+           >   
+        
+          
+              <MarkupList id = "dialogOptions"
+                 itemComponentName = "dialogOptionsItemComponent"
+                 itemSpacing = "[ 0, 50 ]" 
+                 numRows="4"                  
+                 itemSize="[816,52]" 
+                 translation= "[203,93]"
+                 drawFocusFeedback="false"/>
+                 
+               <MarkupList id = "registredDevicesMarkup"
+                 itemComponentName = "RegistredDeviceItemComponent"
+                 itemSpacing = "[ 0, 50 ]" 
+                 numRows="4"                  
+                 itemSize="[1150,50]" 
+                 translation= "[100,93]"
+                 drawFocusFeedback="false"/>  
+                 
+        <Button id="ok"
+                visible="true"
+                
+                translation= "[471,589]"
+                minWidth  = "275"
+                maxWidth  = "275"
+               
+                focusedTextColor="#FFFFFF"
+                height = "84"
+                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
+                focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                BitmapUri =               "pkg:/images/profile/button1focus.png"
+                showFocusFootprint="true"
+                iconUri=""
+                focusedIconUri=""
+                horizAlign="center">
+                <Label  id="Lbaelok"
+                        horizAlign="center"
+                        height = "84"
+                        Width  = "275"
+                        vertAlign = "center"
+                        text="OK" />
+                </Button>   
+          
+    
+             
+     </Poster>
+       
+       <Rectangle
+                id="LoaderBackground"
+                color="0x000000FF"
+                visible="false"
+                opacity="0.65"
+              />
+	        <BusySpinner 
+	 
+	    		id = "LoginBusySpinner" 
+		    	visible = "false"
+			  />
+			  
+        <Group id="ErrorDialogView" visible = "false"> 
+        
+              <Rectangle
+                  id="dialogfadeBackground"
+                  color="#000000"
+                  
+                  opacity="0.65"
+               />
+	          <Poster id = "backgroungPoster"
+	                   translation = "[ 497, 319 ]"
+	                    width="923.00"
+	                    height="500.00"
+	                    uri="pkg:/images/profile/dialogBackground.png"   />
+	          <Label  id = "messageBody"
+	                        translation = "[ 643, 408 ]"
+	                        width="658.00"
+	                        height="177.00"
+	                        horizAlign="center"
+	                        vertAlign="center"
+                            /> 
+	       
+	                
+              <Button id = "buttonClick"
+                      visible="true"
+                
+                      translation= "[835,672]"
+                      minWidth  = "270"
+                      maxWidth  = "270"
+                
+                      focusedTextColor="#FFFFFF"
+                      height = "96"
+                      focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
+                      focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                      BitmapUri =               "pkg:/images/profile/button1focus.png"
+                      showFocusFootprint="true"
+                      iconUri=""
+                      focusedIconUri=""
+                      text="Retry"
+                     
+                      >
+               
+                </Button> 
+        
+            </Group>   
+	</children>
+</component>

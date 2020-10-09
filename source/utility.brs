@@ -141,7 +141,8 @@ function APICall(url as String, callType as String, data as Object, parameters a
         requestObject.SetUrl(url)
     end if
 
-    ' ? "request url:"; url
+    ? "request url:"; url
+    ?"method :";callType
     requestObject.addHeader("Content-Type", "application/json")
     requestObject.addHeader("Authorization", "Bearer " + getAccountToken())
     requestObject.setCertificatesFile("common:/certs/ca-bundle.crt")

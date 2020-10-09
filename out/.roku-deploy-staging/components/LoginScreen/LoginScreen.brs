@@ -523,9 +523,9 @@ sub dialogButtonResponse()
     if m.loginsuccess = true and m.dialog.buttonSelected = 0
         
         CloseScreen(m.top)
-        ShowScreen(CreateObject("roSgNode","HomeScreen"))
-        ' m.dialog.close = true
-        ' m.top.visible = false
+        ' ShowScreen(CreateObject("roSgNode","HomeScreen"))
+        m.dialog.close = true
+        m.top.visible = false
     end if
 end sub
 
