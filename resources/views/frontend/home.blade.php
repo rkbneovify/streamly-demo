@@ -1,5 +1,216 @@
 @extends('frontend/partials/master')
 
+@section('stylesheets-bottom')
+	<style>
+		nav#mainNav {
+			background-color: #004E92;
+		}
+
+		
+	</style>
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css"> -->
+
+	<link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
+	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
+	<script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
+
+	<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script> -->
+	<script>
+
+$(function () {
+    $.FindContainer = function () {
+        $('.tab-content>div').each(function findcontent() {
+            var newindex = $('.activetab').index();
+            var newheight = $('.activetab').height();
+            $('.tab-content').animate({
+                'height': newheight+20
+            }, 100);
+            var otherindex = $(this).index();
+            var substractindex = otherindex - newindex;
+            var currentwidth = $('.multipletab').width();
+            var newpositions = substractindex * currentwidth;
+            $(this).animate({
+                'left': newpositions
+            });
+        });
+    };
+    $.FindId = function () {
+        $('.tab-content>div').each(function () {
+            if ($(this).attr('id') == $('.active').attr('id')) {
+                $('.tab-content>div').removeClass('activetab');
+                $(this).addClass('activetab');
+            }
+        });
+    };
+    $('.tab-buttons>span').first().addClass('active');
+    $('.tab-content>div').each(function () {
+        var activeid = $('.active').attr('id');
+        if ($(this).attr('id') == activeid) {
+            $(this).addClass('activetab');
+        }
+        var currentheight = $('.activetab').height();
+        var currentwidth = $('.multipletab').width();
+        var currentindex = $(this).index();
+        var currentposition = currentindex * currentwidth;
+        $(this).css({
+            'left': currentposition,
+                'width': currentwidth - 40,
+                'padding': '10px 20px'
+        });
+        $(this).attr('data-position', currentposition);
+        $('.tab-content').css('height', currentheight+20);
+    });
+    $('.tab-buttons>span').click(function () {
+
+        $('.tab-buttons>span').removeClass('active');
+        $(this).addClass('active');
+        var currentid = $('.active').attr('id');
+        $.FindId();
+        $.FindContainer();
+    });
+    $('.next').click(function () {
+        var activetabindex = $('.activetab').index() + 1;
+        var containers = $('.tab-content>div').length;
+        if (containers == activetabindex) {
+            $('.tab-buttons>span').removeClass('active');
+            $('.tab-buttons>span').first().addClass('active');
+            var currentid = $('.active').attr('id');
+            $.FindId();
+            $.FindContainer();
+        } else {
+            var currentopen = $('.active').next();
+            $('.active').removeClass('active');
+            currentopen.addClass('active');
+            $.FindId();
+            $.FindContainer();
+        }
+    });
+  $('.prev').click(function(){
+    var activetabindex = $('.activetab').index();
+        if (activetabindex == 0) {
+            $('.tab-buttons>span').removeClass('active');
+            $('.tab-buttons>span').last().addClass('active');
+            var currentid = $('.active').attr('id');
+            $.FindId();
+            $.FindContainer();
+        } else {
+            var currentopen = $('.active').prev();
+            $('.active').removeClass('active');
+            currentopen.addClass('active');
+            $.FindId();
+            $.FindContainer();
+        }
+  });
+});
+		/*$('.live-news-carousel').owlCarousel({
+		    center: true,
+		    items:6,
+		    loop:true,
+		    margin:10,
+		    nav: true,
+		    responsive:{
+		        600:{
+		            items:4
+		        }
+		    }
+
+		});*/
+		$(document).ready(function() {
+     
+		var owl = $('.owl-carousel');
+		$.ajaxSetup({
+
+headers: {
+
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+
+}
+
+});
+			owl.owlCarousel({
+				slideBy: 6,
+				loop:true,
+			    margin:20,
+			    nav: true,
+			    responsiveClass:true,
+			    responsive:{
+			        0:{
+			            items:1,
+			            nav:true
+			        },
+			        600:{
+			            items:3,
+			            nav:false
+			        },
+			        1000:{
+			            items:6,
+			            nav:true,
+			            loop:false
+			        }
+			    }
+			});
+		
+		$(document).on('click','.btn-submit',function(e){
+
+
+e.preventDefault();
+let channelid = $(this).data('id');
+
+
+$.ajax({
+
+	 type:'POST',
+
+	 url:"{{ url('favorite') }}",
+
+	 data:{channelid:channelid,
+	 },
+
+	 success:function(data){
+	$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+
+	 }
+
+});
+
+
+
+});	
+$(document).on('click','.btn-remove',function(e){
+	
+
+
+
+e.preventDefault();
+let channelid = $(this).data('id');
+
+$.ajax({
+
+	 type:'POST',
+
+	 url:"{{ url('unfavorite') }}",
+
+	 data:{channelid:channelid,
+	 },
+
+	 success:function(data){
+
+	$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+
+	 }
+
+});
+
+
+
+});
+		});
+	</script>
+
+
+@endsection
 @section('stylesheets')
     <style>
                .grow { transition: width 2s;}
@@ -78,10 +289,10 @@
 		justify-content: center;
 		padding: 0;
 		margin: 0;
-		background: -webkit-linear-gradient(98deg, #000428 0%, #004E92 100%);
+		/* background: -webkit-linear-gradient(98deg, #000428 0%, #004E92 100%);
 		background: -moz-linear-gradient(98deg, #000428 0%, #004E92 100%);
-		background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
-		background-color: #15101E;
+		background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box; */
+		/* background-color: #15101E; */
 		background-image: null;
 		background-size: cover;
 		background-repeat: no-repeat;
@@ -168,13 +379,17 @@
 	
 	.css-5nata0 .upper-section .content .apps,
 	[data-css-5nata0] .upper-section .content .apps {
-		margin: 26px 0 20px;
-		padding: 8px 30px;
-		font-size: 16px;
-		line-height: 21px;
-		background-color: transparent;
-		border: 2px solid #FFFFFF;
-		border-radius: 20px;
+        margin: 20px 0;
+        width: 296px;
+height: 64px;
+  background: linear-gradient(to right, #F7B292 50%, #FF712F 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all .5s ease-out;
+  color: #202020;
+  padding: 1rem 2rem !important;
+		/* background-color: transparent; */
+		
 		align-self: flex-start;
 		-webkit-align-self: flex-start;
 	}
@@ -279,8 +494,12 @@
     .css-5nata0 .upper-section .content, [data-css-5nata0] .upper-section .content {
     position: absolute;
     left: 100px;
-    color: #fff;
+    /* color: #fff; */
 }
+
+/* for genre channel */
+
+
 	
     </style>
 @endsection
@@ -535,7 +754,7 @@
         </div>
     </section>
 <!-- Channel logo Grid-->
-<section class="page-section bg-light" id="portfolio">
+{{-- <section class="page-section bg-light" id="portfolio">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading">Available Channels</h2>
@@ -552,6 +771,101 @@
 
               </div>
         </div>
+    </div>
+</section> --}}
+
+<style>.custom-row .row{
+    margin-top: 2rem;
+}
+.col-centered {
+		    margin: 0 auto;
+		    position: relative;
+		}
+
+		.faq-btn{
+			background: #004E92 0% 0% no-repeat padding-box;
+			border: 0.25px solid #707070;
+			border-radius: 18px;
+			color: white;
+			padding: 0.4rem 1rem;
+		}
+
+		.faq-btn.collapsed {
+			background: #FFFFFF 0% 0% no-repeat padding-box;
+			color: #5E5E5E;
+		}
+
+		#accordion-child .card {
+		    margin-top: 5px;
+		}
+
+		[data-toggle="collapse"] .fa:before {   
+		  content: "\f107";
+		}
+
+		[data-toggle="collapse"].collapsed .fa:before {
+		  content: "\f106";
+		}
+        #tab-buttons>a { display:block;
+  float:left;
+  cursor:pointer;
+  color:#666;
+  font:400 15px 'pt sans',sans-serif;
+  
+  padding:0 15px;
+  line-height:40px !important;
+  border: 2px solid #FF712F;}
+  #tab-buttons>a:not(.collapsed){
+  background:#FF712F;
+  color:#FFFFFF;
+  position:relative;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+  
+    width: 163px;
+    height: 41px;
+
+}
+</style>
+<section class="page-section bg-light">
+    <div class="container">
+        <div class="text-center">
+
+            <h2 class="section-heading">Available Channels</h2>
+            <div class="row">
+                <div class="col-centered" id="tab-buttons">
+                    <a href="#Movies" class="btn btn-sm btn-default faq-btn" data-toggle="collapse">Movies</a>
+                
+                    <a href="#Others" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Others</a>
+                
+                    <a href="#Comedy" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Comedy</a>
+                    <a href="#News" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">News</a>
+                    <a href="#Sports" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Sports</a>
+                    <a href="#Family" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Family</a>
+                    <a href="#Kids" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Kids</a>
+                </div>
+            </div>
+        </div>
+    <div class="row col-centered" id="accordion">
+        @foreach($pagechannel2 as $key => $user)
+        
+        @if($key=='Movies')
+    <div id="{{$key}}" class="col-sm-12 collapse  text-center show" data-parent="#accordion">
+        <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
+        <div class="item1"> 
+            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" alt="Logo of {{$channeldet2->callSign}}">
+        </div>  @endforeach</div></div>
+    </div>
+    @else
+
+    <div id="{{$key}}" class="col-sm-12 collapse  text-center " data-parent="#accordion">
+        <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
+        <div class="item1"> 
+            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" alt="Logo of {{$channeldet2->callSign}}">
+        </div>  @endforeach</div></div>
+    </div>
+@endif
+    @endforeach
+</div>
     </div>
 </section>
 <style>
@@ -574,7 +888,7 @@
     }
     </style>
     <!-- Portfolio Grid-->
-    <section class="page-section bg-light" id="portfolio">
+    {{-- <section class="page-section bg-light" id="portfolio">
         <div class="container">
             <div class="text-center">
                 <h2 class="section-heading">Download Our App</h2>
@@ -603,16 +917,16 @@
                 </div>
             </div>
         </div>
-    </section> 
-    {{-- <section class="page-section bg-light" id="portfolio">
-        <div class="container">
+    </section>  --}}
+     <section class="page-section " id="portfolio">
+        {{-- <div class="container">
             <div class="text-center">
                 <h2 class="section-heading">Download Our App</h2>
             </div>
-        </div>
-    </section>
+            
+        </div> --}}
 
-    {{-- <div class="css-thjkr7">
+    <div class="css-thjkr7">
         <div class="css-5nata0">
             <div class="upper-section">
                 <div class="content">
@@ -620,15 +934,209 @@
                         <br> your devices.</div>
                     <div class="sub-title">Download the free Streamly apps for all your devices.
                         <br> Watch what you want, when you want.</div>
-                    <div class="apps css-q9bl1b" style="
-                    width: 242px;
-                "><a href="{{ url('/devices') }}" style="    text-decoration: none;
-    outline: none;
-    color: unset;">See all apps and devices</a></div>
+                    <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
                 </div>
                 <div class="devices-preview"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/us-devices-preview.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=2 2x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=3 3x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=4 4x" alt="image of tv guide"></div>
             </div>
-            <div class="support-platforms"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/platform-logos.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/devices/platform-logos@2x.png?ch=width&amp;auto=format,compress 2x" alt="supported platform logo"></div>
         </div>
-    </div> --}}
+
+        <div class="flex-container space-evenly">
+            
+            <svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg>
+              
+              <svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg>
+              <svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg>
+              <svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg>
+              <svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg>
+              <svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
+                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg> </div>
+    </div>
+    </section>
+<style>
+    .flex-container {
+        width: 100%;   
+    
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+}
+
+.space-evenly { 
+  justify-content: space-evenly; 
+}
+    .hovicon {
+        display: inline-block;
+        font-size: 45px;
+        line-height: 90px;
+        cursor: pointer;
+        margin: 20px;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        text-align: center;
+        position: relative;
+        text-decoration: none;
+        z-index: 1;
+        color: #fff;
+    }
+    
+.hovicon:after {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    content:'';
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.hovicon:before {
+    speak: none;
+    font-size: 48px;
+    line-height: 90px;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    display: block;
+    -webkit-font-smoothing: antialiased;
+}
+/* Effect 1 */
+.hovicon.effect-1 {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-transition: background 0.2s, color 0.2s;
+    -moz-transition: background 0.2s, color 0.2s;
+    transition: background 0.2s, color 0.2s;
+}
+.hovicon.effect-1:after {
+    top: -7px;
+    left: -7px;
+    padding: 7px;
+    box-shadow: 0 0 0 4px #FF712F;
+    -webkit-transition: -webkit-transform 0.2s, opacity 0.2s;
+    -webkit-transform: scale(1);
+    -moz-transition: -moz-transform 0.2s, opacity 0.2s;
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transition: transform 0.2s, opacity 0.2s;
+    transform: scale(1);
+    opacity: 0;
+    
+}
+/* Effect 1a */
+ .hovicon.effect-1.sub-a:hover {
+    background: #000428;
+    
+}
+.hovicon.effect-1.sub-a:hover i {
+    
+}
+.hovicon.effect-1.sub-a:hover:after {
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+    opacity: 1;
+}
+
+circle {
+  fill: white;
+  fill-opacity: 0;
+  stroke: #FF712F;
+  stroke-width: 2px;
+  transition: stroke-opacity 0.8s, stroke-width 0.8s, transform 0.8s;
+  transform-origin: 50% 50%;
+  stroke-opacity: 0;
+}
+
+circle:hover {
+  stroke-opacity: 1;
+  stroke-width: 0.5;
+  transform: scale(15);
+}
+
+.circle
+{ width:140px;
+    height:140px;
+    border-radius:70px;
+    font-size:20px;
+    color:#fff;
+    line-height:100px;
+    text-align:center;
+    background:#000;
+    }
+    #roku{
+
+      background-image: url("../frontend/img/newicon/roku.png");
+
+/*background-size: cover;*/
+background-size: 87px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+    #amazonfiretv{
+
+      background-image: url("../frontend/img/newicon/andriodtv.png");
+
+/*background-size: cover;*/
+background-size: 100px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+    #appletv{
+
+      background-image: url("../frontend/img/newicon/appletv.png");
+
+/*background-size: cover;*/
+background-size: 60px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+    #iostv{
+
+      background-image: url("../frontend/img/newicon/ios.png");
+
+/*background-size: cover;*/
+background-size: 50px;
+background-repeat: no-repeat;
+background-position: center;
+    } 
+     #android{
+
+      background-image: url("../frontend/img/newicon/android.png");
+
+/*background-size: cover;*/
+background-size: 87px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+    #samsungtv{
+
+      background-image: url("../frontend/img/newicon/smarttv.png");
+
+/*background-size: cover;*/
+background-size: 87px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+
+    .circle:hover .innerCircle{
+      stroke-opacity: 1;
+  stroke-width: 0.5;
+  transform: scale(15);
+    }
+</style>
 @endsection

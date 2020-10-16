@@ -326,6 +326,7 @@ $("#my_form").submit(function(event){
 	<section class="page-section">
 		<div class="container">
 				<h2 class="section-heading text-center">Check Availability</h2>
+				
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">

@@ -145,6 +145,7 @@ Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
 Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
+Route::get('/checkAvailabilty2', 'HomeController@checkAvailabilty2');
 Route::get('/contactform', 'HomeController@contactform');
 Route::get('/devices', 'HomeController@showSupportedDevices');
 Route::get('/helpandsupport', 'HomeController@helpandsupp');
@@ -174,6 +175,8 @@ Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
+
+Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     
