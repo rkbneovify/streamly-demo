@@ -49,5 +49,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('GOOGLE_REDIRECT')
     ],
+    'usps' => [
+
+        'userid' => env('USPS_USER_ID'), // string
+        'verifyssl' => env('USPS_VERIFY_SSL'), // bool
+        'env' => env('USPS_ENV') //string
+    ],
 
 ];

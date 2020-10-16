@@ -2477,17 +2477,71 @@ fieldset:disabled a.btn {
     height: 13px;
     width: 100%;
     background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+    
 }
 
 .select-plan-card p {
     padding-top: 1rem;
 }
+.select-plan-card {
+  transition: transform .2s; /* Animation */
+}
 
 .select-plan-card h3 {
     font-weight: 400;
 }
+.select-plan-card:hover  {
+  transform: scale(1.1);
+}
+.select-plan-card>div:hover  {
+  
+  border-left: 1px solid #76788B;
+  border-right: 1px solid #76788B;
+  border-bottom: 1px solid #76788B;
+  
+}
+.select-plan-card>div:hover .btn-select-plan {
+  margin: 20px 0;
+  
+  background: linear-gradient(to right, #F7B292 50%, #FF712F 50%);
+  background-size: 200% 100%;
+  background-position: right bottom;
+  transition: all .5s ease-out;
+  color: #fff;
+  padding: 1rem 2rem !important;
+  
+  
+}
 
 .btn-select-plan {
+  margin: 20px 0;
+      background: #F7B292;
+      color: #202020;
+      padding: 1rem 2rem !important;
+  
+}
+.btn-see-all-plan {
+  margin: 20px 0;
+  background: #F7B292;
+  color: #202020;
+  padding: 1rem 2rem !important;
+  
+}
+.btn-see-all-plan:hover {
+
+
+      margin: 20px 0;
+  
+      background: linear-gradient(to right, #F7B292 50%, #FF712F 50%);
+      background-size: 200% 100%;
+      background-position: right bottom;
+      transition: all .5s ease-out;
+      color: #fff;
+      padding: 1rem 2rem !important;
+  
+}
+
+.btn-select-plan:hover {
       margin: 20px 0;
       background: transparent linear-gradient(107deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box !important;
       color: #fff;
