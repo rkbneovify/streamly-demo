@@ -17,7 +17,7 @@ use App\Models\Map;
 use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
-
+use ctwillie\Usps\Address;
 use App\Models\FrontendText;
 // use GuzzleHttp\Client;
 
@@ -58,6 +58,27 @@ class HomeController extends Controller
        $pagechannel=$record->get()->reject(function($element) use($imagePath) {
         return $element->logo == $imagePath;
     }); 
+
+
+    $record2 = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
+        
+    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+    
+    
+    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+//     ->whereIn('channels.callSign', function($query)
+// {
+//     $query->select('CallSign')
+//           ->from('gracenotechannels');
+          
+// })
+->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+   
+
+   
+  $pagechannel2=$record2->get()->reject(function($element) use($imagePath) {
+    return $element->logo == $imagePath;
+})->groupBy('genrename');
        
         //$plans=$plans->data;
         if( Auth::check()){
@@ -70,7 +91,7 @@ class HomeController extends Controller
             $login = false;
         }
 
-        return view('frontend.home', compact('login','plans','pagechannel'));
+        return view('frontend.home', compact('login','plans','pagechannel2','pagechannel'));
     }
     
    /* public function location(Request $request)
@@ -273,9 +294,79 @@ $geojson = array(
     public function checkAvailabilty()
     {
         
+$address = new Address([
+    'Address2' => '2932 Nutwood',
+    'City' => 'Fullerton',
+    'State' => 'CA',
+    'Zip5' => 92831
+]);
+$message='';
+$response = $address->validate();
+
+if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];}else{
+    dd($response);
+    $message=$response['Address'];
+}
+// if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
+ 
         $login = false; 
-        return view('frontend.checkavailbilty',compact('login'));
+        return view('frontend.checkavailbilty',compact('login','response'));
         // return view('frontend.verified');
+    }
+    public function checkAvailabilty2()
+    {
+        
+$address = new Address([
+    'Address2' => '6406 Ivy Lane',
+    'City' => 'Greenbelt',
+    'State' => 'MD',
+    'Zip5' => 20770
+]);
+$message='';
+$response = $address->validate();
+if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];}else{
+    // print_r($response);
+    $message=isset($response['Address']['ReturnText'])?$response['Address']['ReturnText']:'Seems like valid addres';
+}
+// if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
+// dd($response);
+        $login = false; 
+        return view('frontend.checkavailbilty2',compact('login','response'));
+        // return view('frontend.verified');
+    }
+
+    public function addressCheck(Request $request)
+    { //dd($request);
+        
+        if($request->has('Address2')){
+            
+            
+            try {
+             
+$address = new Address([
+    'Address2' => $request->input('Address2'),
+    'City' => $request->input('City'),
+    'State' => $request->input('State'),
+    'Zip5' => $request->input('zip')
+]);
+$message='';
+$response = $address->validate();
+if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];
+    return response()->json(['message' => $message], 404);}else{
+    // print_r($response);
+    $message=isset($response['Address']['ReturnText'])?$response['Address']['ReturnText']:'Seems like valid address';
+    //todo insert into address logic
+    //$request->input('Address2').$request->input('City').$request->input('State').$request->input('zip')
+    return response()->json(['message' => $message], 200);
+
+}
+
+            } catch (Exception $e) {
+                return response()->json(['message' => $e->getMessage()], 400);
+            }
+         
+        }
+        
     }
     public function contactform()
     {

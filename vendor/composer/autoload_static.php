@@ -41,6 +41,10 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
+        'c' => 
+        array (
+            'ctwillie\\Usps\\' => 14,
+        ),
         'Z' => 
         array (
             'Zizaco\\Entrust\\' => 15,
@@ -96,6 +100,7 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
             'Svg\\' => 4,
             'Stripe\\' => 7,
             'Spatie\\TemporaryDirectory\\' => 26,
+            'Spatie\\ArrayToXml\\' => 18,
         ),
         'R' => 
         array (
@@ -204,6 +209,10 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
+        'ctwillie\\Usps\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ctwillie/laravel-usps/src',
         ),
         'Zizaco\\Entrust\\' => 
         array (
@@ -356,6 +365,10 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
         'Spatie\\TemporaryDirectory\\' => 
         array (
             0 => __DIR__ . '/..' . '/spatie/temporary-directory/src',
+        ),
+        'Spatie\\ArrayToXml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/array-to-xml/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (
@@ -661,6 +674,7 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
         'App\\Http\\Controllers\\Admin\\GracenoteController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/GracenoteController.php',
         'App\\Http\\Controllers\\Admin\\SubscriptionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SubscriptionController.php',
         'App\\Http\\Controllers\\Admin\\SubscriptionPackController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SubscriptionPackController.php',
+        'App\\Http\\Controllers\\Admin\\TurfController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/TurfController.php',
         'App\\Http\\Controllers\\Admin\\UserAndRoleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserAndRoleController.php',
         'App\\Http\\Controllers\\Admin\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UsersController.php',
         'App\\Http\\Controllers\\Auth\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthController.php',
@@ -5407,6 +5421,7 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
         'SebastianBergmann\\Timer\\RuntimeException' => __DIR__ . '/..' . '/phpunit/php-timer/src/RuntimeException.php',
         'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Spatie\\ArrayToXml\\ArrayToXml' => __DIR__ . '/..' . '/spatie/array-to-xml/src/ArrayToXml.php',
         'Spatie\\TemporaryDirectory\\TemporaryDirectory' => __DIR__ . '/..' . '/spatie/temporary-directory/src/TemporaryDirectory.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Stripe\\Account' => __DIR__ . '/..' . '/stripe/stripe-php/lib/Account.php',
@@ -6590,6 +6605,8 @@ class ComposerStaticInit9c4bd5d1ad80bfec7363be31424bacdc
         'Zizaco\\Entrust\\Traits\\EntrustPermissionTrait' => __DIR__ . '/..' . '/gghughunishvili/entrust/src/Entrust/Traits/EntrustPermissionTrait.php',
         'Zizaco\\Entrust\\Traits\\EntrustRoleTrait' => __DIR__ . '/..' . '/gghughunishvili/entrust/src/Entrust/Traits/EntrustRoleTrait.php',
         'Zizaco\\Entrust\\Traits\\EntrustUserTrait' => __DIR__ . '/..' . '/gghughunishvili/entrust/src/Entrust/Traits/EntrustUserTrait.php',
+        'ctwillie\\Usps\\API' => __DIR__ . '/..' . '/ctwillie/laravel-usps/src/API.php',
+        'ctwillie\\Usps\\Address' => __DIR__ . '/..' . '/ctwillie/laravel-usps/src/Address.php',
         'phpDocumentor\\Reflection\\DocBlock' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlock.php',
         'phpDocumentor\\Reflection\\DocBlockFactory' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactory.php',
         'phpDocumentor\\Reflection\\DocBlockFactoryInterface' => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src/DocBlockFactoryInterface.php',
