@@ -12,6 +12,9 @@ sub init()
    setHeader()  
    
 
+   'search result list 
+  '  m.ChannelsMarkuGrid = m.top.findnode("ChannelsMarkuGrid")
+
     'spinner
     m.spinner = m.top.CreateChild("BusySpinner")
     m.spinner.visible = false
@@ -30,16 +33,31 @@ sub init()
     m.searchStart.focusedIconUri =""
     m.searchStart.iconUri="" 
     m.searchStart.setFocus(false) 
+
+    m.global.RSG_analytics.trackEvent = {
+      google: {
+          ec: "Channel_Search_Screen",
+          ea: "Launch_complete"
+      }
+  }
 end sub
 
 
 
 sub resultentList()
 ?"resultentList"   
-   m.labelList = m.top.createChild("LabelList")   
-   m.labelList.id = "labelList"
-   m.labelList.translation = "[800,200]" 
-   m.labelList.observeField("itemSelected","setChannelUrl")
+   m.ChannelsMarkuGrid = m.top.createChild("MarkupGrid")   
+   m.ChannelsMarkuGrid.id = "ChannelsMarkuGrid"
+   m.ChannelsMarkuGrid.translation = "[800,200]" 
+   m.ChannelsMarkuGrid.itemComponentName = "ChannellistMarkuGridComponent"
+   m.ChannelsMarkuGrid.itemSpacing = "[ 0, 0 ]" 
+   m.ChannelsMarkuGrid.rowSpacings = "[ 0, 0 ]" 
+   m.ChannelsMarkuGrid. numColumns="4" 
+   m.ChannelsMarkuGrid. numRows="3" 
+   m.ChannelsMarkuGrid.itemSize="[250,230]" 
+                 
+   m.ChannelsMarkuGrid.drawFocusFeedback="true"
+   m.ChannelsMarkuGrid.observeField("itemSelected","setChannelUrl")
  'show response text 
    m.errorResultLabel = m.top.createChild("Label")
    m.errorResultLabel.text ="Please type some text for search the channels :" 
@@ -77,6 +95,8 @@ sub searchKeyboard()
    m.Searchkeyboard.translation = "[100,200]"
    m.Searchkeyboard.observeField("text","channelSearchText")
    m.Searchkeyboard.setFocus(true) 
+   m.Searchkeyboard .maxheight = 300
+   m.Searchkeyboard .width = 300
  
 end sub
  
@@ -139,13 +159,15 @@ sub responseAPI(event as object)
        end if 
        if channel.url<> invalid then channelDetail.url = channel.url
        if channel.id<> invalid then  channelDetail.id = channel.id
+       if channel.logo<> invalid then  channelDetail.HDSMALLICONURL = channel.logo
      end for
     else
        m.errorResultLabel.text ="No Channels for "+"' "+m.inputText+" '" 
        m.errorResultLabel.visible = true
     end if
   end if     
-      m.labelList.content = m.labelContent
+      m.ChannelsMarkuGrid.content = m.labelContent
+      m.ChannelsMarkuGrid.visible = true
 '  m.labelContent.createChild("ContentNode").title=event.getData()
   m.spinner.visible = false
 end sub
@@ -193,10 +215,10 @@ result =false
      ?"m.Searchkeyboard.hasFocus(); ";m.Searchkeyboard.hasFocus()
       if key="right"  then
          m.Searchkeyboard.setFocus(false)
-         m.labelList.setFocus(true)
+         m.ChannelsMarkuGrid.setFocus(true)
          result = true 
-      else if key="left" and m.labelList.hasFocus() then
-         m.labelList.setFocus(false)
+      else if key="left" and m.ChannelsMarkuGrid.hasFocus() then
+         m.ChannelsMarkuGrid.setFocus(false)
          m.Searchkeyboard.setFocus(true)   
         result = true 
       else if key="back" then

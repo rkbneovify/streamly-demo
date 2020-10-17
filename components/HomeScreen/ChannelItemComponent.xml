@@ -5,34 +5,27 @@
       <field id="content" type="node"  onChange = "showcontent" />
       <field id="width" type="float" />
       <field id="height" type="float" />
+      <field id = "listHasFocus" type = "boolean" onChange = "setfocus"/>
+      <field id = "focusPercent" type = "float" onChange = "setfocus"/>  
     </interface>
 	
 	<script type="text/brightscript" uri="pkg:/components/HomeScreen/ChannelItemComponent.brs" />
 <script type = "text/brightscript" >
  <![CDATA[
-
- sub init()
-    
-      m.title = m.top.findNode("title")
-      m.poster = m.top.findNode("poster")
-    
-    end sub
-
-sub showcontent()
-
-if m.top.content<>invalid
-      m.title.font= "font:SmallSystemFont"
-      m.title.font.size=22
-      m.poster.uri=m.top.content.HDSMALLICONURL
-      m.title.text = m.top.content.TITLE
-end if 
-     
-end sub  
+  
 
     ]]>
 </script>
     <children>
        
+        <Poster
+           id="channelfocusborder"
+           loadDisplayMode="scaleToFill"           
+           translation="[0,0]"
+           height="82"
+           width="280"
+           uri="pkg:/images/home/channelinfobackgrnd.png"
+        /> 
        <Poster
            
            loadDisplayMode="scaleToFill"           

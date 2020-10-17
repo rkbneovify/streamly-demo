@@ -1,5 +1,6 @@
 
 sub INIT()
+    
     ? "login init()"
 
     m.SignInLabel = m.top.findNode("SignInLabel")
@@ -530,7 +531,7 @@ sub dialogButtonResponse()
     ? "dialogButtonResponse: "m.dialog.buttonSelected
     if m.loginsuccess = true and m.dialog.buttonSelected = 0
         
-        CloseScreen(m.top)
+        ' CloseScreen(m.top)
         ' ShowScreen(CreateObject("roSgNode","HomeScreen"))
         m.dialog.close = true
         m.top.visible = false

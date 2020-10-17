@@ -68,6 +68,7 @@ end sub
 function analyticsInit()
     
     di = CreateObject("roDeviceInfo")
+    ?"di.GetDisplaySize()";di.GetDisplaySize()
 
     m.global.addField("RSG_analytics","node",false)
     m.global.RSG_analytics = CreateObject("roSGNode","Roku_Analytics:AnalyticsNode")
@@ -86,26 +87,9 @@ function analyticsInit()
             an : "Streamly"
             av : di.GetVersion()
             cid : di.GetChannelClientId()
-            sr : Str(di.GetDisplaySize().width)+"*"+ Str(di.GetDisplaySize().height) 'must be expressed as WWWWxHHHH
+            sr : Str(di.GetDisplaySize().w)+"*"+ Str(di.GetDisplaySize().h) 'must be expressed as WWWWxHHHH
         }
-        'set proper init values for Omniture analytics
-        ' Omniture : {
-        '     baseUrl : "http://test.com/"
-        '     defaultParams : {
-        '         sv         : "AnalyticNodeSample"
-        '         v11        : "D=c11"
-        '         c11        : "<TIME_PARTING_HOUR>"
-        '         v12        : "D=c12"
-        '         c12        : "<TIME_PARTING_DAY>"
-        '         v14        : "D=c14"
-        '         c14        : "D=User-Agent:Roku/3100X"'CreateObject("roDeviceInfo").GetModel()
-        '         v55        : "D=c55"
-        '         c55        : "no sponsor"
-        '         v66        : "D=c66"
-        '         c66        : "analytic_node_sample"
-        '         ch         : "roku:analytic_node_sample"
-        '     }
-        ' }
+     
         
     }
 

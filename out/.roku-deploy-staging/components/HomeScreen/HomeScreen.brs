@@ -29,7 +29,7 @@ sub init()
     m.timeGride.numRows = 0
     '    m.video = m.top.findNode("video")
     m.video = m.top.findNode("myVideo")
-    m.video.observeField("state", "videoState")
+    ' m.video.observeField("state", "videoState")
 
     m.video.enableUI = false
     m.video.visible = false
@@ -88,7 +88,7 @@ sub init()
 
     m.timeGride.programHorizMargin = 32
     'm.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
-    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/epgbackground.png"
+    m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite3.9.png"
     ' m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite4.png"
    
     m.timeGride.overlayBitmapUri = ""
@@ -190,6 +190,166 @@ sub init()
     m.AllChannelContent = CreateObject("roSGNode", "ContentNode")
 
     ' mybutton.horiz
+
+    m.global.RSG_analytics.trackEvent = {
+        google: {
+            ec: "EPG_Screen",
+            ea: "EPG_Launch"
+        }
+    }
+    SetupVideoPlayer()
+end sub
+
+Sub SetupVideoPlayer()
+    
+    ' m.Video = m.top.findNode("VideoPlayer")
+    m.video.observeField("state","onStateChange")
+    m.video.observeField("position","onPositionChange")
+    m.video.observeField("visible","onVisibleChange")
+    m.video.observeField("content","onContentChange")
+    m.video.observeField("streamInfo","onStreamInfoChange")
+    m.video.notificationInterval = 1
+
+    'map of events that should be handled on state change
+    m.statestToHandle = {
+        "stopped" :""
+        "playing":""
+        "paused":""
+        "error":""
+        "finished":""
+    }
+    m.position = 0
+End Sub
+
+sub onStateChange()
+    ?"state:"m.Video.state
+
+    ? "videoState"; m.video.state
+    ? "completedStreamInfo"; m.video.completedStreamInfo
+
+
+    '  if m.video.state="playing"
+    '     m.video.control="pause"
+    '      m.video.mute = false
+    if m.video.state = "error"
+        print "m.video.errorCode: "; m.video.errorCode
+        print "m.video.errorMsg: "; m.video.errorMsg
+        print "m.vdeo.errorStr: "; m.video.errorStr
+        print "m.vdeo.errorInfo: "; m.video.errorInfo
+        print "m.vdeo.completedStreamInfo: "; m.video.completedStreamInfo
+
+        m.video.control = "stop"
+        m.ChannelsGroup.visible = true
+        m.video.visible = true
+        m.video.setFocus(false)
+        m.timeGride.setFocus(true)
+    end if
+   
+    if m.Video.content <> invalid AND m.statestToHandle[m.Video.state] <> invalid
+        'we have a state that should be fired
+        'store these states in map so you won't receive unhandled states or have string case sensitive issues
+        state = m.Video.state
+        
+        'Convert video node state to proper GA event name
+        GoogleEventAction = invalid
+        if state = "playing" AND m.peviousestate = "paused"
+            GoogleEventAction = "resume"
+        else if state = "playing"
+            GoogleEventAction = "progress"
+        else if state = "finished"
+            GoogleEventAction = "complete"
+        else if state = "paused"
+            GoogleEventAction = "pause"
+        else if state = "stopped"
+            GoogleEventAction = "complete"
+        end if
+        
+        'Convert video node state to proper Omniture event name
+        'you can have more than one parameter here
+      
+        GoogleParams = invalid
+        if GoogleEventAction <> invalid
+            ni = invalid
+            if GoogleEventAction = "complete" or GoogleEventAction = "progress"
+                ni = "1"
+            end if
+            GoogleParams = {
+                t : "event"
+                ec : "video"
+                ea : GoogleEventAction
+                el : m.video.content.title
+                ev : int(m.video.position).tostr()
+                ni : ni
+            }
+        end if
+
+        m.global.RSG_analytics.trackEvent = {
+            Google      : GoogleParams
+        }
+        
+        m.peviousestate = state           
+        if state = "error" or state = "finished"
+            m.timer = CreateObject("roSgnode", "Timer")
+            m.timer.observeField("fire","CloseVideoPlayer")
+            m.timer.duration = 0.3
+            m.timer.control = "start"
+        end if
+    end if
+    
+end sub
+
+sub onPositionChange()
+    if m.video.duration > 0 Then
+        EventAction = "progress"      
+        'this is logic for seek events, this should be done here not in onkeyevent as it should only be send once per seek
+        if m.video.content <> invalid AND  m.userHasSeeked = true
+             m.userHasSeeked = false
+            ?"send fast seek event"
+            if int(m.video.position) < m.position 
+                 EventAction = "rewind"
+                 ev = "event28,event72"
+            else
+                 EventAction = "fast forward"
+                 ev = "event28,event73"
+            end if
+            m.global.RSG_analytics.trackEvent = {
+                Google : {
+                    t : "event"
+                    ec : "video"
+                    ea : EventAction
+                    el : m.video.content.title
+                    ev : int(m.video.position).tostr()
+                }
+              
+            }
+        end if
+        
+        'calculate if it's quartal event
+        quarts = m.video.duration / 4
+        event = invalid
+        If int(m.video.Position) = Int(quarts) Then
+            event = "event26,event72"
+        Else If int(m.video.Position) = Int(quarts * 2) Then
+            event = "event27,event72"
+        Else If int(m.video.Position) = Int(quarts * 3) Then
+            event = "event28,event72"
+        End If
+        if event <> invalid
+            ?"CustomVideo: quarts ["quarts"] event="event
+            m.global.RSG_analytics.trackEvent = {
+                Google : {
+                    t : "event"
+                    ec : "video"
+                    ea : EventAction
+                    el : m.video.content.title
+                    ev : int(m.video.position).tostr()
+                    ni : "1"
+                }        
+            }
+        end if
+    End If
+    'store previous position so you can now if user really skipped video
+    m.position = int(m.video.position)
 end sub
 
 ' sub StartProgramUpdating()
@@ -211,13 +371,23 @@ end sub
 ' end sub
 sub RestartLazyLoadingTimer()
     ? "RestartLazyLoadingTimer"
+
     m.lazyLoadingTimer.control = "stop"
     m.lazyLoadingTimer.control = "start"
+
 end sub
 
 sub channelFocused(event as object)
-    ' ? "channelFocused:"; event.getData()
+    ? "m.timeGride.content:";m.timeGride.content
     'm.lazyLoadingTimer.control = "start"
+
+    if m.timeGride.content<>invalid
+        m.timeGride.content.getChild(m.timeGride.channelFocused).channelfocus = true    
+    end if
+ if m.timeGride.channelFocused <> -1
+    ' ?"event.getRoSGNode().content.getChild(m.timeGride.channelFocused)" event.getRoSGNode().content.getChild(m.timeGride.channelFocused)
+
+end if   
     if m.channelListData < 8 and event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
         channelnode = event.getRoSGNode().content
@@ -318,9 +488,9 @@ end function
 
 sub closeDialog(event as object)
     ?"closeCustomDialog"
-  
     m.top.removeChild(event.getRosgNode())
     m.top.setFocus(true)
+
 end sub
 
 sub ChannelResponseData()
@@ -329,7 +499,11 @@ sub ChannelResponseData()
     m.top.signalBeacon("AppLaunchComplete")
     m.timeGride.setFocus(true)
     m.ChannelData = m.ChannelEpisodeTask.ChannelData
+
+
+
     initGrigData(m.ChannelData)
+    
     m.channelListData = 0
     m.channelNameString = "ALL"
     m.lazyLoadingTimer.control = "start"
@@ -338,6 +512,13 @@ sub ChannelResponseData()
     '    this.epgContent
     '    this.channelIndexUpdate
     '    this.categorySring
+
+    m.global.RSG_analytics.trackEvent = {
+        google: {
+            ec: "EPG_Screen",
+            ea: "EPG_launch_complete"
+        }
+    }
 end sub
 
 function playVideo(liveStreamData as object, drmKey as string) as void
@@ -357,30 +538,33 @@ function playVideo(liveStreamData as object, drmKey as string) as void
 
     drmParams = {
         keySystem: "Widevine"
-        licenseServerURL: "https://wv-keyos.licensekeyserver.com/"
-    }
+        licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Widevine"
+    }                      
 
-    vidContent.streamformat = "dash"
+    vidContent.streamformat = "smooth"
     vidContent.drmParams = drmParams
     ' vidContent.HttpHeaders=["customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="]
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd"
+   ?"liveStreamData.url";liveStreamData.url
     vidContent.url = liveStreamData.url
+    ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/Manifest"
 
 
-    httpAgent = CreateObject("roHttpAgent")
-    httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    httpAgent.InitClientCertificates()
-    httpAgent.EnableCookies()
-    httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
-    httpAgent.AddHeader("Accept", "text/xml")
-    headers = {
+    ' httpAgent = CreateObject("roHttpAgent")
+    ' httpAgent.SetCertificatesFile("common:/certs/ca-bundle.crt")
+    ' httpAgent.InitClientCertificates()
+    ' httpAgent.EnableCookies()
+    ' httpAgent.AddHeader("X-Roku-Reserved-Dev-Id", "")
+    ' httpAgent.AddHeader("Accept", "text/xml")
+    ' ' headers = {
 
-        "customdata": drmKey
-        ' "customdata":"PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTA5IDExOjU5OjE1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDkgMTI6MTQ6MTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YjNmOGU3NTBiYzIwY2VmOGEyOTJkNmE4NDE4ZDMwYTE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+Y0lyaXhMMUk5NW51UWQ4V2NwUWZmVWFNNGVBWEJQajFIS3I4WENtNkh2bDM0eWNIL0M5Y1RXSy9DaEVKQlJ4Um5XOUJhREsrZGgxZ0VGN1hMYVZRSERETmp0NklKYVJvNjduUzJjN244QjVINmlwUWRpd3E4dS8wM2tCVjRydG9EQlJWTndXUXdQbm91Wm95a1JETzdiK0hjU0tRaUhwZkQySFlKWHo0alBRb0pEb1J4VUFQNm9FYVJDUW0yNzJZUzlNaFZkYURDSGgyaW81enMwY3RsdEhkb0xqTlBqZEZvMVIyV0t1R0lmNktuK0FSVzZXeHgrbTNySzJiMlFPOCtRSG1Xb0FzTFMxcU9yMDRTZjVKdXFIMERIaUgwSlFKbkpaOTBlTUptYU9QZ052RDBRcDdDMWh1MFlqTU5mTVgrbzRyMUFyeHVCMmhOWVVyQ0tQb1hnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
-    }
+    ' '     "customdata": drmKey
+    ' '     ' "x-keyos-authorization": drmKey
+    ' '     ' "customdata":"PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTA5IDExOjU5OjE1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDkgMTI6MTQ6MTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YjNmOGU3NTBiYzIwY2VmOGEyOTJkNmE4NDE4ZDMwYTE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+Y0lyaXhMMUk5NW51UWQ4V2NwUWZmVWFNNGVBWEJQajFIS3I4WENtNkh2bDM0eWNIL0M5Y1RXSy9DaEVKQlJ4Um5XOUJhREsrZGgxZ0VGN1hMYVZRSERETmp0NklKYVJvNjduUzJjN244QjVINmlwUWRpd3E4dS8wM2tCVjRydG9EQlJWTndXUXdQbm91Wm95a1JETzdiK0hjU0tRaUhwZkQySFlKWHo0alBRb0pEb1J4VUFQNm9FYVJDUW0yNzJZUzlNaFZkYURDSGgyaW81enMwY3RsdEhkb0xqTlBqZEZvMVIyV0t1R0lmNktuK0FSVzZXeHgrbTNySzJiMlFPOCtRSG1Xb0FzTFMxcU9yMDRTZjVKdXFIMERIaUgwSlFKbkpaOTBlTUptYU9QZ052RDBRcDdDMWh1MFlqTU5mTVgrbzRyMUFyeHVCMmhOWVVyQ0tQb1hnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
+    ' ' }
 
-    httpAgent.setheaders(headers)
-    m.video.setHttpAgent(httpAgent)
+    ' ' httpAgent.setheaders(headers)
+    ' ' m.video.setHttpAgent(httpAgent)
     ' m.video.drmHttpAgent=httpAgent
 
 
@@ -410,28 +594,28 @@ function playVideo(liveStreamData as object, drmKey as string) as void
 end function
 
 
-sub videoState()
-    ? "videoState"; m.video.state
-    ? "completedStreamInfo"; m.video.completedStreamInfo
+' sub videoState()
+'     ? "videoState"; m.video.state
+'     ? "completedStreamInfo"; m.video.completedStreamInfo
 
 
-    '  if m.video.state="playing"
-    '     m.video.control="pause"
-    '      m.video.mute = false
-    if m.video.state = "error"
-        print "m.video.errorCode: "; m.video.errorCode
-        print "m.video.errorMsg: "; m.video.errorMsg
-        print "m.video.errorStr: "; m.video.errorStr
+'     '  if m.video.state="playing"
+'     '     m.video.control="pause"
+'     '      m.video.mute = false
+'     if m.video.state = "error"
+'         print "m.video.errorCode: "; m.video.errorCode
+'         print "m.video.errorMsg: "; m.video.errorMsg
+'         print "m.vdeo.errorStr: "; m.video.errorStr
 
-        m.video.control = "stop"
-        m.ChannelsGroup.visible = true
-        m.video.visible = true
-        m.video.setFocus(false)
-        m.timeGride.setFocus(true)
+'         m.video.control = "stop"
+'         m.ChannelsGroup.visible = true
+'         m.video.visible = true
+'         m.video.setFocus(false)
+'         m.timeGride.setFocus(true)
 
 
-    end if
-end sub
+'     end if
+' end sub
 
 sub initGrigData(channels as object)
     ? "m.ChannelCategoryMarkuGrid:init()"

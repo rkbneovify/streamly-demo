@@ -141,10 +141,11 @@ function APICall(url as String, callType as String, data as Object, parameters a
         requestObject.SetUrl(url)
     end if
 
-    ? "request url:"; url
-    ?"method :";callType
+    ' ? "request url:"; url
+    ' ?"method :";callType
     requestObject.addHeader("Content-Type", "application/json")
     requestObject.addHeader("Authorization", "Bearer " + getAccountToken())
+    requestObject.addHeader("User-Agent", "Roku/DVP-9.30 (509.30E04194A)")
     requestObject.setCertificatesFile("common:/certs/ca-bundle.crt")
     requestObject.initClientCertificates()
     requestObject.enableEncodings(true)

@@ -8,9 +8,7 @@
 	<interface>
 	 <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
 	  <field id="profileScreen" type = "boolean" alwaysnotify="true" />
-	  <field id="ExitView" type = "boolean" alwaysnotify="true" />
-	  
-	 
+	  <field id="ExitView" type = "boolean" alwaysnotify="true" />	 
 	</interface>
 	<children>
 	 

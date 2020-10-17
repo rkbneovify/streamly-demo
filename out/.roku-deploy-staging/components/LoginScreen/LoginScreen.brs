@@ -1,5 +1,6 @@
 
 sub INIT()
+    
     ? "login init()"
 
     m.SignInLabel = m.top.findNode("SignInLabel")
@@ -65,6 +66,14 @@ sub INIT()
     centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
     m.LoginBusySpinner.translation = [centerx, centery]
     m.needHelpText = ""
+
+
+    m.global.RSG_analytics.trackEvent = {
+        google: {
+            ec: "login_screen",
+            ea: "launch_complete"
+        }
+    }
 end sub
 sub termConditionUI()
     ? "termConditionUI";
@@ -522,7 +531,7 @@ sub dialogButtonResponse()
     ? "dialogButtonResponse: "m.dialog.buttonSelected
     if m.loginsuccess = true and m.dialog.buttonSelected = 0
         
-        CloseScreen(m.top)
+        ' CloseScreen(m.top)
         ' ShowScreen(CreateObject("roSgNode","HomeScreen"))
         m.dialog.close = true
         m.top.visible = false

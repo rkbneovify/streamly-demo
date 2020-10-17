@@ -7,7 +7,6 @@
      <interface>	
 	   <field id="ExitView" type="boolean" alwaysNotify="true"/>
 	   <field id="dialog" type="node" alwaysNotify="true"/>
-	  
 	</interface>
 	
 <children>

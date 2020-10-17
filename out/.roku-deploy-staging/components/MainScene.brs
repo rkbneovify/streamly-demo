@@ -2,9 +2,17 @@
 
 sub init()
     ? "MAin init()::accessToken: "; getAccountToken()
+    ? "MAin init()::getDeviceInfo: "; getDeviceInfo()
     ' InitScreenStack(m.global["screenStack"])
 '        setAccountToken("")  
 analyticsInit()
+
+' m.global.RSG_analytics.trackEvent = {
+'     google: {
+'         ec: "navigation",
+'         ea: "channel_launch"
+'     }
+' }
 
     if getAccountToken() <> invalid and getAccountToken() <> ""
         ? "login successfully: accessToken: "; getAccountToken()
@@ -59,6 +67,9 @@ sub showDialog(event as Object)
 end sub
 function analyticsInit()
     
+    di = CreateObject("roDeviceInfo")
+    ?"di.GetDisplaySize()";di.GetDisplaySize()
+
     m.global.addField("RSG_analytics","node",false)
     m.global.RSG_analytics = CreateObject("roSGNode","Roku_Analytics:AnalyticsNode")
     'disables all debug prints, enable it in order to see which events are fired
@@ -71,27 +82,14 @@ function analyticsInit()
         Google : {
             trackingID : "UA-107042774-1"
             defaultParams : {
-                an : "RokuAnalyticsClient"
+                ' an : "RokuAnalyticsClient"
             }
+            an : "Streamly"
+            av : di.GetVersion()
+            cid : di.GetChannelClientId()
+            sr : Str(di.GetDisplaySize().w)+"*"+ Str(di.GetDisplaySize().h) 'must be expressed as WWWWxHHHH
         }
-        'set proper init values for Omniture analytics
-        ' Omniture : {
-        '     baseUrl : "http://test.com/"
-        '     defaultParams : {
-        '         sv         : "AnalyticNodeSample"
-        '         v11        : "D=c11"
-        '         c11        : "<TIME_PARTING_HOUR>"
-        '         v12        : "D=c12"
-        '         c12        : "<TIME_PARTING_DAY>"
-        '         v14        : "D=c14"
-        '         c14        : "D=User-Agent:Roku/3100X"'CreateObject("roDeviceInfo").GetModel()
-        '         v55        : "D=c55"
-        '         c55        : "no sponsor"
-        '         v66        : "D=c66"
-        '         c66        : "analytic_node_sample"
-        '         ch         : "roku:analytic_node_sample"
-        '     }
-        ' }
+     
         
     }
 

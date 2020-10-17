@@ -13,4 +13,5 @@
    <field id="playChannel" type="String" />
   </interface>
 	
+
 </component>

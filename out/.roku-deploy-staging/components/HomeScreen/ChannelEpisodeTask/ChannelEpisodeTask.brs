@@ -1,13 +1,12 @@
 sub init() ' This function retrieves and parses the feed and stores each content item in a ContentNode
-    ? "API Call INIT: "; m.top.state
+   ? "API Call INIT: "; m.top.state
     m.top.functionName = "ChannnleAPI"
 end sub
 
 sub ChannnleAPI()
     m.top.callType = "GET"
-
     jsonResponse = APICall(getBaseUrl() + getChannelListUrl(), m.top.callType, m.top.data, m.top.parameters)
-    ? "ChannnleAPI: jsonResponse"; jsonResponse
+    ' ? "ChannnleAPI: jsonResponse"; jsonResponse
 '    ? "ChannnleAPI: jsonResponse.Count(): "; jsonResponse.data.Count()
 '     m.top.categoryChannels
 if jsonResponse.responseCode = 200

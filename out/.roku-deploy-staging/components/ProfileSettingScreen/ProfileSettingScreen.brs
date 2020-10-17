@@ -63,7 +63,12 @@ sub init()
   m.dialogOptions = m.top.findNode("dialogOptions")
   m.registredDevicesMarkup = m.top.findNode("registredDevicesMarkup")
  
- 
+  m.global.RSG_analytics.trackEvent = {
+    google: {
+        ec: "profile_screen",
+        ea: "launch_complete"
+    }
+}
  initMrkupWithData()
  
  

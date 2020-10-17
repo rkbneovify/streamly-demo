@@ -1,0 +1,29 @@
+<component name="ChannellistMarkuGridComponent" extends="Group">
+  <script type="text/brightscript" uri="ChannellistMarkuGridComponent.brs" />
+  <interface>
+    <field id="itemContent" type="node"  onChange = "showcontent" />
+  
+   
+    <field id = "width" type = "float" onChange = "setSize"/>
+    <field id = "height" type = "float" onChange = "setSize"/>
+  
+    <field id = "itemHasFocus" type = "boolean" onChange = "setfocus"/>
+    <field id = "focusPercent" type = "float" onChange = "setfocus"/>
+  
+  
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/SearchScreen/ChannellistMarkuGridComponent/ChannellistMarkuGridComponent.brs" />
+
+  <children>
+
+    <Poster id = "background" loadDisplayMode="scaleToFill" translation="[0,0]"  uri="pkg:/images/home/channelinfobackgrnd.png" />
+
+    <Poster id = "poster" loadDisplayMode = "scaleToFit" translation = "[40,40]"
+            height = "130"
+            width =  "130"
+            loadHeight ="130"
+            loadWidth ="130" />
+    <!-- <Label id="title" height="50" width="120" translation="[150,35]" /> -->
+  </children>
+</component>
