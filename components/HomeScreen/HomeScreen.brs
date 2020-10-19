@@ -13,7 +13,7 @@ sub init()
     m.channelBackgroundposter = m.top.findNode("channelBackgroundposter")
     ' ?"m.top.getScene().currentDesignResolution";m.top.getScene().currentDesignResolution
     ' if m.deviceinfo.getDisplaySize().w = 1920
-    '        m.PosterBackground.uri = "pkg:/images/background_FHD.jpg"
+    '        m.m.PosterBackground.uri = "pkg:/images/background_FHD.jpg"
     m.channelBackgroundposter.height = currentResolution.height
     m.channelBackgroundposter.width = currentResolution.width
     m.channelBackgroundposter.uri = "pkg:/images/homeScreenBckgrnd.png"
@@ -28,10 +28,13 @@ sub init()
 
     m.timeGride.numRows = 0
     '    m.video = m.top.findNode("video")
-    m.video = m.top.findNode("myVideo")
+    m.video = m.top.findNode("livePlayer")
+    m.streamlyview   = m.top.findNode("streamlyview")
+    ' m.streaminfo   = m.top.findNode("streaminfo")
     ' m.video.observeField("state", "videoState")
 
     m.video.enableUI = false
+    m.video.enableTrickPlay = false
     m.video.visible = false
     m.ChannelsGroup.visible = true
     m.video.thumbnailImage = "pkg:/images/home/testingThumbnail.jpg"
@@ -58,6 +61,7 @@ sub init()
 
 
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
+    ' m.channelIcon = m.top.findNode("channelIcon")
 
     ' channel ,episode api call '
 
@@ -118,6 +122,11 @@ sub init()
     m.lazyLoadingTimer.repeat = false
     m.lazyLoadingTimer.duration = .3
     m.lazyLoadingTimer.observeField("fire", "StartContentLoading")
+
+    m.streaminfoTimer = CreateObject("roSGNode", "Timer")
+    m.streaminfoTimer.repeat = false
+    m.streaminfoTimer.duration = 4
+    m.streaminfoTimer.observeField("fire", "closeStreamInfo")
     '    m.lazyLoadingTimer.control = "start"
     '    m.ChannelData = createObject("roArray")
     ' prgramView Update Timer
@@ -127,37 +136,37 @@ sub init()
 
     '    m.programUpdateTimer.observeField("fire", "StartProgramUpdating")
 
-    PosterBackground = m.top.createChild("Poster")
+    m.PosterBackground = m.top.createChild("Poster")
 
-    PosterBackground.translation = [1411, 716]
+    m.PosterBackground.translation = [60, 800]
 
-    PosterBackground.height = 236
-    PosterBackground.width = 469
-    PosterBackground.uri = "pkg:/images/home/channelinfobackgrnd.png"
-    PosterBackground.opacity = .8
-    PosterBackground.visible = false
-    '   LayoutGroup = PosterBackground.createChild("LayoutGroup")
+    m.PosterBackground.height = 236
+    m.PosterBackground.width = 469
+    m.PosterBackground.uri = "pkg:/images/home/channelinfobackgrnd.png"
+    m.PosterBackground.opacity = .8
+    m.PosterBackground.visible = false
+    '   LayoutGroup = m.PosterBackground.createChild("LayoutGroup")
     '   LayoutGroup.layoutDirection = "horiz"
     '   LayoutGroup.itemSpacings ="10"
 
-    PosterchannleIcon = PosterBackground.createChild("Poster")
-    PosterchannleIcon.translation = [26, 98]
-    PosterchannleIcon.height = 94
-    PosterchannleIcon.width = 138
-    PosterchannleIcon.uri = "pkg:/images/mtv.png"
+    m.PosterchannleIcon = m.PosterBackground.createChild("Poster")
+    m.PosterchannleIcon.translation = [26, 98]
+    m.PosterchannleIcon.height = 94
+    m.PosterchannleIcon.width = 138
+    m.PosterchannleIcon.uri = "pkg:/images/mtv.png"
 
-    PosterchannleIcon = PosterBackground.createChild("Poster")
-    PosterchannleIcon.translation = [189, 22]
-    PosterchannleIcon.height = 20
-    PosterchannleIcon.width = 20
-    PosterchannleIcon.uri = "pkg:/images/home/liveIcon.png"
-    PosterchannleIconLabel = PosterchannleIcon.createChild("Label")
+    PosterchannleliveIcon = m.PosterBackground.createChild("Poster")
+    PosterchannleliveIcon.translation = [189, 22]
+    PosterchannleliveIcon.height = 20
+    PosterchannleliveIcon.width = 20
+    PosterchannleliveIcon.uri = "pkg:/images/home/liveIcon.png"
+    m.PosterchannleIconLabel = PosterchannleliveIcon.createChild("Label")
 
-    PosterchannleIconLabel.text = "Live"
-    PosterchannleIconLabel.font = getFont(18, "pkg:/fonts/HelveticaNeueMedium.ttf")
-    PosterchannleIconLabel.translation = [30, 0]
+    m.PosterchannleIconLabel.text = "Live"
+    m.PosterchannleIconLabel.font = getFont(18, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.PosterchannleIconLabel.translation = [30, 0]
 
-    ConsertTiming = PosterBackground.createChild("Rectangle")
+    ConsertTiming = m.PosterBackground.createChild("Rectangle")
     ConsertTiming.translation = [189, 55]
     ConsertTiming.height = 30
     ConsertTiming.width = 163
@@ -167,7 +176,7 @@ sub init()
     ConsertTimingTExt.translation = [8, 4]
     ConsertTimingTExt.font = getFont(18, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
 
-    ConcertChannel = PosterBackground.createChild("Label")
+    ConcertChannel = m.PosterBackground.createChild("Label")
     ConcertChannel.translation = [189, 103]
     ConcertChannel.height = 41
     ConcertChannel.width = 0
@@ -175,7 +184,7 @@ sub init()
     ConcertChannel.text = "MTV-USA"
     ConcertChannel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ConcertName = PosterBackground.createChild("Label")
+    ConcertName = m.PosterBackground.createChild("Label")
     ConcertName.translation = [189, 162]
     ConcertName.height = 30
     ConcertName.width = 255
@@ -199,12 +208,24 @@ sub init()
     }
     SetupVideoPlayer()
 end sub
+sub closeStreamInfo()
+    ?"closeStreamInfo"
+    m.streaminfoTimer.control = "stop"
+    m.streamlyview.visible = false
+    ' m.channelIcon.visible = false
+    m.PosterBackground.visible = false
+
+    ' m.streaminfo.visible = false
+
+
+end sub
 
 Sub SetupVideoPlayer()
     
     ' m.Video = m.top.findNode("VideoPlayer")
     m.video.observeField("state","onStateChange")
     m.video.observeField("position","onPositionChange")
+    m.video.observeField("bufferingStatus","percentage")
     m.video.observeField("visible","onVisibleChange")
     m.video.observeField("content","onContentChange")
     m.video.observeField("streamInfo","onStreamInfoChange")
@@ -220,7 +241,15 @@ Sub SetupVideoPlayer()
     }
     m.position = 0
 End Sub
+' sub percentage(event as object)
 
+'     if  event.getData()<>invalid
+
+'         ?"percentage buffering ";event.getData().percentage        
+'     else
+        
+'     end if
+' end sub
 sub onStateChange()
     ?"state:"m.Video.state
 
@@ -378,10 +407,11 @@ sub RestartLazyLoadingTimer()
 end sub
 
 sub channelFocused(event as object)
-    ? "m.timeGride.content:";m.timeGride.content
     'm.lazyLoadingTimer.control = "start"
-
     if m.timeGride.content<>invalid
+        ? "m.timeGride.content:";m.timeGride.content.getChild(m.timeGride.channelFocused)
+        m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
+
         m.timeGride.content.getChild(m.timeGride.channelFocused).channelfocus = true    
     end if
  if m.timeGride.channelFocused <> -1
@@ -521,7 +551,7 @@ sub ChannelResponseData()
     }
 end sub
 
-function playVideo(liveStreamData as object, drmKey as string) as void
+function playVideo(liveStreamData ) as void
     ? "HomeScreen:playVideo: url:";liveStreamData
     m.video.thumbnailImage = ""
     if liveStreamData.channelid <> invalid
@@ -535,10 +565,14 @@ function playVideo(liveStreamData as object, drmKey as string) as void
     end if
 
     vidContent = CreateObject("RoSGNode", "ContentNode")
+        ' licenseServerURL:"https://widevine-proxy.appspot.com/proxy"
+        ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
 
     drmParams = {
-        keySystem: "Widevine"
-        licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Widevine"
+        keySystem: "Playready"
+        licenseServerURL:"https://streamlytv.com/api/generic?drm-type=Playready"
+        ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
+
     }                      
 
     vidContent.streamformat = "smooth"
@@ -548,6 +582,7 @@ function playVideo(liveStreamData as object, drmKey as string) as void
    ?"liveStreamData.url";liveStreamData.url
     vidContent.url = liveStreamData.url
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/Manifest"
+    ' vidContent.url = "https://test.playready.microsoft.com/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/manifest"
 
 
     ' httpAgent = CreateObject("roHttpAgent")
@@ -697,21 +732,21 @@ function programSelected(event as object) as object
     ' m.programUpdateTimer.control = "start"
     ' m.programIndex+=1
 
-    m.liveStreamData = timeGrid.content.getChild(timeGrid.channelSelected)
+    ' m.liveStreamData = timeGrid.content.getChild(timeGrid.channelSelected)
 
-    ? ":programSelecte: data: "; data
-
+    ' ? ":programSelecte: data: "; data
+    playVideo(timeGrid.content.getChild(timeGrid.channelSelected))
     m.ChannelsGroup.visible = false
     m.video.visible = true
     m.video.setFocus(true)
 
-    m.drmKeyApiCall = CreateObject("roSGNode", "ApiCall")
-    m.drmKeyApiCall.bodyData = {}
-    m.drmKeyApiCall.callType = "GET"
-    m.drmKeyApiCall.url = drmkeyUrl()
-    m.drmKeyApiCall.observeField("apiResponse", "apiResponse")
-    m.drmKeyApiCall.observeField("errorMessage", "errorDialogShow")
-    m.drmKeyApiCall.control = "RUN"
+    ' m.drmKeyApiCall = CreateObject("roSGNode", "ApiCall")
+    ' m.drmKeyApiCall.bodyData = {}
+    ' m.drmKeyApiCall.callType = "GET"
+    ' m.drmKeyApiCall.url = drmkeyUrl()
+    ' m.drmKeyApiCall.observeField("apiResponse", "apiResponse")
+    ' m.drmKeyApiCall.observeField("errorMessage", "errorDialogShow")
+    ' m.drmKeyApiCall.control = "RUN"
 
     ' m.ApiCall = CreateObject("roSGNode", "ApiCall")
     ' m.ApiCall.bodyData = { "channelids": liveStreamData.channelid }
@@ -722,20 +757,20 @@ function programSelected(event as object) as object
     return true
 end function
 
-sub apiResponse(event as object)
-    ? "m.ApiCall.apiResponse;"; event.getData()
-    ?"event.getDagetRoSGNode()ta().url ";event.getRoSGNode().url
-    if (event.getData() <> invalid and event.getRoSGNode().url = addRecentUrl() and event.getData().data <> invalid)
-        m.ChannelData["RECENT"] = event.getData().data
+' sub apiResponse(event as object)
+'     ? "m.ApiCall.apiResponse;"; event.getData()
+'     ?"event.getDagetRoSGNode()ta().url ";event.getRoSGNode().url
+'     if (event.getData() <> invalid and event.getRoSGNode().url = addRecentUrl() and event.getData().data <> invalid)
+'         m.ChannelData["RECENT"] = event.getData().data
 
-    else if (event.getData() <> invalid and event.getRoSGNode().url = drmkeyUrl() and event.getData().data <> invalid)
+'     else if (event.getData() <> invalid and event.getRoSGNode().url = drmkeyUrl() and event.getData().data <> invalid)
 
-        playVideo(m.liveStreamData, event.getData().data)
-    end if
+'         playVideo(m.liveStreamData, event.getData().data)
+'     end if
 
-    ' m.ApiCall.RECENTResponse
-    event.getRoSGNode().control = "stop"
-end sub
+'     ' m.ApiCall.RECENTResponse
+'     event.getRoSGNode().control = "stop"
+' end sub
 
 sub VideoControl(event as object)
     video = event.getRoSGNode()
@@ -829,9 +864,13 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.timeGride.setFocus(true)
             result = true
         else if (m.video.hasFocus() and key = "back")
+            
+            m.streamlyview.visible = false
+            m.PosterBackground.visible = false
+            ' m.streaminfo.visible = false
             m.video.control = "stop"
             m.ChannelsGroup.visible = true
-            m.video.visible = true
+            m.video.visible = false
             m.video.setFocus(false)
             m.timeGride.setFocus(true)
             return true
@@ -857,16 +896,23 @@ function onKeyEvent(key as string, press as boolean) as boolean
             '          m.timeGride.setFocus(true)
 
             '          result = true
-            '        else if m.video.hasFocus()  and (key="play" or key="OK")
+                    else if m.video.hasFocus()  and  key="OK"
 
-            '           ?"ok pressed fr play video"
+                      ?"ok pressed fr play video"
 
-            '           playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
+                      if  m.streamlyview.visible = false
+                        m.streamlyview.visible = true
+                        m.PosterBackground.visible = true
+                        ' m.streaminfo.visible = true
+                        m.streaminfoTimer.control = "start"
+                      end if
 
-            '          result = true
+                    '   playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
+
+                     result = true
         else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key = "options"
+          
             ? "HomeSceen:open profile setting view";
-
             m.searchPoster.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(false)
             m.focusPoster.uri = ""
