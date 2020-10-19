@@ -338,17 +338,18 @@ function getKeyOSAuthToken(){
 }
 
 function isDeviceAppleRokuOthers($ua){
-  $iPod    = stripos($ua,"iPod");
-$iPhone  = stripos($ua,"iPhone");
-$iPad    = stripos($ua,"iPad");
-$iPadOS = stripos($ua,"Macintosh");
-$appletv = stripos($ua,"appletv");
-$Android = stripos($ua,"Android");
-$Roku = stripos($ua,"Roku");
-$Darwin = stripos($ua,"Darwin");
+  $iPod    = (stripos($ua,"iPod") !== false);
+$iPhone  = (stripos($ua,"iPhone") !== false);
+$iPad    = (stripos($ua,"iPad") !== false);
+$iPadOS = (stripos($ua,"Macintosh") !== false);
+$appletv = (stripos($ua,"appletv") !== false);
+$Android = (stripos($ua,"Android") !== false);
+$Roku = (stripos($ua,"Roku") !== false);
+$Darwin = (stripos($ua,"Darwin") !== false);
+$Apple_TV = (stripos($ua,"Apple TV") !== false);
 if($Roku){
   return 'roku';
-}else if( $Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+}else if( $Apple_TV||$Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
   return 'apple';
  }else{
    return 'others';
