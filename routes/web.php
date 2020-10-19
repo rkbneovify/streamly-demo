@@ -144,8 +144,8 @@ Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
-Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
-Route::get('/checkAvailabilty2', 'HomeController@checkAvailabilty2');
+// Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
+Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty2');
 Route::get('/contactform', 'HomeController@contactform');
 Route::get('/devices', 'HomeController@showSupportedDevices');
 Route::get('/helpandsupport', 'HomeController@helpandsupp');
@@ -170,6 +170,7 @@ Route::get('/epgviewr2', 'Pages\LiveTv@epgScreen2');
 Route::get('/drm', 'Admin\BuyDRMController@WidevinePlayer');
 Route::get('/drm2', 'Admin\BuyDRMController@WidevinePlayer2');
 Route::get('/ism', 'Admin\BuyDRMController@WidevinePlayer3');
+Route::get('/ism2', 'Admin\BuyDRMController@WidevinePlayer4');
 Route::get('/fair', 'Admin\BuyDRMController@fairPlayer');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 
