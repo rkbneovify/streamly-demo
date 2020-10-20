@@ -315,7 +315,7 @@ function getKeyOSAuthToken(){
   $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
   try {  // Create authentication XML generator instance.
     $auth_xml_generator = new \KeyOSAuthXMLGenerator($certificate);
-    $auth_xml_generator->AuthXMLExpirationTime('+15 minutes');
+    $auth_xml_generator->AuthXMLExpirationTime('+1 day');
   
     // Crate Simple PR license
     $pr_lic = $auth_xml_generator->newSimpleLicense();
