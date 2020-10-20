@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">187207008307-7r9j38pc6rp390gebpjqugr89m71srtr.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://streamly-tv-android.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">187207008307</string>
+    <string name="google_api_key" translatable="false">AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro</string>
+    <string name="google_app_id" translatable="false">1:187207008307:android:e1988bf4dcedf75ed76346</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro</string>
+    <string name="google_storage_bucket" translatable="false">streamly-tv-android.appspot.com</string>
+    <string name="project_id" translatable="false">streamly-tv-android</string>
+</resources>

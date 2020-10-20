@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "187207008307",
+    "firebase_url": "https://streamly-tv-android.firebaseio.com",
+    "project_id": "streamly-tv-android",
+    "storage_bucket": "streamly-tv-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187207008307:android:e1988bf4dcedf75ed76346",
+        "android_client_info": {
+          "package_name": "com.streamly.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187207008307-7r9j38pc6rp390gebpjqugr89m71srtr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187207008307-7r9j38pc6rp390gebpjqugr89m71srtr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

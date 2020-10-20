@@ -1,0 +1,5 @@
+package com.streamly.tv;
+
+public class BR {
+  public static final int _all = 0;
+}
