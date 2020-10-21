@@ -20,8 +20,6 @@ public class NetworkUtils {
     public void registerNetworkCallback() {
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//            NetworkRequest.Builder builder = new NetworkRequest.Builder();
-
             connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
                 @Override
                 public void onAvailable(Network network) {

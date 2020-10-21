@@ -80,60 +80,9 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        Log.e(TAG, "OnClick Method");
         switch (view.getId()) {
             case R.id.account:
-
-                //#neovifyissueresolved28sep
-                /*  ProfileDialog profileDialog=new ProfileDialog(this);
-                profileDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                profileDialog.show();*/
-
-                try {
-                    // Check if no view has focus:
-                    view = this.getCurrentFocus();
-                    if (view != null) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
-                    DisplayMetrics metrics = getResources().getDisplayMetrics();
-                    int screenWidth = (int) (metrics.widthPixels * 0.90);
-                    pDialog = new Dialog(SettingsActivity.this);
-                    pDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    pDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                    pDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
-                    pDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    pDialog.setContentView(R.layout.dialog_profile_new);
-                    pDialog.getWindow().setLayout(screenWidth, RecyclerView.LayoutParams.WRAP_CONTENT);
-                    blurView = pDialog.findViewById(R.id.blurView);
-                    blurView.create(getWindow().getDecorView(), 20);
-//                    blurView.setBackgroundColor(getResources().getColor(R.color.shaded_color));
-                    blurView.setBackground(getResources().getDrawable(R.drawable.layout_focus));
-                    blurView.show();
-
-                    btnOk = pDialog.findViewById(R.id.btn_ok);
-                    userName = pDialog.findViewById(R.id.text_name);
-                    userEmail = pDialog.findViewById(R.id.text_email);
-                    buildDate = pDialog.findViewById(R.id.text_updated_date);
-                    progressBar = pDialog.findViewById(R.id.progress_bar);
-
-                    CommonUtility.checkInternetConnection(SettingsActivity.this);
-                    auth_token = TokenStorage.readSharedToken(SettingsActivity.this, ConstantUtility.AUTH_TOKEN, null);
-                    if (ConstantUtility.isNetworkConnected) {
-                        getUserProfile();
-                    } else {
-                        CommonUtility.showToast(SettingsActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
-                    }
-
-                    btnOk.setOnClickListener(v -> pDialog.dismiss());
-
-                    pDialog.setCancelable(true);
-                    pDialog.show();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
+                viewFocusAccount(view);
                 break;
 
             case R.id.register_device:
@@ -168,12 +117,58 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         }
     }
 
+    private void viewFocusAccount(View view) {
+        try {
+            // Check if no view has focus:
+            view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            DisplayMetrics metrics = getResources().getDisplayMetrics();
+            int screenWidth = (int) (metrics.widthPixels * 0.90);
+            pDialog = new Dialog(SettingsActivity.this);
+            pDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            pDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                    pDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
+            pDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            pDialog.setContentView(R.layout.dialog_profile_new);
+            pDialog.getWindow().setLayout(screenWidth, RecyclerView.LayoutParams.WRAP_CONTENT);
+            blurView = pDialog.findViewById(R.id.blurView);
+            blurView.create(getWindow().getDecorView(), 20);
+//                    blurView.setBackgroundColor(getResources().getColor(R.color.shaded_color));
+            blurView.setBackground(getResources().getDrawable(R.drawable.layout_focus));
+            blurView.show();
+
+            btnOk = pDialog.findViewById(R.id.btn_ok);
+            userName = pDialog.findViewById(R.id.text_name);
+            userEmail = pDialog.findViewById(R.id.text_email);
+            buildDate = pDialog.findViewById(R.id.text_updated_date);
+            progressBar = pDialog.findViewById(R.id.progress_bar);
+
+            CommonUtility.checkInternetConnection(SettingsActivity.this);
+            auth_token = TokenStorage.readSharedToken(SettingsActivity.this, ConstantUtility.AUTH_TOKEN, null);
+            if (ConstantUtility.isNetworkConnected) {
+                getUserProfile();
+            } else {
+                CommonUtility.showToast(SettingsActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
+            }
+
+            btnOk.setOnClickListener(v -> pDialog.dismiss());
+
+            pDialog.setCancelable(true);
+            pDialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //#neovifyissueresolved28sep
     private void getUserProfile() {
         progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ProfileModel> call = apiInterface.getUserProfile("Bearer " + auth_token);
-
         call.enqueue(new Callback<ProfileModel>() {
             @Override
             public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
@@ -197,16 +192,13 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(SettingsActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e(TAG, "Exception " + ex);
                 }
                 Log.e(TAG, "profileResponCode " + response.code() + "");
                 progressBar.setVisibility(View.INVISIBLE);
-
             }
-
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
                 Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
@@ -214,7 +206,6 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 progressBar.setVisibility(View.INVISIBLE);
             }
         });
-
     }
 
 }
