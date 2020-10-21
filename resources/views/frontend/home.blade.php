@@ -1,13 +1,7 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
-	<style>
-		nav#mainNav {
-			background-color: #004E92;
-		}
 
-		
-	</style>
 	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css"> -->
@@ -213,9 +207,10 @@ $.ajax({
 @endsection
 @section('stylesheets')
     <style>
-               .grow { transition: width 2s;}
-.grow:hover {     width: 300px;
-     background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+               /* .grow { transition: width 2s;} */
+.grow:hover {     
+    /* width: 300px; */
+     /* background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box; */
      
 }
         .sidenav {
@@ -936,7 +931,10 @@ height: 64px;
                         <br> Watch what you want, when you want.</div>
                     <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
                 </div>
-                <div class="devices-preview"><img src="./fuboTV - Watch &amp; DVR Live Sports &amp; TV Online_files/us-devices-preview.png" srcset="https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress 1x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=2 2x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=3 3x,https://fubotv.imgix.net/static/web/us_welcome/us-devices-preview.png?ch=width&amp;auto=format,compress&amp;dpr=4 4x" alt="image of tv guide"></div>
+                <div class="devices-preview"><img src="{{url('../frontend/img/devices3.png')}}" 
+  
+alt="image of tv guide"
+></div>
             </div>
         </div>
 
