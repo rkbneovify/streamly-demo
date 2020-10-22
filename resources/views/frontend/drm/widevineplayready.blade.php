@@ -38,7 +38,20 @@
                     src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd',
                     type: 'application/dash+xml',
                     keySystems: {
-                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+                        'com.widevine.alpha': { url:'https://wv-keyos.licensekeyserver.com/',   
+                     audioContentType: 'audio/mp4; codecs="Passthrough"',
+      videoContentType:'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+      //               supportedConfigurations: [{
+      //   videoCapabilities: [{
+      //     contentType:  'video/mp4;codecs="avc1.42E01E"',
+      //     robustness: 'SW_SECURE_CRYPTO'
+      //   }],
+      //   audioCapabilities: [{
+      //     contentType: 'audio/mp4;codecs="mp4a.40.2"',
+      //     robustness: 'SW_SECURE_CRYPTO'
+      //   }]
+      // }],
+                    }
                         'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
                     }
                 };
