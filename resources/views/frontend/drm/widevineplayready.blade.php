@@ -6,26 +6,23 @@
 			background-color: #004E92;
 		}
 	</style>
-    <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
   
-    <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
-    <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
-{{-- 
-  <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-contrib-quality-levels.js"></script>
-	<script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
-
-<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
+	<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
+  
+	<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
+	<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 	<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
  
 		<script>
 		$('document').ready(function(){
-			var player = videojs('player',{autoplay: true});
+			var player = videojs('player');
 		
 			player.httpSourceSelector();
  
             // Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
-            player.eme({
+						player.eme({
                 // If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
                 emeHeaders: {
                     'customdata': '{{$encoded_auth_xml}}'
@@ -34,24 +31,11 @@
  
 						player.on('ready', function() {
                 // Setup dash + pr/wv
-                var wvprDashSrc = {
+								var wvprDashSrc = {
                     src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd',
                     type: 'application/dash+xml',
                     keySystems: {
-                        'com.widevine.alpha': { url:'https://wv-keyos.licensekeyserver.com/',   
-                     audioContentType: 'audio/mp4; codecs="Passthrough"',
-      videoContentType:'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
-      //               supportedConfigurations: [{
-      //   videoCapabilities: [{
-      //     contentType:  'video/mp4;codecs="avc1.42E01E"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }],
-      //   audioCapabilities: [{
-      //     contentType: 'audio/mp4;codecs="mp4a.40.2"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }]
-      // }],
-                    }
+                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
                         'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
                     }
                 };
