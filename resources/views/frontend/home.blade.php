@@ -312,7 +312,7 @@ $.ajax({
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		padding: 130px 0 44px;
+		/* padding: 130px 0 44px; */
 		position: relative;
 		overflow: hidden;
 		-webkit-box-orient: vertical;
