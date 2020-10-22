@@ -9,13 +9,11 @@
 
 <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
   
-<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
 <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
+<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
-{{-- <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
-<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 	
 
 <script>
@@ -38,22 +36,9 @@
 									src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd',
 									type: 'application/dash+xml',
 									keySystems: {
-											'com.widevine.alpha': { url:'https://wv-keyos.licensekeyserver.com/',   
-                     audioContentType: 'audio/mp4; codecs="Passthrough"',
-      videoContentType:'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
-      //               supportedConfigurations: [{
-      //   videoCapabilities: [{
-      //     contentType:  'video/mp4;codecs="avc1.42E01E"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }],
-      //   audioCapabilities: [{
-      //     contentType: 'audio/mp4;codecs="mp4a.40.2"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }]
-      // }],
-                    },
-											'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
-									}
+                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+                        'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+                    }
 							};
 
 							// Set the source to the player to init/start the playback.
@@ -65,22 +50,9 @@
 									src: new_url,
 									type: 'application/dash+xml',
 									keySystems: {
-											'com.widevine.alpha': { url:'https://wv-keyos.licensekeyserver.com/',   
-                     audioContentType: 'audio/mp4; codecs="Passthrough"',
-      videoContentType:'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
-      //               supportedConfigurations: [{
-      //   videoCapabilities: [{
-      //     contentType:  'video/mp4;codecs="avc1.42E01E"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }],
-      //   audioCapabilities: [{
-      //     contentType: 'audio/mp4;codecs="mp4a.40.2"',
-      //     robustness: 'SW_SECURE_CRYPTO'
-      //   }]
-      // }],
-                    },
-											'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
-									}
+                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+                        'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+                    }
 							};
 								
 								player.src(changeIn);
