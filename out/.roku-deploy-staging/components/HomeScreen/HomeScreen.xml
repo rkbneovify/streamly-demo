@@ -48,7 +48,7 @@
           </Group>
 
           <Video id="livePlayer" width="1920" height="1080" translation="[0,0]" visible="false"/>
-          <Poster id="streamlyview" uri ="pkg://images/streamly_logo.png" width="300" height="120" translation="[1500,50]" visible="false"/>
+          <Poster id="streamlyview" uri ="pkg://images/streamly_logo.png" width="320" height="120" translation="[1500,50]" visible="false"/>
 
           <!-- <Rectangle id="streaminfo" color="#000000" opacity=".3" width="1920" height="260" translation="[0,820]" visible = "false" /> -->
            <Poster id="channelIcon" uri ="pkg://images/streamly_logo.png" width="120" height="120" translation="[100,880]" visible = "false"/>

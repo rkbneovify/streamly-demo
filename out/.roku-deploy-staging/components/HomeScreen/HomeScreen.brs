@@ -29,7 +29,7 @@ sub init()
     m.timeGride.numRows = 0
     '    m.video = m.top.findNode("video")
     m.video = m.top.findNode("livePlayer")
-    m.streamlyview   = m.top.findNode("streamlyview")
+    m.streamlyview = m.top.findNode("streamlyview")
     ' m.streaminfo   = m.top.findNode("streaminfo")
     ' m.video.observeField("state", "videoState")
 
@@ -94,14 +94,14 @@ sub init()
     'm.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
     m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite3.9.png"
     ' m.timeGride.programBackgroundBitmapUri = "pkg:/images/home/borderwhite4.png"
-   
+
     m.timeGride.overlayBitmapUri = ""
     m.timeGride.channelInfoBackgroundBitmapUri = ""
     m.timeGride.timeBarBitmapUri = "pkg:/images/transparentimg.png"
     m.timeGride.programTitleFocusedColor = "#ffffff"
     m.timeGride.showPastTimeScreen = true
 
-    m.timeGride.itemSize =[1920, 75]
+    m.timeGride.itemSize = [1920, 75]
     m.timeGride.programTitleFont = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.timeGride.channelNoDataText = "Loading..."
     m.timeGride.loadingDataText = "Loading..."
@@ -131,10 +131,10 @@ sub init()
     '    m.ChannelData = createObject("roArray")
     ' prgramView Update Timer
 
-    '    m.programUpdateTimer = CreateObject("roSGNode", "Timer")
-    '    m.programUpdateTimer.repeat = false
+    m.programUpdateTimer = CreateObject("roSGNode", "Timer")
+    m.programUpdateTimer.repeat = false
 
-    '    m.programUpdateTimer.observeField("fire", "StartProgramUpdating")
+    m.programUpdateTimer.observeField("fire", "StartProgramUpdating")
 
     m.PosterBackground = m.top.createChild("Poster")
 
@@ -171,25 +171,25 @@ sub init()
     ConsertTiming.height = 30
     ConsertTiming.width = 163
     ConsertTiming.color = "#004E92"
-    ConsertTimingTExt = ConsertTiming.createChild("Label")
-    ConsertTimingTExt.text = "04:00 - 05:00PM"
-    ConsertTimingTExt.translation = [8, 4]
-    ConsertTimingTExt.font = getFont(18, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+    m.ConsertTimingTExt = ConsertTiming.createChild("Label")
+    m.ConsertTimingTExt.text = "04:00 - 05:00PM"
+    m.ConsertTimingTExt.translation = [8, 4]
+    m.ConsertTimingTExt.font = getFont(18, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
 
-    ConcertChannel = m.PosterBackground.createChild("Label")
-    ConcertChannel.translation = [189, 103]
-    ConcertChannel.height = 41
-    ConcertChannel.width = 0
-    '   ConcertChannel.wrap =true
-    ConcertChannel.text = "MTV-USA"
-    ConcertChannel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.ConcertChannel = m.PosterBackground.createChild("Label")
+    m.ConcertChannel.translation = [189, 103]
+    m.ConcertChannel.height = 41
+    m.ConcertChannel.width = 0
+    '   m.ConcertChannel.wrap =true
+    m.ConcertChannel.text = "MTV-USA"
+    m.ConcertChannel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ConcertName = m.PosterBackground.createChild("Label")
-    ConcertName.translation = [189, 162]
-    ConcertName.height = 30
-    ConcertName.width = 255
-    ConcertName.text = "Justin Beiber concert"
-    ConcertName.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+    m.ConcertName = m.PosterBackground.createChild("Label")
+    m.ConcertName.translation = [189, 162]
+    m.ConcertName.height = 30
+    m.ConcertName.width = 255
+    m.ConcertName.text = "Justin Beiber concert"
+    m.ConcertName.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
     m.channelListData = 0
     '   LayutRght.layoutDirection = "vert"
 
@@ -207,6 +207,8 @@ sub init()
         }
     }
     SetupVideoPlayer()
+    m.programIndex = 0
+
 end sub
 sub closeStreamInfo()
     ?"closeStreamInfo"
@@ -220,34 +222,34 @@ sub closeStreamInfo()
 
 end sub
 
-Sub SetupVideoPlayer()
-    
+sub SetupVideoPlayer()
+
     ' m.Video = m.top.findNode("VideoPlayer")
-    m.video.observeField("state","onStateChange")
-    m.video.observeField("position","onPositionChange")
-    m.video.observeField("bufferingStatus","percentage")
-    m.video.observeField("visible","onVisibleChange")
-    m.video.observeField("content","onContentChange")
-    m.video.observeField("streamInfo","onStreamInfoChange")
+    m.video.observeField("state", "onStateChange")
+    m.video.observeField("position", "onPositionChange")
+    m.video.observeField("bufferingStatus", "percentage")
+    m.video.observeField("visible", "onVisibleChange")
+    m.video.observeField("content", "onContentChange")
+    m.video.observeField("streamInfo", "onStreamInfoChange")
     m.video.notificationInterval = 1
 
     'map of events that should be handled on state change
     m.statestToHandle = {
-        "stopped" :""
-        "playing":""
-        "paused":""
-        "error":""
-        "finished":""
+        "stopped": ""
+        "playing": ""
+        "paused": ""
+        "error": ""
+        "finished": ""
     }
     m.position = 0
-End Sub
+end sub
 ' sub percentage(event as object)
 
 '     if  event.getData()<>invalid
 
-'         ?"percentage buffering ";event.getData().percentage        
+'         ?"percentage buffering ";event.getData().percentage
 '     else
-        
+
 '     end if
 ' end sub
 sub onStateChange()
@@ -256,10 +258,6 @@ sub onStateChange()
     ? "videoState"; m.video.state
     ? "completedStreamInfo"; m.video.completedStreamInfo
 
-
-    '  if m.video.state="playing"
-    '     m.video.control="pause"
-    '      m.video.mute = false
     if m.video.state = "error"
         print "m.video.errorCode: "; m.video.errorCode
         print "m.video.errorMsg: "; m.video.errorMsg
@@ -267,21 +265,30 @@ sub onStateChange()
         print "m.vdeo.errorInfo: "; m.video.errorInfo
         print "m.vdeo.completedStreamInfo: "; m.video.completedStreamInfo
 
+        if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+            m.programUpdateTimer.control = "stop"
+        end if
+
+        m.streamlyview.visible = false
+        m.PosterBackground.visible = false
+        ' m.streaminfo.visible = false
         m.video.control = "stop"
         m.ChannelsGroup.visible = true
-        m.video.visible = true
+        m.video.visible = false
         m.video.setFocus(false)
         m.timeGride.setFocus(true)
+
+
     end if
-   
-    if m.Video.content <> invalid AND m.statestToHandle[m.Video.state] <> invalid
+
+    if m.Video.content <> invalid and m.statestToHandle[m.Video.state] <> invalid
         'we have a state that should be fired
         'store these states in map so you won't receive unhandled states or have string case sensitive issues
         state = m.Video.state
-        
+
         'Convert video node state to proper GA event name
         GoogleEventAction = invalid
-        if state = "playing" AND m.peviousestate = "paused"
+        if state = "playing" and m.peviousestate = "paused"
             GoogleEventAction = "resume"
         else if state = "playing"
             GoogleEventAction = "progress"
@@ -292,10 +299,10 @@ sub onStateChange()
         else if state = "stopped"
             GoogleEventAction = "complete"
         end if
-        
+
         'Convert video node state to proper Omniture event name
         'you can have more than one parameter here
-      
+
         GoogleParams = invalid
         if GoogleEventAction <> invalid
             ni = invalid
@@ -303,101 +310,92 @@ sub onStateChange()
                 ni = "1"
             end if
             GoogleParams = {
-                t : "event"
-                ec : "video"
-                ea : GoogleEventAction
-                el : m.video.content.title
-                ev : int(m.video.position).tostr()
-                ni : ni
+                t: "event"
+                ec: "video"
+                ea: GoogleEventAction
+                el: m.video.content.title
+                ev: int(m.video.position).tostr()
+                ni: ni
             }
         end if
 
         m.global.RSG_analytics.trackEvent = {
-            Google      : GoogleParams
+            Google: GoogleParams
         }
-        
-        m.peviousestate = state           
+
+        m.peviousestate = state
         if state = "error" or state = "finished"
             m.timer = CreateObject("roSgnode", "Timer")
-            m.timer.observeField("fire","CloseVideoPlayer")
+            m.timer.observeField("fire", "CloseVideoPlayer")
             m.timer.duration = 0.3
             m.timer.control = "start"
         end if
     end if
-    
+
 end sub
 
 sub onPositionChange()
-    if m.video.duration > 0 Then
-        EventAction = "progress"      
+    if m.video.duration > 0 then
+        EventAction = "progress"
         'this is logic for seek events, this should be done here not in onkeyevent as it should only be send once per seek
-        if m.video.content <> invalid AND  m.userHasSeeked = true
-             m.userHasSeeked = false
+        if m.video.content <> invalid and m.userHasSeeked = true
+            m.userHasSeeked = false
             ?"send fast seek event"
-            if int(m.video.position) < m.position 
-                 EventAction = "rewind"
-                 ev = "event28,event72"
+            if int(m.video.position) < m.position
+                EventAction = "rewind"
+                ev = "event28,event72"
             else
-                 EventAction = "fast forward"
-                 ev = "event28,event73"
+                EventAction = "fast forward"
+                ev = "event28,event73"
             end if
             m.global.RSG_analytics.trackEvent = {
-                Google : {
-                    t : "event"
-                    ec : "video"
-                    ea : EventAction
-                    el : m.video.content.title
-                    ev : int(m.video.position).tostr()
+                Google: {
+                    t: "event"
+                    ec: "video"
+                    ea: EventAction
+                    el: m.video.content.title
+                    ev: int(m.video.position).tostr()
                 }
-              
+
             }
         end if
-        
+
         'calculate if it's quartal event
         quarts = m.video.duration / 4
         event = invalid
-        If int(m.video.Position) = Int(quarts) Then
+        if int(m.video.Position) = Int(quarts) then
             event = "event26,event72"
-        Else If int(m.video.Position) = Int(quarts * 2) Then
+        else if int(m.video.Position) = Int(quarts * 2) then
             event = "event27,event72"
-        Else If int(m.video.Position) = Int(quarts * 3) Then
+        else if int(m.video.Position) = Int(quarts * 3) then
             event = "event28,event72"
-        End If
+        end if
         if event <> invalid
             ?"CustomVideo: quarts ["quarts"] event="event
             m.global.RSG_analytics.trackEvent = {
-                Google : {
-                    t : "event"
-                    ec : "video"
-                    ea : EventAction
-                    el : m.video.content.title
-                    ev : int(m.video.position).tostr()
-                    ni : "1"
-                }        
+                Google: {
+                    t: "event"
+                    ec: "video"
+                    ea: EventAction
+                    el: m.video.content.title
+                    ev: int(m.video.position).tostr()
+                    ni: "1"
+                }
             }
         end if
-    End If
+    end if
     'store previous position so you can now if user really skipped video
     m.position = int(m.video.position)
 end sub
 
-' sub StartProgramUpdating()
-' ?"StartProgramUpdating"
+sub StartProgramUpdating()
 
-'  m.programIndex = 0
-' currentProgram = m.currentProgramsNode.getChild(m.programIndex)
-' ?"currentProgram title ;";currentProgram.title
-' ?"currentProgram start ;";currentProgram.PLAYSTART
-' ?"currentProgram end ;";currentProgram["PLAYDURATION"] ;" sec"
+    m.programUpdateTimer.control = "stop"
 
-' m.programDuration = currentProgram["PLAYDURATION"]
+    conncertUpdate(m.timeGrid)
 
-' m.programUpdateTimer.control = "stop"
-' m.programUpdateTimer.duration = m.programDuration
-' m.programUpdateTimer.control = "start"
-' m.programIndex+=1
 
-' end sub
+end sub
 sub RestartLazyLoadingTimer()
     ? "RestartLazyLoadingTimer"
 
@@ -408,16 +406,17 @@ end sub
 
 sub channelFocused(event as object)
     'm.lazyLoadingTimer.control = "start"
-    if m.timeGride.content<>invalid
+    if m.timeGride.content <> invalid
         ? "m.timeGride.content:";m.timeGride.content.getChild(m.timeGride.channelFocused)
         m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
+        ' m.ConsertTimingTExt =
+        ' ?"programSelected";m.timeGride.content.getChild(m.timeGride.channelFocused).getChild(m.timeGride.programSelected)
 
-        m.timeGride.content.getChild(m.timeGride.channelFocused).channelfocus = true    
+        m.timeGride.content.getChild(m.timeGride.channelFocused).channelfocus = true
     end if
- if m.timeGride.channelFocused <> -1
-    ' ?"event.getRoSGNode().content.getChild(m.timeGride.channelFocused)" event.getRoSGNode().content.getChild(m.timeGride.channelFocused)
-
-end if   
+    if m.timeGride.channelFocused <> -1
+       
+    end if
     if m.channelListData < 8 and event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
         channelnode = event.getRoSGNode().content
@@ -487,33 +486,33 @@ sub reqApiCAll(page)
 end sub
 
 function errorDialogShow(event as object)
-   
+
     if event.getData().responseCode = 401
-    
-        m.DialogButton = popupDialog(m.top , "Error " ,event.getData().Failure)
-        m.DialogButton.observeField("buttonSelected","loginScreen")
+
+        m.DialogButton = popupDialog(m.top, "Error ", event.getData().Failure)
+        m.DialogButton.observeField("buttonSelected", "loginScreen")
         m.DialogButton.setFocus(true)
 
-    else 
-        m.DialogButton = popupDialog(m.top , "Error " ,event.getData().Failure)
-        m.DialogButton.observeField("buttonSelected","closeScreen1")
+    else
+        m.DialogButton = popupDialog(m.top, "Error ", event.getData().Failure)
+        m.DialogButton.observeField("buttonSelected", "closeScreen1")
         m.DialogButton.setFocus(true)
     end if
-    
+
 end function
 
 function loginScreen()
-    
+
     ' ShowScreen(CreateObject("roSgNode","LoginScreen"))
     m.top.ExitView = true
 
 end function
 
 function closeScreen1()
-?"closeScreen"
+    ?"closeScreen"
     m.top.getScene().exitApp = "exitApp"
     closeErrorDialogShow(m.top)
-    
+
 end function
 
 sub closeDialog(event as object)
@@ -533,15 +532,12 @@ sub ChannelResponseData()
 
 
     initGrigData(m.ChannelData)
-    
+
     m.channelListData = 0
     m.channelNameString = "ALL"
     m.lazyLoadingTimer.control = "start"
 
-    '    this = {}
-    '    this.epgContent
-    '    this.channelIndexUpdate
-    '    this.categorySring
+    
 
     m.global.RSG_analytics.trackEvent = {
         google: {
@@ -551,7 +547,7 @@ sub ChannelResponseData()
     }
 end sub
 
-function playVideo(liveStreamData ) as void
+function playVideo(liveStreamData) as void
     ? "HomeScreen:playVideo: url:";liveStreamData
     m.video.thumbnailImage = ""
     if liveStreamData.channelid <> invalid
@@ -565,21 +561,21 @@ function playVideo(liveStreamData ) as void
     end if
 
     vidContent = CreateObject("RoSGNode", "ContentNode")
-        ' licenseServerURL:"https://widevine-proxy.appspot.com/proxy"
-        ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
+    ' licenseServerURL:"https://widevine-proxy.appspot.com/proxy"
+    ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
 
     drmParams = {
         keySystem: "Playready"
-        licenseServerURL:"https://streamlytv.com/api/generic?drm-type=Playready"
+        licenseServerURL: "https://streamlytv.com/api/generic?drm-type=Playready"
         ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
 
-    }                      
+    }
 
     vidContent.streamformat = "smooth"
     vidContent.drmParams = drmParams
     ' vidContent.HttpHeaders=["customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="]
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd"
-   ?"liveStreamData.url";liveStreamData.url
+    ?"liveStreamData.url";liveStreamData.url
     vidContent.url = liveStreamData.url
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/Manifest"
     ' vidContent.url = "https://test.playready.microsoft.com/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/manifest"
@@ -697,45 +693,10 @@ end sub
 function programSelected(event as object) as object
     timeGrid = event.GetRoSGNode()
 
-    ' channelNode = timeGrid.content.getChild(timeGrid.channelSelected)
-    ' m.currentProgramsNode =  channelNode
-
-    ' m.programIndex = 0
-
-    ' currentProgram = m.currentProgramsNode.getChild(m.programIndex)
-
-    ' currentTime1 =  CreateObject("roDateTime")
-    '    t = currentTime1.AsSeconds()
-    ' ?"currentProgram t ;";currentTime1.ToISOString() ;" sec"
-
-    ' currentTime1.FromSeconds(currentProgram.PLAYSTART)
-    ' ?"currentProgram PLAYSTART ;";currentTime1.ToISOString()
-
-    ' ?"currentProgram title ;";currentProgram.title
-    ' ?"currentProgram end ;";currentProgram.PLAYDURATION ;" sec"
-
-    ' currentEpisodeDuration =  (   (currentProgram.PLAYSTART) +currentProgram.PLAYDURATION* 1000 - ( t  )  )
-
-    '    if  t > (currentProgram.PLAYSTART/1000)
-    '       m.programDuration = (t- (currentProgram.PLAYSTART/1000))
-    '    else
-    '       m.programDuration = ((currentProgram.PLAYSTART/1000) -t)
-    '    end if
-    '  m.programDuration = (currentEpisodeDuration/1000)
-
-    ' ?"m.programDuration exact ;";m.programDuration
-    ' m.programDuration = currentProgram.PLAYDURATION
-
-    ' if m.programUpdateTimer <> invalid and m.programUpdateTimer.control = "start" then m.programUpdateTimer.control = "stop"
-
-    ' m.programUpdateTimer.duration = m.programDuration
-    ' m.programUpdateTimer.control = "start"
-    ' m.programIndex+=1
-
-    ' m.liveStreamData = timeGrid.content.getChild(timeGrid.channelSelected)
-
-    ' ? ":programSelecte: data: "; data
     playVideo(timeGrid.content.getChild(timeGrid.channelSelected))
+
+    conncertUpdate(timeGrid)
+
     m.ChannelsGroup.visible = false
     m.video.visible = true
     m.video.setFocus(true)
@@ -756,7 +717,28 @@ function programSelected(event as object) as object
 
     return true
 end function
+sub conncertUpdate(timeGrid as object)
+    m.programIndex += timeGrid.programSelected
 
+    if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+        m.programUpdateTimer.control = "stop"
+    end if
+
+    m.currentProgramsNode = timeGrid.content.getChild(timeGrid.channelSelected)
+    programnode = m.currentProgramsNode.getChild(m.programIndex)
+    programdate = CreateObject("roDateTime")
+    programdate.FromSeconds(programnode.PLAYSTART)
+    durationTimetext = programdate.toISOString().Mid(11, 5) + " - "
+    programdate.FromSeconds(programnode.PLAYSTART + programnode.PLAYDURATION)
+    durationTimetext += programdate.toISOString().Mid(11, 5)
+    m.ConsertTimingTExt.text = durationTimetext
+    m.ConcertChannel.text = m.currentProgramsNode.TITLE
+    m.ConcertName.text = programnode.TITLE
+
+    m.programUpdateTimer.duration = programnode.PLAYDURATION
+    m.programUpdateTimer.control = "start"
+
+end sub
 ' sub apiResponse(event as object)
 '     ? "m.ApiCall.apiResponse;"; event.getData()
 '     ?"event.getDagetRoSGNode()ta().url ";event.getRoSGNode().url
@@ -864,7 +846,11 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.timeGride.setFocus(true)
             result = true
         else if (m.video.hasFocus() and key = "back")
-            
+
+            if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+                m.programUpdateTimer.control = "stop"
+            end if
+
             m.streamlyview.visible = false
             m.PosterBackground.visible = false
             ' m.streaminfo.visible = false
@@ -875,43 +861,22 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.timeGride.setFocus(true)
             return true
 
-            '        else if m.ChannelsGroup.visible=true and key="back"
+        else if m.video.hasFocus() and key = "OK"
 
-            '          m.ChannelsGroup.visible = false
-            '          m.timeGride.setFocus(false)
-            '          m.ChannelCategoryMarkuGrid.setFocus(false)
+            ?"ok pressed fr play video"
 
-            '          m.video.visible=true
-            '          m.video.setFocus(true)
-            '          m.searchPoster.visible =false
-            '          result = true
-            '        else if m.video.visible=true and key="options" and  m.video.hasFocus() and m.video.state<> "buffering" and m.video.state<> "stopped"
+            if m.streamlyview.visible = false
+                m.streamlyview.visible = true
+                m.PosterBackground.visible = true
+                ' m.streaminfo.visible = true
+                m.streaminfoTimer.control = "start"
+            end if
 
-            '          ?"HomeSceen:open channel view";
-            '          m.searchPoster.visible = true
-            '          m.video.visible=false
-            '          m.ChannelsGroup.visible = true
-            '          m.video.setFocus(false)
-            '          m.ChannelCategoryMarkuGrid.setFocus(false)
-            '          m.timeGride.setFocus(true)
+            '   playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
 
-            '          result = true
-                    else if m.video.hasFocus()  and  key="OK"
-
-                      ?"ok pressed fr play video"
-
-                      if  m.streamlyview.visible = false
-                        m.streamlyview.visible = true
-                        m.PosterBackground.visible = true
-                        ' m.streaminfo.visible = true
-                        m.streaminfoTimer.control = "start"
-                      end if
-
-                    '   playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
-
-                     result = true
+            result = true
         else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key = "options"
-          
+
             ? "HomeSceen:open profile setting view";
             m.searchPoster.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(false)
