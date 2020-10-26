@@ -37,20 +37,8 @@
  
   function init() {
       player = dashjs.MediaPlayer().create();
-      // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
-      player.updateSettings({
-          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-          'streaming': {
-						'liveDelay': 2,
-						'fastSwitchEnabled': true  ,
-              //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
-              //determine which assets to request in order to perfom adaptive streaming of the content.
-              //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
-              'retryIntervals': {MPD: 5000},
-              'retryAttempts': {MPD: 3}
-          },'abr': { 'autoSwitchBitrate': { 'video': false } }
-      });
-      player.setProtectionData({
+			// player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
+			player.setProtectionData({
         "com.widevine.alpha": {
           serverURL: "//wv-keyos.licensekeyserver.com/",
           httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
@@ -62,6 +50,22 @@
           clearkeys: ""
         }
       });
+      player.updateSettings({
+          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
+          'streaming': {
+						'liveDelay': 2,
+                        'liveCatchUpMinDrift': 0.05,
+                        'liveCatchUpPlaybackRate': 0.5,
+                        'stableBufferTime': 2,
+                        'bufferTimeAtTopQuality': 2,
+                        'bufferTimeAtTopQualityLongForm': 2,
+                        'bufferToKeep': 2,
+                        'bufferAheadToKeep': 2,
+                        'lowLatencyEnabled': true,
+                        'fastSwitchEnabled': true,
+          },'abr': { 'autoSwitchBitrate': { 'video': false } }
+      });
+      
       firstLoad = false;
                   
               var url = "http://rdmedia.bbc.co.uk/dash/ondemand/testcard/1/client_manifest-events.mpd";
