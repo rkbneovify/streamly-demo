@@ -150,11 +150,11 @@ $record = $this->channeljsonFunc($type);
     $ua = $request->server('HTTP_USER_AGENT');
     $isDevice=isDeviceAppleRokuOthers($ua);
     if($isDevice=='roku'){
-    $channel = Channel::select('id', 'callSign', 'smooth_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+    $channel = Channel::select('id', 'smooth_url as url','channels.image', DB::raw('IFNULL(channels.callSign,channels.name) callSign'))->where('name', 'LIKE', "%{$search}%")->where('channels.status','=','1')->whereNotNull('smooth_url')->get();
 } else if($isDevice=='apple')  {
-        $channel = Channel::select('id', 'callSign', 'url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+        $channel = Channel::select('id', 'url','channels.image', DB::raw('IFNULL(channels.callSign,channels.name) callSign'))->where('name', 'LIKE', "%{$search}%")->where('channels.status','=','1')->whereNotNull('url')->get();
     }else{
-        $channel = Channel::select('id', 'callSign', 'dash_url as url')->where('name', 'LIKE', "%{$search}%")->Paginate(16);
+        $channel = Channel::select('id', 'dash_url as url','channels.image', DB::raw('IFNULL(channels.callSign,channels.name) callSign'))->where('name', 'LIKE', "%{$search}%")->where('channels.status','=','1')->whereNotNull('dash_url')->get();
     }
  
   //$author = Author::where('name', 'LIKE', "%{$search}%")->Paginate(16);
@@ -163,7 +163,7 @@ $record = $this->channeljsonFunc($type);
 
 
    return response()->json(array(
-    'message' => $channel, 
+    'data' => $channel, 
     'success' => true,
     //'author'=>$author,
     //'genre'=>$genre,
