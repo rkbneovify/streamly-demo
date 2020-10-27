@@ -37,6 +37,16 @@ class Faq extends Controller
         }
     	return view('frontend.pages.privacy', compact('login'));
 
+    } 
+    public function accessibility(){
+
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
+    	return view('frontend.pages.accessibility', compact('login'));
+
     }
    
 }
