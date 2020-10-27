@@ -544,9 +544,12 @@ height: 64px;
 	<!-- Masthead-->
 	<header class="masthead">
 	    <div class="container">
-	        <div class="masthead-heading">Your Alternative to Cable!</div>
-	        <div class="masthead-subheading">Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </div>
-	        <div class="masthead-subheading">STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing! </div>
+            <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
+	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}" alt="logo of streamly" style="width: 442px;
+                height: 110px;"/></div>
+	       
+            <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
+            <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
 	        <a class="btn btn-primary btn-xl js-scroll-trigger grow" href="#services">START TODAY</a>
 	    </div>
 	</header>
