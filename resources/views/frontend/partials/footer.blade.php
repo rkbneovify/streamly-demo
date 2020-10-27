@@ -30,7 +30,7 @@
 							@endif
         			<li><a href="{{ url('/devices') }}"  style="color:#C5C5C5">Supported Devices</a></li>
         			<li><a href="{{ url('/account/settings/bug') }}" style="color:#C5C5C5">Report a bug</a></li>
-        			<li>Accessibility</li>
+        			<li ><a href="{{ url('accessibility') }}" style="color:#C5C5C5">Accessibility</a></li>
         		</ul>
         	</div>
         	<div class="col-sm-2">
