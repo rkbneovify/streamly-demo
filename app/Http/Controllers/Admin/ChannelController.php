@@ -100,7 +100,7 @@ $record = $this->channeljsonFunc($type);
        
     //JSON_ARRAY
        
-       $pagechannel=$record->get(); 
+       $pagechannel=$record->get();
     //   ->paginate(10);
         
       
@@ -108,7 +108,7 @@ $record = $this->channeljsonFunc($type);
     $response = [
         'success' => true,
         'data'=>$pagechannel, 
-        // 'data'=>$pagechannel->count(), 
+        // 'count'=>$pagechannel->count(), 
         'message' => 'Channel with genre successfully fetched',
         'response_code'=>200,
     ];
@@ -388,6 +388,7 @@ $reco=$record->get();
             'date'=>date("Y-m-d"),
             'logo'=>$imagePath,
             'data' => $reco,
+            // 'count' => $reco->count(),
            
             'message' => 'Channel found',
             'response_code'=>200,
@@ -497,6 +498,7 @@ $reco=$record->get(); //echo $reco;exit;
       $response = [
           'success' => true,
           'date'=>date("Y-m-d"),
+        //   'count' => $reco->count(),
           'data' => $reco,
          
           'message' => 'Schedule data for 3 days found',
@@ -518,7 +520,7 @@ $reco=$record->get(); //echo $reco;exit;
     ->fromSub(function ($query) use ($type) {
       $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
       DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
-      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
       ->from('gracenote')
       ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     
@@ -526,6 +528,7 @@ $reco=$record->get(); //echo $reco;exit;
       AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
        ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
+        ->where('sub.status','=','1')
     ->orderBy('sub.callSign', 'asc')
     ->groupBy('sub.callSign','StationName','image',$type,'id');
     return $record;
