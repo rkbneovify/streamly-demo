@@ -183,7 +183,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         ProtoneMedia\LaravelFFMpeg\Support\ServiceProvider::class,
 
-
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
 
     ],
 
@@ -243,7 +243,7 @@ return [
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'FFMpeg' => ProtoneMedia\LaravelFFMpeg\Support\FFMpeg::class,
         'LogActivity' => App\Helpers\LogActivity::class,
-
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
 
     ],
 

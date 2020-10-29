@@ -102,6 +102,7 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
 });
 
 Route::post('generic', 'Admin\BuyDRMController@proxyServer');
+Route::get('/qrcode', 'APIController@qrcodeapi');
 
 // Route::fallback(function(){
 //     return response()->json([

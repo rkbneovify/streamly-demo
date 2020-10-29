@@ -4,6 +4,9 @@ namespace Laravel\Cashier;
 
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Support\Arr;
+use InvalidArgumentException;
+use Stripe\Subscription as StripeSubscription;
 
 class SubscriptionBuilder
 {
@@ -24,16 +27,9 @@ class SubscriptionBuilder
     /**
      * The name of the plan being subscribed to.
      *
-     * @var string
+     * @var array
      */
-    protected $plan;
-
-    /**
-     * The quantity of the subscription.
-     *
-     * @var int
-     */
-    protected $quantity = 1;
+    protected $items;
 
     /**
      * The date and time the trial will expire.
@@ -75,27 +71,60 @@ class SubscriptionBuilder
      *
      * @param  mixed  $owner
      * @param  string  $name
-     * @param  string  $plan
+     * @param  string|string[]  $plans
      * @return void
      */
-    public function __construct($owner, $name, $plan)
+    public function __construct($owner, $name, $plans = null)
     {
         $this->name = $name;
-        $this->plan = $plan;
         $this->owner = $owner;
+
+        foreach ((array) $plans as $plan) {
+            $this->plan($plan);
+        }
     }
 
     /**
-     * Specify the quantity of the subscription.
+     * Set a plan on the subscription builder.
      *
+     * @param  string  $plan
      * @param  int  $quantity
      * @return $this
      */
-    public function quantity($quantity)
+    public function plan($plan, $quantity = 1)
     {
-        $this->quantity = $quantity;
+        $options = [
+            'plan' => $plan,
+            'quantity' => $quantity,
+        ];
+
+        if ($taxRates = $this->getPlanTaxRatesForPayload($plan)) {
+            $options['tax_rates'] = $taxRates;
+        }
+
+        $this->items[$plan] = $options;
 
         return $this;
+    }
+
+    /**
+     * Specify the quantity of a subscription item.
+     *
+     * @param  int  $quantity
+     * @param  string|null  $plan
+     * @return $this
+     */
+    public function quantity($quantity, $plan = null)
+    {
+        if (is_null($plan)) {
+            if (count($this->items) > 1) {
+                throw new InvalidArgumentException('Plan is required when creating multi-plan subscriptions.');
+            }
+
+            $plan = Arr::first($this->items)['plan'];
+        }
+
+        return $this->plan($plan, $quantity);
     }
 
     /**
@@ -182,33 +211,43 @@ class SubscriptionBuilder
     /**
      * Add a new Stripe subscription to the Stripe model.
      *
-     * @param  array  $options
+     * @param  array  $customerOptions
+     * @param  array  $subscriptionOptions
      * @return \Laravel\Cashier\Subscription
      *
      * @throws \Laravel\Cashier\Exceptions\PaymentActionRequired
      * @throws \Laravel\Cashier\Exceptions\PaymentFailure
      */
-    public function add(array $options = [])
+    public function add(array $customerOptions = [], array $subscriptionOptions = [])
     {
-        return $this->create(null, $options);
+        return $this->create(null, $customerOptions, $subscriptionOptions);
     }
 
     /**
      * Create a new Stripe subscription.
      *
      * @param  \Stripe\PaymentMethod|string|null  $paymentMethod
-     * @param  array  $options
+     * @param  array  $customerOptions
+     * @param  array  $subscriptionOptions
      * @return \Laravel\Cashier\Subscription
      *
      * @throws \Laravel\Cashier\Exceptions\PaymentActionRequired
      * @throws \Laravel\Cashier\Exceptions\PaymentFailure
      */
-    public function create($paymentMethod = null, array $options = [])
+    public function create($paymentMethod = null, array $customerOptions = [], array $subscriptionOptions = [])
     {
-        $customer = $this->getStripeCustomer($paymentMethod, $options);
+        $customer = $this->getStripeCustomer($paymentMethod, $customerOptions);
 
-        /** @var \Stripe\Subscription $stripeSubscription */
-        $stripeSubscription = $customer->subscriptions->create($this->buildPayload());
+        $payload = array_merge(
+            ['customer' => $customer->id],
+            $this->buildPayload(),
+            $subscriptionOptions
+        );
+
+        $stripeSubscription = StripeSubscription::create(
+            $payload,
+            $this->owner->stripeOptions()
+        );
 
         if ($this->skipTrial) {
             $trialEndsAt = null;
@@ -221,11 +260,20 @@ class SubscriptionBuilder
             'name' => $this->name,
             'stripe_id' => $stripeSubscription->id,
             'stripe_status' => $stripeSubscription->status,
-            'stripe_plan' => $this->plan,
-            'quantity' => $this->quantity,
+            'stripe_plan' => $stripeSubscription->plan ? $stripeSubscription->plan->id : null,
+            'quantity' => $stripeSubscription->quantity,
             'trial_ends_at' => $trialEndsAt,
             'ends_at' => null,
         ]);
+
+        /** @var \Stripe\SubscriptionItem $item */
+        foreach ($stripeSubscription->items as $item) {
+            $subscription->items()->create([
+                'stripe_id' => $item->id,
+                'stripe_plan' => $item->plan->id,
+                'quantity' => $item->quantity,
+            ]);
+        }
 
         if ($subscription->incomplete()) {
             (new Payment(
@@ -261,17 +309,23 @@ class SubscriptionBuilder
      */
     protected function buildPayload()
     {
-        return array_filter([
+        $payload = array_filter([
             'billing_cycle_anchor' => $this->billingCycleAnchor,
             'coupon' => $this->coupon,
             'expand' => ['latest_invoice.payment_intent'],
             'metadata' => $this->metadata,
-            'plan' => $this->plan,
-            'quantity' => $this->quantity,
-            'tax_percent' => $this->getTaxPercentageForPayload(),
+            'items' => collect($this->items)->values()->all(),
             'trial_end' => $this->getTrialEndForPayload(),
             'off_session' => true,
         ]);
+
+        if ($taxRates = $this->getTaxRatesForPayload()) {
+            $payload['default_tax_rates'] = $taxRates;
+        } elseif ($taxPercentage = $this->getTaxPercentageForPayload()) {
+            $payload['tax_percent'] = $taxPercentage;
+        }
+
+        return $payload;
     }
 
     /**
@@ -294,11 +348,37 @@ class SubscriptionBuilder
      * Get the tax percentage for the Stripe payload.
      *
      * @return int|float|null
+     * @deprecated Please migrate to the new Tax Rates API.
      */
     protected function getTaxPercentageForPayload()
     {
         if ($taxPercentage = $this->owner->taxPercentage()) {
             return $taxPercentage;
+        }
+    }
+
+    /**
+     * Get the tax rates for the Stripe payload.
+     *
+     * @return array|null
+     */
+    protected function getTaxRatesForPayload()
+    {
+        if ($taxRates = $this->owner->taxRates()) {
+            return $taxRates;
+        }
+    }
+
+    /**
+     * Get the plan tax rates for the Stripe payload.
+     *
+     * @param  string  $plan
+     * @return array|null
+     */
+    protected function getPlanTaxRatesForPayload($plan)
+    {
+        if ($taxRates = $this->owner->planTaxRates()) {
+            return $taxRates[$plan] ?? null;
         }
     }
 }
