@@ -17,7 +17,7 @@ class Media
     private $path;
 
     /**
-     * @var \Spatie\TemporaryDirectory\TemporaryDirectory
+     * @var string
      */
     private $temporaryDirectory;
 
@@ -91,7 +91,7 @@ class Media
         }
 
         return app('filesystem')->createLocalDriver(
-            ['root' => $this->temporaryDirectory->path()]
+            ['root' => $this->temporaryDirectory]
         );
     }
 

@@ -3,9 +3,10 @@
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
- * @link http://piwik.org
+ * @link https://matomo.org
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
+
 namespace DeviceDetector\Parser\Client\Browser\Engine;
 
 use DeviceDetector\Parser\Client\ClientParserAbstract;
@@ -43,8 +44,15 @@ class Version extends ClientParserAbstract
             return '';
         }
 
-        preg_match("~$this->engine\s*/?\s*((?(?=\d+\.\d)\d+[.\d]*|\d{1,7}(?=(?:\D|$))))~i", $this->userAgent, $matches);
+        if ($this->engine === 'Gecko') {
+            $pattern = "~[ ](?:rv[: ]([0-9\.]+)).*gecko/[0-9]{8,10}~i";
+            if (preg_match($pattern, $this->userAgent, $matches)) {
+                return array_pop($matches);
+            }
 
+        }
+
+        preg_match("~$this->engine\s*/?\s*((?(?=\d+\.\d)\d+[.\d]*|\d{1,7}(?=(?:\D|$))))~i", $this->userAgent, $matches);
         if (!$matches) {
             return '';
         }

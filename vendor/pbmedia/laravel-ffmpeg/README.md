@@ -2,8 +2,8 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/pbmedia/laravel-ffmpeg.svg?style=flat-square)](https://packagist.org/packages/pbmedia/laravel-ffmpeg)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/pascalbaljetmedia/laravel-ffmpeg/master.svg?style=flat-square)](https://travis-ci.org/pascalbaljetmedia/laravel-ffmpeg)
-[![Quality Score](https://img.shields.io/scrutinizer/g/pascalbaljetmedia/laravel-ffmpeg.svg?style=flat-square)](https://scrutinizer-ci.com/g/pascalbaljetmedia/laravel-ffmpeg)
+[![Build Status](https://img.shields.io/travis/protonemedia/laravel-ffmpeg/master.svg?style=flat-square)](https://travis-ci.org/protonemedia/laravel-ffmpeg)
+[![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-ffmpeg.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-ffmpeg)
 [![Total Downloads](https://img.shields.io/packagist/dt/pbmedia/laravel-ffmpeg.svg?style=flat-square)](https://packagist.org/packages/pbmedia/laravel-ffmpeg)
 
 This package provides an integration with FFmpeg for Laravel 6.0 and higher. [Laravel's Filesystem](http://laravel.com/docs/7.0/filesystem) handles the storage of the files.
@@ -14,6 +14,7 @@ This package provides an integration with FFmpeg for Laravel 6.0 and higher. [La
 * Compatible with Laravel 6.0 and higher, support for [Package Discovery](https://laravel.com/docs/7.0/packages#package-discovery).
 * Built-in support for HLS.
 * Built-in support for concatenation, multiple inputs/outputs, image sequences (timelapse), complex filters (and mapping), frame/thumbnail exports.
+* Built-in support for watermarks (positioning and manipulation).
 * PHP 7.2 and higher.
 
 ## Video Course Builder
@@ -101,6 +102,36 @@ FFMpeg::open('steve_howe.mp4')
     });
 ```
 
+### Open files from the web
+
+You can open files from the web by using the `openUrl` method. You can specify custom HTTP headers with the optional second parameter:
+
+```php
+FFMpeg::openUrl('https://videocoursebuilder.com/lesson-1.mp4');
+
+FFMpeg::openUrl('https://videocoursebuilder.com/lesson-2.mp4', [
+    'Authorization' => 'Basic YWRtaW46MTIzNA==',
+]);
+```
+
+### Handling exceptions
+
+When the encoding fails, a `ProtoneMedia\LaravelFFMpeg\Exporters\EncodingException` shall be thrown, which extends the underlying `FFMpeg\Exception\RuntimeException` class. This class has two methods that can help you identify the problem. Using the `getCommand` method, you can get the executed command with all parameters. The `getErrorOutput` method gives you a full output log.
+
+For legacy reasons, the message of the exception is always *Encoding failed*. You can replace this message with a more informative message by updating the `set_command_and_error_output_on_exception` configuration key to `true`.
+
+```php
+try {
+    FFMpeg::open('yesterday.mp3')
+        ->export()
+        ->inFormat(new Aac)
+        ->save('yesterday.aac');
+} catch (EncodingException $exception) {
+    $command = $exception->getCommand();
+    $errorLog = $exception->getErrorOutput();
+}
+```
+
 ### Filters
 
 You can add filters through a ```Closure``` or by using PHP-FFMpeg's Filter objects:
@@ -148,6 +179,17 @@ FFMpeg::fromDisk('videos')
     ->save('small_steve.mkv');
 ```
 
+#### Resizing
+
+Since resizing is a common operation, we've added a dedicated method for it:
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->export()
+    ->resize(640, 480);
+```
+The first argument is the width, and the second argument the height. The optional third argument is the mode. You can choose between `fit` (default), `inset`, `width` or `height`. You can find about these modes in the `FFMpeg\Filters\Video\ResizeFilter` class.
+
 ### Custom filters
 
 Sometimes you don't want to use the built-in filters. You can apply your own filter by providing a set of options. This can be an array or multiple strings as arguments:
@@ -162,6 +204,99 @@ FFMpeg::fromDisk('videos')
 FFMpeg::fromDisk('videos')
     ->open('steve_howe.mp4')
     ->addFilter('-itsoffset', 1);
+```
+
+### Watermark filter
+
+As of version 7.3, you can easily add a watermark using the `addWatermark` method. With the `WatermarkFactory`, you can open your watermark file from a specific disk, just like opening an audio or video file. When you discard the `fromDisk` method, it uses the default disk specified in the `filesystems.php` configuration file.
+
+After opening your watermark file, you can position it with the `top`, `right`, `bottom`, and `left` methods. The first parameter of these methods is the offset, which is optional and can be negative.
+
+```php
+use ProtoneMedia\LaravelFFMpeg\Filters\WatermarkFactory;
+
+FFMpeg::fromDisk('videos')
+    ->open('steve_howe.mp4')
+    ->addWatermark(function(WatermarkFactory $watermark) {
+        $watermark->fromDisk('local')
+            ->open('logo.png')
+            ->right(25)
+            ->bottom(25);
+    });
+```
+
+Instead of using the position methods, you can also use the `horizontalAlignment` and `verticalAlignment` methods.
+
+For horizontal alignment, you can use the `WatermarkFactory::LEFT`, `WatermarkFactory::CENTER` and `WatermarkFactory::RIGHT` constants. For vertical alignment, you can use the `WatermarkFactory::TOP`, `WatermarkFactory::CENTER` and `WatermarkFactory::BOTTOM` constants. Both methods take an optional second parameter, which is the offset.
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->addWatermark(function(WatermarkFactory $watermark) {
+        $watermark->open('logo.png')
+            ->horizontalAlignment(WatermarkFactory::LEFT, 25)
+            ->verticalAlignment(WatermarkFactory::TOP, 25);
+    });
+```
+
+The `WatermarkFactory` also supports opening files from the web with the `openUrl` method. It supports custom HTTP headers as well.
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->addWatermark(function(WatermarkFactory $watermark) {
+        $watermark->openUrl('https://videocoursebuilder.com/logo.png');
+
+        // or
+
+        $watermark->openUrl('https://videocoursebuilder.com/logo.png', [
+            'Authorization' => 'Basic YWRtaW46MTIzNA==',
+        ]);
+    });
+```
+
+If you want more control over the GET request, you can pass in an optional third parameter, which gives you the Curl resource.
+
+```php
+$watermark->openUrl('https://videocoursebuilder.com/logo.png', [
+    'Authorization' => 'Basic YWRtaW46MTIzNA==',
+], function($curl) {
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+});
+```
+
+#### Watermark manipulation
+
+This package can manipulate watermarks by using [Spatie's Image package](https://github.com/spatie/image). To get started, install the package with Composer:
+
+```bash
+composer require spatie/image
+```
+
+Now you can chain one more manipulation methods on the `WatermarkFactory` instance:
+
+```php
+FFMpeg::open('steve_howe.mp4')
+    ->addWatermark(function(WatermarkFactory $watermark) {
+        $watermark->open('logo.png')
+            ->right(25)
+            ->bottom(25)
+            ->width(100)
+            ->height(100)
+            ->greyscale();
+    });
+```
+
+Check out [the documentation](https://spatie.be/docs/image/v1/introduction) for all available methods.
+
+### Export without transcoding
+
+This package comes with a `ProtoneMedia\LaravelFFMpeg\FFMpeg\CopyFormat` class that allows you to export a file without transcoding the streams. You might want to use this to use another container:
+
+```php
+FFMpeg::open('video.mp4')
+    ->export()
+    ->inFormat(new \ProtoneMedia\LaravelFFMpeg\FFMpeg\CopyFormat)
+    ->save('video.mkv');
 ```
 
 ### Chain multiple convertions
@@ -283,7 +418,7 @@ FFMpeg::fromDisk('uploads')
 
 When you open multiple inputs, you have to add mappings so FFMpeg knows how to route them. This package provides a `addFormatOutputMapping` method, which takes three parameters: the format, the output, and the output labels of the `-filter_complex` part.
 
-The output (2nd argument) should be an instanceof `\ProtoneMedia\LaravelFFMpeg\Filesystem\Media`. You can instantiate with the `make` method, call it with the name of the disk and the path (see example).
+The output (2nd argument) should be an instanceof `ProtoneMedia\LaravelFFMpeg\Filesystem\Media`. You can instantiate with the `make` method, call it with the name of the disk and the path (see example).
 
 Check out this example, which maps separate video and audio inputs into one output.
 
@@ -320,6 +455,32 @@ FFMpeg::open(['video.mp4', 'video2.mp4'])
     ->addFilter(function(ComplexFilters $filters) {
         // $filters->watermark(...);
     });
+```
+
+Opening files from the web works similarly. You can pass an array of URLs to the `openUrl` method, optionally with custom HTTP headers.
+
+```php
+FFMpeg::openUrl([
+    'https://videocoursebuilder.com/lesson-3.mp4',
+    'https://videocoursebuilder.com/lesson-4.mp4',
+]);
+
+FFMpeg::openUrl([
+    'https://videocoursebuilder.com/lesson-3.mp4',
+    'https://videocoursebuilder.com/lesson-4.mp4',
+], [
+    'Authorization' => 'Basic YWRtaW46MTIzNA==',
+]);
+```
+
+If you want to use another set of HTTP headers for each URL, you can chain the `openUrl` method:
+
+```php
+FFMpeg::openUrl('https://videocoursebuilder.com/lesson-5.mp4', [
+    'Authorization' => 'Basic YWRtaW46MTIzNA==',
+])->openUrl('https://videocoursebuilder.com/lesson-6.mp4', [
+    'Authorization' => 'Basic bmltZGE6NDMyMQ==',
+]);
 ```
 
 ### Concat files without transcoding
@@ -417,7 +578,7 @@ FFMpeg::open('steve_howe.mp4')
 
 ### Using custom segment patterns
 
-You can use a custom pattern to name the segments and playlists. The `useSegmentFilenameGenerator` gives you 5 arguments. The first, second and third argument provide information about the basename of the export, the format of the current iteration and the key of the current iteration. The fourth argument is a callback you should call with your *segments* pattern. The fifth argument is a callback you should call with your *playlist* pattern. Note that this is not the name of the master playlist, but the name of the playlist of each format.
+You can use a custom pattern to name the segments and playlists. The `useSegmentFilenameGenerator` gives you 5 arguments. The first, second and third argument provide information about the basename of the export, the format of the current iteration and the key of the current iteration. The fourth argument is a callback you should call with your *segments* pattern. The fifth argument is a callback you should call with your *playlist* pattern. Note that this is not the name of the primary playlist, but the name of the playlist of each format.
 
 ```php
 FFMpeg::fromDisk('videos')
@@ -486,11 +647,11 @@ https://protone.media/en/blog/how-to-use-ffmpeg-in-your-laravel-projects
 
 ## Wiki
 
-* [Custom filters](https://github.com/pascalbaljetmedia/laravel-ffmpeg/wiki/Custom-filters)
-* [FFmpeg failed to execute command](https://github.com/pascalbaljetmedia/laravel-ffmpeg/wiki/FFmpeg-failed-to-execute-command)
-* [Get the dimensions of a Video file](https://github.com/pascalbaljetmedia/laravel-ffmpeg/wiki/Get-the-dimensions-of-a-Video-file)
-* [Monitoring the transcoding progress](https://github.com/pascalbaljetmedia/laravel-ffmpeg/wiki/Monitoring-the-transcoding-progress)
-* [Unable to load FFProbe](https://github.com/pascalbaljetmedia/laravel-ffmpeg/wiki/Unable-to-load-FFProbe)
+* [Custom filters](https://github.com/protonemedia/laravel-ffmpeg/wiki/Custom-filters)
+* [FFmpeg failed to execute command](https://github.com/protonemedia/laravel-ffmpeg/wiki/FFmpeg-failed-to-execute-command)
+* [Get the dimensions of a Video file](https://github.com/protonemedia/laravel-ffmpeg/wiki/Get-the-dimensions-of-a-Video-file)
+* [Monitoring the transcoding progress](https://github.com/protonemedia/laravel-ffmpeg/wiki/Monitoring-the-transcoding-progress)
+* [Unable to load FFProbe](https://github.com/protonemedia/laravel-ffmpeg/wiki/Unable-to-load-FFProbe)
 
 ## Changelog
 
@@ -508,11 +669,14 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Other Laravel packages
 
-* [`Laravel Analytics Event Tracking`](https://github.com/pascalbaljetmedia/laravel-analytics-event-tracking): Laravel package to easily send events to Google Analytics.
-* [`Laravel Blade On Demand`](https://github.com/pascalbaljetmedia/laravel-blade-on-demand): Laravel package to compile Blade templates in memory.
-* [`Laravel Paddle`](https://github.com/pascalbaljetmedia/laravel-paddle): Paddle.com API integration for Laravel with support for webhooks/events.
-* [`Laravel Verify New Email`](https://github.com/pascalbaljetmedia/laravel-verify-new-email): This package adds support for verifying new email addresses: when a user updates its email address, it won't replace the old one until the new one is verified.
-* [`Laravel WebDAV`](https://github.com/pascalbaljetmedia/laravel-webdav): WebDAV driver for Laravel's Filesystem.
+* [`Laravel Analytics Event Tracking`](https://github.com/protonemedia/laravel-analytics-event-tracking): Laravel package to easily send events to Google Analytics.
+* [`Laravel Blade On Demand`](https://github.com/protonemedia/laravel-blade-on-demand): Laravel package to compile Blade templates in memory.
+* [`Laravel Cross Eloquent Search`](https://github.com/protonemedia/laravel-cross-eloquent-search): Laravel package to search through multiple Eloquent models.
+* [`Laravel Form Components`](https://github.com/protonemedia/laravel-form-components): Blade components to rapidly build forms with Tailwind CSS Custom Forms and Bootstrap 4. Supports validation, model binding, default values, translations, includes default vendor styling and fully customizable!
+* [`Laravel Paddle`](https://github.com/protonemedia/laravel-paddle): Paddle.com API integration for Laravel with support for webhooks/events.
+* [`Laravel Verify New Email`](https://github.com/protonemedia/laravel-verify-new-email): This package adds support for verifying new email addresses: when a user updates its email address, it won't replace the old one until the new one is verified.
+* [`Laravel WebDAV`](https://github.com/protonemedia/laravel-webdav): WebDAV driver for Laravel's Filesystem.
+
 ## Security
 
 If you discover any security-related issues, please email code@protone.media instead of using the issue tracker. Please do not email any questions, open an issue if you have a question.
