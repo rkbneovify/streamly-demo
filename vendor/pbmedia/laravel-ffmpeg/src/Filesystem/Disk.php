@@ -9,7 +9,6 @@ use Illuminate\Support\Traits\ForwardsCalls;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem as LeagueFilesystem;
-use Spatie\TemporaryDirectory\TemporaryDirectory;
 
 /**
  * @mixin \Illuminate\Filesystem\FilesystemAdapter
@@ -24,7 +23,7 @@ class Disk
     private $disk;
 
     /**
-     * @var \Spatie\TemporaryDirectory\TemporaryDirectory
+     * @var string
      */
     private $temporaryDirectory;
 
@@ -50,6 +49,15 @@ class Disk
         return new static($disk);
     }
 
+    public static function makeTemporaryDisk(): self
+    {
+        $filesystemAdapter = app('filesystem')->createLocalDriver([
+            'root' => TemporaryDirectories::create(),
+        ]);
+
+        return new static($filesystemAdapter);
+    }
+
     /**
      * Creates a fresh instance, mostly used to force a new TemporaryDirectory.
      */
@@ -62,7 +70,7 @@ class Disk
      * Creates a new TemporaryDirectory instance if none is set, otherwise
      * it returns the current one.
      */
-    public function getTemporaryDirectory(): TemporaryDirectory
+    public function getTemporaryDirectory(): string
     {
         if ($this->temporaryDirectory) {
             return $this->temporaryDirectory;

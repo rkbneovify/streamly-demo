@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Models\RecentChannel;
 use App\Models\FrontendText;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class APIController extends Controller
 {
     /**
@@ -29,7 +30,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi']]);
     }
 
     public function index()
@@ -567,4 +568,18 @@ public function myRecents(Request $request)
     }
     
     }
+
+    public function qrcodeapi(){
+     //use this to generate svg file and then manually convert that svg to png
+        // $qrcode=QrCode::size(250)->generate('http://streamlytv.com/'); 
+        
+        $imagePath=asset("/frontend/img/streamlyQRcode.png");
+
+        $response = [
+            'success' => true,
+            'data' => $imagePath,
+            'message' => 'http://streamlytv.com/','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+       }
 }
