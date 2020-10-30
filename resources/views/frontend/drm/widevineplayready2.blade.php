@@ -200,7 +200,7 @@
 					<div class="col-md-8 col-centered">
 							<video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
 							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
-							<source src="" type="application/x-mpegURL"/>
+							<source src="" type="application/dash+xml"/>
 					</video>
 
 						<div class="channel-detail">
