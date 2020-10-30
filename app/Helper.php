@@ -51,7 +51,21 @@ use Jenssegers\Agent\Agent;
         ],200)->send();}
 
         } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
-
+          //check if device id is same
+          if (App\SessionTable::where([
+            ['status', '=', '1'],
+            ['users_id', '=', $user_id],
+            ['mac_address', '=', $deviceDetails],
+             ])->exists()) {
+              $explodedstring= explode("#~",$deviceDetails);
+               return response()->json([
+                'success' => false,
+                'response_code'=>429,
+                'message'=>'Same device ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web!',
+                //'loggedindeviceinfointheseId'=>$myarr,
+              ],429)->send();
+            // exists
+        }
          //new entry of sessionTable
          //and get the number of last connected device
          $prevConnectDevicecount = App\SessionTable::select('connected_devices')
