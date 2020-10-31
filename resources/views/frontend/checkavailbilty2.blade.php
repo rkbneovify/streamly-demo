@@ -146,9 +146,7 @@ $('body').on('blur','[name="zip"]',function(){
 			background-color: #004E92;
 		}
 
-		body{
-			background: #F9F9F9 0% 0% no-repeat padding-box;
-		}
+		
 		
 		.page-section {
 		    padding: 8rem 0;
@@ -362,12 +360,13 @@ $('body').on('blur','[name="zip"]',function(){
 </div>
 	<section class="page-section">
 		<div class="container">
-				<h2 class="section-heading text-center">Check Availability</h2>
-				<p class="text-center">To display pricing and offers available for your location, please enter an address.</p>
+				<h2 class="section-heading text-center">Check Availability</h2><div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
+  
+					alt="location image" style="">To display pricing and offers available for your location, please enter an address.</p></div>
 				<div class="row setting-cards">
-					<div class=" col-md-6">
+					<div class=" col-md-6 " style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px; border: 1px solid #CED4DA;">
 						<ul class="setting-card">
-							<li>Enter Zipcode:</li>
+							
 							
 								@if($errors->has('email'))
 								 <div class="alert alert-danger alert-dismissible ">
@@ -379,10 +378,10 @@ $('body').on('blur','[name="zip"]',function(){
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}">
 													{{-- <label for="email" class="control-label text-center">Email</label> --}}
-													<input type="number" id="zip" name="zip" class="form-control text-center">
+													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center">
 											</div>
 											<div class="form-group">
-												<label for="Address2" class="control-label">Address</label>
+												<label for="Address2"  class="control-label ">Address</label>
 												<input type="text" id="Address2" name="Address2" class="form-control" >
 											<pre>222 Example St.</pre>	
 										</div>			<div class="form-group">
@@ -406,59 +405,21 @@ $('body').on('blur','[name="zip"]',function(){
 								</ul>
 							
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6" style="text-align: center; ">
 						
-						<ul class="setting-card">
-							<li>Enter Zipcode:</li>
+						
+							<h5><img src="{{url('../frontend/img/user.png')}}" 
+  
+	alt="user icon" style="height: 21px;padding-left:10px;padding-right:10px;  font-weight: 40;">Existing Customer</h5>
 							
-								@if($errors->has('email'))
-								 <div class="alert alert-danger alert-dismissible ">
-										<button type="button" class="close" data-dismiss="alert">&times;</button>
-										<strong>Error!</strong> {{$errors->first()}}
-								</div>
-						@endif 
-									<form  id="my_form" class="login-form mt-3">
-										@csrf
-											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}">
-													{{-- <label for="email" class="control-label text-center">Email</label> --}}
-													<input type="number" id="zip" name="zip" class="form-control text-center">
-											</div>
-											{{-- <div class="form-group">
-												<label for="Address2" class="control-label">Address</label>
-												<input type="text" id="Address2" name="Address2" class="form-control">
-										</div>			<div class="form-group">
-												<label for="City" class="control-label">City</label>
-												<input type="text" id="City" name="City" class="form-control">
-										</div>			<div class="form-group">
-												<label for="State" class="control-label">State</label>
-												<input type="text" id="State" name="State" class="form-control">
-										</div>
-											<small id="ziphelp" ></small>
-											<small id="addresshelp" ></small>
-											<div class="form-group ">
-													<button type="submit" class="btn btn-lg login-btn">Check zipcode</button>
-											</div> --}}
-				
-				
-				
-											{!! csrf_field() !!}
-									</form>
+	<p style="font-weight: 30;">	<strong >Already have an account? </strong><a onclick="openNav(event)" href="javascript:void(0)">Log in</a> </p>
 							
-								</ul>
+								
 							
 					</div>
 				
 				
 
-				@if ($errors->any())
-				<div class="alert alert-danger">
-						<ul>
-								@foreach ($errors->all() as $error)
-										<li>{{ $error }}</li>
-								@endforeach
-						</ul>
-				</div>
-		@endif
 
 		</div>
 		
