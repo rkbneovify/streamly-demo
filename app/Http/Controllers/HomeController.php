@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
 use ctwillie\Usps\Address;
 use App\Models\FrontendText;
+use App\Models\AddressesCheckAvailability;
 // use GuzzleHttp\Client;
 
 class HomeController extends Controller
@@ -356,6 +357,13 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     // print_r($response);
     $message=isset($response['Address']['ReturnText'])?$response['Address']['ReturnText']:'Seems like valid address';
     //todo insert into address logic
+    $AddressesCheckAvailability = AddressesCheckAvailability::updateOrCreate([
+        'address2' => $response['Address']['Address2'],
+        'city' => $response['Address']['City'],
+        'state' => $request->input('State'),
+        'zip5'=>$response['Address']['Zip5']
+    ]);
+
     //$request->input('Address2').$request->input('City').$request->input('State').$request->input('zip')
     return response()->json(['message' => $message], 200);
 
