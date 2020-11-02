@@ -151,6 +151,13 @@
                 Frontend Text
                 </p>
               </a>
+            </li><li class="nav-item ">
+              <a href=" {{ url('/admin/addressdatatable') }}"  class="nav-link">
+              <i class="nav-icon fas fa-edit"></i>
+                <p>
+                Address availibilty
+                </p>
+              </a>
             </li>
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Zipcode;
 
 
+use App\Models\AddressesCheckAvailability;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
@@ -264,6 +265,24 @@ class ZipcodeController extends Controller
          }
 
         return view('admin.zipcodes.mapfence',compact('geojson'));
+    }
+
+    public function addressindex()
+    {
+        
+     
+        return view('admin.zipcodes.addresses');
+    }
+
+    public function addressindexDatatables()
+    {  $data = AddressesCheckAvailability::select('address2','city','state','zip5')->get();
+        return DataTables::of($data)
+        ->addColumn('action', function($row) {
+            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })
+
+        ->addIndexColumn()
+        ->make(true);
     }
     
 }
