@@ -87,9 +87,12 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
     Route::get('allowedzipcode', 'ZipcodeController@allowedZipcodes');
     Route::get('address', 'ZipcodeController@addressindex');
     Route::get('addressdatatable', 'ZipcodeController@addressindexDatatables');
+
+    Route::put('addressupdate/{id}','ZipcodeController@addressupdate')->name('addressupdate');
     Route::get('/zipcode/create', 'ZipcodeController@create');
     Route::get('/zipcode/view/{id}', 'ZipcodeController@show');
     Route::get('/zipcode/edit/{id}', 'ZipcodeController@edit');
+    Route::get('/addressupdateedit/{id}', 'ZipcodeController@addressupdateedit');
     //Route::post('zipcode/update', 'ZipcodeController@updateRole');
     Route::post('insertzipcode','ZipcodeController@store')->name('insertzipcode');
     Route::put('zipcodeupdate/{id}','ZipcodeController@update')->name('zipcodeupdate');
