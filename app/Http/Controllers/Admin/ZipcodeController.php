@@ -275,15 +275,42 @@ class ZipcodeController extends Controller
     }
 
     public function addressindexDatatables()
-    {  $data = AddressesCheckAvailability::select('address2','city','state','zip5')->get();
+    {  $data = AddressesCheckAvailability::select('id','address2','city','state','zip5')->get();
         return DataTables::of($data)
         ->addColumn('action', function($row) {
-            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/addressupdateedit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
 
         ->addIndexColumn()
         ->make(true);
     }
+
+    public function addressupdateedit($id){
+
+        $zipstate = AddressesCheckAvailability::find($id); 
+        return view('admin.zipcodes.addressedit', compact('zipstate'));
+    }
+    public function addressupdate(Request $request, $id){
+        $this->validate($request, [
+            'zip5' => 'required|max:20',
+            'city' => 'required',
+            'state' => 'required',
+            'address2' => 'required',
+            
+            
+    
+        ]);
+    
+        $input = $request->only('zip5', 'city', 'state','address2');
+        
+        $model = AddressesCheckAvailability::find($id);
+        if(!$model){
+            return redirect('admin/address')->with('info','AddressesCheckAvailability with id ' . $id . ' cannot be found.'); 
+        }
+        else{$model->update($input); //update the subscription info
+    
+            return redirect('admin/address')->with('info','AddressesCheckAvailability updated Successfully');
+       }    }
     
 }
 

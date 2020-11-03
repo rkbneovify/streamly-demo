@@ -25,9 +25,9 @@
 
     <!-- Main content -->
     <section class="content">
-    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
+    {{-- <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
                                         Add new Address 
-                                    </a>
+                                    </a> --}}
 
       <!-- Default box -->
       <div class="card">
