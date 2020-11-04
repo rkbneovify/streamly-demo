@@ -6,10 +6,10 @@
 			background-color: #004E92;
 		}
 	</style>
-
-<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
-  
-<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
+{{-- <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet"> --}}
+<script src="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video.min.js"></script>
+{{-- <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script> --}}
 <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 <script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 
@@ -18,7 +18,23 @@
 
 <script>
 	$('document').ready(function(){
-		var player = videojs('player', {autoplay: true});
+		var player = videojs('player', {
+          preload: true,
+          autoplay: true,
+          controls: true,
+          controlBar: {
+              'liveDisplay': true,
+              'pictureInPictureToggle': true,
+		// 					'volumeMenuButton': true,
+    // 'currentTimeDisplay': true,
+    // 'timeDivider': true,
+    // 'durationDisplay': true,
+    // 'remainingTimeDisplay': false,
+    // 'progressControl': true,
+    // 'subtitlesButton': true,
+    'fullscreenToggle': true,
+          }
+      });
 	
 		player.httpSourceSelector();
 
@@ -233,9 +249,17 @@
 		</div>
 
 	
-		<input type="text" placeholder="paste your link here" id="myInput">
+		<input type="text" placeholder="paste your link here"  value="https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd" id="myInput">
         
 		<button id="change">change video</button>
+
+<div> example:
+	<p>https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd</p>
+	<p>http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest</p>
+	<p>http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest</p>
+	<p>https://vm2.dashif.org/livesim/testpic_2s/Manifest.mpd</p>
+	"https://d2rghg6apqy7xc.cloudfront.net/dvp/test_dash/005/unencrypted/montereypop_16_min_2265099.mpd
+</div>
 		</div>
 	</section>
 	

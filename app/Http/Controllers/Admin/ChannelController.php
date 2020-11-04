@@ -357,7 +357,7 @@ $record = $this->channeljsonFunc($type);
     //  ]);
      DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 $record  = Gracenote::select("CallSign","StationName","image")
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
 ->fromSub(function ($query) {
     $callsign = request()->get('search');
     $query->select('gracenote.*','channels.image')
