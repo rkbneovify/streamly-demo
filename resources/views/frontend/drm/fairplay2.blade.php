@@ -19,7 +19,22 @@
 	<script type="text/javascript">
 			(function() {
 					// Init player.
-					var player = videojs('player', {autoplay: true});
+					var player = videojs('player', {
+          preload: true,
+          autoplay: true,
+          controls: true,
+          controlBar: {
+              'liveDisplay': true,
+              'pictureInPictureToggle': true,
+		// 					'volumeMenuButton': true,
+    // 'currentTimeDisplay': true,
+    // 'timeDivider': true,
+    // 'durationDisplay': true,
+    // 'remainingTimeDisplay': false,
+    // 'progressControl': true,
+    // 'subtitlesButton': true,
+    'fullscreenToggle': true,
+          }});
 					player.httpSourceSelector();
 					player.eme();
 					player.on('ready', function() {

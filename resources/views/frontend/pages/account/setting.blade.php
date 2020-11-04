@@ -214,7 +214,7 @@ use Laravel\Cashier\Cashier;?>
 						 
 									<div class="modal-body text-center">
 										<h4>Remove Device</h4>
-										<p>{{ $user->device_name ?? '' }} inch will be removed. Would you like to continue?</p>
+										<p>{{ $user->device_name ?? '' }} will be removed. Would you like to continue?</p>
 										<div>
 											<form action="{{ url('user/sessiondestroy', $user->id) }}" method="POST">
 												<input type="hidden" name="_method" value="DELETE">
