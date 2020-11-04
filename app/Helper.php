@@ -1,71 +1,21 @@
 <?php
 use Carbon\Carbon;
-
+use App\SessionTable;
 use Jenssegers\Agent\Agent;
      function checkLoginLimit($user_id,$token,$deviceDetails){
-        $login_limit = 5;$userInfo = JWTAuth::user();
+        $login_limit = 5;
     //find all by user_id and and status=active
     $active_session = App\SessionTable::where([
     ['status', '=', '1'],
     ['users_id', '=', $user_id],
      ])->get()->toArray();
-     if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
-      $termAndCondition=true;
-   } else {$termAndCondition=false;}
         //check if there's no entry by this used id
         if ((count($active_session)==0)) {
          //new entry of sessionTable
-         
-       
-        $date = date('Y-m-d H:i:s');
-        
-        //Store the login info in 
-        $task = new  App\SessionTable();
-        $task->users_id = $user_id;
-        $task->access_token = $token;
-        $task->user_ip = getUserIpAddr();
-        $task->mac_address = $deviceDetails;
-        $task->connected_devices = 1;
-       $task->logintime = Carbon::now();
-        $task->status = 1;
-        $task->created_on = $date;
-        $task->modified_on = Carbon::now();
-        
-        
-        if($task->save()){
-        return response()->json([
-      
-          'success' => true,
-          'message'=>'logged in successfully ',
-          'response_code'=>200,
-          'connected_device'=> '1 device connected  ',
-          'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'device_info'=>$deviceDetails,
-            'user'=>$userInfo,
-            'termandcondition'=>$termAndCondition
-            
-          
-          
-        ],200)->send();}
-
-        } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
+         sessionTable($user_id,$token,$deviceDetails,$connected_devices=1);
+     } else if (count($active_session) > 0 && count($active_session) < $login_limit) {
           //check if device id is same
-          if (App\SessionTable::where([
-            ['status', '=', '1'],
-            ['users_id', '=', $user_id],
-            ['mac_address', '=', $deviceDetails],
-             ])->exists()) {
-              $explodedstring= explode("#~",$deviceDetails);
-               return response()->json([
-                'success' => false,
-                'response_code'=>429,
-                'message'=>'Same device ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web!',
-                //'loggedindeviceinfointheseId'=>$myarr,
-              ],429)->send();
-            // exists
-        }
+          if(duplicateDeviceId($user_id,$deviceDetails)==false){
          //new entry of sessionTable
          //and get the number of last connected device
          $prevConnectDevicecount = App\SessionTable::select('connected_devices')
@@ -77,44 +27,8 @@ use Jenssegers\Agent\Agent;
            
         $device=number_format($prevConnectDevicecount['connected_devices']); 
         //the number of device previously connected + 1
-        
-        $newnumofDevice =$device+1; 
-        
-        $date = date('Y-m-d H:i:s');
-        
-        //Store the login info in 
-        $task = new App\SessionTable();
-        //$task->users_id = $request->users_id;
-        $task->users_id = $user_id;
-        $task->access_token = $token;//change this field to status
-        $task->user_ip = getUserIpAddr();
-        $task->mac_address = $deviceDetails;
-        $task->connected_devices= $newnumofDevice;
-        $task->logintime = Carbon::now();
-        $task->status = 1;
-        $task->created_on = $date;
-        $task->modified_on = Carbon::now();
-        $task->save();
-        if($task->save()){
-          
-          return response()->json([
-        
-            'success' => true,
-            'message'=>'logged in successfully ',
-            'connected_device'=> $newnumofDevice.' device connected  ',
-            'response_code'=>200,
-            
-
-            
-          'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
-            'device_info'=>$deviceDetails,
-            'user'=>$userInfo,'termandcondition'=>false
-            
-          ],200)->send();}
-        
-       
+        sessionTable($user_id,$token,$deviceDetails,$connected_devices=$device+1);
+        }
 
     } //after iteration we check if the count of logins is still greater than the limit
     if (count($active_session) >= $login_limit) {
@@ -368,6 +282,62 @@ if($Roku){
  }else{
    return 'others';
  }
+}
+
+function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
+  $userInfo = JWTAuth::user();
+  if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
+    $termAndCondition=true;
+ } else {$termAndCondition=false;}
+  $date = date('Y-m-d H:i:s');
+  $session_tab = new  App\SessionTable();
+  $session_tab->users_id = $user_id;
+  $session_tab->access_token = $token;
+  $session_tab->user_ip = getUserIpAddr();
+  $session_tab->mac_address = $deviceDetails;
+  $session_tab->connected_devices = $connected_devices;
+ $session_tab->logintime = Carbon::now();
+  $session_tab->status = 1;
+  $session_tab->created_on = $date;
+  $session_tab->modified_on = Carbon::now();  
+
+  if($session_tab->save()){
+    return response()->json([
+  
+      'success' => true,
+      'message'=>'logged in successfully ',
+      'response_code'=>200,
+      'connected_device'=> $connected_devices.' device connected  ',
+      'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => JWTAuth::factory()->getTTL() * 60,
+        'device_info'=>$deviceDetails,
+        'user'=>$userInfo,
+        'termandcondition'=>$termAndCondition
+        
+      
+      
+    ],200)->send();}
+
+}
+
+function duplicateDeviceId($user_id,$deviceDetails){
+  if (App\SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+    ['mac_address', '=', $deviceDetails],
+     ])->exists()) {
+      $explodedstring= explode("#~",$deviceDetails);
+       return response()->json([
+        'success' => false,
+        'response_code'=>429,
+        'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web!',
+        //'loggedindeviceinfointheseId'=>$myarr,
+      ],429)->send();
+    // exists
+} else{
+  return false;
+}
 }
 
 
