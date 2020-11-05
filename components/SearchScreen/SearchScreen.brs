@@ -48,15 +48,16 @@ sub resultentList()
 ?"resultentList"   
    m.ChannelsMarkuGrid = m.top.createChild("MarkupGrid")   
    m.ChannelsMarkuGrid.id = "ChannelsMarkuGrid"
-   m.ChannelsMarkuGrid.translation = "[800,200]" 
+   m.ChannelsMarkuGrid.translation = "[720,200]" 
    m.ChannelsMarkuGrid.itemComponentName = "ChannellistMarkuGridComponent"
-   m.ChannelsMarkuGrid.itemSpacing = "[ 0, 0 ]" 
-   m.ChannelsMarkuGrid.rowSpacings = "[ 0, 0 ]" 
-   m.ChannelsMarkuGrid. numColumns="4" 
+   m.ChannelsMarkuGrid.itemSpacing = "[ 20, 0 ]" 
+   m.ChannelsMarkuGrid.rowSpacings = "[ 20, 20 ]" 
+   m.ChannelsMarkuGrid. numColumns="3" 
    m.ChannelsMarkuGrid. numRows="3" 
-   m.ChannelsMarkuGrid.itemSize="[250,230]" 
+   m.ChannelsMarkuGrid.itemSize="[360,260]" 
                  
    m.ChannelsMarkuGrid.drawFocusFeedback="true"
+   m.ChannelsMarkuGrid.visible = false
    m.ChannelsMarkuGrid.observeField("itemSelected","setChannelUrl")
  'show response text 
    m.errorResultLabel = m.top.createChild("Label")
@@ -65,9 +66,9 @@ sub resultentList()
    m.errorResultLabel.visible = true
 end sub
 
-sub setChannelUrl()
-?"setChannelUrl"   
- m.top.playChannel = "http://channelstore.streamlytv.com/live/CMTV/interlink.m3u8"
+sub setChannelUrl(event as object)
+?"setChannelUrl:";event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)   
+ m.top.playChannel = event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)
 end sub
    
 sub setHeader()
@@ -133,6 +134,7 @@ sub channelSearchText(event as object)
      m.ChannelSearchTask.observeField("response","responseAPI")
      m.ChannelSearchTask.control = "RUN"
    else 
+     m.ChannelsMarkuGrid.visible = false
      m.errorResultLabel.text ="Please type some text for search the channels :" 
      m.errorResultLabel.visible = true
    end if
@@ -145,11 +147,11 @@ sub responseAPI(event as object)
   dataJson = event.getData()
   
   if dataJson.success=true
-    ?"dataJson:dataJson:  ";dataJson.message.data[0]
+    ?"dataJson:dataJson:  ";dataJson.data[0]
 '    ?"dataJson:dataJson:  ";dataJson.message.data[0]
-   if  dataJson.message.data[0] <> invalid
+   if  dataJson.data[0] <> invalid
      m.labelContent = createObject("roSGNode", "ContentNode")
-     for each channel in dataJson.message.data
+     for each channel in dataJson.data
        ?"Search::chanel details :";channel
        channelDetail=m.labelContent.createChild("ContentNode")
        if channel.callSign<> invalid 
@@ -160,14 +162,16 @@ sub responseAPI(event as object)
        if channel.url<> invalid then channelDetail.url = channel.url
        if channel.id<> invalid then  channelDetail.id = channel.id
        if channel.logo<> invalid then  channelDetail.HDSMALLICONURL = channel.logo
+       if channel.callSign<> invalid then  channelDetail.title = channel.callSign
      end for
+     m.ChannelsMarkuGrid.content = m.labelContent
+     m.ChannelsMarkuGrid.visible = true
     else
        m.errorResultLabel.text ="No Channels for "+"' "+m.inputText+" '" 
        m.errorResultLabel.visible = true
     end if
   end if     
-      m.ChannelsMarkuGrid.content = m.labelContent
-      m.ChannelsMarkuGrid.visible = true
+    
 '  m.labelContent.createChild("ContentNode").title=event.getData()
   m.spinner.visible = false
 end sub
@@ -213,7 +217,7 @@ result =false
     end if
      ?"SearchScreen: ";key
      ?"m.Searchkeyboard.hasFocus(); ";m.Searchkeyboard.hasFocus()
-      if key="right"  then
+      if (key="right"  and  m.ChannelsMarkuGrid.visible = true)  then
          m.Searchkeyboard.setFocus(false)
          m.ChannelsMarkuGrid.setFocus(true)
          result = true 

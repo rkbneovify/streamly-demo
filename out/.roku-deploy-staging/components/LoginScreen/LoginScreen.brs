@@ -219,6 +219,7 @@ sub termConditionApiCall()
 end sub
 
 sub dontHaveAccount()
+    
     m.dontHaveAccountLAbel = m.top.findNode("registerLabel")
     m.dontHaveAccountLAbel.text = "Don't have acount ?"
     m.dontHaveAccountLAbel.translation = [280, 660]
@@ -275,9 +276,15 @@ end sub
 sub showDialogforCreateAccount()
     '    m.top.appendChild(m.DialogNodePoster)
     m.needHelpText = "registerNow"
-    showDialog("Sign up for the best experience", "Please go to https://streamlytv.com for creating new account.", true, "", "")
+
+    signup = m.top.createChild("signup")
+    signup.setFocus(true)
+    ' showDialog("Sign up for the best experience", "Please go to https://streamlytv.com for creating new account.", true, "", "")
     '    m.OkButton.setFocus(true)
 end sub
+
+
+
 
 sub initSupportDialog()
     m.dialogHeight = 350

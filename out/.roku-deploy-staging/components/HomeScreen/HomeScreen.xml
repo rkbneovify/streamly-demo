@@ -27,6 +27,23 @@
 
                <Poster id= "searchPoster"/>
                <TimeGrid id="timeGrid"/>
+               <Poster id = "epg_detail_info"
+                uri = "pkg://images/profile/profile_dialog.png" 
+                width ="1920" height="300" opacity="1" 
+                translation = "[0,780]"/>
+
+               <LayoutGroup id ="epg_des_layout_group" layoutDirection="horiz" horizAlignment="top" itemSpacings="[40]" translation = "[70,820]">
+                    <Poster uri="pkg:/images/home/thumbnailimgtesting.png" loadDisplayMode="scaletofill" height="220" width="350"/>
+
+                    <LayoutGroup id ="" layoutDirection="vert" horizAlignment="left" itemSpacings="[20,20]" >
+
+                         <Label text="Justin Biber Concert" id="episode_name" />
+                         <Label text="Start at 4:35 PM" id="broadcst_time" />
+                         <Label text="this is a episode broadcasting now " id="episode_detail" />
+
+                    </LayoutGroup>
+
+               </LayoutGroup>
 
                <!-- translation= "[1417,44]" -->
                <Poster uri="pkg:/images/home/profileSetting.png" translation= "[1657,44]" loadDisplayMode="scaletofill" height="56" width="56">
@@ -48,10 +65,9 @@
           </Group>
 
           <Video id="livePlayer" width="1920" height="1080" translation="[0,0]" visible="false"/>
-          <Poster id="streamlyview" uri ="pkg://images/streamly_logo.png" width="320" height="120" translation="[1500,50]" visible="false"/>
+          <Poster id="streamlyview" uri ="pkg://images/streamly_logo.png" width="320" height="100" translation="[1500,50]" visible="false"/>
 
           <!-- <Rectangle id="streaminfo" color="#000000" opacity=".3" width="1920" height="260" translation="[0,820]" visible = "false" /> -->
-           <Poster id="channelIcon" uri ="pkg://images/streamly_logo.png" width="120" height="120" translation="[100,880]" visible = "false"/>
-
+          <Poster id="channelIcon" uri ="pkg://images/streamly_logo.png" width="120" height="120" translation="[100,880]" visible = "false"/>
      </children>
 </component>

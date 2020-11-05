@@ -121,10 +121,8 @@
 	                 focusedIconUri=""
 	                 focusFootprintBitmapUri = "pkg:/images/Login/signfocus.png"
 	                 focusBitmapUri = "pkg:/images/Login/signfootprint.png"        
-	                 showFocusFootprint="true"
-	          
-	          />
-	          
+	                 showFocusFootprint="true"	          
+	          />	          			  
 	          <Button id ="termConditionButton"/>
 	          <Label  id="registerLabel"/>
 	  

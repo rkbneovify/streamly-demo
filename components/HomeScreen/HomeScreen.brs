@@ -23,6 +23,24 @@ sub init()
     ' m.channelBackgroundposter.uri = "pkg:/images/home/homeScreenBckgrndhd.png"
     ' end if
 
+    m.episode_name = m.top.findNode("episode_name")
+    m.broadcst_time = m.top.findNode("broadcst_time")
+    m.episode_detail = m.top.findNode("episode_detail")
+    
+    m.episode_detail.font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf") 
+    m.episode_detail.numLines = 5
+    m.episode_detail.width = 1300
+    m.episode_detail.height = 0
+    m.episode_detail.wrap=true
+    m.episode_detail.lineSpacing = 2
+
+    m.episode_detail.text="this is a episode broadcasting now \n this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now " 
+
+
+
+    m.broadcst_time.font = getFont(27, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+    m.episode_detail.font =  getFont(25, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
+    
     m.ChannelsGroup = m.top.findNode("ChannelsGroup")
     m.timeGride = m.top.findNode("timeGrid")
 
@@ -37,7 +55,7 @@ sub init()
     m.video.enableTrickPlay = false
     m.video.visible = false
     m.ChannelsGroup.visible = true
-    m.video.thumbnailImage = "pkg:/images/home/testingThumbnail.jpg"
+    ' m.video.thumbnailImage = "pkg:/images/home/testingThumbnail.jpg"
     '    m.channelGuide = m.top.findNode("channelGuide")
     '    m.pressbackLabel = m.top.findNode("pressbackLabel")
     m.Settings = m.top.findNode("Settings")
@@ -89,6 +107,7 @@ sub init()
 
     m.timeGride.observeField("programSelected", "programSelected")
     m.timeGride.observeField("channelFocused", "channelFocused")
+    m.timeGride.observeField("programFocusedDetails", "programFocusedDetails")
 
     m.timeGride.programHorizMargin = 32
     'm.timeGride.programBackgroundBitmapUri = "pkg:/images/programUnfocusBOrder.png"
@@ -140,10 +159,11 @@ sub init()
 
     m.PosterBackground.translation = [60, 800]
 
-    m.PosterBackground.height = 236
-    m.PosterBackground.width = 469
-    m.PosterBackground.uri = "pkg:/images/home/channelinfobackgrnd.png"
-    m.PosterBackground.opacity = .8
+    m.PosterBackground.height = 230
+    m.PosterBackground.width = 430
+
+    m.PosterBackground.uri = "pkg:/images/search/search_result_background.png"
+    m.PosterBackground.opacity = .5
     m.PosterBackground.visible = false
     '   LayoutGroup = m.PosterBackground.createChild("LayoutGroup")
     '   LayoutGroup.layoutDirection = "horiz"
@@ -179,7 +199,7 @@ sub init()
     m.ConcertChannel = m.PosterBackground.createChild("Label")
     m.ConcertChannel.translation = [189, 103]
     m.ConcertChannel.height = 41
-    m.ConcertChannel.width = 0
+    m.ConcertChannel.width = 230
     '   m.ConcertChannel.wrap =true
     m.ConcertChannel.text = "MTV-USA"
     m.ConcertChannel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -187,7 +207,7 @@ sub init()
     m.ConcertName = m.PosterBackground.createChild("Label")
     m.ConcertName.translation = [189, 162]
     m.ConcertName.height = 30
-    m.ConcertName.width = 255
+    m.ConcertName.width = 230
     m.ConcertName.text = "Justin Beiber concert"
     m.ConcertName.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
     m.channelListData = 0
@@ -210,6 +230,24 @@ sub init()
     m.programIndex = 0
 
 end sub
+sub programFocusedDetails(params as object)
+    channelNode = params.getRosgNode().content.getChild(params.getData().focusChannelIndex )
+    episode = channelNode.getChild( params.getData().focusIndex)
+   
+    ' ?"episode";  episode
+
+    if episode<> invalid 
+        m.episode_name.text = episode.TITLE
+
+        programdate = CreateObject("roDateTime")
+        programdate.FromSeconds(episode.PLAYSTART)
+        durationTimetext = programdate.toISOString().Mid(11, 5)
+        m.broadcst_time.text = "Starts at  "+durationTimetext
+
+    end if    
+   
+end sub 
+
 sub closeStreamInfo()
     ?"closeStreamInfo"
     m.streaminfoTimer.control = "stop"
@@ -243,43 +281,53 @@ sub SetupVideoPlayer()
     }
     m.position = 0
 end sub
-' sub percentage(event as object)
+sub percentage(event as object)
 
-'     if  event.getData()<>invalid
+    if (event <> invalid and event.getData() <> invalid)
 
-'         ?"percentage buffering ";event.getData().percentage
-'     else
+        ?" buffering ";event.getData().percentage
 
-'     end if
-' end sub
-sub onStateChange()
-    ?"state:"m.Video.state
-
-    ? "videoState"; m.video.state
-    ? "completedStreamInfo"; m.video.completedStreamInfo
-
-    if m.video.state = "error"
-        print "m.video.errorCode: "; m.video.errorCode
-        print "m.video.errorMsg: "; m.video.errorMsg
-        print "m.vdeo.errorStr: "; m.video.errorStr
-        print "m.vdeo.errorInfo: "; m.video.errorInfo
-        print "m.vdeo.completedStreamInfo: "; m.video.completedStreamInfo
-
-        if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
-            m.programUpdateTimer.control = "stop"
-        end if
-
-        m.streamlyview.visible = false
-        m.PosterBackground.visible = false
-        ' m.streaminfo.visible = false
-        m.video.control = "stop"
-        m.ChannelsGroup.visible = true
-        m.video.visible = false
-        m.video.setFocus(false)
-        m.timeGride.setFocus(true)
-
+    else
 
     end if
+end sub
+sub onStateChange()
+
+    if m.Video <> invalid
+
+        ?"state:"m.Video.state
+
+        ? "videoState"; m.video.state
+        ? "completedStreamInfo"; m.video.completedStreamInfo
+
+        if (m.video.state <> invalid and m.video.state = "error")
+
+            print "m.video.errorCode: "; m.video.errorCode
+            print "m.video.errorMsg: "; m.video.errorMsg
+            print "m.vdeo.errorStr: "; m.video.errorStr
+            print "m.vdeo.errorInfo: "; m.video.errorInfo
+            print "m.vdeo.completedStreamInfo: "; m.video.completedStreamInfo
+
+            if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+                m.programUpdateTimer.control = "stop"
+            end if
+
+            m.streamlyview.visible = false
+            m.PosterBackground.visible = false
+            ' m.streaminfo.visible = false
+            m.video.control = "stop"
+            m.ChannelsGroup.visible = true
+            m.video.visible = false
+            m.video.setFocus(false)
+            m.timeGride.setFocus(true)
+
+        end if
+
+    end if
+
+
+
+
 
     if m.Video.content <> invalid and m.statestToHandle[m.Video.state] <> invalid
         'we have a state that should be fired
@@ -407,15 +455,16 @@ end sub
 sub channelFocused(event as object)
     'm.lazyLoadingTimer.control = "start"
     if m.timeGride.content <> invalid
-        ? "m.timeGride.content:";m.timeGride.content.getChild(m.timeGride.channelFocused)
-        m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
-        ' m.ConsertTimingTExt =
-        ' ?"programSelected";m.timeGride.content.getChild(m.timeGride.channelFocused).getChild(m.timeGride.programSelected)
 
-        m.timeGride.content.getChild(m.timeGride.channelFocused).channelfocus = true
+        if m.timeGride.content.getChild(m.timeGride.channelFocused) <> invalid
+            ' ? "m.timeGride.content:";m.timeGride.content.getChild(m.timeGride.channelFocused)
+            m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
+            
+        end if
+
     end if
     if m.timeGride.channelFocused <> -1
-       
+
     end if
     if m.channelListData < 8 and event.getRoSGNode().content <> invalid and event.getRoSGNode().content.getChild(event.getData() + 6) = invalid and m.channelListData < m.ChannelData[m.channelNameString].Count()
         if m.lazyLoadingTimer <> invalid and m.lazyLoadingTimer.control = "start" then m.lazyLoadingTimer.control = "stop"
@@ -529,15 +578,13 @@ sub ChannelResponseData()
     m.timeGride.setFocus(true)
     m.ChannelData = m.ChannelEpisodeTask.ChannelData
 
-
-
     initGrigData(m.ChannelData)
 
     m.channelListData = 0
     m.channelNameString = "ALL"
     m.lazyLoadingTimer.control = "start"
 
-    
+
 
     m.global.RSG_analytics.trackEvent = {
         google: {
@@ -548,8 +595,8 @@ sub ChannelResponseData()
 end sub
 
 function playVideo(liveStreamData) as void
-    ? "HomeScreen:playVideo: url:";liveStreamData
-    m.video.thumbnailImage = ""
+    ' ? "HomeScreen:playVideo: url:";liveStreamData
+    ' m.video.thumbnailImage = ""
     if liveStreamData.channelid <> invalid
         m.ApiCall = CreateObject("roSGNode", "ApiCall")
         m.ApiCall.bodyData = { "channelids": liveStreamData.channelid }
@@ -568,7 +615,6 @@ function playVideo(liveStreamData) as void
         keySystem: "Playready"
         licenseServerURL: "https://streamlytv.com/api/generic?drm-type=Playready"
         ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
-
     }
 
     vidContent.streamformat = "smooth"
@@ -577,7 +623,7 @@ function playVideo(liveStreamData) as void
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd"
     ?"liveStreamData.url";liveStreamData.url
     vidContent.url = liveStreamData.url
-    ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/Manifest"
+    ' vidContent.url = "https://cdn.streamlytv.com/streamly.old/ngrp:AETVP.stream_all/Manifest"
     ' vidContent.url = "https://test.playready.microsoft.com/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/manifest"
 
 
@@ -804,7 +850,7 @@ sub playSearchChannelUrl(event as object)
 
     m.ChannelsGroup.visible = false
     m.video.visible = true
-    '    playVideo(searchScreen.playChannel,channelid)
+    playVideo(event.getData())
 end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean

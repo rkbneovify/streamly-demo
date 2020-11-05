@@ -14,16 +14,31 @@
   </interface>
 
   <script type="text/brightscript" uri="pkg:/components/SearchScreen/ChannellistMarkuGridComponent/ChannellistMarkuGridComponent.brs" />
+  <script type="text/brightscript" uri="pkg:/source/utility.brs" />
 
   <children>
 
-    <Poster id = "background" loadDisplayMode="scaleToFill" translation="[0,0]"  uri="pkg:/images/home/channelinfobackgrnd.png" />
+    <Poster id = "background" loadDisplayMode="scaleToFill" translation="[0,0]"  uri="pkg:/images/search/search_result_background.png" opacity = ".5" />
+   
 
-    <Poster id = "poster" loadDisplayMode = "scaleToFit" translation = "[40,40]"
-            height = "130"
-            width =  "130"
+    <Poster id = "poster" loadDisplayMode = "scaleToFit" translation = "[115,56]"
+            height = "0.0"
+            width =  "0.0"
             loadHeight ="130"
             loadWidth ="130" />
-    <!-- <Label id="title" height="50" width="120" translation="[150,35]" /> -->
+   
+    <!-- <Poster id = "channel_info" loadDisplayMode="scaleToFill" translation="[0,180]"  uri="pkg:/images/search/channel_list_info.png"  > -->
+    <Rectangle
+       id="channel_info"
+       color="#000000"
+       opacity=".6"
+       translation="[0,180]" >
+    <LayoutGroup layoutDirection="vert" vertAlignment="top" itemSpacings="[-18]" translation="[20,8]"  >
+        <Label id="id" height="50" width="120"  />
+        <Label id="channel_name" height="50" width="300"  />
+
+    </LayoutGroup>
+     
+    </Rectangle>
   </children>
 </component>

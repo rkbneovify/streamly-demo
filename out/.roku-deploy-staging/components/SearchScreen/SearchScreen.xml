@@ -10,7 +10,7 @@
     <function name="showProgressBar"/>
     
    <field id="exitView" type="boolean" />
-   <field id="playChannel" type="String" />
+   <field id="playChannel" type="node" />
   </interface>
 	
 
