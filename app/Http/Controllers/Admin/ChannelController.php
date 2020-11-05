@@ -347,7 +347,7 @@ $record = $this->channeljsonFunc($type);
     }
     
 
-    public function channelschedulejson(){
+    public function channelschedulejson(Request $request){
         
        // $search = date("Y-m-d");
         $callsign = request()->get('search');
@@ -355,20 +355,19 @@ $record = $this->channeljsonFunc($type);
     // ['CallSign', '=', $callsign],
     // ['StartDateTime', 'LIKE', "%{$search}%"],
     //  ]);
-     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-$record  = Gracenote::select("CallSign","StationName","image")
-->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
-->fromSub(function ($query) {
-    $callsign = request()->get('search');
-    $query->select('gracenote.*','channels.image')
-    ->from('gracenote')
-    ->join('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-    ->whereRaw("gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s') AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s')  AND (gracenote.`CallSign`='".$callsign."')")
-    ->orderBy('gracenote.StartDateTime', 'asc');
-}, 'sub')
+    
+    $ua = $request->server('HTTP_USER_AGENT');
+$isDevice=isDeviceAppleRokuOthers($ua);
 
-->orderBy('CallSign', 'asc')
-->groupBy('CallSign','StationName','image');
+if($isDevice=='roku'){ $type='smooth_url';
+    $record = $this->channelschedulejsonFunc($type,$callsign);
+}else if($isDevice=='apple')  {
+$type='url';
+$record = $this->channelschedulejsonFunc($type,$callsign);
+} else {
+$type='dash_url';
+$record = $this->channelschedulejsonFunc($type,$callsign);
+    }
 $reco=$record->get();   
      if ($reco->isEmpty()) {
         $response = [
@@ -395,6 +394,29 @@ $reco=$record->get();
         ];
         // return response()->json($reco);
         return response()->json($response, 200);
+    }
+    public function channelschedulejsonFunc($type,$callsign){
+        $imagePath=url("/uploads/channellogo/");
+    
+        DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+        $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+        ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+        ->fromSub(function ($query) use ($type) {
+          $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+          DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+          DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+          ->from('gracenote')
+          ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+        
+          ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+          AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+           ->orderBy('gracenote.StartDateTime', 'asc');
+            }, 'sub')
+            ->where('sub.status','=','1')
+            ->where('sub.callSign','=',$callsign)
+        ->orderBy('sub.callSign', 'asc')
+        ->groupBy('sub.callSign','StationName','image',$type,'id');
+        return $record;
     }
 
     public function channelData()
