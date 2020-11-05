@@ -1,6 +1,22 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
+  
+
+<script>
+    @if ($errors->has('email'))
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenav").classList.add("show");
+@endif
+@if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code'))
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenavRegister").classList.add("show");
+@endif
+
+@if(session()->has('message'))
+document.getElementById("mySidenavRegister").classList.add("show");
+@endif
+</script>
 
 	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css">
@@ -500,16 +516,6 @@ height: 64px;
 @endsection
 @section('stylesheets-bottom')
 
-<script type="text/javascript">
-    @if ($errors->has('email'))
-    // document.getElementById("mySidenav").style.width = "34%";
-    document.getElementById("mySidenav").classList.add("show");
-@endif
-@if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code'))
-    // document.getElementById("mySidenav").style.width = "34%";
-    document.getElementById("mySidenavRegister").classList.add("show");
-@endif
-</script>
 {{-- <script>
     jQuery(document).ready(function(){
         
@@ -534,12 +540,7 @@ height: 64px;
         </div>
     @endif --}}
 
-    @if(session()->has('message'))
-         <div class="alert alert-success alert-dismissible ">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ session()->get('message') }}
-        </div>
-    @endif
+    
 
 	<!-- Masthead-->
 	<header class="masthead">
@@ -617,13 +618,19 @@ height: 64px;
 
         <div class="container" style="padding: 0px 50px;">
             <div class="row mt-4">
-                @if($errors->any())
+                @if($errors->any()&& !$errors->has('email'))
          <div class="alert alert-danger alert-dismissible ">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Error!</strong> @foreach ($errors->all() as $message) 
                 {{$message}}
             
             @endforeach
+        </div>
+    @endif
+    @if(session()->has('message'))
+         <div class="alert alert-success alert-dismissible ">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ session()->get('message') }}
         </div>
     @endif 
                 <h4 class="login_txt">Create Your Account</h4>    
