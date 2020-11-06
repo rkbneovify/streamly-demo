@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Subscription;
 use Illuminate\Support\Arr;
 use Mail;
+use Exception;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class Setting extends Controller
 {   public function __construct()
@@ -107,8 +109,14 @@ config([
   'jwt.blacklist_enabled' => true
 ]);
 // JWTAuth::parseToken()->invalidate();
-
+try {
 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
+}catch (Exception $e) {
+    return redirect('account/settings')->with('message','Exception occured'.$e->getMessage().'fff');
+}catch (JWTException $e){
+    return redirect('account/settings')->with('message',''.$e->getMessage().'');
+}
+
         
          if($user){
             return redirect('account/settings')->with('message','Device Session Deleted Successfully');
