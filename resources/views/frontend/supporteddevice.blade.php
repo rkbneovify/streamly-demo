@@ -1039,6 +1039,11 @@ html.compatible-devices .vibrant-divider {
 							<p data-i18n="pcs_and_laptops-device-description">Streamly is optimized for today’s most popular browsers so you can watch on your PC or laptop.</p>
 					</div>
 			</div>
+			<div class="device-logos grid-2 country-visible-se"> 
+                <a href="http://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/pc.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+                <a href="http://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/laptop.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+               	
+			</div>
 	</div>
 </section>
 @endsection
