@@ -921,19 +921,19 @@ html.compatible-devices .vibrant-divider {
 		</div>
 		
 	</section> --}}
-	<section class="shadowed device-slider device-count-4">
+	<section class="shadowed device-slider device-count-3">
 		<ul>
-				<li data-category="media_players" class="active media_players-icon"> <span data-i18n="media_players-device-name" class="device-name">Streaming Media Players</span> </li>
+				{{-- <li data-category="media_players" class="active media_players-icon"> <span data-i18n="media_players-device-name" class="device-name">Streaming Media Players</span> </li> --}}
 				{{-- <li data-category="hdtvs" class="hdtvs-icon"> <span data-i18n="hdtvs-device-name" class="device-name">Smart TVs</span> </li> --}}
 				{{-- <li data-category="game_consoles" class="game_consoles-icon"> <span data-i18n="game_consoles-device-name" class="device-name">Game Consoles</span> </li> --}}
-				<li data-category="mvpds" class="mvpds-icon"> <span data-i18n="mvpds-device-name" class="device-name">Set-top Boxes</span> </li>
+				<li data-category="mvpds" class="hdtvs-icon"> <span data-i18n="mvpds-device-name" class="device-name">Smart TVs</span> </li>
 				{{-- <li data-category="blu_ray_players" class="blu_ray_players-icon"> <span data-i18n="blu_ray_players-device-name" class="device-name">Blu-ray Players</span> </li> --}}
 				<li data-category="phones_and_tablets" class="phones_and_tablets-icon"> <span data-i18n="phones_and_tablets-device-name" class="device-name">Smartphones &amp; Tablets</span> </li>
 				<li data-category="pcs_and_laptops" class="pcs_and_laptops-icon"> <span data-i18n="pcs_and_laptops-device-name" class="device-name">PCs &amp; Laptops</span> </li>
 		</ul>
 		<div class="shadowed vibrant-divider"></div>
 </section>
-<section data-category="media_players" class="active device-slider-content">
+{{-- <section data-category="media_players" class="active device-slider-content">
 	<div class="container">
 			<div class="row">
 					<div class="one-half column">
@@ -946,8 +946,8 @@ html.compatible-devices .vibrant-divider {
 							style="background-image: url(../frontend/images/media_players/chromecast_logo.png)" title="Chromecast" data-cms-original-style="background-image: url('./images/media_players/chromecast_logo.png')">Chromecast</a> </div>
 		
 	</div>
-</section>
-<section data-category="hdtvs" class="device-slider-content">
+</section> --}}
+<section data-category="hdtvs" class=" device-slider-content">
 	<div class="container">
 			<div class="row">
 					<div class="one-half column">
@@ -986,75 +986,19 @@ html.compatible-devices .vibrant-divider {
 		
 	</div>
 </section>
-<section data-category="mvpds" class="device-slider-content">
+<section data-category="mvpds" class="active device-slider-content">
 	<div class="container">
 			<div class="row">
 					<div class="one-half column">
 							<h4 class="fancy-header" data-i18n="mvpds-device-title">EASY AS CHANGING CHANNELS</h4>
 							<p data-i18n="mvpds-device-description">Now you can switch from live TV to Streamly right from your set-top box. Streamly is available through a growing number of pay TV providers. Ask yours for Streamly if you don’t see it here.</p>
 					</div>
-			</div>
-			<div class="device-logos grid-2 country-visible-ar"> <a href="https://www.telecentro.com.ar/producto/television" style="background-image: url(../frontend/images/s/mvpds/telecentro.png)" title="Telecentro" data-cms-original-style="background-image: url('./images/mvpds/telecentro.png')">Telecentro</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-au"> <a href="http://fetchtv.com.au/Streamly" style="background-image: url(/uploads/fetch.png)" title="Fetch" data-cms-original-style="background-image: url('/uploads/fetch.png')">Fetch</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-be"> <a href="http://www.proximus.be/en/id_zwpr_ps/personal/our-products.html" style="background-image: url(../frontend/images/s/mvpds/proximus_logo_white.png)" title="Proximus" data-cms-original-style="background-image: url('./images/mvpds/proximus_logo_white.png')">Proximus</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-br"> <a href="http://www.apple.com/appletv/" style="background-image: url(../frontend/images/s/media_players/appletv_rev.png)" title="Apple TV" data-cms-original-style="background-image: url('./images/media_players/appletv_rev.png')">Apple TV</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-4 country-visible-ca"> <a href="http://www.bell.ca/Fibe-TV#EXT=FTV_Net_ExtSite_OTH_Streamly_Mass_100216_vg_logo" style="background-image: url(../frontend/images/s/mvpds/2016-02-24.gif)" title="Bell" data-cms-original-style="background-image: url('./images/mvpds/2016-02-24.gif')">Bell</a>                <a href="http://www.cogeco.ca/web/" style="background-image: url(../frontend/images/s/mvpds/cogeco.png)" title="Cogeco" data-cms-original-style="background-image: url('./images/mvpds/cogeco.png')">Cogeco</a> <a href="http://telus.ca" style="background-image: url(../frontend/images/s/mvpds/telus.png)"
-							title="Telus" data-cms-original-style="background-image: url('./images/mvpds/telus.png')">Telus</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-4 country-visible-de"> <a href="http://www.entertain.de/startseite/funktionen/apps-und-social_tv.html#esr=&stagetab=2" style="background-image: url(../frontend/images/s/mvpds/telekom_logo_2013.svg.png)" title="Deutsche Telekom - Entertain" data-cms-original-style="background-image: url('./images/mvpds/telekom_logo_2013.svg.png')">Deutsche Telekom - Entertain</a>                <a href="http://www.humaxdigital.com/" style="background-image: url(/uploads/humax_logo_inside_320_pixel_width.png)" title="Humax" data-cms-original-style="background-image: url('/uploads/humax_logo_inside_320_pixel_width.png')">Humax</a>                <a href="https://www.sky.de/bestellung/pakete-produkte/sky-entertainment-plus-paket-165191" style="background-image: url(/uploads/sky-244x92.png)" title="Sky TV" data-cms-original-style="background-image: url('/uploads/sky-244x92.png')">Sky TV</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-dk"> <a href="http://yousee.dk/tvboksguide" style="background-image: url(/uploads/yousee-white-rgb.png)" title="youSee" data-cms-original-style="background-image: url('/uploads/yousee-white-rgb.png')">youSee</a> <a href="http://www.waoo.dk/" style="background-image: url(../frontend/images/s/mvpds/waoo_logo_2d_rgb_Streamly.png)"
-							title="Waoo" data-cms-original-style="background-image: url('./images/mvpds/waoo_logo_2d_rgb_Streamly.png')">Waoo</a> </div>
-			<div class="device-logos grid-2 country-visible-es"> <a href="https://www.movistar.es/particulares/Streamly?utm_source=Streamly&utm_medium=referrer&utm_campaign=ficha-Streamly&utm_content=2019-1-Streamly-ficha-movistar" style="background-image: url(/uploads/movistar.png)" title="Movistar" data-cms-original-style="background-image: url('/uploads/movistar.png')">Movistar</a>                <a href="https://www.ono.es" style="background-image: url(/uploads/vodafone-2017-logo.png)" title="Vodafone" data-cms-original-style="background-image: url('/uploads/vodafone-2017-logo.png')">Vodafone</a> </div>
-			<div class="device-logos grid-4 country-visible-fr">
-			<a href="http://bboxmiami.bouyguestelecom.fr/" style="background-image: url(../frontend/images/s/mvpds/bboxmiami.png)" title="Bouygues (Bbox Miami)" data-cms-original-style="background-image: url('./images/mvpds/bboxmiami.png')">Bouygues (Bbox Miami)</a>                <a href="http://assistance.orange.fr/presentation-de-la-livebox-play-5375.php#" style="background-image: url(../frontend/images/s/mvpds/orange-updated-logo.jpg)" title="Orange" data-cms-original-style="background-image: url('./images/mvpds/orange-updated-logo.jpg')">Orange</a>                <a href="http://assistance.sfr.fr/runtime/internet-et-box/tv-google-play/tout-savoir-Streamly-sfr.html" style="background-image: url(../frontend/images/s/mvpds/sfr_logo_2014.png)" title="SFR" data-cms-original-style="background-image: url('./images/mvpds/sfr_logo_2014.png')">SFR</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-6 country-visible-gb"> <a href="http://www.productsandservices.bt.com/products/bt-tv/" style="background-image: url(../frontend/images/s/mvpds/bt.png)" title="BT" data-cms-original-style="background-image: url('./images/mvpds/bt.png')">BT</a> <a href="http://www.freesat.co.uk/whats-on/Streamly"
-							style="background-image: url(/index.html)" title="Freesat" data-cms-original-style="background-image: url('')">Freesat</a> <a href="http://www.humaxdigital.com/" style="background-image: url(/uploads/humax_logo_inside_320_pixel_width.png)"
-							title="Humax" data-cms-original-style="background-image: url('/uploads/humax_logo_inside_320_pixel_width.png')">Humax</a> <a href="https://sales.talktalk.co.uk/product/tv/ptv" style="background-image: url(../frontend/images/s/mvpds/talktalk.png)" title="Talktalk"
-							data-cms-original-style="background-image: url('./images/mvpds/talktalk.png')">Talktalk</a> <a href="http://www.virginmedia.com/shop/tv/Streamly.html " style="background-image: url(../frontend/images/s/mvpds/virgin_media.png)" title="Virgin Media" data-cms-original-style="background-image: url('./images/mvpds/virgin_media.png')">Virgin Media</a>                <a href="http://www.youview.com/" style="background-image: url(../frontend/images/s/mvpds/youview-logo-20141.png)" title="YouView" data-cms-original-style="background-image: url('./images/mvpds/youview-logo-20141.png')">YouView</a> </div>
-			<div class="device-logos grid-4 country-visible-ie">
-			<a href="http://www.virginmedia.com/shop/tv/Streamly.html " style="background-image: url(../frontend/images/s/mvpds/virgin_media.png)" title="Virgin Media" data-cms-original-style="background-image: url('./images/mvpds/virgin_media.png')">Virgin Media</a>                <a href="http://www.vodafone.ie/home/tv/" style="background-image: url(/uploads/vodafone-2017-logo.png)" title="Vodafone" data-cms-original-style="background-image: url('/uploads/vodafone-2017-logo.png')">Vodafone</a> <a href="http://www.youview.com/"
-							style="background-image: url(../frontend/images/s/mvpds/youview-logo-20141.png)" title="YouView" data-cms-original-style="background-image: url('./images/mvpds/youview-logo-20141.png')">YouView</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-it"> <a href="https://sky.it/Streamly" style="background-image: url(/uploads/sky-244x92.png)" title="Sky TV" data-cms-original-style="background-image: url('/uploads/sky-244x92.png')">Sky TV</a> <a href="https://www.tim.it/smart-life/tv-entertainment/tim-Streamly"
-							style="background-image: url(../frontend/images/s/mvpds/primario_rgb_png.png)" title="Telecom Italia" data-cms-original-style="background-image: url('./images/mvpds/primario_rgb_png.png')">Telecom Italia</a> </div>
-			<div class="device-logos grid-4 country-visible-nl">
-			<a href="https://www.kpn.com/" style="background-image: url(../frontend/images/s/mvpds/449px-kpn_logo.svg.png)" title="KPN" data-cms-original-style="background-image: url('./images/mvpds/449px-kpn_logo.svg.png')">KPN</a> <a href="http://www.telfort.nl/Streamly"
-							style="background-image: url(../frontend/images/s/mvpds/telfort_logo_rgb.png)" title="Telfort" data-cms-original-style="background-image: url('./images/mvpds/telfort_logo_rgb.png')">Telfort</a> <a href="http://www.xs4all.nl" style="background-image: url(../frontend/images/s/mvpds/xs4all_logo_yellow_rgb.png)"
-							title="Xs4all" data-cms-original-style="background-image: url('./images/mvpds/xs4all_logo_yellow_rgb.png')">Xs4all</a> <a href="https://www.ziggo.nl/televisie/Streamly/" style="background-image: url(/uploads/ziggologo-244x92.png)" title="Ziggo"
-							data-cms-original-style="background-image: url('/uploads/ziggologo-244x92.png')">Ziggo</a> </div>
-			<div class="device-logos grid-2 country-visible-pt"> <a href="https://www.meo.pt/tv/melhor-experiencia-tv/Streamly" style="background-image: url(/uploads/meo-branco-rgb.png)" title="MEO" data-cms-original-style="background-image: url('/uploads/meo-branco-rgb.png')">MEO</a> <a href="http://www.vodafone.pt/main/particulares/"
-							style="background-image: url(/uploads/vodafone-2017-logo.png)" title="Vodafone" data-cms-original-style="background-image: url('/uploads/vodafone-2017-logo.png')">Vodafone</a> </div>
-			<div class="device-logos grid-2 country-visible-se">
-			<a href="https://www.comhem.se/tv" style="background-image: url(../frontend/images/s/mvpds/comhem_logo_neg.png)" title="Comhem" data-cms-original-style="background-image: url('./images/mvpds/comhem_logo_neg.png')">Comhem</a> <a href="https://www.telia.se/privat/tv"
-							style="background-image: url(/uploads/telia-pw-rgb.png)" title="Telia" data-cms-original-style="background-image: url('/uploads/telia-pw-rgb.png')">Telia</a> </div>
-			<div class="device-logos grid-20 country-visible-us"> <a href="http://atlanticbb.com/for-home/tv/Streamly" style="background-image: url(../frontend/images/s/mvpds/atlanticbroadband.png)" title="Atlantic Broadband" data-cms-original-style="background-image: url('./images/mvpds/atlanticbroadband.png')">Atlantic Broadband</a>                <a href="http://www.brctv.com/tivo" style="background-image: url(../frontend/images/s/mvpds/blue-ridge-communications-361.png)" title="Blue Ridge" data-cms-original-style="background-image: url('./images/mvpds/blue-ridge-communications-361.png')">Blue Ridge</a>                <a href="https://www.cableone.net/" style="background-image: url(../frontend/images/s/mvpds/cableone.gif)" title="Cable ONE" data-cms-original-style="background-image: url('./images/mvpds/cableone.gif')">Cable ONE</a> <a href="http://www.xfinity.com/Streamly"
-							style="background-image: url(../frontend/images/s/mvpds/xfinity.png)" title="Comcast" data-cms-original-style="background-image: url('./images/mvpds/xfinity.png')">Comcast</a> <a href="https://www.cox.com/residential/education-center/tv/Streamly-on-contour.html"
-							style="background-image: url(/uploads/cox-244x92.png)" title="COX" data-cms-original-style="background-image: url('/uploads/cox-244x92.png')">COX</a> <a href="http://www.dish.com/technology/Streamly/" style="background-image: url(../frontend/images/s/mvpds/dish_logo_4c_red.png)"
-							title="Dish" data-cms-original-style="background-image: url('./images/mvpds/dish_logo_4c_red.png')">Dish</a> <a href="http://www.gci.com/kb/Streamly-on-tivo" style="background-image: url(../frontend/images/s/mvpds/gci.png)" title="GCI" data-cms-original-style="background-image: url('./images/mvpds/gci.png')">GCI</a>                <a href="http://mygrande.com/cable-tv/tivo" style="background-image: url(../frontend/images/s/mvpds/grandecommunications.png)" title="Grande Communications" data-cms-original-style="background-image: url('./images/mvpds/grandecommunications.png')">Grande Communications</a>                <a href="https://www.midcocomm.com/" style="background-image: url(../frontend/images/s/mvpds/midcontinentcommunications.png)" title="Midcontinent Communications" data-cms-original-style="background-image: url('./images/mvpds/midcontinentcommunications.png')">Midcontinent Communications</a>                <a href="http://rcn.com/j/Streamly" style="background-image: url(../frontend/images/s/mvpds/rcn_corporation_logo.svg.png)" title="RCN" data-cms-original-style="background-image: url('./images/mvpds/rcn_corporation_logo.svg.png')">RCN</a> <a href="http://www.suddenlink.com/tivo"
-							style="background-image: url(../frontend/images/s/mvpds/suddenlink.png)" title="Suddenlink TV" data-cms-original-style="background-image: url('./images/mvpds/suddenlink.png')">Suddenlink TV</a> <a href="https://www.tivo.com/my-account/how-to/watch-Streamly"
-							style="background-image: url(../frontend/images/s/mvpds/tivo.png)" title="TiVo" data-cms-original-style="background-image: url('./images/mvpds/tivo.png')">TiVo</a> <a href="http://atlanticbb.com/for-home/tv/Streamly" style="background-image: url(/uploads/vodafone-2017-logo.png)"
-							title="Vodafone" data-cms-original-style="background-image: url('/uploads/vodafone-2017-logo.png')">Vodafone</a> <a href="http://www.wavebroadband.com/for-home/cable-tv/tivo/" style="background-image: url(../frontend/images/s/mvpds/wavelogo.png)" title="Wave"
-							data-cms-original-style="background-image: url('./images/mvpds/wavelogo.png')">Wave</a> <a href="http://www.wowway.com/home-map" style="background-image: url(../frontend/images/s/mvpds/wowlogo.png)" title="WOW!" data-cms-original-style="background-image: url('./images/mvpds/wowlogo.png')">WOW!</a>
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-					<div></div>
-			</div>
+            </div>
+            <div class="device-logos grid-4 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/roku.png)" title="Roku" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
+                style="background-image: url(../frontend/img/newicon/andriodtv.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Apple iOS</a> <a href="https://www.microsoft.com/en-us/mobile/phones/all/"
+                style="background-image: url(../frontend/img/newicon/appletv.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a>
+        <div></div>
+</div>
 	</div>
 </section>
 <section data-category="blu_ray_players" class="device-slider-content">
@@ -1094,57 +1038,6 @@ html.compatible-devices .vibrant-divider {
 							<h4 class="fancy-header" data-i18n="pcs_and_laptops-device-title">WATCH ON WHAT YOU HAVE</h4>
 							<p data-i18n="pcs_and_laptops-device-description">Streamly is optimized for today’s most popular browsers so you can watch on your PC or laptop.</p>
 					</div>
-			</div>
-			<div class="device-logos grid-2 country-visible-at"> <a href="http://www.toshiba.at/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-4 country-visible-be"> <a href="http://www.lg.com/be_fr/produits-informatiques" style="background-image: url(../frontend/images/s/hdtvs/lg.png)" title="LG" data-cms-original-style="background-image: url('./images/hdtvs/lg.png')">LG</a> <a href="http://www.sony.be/support/fr/hub/prd-comp"
-							style="background-image: url(../frontend/images/s/hdtvs/sony-light.png)" title="Sony" data-cms-original-style="background-image: url('./images/hdtvs/sony-light.png')">Sony</a> <a href="http://www.toshiba.be/fr/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)"
-							title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-br"> <a href="http://www.lge.com/br/computadores" style="background-image: url(../frontend/images/s/hdtvs/lg.png)" title="LG" data-cms-original-style="background-image: url('./images/hdtvs/lg.png')">LG</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-ch"> <a href="http://www.toshiba.ch/fr/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-co"> <a href="http://www.lge.com/co" style="background-image: url(../frontend/images/s/hdtvs/lg.png)" title="LG" data-cms-original-style="background-image: url('./images/hdtvs/lg.png')">LG</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-de"> <a href="http://www.toshiba.de/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-dk"> <a href="http://www.toshiba.dk/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-fi"> <a href="http://www.toshiba.fi/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-fr"> <a href="http://www.toshiba.fr/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-gb"> <a href="http://www.toshiba.co.uk/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-ie"> <a href="http://www.toshiba.ie/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-4 country-visible-lu"> <a href="http://www.lg.com/be_fr/produits-informatiques" style="background-image: url(../frontend/images/s/hdtvs/lg.png)" title="LG" data-cms-original-style="background-image: url('./images/hdtvs/lg.png')">LG</a> <a href="http://www.sony.lu/support/fr/hub/prd-comp"
-							style="background-image: url(../frontend/images/s/hdtvs/sony-light.png)" title="Sony" data-cms-original-style="background-image: url('./images/hdtvs/sony-light.png')">Sony</a> <a href="http://www.toshiba.eu/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)"
-							title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-4 country-visible-nl"> <a href="http://www.lg.com/nl/computer-producten" style="background-image: url(../frontend/images/s/hdtvs/lg.png)" title="LG" data-cms-original-style="background-image: url('./images/hdtvs/lg.png')">LG</a> <a href="http://www.sony.nl/electronics/computers/vaio-laptops"
-							style="background-image: url(../frontend/images/s/hdtvs/sony-light.png)" title="Sony" data-cms-original-style="background-image: url('./images/hdtvs/sony-light.png')">Sony</a> <a href="http://www.toshiba.nl/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)"
-							title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-no"> <a href="http://www.toshiba.no/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
-			</div>
-			<div class="device-logos grid-2 country-visible-se"> <a href="http://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/hdtvs/toshiba.png)" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-					<div></div>
 			</div>
 	</div>
 </section>
