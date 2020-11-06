@@ -278,11 +278,18 @@ sub showDialogforCreateAccount()
     m.needHelpText = "registerNow"
 
     signup = m.top.createChild("signup")
+    signup.observeField("exit","closesignup")
     signup.setFocus(true)
     ' showDialog("Sign up for the best experience", "Please go to https://streamlytv.com for creating new account.", true, "", "")
     '    m.OkButton.setFocus(true)
 end sub
 
+sub closesignup(event as object)
+  ?"closesignup"
+    m.top.removeChild(event.getRoSgnode())
+    m.registerNow.setFocus(true)
+
+end sub
 
 
 

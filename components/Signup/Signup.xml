@@ -1,5 +1,10 @@
 <component name="Signup" extends="Group">
     <script type="text/brightscript" uri="pkg:/components/Signup/Signup.brs" />
-    
+
     <script type="text/brightscript" uri="pkg:/source/utility.brs" />
+
+
+    <interface>
+        <field id="exit" type="boolean" />
+    </interface>
 </component>

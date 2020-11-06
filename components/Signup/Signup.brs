@@ -2,6 +2,8 @@ sub init()
     ?"SignUp screen init"
 
 
+    ' showProgressBar()
+    ' apiCAll()
     ScreenBackgroundSet()
     logoSet()
     LabelSet()
@@ -9,8 +11,83 @@ sub init()
     QRScaneSet()
     LableSignupHoldset()
 
+    createLoader()
+    showspinner(true)
+
+    TaskSignup = CreateObject("roSgNode", "TaskSignup")
+    TaskSignup.observeField("response", "apiResponse")
+    TaskSignup.control = "RUN"
+
 end sub
 
+sub apiResponse(event as object)
+    ?"apiResponse:";event.getData()
+    event.getRosgNode().control = "STOP"
+
+    if event.getData().responseCode = 200
+        ?"apiResponse:";event.getData().jsonResponse
+        if event.getData().jsonResponse.data <> invalid
+            m.QRPoster.Uri = event.getData().jsonResponse.data
+
+        end if
+        if event.getData().jsonResponse.message <> invalid
+            m.browserLink.text = event.getData().jsonResponse.message
+
+        end if
+    else
+
+    end if
+    ' TaskSignup.control ="STOP"
+    showspinner(false)
+end sub
+
+sub createLoader()
+
+    m.LoaderBackground = m.top.createChild("Rectangle")
+    m.LoaderBackground.color = "0x000000FF"
+    m.LoaderBackground.visible = false
+    '  m.LoaderBackground.opacity="0.65"
+    m.LoginBusySpinner = m.top.createChild("BusySpinner")
+    m.LoginBusySpinner.visible = false
+    m.LoginBusySpinner.clockwise = false
+    m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+    '  m.LoginBusySpinner.visible = false
+
+end sub
+
+' sub showProgressBar()
+'     ' m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
+'     ' m.LoaderBackground = m.top.findNode("LoaderBackground")
+'     ' m.LoginBusySpinner.observeField("visible", "showspinner")
+
+' end sub
+sub showspinner(event as object)
+    ?"SignUp::showspinner:event : ";event
+
+    if(event = true)
+
+        centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
+        centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
+        m.LoginBusySpinner.translation = [centerx, centery]
+
+        m.LoaderBackground.width = 1920
+        m.LoaderBackground.height = 1080
+        m.LoaderBackground.visible = true
+        m.LoginBusySpinner.visible = true
+        m.LoginBusySpinner.control = "start"
+
+    else if(event = false)
+
+        m.LoaderBackground.visible = false
+        m.LoginBusySpinner.visible = false
+        m.LoginBusySpinner.control = "stop"
+
+    end if
+end sub
+
+' sub apiCAll()
+
+' end sub
 sub ScreenBackgroundSet()
     screenBackground = m.top.createChild("Poster")
     screenBackground.height = 1080
@@ -57,9 +134,10 @@ sub BrowserLinkSet()
     orLabel.text = "Open the link in a browser"
     orLabel.font = getFont(35, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    orLabel = m.BrouserlayoutGroup.createChild("Label")
-    orLabel.text = "Streamly.co/tv/562888"
-    orLabel.font = getFont(55, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
+    m.browserLink = m.BrouserlayoutGroup.createChild("Label")
+    m.browserLink.text = "Streamly.co/tv/562888"
+    m.browserLink.font = getFont(55, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
+    m.browserLink.numlines = 1
     m.BrouserlayoutGroup.translation = [40, (browserLinkBackground.boundingRect().height - m.BrouserlayoutGroup.boundingRect().height) / 2]
 
     ' browserLinkBackground.translation = [99, 390]
@@ -100,13 +178,13 @@ sub QRScaneSet()
     orLabel.wrap = true
     orLabel.font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    QRPoster = QRScanelayoutGroup.createChild("Poster")
+    m.QRPoster = QRScanelayoutGroup.createChild("Poster")
 
-    QRPoster.height = 225
-    QRPoster.width = 225
-    QRPoster.Uri = "pkg:/images/Signup/qr_testing.png"
+    m.QRPoster.height = 225
+    m.QRPoster.width = 225
+    m.QRPoster.Uri = "pkg:/images/Signup/qr_testing.png"
 
-    QRScanelayoutGroup.translation = [60, (QRScaneBackground.boundingRect().height - QRScanelayoutGroup.boundingRect().height) / 2+60]
+    QRScanelayoutGroup.translation = [60, (QRScaneBackground.boundingRect().height - QRScanelayoutGroup.boundingRect().height) / 2 + 60]
 
 
 end sub
@@ -118,3 +196,17 @@ sub LableSignupHoldset()
     LableSignupHold.translation = [(1920 - LableSignupHold.boundingRect().width) / 2, 980]
 
 end sub
+
+function onKeyEvent(key as string, press as boolean) as boolean
+?"Signup screen ::onKeyEvent;key"; key
+?"Signup screen ::onKeyEvent;press"; press
+
+  if ( press and key ="back")
+    
+    m.top.exit = true
+    return true
+  end if
+
+  return false
+
+end function

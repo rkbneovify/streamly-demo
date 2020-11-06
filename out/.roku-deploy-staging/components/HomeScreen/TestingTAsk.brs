@@ -37,6 +37,7 @@ sub ChannnleAPI()
        singleProgramNode = channleNode.createChild("ContentNode")  
        if prograom.title<>invalid then singleProgramNode.TITLE  = prograom.title
        if prograom.start<>invalid then singleProgramNode.PLAYSTART  = prograom.start
+       if prograom.description<>invalid then singleProgramNode.Description  = prograom.description
        if prograom["end"]<>invalid then 
         singleProgramNode.PLAYDURATION  = prograom["end"]- prograom["start"] 
         timemin = prograom["end"] 

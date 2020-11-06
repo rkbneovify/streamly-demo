@@ -169,6 +169,8 @@ sub responseAPI(event as object)
     else
        m.errorResultLabel.text ="No Channels for "+"' "+m.inputText+" '" 
        m.errorResultLabel.visible = true
+       m.ChannelsMarkuGrid.visible = false
+
     end if
   end if     
     

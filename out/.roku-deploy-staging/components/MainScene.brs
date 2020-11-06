@@ -14,7 +14,7 @@ analyticsInit()
 '     }
 ' }
 
-    if getAccountToken() <> invalid and getAccountToken() <> ""
+    if getAccountToken() <> invalid and getAccountToken() = ""
         ? "login successfully: accessToken: "; getAccountToken()
         ' ShowScreen(m.global["screenStack"],CreateObject("roSgNode","HomeScreen"))
         
@@ -80,11 +80,11 @@ function analyticsInit()
          
         'set data to IQ analytics
         Google : {
-            trackingID : "UA-107042774-1"
+            trackingID : "G-S8PDH6LPDV"                        
             defaultParams : {
-                ' an : "RokuAnalyticsClient"
+                an : "StreamlyTv"
             }
-            an : "Streamly"
+            an : "StreamlyTv"
             av : di.GetVersion()
             cid : di.GetChannelClientId()
             sr : Str(di.GetDisplaySize().w)+"*"+ Str(di.GetDisplaySize().h) 'must be expressed as WWWWxHHHH

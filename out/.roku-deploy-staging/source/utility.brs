@@ -268,6 +268,9 @@ function addRecentUrl() as Object
     return "api/auth/addtorecent"
 end function
 
+function LinkNQRCode() as object
+    return "api/qrcode"
+end function
 
 
 function popupDialog(node as object, title as string , message as string) as object
