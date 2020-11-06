@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use JWTAuth;
-
+use Exception;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
 
 class UsersController extends Controller
@@ -214,8 +215,13 @@ config([
   'jwt.blacklist_enabled' => true
 ]);
 // JWTAuth::parseToken()->invalidate();
-
+try{
 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
+}catch (Exception $e) {
+    return redirect()->back()->with('info','Exception occured'.$e->getMessage().'fff');
+}catch (JWTException $e){
+    return redirect()->back()->with('info',''.$e->getMessage().'');
+}
         
          if($user){
             return redirect()->back()->with('info','User Session Deleted Successfully');
