@@ -11,14 +11,14 @@
 }</style>
 <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
 
-<link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
+<link  href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet">
   
-<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
-<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
+<script defer src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script>
+<script defer src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
 {{-- <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
-<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+<script defer src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
     @stop
 @section('content')
 
@@ -185,12 +185,12 @@
 
 @section('scripts')
 
-<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script defer type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
 <script>
 $('.select2').select2();
 </script>
-<script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script  defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script>
 
 function videoJsPlayer(url) {

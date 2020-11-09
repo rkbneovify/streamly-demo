@@ -37,13 +37,13 @@
   </footer>
 <!-- ./wrapper -->
 <!-- jQuery -->
-<script type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<script defer type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
 
 <!-- Bootstrap -->
-<script type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script defer type="text/javascript" src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE -->
-<script type="text/javascript" src="{{ asset('dist/js/adminlte.js') }}"></script>
+<script defer type="text/javascript" src="{{ asset('dist/js/adminlte.js') }}"></script>
     @yield('scripts')
 </body>
 </html>
