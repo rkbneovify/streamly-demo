@@ -12,9 +12,9 @@
 <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
 
 <link rel="stylesheet" href="{{ asset('frontend/controlbar/controlbar.css') }}">
-<script src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
-<script src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script>
-<script src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
+<script defer src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
+<script defer src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script>
+<script defer src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
     @stop
 @section('content')
 
@@ -212,12 +212,12 @@
 
 @section('scripts')
 
-<script type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script defer type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
 <script>
 $('.select2').select2();
 </script>
-<script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script>
 
  
