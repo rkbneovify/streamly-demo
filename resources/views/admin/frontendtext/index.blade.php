@@ -130,7 +130,7 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+<script defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
 <script>
   //
 // Pipelining function for DataTables. To be used to the `ajax` option of DataTables

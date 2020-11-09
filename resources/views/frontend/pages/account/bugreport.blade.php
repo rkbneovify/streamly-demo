@@ -1,7 +1,7 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets')
-<script src="https://www.google.com/recaptcha/api.js"></script>
+<script defer src="https://www.google.com/recaptcha/api.js"></script>
     <style>
         
         .sidenav {
