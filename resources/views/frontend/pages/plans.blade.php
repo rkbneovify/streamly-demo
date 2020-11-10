@@ -120,7 +120,7 @@
                       <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
                   </div>
 
-                  <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a>
+                  <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a>
 
                   <div class="mt-4">
                       <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
@@ -208,7 +208,7 @@
               <h2 class="section-heading">Select Your Plan</h2>
           </div>
           <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
-              @foreach ($plans->data as $plan)
+            @foreach ($plans->data as $plan)
               <div class="col-sm-4 select-plan-card">
                 <div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
                 <p>{{ $plan->nickname }} </p>
@@ -219,9 +219,12 @@
 
                   <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
                     <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
-                    <li>{{$plan->metadata->text1??'Lorem Ipsum is simply dummy text of the printing'}}</li>
-                    <li>{{$plan->metadata->text2??"Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"}}</li>
-
+                    
+                    @foreach ($plan->metadata->jsonSerialize() as $key => $value)
+                  
+                    
+                    <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
+                    @endforeach
                   </ul>
 
                       <?php

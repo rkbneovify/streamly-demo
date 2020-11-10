@@ -86,7 +86,7 @@
 	<section class="page-section">
 		<div class="container">
 			<div class="text-center">
-				<h2 class="section-heading">Add Your Billing Detailsds</h2>
+				<h2 class="section-heading">Add Your Billing Details</h2>
 				<div class="row">
 					<div class="col-md-4 text-left">
 						<div class="row subscription-box">

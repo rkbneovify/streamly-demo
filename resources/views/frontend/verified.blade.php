@@ -219,7 +219,7 @@ document.getElementById("mySidenavRegister").classList.add("show");
 									<button type="submit" class="btn btn-lg login-btn">LOG IN</button>
 							</div>
 
-							<span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a>
+							<span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a>
 
 							<div class="mt-4">
 									<div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
