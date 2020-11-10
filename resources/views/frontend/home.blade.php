@@ -591,7 +591,7 @@ height: 64px;
                         <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
                     </div>
 
-                    <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a>
+                    <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a>
 
                     <div class="mt-4">
                         <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
@@ -737,9 +737,11 @@ height: 64px;
 
                         <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
                             <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
-                            <li>{{$plan->metadata->text1??'Lorem Ipsum is simply dummy text of the printing'}}</li>
-                            <li>{{$plan->metadata->text2??"Lorem Ipsum is simply dummy text of the printing Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"}}</li>
-        
+                            @foreach ($plan->metadata->jsonSerialize() as $key => $value)
+                  
+                    
+                    <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
+                    @endforeach
                           </ul>
 
                         <?php
