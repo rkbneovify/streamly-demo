@@ -128,7 +128,7 @@ use Laravel\Cashier\Cashier;?>
 
 				<div class="modal-body text-center">
 					<h4>Cancel Subscription</h4>
-					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
+					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
 					<div>
 						<form action="{{ url('user/subscriptiondestroy', Auth::user()->id) }}" method="POST">
 							<input type="hidden" name="_method" value="DELETE">
@@ -277,10 +277,10 @@ use Laravel\Cashier\Cashier;?>
 						<ul class="setting-card">
 							<li>
 								Current Pack
-								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at {{ $plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
+								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
 							</li>
 							<li>
-								{{$plan->nickname ?? ''}} at {{$plan->currency ?? ''}} {{$plan->amount/100 ?? ''}}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}
+								{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}
 								<b><span class="pull-right">{{$subscription->created_at ?? ''}}</span></b>
 							</li>
 							<li>
@@ -325,7 +325,7 @@ use Laravel\Cashier\Cashier;?>
 						<ul class="setting-card">
 							<li>
 								Current Pack
-								<b><span class="pull-right">		No Pack Subscribed</span></b>
+								<b><span class="pull-right">		No Plan Selected</span></b>
 							</li>
 							
 							<li>

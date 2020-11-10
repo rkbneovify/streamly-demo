@@ -81,7 +81,7 @@ $("#my_form").submit(function(event){
 							 dataType: 'json',
 							 success: function (data) {
 								 $('#card-button').prop('disabled', false);
-								 $('#ziphelp').html('<p style="color:green">'+data.message+'  <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a></p>');
+								 $('#ziphelp').html('<p style="color:green">'+data.message+'  <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
 							 },
 							 error:function(xhr, status, error){ 
 								 if(xhr.status==404) {
@@ -246,7 +246,7 @@ $("#my_form").submit(function(event){
 									<button type="submit" class="btn btn-lg login-btn">LOG IN</button>
 							</div>
 
-							<span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now</a>
+							<span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a>
 
 							<div class="mt-4">
 									<div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
