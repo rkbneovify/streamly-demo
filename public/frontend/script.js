@@ -62,12 +62,14 @@ function openNav(event) {
     closeNavReg();
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenav").classList.add("show");
+    document.getElementById("email").focus();
 }
 
 function openNavReg() {
     closeNav();
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenavRegister").classList.add("show");
+    document.getElementById("name").focus();
 }
 
 function closeNav() {

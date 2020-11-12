@@ -1,7 +1,9 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets')
-    <style>
+<script src="https://unpkg.com/driver.js/dist/driver.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/driver.js/dist/driver.min.css">
+<style>
         
         .sidenav {
             height: 100%;
@@ -64,6 +66,47 @@
 @endsection
 @section('stylesheets-bottom')
 <script type="text/javascript">
+// introJs().start();
+const driver = new Driver();
+// Define the steps for introduction
+driver.defineSteps([
+  {
+    element: '#first-element-introduction',
+    popover: {
+      className: 'first-step-popover-class',
+      title: 'Welcome to check availbilty page',
+
+      description: 'This page will tell you if our service is available in your location',
+      position: 'left'
+    }
+  },
+  {
+    element: '#second-element-introduction',
+    popover: {
+      title: 'Enter you zip',
+      description: 'enter zip code and wait it to fill the city and state',
+      position: 'top'
+    }
+  },
+  {
+    element: '#third-element-introduction',
+    popover: {
+      title: 'Add your address',
+      description: 'Add you address and click on submit ',
+      position: 'right'
+    }
+  },
+  {
+    element: '#fourth-element-introduction',
+    popover: {
+      title: 'Click on submit',
+      description: 'Click on submit if address is validated then you can start your trial',
+      position: 'right'
+    }
+  },
+]);
+// Start the introduction
+driver.start();
 
 $("#my_form").submit(function(event){
 	event.preventDefault(); //prevent default action 
@@ -360,7 +403,7 @@ $('body').on('blur','[name="zip"]',function(){
 </div>
 	<section class="page-section">
 		<div class="container">
-				<h2 class="section-heading text-center">Check Availability</h2><div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
+				<h2 class="section-heading text-center" id="first-element-introduction" >Check Availability</h2><div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
   
 					alt="location image" style="">To display pricing and offers available for your location, please enter an address.</p></div>
 				<div class="row setting-cards">
@@ -376,11 +419,11 @@ $('body').on('blur','[name="zip"]',function(){
 						@endif 
 									<form  id="my_form" class="login-form mt-3">
 										@csrf
-											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}">
+											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
 													{{-- <label for="email" class="control-label text-center">Email</label> --}}
 													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center">
 											</div>
-											<div class="form-group">
+											<div class="form-group" id="third-element-introduction" >
 												<label for="Address2"  class="control-label ">Address</label>
 												<input type="text" id="Address2" name="Address2" class="form-control" >
 											<pre>222 Example St.</pre>	
@@ -393,7 +436,7 @@ $('body').on('blur','[name="zip"]',function(){
 										</div>
 											<small id="ziphelp" ></small>
 											<small id="addresshelp" ></small>
-											<div class="form-group ">
+											<div class="form-group " id="fourth-element-introduction" >
 													<button type="submit" class="btn btn-lg login-btn">Submit Address</button>
 											</div>
 				
