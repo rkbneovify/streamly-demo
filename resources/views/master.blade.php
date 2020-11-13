@@ -12,7 +12,7 @@
   <!-- Font Awesome Icons -->
   <link href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
   <!-- IonIcons -->
-  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link href="{{ asset('dist/css/ionicons.min.css') }}" rel="stylesheet">
   <!-- Theme style -->
   <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
   
@@ -29,7 +29,7 @@
     </div>
     <!-- Main Footer -->
 <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+    <strong> <a href="http://streamlytv.com">© {{Date('Y')}} Streamly, LLC</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.0.4
@@ -37,7 +37,7 @@
   </footer>
 <!-- ./wrapper -->
 <!-- jQuery -->
-<script defer type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<script  type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 
 
 <!-- Bootstrap -->
