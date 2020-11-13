@@ -215,7 +215,7 @@
 @section('scripts')
 <script defer type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 
-<script defer type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
+<script  type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
 <script>
 $('.select2').select2();
 </script>
