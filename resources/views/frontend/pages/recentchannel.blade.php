@@ -179,7 +179,9 @@
 				
 				<div class="live-news-item">
 					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genr)}}">
-					<img src="{{ $channeldet->logo }}">
+					
+
+					<img src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
 					<p>{{  $channeldet->callSign}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 

@@ -546,7 +546,7 @@ height: 64px;
 	<header class="masthead">
 	    <div class="container">
             <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
-	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}" alt="logo of streamly" style="width: 442px;
+	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" style="width: 442px;
                 height: 110px;"/></div>
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
@@ -859,7 +859,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center show" data-parent="#accordion">
         <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" alt="Logo of {{$channeldet2->callSign}}">
+            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
     @else
@@ -867,7 +867,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" alt="Logo of {{$channeldet2->callSign}}">
+            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
 @endif
