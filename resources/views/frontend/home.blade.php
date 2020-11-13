@@ -600,7 +600,7 @@ height: 64px;
                     </div>
 
                     <div class="form-group mt-4 text-center">
-                        <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                        <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
                     </div>
                     {!! csrf_field() !!}
                 </form>
@@ -859,7 +859,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center show" data-parent="#accordion">
         <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
+            <img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
     @else
@@ -867,7 +867,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
+            <img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
 @endif
@@ -943,7 +943,7 @@ height: 64px;
                         <br> Watch what you want, when you want.</div>
                     <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
                 </div>
-                <div class="devices-preview"><img src="{{url('../frontend/img/devices3.png')}}" 
+                <div class="devices-preview"><img class="lazy" data-src="{{url('../frontend/img/devices3.png')}}" 
   
 alt="image of tv guide"
 ></div>
