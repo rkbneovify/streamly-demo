@@ -296,7 +296,8 @@
 						@else
 						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
 							@endif<div class="live-news-item">
-						<img src="{{  $channeldet->logo}}">
+
+						<img src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
 						<p>{{  $channeldet->name??'no name'}}</p>
 					</div> </a>
 					@endforeach
