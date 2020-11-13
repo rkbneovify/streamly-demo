@@ -77,7 +77,7 @@ driver.defineSteps([
       title: 'Welcome to check availbilty page',
 
       description: 'This page will tell you if our service is available in your location',
-      position: 'left'
+      position: 'bottom'
     }
   },
   {
@@ -85,7 +85,7 @@ driver.defineSteps([
     popover: {
       title: 'Enter you zip',
       description: 'enter zip code and wait it to fill the city and state',
-      position: 'top'
+      position: 'bottom'
     }
   },
   {
@@ -93,7 +93,7 @@ driver.defineSteps([
     popover: {
       title: 'Add your address',
       description: 'Add you address and click on submit ',
-      position: 'right'
+      position: 'bottom'
     }
   },
   {
@@ -101,7 +101,7 @@ driver.defineSteps([
     popover: {
       title: 'Click on submit',
       description: 'Click on submit if address is validated then you can start your trial',
-      position: 'right'
+      position: 'bottom'
     }
   },
 ]);
