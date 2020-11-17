@@ -62,7 +62,11 @@ function point( $coordinates, $properties ) {
 public function index(Request $request)
     {     
         $LAT= $request['latitude'];
-        $LON = $request['longitude'];
+				$LON = $request['longitude'];
+				if(!$this->is_coordinate($LAT, $LON)){
+					$response = array('success' => false,'response_code'=>400,'message'=>'coordinates must only contain numbers or invalid coordinates');
+					return response()->json($response, 400);}
+			
 $point = $this->point([$LON, $LAT],''); 
 
 $data = $this->data();
@@ -76,6 +80,24 @@ if($answer['response_code']==403){
 return response()->json($answer, 200);}
  }
 
+  /**
+ * Validates a given coordinate
+ *
+ * @param float|int|string $lat Latitude
+ * @param float|int|string $long Longitude
+ * @return bool `true` if the coordinate is valid, `false` if not
+ */
+function is_coordinate($lat, $long) {
+
+	$lat_pattern  = '/\A[+-]?(?:90(?:\.0{1,18})?|\d(?(?<=9)|\d?)\.\d{1,18})\z/x';
+	$long_pattern = '/\A[+-]?(?:180(?:\.0{1,18})?|(?:1[0-7]\d|\d{1,2})\.\d{1,18})\z/x';
+
+	if (preg_match($lat_pattern, $lat) && preg_match($long_pattern, $long)) {
+			return true;
+	} else {
+			return false;
+	}
+}
 
 
 /**
