@@ -898,7 +898,7 @@ html.compatible-devices .vibrant-divider {
 	</div>
 	{{-- url("../frontend/img/banner.webp"); --}}
 </div>
-<header id="video-background" style="background-image: url(../frontend/img/banner.webp)" data-cms-original-style="background-image: url('../frontend/images/header-2560-2.jpg')">
+<header id="video-background" style="background-image: url(../frontend/img/bannerforsupporteddvice.png)" data-cms-original-style="background-image: url('../frontend/images/header-2560-2.jpg')">
 	<h2 class="editable" data-i18n="devices-hero-title" data-cms-source="/src/index.html" data-cms-index="0" style="color: #fff; margin:0px 545.5px 20px;">Connect to Streamly using your favorite devices.</h2>
 	<div class="video-background" id="video-background-container"></div>
 </header>
@@ -953,7 +953,7 @@ html.compatible-devices .vibrant-divider {
 					<div class="one-half column">
 							<h4 class="fancy-header" data-i18n="hdtvs-device-title">BUILT-IN CONNECTION</h4>
 							<p data-i18n="hdtvs-device-description">Smart TVs have Streamly already on them—ready for you to watch. There’s no need to add another device.</p>
-							<div class="nrtv-callout-wrapper"> <img src="./images/nrtv.png" class="language-invisible-ja" /> <img src="./images/nrtv-ja.png" class="language-visible-ja" />
+							<div class="nrtv-callout-wrapper"> <img class="lazy" data-src="./images/nrtv.png" class="language-invisible-ja" /> <img class="lazy" data-src="./images/nrtv-ja.png" class="language-visible-ja" />
 									<p data-i18n="devices-nrtv-callout-text"> Want a smart TV that’s built for a great Streamly experience? Look for smart TVs with the Streamly Recommended TV logo. </p>
 									<p><a href="/en/recommendedtv/2020/" class="button" data-i18n="devices-nrtv-callout-cta" data-cms-original-href="/recommendedtv/2020/">LEARN MORE ▸</a></p>
 							</div>

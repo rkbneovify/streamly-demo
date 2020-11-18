@@ -80,7 +80,7 @@ if($isDevice=='apple')  { //for apple serve m3u8
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$url= Channel::where('callSign', $callSign)->get('url');
+$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('url');
 
   $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
 
@@ -94,8 +94,8 @@ $url= Channel::where('callSign', $callSign)->get('url');
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$url= Channel::where('callSign', $callSign)->get('dash_url as url');
-// print_r($url); exit;
+$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
+
   $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
 
 
