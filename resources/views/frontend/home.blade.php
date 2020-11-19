@@ -1,6 +1,24 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
+
+<script>
+
+    var botmanWidget = {
+    title:'Streamly Bot',
+    introMessage: 'Hello, I am a Streamly Bot! I am here to assist you and answer all your questions about our products and services!',
+    mainColor:'#004E92',
+    aboutText:'',
+    bubbleBackground:'#004E92',
+    headerTextColor: '#fff',
+};
+
+</script>
+
+
+
+<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+
   
 
 <script>
