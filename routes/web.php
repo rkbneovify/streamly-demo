@@ -189,3 +189,5 @@ Route::get('/stripesync', function (Request $request) {
     
     return redirect('admin/subscriptions')->with('info',Artisan::output());
  });
+ Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
+Route::match(['get', 'post'], '/botman', 'BotManController@handle');

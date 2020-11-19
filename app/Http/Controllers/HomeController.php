@@ -94,6 +94,10 @@ class HomeController extends Controller
 
         return view('frontend.home', compact('login','plans','pagechannel2','pagechannel'));
     }
+
+    public function botman(){
+        return view('frontend.botman'); 
+    }
     
    /* public function location(Request $request)
     {     
