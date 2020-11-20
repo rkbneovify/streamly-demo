@@ -8,6 +8,9 @@
   position: relative;  /* This position relative is needed to position the menus */
   width: 640px;
   margin: 0 auto;
+}
+.hide_column {
+    display : none;
 }</style>
 <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
 
@@ -56,6 +59,12 @@
           </div>
         </div>
         <div class="card-body p-0">
+          <div class="form-group">
+            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+              <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
+              <label class="custom-control-label" for="customSwitch3">Turn this on to test smooth links</label>
+            </div>
+          </div>
           <table id="data-table" class="table table-striped projects">
               <thead>
                   <tr>
@@ -89,6 +98,9 @@
                       </th>
                       <th style="width: 20%">
                       Callsign
+                      </th>
+                      <th style="width: 20%" style="display:none">
+                      ism
                       </th>
                   </tr>
               </thead>
@@ -218,6 +230,8 @@ $('.select2').select2();
 </script>
 <script defer type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<script type="text/javascript" src="{{ asset('plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 <script>
 
  
@@ -277,6 +291,8 @@ $(function() {
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
             { data: 'callSign', name: 'callSign',orderable: true },
+
+            {data: 'smooth_url', name: 'smooth_url', orderable: false, searchable: false ,},
         ],
         columnDefs: [
         {       
@@ -304,7 +320,9 @@ $(function() {
         '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
         data;
     }
-  } 
+  } ,  { 'targets': [ 9 ],
+      'className': "hide_column"
+    }
         
         ]
     });
@@ -312,15 +330,22 @@ $(function() {
     
         var name = $('td', this).eq(1).text();
         var mpd = $('td', this).eq(6).text();
+        var ism = $('td', this).eq(9).text();
         var url = $('td', this).eq(2).find("span").prop("title");
+        var checkISMlink=$('#customSwitch3').is(":checked");
+        // console.log('name',name);
+        // console.log('url',url);
+        // console.log('ism',ism);
+        // console.log('checkISMlink',checkISMlink);
         
-        console.log('name',name);
-        console.log('url',url);
         $(".modal-body div span").text("");
+        if(checkISMlink){$(".username span").text(ism);
+        init(ism);
+        }else{
         $(".username span").text(mpd);
 
               //  var url1 = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
-        init(mpd);
+        init(mpd);}
         $('#myModal').modal("show");
         // $("#videoPlayer").attr('src', url);
     });
