@@ -88,5 +88,11 @@
     <string name="terms"><![CDATA[T & C]]></string>
     <string name="family">Family</string>
     <string name="no_data_found">No Data Found....!</string>
+    <string name="activate_account">Activate your Streamly Account on your TV</string>
+    <string name="stay_text">Stay on this while you sign in on your phone or computer</string>
+    <string name="scan_qr">Scan this QR code</string>
+    <string name="text_qr_with_phone">Try using a phone camera or a QR code scanner</string>
+    <string name="open_link_browser">Open the link in a browser</string>
+    <string name="demo_link">streamly.co/tv/562888</string>
 
 </resources>

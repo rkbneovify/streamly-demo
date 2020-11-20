@@ -55,6 +55,23 @@
                     }
                 },
                 {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-de/values-de.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "110",
+                        "startColumns": "4",
+                        "startOffsets": "10360",
+                        "endColumns": "100",
+                        "endOffsets": "10456"
+                    }
+                },
+                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/res/values-de/values-de.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
@@ -69,23 +86,6 @@
                         "startOffsets": "5825,5932,6033,6129,6223,6342,6454,6552,6650,6779,6905,7007,7125,7311,7438,7562,7671,7766,7894,7990,8097,8213,8327,8426,8542,8661,8780,8896,9015,9140,9261,9388,9501,9620,9707,9790,9894,10032,10190",
                         "endColumns": "106,100,95,93,118,111,97,97,128,125,101,117,185,126,123,108,94,127,95,106,115,113,98,115,118,118,115,118,124,120,126,112,118,86,82,103,137,157,87",
                         "endOffsets": "5927,6028,6124,6218,6337,6449,6547,6645,6774,6900,7002,7120,7306,7433,7557,7666,7761,7889,7985,8092,8208,8322,8421,8537,8656,8775,8891,9010,9135,9256,9383,9496,9615,9702,9785,9889,10027,10185,10273"
-                    }
-                },
-                {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/fa54a525b25a9e33c2c8573ec92cc58a/core-1.5.0-alpha04/res/values-de/values-de.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "110",
-                        "startColumns": "4",
-                        "startOffsets": "10360",
-                        "endColumns": "100",
-                        "endOffsets": "10456"
                     }
                 }
             ]

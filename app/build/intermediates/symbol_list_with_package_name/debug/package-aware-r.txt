@@ -1,4 +1,4 @@
-com.streamly.tv
+com.streamly.TVApp.Streamly
 anim abc_fade_in
 anim abc_fade_out
 anim abc_grow_fade_in_from_bottom
@@ -1210,6 +1210,7 @@ color programguide_time_indicator_line
 color programguide_time_indicator_triangle
 color programguide_time_text_color
 color progress_bar_color
+color qrbackground
 color ripple_material_dark
 color ripple_material_light
 color secondary_text_default_material_dark
@@ -2615,7 +2616,6 @@ drawable option_foucs
 drawable option_press
 drawable options_states
 drawable person_singing
-drawable pic
 drawable programguide_button_background
 drawable programguide_channel_item_background
 drawable programguide_current_time_indicator_triangle
@@ -2625,6 +2625,7 @@ drawable programguide_icon_dropdown
 drawable programguide_icon_placeholder
 drawable programguide_item_program_background
 drawable programguide_tile_placeholder
+drawable qr_code_rectangle
 drawable rectangle_focus
 drawable rectangle_states
 drawable register_background
@@ -2632,6 +2633,8 @@ drawable register_normal
 drawable resize_image
 drawable resize_imagee
 drawable resized
+drawable search_text_background
+drawable search_white_border
 drawable setting_icon
 drawable shape_of_channel_cell3
 drawable sign_in_focus
@@ -2817,7 +2820,6 @@ id cos
 id current_time
 id custom
 id customPanel
-id dataBinding
 id decelerate
 id decelerateAndComplete
 id decor_content_parent
@@ -2948,7 +2950,9 @@ id ifRoom
 id ignore
 id ignoreRequest
 id image
+id imageView
 id image_search
+id img_qr_code
 id img_voice_search
 id info
 id infoOver
@@ -3007,6 +3011,8 @@ id line1
 id line3
 id linear
 id linearLayout
+id linearLayout2
+id linearLayout3
 id listMode
 id list_item
 id llMain
@@ -3042,8 +3048,6 @@ id notification_main_column
 id notification_main_column_container
 id off
 id on
-id onAttachStateChangeListener
-id onDateChanged
 id onboarding_fragment_root
 id one
 id packed
@@ -3173,7 +3177,8 @@ id text2
 id textSpacerNoButtons
 id textSpacerNoTitle
 id textView
-id textWatcher
+id textView2
+id textView3
 id text_all
 id text_channels
 id text_comedy
@@ -3205,6 +3210,7 @@ id transitionToEnd
 id transitionToStart
 id transport_row
 id triangle
+id tv_link
 id tv_privacy
 id tv_support
 id tv_terms
@@ -3306,6 +3312,7 @@ layout abc_tooltip
 layout activity_log_in
 layout activity_main
 layout activity_player
+layout activity_q_r_code
 layout activity_search
 layout activity_settings
 layout activity_splash
@@ -3455,6 +3462,7 @@ string abc_shareactionprovider_share_with_application
 string abc_toolbar_collapse_description
 string accept
 string account
+string activate_account
 string all
 string app_name
 string build_date
@@ -3463,6 +3471,7 @@ string com_crashlytics_android_build_id
 string comedy
 string common_google_play_services_unknown_issue
 string default_web_client_id
+string demo_link
 string email
 string exo_controls_fastforward_description
 string exo_controls_fullscreen_description
@@ -3561,6 +3570,7 @@ string no_internet
 string number_one
 string number_two
 string ok
+string open_link_browser
 string orb_search_action
 string others
 string password
@@ -3584,6 +3594,7 @@ string register_account
 string register_device
 string register_now
 string remember
+string scan_qr
 string search_menu_title
 string settings
 string signIn
@@ -3591,12 +3602,14 @@ string sign_in
 string sign_out
 string sports
 string status_bar_notification_info_overflow
+string stay_text
 string support
 string support_text
 string sure_signout
 string terms
 string termsofuses
 string test
+string text_qr_with_phone
 string username
 string username_profile
 string version

@@ -12,7 +12,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.streamly.tv"
+        applicationId "com.streamly.TVApp.Streamly"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -28,9 +28,10 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
-    }
+
+//    dataBinding {
+//        enabled = true
+//    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

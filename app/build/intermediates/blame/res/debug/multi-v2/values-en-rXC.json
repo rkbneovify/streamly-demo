@@ -4,23 +4,6 @@
             "outputFile": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/fa54a525b25a9e33c2c8573ec92cc58a/core-1.5.0-alpha04/res/values-en-rXC/values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "203",
-                        "endOffsets": "254"
-                    },
-                    "to": {
-                        "startLines": "69",
-                        "startColumns": "4",
-                        "startOffsets": "13915",
-                        "endColumns": "203",
-                        "endOffsets": "14114"
-                    }
-                },
-                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/res/values-en-rXC/values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
@@ -35,6 +18,23 @@
                         "startOffsets": "5528,5736,5939,6136,6332,6553,6767,6964,7162,7395,7625,7832,8052,8279,8501,8720,8926,9117,9347,9536,9739,9944,10147,10340,10552,10760,10973,11184,11385,11593,11805,12022,12230,12441,12630,12816,13017,13269,13537",
                         "endColumns": "207,202,196,195,220,213,196,197,232,229,206,219,226,221,218,205,190,229,188,202,204,202,192,211,207,212,210,200,207,211,216,207,210,188,185,200,251,267,191",
                         "endOffsets": "5731,5934,6131,6327,6548,6762,6959,7157,7390,7620,7827,8047,8274,8496,8715,8921,9112,9342,9531,9734,9939,10142,10335,10547,10755,10968,11179,11380,11588,11800,12017,12225,12436,12625,12811,13012,13264,13532,13724"
+                    }
+                },
+                {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-en-rXC/values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "203",
+                        "endOffsets": "254"
+                    },
+                    "to": {
+                        "startLines": "69",
+                        "startColumns": "4",
+                        "startOffsets": "13915",
+                        "endColumns": "203",
+                        "endOffsets": "14114"
                     }
                 },
                 {

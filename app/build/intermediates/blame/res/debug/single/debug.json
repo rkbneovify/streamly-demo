@@ -48,6 +48,10 @@
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/blur_background.png"
     },
     {
+        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_search_white_border.xml.flat",
+        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/search_white_border.xml"
+    },
+    {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/layout_dialog_profile.xml.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/layout/dialog_profile.xml"
     },
@@ -122,6 +126,10 @@
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable-xxxhdpi_resize_image.png.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable-xxxhdpi/resize_image.png"
+    },
+    {
+        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_qr_code_rectangle.xml.flat",
+        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/qr_code_rectangle.xml"
     },
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_programguide_icon_dropdown.xml.flat",
@@ -252,6 +260,10 @@
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
+        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_search_text_background.xml.flat",
+        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/search_text_background.xml"
+    },
+    {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable-mdpi_resize_image.png.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable-mdpi/resize_image.png"
     },
@@ -350,10 +362,6 @@
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_black_transparent.xml.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/black_transparent.xml"
-    },
-    {
-        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable_pic.png.flat",
-        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable/pic.png"
     },
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable-hdpi_ic_launcher_foreground.png.flat",
@@ -542,6 +550,10 @@
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable-xhdpi_app_icon_tv.png.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable-xhdpi/app_icon_tv.png"
+    },
+    {
+        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/layout_activity_q_r_code.xml.flat",
+        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/layout/activity_q_r_code.xml"
     },
     {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_streamly.png.flat",

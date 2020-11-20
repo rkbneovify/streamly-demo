@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <FrameLayout
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/blur_background"
@@ -24,12 +23,13 @@
             android:orientation="vertical">
             <!--                android:visibility="gone"-->
 
+<!--            android:background="@drawable/white_border"-->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="860px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="@drawable/white_border"
+                android:layout_gravity="start"
+                android:layout_marginTop="80.5px"
+                android:layout_marginLeft="120.5px"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="@dimen/_6sdp"
@@ -42,13 +42,14 @@
                     android:layout_weight="2.6"
                     android:layout_margin="0dp"
                     android:background="@null"
-                    android:drawableRight="@drawable/ic_search"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:drawablePadding="10dp"
                     android:hint=" Search Channels"
                     android:inputType="text"
                     android:maxLength="30"
                     android:maxLines="1"
                     android:textColor="@color/md_white_1000"
-                    android:textColorHint="@color/md_white_1000"
+                    android:textColorHint="#FF798588"
                     android:textSize="@dimen/_12sdp" />
 <!--                android:layout_margin="@dimen/_3sdp"-->
 
@@ -60,6 +61,14 @@
                     android:src="@drawable/ic_voice_search" />
 
             </LinearLayout>
+            <View
+                android:layout_width="860px"
+                android:layout_height="2px"
+                android:layout_gravity="start"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="120.5px"
+                android:background="#FF798588"
+                android:src="@drawable/ic_voice_search" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,6 +77,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="12sp"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
                 <requestFocus />
@@ -75,9 +86,12 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/view_search"/>
 
             </LinearLayout>
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -118,5 +132,4 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
-    </FrameLayout>
-</layout>
+ </FrameLayout>

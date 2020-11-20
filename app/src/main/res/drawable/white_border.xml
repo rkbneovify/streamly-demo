@@ -12,5 +12,6 @@
     <!--        android:angle="-90"/>-->
 
     <corners android:radius="1dp" />
-    <stroke android:width="3px" android:color="@color/md_white_1000" />
+    <stroke android:width="3px"
+        android:color="@color/md_white_1000" />
 </shape>

@@ -64,7 +64,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"/>
+        />
 
     <ImageView
         android:id="@+id/programguide_detail_image"
@@ -75,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="@id/bottom_detail"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/bottom_detail"
-        android:visibility="gone"/>
+        />
 
     <TextView
         android:id="@+id/programguide_detail_title"
@@ -156,7 +156,7 @@
             android:text="@string/programguide_error_fetching_content" />
 
         <!-- Data state -->
-        <com.streamly.tv.ProgramGuideGridView
+        <com.streamly.TVApp.Streamly.ProgramGuideGridView
             android:id="@+id/programguide_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -170,7 +170,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/programguide_channel_column_width" />
 
-    <com.streamly.tv.timeline.ProgramGuideTimelineRow
+    <com.streamly.TVApp.Streamly.timeline.ProgramGuideTimelineRow
         android:id="@+id/programguide_time_row"
         android:layout_width="0dp"
         android:layout_height="@dimen/programguide_time_row_height"

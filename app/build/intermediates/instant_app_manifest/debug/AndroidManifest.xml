@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.streamly.tv"
+    package="com.streamly.TVApp.Streamly"
     android:targetSandboxVersion="2"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -32,9 +32,9 @@
         android:testOnly="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true" >
-        <activity android:name="com.streamly.tv.search_channels.SearchActivity" />
-        <activity android:name="com.streamly.tv.playervideo.PlayerActivity" >
-        </activity>
+        <activity android:name="com.streamly.TVApp.Streamly.QRCode.QRCodeActivity" />
+        <activity android:name="com.streamly.TVApp.Streamly.search_channels.SearchActivity" />
+        <activity android:name="com.streamly.TVApp.Streamly.playervideo.PlayerActivity" />
         <!--
         <activity
             android:name=".MainActivity"
@@ -51,13 +51,13 @@
         </activity>
         -->
         <activity
-            android:name="com.streamly.tv.settings.SettingsActivity"
+            android:name="com.streamly.TVApp.Streamly.settings.SettingsActivity"
             android:windowSoftInputMode="stateAlwaysVisible" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
         <!--  -->
         <!-- </activity> -->
-        <activity android:name="com.streamly.tv.log_in.LogInActivity" />
+        <activity android:name="com.streamly.TVApp.Streamly.log_in.LogInActivity" />
         <activity
-            android:name="com.streamly.tv.splash.SplashActivity"
+            android:name="com.streamly.TVApp.Streamly.splash.SplashActivity"
             android:banner="@drawable/app_icon_tv"
             android:icon="@drawable/app_icon_tv"
             android:logo="@drawable/app_icon_tv" >
@@ -67,7 +67,7 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.streamly.tv.MainActivity" />
+        <activity android:name="com.streamly.TVApp.Streamly.MainActivity" />
 
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
@@ -102,7 +102,7 @@
 
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="com.streamly.tv.firebaseinitprovider"
+            android:authorities="com.streamly.TVApp.Streamly.firebaseinitprovider"
             android:directBootAware="true"
             android:exported="false"
             android:initOrder="100" />

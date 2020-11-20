@@ -4,23 +4,6 @@
             "outputFile": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-bg/values-bg.xml",
             "map": [
                 {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/fa54a525b25a9e33c2c8573ec92cc58a/core-1.5.0-alpha04/res/values-bg/values-bg.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "110",
-                        "startColumns": "4",
-                        "startOffsets": "10521",
-                        "endColumns": "100",
-                        "endOffsets": "10617"
-                    }
-                },
-                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/res/values-bg/values-bg.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
@@ -35,6 +18,23 @@
                         "startOffsets": "5910,6017,6118,6214,6306,6443,6557,6655,6752,6884,7013,7123,7261,7425,7559,7690,7795,7899,8039,8139,8249,8354,8470,8573,8705,8827,8952,9074,9185,9300,9416,9542,9653,9774,9861,9946,10045,10186,10341",
                         "endColumns": "106,100,95,91,136,113,97,96,131,128,109,137,163,133,130,104,103,139,99,109,104,115,102,131,121,124,121,110,114,115,125,110,120,86,84,98,140,154,95",
                         "endOffsets": "6012,6113,6209,6301,6438,6552,6650,6747,6879,7008,7118,7256,7420,7554,7685,7790,7894,8034,8134,8244,8349,8465,8568,8700,8822,8947,9069,9180,9295,9411,9537,9648,9769,9856,9941,10040,10181,10336,10432"
+                    }
+                },
+                {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-bg/values-bg.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "110",
+                        "startColumns": "4",
+                        "startOffsets": "10521",
+                        "endColumns": "100",
+                        "endOffsets": "10617"
                     }
                 },
                 {

@@ -21,23 +21,6 @@
                     }
                 },
                 {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/fa54a525b25a9e33c2c8573ec92cc58a/core-1.5.0-alpha04/res/values-pt-rBR/values-pt-rBR.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "70",
-                        "startColumns": "4",
-                        "startOffsets": "7494",
-                        "endColumns": "100",
-                        "endOffsets": "7590"
-                    }
-                },
-                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/res/values-pt-rBR/values-pt-rBR.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
@@ -52,6 +35,23 @@
                         "startOffsets": "3047,3154,3255,3354,3450,3576,3690,3789,3890,4023,4152,4252,4368,4534,4659,4780,4883,4975,5107,5202,5305,5408,5514,5611,5725,5853,5974,6091,6194,6302,6413,6529,6634,6744,6831,6918,7022,7160,7315",
                         "endColumns": "106,100,98,95,125,113,98,100,132,128,99,115,165,124,120,102,91,131,94,102,102,105,96,113,127,120,116,102,107,110,115,104,109,86,86,103,137,154,92",
                         "endOffsets": "3149,3250,3349,3445,3571,3685,3784,3885,4018,4147,4247,4363,4529,4654,4775,4878,4970,5102,5197,5300,5403,5509,5606,5720,5848,5969,6086,6189,6297,6408,6524,6629,6739,6826,6913,7017,7155,7310,7403"
+                    }
+                },
+                {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-pt-rBR/values-pt-rBR.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "70",
+                        "startColumns": "4",
+                        "startOffsets": "7494",
+                        "endColumns": "100",
+                        "endOffsets": "7590"
                     }
                 },
                 {

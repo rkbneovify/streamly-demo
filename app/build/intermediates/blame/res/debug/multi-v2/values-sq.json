@@ -21,6 +21,23 @@
                     }
                 },
                 {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-sq/values-sq.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "110",
+                        "startColumns": "4",
+                        "startOffsets": "10281",
+                        "endColumns": "100",
+                        "endOffsets": "10377"
+                    }
+                },
+                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/res/values-sq/values-sq.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
@@ -35,23 +52,6 @@
                         "startOffsets": "5746,5853,5954,6050,6146,6272,6387,6483,6573,6714,6834,6947,7076,7237,7368,7497,7606,7697,7841,7930,8039,8149,8252,8345,8463,8580,8696,8810,8921,9036,9164,9291,9415,9539,9626,9709,9812,9950,10104",
                         "endColumns": "106,100,95,95,125,114,95,89,140,119,112,128,160,130,128,108,90,143,88,108,109,102,92,117,116,115,113,110,114,127,126,123,123,86,82,102,137,153,94",
                         "endOffsets": "5848,5949,6045,6141,6267,6382,6478,6568,6709,6829,6942,7071,7232,7363,7492,7601,7692,7836,7925,8034,8144,8247,8340,8458,8575,8691,8805,8916,9031,9159,9286,9410,9534,9621,9704,9807,9945,10099,10194"
-                    }
-                },
-                {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/fa54a525b25a9e33c2c8573ec92cc58a/core-1.5.0-alpha04/res/values-sq/values-sq.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "110",
-                        "startColumns": "4",
-                        "startOffsets": "10281",
-                        "endColumns": "100",
-                        "endOffsets": "10377"
                     }
                 },
                 {

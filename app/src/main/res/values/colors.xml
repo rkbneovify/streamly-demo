@@ -9,7 +9,7 @@
     <color name="progress_bar_color">#004E92</color>
     <color name="programguide_header_background">#202020</color>
     <color name="programguide_content_background">#000000</color>
-    <color name="programguide_footer_background">#202020</color>
+    <color name="programguide_footer_background">#80202020</color>
     <color name="programguide_selected_gap_color">#22FFFFFF</color>
     <color name="programguide_default_gap_color">@android:color/transparent</color>
 
@@ -49,6 +49,8 @@
     <color name="color_white">#FFF</color>
     <color name="my_grey">#ffffff</color>
     <color name="transparent1">#00FFFFFF</color>
+    <color name="qrbackground">#FF141B21</color>
+
 
     <color name="app_blue_light">#004E92</color>
     <color name="app_blue_dark">#000428</color>

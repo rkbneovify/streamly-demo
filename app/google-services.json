@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "187207008307",
-    "firebase_url": "https://streamly-tv-android.firebaseio.com",
-    "project_id": "streamly-tv-android",
-    "storage_bucket": "streamly-tv-android.appspot.com"
+    "project_number": "380909681859",
+    "firebase_url": "https://streamlytv-1bf78.firebaseio.com",
+    "project_id": "streamlytv-1bf78",
+    "storage_bucket": "streamlytv-1bf78.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:187207008307:android:e1988bf4dcedf75ed76346",
+        "mobilesdk_app_id": "1:380909681859:android:69202ae2574e91de3bb676",
         "android_client_info": {
-          "package_name": "com.streamly.tv"
+          "package_name": "com.streamly.TVApp.Streamly"
         }
       },
       "oauth_client": [
         {
-          "client_id": "187207008307-7r9j38pc6rp390gebpjqugr89m71srtr.apps.googleusercontent.com",
+          "client_id": "380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBIiMHwjco7DJvmebovRk0amwxOJJ_X6Ro"
+          "current_key": "AIzaSyBSoGGC265Zrj-ivVigKvm9F9KxkyZx-mo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "187207008307-7r9j38pc6rp390gebpjqugr89m71srtr.apps.googleusercontent.com",
+              "client_id": "380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
