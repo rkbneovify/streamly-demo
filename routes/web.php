@@ -77,6 +77,7 @@ Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy
   Route::get('/channelstatus/create', 'Admin\ChannelController@create');//channels Statust
   
 Route::get('/channelstatus', 'Admin\ChannelController@index');//channel
+Route::get('/channelstatus2', 'Admin\ChannelController@index2');//channel
 Route::get('/channelstatus/view/{id}', 'Admin\ChannelController@show');//channel
 Route::get('/channelstatus/edit/{id}', 'Admin\ChannelController@edit');//channel
 Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');//ajax channel data
