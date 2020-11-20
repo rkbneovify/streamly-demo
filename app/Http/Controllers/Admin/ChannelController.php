@@ -27,7 +27,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index','checkdevice','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData','PacificFrontEpgchannelDaysSchedule']]);
+        $this->middleware('jwt.verify', ['except' => ['index','index2','checkdevice','show','create','edit','update','destroy','store','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','channelData','PacificFrontEpgchannelDaysSchedule']]);
     }
     public function index()
     {  
@@ -37,6 +37,16 @@ class ChannelController extends Controller
         $ua = request()->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
 if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index', compact('record','encoded_auth_xml'));}
+        
+    } 
+    public function index2()
+    {  
+        $record = Channel::with('genre')->paginate(10);
+        $encoded_auth_xml = getKeyOSAuthToken(); 
+        
+        $ua = request()->server('HTTP_USER_AGENT');
+        $isDevice=isDeviceAppleRokuOthers($ua);
+if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index2', compact('record','encoded_auth_xml'));}
         
     }  
 
