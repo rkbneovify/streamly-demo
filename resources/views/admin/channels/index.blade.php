@@ -241,7 +241,7 @@ $('.select2').select2();
      player.updateSettings({
          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
          'streaming': {
-           'liveDelay': 10,
+          //  'liveDelay': 1,
            'fastSwitchEnabled': true  ,
              //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
              //determine which assets to request in order to perfom adaptive streaming of the content.
