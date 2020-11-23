@@ -433,6 +433,29 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
         }*/
 
+
+        $verification_code=Crypt::encrypt($request['user-email']);
+
+        $FRONTEND_URL=env('FRONTEND_URL');
+
+        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+        $html='<html>
+            Hi, '.$request['name'].'<br><br>
+
+            Thank you for registering on '.env('APP_NAME').'.
+
+            Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
+        </html>';
+      try{
+        Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
+            $message->to($request['user-email'], $request['name'])
+            ->subject(env('APP_NAME').': Account Verification');
+            // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+       
+       
+    
+        });
+
         $User = User::create([
             'name' => $request['name'],
             'email' => $request['user-email'],
@@ -446,28 +469,11 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             'user_id' => $User->id,
             'role_id' => $this->DEFAULT_ROLE_ID,
         ]);
-
-
-        $verification_code=Crypt::encrypt($User->email);
-
-        $FRONTEND_URL=env('FRONTEND_URL');
-
-        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
-        $html='<html>
-            Hi, '.$User->name.'<br><br>
-
-            Thank you for registering on '.env('APP_NAME').'.
-
-            Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
-        </html>';
-      try{
-        Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
-            $message->to($request['user-email'], $User->name)
-            ->subject(env('APP_NAME').': Account Verification');
-            // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
-        });} catch (Exception $ex) {
+    
+    
+    } catch (Exception $ex) {
              //$ex->getMessage();
-             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+             return redirect()->back()->withInput()->withErrors(['SMTP-Error'=> "We've got errors!".json_encode($ex->getMessage(), true)]);
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
 
