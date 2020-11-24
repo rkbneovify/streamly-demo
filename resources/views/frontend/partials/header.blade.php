@@ -42,6 +42,9 @@
                                     <a class="dropdown-item" href="/account/settings">{{ Auth::user()->name }}</a>
                                     <a class="dropdown-item" href="/account/settings">Account Settings</a>
                                     @if (Auth::user()->subscribed('main')) 
+                                    <a class="dropdown-item" href="/react">Program Guide</a>
+                                    <a class="dropdown-item" href="/livetv/list">All channels</a>
+                                    <a class="dropdown-item" href="/livetv">All channels with genre</a>
                                     <a class="dropdown-item" href="/my_favorites">My favorites</a>
                                     <a class="dropdown-item" href="/livetv/recent">My recents</a>
                                     @endif
