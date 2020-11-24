@@ -50,10 +50,15 @@ sub resultentList()
    m.ChannelsMarkuGrid.id = "ChannelsMarkuGrid"
    m.ChannelsMarkuGrid.translation = "[720,200]" 
    m.ChannelsMarkuGrid.itemComponentName = "ChannellistMarkuGridComponent"
-   m.ChannelsMarkuGrid.itemSpacing = "[ 20, 0 ]" 
-   m.ChannelsMarkuGrid.rowSpacings = "[ 20, 20 ]" 
-   m.ChannelsMarkuGrid. numColumns="3" 
-   m.ChannelsMarkuGrid. numRows="3" 
+   m.ChannelsMarkuGrid.itemSpacing = "[ 20, 20 ]" 
+  '  m.ChannelsMarkuGrid.rowSpacings = "[ 200, 200 ]" 
+  '  m.ChannelsMarkuGrid.columnSpacings = "[ 200, 0 ]" 
+  ' m.ChannelsMarkuGrid.rowHeights =	[ 260, 120, 220 ]
+  
+
+  '  m.ChannelsMarkuGrid.wrapDividerHeight="200" 
+   m.ChannelsMarkuGrid.numColumns="3" 
+   m.ChannelsMarkuGrid.numRows="3" 
    m.ChannelsMarkuGrid.itemSize="[360,260]" 
                  
    m.ChannelsMarkuGrid.drawFocusFeedback="true"

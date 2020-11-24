@@ -11,10 +11,10 @@ analyticsInit()
 '     google: {
 '         ec: "navigation",
 '         ea: "channel_launch"
-'     }
+'    
 ' }
 
-    if getAccountToken() <> invalid and getAccountToken() = ""
+    if getAccountToken() <> invalid and getAccountToken() <> ""
         ? "login successfully: accessToken: "; getAccountToken()
         ' ShowScreen(m.global["screenStack"],CreateObject("roSgNode","HomeScreen"))
         
@@ -80,7 +80,8 @@ function analyticsInit()
          
         'set data to IQ analytics
         Google : {
-            trackingID : "G-S8PDH6LPDV"                        
+            ' trackingID : "G-S8PDH6LPDV"           G-RGE4ZXT43Q             
+            trackingID :"G-RGE4ZXT43Q"                      
             defaultParams : {
                 an : "StreamlyTv"
             }

@@ -145,7 +145,9 @@ function APICall(url as String, callType as String, data as Object, parameters a
     ' ?"method :";callType
     requestObject.addHeader("Content-Type", "application/json")
     requestObject.addHeader("Authorization", "Bearer " + getAccountToken())
-    requestObject.addHeader("User-Agent", "Roku/DVP-9.30 (509.30E04194A)")
+    ' requestObject.addHeader("User-Agent", "Roku/DVP-9.30 (509.30E04194A)")
+    requestObject.addHeader("User-Agent", "Android")
+
     requestObject.setCertificatesFile("common:/certs/ca-bundle.crt")
     requestObject.initClientCertificates()
     requestObject.enableEncodings(true)
@@ -272,17 +274,30 @@ function LinkNQRCode() as object
     return "api/qrcode"
 end function
 
+Function openApi() as object
+    ' return "http://ip-api.com/json/137.151.1.0"
+    return "http://ip-api.com/json"
+end function
+Function geofence() as object
+    return "/api/auth/geofence"
+end function
 
 function popupDialog(node as object, title as string , message as string) as object
     
     m.dialogHeight = 350
     m.dialogWidth = 1223
-
+    m.background = node.createChild("Rectangle")
+   
     m.SupportDialog = node.createChild("Poster")
+    
+    m.background.height = 1080
+    m.background.width = 1920
+    m.background.color = "#000000"
+    m.background.opacity = ".4"
     m.SupportDialog.visible = true
     m.SupportDialog.width = m.dialogWidth
     m.SupportDialog.height = m.dialogHeight
-    m.SupportDialog.uri = "pkg:/images/profile/dialogBackground.png"
+    m.SupportDialog.uri = "pkg:/images/profile/profile_dialog.png"
     m.SupportDialog.translation = [(1920 - m.dialogWidth) / 2, (1080 - m.dialogHeight) / 2]
 
     m.LayoutGroup = m.SupportDialog.createChild("LayoutGroup")
@@ -335,7 +350,8 @@ end function
 
 function closeErrorDialogShow(node as object)
 
-    if m.SupportDialog<>invalid
+    if m.background<>invalid and m.SupportDialog <>invalid and node <>invalid 
+        node.removeChild(m.background)
         node.removeChild(m.SupportDialog)
     end if
     

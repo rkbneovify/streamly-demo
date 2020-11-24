@@ -1,4 +1,5 @@
 sub init()
+
     ? "Home init()"
     'show loading
     m.processPoster = m.top.createChild("Poster")
@@ -34,7 +35,7 @@ sub init()
     m.episode_detail.wrap=true
     m.episode_detail.lineSpacing = 2
 
-    m.episode_detail.text="this is a episode broadcasting now \n this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now " 
+    ' m.episode_detail.text="this is a episode broadcasting now \n this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now this is a episode broadcasting now " 
 
 
 
@@ -73,11 +74,7 @@ sub init()
     m.focusPoster.uri = ""
     m.focusPoster.height = 60
     m.focusPoster.width = 75
-
-    '    m.searchPoster.visible =false
-
-
-
+    
     m.ChannelCategoryMarkuGrid = m.top.findNode("ChannelCategoryMarkuGrid")
     ' m.channelIcon = m.top.findNode("channelIcon")
 
@@ -161,9 +158,11 @@ sub init()
 
     m.PosterBackground.height = 230
     m.PosterBackground.width = 430
-
+   
     m.PosterBackground.uri = "pkg:/images/search/search_result_background.png"
-    m.PosterBackground.opacity = .5
+    ' m.PosterBackground.uri = "pkg:/images/profile/profile_dialog.png"
+    ' m.PosterBackground.opacity  = .3
+
     m.PosterBackground.visible = false
     '   LayoutGroup = m.PosterBackground.createChild("LayoutGroup")
     '   LayoutGroup.layoutDirection = "horiz"
@@ -218,17 +217,57 @@ sub init()
     '   LayutRght.translation=[217,21]
     m.AllChannelContent = CreateObject("roSGNode", "ContentNode")
 
-    ' mybutton.horiz
-
     m.global.RSG_analytics.trackEvent = {
         google: {
             ec: "EPG_Screen",
-            ea: "EPG_Launch"
+            ea: "EPG_Launch",
+            t :"pageview",
+            ' uid:"shahjad_ROku"
+
         }
     }
     SetupVideoPlayer()
     m.programIndex = 0
 
+    VideoliveLoader()
+
+end sub
+
+sub LocationInfo()
+?"LocationInfo:";
+ 
+ location = CreateObject("roSgNode","Location")
+ location.callType = "GET" 
+ location.observeField("apiResponse","locationresponse")
+ location.control ="RUN"
+
+end sub
+
+sub locationresponse(event as object)
+ ?"locationresponse"    
+ if( event.getData()<>invalid and event.getData().response_code = 403 )
+    
+    closePlayer()
+    m.LiveChannelError = popupDialog(m.top,"Live Channel Error",event.getData().message)
+    m.LiveChannelError.observeField("buttonSelected","closeDialog")
+    m.LiveChannelError.setFocus(true)
+   
+ else
+    m.video.control = "play"    
+ end if
+
+end sub
+
+
+
+
+sub VideoLiveLoader()
+    m.playerLoader = m.top.createChild("BusySpinner")
+    m.playerLoader.visible = false
+    m.playerLoader.clockwise = false
+    m.playerLoader.poster.uri = "pkg:/images/videoplayer/loader96.png"
+    ' ?"m.playerLoader.poster:";m.playerLoader.poster
+    ' m.playerLoader.translation = [(1920 -m.playerLoader.poster.bitmapWidth)/2 , 1080 -  (m.playerLoader.poster.bitmapHeight)/2]
 end sub
 sub programFocusedDetails(params as object)
     channelNode = params.getRosgNode().content.getChild(params.getData().focusChannelIndex )
@@ -243,13 +282,14 @@ sub programFocusedDetails(params as object)
         programdate.FromSeconds(episode.PLAYSTART)
         durationTimetext = programdate.toISOString().Mid(11, 5)
         m.broadcst_time.text = "Starts at  "+durationTimetext
+        m.episode_detail.text = episode.DESCRIPTION
 
     end if    
    
 end sub 
 
 sub closeStreamInfo()
-    ?"closeStreamInfo"
+    ' ?"closeStreamInfo"
     m.streaminfoTimer.control = "stop"
     m.streamlyview.visible = false
     ' m.channelIcon.visible = false
@@ -284,9 +324,7 @@ end sub
 sub percentage(event as object)
 
     if (event <> invalid and event.getData() <> invalid)
-
         ?" buffering ";event.getData().percentage
-
     else
 
     end if
@@ -300,6 +338,20 @@ sub onStateChange()
         ? "videoState"; m.video.state
         ? "completedStreamInfo"; m.video.completedStreamInfo
 
+       if m.Video.state = "buffering"
+        ' m.video.visible = true
+        centerx = (1920 - m.playerLoader.poster.bitmapWidth) / 2
+        centery = (1080 - m.playerLoader.poster.bitmapHeight) / 2
+        m.playerLoader.translation = [centerx, centery]
+
+        m.playerLoader.visible = true
+        m.playerLoader.control = "start"
+       else
+
+        m.playerLoader.visible = false
+        m.playerLoader.control = "stop"    
+       end if
+
         if (m.video.state <> invalid and m.video.state = "error")
 
             print "m.video.errorCode: "; m.video.errorCode
@@ -308,26 +360,24 @@ sub onStateChange()
             print "m.vdeo.errorInfo: "; m.video.errorInfo
             print "m.vdeo.completedStreamInfo: "; m.video.completedStreamInfo
 
-            if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
-                m.programUpdateTimer.control = "stop"
-            end if
+            closePlayer()
 
-            m.streamlyview.visible = false
-            m.PosterBackground.visible = false
-            ' m.streaminfo.visible = false
-            m.video.control = "stop"
-            m.ChannelsGroup.visible = true
-            m.video.visible = false
-            m.video.setFocus(false)
-            m.timeGride.setFocus(true)
+            ' if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+            '     m.programUpdateTimer.control = "stop"
+            ' end if
+
+            ' m.streamlyview.visible = false
+            ' m.PosterBackground.visible = false
+            ' ' m.streaminfo.visible = false
+            ' m.video.control = "stop"
+            ' m.ChannelsGroup.visible = true
+            ' m.video.visible = false
+            ' m.video.setFocus(false)
+            ' m.timeGride.setFocus(true)
 
         end if
 
     end if
-
-
-
-
 
     if m.Video.content <> invalid and m.statestToHandle[m.Video.state] <> invalid
         'we have a state that should be fired
@@ -566,8 +616,9 @@ end function
 
 sub closeDialog(event as object)
     ?"closeCustomDialog"
-    m.top.removeChild(event.getRosgNode())
-    m.top.setFocus(true)
+    ' m.top.removeChild(event.getRosgNode())
+    closeErrorDialogShow(m.top)
+    m.timeGride.setFocus(true)
 
 end sub
 
@@ -589,7 +640,9 @@ sub ChannelResponseData()
     m.global.RSG_analytics.trackEvent = {
         google: {
             ec: "EPG_Screen",
-            ea: "EPG_launch_complete"
+            ea: "EPG_launch_complete",
+            t :"pageview",
+            ' uid:"shahjad_ROku"
         }
     }
 end sub
@@ -597,6 +650,12 @@ end sub
 function playVideo(liveStreamData) as void
     ' ? "HomeScreen:playVideo: url:";liveStreamData
     ' m.video.thumbnailImage = ""
+       'video loader at center
+       centerx = (1920 - m.playerLoader.poster.bitmapWidth) / 2
+       centery = (1080 - m.playerLoader.poster.bitmapHeight) / 2
+       m.playerLoader.translation = [centerx, centery]
+       m.playerLoader.visible = true
+
     if liveStreamData.channelid <> invalid
         m.ApiCall = CreateObject("roSGNode", "ApiCall")
         m.ApiCall.bodyData = { "channelids": liveStreamData.channelid }
@@ -610,21 +669,22 @@ function playVideo(liveStreamData) as void
     vidContent = CreateObject("RoSGNode", "ContentNode")
     ' licenseServerURL:"https://widevine-proxy.appspot.com/proxy"
     ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
+ 
 
     drmParams = {
-        keySystem: "Playready"
-        licenseServerURL: "https://streamlytv.com/api/generic?drm-type=Playready"
+        keySystem: "Widevine"
+        licenseServerURL: "https://streamlytv.com/api/generic?drm-type=Widevine"
         ' licenseServerURL:"https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=Playready"
     }
 
-    vidContent.streamformat = "smooth"
+    vidContent.streamformat = "Dash"
     vidContent.drmParams = drmParams
     ' vidContent.HttpHeaders=["customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="]
     ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd"
     ?"liveStreamData.url";liveStreamData.url
     vidContent.url = liveStreamData.url
     ' vidContent.url = "https://cdn.streamlytv.com/streamly.old/ngrp:AETVP.stream_all/Manifest"
-    ' vidContent.url = "https://test.playready.microsoft.com/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/manifest"
+    ' vidContent.url = "https://cdn.streamlytv.com/streamly/ngrp:AMCPHD.stream_all/manifest.mpd"
 
 
     ' httpAgent = CreateObject("roHttpAgent")
@@ -660,14 +720,18 @@ function playVideo(liveStreamData) as void
     ' vidContent.streamFormat = "smooth"
     ' vidContent.KeySystem="playready"
 
-    vidContent.live = true
+      vidContent.live = true
     ' vidContent.appData ="PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTA5LTAzIDA3OjUxOjIyLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMDMgMDg6MDY6MjIuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+MTIzM2Q0NmRlZTU0NzlhMzU4NDQzZjIwN2Q5NDIzNGE8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+YUxocTlsQkZxMmYyOW9ncUlhM3VZbFF5RnR5TGRid0R0eXFyN2dvY09jWFl6cFdMYXJqM3FKZm9ZdUluRFR1VGZUYmhkdXhhNlN0bXBpb0l4QWttT00xSzBudUZ1cFBTa1ZONjhiOVVacXlnYUswK3FiMzJnOXV1RmdLVWFoN3lLU1JIeGYxbHNqaU5UNTJDQmNWampFdHZ1aXBXT3FGOVF4MVJKWTRMRjhZK1AyQS9lZDNyblF0TFhDUmJuM1N6My9TK0VNWTJNU2lSMmd6Wm9ONWUzRXdQVjhreHRzUlQ4d3dJQ3dYc3pxMDJweGRpSmp5ZEtCTmlNcXZMcjBqcGlkY3JZU2VxVmVKL2l1N3hadlhLMFhaYnZuUWJXVXVDaWNtNDBSdFpoaXN5bDhla0loN3hmcVdQU252Mm4wNWlEQUs4SFhqQWZhdnB5Q0RuTU9VaGFnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="
 
     ' vidContent.url = "https://channelstore.streamlytv.com/streamly/AETVP.stream_240p/Manifest"
     m.video.content = vidContent
     m.video.setFocus(true)
 
-    m.video.control = "play"
+    LocationInfo()
+
+
+    m.video.control = "prebuffer"
+
 end function
 
 
@@ -737,29 +801,17 @@ sub categorySelcted(event as object)
 end sub
 
 function programSelected(event as object) as object
-    timeGrid = event.GetRoSGNode()
 
-    playVideo(timeGrid.content.getChild(timeGrid.channelSelected))
+
+    timeGrid = event.GetRoSGNode()
+    streamNode = timeGrid.content.getChild(timeGrid.channelSelected)
+    playVideo(streamNode)
 
     conncertUpdate(timeGrid)
 
     m.ChannelsGroup.visible = false
     m.video.visible = true
     m.video.setFocus(true)
-
-    ' m.drmKeyApiCall = CreateObject("roSGNode", "ApiCall")
-    ' m.drmKeyApiCall.bodyData = {}
-    ' m.drmKeyApiCall.callType = "GET"
-    ' m.drmKeyApiCall.url = drmkeyUrl()
-    ' m.drmKeyApiCall.observeField("apiResponse", "apiResponse")
-    ' m.drmKeyApiCall.observeField("errorMessage", "errorDialogShow")
-    ' m.drmKeyApiCall.control = "RUN"
-
-    ' m.ApiCall = CreateObject("roSGNode", "ApiCall")
-    ' m.ApiCall.bodyData = { "channelids": liveStreamData.channelid }
-    ' m.ApiCall.url = addRecentUrl()
-    ' m.ApiCall.observeField("apiResponse", "apiResponse")
-    ' m.ApiCall.control = "RUN"
 
     return true
 end function
@@ -772,17 +824,22 @@ sub conncertUpdate(timeGrid as object)
 
     m.currentProgramsNode = timeGrid.content.getChild(timeGrid.channelSelected)
     programnode = m.currentProgramsNode.getChild(m.programIndex)
-    programdate = CreateObject("roDateTime")
-    programdate.FromSeconds(programnode.PLAYSTART)
-    durationTimetext = programdate.toISOString().Mid(11, 5) + " - "
-    programdate.FromSeconds(programnode.PLAYSTART + programnode.PLAYDURATION)
-    durationTimetext += programdate.toISOString().Mid(11, 5)
-    m.ConsertTimingTExt.text = durationTimetext
-    m.ConcertChannel.text = m.currentProgramsNode.TITLE
-    m.ConcertName.text = programnode.TITLE
 
-    m.programUpdateTimer.duration = programnode.PLAYDURATION
-    m.programUpdateTimer.control = "start"
+    if programnode<>invalid
+        ' ?"programnode:";programnode
+        programdate = CreateObject("roDateTime")
+        programdate.FromSeconds(programnode.PLAYSTART)
+        durationTimetext = programdate.toISOString().Mid(11, 5) + " - "
+        programdate.FromSeconds(programnode.PLAYSTART + programnode.PLAYDURATION)
+        durationTimetext += programdate.toISOString().Mid(11, 5)
+        m.ConsertTimingTExt.text = durationTimetext
+        m.ConcertChannel.text = m.currentProgramsNode.TITLE
+        m.ConcertName.text = programnode.TITLE
+    
+        m.programUpdateTimer.duration = programnode.PLAYDURATION
+        m.programUpdateTimer.control = "start"
+    end if
+  
 
 end sub
 ' sub apiResponse(event as object)
@@ -892,23 +949,15 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.timeGride.setFocus(true)
             result = true
         else if (m.video.hasFocus() and key = "back")
-
-            if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
-                m.programUpdateTimer.control = "stop"
-            end if
-
-            m.streamlyview.visible = false
-            m.PosterBackground.visible = false
-            ' m.streaminfo.visible = false
-            m.video.control = "stop"
-            m.ChannelsGroup.visible = true
-            m.video.visible = false
-            m.video.setFocus(false)
+            
+            closePlayer()
+            return true
+        else  if m.LiveChannelError<>invalid and key = "back"
+            closeErrorDialogShow(m.top)
             m.timeGride.setFocus(true)
             return true
 
         else if m.video.hasFocus() and key = "OK"
-
             ?"ok pressed fr play video"
 
             if m.streamlyview.visible = false
@@ -918,8 +967,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 m.streaminfoTimer.control = "start"
             end if
 
-            '   playVideo("https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8")
-
+            '   playVideo("https://b
             result = true
         else if (m.timeGride.hasFocus() = true or m.searchPoster.hasFocus() or m.ChannelCategoryMarkuGrid.hasFocus()) and key = "options"
 
@@ -941,3 +989,23 @@ function onKeyEvent(key as string, press as boolean) as boolean
 
     return result
 end function
+
+sub closePlayer()
+?"close player"
+    if m.LiveChannelError<>invalid
+        closeErrorDialogShow(m.top)
+    end if
+
+    if m.programUpdateTimer.control <> invalid and m.programUpdateTimer.control = "start"
+        m.programUpdateTimer.control = "stop"
+    end if
+
+    m.streamlyview.visible = false
+    m.PosterBackground.visible = false
+    ' m.streaminfo.visible = false
+    m.video.control = "stop"
+    m.ChannelsGroup.visible = true
+    m.video.visible = false
+    m.video.setFocus(false)
+    m.timeGride.setFocus(true)
+end sub

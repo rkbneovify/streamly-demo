@@ -14,11 +14,9 @@ sub ChannnleAPI()
   ' ?"pr-ogramData: ";programData.jsonResponse
 'sleep(4000)
 ' ?"API End call";   
-
   if programData.responseCode = 200
     
-    programdata = programData.jsonResponse.data[0].programs      
-    
+    programdata = programData.jsonResponse.data[0].programs          
     content = m.top.content
     channleNode = content.getChild(m.top.id.ToInt())
 
