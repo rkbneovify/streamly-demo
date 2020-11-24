@@ -34,7 +34,7 @@
 			/*height: 50px;*/
 			width: 100%;
 			border-radius: 6px 6px 0px 0px;
-			opacity: 0.51;
+			/* opacity: 0.51; */
 			padding-bottom: 10px;
 		}
 
@@ -71,8 +71,8 @@
 		.section-heading {
 			margin-bottom: 2rem !important;
 		}
-
-		.submit-btn{
+		
+	.submit-btn{
 		    background-color: #03A9F4 !important;
 		    border-radius: 6px !important;
 		    width: 100%;
@@ -101,9 +101,13 @@
 											<td>Trial</td>
 											<th class="text-right" style="padding-right: 1rem;">{{$plandetails->trial_period_days??'no trials'}} days</th>
 										</tr>
-										<tr>
+										<tr >
 											<td>Tax</td>
 											<th class="text-right" style="padding-right: 1rem;">$ 0</th>
+										</tr>
+										<tr  id= "couponrow ">
+											<td>Coupon</td>
+											<th class="text-right" style="padding-right: 1rem;" id="couponoff">$ 0</th>
 										</tr>
 									</tbody>
 								</table>
@@ -129,11 +133,12 @@
 										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
 										<span style="display: block;">Credit Card</span>
 									</div>
-									{{-- <div class="col-md-4" style="padding: 2rem;">
-										<img src="{{ asset('frontend/img/noun_credit_card.svg') }}">
-										<span style="display: block;">Debit Card</span>
+									<div class="col-md-8" style="padding: 2rem;">
+										{{-- <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> --}}
+										<span><strong>Final amount</strong> </span>
+										<span style="display: block;" id="totalprice2">$ {{$plandetails->amount/100}}</span>
 									</div>
-									<div class="col-md-4" style="padding: 2rem;">
+									{{-- <div class="col-md-4" style="padding: 2rem;">
 										<img src="{{ asset('frontend/img/paypal.svg') }}">
 										<span style="display: block;">Paypal</span>
 									</div> --}}
@@ -269,7 +274,9 @@
                     
                         <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
                             <p class="font-bold mb-2">Thanks for being a customer!</p>
-                            <p>You Are Subscribed to the {{$plandetails->nickname}}.</p>
+														<p>You Are Subscribed to the {{$plandetails->nickname}}.</p>
+														
+														<p>To explore the channels  <a  href="/livetv">Click here</a> or you can use the search bar above</p>
                         </div>
 
                     @endif
@@ -314,7 +321,9 @@ $('body').on('blur','[name="coupon"]',function(){
       .find('.help-block').css('color', 'green').text(data.message).show();
 			if (data.amountoff != null){
 			var totprice= {{$plandetails->amount/100}}-data.amountoff;
-			document.getElementById("totalprice").textContent='$ '+totprice;
+			document.getElementById("totalprice").textContent='$ '+totprice.toFixed(2);
+			document.getElementById("totalprice2").textContent='$ '+totprice.toFixed(2);
+			document.getElementById("couponoff").textContent='$ '+data.amountoff+' off';
 			
 			};
 			if (data.percentoff != null){
@@ -324,6 +333,8 @@ $('body').on('blur','[name="coupon"]',function(){
 
  var totalValue = {{$plandetails->amount/100}} * ( (100-data.percentoff) / 100 )
 			document.getElementById("totalprice").textContent='$ '+totalValue.toFixed(2);
+			document.getElementById("totalprice2").textContent='$ '+totalValue.toFixed(2);
+			document.getElementById("couponoff").textContent=data.percentoff+'% off';
 			
 };
     },

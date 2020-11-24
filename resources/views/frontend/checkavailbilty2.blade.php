@@ -84,7 +84,7 @@ driver.defineSteps([
     element: '#second-element-introduction',
     popover: {
       title: 'Enter you zip',
-      description: 'enter zip code and wait it to fill the city and state',
+      description: 'enter zip code',
       position: 'bottom'
     }
   },
@@ -100,14 +100,14 @@ driver.defineSteps([
     element: '#fourth-element-introduction',
     popover: {
       title: 'Click on submit',
-      description: 'Click on submit if address is validated then you can start your trial',
+      description: 'Click on submit if zip is validated then you can start your trial',
       position: 'bottom'
     }
   },
 ]);
 // Start the introduction
 driver.start();
-
+/*
 $("#my_form").submit(function(event){
 	event.preventDefault(); //prevent default action 
 	var zipnumber = $("[name='zip']");
@@ -140,11 +140,12 @@ $("#my_form").submit(function(event){
 					 });
 	
 });
+*/
 
 $(function() {
+	$("#my_form").submit(function(event){
 
-$('body').on('blur','[name="zip"]',function(){
-
+		event.preventDefault(); //prevent default action 
 	var zipnumber = $("[name='zip']");
 	// alert(zip); exit;
 
@@ -160,15 +161,22 @@ $('body').on('blur','[name="zip"]',function(){
 								 $('#City').val(data.city); 
 			$('#State').val(data.state); 
 			$('#address-country').val("US"); 
-								 $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
+								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
+								 
+								 $('#zipanswer').html("<span style='font-size:30px; color:green;'>&#10004; " +data.message+"<a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'> Start you trial now!</a></span>");
+								 $('#zip').css("border-color", "green");
+
 							 },
 							 error:function(xhr, status, error){ 
 								 if(xhr.status==404) {
 									 // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
 									 $('#card-button').prop('disabled', true);
-								 $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
+								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
 												 
-						 
+								 $('#zipanswer').html("<span style='font-size:30px; color:red;'>&#10006; Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information</span>");
+								 $('#zip').css("border-color", "red");
+								 $('#zip').css("border-width", "3px");
+
 							 }
 									// coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
 							 }
@@ -403,11 +411,13 @@ $('body').on('blur','[name="zip"]',function(){
 </div>
 	<section class="page-section">
 		<div class="container">
-				<h2 class="section-heading text-center" id="first-element-introduction" >Check Availability</h2><div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
+				<h2 class="section-heading text-center" id="first-element-introduction" >Check Availability</h2>
+				<div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
   
 					alt="location image" style="">To display pricing and offers available for your location, please enter an address.</p></div>
 				<div class="row setting-cards">
 					<div class=" col-md-6 " style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px; border: 1px solid #CED4DA;">
+					
 						<ul class="setting-card">
 							
 							
@@ -417,17 +427,21 @@ $('body').on('blur','[name="zip"]',function(){
 										<strong>Error!</strong> {{$errors->first()}}
 								</div>
 						@endif 
+						<h5 class="text-center" style="color: #212529;padding-top:2%"><img src="{{url('../frontend/img/user.png')}}" 
+  
+							alt="user icon" style="height: 21px;padding-left:10px;padding-right:10px;  font-weight: 40;"> New Customer</h5>
 									<form  id="my_form" class="login-form mt-3">
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
-													{{-- <label for="email" class="control-label text-center">Email</label> --}}
-													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center">
+													<label for="zip" class="control-label text-center">Enter your zipcode</label>
+													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"><span id="zipanswer"></span>
 											</div>
-											<div class="form-group" id="third-element-introduction" >
+											{{-- <div class="form-group" id="third-element-introduction" >
 												<label for="Address2"  class="control-label ">Address</label>
 												<input type="text" id="Address2" name="Address2" class="form-control" >
 											<pre>222 Example St.</pre>	
-										</div>			<div class="form-group">
+										</div>	 --}}
+												<div class="form-group">
 												<label for="City" class="control-label">City</label>
 												<input type="text" id="City" name="City" class="form-control" disabled>
 										</div>			<div class="form-group">
@@ -437,7 +451,7 @@ $('body').on('blur','[name="zip"]',function(){
 											<small id="ziphelp" ></small>
 											<small id="addresshelp" ></small>
 											<div class="form-group " id="fourth-element-introduction" >
-													<button type="submit" class="btn btn-lg login-btn">Submit Address</button>
+													<button type="submit" class="btn btn-lg login-btn">Submit Zip</button>
 											</div>
 				
 				
