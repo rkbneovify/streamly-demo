@@ -16,15 +16,14 @@
 	<!-- Bootstrap script -->
 
 	@yield('stylesheets')
-
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RGE4ZXT43Q"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E50Q5Q9J8D"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-RGE4ZXT43Q');
+  gtag('config', 'G-E50Q5Q9J8D');
 </script>
 
 
