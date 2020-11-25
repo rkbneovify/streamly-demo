@@ -10252,7 +10252,10 @@ header.masthead .masthead-heading {
   margin-bottom: 2rem;
   font-family: "Poppins", sans-serif !important;
 }
-
+.headerlogo{
+  width: 442px;
+ height: 110px;
+}
 @media (min-width: 768px) {
   header.masthead {
       padding-top: 12.78rem;
@@ -10270,6 +10273,19 @@ header.masthead .masthead-heading {
     line-height: 4.5rem;
     margin-bottom: 2rem;
     /* width: 50%; */
+  }
+}
+
+@media (min-width: 360px) {
+  .headerlogo{
+    width: 340px;
+   height: 110px;
+  }
+}
+@media (min-width: 320px)  and (max-device-width: 359px){
+  .headerlogo{
+    width: 300px;
+   height: 110px;
   }
 }
 #portfolio .portfolio-item {
