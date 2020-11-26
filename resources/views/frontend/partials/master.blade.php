@@ -91,7 +91,7 @@
 															data:{'search':query},
 													 
 															success:function (data) {
-																	console.log(data);
+																	// console.log(data);
 																			$('#search_list').html(data);
 															}
 											})
