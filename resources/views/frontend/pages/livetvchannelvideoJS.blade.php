@@ -31,14 +31,87 @@
 <link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 <script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
-<link rel="stylesheet" href="{{ asset('frontend/controlbar/controlbar.css') }}">
-<script src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
-<script src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script>
-<script src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
+{{-- <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet"> --}}
+<script src="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video.min.js"></script>
+{{-- <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script> --}}
+<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
+<script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
+
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
 
 
 <script>
 	$('document').ready(function(){
+		var player = videojs('player',  {
+          preload: true,
+          autoplay: true,
+          controls: true,
+          controlBar: {
+              'liveDisplay': true,
+              'pictureInPictureToggle': true,
+		// 					'volumeMenuButton': true,
+    // 'currentTimeDisplay': true,
+    // 'timeDivider': true,
+    // 'durationDisplay': true,
+    // 'remainingTimeDisplay': false,
+    // 'progressControl': true,
+    // 'subtitlesButton': true,
+    'fullscreenToggle': true,
+          }
+      });
+	
+		player.httpSourceSelector();
+
+					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
+					player.eme({
+							// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
+							emeHeaders: {
+									'customdata': '{{$encoded_auth_xml}}'
+							}
+					});
+
+					player.on('ready', function() {
+							// Setup dash + pr/wv
+							var wvprDashSrc = {
+									src: '{{$url[0]->url??"no url found"}}',
+									type: 'application/dash+xml',
+									keySystems: {
+                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+                        'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+                    }
+							};
+
+							// Set the source to the player to init/start the playback.
+							player.src(wvprDashSrc);
+
+					
+					});
+					player.tech().on('retryplaylist', () => {
+      
+        console.log('lets try reloading the url');
+				player.src({
+                                src: '{{$url[0]->url??"no url found"}}',
+																type: 'application/dash+xml',
+                            });
+                            player.load();
+      });
+					player.on('error', () => {
+						console.log("error occured");
+						var modal = player.createModal('Retrying connection');
+                    if (player.error().code === 4) {
+                        
+                            player.src({
+															src: '{{$url[0]->url??"no url found"}}',
+																type: 'application/dash+xml',
+                            });
+                            player.load();
+														modal.close();
+                        
+                    }
+                });
+								
 		var owl = $('.owl-carousel');
 			owl.owlCarousel({
 				slideBy: 6,
@@ -64,63 +137,7 @@
 			});
 		
 	});
-	var player,firstLoad = true;
  
-  function init() {
-      player = dashjs.MediaPlayer().create();
-      // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
-      // player.updateSettings({
-      //     // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-      //     'streaming': {
-			// 			'liveDelay': 10,
-			// 			'fastSwitchEnabled': true  ,
-      //         //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
-      //         //determine which assets to request in order to perfom adaptive streaming of the content.
-      //         //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
-      //         'retryIntervals': {MPD: 5000},
-      //         'retryAttempts': {MPD: 3}
-      //     },'abr': { 'autoSwitchBitrate': { 'video': false } }
-      // });
-			player.updateSettings({
-          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-          'streaming': {
-						'liveDelay': 2,
-                        'liveCatchUpMinDrift': 0.05,
-                        'liveCatchUpPlaybackRate': 0.5,
-                        'stableBufferTime': 2,
-                        'bufferTimeAtTopQuality': 2,
-                        'bufferTimeAtTopQualityLongForm': 2,
-                        'bufferToKeep': 2,
-                        'bufferAheadToKeep': 2,
-                        'lowLatencyEnabled': true,
-                        'fastSwitchEnabled': true,
-          },'abr': { 'autoSwitchBitrate': { 'video': false } }
-      });
-      player.setProtectionData({
-        "com.widevine.alpha": {
-          serverURL: "//wv-keyos.licensekeyserver.com/",
-          httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
-          clearkeys: ""
-        },
-        "com.microsoft.playready": {
-          serverURL: "//pr-keyos.licensekeyserver.com/core/rightsmanager.asmx",
-          httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
-          clearkeys: ""
-        }
-      });
-      firstLoad = false;
-                  
-              var url = "{{$url[0]->url??'no url found'}}";
-              // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
-                  player.initialize(document.querySelector("video"), url, true);
-                  var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
-  controlbar.initialize();
-  }
-  
-  document.addEventListener("DOMContentLoaded", function () {
-                  init();
-              });	
-		
 	</script>
 	<style>
 
@@ -258,36 +275,11 @@
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-						<video  autoplay="" preload="auto" id="videoPlayer"  autoplay > </video>
-            <div id="videoController" class="video-controller unselectable">
-              <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-                  <span id="iconPlayPause" class="icon-play"></span>
-              </div>
-              <span id="videoTime" class="time-display">00:00:00</span>
-              <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-                  <span class="icon-fullscreen-enter"></span>
-              </div>
-              <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-                  <span class="icon-bitrate"></span>
-              </div>
-              <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01"/>
-              <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-                  <span id="iconMute" class="icon-mute-off"></span>
-              </div>
-              <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-                  <span class="icon-tracks"></span>
-              </div>
-              <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-                  <span class="icon-caption"></span>
-              </div>
-              <span id="videoDuration" class="duration-display">00:00:00</span>
-              <div class="seekContainer">
-                  <div id="seekbar" class="seekbar seekbar-complete">
-                      <div id="seekbar-buffer" class="seekbar seekbar-buffer"></div>
-                      <div id="seekbar-play" class="seekbar seekbar-play"></div>
-                  </div>
-              </div>
-          </div>
+						{{-- <video id="my-player" class="video-js" controls></video> --}}
+            <video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
+							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
+							<source src="" type="application/dash+xml"/>
+					</video>
 
 						<div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
@@ -328,7 +320,8 @@
 						@else
 						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
 							@endif<div class="live-news-item">
-						<img src="{{  $channeldet->logo}}">
+
+						<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
 						<p>{{  $channeldet->name??'no name'}}</p>
 					</div> </a>
 					@endforeach
