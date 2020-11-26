@@ -300,8 +300,8 @@ $('body').on('blur','[name="coupon"]',function(){
     if($coupon.val().length > 0) { // check if user typed anything
   // $coupon.val($coupon.val().toUpperCase()); // I make all my coupons uppercase
   
-  $.ajax({
-		var text = document.getElementById("totalprice").textContent;				 
+	var text = document.getElementById("totalprice").textContent;		
+  $.ajax({		 
     url:"{{ route('ajax-check') }}",
 
     type:"GET",
