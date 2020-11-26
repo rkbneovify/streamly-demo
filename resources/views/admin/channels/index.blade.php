@@ -237,6 +237,7 @@ $('.select2').select2();
  
  function init(url) {
      player = dashjs.MediaPlayer().create();
+    //  player.getProtectionController().setRobustnessLevel('SW_SECURE_CRYPTO');
      // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
      player.updateSettings({
          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},

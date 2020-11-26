@@ -110,6 +110,71 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
           }
     }
 
+    //for video.js
+
+    public function showChannel2($callSign,$genre){
+     
+        try {
+            $encoded_auth_xml = getKeyOSAuthToken();
+    
+         
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+        $login_limit = 5;$user_id = Auth::user()->id;
+
+//find all by user_id and and status=active
+$active_session = SessionTable::where([
+['status', '=', '1'],
+['users_id', '=', $user_id],
+ ])->get()->toArray();
+ if (count($active_session) >= $login_limit) {
+    $login = true;
+    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
+    //  $login = false; 
+        return view('frontend.deviceLimitReached',compact('login'));
+ }
+        $ua = request()->server('HTTP_USER_AGENT');
+        $isDevice=isDeviceAppleRokuOthers($ua);
+if($isDevice=='apple')  { //for apple serve m3u8
+    // echo "apple device";
+    $type='url';
+    $record = $this->showChannelFunc($type);
+   
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('url');
+
+  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+
+  return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+}else{ 
+    // echo " non apple device";
+    //for non apple "dash_url as url"
+    $type='dash_url';
+    $record = $this->showChannelFunc($type);
+    
+   
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
+
+  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+
+
+}
+
+       
+      
+    	return view('frontend.pages.livetvchannelvideoJS', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+    }catch(Exception $e) {
+            
+            return $e->getMessage();
+          }
+    }
     public function showChannelFunc($type){
        $record= Channel::select('channels.id', 'channels.name','channels.callSign','channels.image', "channels.$type as url")
         
