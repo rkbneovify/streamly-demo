@@ -10638,34 +10638,34 @@ section#contact form#contactForm :-ms-input-placeholder {
 .social-list li{
   margin-bottom: 2rem !important;
 }
-.footer {
-      background: transparent linear-gradient(113deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
-      color: #fff;
-  font-size: 0.9rem;
-  font-family: "Poppins", sans-serif !important;
-  height: 20.25rem;
-  position: relative;
+footer {
+  
+background: transparent linear-gradient(113deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;   color: #fff;
+font-size: 0.9rem;
+font-family: 'Poppins', sans-serif !important;padding-top: 4%;padding-bottom: 1%;
+
 }
 
-.footer .container {
-      position: absolute;
+
+footer .container {
+
       top: 30%;
 }
 
-footer.footer ul {
+footer ul {
     padding: 0;
     list-style: none;
 }
 
-footer.footer ul li{
+footer ul li{
       color: #C5C5C5;
 }
 
-footer.footer h6 {
+footer h6 {
     margin-bottom: 1rem;
 }
 
-footer.footer ul li {
+footer ul li {
     margin-bottom: 1rem;
 }
 
