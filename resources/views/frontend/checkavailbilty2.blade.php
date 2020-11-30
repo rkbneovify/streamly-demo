@@ -163,8 +163,9 @@ $(function() {
 			$('#address-country').val("US"); 
 								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
 								 
-								 $('#zipanswer').html("<span style='font-size:30px; color:green;'>&#10004; " +data.message+"<a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'> Start you trial now!</a></span>");
-								 $('#zip').css("border-color", "green");
+								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px;color: #1BB525;'>&#x2705; " +data.message+"<a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'> Start you trial now!</a></span>");
+								 
+								 $('#zip').css("color", "#1BB525");
 
 							 },
 							 error:function(xhr, status, error){ 
@@ -173,9 +174,8 @@ $(function() {
 									 $('#card-button').prop('disabled', true);
 								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
 												 
-								 $('#zipanswer').html("<span style='font-size:30px; color:red;'>&#10006; Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information</span>");
-								 $('#zip').css("border-color", "red");
-								 $('#zip').css("border-width", "3px");
+								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information</span>");
+								 $('#zip').css("color", "#FC243B");
 
 							 }
 									// coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
@@ -415,10 +415,10 @@ $(function() {
 				<div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
   
 					alt="location image" style="">To display pricing and offers available for your location, please enter an address.</p></div>
-				<div class="row setting-cards">
+				<div class="row setting-cards " >
 					<div class=" col-md-6 " style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px; border: 1px solid #CED4DA;">
-					
-						<ul class="setting-card">
+						<div class="mr-2">
+						{{-- <ul class="setting-card"> --}}
 							
 							
 								@if($errors->has('email'))
@@ -427,9 +427,10 @@ $(function() {
 										<strong>Error!</strong> {{$errors->first()}}
 								</div>
 						@endif 
-						<h5 class="text-center" style="color: #212529;padding-top:2%"><img src="{{url('../frontend/img/user.png')}}" 
+						<img src="{{url('../frontend/img/user.png')}}" 
   
-							alt="user icon" style="height: 21px;padding-left:10px;padding-right:10px;  font-weight: 40;"> New Customer</h5>
+						alt="user icon" class="mx-auto d-block"  style="padding-top:5%">
+						<h5 class="text-center" style="color: #212529;padding-top:2%"> New Customer</h5>
 									<form  id="my_form" class="login-form mt-3">
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
@@ -459,21 +460,22 @@ $(function() {
 											{!! csrf_field() !!}
 									</form>
 							
-								</ul>
+								{{-- </ul> --}}
 							
-					</div>
-					<div class="col-md-6" style="text-align: center; ">
-						
-						
-							<h5><img src="{{url('../frontend/img/user.png')}}" 
+					</div></div>
+					<div class="col-md-1"></div>
+					<div class="col-md-5" style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px; border: 1px solid #CED4DA;">
+						<div class="ml-2">
+						<img src="{{url('../frontend/img/user.png')}}" 
   
-	alt="user icon" style="height: 21px;padding-left:10px;padding-right:10px;  font-weight: 40;">Existing Customer</h5>
+	alt="user icon" class="mx-auto d-block" style="padding-top:5%">
+	<h5 class="text-center" style="color: #212529;padding-top:2%"> Existing Customer</h5>
 							
-	<p style="font-weight: 30;">	<strong >Already have an account? </strong><a onclick="openNav(event)" href="javascript:void(0)">Log in</a> </p>
+	<p style="font-weight: 30;" class="text-center">	<strong >Already have an account? </strong><a onclick="openNav(event)" href="javascript:void(0)">Log in</a> </p>
 							
 								
 							
-					</div>
+					</div></div>
 				
 				
 
