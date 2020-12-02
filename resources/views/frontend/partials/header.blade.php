@@ -5,8 +5,9 @@
 
         @if( isset($login) && $login)
 
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive1" aria-controls="navbarResponsive" aria-expanded="false" onclick="logoutUser()" aria-label="Toggle navigation">Logout<i class="fas fa-bars ml-1"></i></button>
-
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
         @else
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive1" aria-controls="navbarResponsive" aria-expanded="false" onclick="openNav(event)" aria-label="Toggle navigation">Log In<i class="fas fa-bars ml-1"></i></button>
         @endif
@@ -28,34 +29,27 @@
                             <div id="search_list"></div>  
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a style="background: " class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <span class="dropdown-menu-arrow"></span>
+                            <a class="dropdown-item" href="/account/settings">{{ Auth::user()->name }}</a>
+                            <a class="dropdown-item" href="/account/settings">Account Settings</a>
+                            @if (Auth::user()->subscribed('main')) 
+                            <a class="dropdown-item" href="/react">Program Guide</a>
+                            <a class="dropdown-item" href="/livetv/list">All channels</a>
+                            <a class="dropdown-item" href="/livetv">All channels with genre</a>
+                            <a class="dropdown-item" href="/my_favorites">My favorites</a>
+                            <a class="dropdown-item" href="/livetv/recent">My recents</a>
+                            @endif
+                            <a class="dropdown-item" href="#">Download app</a>
+                            <a class="dropdown-item" href="/faq">Help & Support</a>
+                            <a class="dropdown-item logouttheuser"  href="javascript:void(0)">Logout</a>
+                        </div>
+                      </li>
                     
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-list-4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbar-list-4">
-                        <ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
-                                </a>
-                                <div class="dropdown-menu navbarDropdownMenuLink text-center" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item" href="/account/settings">{{ Auth::user()->name }}</a>
-                                    <a class="dropdown-item" href="/account/settings">Account Settings</a>
-                                    @if (Auth::user()->subscribed('main')) 
-                                    <a class="dropdown-item" href="/react">Program Guide</a>
-                                    <a class="dropdown-item" href="/livetv/list">All channels</a>
-                                    <a class="dropdown-item" href="/livetv">All channels with genre</a>
-                                    <a class="dropdown-item" href="/my_favorites">My favorites</a>
-                                    <a class="dropdown-item" href="/livetv/recent">My recents</a>
-                                    @endif
-                                    <a class="dropdown-item" href="#">Download app</a>
-                                    <a class="dropdown-item" href="/faq">Help & Support</a>
-                                    <a class="dropdown-item js-scroll-trigger btn-login logouttheuser"  href="javascript:void(0)">Logout</a>
-                                    
-                                </div>
-                            </li>   
-                        </ul>
-                    </div>
 
                 @else
 
