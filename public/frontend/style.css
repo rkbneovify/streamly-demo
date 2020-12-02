@@ -10799,8 +10799,50 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
   box-shadow: 0px 3px 6px #00000029;
   border: 1px solid #FFFFFF;
 }
-
+.dropdown-menu.show{
+  position: absolute;
+  background: transparent linear-gradient(137deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  border: 1px solid #FFFFFF;
+}
+.dropdown-menu-arrow {
+  top: -25px;
+  left: 10%;
+  width: 0;
+  height: 0;
+  position: relative;
+}
+.dropdown-menu-arrow:before,
+.dropdown-menu-arrow:after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-width: 7px 8px;
+  border-style: solid;
+  border-color: transparent;
+  z-index: 1001;
+}
+.dropdown-menu-arrow:after {
+  bottom: -18px;
+  right: -8px;
+  border-bottom-color: #000428;
+}
+.dropdown-menu-arrow:before {
+  bottom: -17px;
+  right: -8px;
+  border-bottom-color: rgba(0,0,0,.15);
+}
 .navbarDropdownMenuLink .dropdown-item {
+  text-align: center;
+  padding: 0.25rem 2rem;
+  font: Regular 14px/70px Poppins;
+  letter-spacing: 0.17px;
+  color: #CCCCCC;
+  text-align: right;
+}
+.dropdown-item {
   text-align: center;
   padding: 0.25rem 2rem;
   font: Regular 14px/70px Poppins;
