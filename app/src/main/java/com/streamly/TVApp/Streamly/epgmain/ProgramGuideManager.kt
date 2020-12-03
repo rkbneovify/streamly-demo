@@ -18,12 +18,20 @@ class ProgramGuideManager<T> {
      * position and detailed view's time range.
      */
     companion object {
+        // todo <----Changes on 3-december-2020----->
         internal val ENTRY_MIN_DURATION = TimeUnit.MINUTES.toMillis(2) // 2 min
         private val MAX_UNACCOUNTED_TIME_BEFORE_GAP = TimeUnit.MINUTES.toMillis(15) // 15 min
-
-        //#neovifyissueresolved28sep
-        private const val DAY_STARTS_AT_HOUR = 0
+        private const val DAY_STARTS_AT_HOUR = 5
         private const val DAY_ENDS_NEXT_DAY_AT_HOUR = 6
+        private const val DAY_STARTS_YESTERDAY_AT_HOUR = 5
+        private const val DAY_ENDS_DAY_AFTER_TOMORROW_AT_HOUR = 6
+
+//        internal val ENTRY_MIN_DURATION = TimeUnit.MINUTES.toMillis(2) // 2 min
+//        private val MAX_UNACCOUNTED_TIME_BEFORE_GAP = TimeUnit.MINUTES.toMillis(15) // 15 min
+        //#neovifyissueresolved28sep
+//        private const val DAY_STARTS_AT_HOUR = 0
+//        private const val DAY_ENDS_NEXT_DAY_AT_HOUR = 6
+        // todo <----Changes on 3-december-2020----->
 
         private val TAG : String = ProgramGuideManager::class.java.name
     }
@@ -96,11 +104,17 @@ class ProgramGuideManager<T> {
                 if (entries.isEmpty()) {
                     entries.add(ProgramGuideSchedule.createGap(startUtcMillis, endUtcMillis))
                 } else {
-                    // Cut off items which don't belong in the desired timeframe
-                    val timelineStartsAt = selectedDate.atStartOfDay(timeZone).withHour(DAY_STARTS_AT_HOUR)
+                    // todo <----Changes on 3-december-2020----->
+                    val timelineStartsAt = selectedDate.atStartOfDay(timeZone).minusDays(1).withHour(DAY_STARTS_YESTERDAY_AT_HOUR)
+                     val timelineEndsAt = timelineStartsAt.plusDays(3).withHour(DAY_ENDS_DAY_AFTER_TOMORROW_AT_HOUR)
 
-                    //#neovifyissueresolved28sep
-                    val timelineEndsAt = timelineStartsAt.plusDays(days).withHour(DAY_ENDS_NEXT_DAY_AT_HOUR)
+                    //                    // Cut off items which don't belong in the desired timeframe
+//                    val timelineStartsAt = selectedDate.atStartOfDay(timeZone).withHour(DAY_STARTS_AT_HOUR)
+//                    //#neovifyissueresolved28sep
+//                    val timelineEndsAt = timelineStartsAt.plusDays(days).withHour(DAY_ENDS_NEXT_DAY_AT_HOUR)
+
+                    // todo <----Changes on 3-december-2020----->
+
 
                     val timelineStartsAtMillis = timelineStartsAt.toEpochSecond() * 1_000
                     val timelineEndsAtMillis = timelineEndsAt.toEpochSecond() * 1_000

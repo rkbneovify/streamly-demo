@@ -55,10 +55,10 @@ public interface ApiInterface {
     Observable<ChannellistModel> getChannelList2(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
 
-    @Headers("Accept: application/json")
+    /*@Headers("Accept: application/json")
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
     Call<ChannelScheduleModel> gotScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
-
+*/
 
     @Headers("Accept: application/json")
 //    @GET("oldchanneldayschdeule")//api/auth/channeldayschdeule

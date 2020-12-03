@@ -53,9 +53,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         private val MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME = ProgramGuideManager.ENTRY_MIN_DURATION
         private val TIME_INDICATOR_UPDATE_INTERVAL = TimeUnit.SECONDS.toMillis(5)
 
-        private const val TIME_OF_DAY_MORNING = "time_of_day_morning"
-        private const val TIME_OF_DAY_AFTERNOON = "time_of_day_afternoon"
-        private const val TIME_OF_DAY_EVENING = "time_of_day_evening"
+//        private const val TIME_OF_DAY_MORNING = "time_of_day_morning"
+//        private const val TIME_OF_DAY_AFTERNOON = "time_of_day_afternoon"
+//        private const val TIME_OF_DAY_EVENING = "time_of_day_evening"
 
         private const val MORNING_STARTS_AT_HOUR = 6
         private const val MORNING_UNTIL_HOUR = 12
@@ -65,6 +65,14 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     }
 
     protected val FILTER_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE
+
+    //    Changes in 2-December-2020
+    ////////////////////////////////////////////////////////////////////////////////////
+//    protected open val DISPLAY_TIMEZONE: ZoneId = ZoneOffset.of("+05:30") // India Time Zone
+//    protected open val DISPLAY_TIMEZONE: ZoneId = ZoneOffset.of("-08:00") // US-California  Time Zone
+//    protected open val SELECTABLE_DAYS_IN_PAST = 1
+//    protected open val SELECTABLE_DAYS_IN_FUTURE = 1
+    /////////////////////////////
 
     // Config values, override in subclass if necessary
     protected open val DISPLAY_LOCALE = Locale("en", "US")
@@ -102,7 +110,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     private val currentDateView get() = view?.findViewById<TextView>(R.id.programguide_current_date)
     private val jumpToLive get() = view?.findViewById<TextView>(R.id.programguide_jump_to_live)
     private val currentTimeIndicator get() = view?.findViewById<FrameLayout>(R.id.programguide_current_time_indicator)
-    private val timeOfDayFilter get() = view?.findViewById<View>(R.id.programguide_time_of_day_filter)
+//    private val timeOfDayFilter get() = view?.findViewById<View>(R.id.programguide_time_of_day_filter)
     private val dayFilter get() = view?.findViewById<View>(R.id.programguide_day_filter)
     private val focusCatcher get() = view?.findViewById<View>(R.id.programguide_focus_catcher)
     private val contentAnimator get() = view?.findViewById<ViewAnimator>(R.id.programguide_content_animator)
@@ -168,8 +176,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Overriding the layout ID is also possible, so that if your layout naming follows a specific
         // structure, you are not obligated to use the name we use in the library.
-        val view = inflater.inflate(OVERRIDE_LAYOUT_ID ?: R.layout.programguide_fragment, container, false)
-        setupFilters(view)
+        val view = inflater.inflate(OVERRIDE_LAYOUT_ID
+                ?: R.layout.programguide_fragment, container, false)
+//        setupFilters(view)
         setupComponents(view)
         return view
     }
@@ -179,7 +188,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * The selectable days and their displays can be changed by the config parameters.
      * Also you can change the display values by overriding the string resources.
      */
-    private fun setupFilters(view: View) {
+    //todo: //<---Filter--->
+    // Uncomment when Filter need to be used. It commented on 2-december-2020 because fiter functionality is not needed yet.
+    /*private fun setupFilters(view: View) {
         // Day filter
         val now = FixedZonedDateTime.now().withZoneSameInstant(DISPLAY_TIMEZONE)
         val dayFilterOptions = (-SELECTABLE_DAYS_IN_PAST until SELECTABLE_DAYS_IN_FUTURE).map { dayIndex ->
@@ -197,8 +208,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             AlertDialog.Builder(filterView.context)
                 .setTitle(R.string.programguide_day_selector_title)
                 .setSingleChoiceItems(
-                    dayFilterOptions.map { it.displayTitle }.toTypedArray(),
-                    currentlySelectedFilterIndex
+                        dayFilterOptions.map { it.displayTitle }.toTypedArray(),
+                        currentlySelectedFilterIndex
                 ) { dialogInterface, position ->
                     currentlySelectedFilterIndex = position
                     dialogInterface.dismiss()
@@ -221,9 +232,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         val isItEvening = !isItMorning && !isItAfternoon
 
         val timeOfDayFilterOptions = listOf(
-            FilterOption(getString(R.string.programguide_part_of_day_morning), TIME_OF_DAY_MORNING, isItMorning),
-            FilterOption(getString(R.string.programguide_part_of_day_afternoon), TIME_OF_DAY_AFTERNOON, isItAfternoon),
-            FilterOption(getString(R.string.programguide_part_of_day_evening), TIME_OF_DAY_EVENING, isItEvening)
+                FilterOption(getString(R.string.programguide_part_of_day_morning), TIME_OF_DAY_MORNING, isItMorning),
+                FilterOption(getString(R.string.programguide_part_of_day_afternoon), TIME_OF_DAY_AFTERNOON, isItAfternoon),
+                FilterOption(getString(R.string.programguide_part_of_day_evening), TIME_OF_DAY_EVENING, isItEvening)
         )
 
         if (currentlySelectedTimeOfDayFilterIndex == -1) {
@@ -246,7 +257,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 }
                 .show()
         }
-    }
+    }*/
+    // todo: //<---Filter--->
 
     /**
      * The 'jump to live' button visibility can be set here.
@@ -297,12 +309,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (!created) {
             viewportMillis = gridWidth * HOUR_IN_MILLIS / widthPerHour
             timelineStartMillis = ProgramGuideUtil.floorTime(
-                System.currentTimeMillis() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
-                HALF_HOUR_IN_MILLIS
+                    System.currentTimeMillis() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
+                    HALF_HOUR_IN_MILLIS
             )
-            programGuideManager.updateInitialTimeRange(
-                timelineStartMillis,
-                timelineStartMillis + viewportMillis
+            programGuideManager.updateInitialTimeRange(timelineStartMillis, timelineStartMillis + viewportMillis
+
+
             )
         }
         view.findViewById<ProgramGuideGridView<T>>(R.id.programguide_grid)?.let {
@@ -327,6 +339,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         programGuideManager.listeners.add(this)
         currentDateView?.alpha = 0f
+
         timeRow.let { timelineRow ->
             val timelineAdapter = ProgramGuideTimeListAdapter(resources, DISPLAY_TIMEZONE)
             timelineRow.adapter = timelineAdapter
@@ -352,7 +365,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             currentDateView?.alpha = 1f
             updateCurrentDateText()
             updateCurrentTimeIndicator()
-            updateTimeOfDayFilter()
+//            updateTimeOfDayFilter()
             didScrollToBestProgramme = false
             setState(State.Content)
         }
@@ -416,8 +429,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         } else {
             if (currentTimeIndicatorWidth == 0) {
                 currentTimeIndicator?.measure(
-                    View.MeasureSpec.UNSPECIFIED,
-                    View.MeasureSpec.UNSPECIFIED
+                        View.MeasureSpec.UNSPECIFIED,
+                        View.MeasureSpec.UNSPECIFIED
                 )
                 currentTimeIndicatorWidth = currentTimeIndicator?.measuredWidth ?: 0
             }
@@ -493,10 +506,10 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      */
     @MainThread
     fun setData(
-        newChannels: List<ProgramGuideChannel>,
-        newChannelEntries: Map<String, List<ProgramGuideSchedule<T>>>,
-        selectedDate: LocalDate,
-        days: Long
+            newChannels: List<ProgramGuideChannel>,
+            newChannelEntries: Map<String, List<ProgramGuideSchedule<T>>>,
+            selectedDate: LocalDate,
+            days: Long
     ) {
         programGuideManager.setData(newChannels, newChannelEntries, selectedDate, DISPLAY_TIMEZONE, days)
     }
@@ -571,12 +584,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         // Might just be a reset
         if (scrollOffset != 0) {
-            updateTimeOfDayFilter()
+//            updateTimeOfDayFilter()
             updateCurrentDateText()
         }
     }
 
-    private fun updateTimeOfDayFilter() {
+    /*private fun updateTimeOfDayFilter() {
         val leftHour =
             Instant.ofEpochMilli(programGuideManager.getFromUtcMillis()).atZone(DISPLAY_TIMEZONE)
                 .hour
@@ -588,16 +601,16 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (currentlySelectedTimeOfDayFilterIndex != selectedItemPosition) {
             currentlySelectedTimeOfDayFilterIndex = selectedItemPosition
             val displayText = getString(
-                listOf(
-                    R.string.programguide_part_of_day_morning,
-                    R.string.programguide_part_of_day_afternoon,
-                    R.string.programguide_part_of_day_evening
-                )[selectedItemPosition]
+                    listOf(
+                            R.string.programguide_part_of_day_morning,
+                            R.string.programguide_part_of_day_afternoon,
+                            R.string.programguide_part_of_day_evening
+                    )[selectedItemPosition]
             )
             timeOfDayFilter?.findViewById<TextView>(R.id.programguide_filter_title)?.text =
                 displayText
         }
-    }
+    }*/
 
     private fun updateCurrentDateText() {
         // The day might have changed
@@ -611,8 +624,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
     private fun updateTimeline() {
         timelineStartMillis = ProgramGuideUtil.floorTime(
-            programGuideManager.getStartTime() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
-            HALF_HOUR_IN_MILLIS
+                programGuideManager.getStartTime() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
+                HALF_HOUR_IN_MILLIS
         )
         val timelineDifference = programGuideManager.getStartTime() - timelineStartMillis
         timelineAdjustmentPixels = ProgramGuideUtil.convertMillisToPixel(timelineDifference)

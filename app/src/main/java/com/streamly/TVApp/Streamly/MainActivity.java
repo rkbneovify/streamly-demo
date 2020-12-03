@@ -6,10 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -156,10 +154,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                finish();
                 break;
         }
-
     }
-
-
 }
 
 
