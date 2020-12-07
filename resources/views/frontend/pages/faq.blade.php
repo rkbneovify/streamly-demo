@@ -163,7 +163,7 @@
 					    <div class="card">
 					      <div class="card-header">
 					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">
-					          	What is Streamly live TV?
+										Is Streamly available nationwide?
 					        	<i class="fa pull-right" aria-hidden="true"></i>
 					        </a>
 
@@ -171,15 +171,13 @@
 
 					      </div>
 					      <div id="collapseOne" class="collapse" data-parent="#accordion-child">
-					        <div class="card-body">
-					          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-					        </div>
+					        <div class="card-body">Streamly is is available in specific markets across the USA, but not in all markets. Please check for availability in your area on the website! </div>
 					      </div>
 					    </div>
 					    <div class="card">
 					      <div class="card-header">
 					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
-					        	What can I do Streamly live TV?
+					        	What channels are available?
 					      		<i class="fa pull-right" aria-hidden="true"></i>
 					      	</a>
 
@@ -188,14 +186,13 @@
 					      </div>
 					      <div id="collapseTwo" class="collapse" data-parent="#accordion-child">
 					        <div class="card-body">
-					          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-					        </div>
+										We are constantly enhancing our entertainment offering. Please check the website for the current networks available!</div>
 					      </div>
 					    </div>
 					    <div class="card">
 					      <div class="card-header">
 					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
-					          	Who can use Streamly live TV?
+										What is StreamlyTV?
 					        	<i class="fa pull-right" aria-hidden="true"></i>
 					        </a>
 
@@ -204,8 +201,192 @@
 					      </div>
 					      <div id="collapseThree" class="collapse" data-parent="#accordion-child">
 					        <div class="card-body">
-					          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-					        </div>
+										Streamly TV isan outstanding app-based TV service that let's you watch over 100 great channels of television using apps. Watch at home or away!  </div>
+					      </div>
+							</div>
+							  <div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFour">
+										How to I start using Streamly?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseFour" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										1)Go to StreamlyTV.com website, and first click the CHECK AVAILABITY link.  <br> 2) Sign up if you are in an authorized zip code. <br>3) Install the StreamlyTV app on your mobile (iOS or Android), Roku, FireTV, AppleTV, and some SmartTV's (in 2020). You can even watch by loggin in from your laptop! </div>
+					      </div>
+							</div>
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFive">
+										How many devices can watch at the same time?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseFive" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										You can login to a maximum of 5 devices at the same time, and with any mix of the apps that meet your needs.  </div>
+					      </div>
+							</div>
+								<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseSix">
+										How do I add or delete users of my StreamlyTV?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseSix" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										You can remove a device from your MY ACCOUNT page on the StreamlyTV website after logging in. Delete some or all. The next time someone logs in to your account, that device will be added, up until all 5 are used again.  </div>
+					      </div>
+							</div>
+							
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseSeven">
+										What if I need more than 5 users?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseSeven" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										Let's say you need 7 devices to watch at the same time. You will max out your first account with 5 users. You will then need to add a second account, allowing you an additional 5 users.	</div>
+					      </div>
+					    </div>
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseEight">
+										Can I watch local channels on StreamlyTV?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseEight" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										Not yet. We are working on this solution for updates.</div>
+					      </div>
+							</div>
+							
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseNine">
+										Does Streamly have DVR (Digital Video Recording)
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseNine" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										DVR is tentatively scheduled for 2021 release..</div>
+					      </div>
+					    </div>
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTen">
+										Can I watch StreamlyTV on my Television?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseTen" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										You can view StreamlyTV several ways on your Television: <br>1) via a ROKU device; <br>2) via a Amazon FireTV device; <br>3) via an AppleTV device, and <br>4) some SmartTV's will have apps to launch direclty in the SmartTV; check the website for updates!</div>
+					      </div>
+							</div>
+							
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseEleven">
+										What devices can be used to view StreamlyTV?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseEleven" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										iOS (iPhone and iPads), AppleTV, Android phones, Android Tablets, Roku devices, Amazon Fire devices, Some SmartTVs (coming in 2021), and your computer or laptop via any browser. </div>
+					      </div>
+					    </div>
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTweleve">
+										Can I watch StreamlyTV when away from home?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseTweleve" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										Yes. You will notice that when you start to view while away from your Home Zip Code, you will receive a notice confirming that it's really you. </div>
+					      </div>
+							</div>
+							
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThirteen">
+										What if I move away from my current zip code.
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseThirteen" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										You'll notice when you go to login from your new location that a notice pops up, which will allow you to continue to watch. However, when you renew, you may not be able to renew UNLESS your new zip code is in an authorized area for viewing StreamlyTV.  </div>
+					      </div>
+					    </div>
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFourteen">
+										How long is my subscription good for?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseFourteen" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										We bill on a monthly basis, and have no contracts. Stop and start as you like.   </div>
+					      </div>
+							</div>
+							
+							<div class="card">
+					      <div class="card-header">
+					        <a class="collapsed card-link" data-toggle="collapse" href="#collapseFifteen">
+										How do I restart my service if it lapses?
+					        	<i class="fa pull-right" aria-hidden="true"></i>
+					        </a>
+
+					        
+
+					      </div>
+					      <div id="collapseFifteen" class="collapse" data-parent="#accordion-child">
+					        <div class="card-body">
+										Simply log back into your account, subscribe, and you're back streaming!   </div>
 					      </div>
 					    </div>
 					</div>
