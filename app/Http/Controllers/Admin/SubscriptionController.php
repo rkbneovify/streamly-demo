@@ -360,7 +360,11 @@ class SubscriptionController extends Controller
             ])->get();
             
             if(count($data)==0){
-                return response()->json(['message' => 'Zipcode not allowed or invalid'], 404);
+                $data2 = Zipcode::select('zipcode','city','state')->where([
+                    
+                    ['zipcode', '=',$request['zip'] ]
+                ])->get();
+                return response()->json(['message' => 'Zipcode not allowed or invalid','city'=>$data2->pluck('city')->first()??'Invalid City','state'=>$data2->pluck('state')->first()??'Invalid State'], 404);
             }
             return response()->json(['message' => 'Zipcode allowed','city'=>$data->pluck('city')->first(),'state'=>$data->pluck('state')->first()], 200); 
 
