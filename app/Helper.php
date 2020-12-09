@@ -272,12 +272,16 @@ $iPad    = (stripos($ua,"iPad") !== false);
 $iPadOS = (stripos($ua,"Macintosh") !== false);
 $appletv = (stripos($ua,"appletv") !== false);
 $Android = (stripos($ua,"Android") !== false);
+$Chrome = (stripos($ua,"Chrome") !== false);
+$Safari = (stripos($ua,"Safari") !== false);
 $Roku = (stripos($ua,"Roku") !== false);
 $Darwin = (stripos($ua,"Darwin") !== false);
 $Apple_TV = (stripos($ua,"Apple TV") !== false);
-if($Roku){
+if($Chrome){
+  return 'chrome';
+}else if($Roku){
   return 'roku';
-}else if( $Apple_TV||$Darwin||$iPod || $iPhone||$iPad||$iPadOS ||$appletv&&!$Android)  {
+}else if( $Apple_TV||$Darwin||$iPod || $iPhone||$iPad||$iPadOS||$Safari ||$appletv&&!$Android)  {
   return 'apple';
  }else{
    return 'others';
