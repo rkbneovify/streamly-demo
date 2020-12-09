@@ -1,8 +1,6 @@
 @extends('frontend/partials/master')
 
 @section('stylesheets')
-<script src="https://unpkg.com/driver.js/dist/driver.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/driver.js/dist/driver.min.css">
 <style>
         
         .sidenav {
@@ -66,47 +64,7 @@
 @endsection
 @section('stylesheets-bottom')
 <script type="text/javascript">
-// introJs().start();
-const driver = new Driver();
-// Define the steps for introduction
-driver.defineSteps([
-  {
-    element: '#first-element-introduction',
-    popover: {
-      className: 'first-step-popover-class',
-      title: 'Welcome to check availbilty page',
 
-      description: 'This page will tell you if our service is available in your location',
-      position: 'bottom'
-    }
-  },
-  {
-    element: '#second-element-introduction',
-    popover: {
-      title: 'Enter you zip',
-      description: 'enter zip code',
-      position: 'bottom'
-    }
-  },
-  {
-    element: '#third-element-introduction',
-    popover: {
-      title: 'Add your address',
-      description: 'Add you address and click on submit ',
-      position: 'bottom'
-    }
-  },
-  {
-    element: '#fourth-element-introduction',
-    popover: {
-      title: 'Click on submit',
-      description: 'Click on submit if zip is validated then you can start your trial',
-      position: 'bottom'
-    }
-  },
-]);
-// Start the introduction
-driver.start();
 /*
 $("#my_form").submit(function(event){
 	event.preventDefault(); //prevent default action 
@@ -143,6 +101,10 @@ $("#my_form").submit(function(event){
 */
 
 $(function() {
+
+	jQuery('.cancel-subscription').on('click', function(){
+				jQuery('#checkAvailibiltyModal').modal('show');
+			});
 	$("#my_form").submit(function(event){
 
 		event.preventDefault(); //prevent default action 
@@ -160,22 +122,37 @@ $(function() {
 								 $('#card-button').prop('disabled', false);
 								 $('#City').val(data.city); 
 			$('#State').val(data.state); 
+			 $('#citymodal').text(data.city); 
+			$('#statemodal').text(data.state); 
+			$('#modalzip').text(zipnumber.val()); 
 			$('#address-country').val("US"); 
 								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
 								 
-								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px;color: #1BB525;'>&#x2705; " +data.message+"<a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'> Start you trial now!</a></span>");
+								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px;color: #1BB525;'>&#x2705; " +data.message+"</span>");
+								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start you trial now!</a>");
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Start now</button>');
 								 
 								 $('#zip').css("color", "#1BB525");
+								 jQuery('#checkAvailibiltyModal').modal('show');
 
 							 },
 							 error:function(xhr, status, error){ 
 								 if(xhr.status==404) {
+									$('#City').val(xhr.responseJSON.city); 
+			$('#State').val(xhr.responseJSON.state); 
+									$('#citymodal').text(xhr.responseJSON.city); 
+			$('#statemodal').text(xhr.responseJSON.state); 
+			$('#modalzip').text(zipnumber.val()); 
+			$('#address-country').val("US"); 
 									 // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
 									 $('#card-button').prop('disabled', true);
 								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
 												 
-								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information</span>");
+								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area.<br /> Please call 1111111111 for more information</span>");
 								 $('#zip').css("color", "#FC243B");
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" onclick="location.href=`{{ url("/contactform") }}`;" >Contact Us</button>');
+							
+								 jQuery('#checkAvailibiltyModal').modal('show');
 
 							 }
 									// coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
@@ -273,7 +250,7 @@ $(function() {
 
 		.modal-body {
 		    position: relative;
-		    flex: 1 1 auto;
+		    /* flex: 1 1 auto; */
 		    padding: 3rem 5rem;
 		}
 
@@ -287,6 +264,35 @@ $(function() {
 @endsection
 
 @section('content')
+
+<div class="modal fade" id="checkAvailibiltyModal">
+	<div class="modal-dialog">
+	<div class="modal-content">
+		{{-- <div class="modal-header"><button type="button" class="close" data-dismiss="modal">×</button><h4 class="modal-title">10020 CAMPBELL LN E</h4></div> --}}
+		<div class="modal-header">
+			<h4 class="modal-title">Your Zip:<span id="modalzip"></span> </h4>
+		</div>
+		<div class="modal-body text-center">
+			{{-- <h4>Your check availbilty status</h4> --}}
+			<p><strong>Message:</strong><span id="zipanswer"></span> </p>
+			<p><strong>City:</strong><span id="citymodal"></span> </p>
+			<p><strong>State:</strong><span id="statemodal"></span> </p>
+			
+			<div>
+				<form action="" method="POST">
+					{{-- <input type="hidden" name="_method" value="DELETE">
+													<input type="hidden" name="_token" value="{{ csrf_token() }}">
+													<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Yes"> --}}
+
+				{{-- <a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">Close</a> --}}
+												</form>
+				{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
+			</div>
+		</div>
+		<div class="modal-footer" ><span id="modalbutton"></span><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button></div>
+	</div>
+	</div>
+</div>
 @if(session()->has('message'))
  <div class="alert alert-success alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -435,7 +441,7 @@ $(function() {
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
 													<label for="zip" class="control-label text-center">Enter your zipcode</label>
-													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"><span id="zipanswer"></span>
+													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center" required><span id="zipanswer"></span>
 											</div>
 											{{-- <div class="form-group" id="third-element-introduction" >
 												<label for="Address2"  class="control-label ">Address</label>
