@@ -63,8 +63,7 @@ class ComedyFragment (context: Context): ProgramGuideFragment<ComedyFragment.Sim
     companion object {
         private val TAG = ComedyFragment::class.java.name
     }
-
-
+    
 
     data class SimpleChannel(
             override val id: String,
