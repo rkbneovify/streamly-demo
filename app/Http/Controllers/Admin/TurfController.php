@@ -204,7 +204,7 @@ if (empty ( $zip ) ) {
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
 		'response_code' => 403,
-		'popupmsg'=>'You are using a zipcode away from your home zipcode'
+		'popupmsg'=>'You are using a zipcode away from your home zipcode, Click continue to Access Your Content'
 	];
 } else {
 	return [
