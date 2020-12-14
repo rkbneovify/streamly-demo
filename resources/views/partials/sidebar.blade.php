@@ -153,9 +153,16 @@
               </a>
             </li><li class="nav-item ">
               <a href=" {{ url('/admin/address') }}"  class="nav-link">
-              <i class="nav-icon fas fa-edit"></i>
+              <i class="nav-icon fas fa-address-card"></i>
                 <p>
                 Address availibilty
+                </p>
+              </a>
+            </li><li class="nav-item ">
+              <a href=" {{ url('/admin/Outsidelocationplay') }}"  class="nav-link">
+              <i class="nav-icon fas fa-search-location"></i>
+                <p>
+                  Outside Location Play
                 </p>
               </a>
             </li>

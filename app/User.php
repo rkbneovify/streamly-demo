@@ -114,4 +114,14 @@ public function recentschannel()
     // {
     //     return $this->hasMany(Subscription::class,'users_id');
     // }
+
+    /**
+    * outsideLocationPlays
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\HasMany
+    */
+    public function outsideLocationPlays()
+    {
+        return $this->hasMany(OutsideLocationPlay::class,'users_id');
+    }
 }
