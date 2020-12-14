@@ -71,6 +71,7 @@ Route::get('my_favorites', 'APIController@myFavorites');
 Route::get('my_recents', 'APIController@myRecents');
 Route::post('addtorecent', 'APIController@addToRecent');
  Route::get('getdrmkey', 'Admin\BuyDRMController@index');
+ Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes

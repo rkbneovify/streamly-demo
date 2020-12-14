@@ -41,7 +41,7 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     Route::get('changeStatus', 'Admin\SubscriptionController@changeStatus');
     Route::post('insertquotation','Admin\SubscriptionController@store')->name('insertquotation');
     Route::put('subscriptionupdate/{id}','Admin\SubscriptionController@update')->name('subscriptionupdate');
-    Route::delete('subscriptiondestroy/{id}','Admin\SubscriptionController@destroy')->name('subscriptiondestroy');;
+    Route::delete('subscriptiondestroy/{id}','Admin\SubscriptionController@destroy')->name('subscriptiondestroy');
 
 
     //gracenote
@@ -114,6 +114,12 @@ Route::get('/frontendtext/create', 'Admin\FrontendTextController@create');
 Route::get('/frontendtext', 'Admin\FrontendTextController@index');//frontendtext
 Route::post('insertfrontendtext','Admin\FrontendTextController@store')->name('insertfrontendtext');
 Route::put('fronttextupdate','Admin\FrontendTextController@update')->name('fronttextupdate');
+// Outside play location
+
+Route::get('Outsidelocationplay', 'Admin\OutsideLocationPlayController@index');
+
+Route::get('Outsidelocationplay/data', 'Admin\OutsideLocationPlayController@OLPajaxData');
+
 });
 
 Route::get('add-to-log', 'HomeController@myTestAddToLog');
