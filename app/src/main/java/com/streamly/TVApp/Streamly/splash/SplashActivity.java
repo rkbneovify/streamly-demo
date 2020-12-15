@@ -20,8 +20,8 @@ public class SplashActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        NetworkUtils network = new NetworkUtils(getApplicationContext());
-        network.registerNetworkCallback();
+//        NetworkUtils network = new NetworkUtils(getApplicationContext());
+//        network.registerNetworkCallback();
 
 //        Log.e("auth_token ",""+TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null));
 //        TokenStorage.clearSharedToken(SplashActivity.this);
@@ -40,7 +40,6 @@ public class SplashActivity extends FragmentActivity {
                 }
             }
         },3000);
-
 
     }
 }

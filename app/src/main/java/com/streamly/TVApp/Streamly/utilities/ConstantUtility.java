@@ -16,7 +16,8 @@ public class ConstantUtility {
         throw new IllegalStateException("Utility class");
     }
     // Global variable used to store network state
-    public static boolean isNetworkConnected = false;
+//    public static boolean isNetworkConnected = false;
+    public static boolean isNetworkConnected = true;
 
     public static final String PREF_DATA="pref_data";
     public static final String LOADING ="Loading..." ;

@@ -5,7 +5,7 @@ INJECTED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissuere
 INJECTED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/AndroidManifest.xml:2:1-60:12
 INJECTED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/AndroidManifest.xml:2:1-60:12
 MERGED from [androidx.leanback:leanback:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/arun/.gradle/caches/transforms-2/files-2.1/96dd16e35de1fbbb09003c66a348698f/constraintlayout-2.0.1/AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] /home/arun/.gradle/caches/transforms-2/files-2.1/92f2ad10e4959e67bbe6b9428c401535/constraintlayout-2.0.4/AndroidManifest.xml:2:1-11:12
 MERGED from [com.vlstr:blurdialog:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/557db50ac7f24daff82b28116b0c170d/jetified-blurdialog-1.0.0/AndroidManifest.xml:2:1-17:12
 MERGED from [androidx.appcompat:appcompat:1.2.0] /home/arun/.gradle/caches/transforms-2/files-2.1/f8eef11780d82368fa50ccea24a9e352/appcompat-1.2.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.cardview:cardview:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/cbbe8b9ce571f58bb3eecca57fbc3b8f/cardview-1.0.0/AndroidManifest.xml:17:1-22:12
@@ -148,8 +148,8 @@ MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.1] /home
 		ADDED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/AndroidManifest.xml:9:22-64
 application
 ADDED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/AndroidManifest.xml:11:5-58:19
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/arun/.gradle/caches/transforms-2/files-2.1/96dd16e35de1fbbb09003c66a348698f/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/arun/.gradle/caches/transforms-2/files-2.1/96dd16e35de1fbbb09003c66a348698f/constraintlayout-2.0.1/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] /home/arun/.gradle/caches/transforms-2/files-2.1/92f2ad10e4959e67bbe6b9428c401535/constraintlayout-2.0.4/AndroidManifest.xml:9:5-20
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] /home/arun/.gradle/caches/transforms-2/files-2.1/92f2ad10e4959e67bbe6b9428c401535/constraintlayout-2.0.4/AndroidManifest.xml:9:5-20
 MERGED from [com.vlstr:blurdialog:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/557db50ac7f24daff82b28116b0c170d/jetified-blurdialog-1.0.0/AndroidManifest.xml:11:5-15:19
 MERGED from [com.vlstr:blurdialog:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/557db50ac7f24daff82b28116b0c170d/jetified-blurdialog-1.0.0/AndroidManifest.xml:11:5-15:19
 MERGED from [com.android.volley:volley:1.1.1] /home/arun/.gradle/caches/transforms-2/files-2.1/ab50fab4bb39a6792d70130e9eb580f3/jetified-volley-1.1.1/AndroidManifest.xml:9:5-20
@@ -274,8 +274,8 @@ INJECTED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissuere
 INJECTED from /home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/AndroidManifest.xml
 MERGED from [androidx.leanback:leanback:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/AndroidManifest.xml:20:5-44
 MERGED from [androidx.leanback:leanback:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/34b4db4f18f1bb340bab571ec62bcb33/leanback-1.0.0/AndroidManifest.xml:20:5-44
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/arun/.gradle/caches/transforms-2/files-2.1/96dd16e35de1fbbb09003c66a348698f/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
-MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] /home/arun/.gradle/caches/transforms-2/files-2.1/96dd16e35de1fbbb09003c66a348698f/constraintlayout-2.0.1/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] /home/arun/.gradle/caches/transforms-2/files-2.1/92f2ad10e4959e67bbe6b9428c401535/constraintlayout-2.0.4/AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.constraintlayout:constraintlayout:2.0.4] /home/arun/.gradle/caches/transforms-2/files-2.1/92f2ad10e4959e67bbe6b9428c401535/constraintlayout-2.0.4/AndroidManifest.xml:5:5-7:41
 MERGED from [com.vlstr:blurdialog:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/557db50ac7f24daff82b28116b0c170d/jetified-blurdialog-1.0.0/AndroidManifest.xml:7:5-9:41
 MERGED from [com.vlstr:blurdialog:1.0.0] /home/arun/.gradle/caches/transforms-2/files-2.1/557db50ac7f24daff82b28116b0c170d/jetified-blurdialog-1.0.0/AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.appcompat:appcompat:1.2.0] /home/arun/.gradle/caches/transforms-2/files-2.1/f8eef11780d82368fa50ccea24a9e352/appcompat-1.2.0/AndroidManifest.xml:20:5-22:41
