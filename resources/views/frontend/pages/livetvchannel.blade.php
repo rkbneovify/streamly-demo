@@ -35,6 +35,7 @@
 <script src="{{ asset('frontend/dashjs/dash.all.min.js') }}" ></script>
 {{-- <script src="{{ asset('frontend/dashjs/dash.mss.min.js') }}" ></script> --}}
 <script src="{{ asset('frontend/controlbar/ControlBar.js') }}" ></script>
+<script src="{{ asset('frontend/dueljs/duel.min.js') }}" ></script>
 
 
 <script>
@@ -67,6 +68,19 @@
 	var player,firstLoad = true;
  
   function init() {
+		  /*** open a channel named player 
+    */
+    var tabplayer = duel.channel('tabplayer');
+
+    /**
+     * Register a new player channel event
+     */
+     tabplayer.on('stop', function () {
+     
+
+        document.title = 'Stopped';
+        player.pause();
+    });
       player = dashjs.MediaPlayer().create();
       // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
       // player.updateSettings({
@@ -124,9 +138,18 @@
                   
               var url = "{{$url[0]->url??'no url found'}}";
               // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
-                  player.initialize(document.querySelector("video"), url, true);
+                  player.initialize(document.querySelector("video"), url, false);
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
+	player.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], function () {
+            console.log("bro it is playing");
+            tabplayer.broadcast('stop');
+            document.title = 'play...';
+        });
+        player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
+            console.log("bro it is paused");
+            
+        });
   }
   
   document.addEventListener("DOMContentLoaded", function () {
@@ -270,7 +293,7 @@
 				<div class="row">
 				
 					<div class="col-md-8 col-centered">
-						<video  autoplay="" preload="auto" id="videoPlayer"  autoplay > </video>
+						<video  autoplay="" preload="auto" id="videoPlayer"   > </video>
             <div id="videoController" class="video-controller unselectable">
               <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
                   <span id="iconPlayPause" class="icon-play"></span>
