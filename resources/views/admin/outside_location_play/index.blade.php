@@ -1,6 +1,9 @@
 @extends('master')
 @section('stylesheets')
-<link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/rowgroup/1.0.2/css/rowGroup.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+
 
     @stop
 @section('content')
@@ -83,7 +86,8 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>  
+ <script src="https://cdn.datatables.net/rowgroup/1.0.2/js/dataTables.rowGroup.min.js"></script>
 <script>
  
  
@@ -115,7 +119,12 @@ $(function() {
 
             { data: 'timestamp', name: 'timestamp' },
             {data: 'action', name: 'action', orderable: false, searchable: false}
-        ],
+        ],  order: [[1, 'asc']],rowGroup: {
+            dataSrc: 'user',
+            startRender: function (rows, group) {
+            return group + ' (' + rows.count() + ' rows)';
+        }
+        }
         // columnDefs: [
         // {       
         //     "render": function(data, type, row) {

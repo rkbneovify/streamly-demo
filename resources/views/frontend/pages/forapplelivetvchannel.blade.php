@@ -41,11 +41,27 @@
 {{-- <script src="http://localhost/buydrm/forqualityswitch/dist/videojs-http-source-selector.min.js"></script> --}}
 <script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 
+<script src="{{ asset('frontend/dueljs/duel.min.js') }}" ></script>
+
 
 <script>
 			(function() {
+				var player;
+		  /*** open a channel named player 
+    */
+    var tabplayer = duel.channel('tabplayer');
+
+    /**
+     * Register a new player channel event
+     */
+     tabplayer.on('stop', function () {
+     
+
+		 document.title = 'Stopped';
+		 player.pause();
+ });
 					// Init player.
-					var player = videojs('my-player', {
+				 player = videojs('my-player', {
           preload: true,
           autoplay: true,
           controls: true,
@@ -73,7 +89,7 @@
 							// Setup hls + fp
 							var fairplayHlsSrc = {
 									// src: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-									src: '{{$url[0]->url}}',
+									src: '{{$url[0]->url??"no url found"}}',
 									type: 'application/x-mpegURL',
 									keySystems: {
 											'com.apple.fps.1_0': {
@@ -113,6 +129,13 @@
 
 							// Set the source to the player to init/start the playback.
 							player.src(fairplayHlsSrc);
+							player.on('play', function() {
+  console.log("it's playing bro");
+	tabplayer.broadcast('stop');
+            document.title = 'play...';
+});						player.on('pause', function() {
+  console.log("it's paused bro");
+});
 					});
 			})();
 	$('document').ready(function(){
