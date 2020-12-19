@@ -100,6 +100,12 @@ use Laravel\Cashier\Cashier;?>
 	<script>
 		jQuery(document).ready(function(){
 			jQuery('.remove-device').on('click', function(){
+				const id = $(this).data('id');
+				const devicename = $(this).data('devicename');
+				const accesstoken = $(this).data('accesstoken');
+				$('#accesstoken').val(accesstoken); 
+			 $('#devicename').html(devicename); 
+				$('#deleteFormDevice').attr('action', '/user/sessiondestroy/'+ id );
 				jQuery('#removeDevice').modal('show');
 			});
 
@@ -122,7 +128,9 @@ use Laravel\Cashier\Cashier;?>
 @section('content')
 	
 
-	<div class="modal fade" id="cancelSubscription">
+	<section class="page-section">
+
+		<div class="modal fade" id="cancelSubscription">
 	    <div class="modal-dialog">
 			<div class="modal-content">
 
@@ -191,9 +199,27 @@ use Laravel\Cashier\Cashier;?>
 			</div>
 	    </div>
 	</div>
+	<div class="modal fade" id="removeDevice">
+		<div class="modal-dialog">
+		<div class="modal-content">
+ 
+			<div class="modal-body text-center">
+				<h4>Remove Device</h4>
+				<p><span id="devicename"></span> will be removed. Would you like to continue?</p>
+				<div>
+					<form  method="POST" id="deleteFormDevice">
+						<input type="hidden" name="_method" value="DELETE">
+														<input type="hidden" name="_token" value="{{ csrf_token() }}">
+														<input type="hidden" name="access_token" id="accesstoken">
+					{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
+					<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete">
+					<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a></form>
+				</div>
+			</div>
 
-	<section class="page-section">
-
+		</div>
+		</div>
+</div>
 @if(session()->has('message'))
  <div class="alert alert-success alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -206,29 +232,11 @@ use Laravel\Cashier\Cashier;?>
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>Device Management:</li>
+							
 							@foreach($allSession as $key => $user)
-							<li> {{$key+1}}. {{ $user->device_name ?? '' }} <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true"></i></li>
-							<div class="modal fade" id="removeDevice">
-								<div class="modal-dialog">
-								<div class="modal-content">
-						 
-									<div class="modal-body text-center">
-										<h4>Remove Device</h4>
-										<p>{{ $user->device_name ?? '' }} will be removed. Would you like to continue?</p>
-										<div>
-											<form action="{{ url('user/sessiondestroy', $user->id) }}" method="POST">
-												<input type="hidden" name="_method" value="DELETE">
-																				<input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="hidden" name="access_token" value="{{ $user->access_token }}">
-											{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
-											<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Delete">
-											<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a></form>
-										</div>
-									</div>
-					
-								</div>
-								</div>
-						</div>@endforeach
+							<li> {{$key+1}}. {{ $user->device_name ?? '' }} @if(session()->get('jwttoken')==$user->access_token)<span class="badge badge-success">current</span>@endif
+								 <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true" data-id="{{ $user->id }}" data-devicename="{{$key+1}}.{{ $user->device_name }}" data-accesstoken="{{ $user->access_token }}"></i></li>
+							@endforeach
 							
 						</ul>
 					</div>

@@ -65,13 +65,14 @@ $active_session = SessionTable::where([
 ['status', '=', '1'],
 ['users_id', '=', $user_id],
  ])->get()->toArray();
- if (count($active_session) >= $login_limit) {
-    $login = true;
-    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
-    //  $login = false; 
-        return view('frontend.deviceLimitReached',compact('login'));
- }
-        $ua = request()->server('HTTP_USER_AGENT');
+ 
+ $activeNowsession = SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+    ['access_token', '=', session()->get('jwttoken')],
+     ])->get()->count();   
+
+      if($activeNowsession!=0){ $ua = request()->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
         
         if($isDevice=='chrome'){
@@ -113,12 +114,21 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
 
   $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
 
-
+  return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+    
+}} else{
+    if (count($active_session) <$login_limit) 
+    return view('frontend.RefreshVideoPlayToken',compact('login'));
 }
+if (count($active_session) >= $login_limit) {
+    $login = true;
+    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
+    //  $login = false; 
+        return view('frontend.deviceLimitReached',compact('login'));
+    }
 
        
       
-    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
     }catch(Exception $e) {
             
             return $e->getMessage();
