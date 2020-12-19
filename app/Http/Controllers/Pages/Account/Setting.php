@@ -19,6 +19,7 @@ use Mail;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+use Jenssegers\Agent\Agent;
 class Setting extends Controller
 {   public function __construct()
     {
@@ -240,4 +241,52 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
             return redirect()->back()->with('error', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
             }
     }
+
+    public function userAskedtoRefreshToken(){
+        $user= Auth::user();
+        $user_id=  $user['id'];
+        $token = JWTAuth::fromUser($user);
+
+        $deviceDetails=getDeviceIdforWeb();
+        $login_limit = 5;
+        //find all by user_id and and status=active
+        $active_session = SessionTable::where([
+        ['status', '=', '1'],
+        ['users_id', '=', $user_id],
+         ])->get()->toArray();
+            //check if there's no entry by this used id
+            if ((count($active_session)==0)) {
+             //new entry of sessionTable
+             if(sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices=1)){return redirect()->back();};
+         }  else if (count($active_session) > 0 && count($active_session) < $login_limit) {
+            //check if device id is same
+            
+           //new entry of sessionTable
+           //and get the number of last connected device
+           $prevConnectDevicecount = SessionTable::select('connected_devices')
+            ->where([
+            ['status', '=', '1'],
+            ['users_id', '=', $user_id],
+             ])->orderBy('connected_devices', 'desc')
+             ->first();
+             
+          $device=number_format($prevConnectDevicecount['connected_devices']); 
+          //the number of device previously connected + 1
+           if(sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices=$device+1)){return redirect()->back();
+      }else{return redirect()->back();}
+       
+       } 
+       if (count($active_session) >= $login_limit) {
+        //then return a login error that maximum logins reached
+        //echo 'you are not allowed to login as you have breeched the maximum session limit.';
+        //exit;
+        return redirect()->back();
+        
+
+
+    }
+      
+        
+    }
+
 }

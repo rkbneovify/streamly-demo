@@ -293,25 +293,19 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
  } else {$termAndCondition=false;}
-  $date = date('Y-m-d H:i:s');
-  $session_tab = new  App\SessionTable();
-  $session_tab->users_id = $user_id;
-  $session_tab->access_token = $token;
-  $session_tab->user_ip = getUserIpAddr();
-  $session_tab->mac_address = $deviceDetails;
-  $session_tab->connected_devices = $connected_devices;
- $session_tab->logintime = Carbon::now();
-  $session_tab->status = 1;
-  $session_tab->created_on = $date;
-  $session_tab->modified_on = Carbon::now();  
+  
 
-  if($session_tab->save()){
+  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+    $active_sessioncount = App\SessionTable::where([
+      ['status', '=', '1'],
+      ['users_id', '=', $user_id],
+       ])->get()->count();
     return response()->json([
   
       'success' => true,
       'message'=>'logged in successfully ',
       'response_code'=>200,
-      'connected_device'=> $connected_devices.' device connected  ',
+      'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
         'token_type' => 'bearer',
         'expires_in' => JWTAuth::factory()->getTTL() * 60,
@@ -364,5 +358,58 @@ function is_coordinate($lat, $long) {
 	}
 }
 
+
+function sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices){
+  $userInfo = JWTAuth::user();
+  if (SessionTable::where('users_id', '=',$user_id)->count()== 0) {
+    $termAndCondition=true;
+ } else {$termAndCondition=false;}
+ 
+
+
+  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+      session(
+          [
+              'jwttoken' => $token
+          ]
+      );
+    return true;}
+
+}
+
+function sessionTableStore($user_id,$token,$deviceDetails,$connected_devices){
+  $date = date('Y-m-d H:i:s');
+$session_tab = new SessionTable();
+$session_tab->users_id = $user_id;
+$session_tab->access_token = $token;
+$session_tab->user_ip = getUserIpAddr();
+$session_tab->mac_address = $deviceDetails;
+$session_tab->connected_devices = $connected_devices;
+$session_tab->logintime = Carbon::now();
+$session_tab->status = 1;
+$session_tab->created_on = $date;
+$session_tab->modified_on = Carbon::now();  
+return $session_tab->save();
+}
+
+function getDeviceIdforWeb(){
+
+  $agent = new Agent();
+        
+  //check if agent is robot
+  if ($agent->isRobot()) {
+      $ua= $agent->robot();
+  } else{ //if agent is not robot then get agent browser and platform like Chrome in Linux
+      $ua = $agent->browser() . " in " . $agent->platform();
+      //if agent browser and platform not obtained, then we check the agent technology
+      if ($agent == ' in ') {
+          $ua =  request()->header('User-Agent');
+      }}
+  
+  // $ua = $request->server('HTTP_USER_AGENT');
+  $deviceid= "web".session()->get('_token');
+
+  return $ua.'#~'.$deviceid;
+}
 
 ?>

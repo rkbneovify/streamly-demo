@@ -39,6 +39,53 @@
 
 
 <script>
+	(function () {
+		var longitude,latitude=true;
+		function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+		
+		// var astrourl='https://api.astroip.co/'+clientIP+'/?api_key={{ env("ASTRO_IP") }}';
+ 
+  }
+}
+getLocation();
+
+function outsidelocationplay(){
+	localStorage.setItem("outsidelocationhit", true); 
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/outsidelocationplay';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+formdata.append("deviceid", "jsjhhjds");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));}
+function showPosition(position) {
+	longitude=position.coords.longitude;
+	latitude=position.coords.latitude;
+	let checkCounter=localStorage.getItem("outsidelocationhit");
+	if(!checkCounter){
+	outsidelocationplay();}
+}
+})();
 	$('document').ready(function(){
 		var owl = $('.owl-carousel');
 			owl.owlCarousel({
@@ -68,6 +115,8 @@
 	var player,firstLoad = true;
  
   function init() {
+		var CallSignValueURL = window.location.pathname.split('/')[2];
+					
 		  /*** open a channel named player 
     */
     var tabplayer = duel.channel('tabplayer');
@@ -142,9 +191,12 @@
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
 	player.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], function () {
-            console.log("bro it is playing");
+						console.log("bro it is playing");
+						//hit geo fence api check if inside or not if not than pop will come up to log the info
             tabplayer.broadcast('stop');
             document.title = 'play...';
+
+						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':false});
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
@@ -291,7 +343,6 @@
 		<div class="full-width">
 			<div class="container">
 				<div class="row">
-				
 					<div class="col-md-8 col-centered">
 						<video  autoplay="" preload="auto" id="videoPlayer"   > </video>
             <div id="videoController" class="video-controller unselectable">
