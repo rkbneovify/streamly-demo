@@ -33,7 +33,7 @@ Route::post('auth/oldgeofence', 'HomeController@oldgeofence');
 // Route::post('auth/geofence', 'HomeController@geofence');
 Route::post('auth/runquery', 'HomeController@simplequeryrun');
 Route::get('auth/allowed', 'HomeController@allowedZipcode');
-Route::post('auth/geofence', 'Admin\TurfController@index');
+Route::post('auth/geofence', 'Admin\TurfController@index')->middleware(['jwt.verify']);
 
 // Authentication Routes
 Route::group(['prefix' => 'auth'], function ($router) {
