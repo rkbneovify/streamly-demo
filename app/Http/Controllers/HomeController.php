@@ -21,7 +21,10 @@ use ctwillie\Usps\Address;
 use App\Models\FrontendText;
 use App\Models\AddressesCheckAvailability;
 // use GuzzleHttp\Client;
-
+use App\SessionTable;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Carbon\Carbon;
 class HomeController extends Controller
 {
 
@@ -538,8 +541,47 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
    
     public function logout()
     {
+        if(session()->has('jwttoken') && session()->get('jwttoken')!=='no jwt'){
+            $tokenString=session()->get('jwttoken');
+            $acctoken = SessionTable::where([
+                ['status', '=', '1'],
+                ['access_token', '=', session()->get('jwttoken')],
+                 ])->get()->toArray();
+                 if ((count($acctoken)!==0)){ 
+                   
+                    $id=  $acctoken[0]['id'];
+                      //logout
+  $myarr=[];
+  array_push($myarr,$id ); 
+     
+     $decremen=count($myarr);// number of id we will use this number to decrement the last value
+     $updatedExpireConcrenteUser=SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
+     SessionTable::where([
+        ['status', '=', '1'],
+        ['connected_devices', '!=', '1'],
+         ])
+->update([
+    'connected_devices' => DB::raw('`connected_devices` - 1 ')
+]);
+config([
+  'jwt.blacklist_enabled' => true
+]);
+
+try {
+    JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
+    }catch (Exception $e) {
+        return redirect('account/settings')->with('message','Exception occured '.$e->getMessage().'');
+    }catch (JWTException $e){
+        return redirect('account/settings')->with('message',''.$e->getMessage().'');
+    }
+     
+                }
+
         Auth::logout();
         return redirect()->route('home');
+        }else{
+            Auth::logout();
+            return redirect()->route('home');}
     }
 
     public function rediretToGoogleLogin(){
