@@ -66776,8 +66776,8 @@ var TVGuide = /*#__PURE__*/function (_Component) {
 
           if (focusedEvent == event) {
             var gradient = canvas.createLinearGradient(177, 375, 0, 0);
-            gradient.addColorStop(0, "rgb(0, 4, 40)");
-            gradient.addColorStop(1, "rgb(0, 78, 146)");
+            gradient.addColorStop(0, "#ff4e00");
+            gradient.addColorStop(1, "#ec9f05");
             canvas.fillStyle = gradient;
           }
         } else if (event.isCurrent) {
