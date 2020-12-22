@@ -412,4 +412,46 @@ function getDeviceIdforWeb(){
   return $ua.'#~'.$deviceid;
 }
 
+function getDeviceIdforAPI($request){
+  $agent = new Agent();
+        
+  //check if agent is robot
+  if ($agent->isRobot()) {
+      $ua= $agent->robot();
+  } else{ //if agent is not robot then get agent browser and platform like Chrome in Linux
+      $ua = $agent->browser() . " in " . $agent->platform();
+      //if agent browser and platform not obtained, then we check the agent technology
+      if ($agent == ' in ') {
+          $ua =  request()->header('User-Agent');
+      }}
+  
+  // $ua = $request->server('HTTP_USER_AGENT');
+  $deviceid= $request->input('deviceid') ?? 'Not Applicable';
+ 
+
+  return $ua.'#~'.$deviceid;
+}
+
+function reverseAddressLookup($LAT,$LON){
+  try{
+    $client = new \GuzzleHttp\Client();
+    $response = $client->get('http://nominatim.openstreetmap.org/reverse?email=contact@streamlytv.com&format=json&lat='.$LAT.'&lon='.$LON.'&zoom=27&addressdetails=1');
+
+    $jsonfile=$response->getBody();
+    if (!json_decode($jsonfile, TRUE)) {return false;}
+    else{
+     $resp = json_decode($jsonfile, true);
+
+if( isset($resp['address']['postcode'] ) ){
+$zipcode= $resp['address']['postcode'];
+$address= $resp['display_name'];
+return $resp;
+}
+ }
+
+}catch(\GuzzleHttp\Exception\RequestException $e){
+
+}
+}
+
 ?>

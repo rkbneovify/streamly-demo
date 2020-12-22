@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Zipcode;
 use Illuminate\Support\Facades\DB;
+use JWTAuth;
+use App\Models\OutsideLocationPlay;
+
+use Carbon\Carbon;
 class TurfController extends Controller
-{
+{ 
+
     /**
  * Wraps a GeoJSON {@link Geometry} in a GeoJSON {@link Feature}.
  *
@@ -72,7 +77,7 @@ $point = $this->point([$LON, $LAT],'');
 $data = $this->data();
 
 // $point = $this->featureEach($data,);
-$answer=$this->PointwithinFeatureCollection($point);
+$answer=$this->PointwithinFeatureCollection($point,$request);
 
 if($answer['response_code']==403){
 	return response()->json($answer, 403);
@@ -161,7 +166,7 @@ function data(){
 
 }
 
-function PointwithinFeatureCollection($point){
+function PointwithinFeatureCollection($point,$request){
 	$mydata = $this->data();
 	global $zip;
 	$ptsWithin = null; $found = false;  $zip='';
@@ -200,12 +205,43 @@ function PointwithinFeatureCollection($point){
 		}
 );
 if (empty ( $zip ) ) {
+
+	$LAT= $request['latitude'];
+	$LON = $request['longitude'];
+	$checkpostcode=reverseAddressLookup($LAT,$LON) ; 
+	// dd($checkpostcode['address']['postcode']);
+	$postcode=$checkpostcode['address']['postcode'];
+	$address= $checkpostcode['display_name'];
+	$uid=JWTAuth::user()->id;
+	// dd($user);
+	$last = OutsideLocationPlay::select('zipcode')->where([
+		['zipcode', '=', $postcode],
+		['users_id', '=', $uid],
+		 ])->get()->first();
+	
+	if(!is_null($last)){
+		$now=Carbon::now();
+	$deviceDetails	=getDeviceIdforAPI($request);
+        $outsideLocation = OutsideLocationPlay::create([
+            'users_id' => $uid,
+            'zipcode'=>$postcode??'00000',
+            'longitude'=>$LAT,
+            'latitude'=>$LON,
+            'address'=>$address??'Unknown',
+            'device_info'=>$deviceDetails,
+            'timestamp'=>$now
+        ]);
+		return [
+		'success' => false,
+		'message' => 'Not within zipcode boundary',
+		'response_code' => 403,
+	];} else{
 	return [
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
 		'response_code' => 403,
 		'popupmsg'=>'You are away from your home zip code:  click here to continue viewing.'
-	];
+	];}
 } else {
 	return [
 		'success' => true,
