@@ -7,7 +7,6 @@ use App\Models\OutsideLocationPlay;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use JWTAuth;
-use Jenssegers\Agent\Agent;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 class OutsideLocationPlayController extends Controller
@@ -129,22 +128,7 @@ class OutsideLocationPlayController extends Controller
     }
          $user=JWTAuth::user();
         $uid=  $user['id'];
-         $agent = new Agent();
-        
-        //check if agent is robot
-        if ($agent->isRobot()) {
-            $ua= $agent->robot();
-        } else{ //if agent is not robot then get agent browser and platform like Chrome in Linux
-            $ua = $agent->browser() . " in " . $agent->platform();
-            //if agent browser and platform not obtained, then we check the agent technology
-            if ($agent == ' in ') {
-                $ua =  request()->header('User-Agent');
-            }}
-        
-        // $ua = $request->server('HTTP_USER_AGENT');
-        $deviceid= $request->input('deviceid') ?? 'Not Applicable';
-       
-        $deviceDetails=$ua.'#~'.$deviceid;
+        $deviceDetails	=getDeviceIdforAPI($request);
         
                 try{
                     $client = new \GuzzleHttp\Client();
