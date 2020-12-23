@@ -234,13 +234,14 @@ if (empty ( $zip ) ) {
 		return [
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
-		'response_code' => 403,
+		'response_code' => 403,'popupmsg'=>'You are away from your home zip code:  click here to continue viewing.',
+		'popupmsgtoggle'=>false
 	];} else{
 	return [
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
 		'response_code' => 403,
-		'popupmsg'=>'You are away from your home zip code:  click here to continue viewing.'
+		'popupmsg'=>'You are away from your home zip code:  click here to continue viewing.','popupmsgtoggle'=>true
 	];}
 } else {
 	return [
