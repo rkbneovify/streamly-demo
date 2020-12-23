@@ -225,8 +225,8 @@ if (empty ( $zip ) ) {
         $outsideLocation = OutsideLocationPlay::create([
             'users_id' => $uid,
             'zipcode'=>$postcode??'00000',
-            'longitude'=>$LAT,
-            'latitude'=>$LON,
+            'longitude'=>$LON,
+            'latitude'=>$LAT,
             'address'=>$address??'Unknown',
             'device_info'=>$deviceDetails,
             'timestamp'=>$now
