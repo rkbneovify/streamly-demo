@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Zipcode;
 use Illuminate\Support\Facades\DB;
-use JWTAuth;
+ use JWTAuth;
 use App\Models\OutsideLocationPlay;
 
 use Carbon\Carbon;
