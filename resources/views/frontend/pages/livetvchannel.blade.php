@@ -78,7 +78,7 @@ fetch(url, requestOptions)
   // .then(result => console.log(result))
 	.then(function(data) {
     var popupmsgtoggle = data.popupmsgtoggle;
-
+		localStorage.setItem("geofence", data.success); 
     // console.log(popupmsgtoggle);
 		if(popupmsgtoggle){
 			alert(JSON.stringify(data.popupmsg));
@@ -90,7 +90,6 @@ fetch(url, requestOptions)
   .catch(error => console.log('error', error));}
 
 function outsidelocationplay(){
-	localStorage.setItem("outsidelocationhit", true); 
 		var base_url = window.location.origin;
 	let url=base_url+'/api/auth/outsidelocationplay';
 		
@@ -232,7 +231,7 @@ function showPosition(position) {
             tabplayer.broadcast('stop');
             document.title = 'play...';
 
-						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':false});
+						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
