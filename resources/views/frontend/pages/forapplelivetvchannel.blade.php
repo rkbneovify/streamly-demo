@@ -46,7 +46,89 @@
 
 <script>
 			(function() {
+				var longitude,latitude=true;
+		function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+		
+		// var astrourl='https://api.astroip.co/'+clientIP+'/?api_key={{ env("ASTRO_IP") }}';
+ 
+  }
+}
+getLocation();
+
+function geofence(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/geofence';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+formdata.append("deviceid", "jsjhhjds");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.json())
+  // .then(result => console.log(result))
+	.then(function(data) {
+    var popupmsgtoggle = data.popupmsgtoggle;
+
+		localStorage.setItem("geofence", data.success); 
+    // console.log(popupmsgtoggle);
+		if(popupmsgtoggle){
+			alert(JSON.stringify(data.popupmsg));
+			outsidelocationplay();
+		}
+  
+    // return fetch('https://api.spacexdata.com/v2/rockets/' + rocketId); // make a 2nd request and return a promise
+  })
+  .catch(error => console.log('error', error));}
+
+function outsidelocationplay(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/outsidelocationplay';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+formdata.append("deviceid", "jsjhhjds");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.text())
+  // .then(result => console.log(result))
+  .catch(error => console.log('error', error));}
+function showPosition(position) {
+	longitude=position.coords.longitude;
+	latitude=position.coords.latitude;
+	
+	geofence();}
 				var player;
+
+		var CallSignValueURL = window.location.pathname.split('/')[2];
 		  /*** open a channel named player 
     */
     var tabplayer = duel.channel('tabplayer');
@@ -132,7 +214,9 @@
 							player.on('play', function() {
   console.log("it's playing bro");
 	tabplayer.broadcast('stop');
-            document.title = 'play...';
+	 document.title = 'play...';
+
+						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 });						player.on('pause', function() {
   console.log("it's paused bro");
 });
