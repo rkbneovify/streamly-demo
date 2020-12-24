@@ -52,6 +52,43 @@
 }
 getLocation();
 
+function geofence(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/geofence';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+formdata.append("deviceid", "jsjhhjds");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.json())
+  // .then(result => console.log(result))
+	.then(function(data) {
+    var popupmsgtoggle = data.popupmsgtoggle;
+
+    // console.log(popupmsgtoggle);
+		if(popupmsgtoggle){
+			alert(JSON.stringify(data.popupmsg));
+			outsidelocationplay();
+		}
+  
+    // return fetch('https://api.spacexdata.com/v2/rockets/' + rocketId); // make a 2nd request and return a promise
+  })
+  .catch(error => console.log('error', error));}
+
 function outsidelocationplay(){
 	localStorage.setItem("outsidelocationhit", true); 
 		var base_url = window.location.origin;
@@ -76,15 +113,14 @@ var requestOptions = {
 
 fetch(url, requestOptions)
   .then(response => response.text())
-  .then(result => console.log(result))
+  // .then(result => console.log(result))
   .catch(error => console.log('error', error));}
 function showPosition(position) {
 	longitude=position.coords.longitude;
 	latitude=position.coords.latitude;
-	let checkCounter=localStorage.getItem("outsidelocationhit");
-	if(!checkCounter){
-	outsidelocationplay();}
-}
+	
+	geofence();}
+
 })();
 	$('document').ready(function(){
 		var owl = $('.owl-carousel');
