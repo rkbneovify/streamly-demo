@@ -429,27 +429,35 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             'user-email' => 'required|string|email|max:255|unique:users,email',
             'user-password' => 'required|string|min:8',
             'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
-            'zip_code'=>'required|exists:zipcodes,zipcode,status,1'
+            'zip_code'=>'required|exists:zipcodes,zipcode,status,1',
+            'g-recaptcha-response'=>'required'
         ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
 
         /*if ( $validatedData->fails() ) {
             return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
         }*/
+// check if reCaptcha has been validated by Google      
+$secret = env('GOOGLE_RECAPTCHA_SECRET');
+$captchaId = $request->input('g-recaptcha-response');
 
+//sends post request to the URL and tranforms response to JSON
+$responseCaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$captchaId));
+if($responseCaptcha->success == true){
 
-        $verification_code=Crypt::encrypt($request['user-email']);
+    $verification_code=Crypt::encrypt($request['user-email']);
 
-        $FRONTEND_URL=env('FRONTEND_URL');
+    $FRONTEND_URL=env('FRONTEND_URL');
 
-        $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
-        $html='<html>
-            Hi, '.$request['name'].'<br><br>
+    $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+    $html='<html>
+        Hi, '.$request['name'].'<br><br>
 
-            Thank you for registering on '.env('APP_NAME').'.
+        Thank you for registering on '.env('APP_NAME').'.
 
-            Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
-        </html>';
-      try{
+        Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
+    </html>';
+
+    try{
         Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
             $message->to($request['user-email'], $request['name'])
             ->subject(env('APP_NAME').': Account Verification');
@@ -481,19 +489,27 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
         }
 
         return redirect('/')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+}else{
+    // send back error message
+    
+    
+    return redirect()->back()->with('message', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
+    }
+
     }
     public function contactformsend(Request $request){
 
         $attributeNames = array(
            'user-email' => 'Email',
-           'name' => 'Name',
+           'contactname' => 'Name',
            'formmessage' => 'Message',
         );
 
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'contactname' => 'required|string|max:255',
             'user-email' => 'required|string|email|max:255',
-        'formmessage'=>'required|string|max:255'
+        'formmessage'=>'required|string|max:255',
+           'g-recaptcha-response'=>'required'
         ], [], $attributeNames);
 
         /*if ( $validatedData->fails() ) {
@@ -510,7 +526,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     if($responseCaptcha->success == true){
        
         $html='<html>
-            Hi,My name is '.$request['name'].'<br><br>
+            Hi,My name is '.$request['contactname'].'<br><br>
             Email :'.$request['user-email'].'<br><br>
 
             Message :'.$request['formmessage'].'.
