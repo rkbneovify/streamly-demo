@@ -220,7 +220,8 @@ function showPosition(position) {
       });
       firstLoad = false;
                   
-              var url = "{{$url[0]->url??'no url found'}}";
+							// var url = "https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd";
+							var url = "{{$url[0]->url??'no url found'}}";
               // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
                   player.initialize(document.querySelector("video"), url, false);
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
@@ -235,6 +236,9 @@ function showPosition(position) {
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
+            
+        });   player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
+            console.log("PLAYBACK_PROGRESS");
             
         });
   }
