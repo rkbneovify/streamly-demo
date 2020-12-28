@@ -161,11 +161,11 @@ $("#my_form").submit(function(event){
 				<div class="row setting-cards">
 		
 					<div class="col-centered col-md-6">
-						@if($errors->any()&& !$errors->has('email')&& !$errors->has('zip_code')&& !$errors->has('user-password')&& !$errors->has('name'))
+						@if($errors->contactForm->any())
 						<div class="alert alert-danger alert-dismissible ">
 							 <button type="button" class="close" data-dismiss="alert">&times;</button>
-							 <strong>Error!</strong> @foreach ($errors->all() as $message) 
-									 {{$message}}
+							 <strong>Error!</strong> @foreach ($errors->contactForm->all() as $message) 
+									 {{$message}}<br>
 							 
 							 @endforeach
 					 </div>
@@ -173,18 +173,18 @@ $("#my_form").submit(function(event){
 					<form action="{{ env("APP_URL") }}/user/contactformsend" method="post" class="login-form mt-3">
 							<div class="form-group">
 									<label for="contactname" class="control-label">Name</label>
-									<input type="text" id="contactname" name="contactname" class="form-control">
+									<input type="text" id="contactname" name="contactname" class="form-control" value="{{old('contactname')}}">
 							</div>
-
+							{{-- <div>{{ $errors->contactForm->first('email') }}</div> --}}
 							<div class="form-group">
-									<label for="email" class="control-label">Email</label>
-									<input type="email" id="user-email" name="user-email" class="form-control">
+									<label for="user-email" class="control-label">Email</label>
+									<input type="email" id="user-email" name="user-email" class="form-control" value="{{old('user-email')}}">
 							</div>
 
 
 							<div class="form-group">
 									<label for="formmessage" class="control-label">Message</label>
-									<textarea id="formmessage" name="formmessage"  class="form-control" rows="4" cols="50"></textarea>
+									<textarea id="formmessage" name="formmessage"  class="form-control" rows="4" cols="50">{{ old('formmessage') }}</textarea>
 							</div>
 							@if(env('GOOGLE_RECAPTCHA_KEY'))
 									<div class="form-group">
@@ -195,7 +195,7 @@ $("#my_form").submit(function(event){
 							@endif
 							
 							<div class="form-group mt-3">
-									<button type="submit" class="btn btn-lg login-btn">Send</button>
+									<button type="submit" class="btn btn-lg login-btn" >Send</button>
 							</div>
 
 
