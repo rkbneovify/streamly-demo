@@ -25,6 +25,7 @@ use App\SessionTable;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
+use App\Http\Requests\ContactFormRequest;
 class HomeController extends Controller
 {
 
@@ -497,25 +498,8 @@ if($responseCaptcha->success == true){
     }
 
     }
-    public function contactformsend(Request $request){
+    public function contactformsend(ContactFormRequest $request){
 
-        $attributeNames = array(
-           'user-email' => 'Email',
-           'contactname' => 'Name',
-           'formmessage' => 'Message',
-        );
-
-        $validatedData = $request->validate([
-            'contactname' => 'required|string|max:255',
-            'user-email' => 'required|string|email|max:255',
-        'formmessage'=>'required|string|max:255',
-           'g-recaptcha-response'=>'required'
-        ], [], $attributeNames);
-
-        /*if ( $validatedData->fails() ) {
-            return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
-        }*/
- 
     // check if reCaptcha has been validated by Google      
     $secret = env('GOOGLE_RECAPTCHA_SECRET');
     $captchaId = $request->input('g-recaptcha-response');
