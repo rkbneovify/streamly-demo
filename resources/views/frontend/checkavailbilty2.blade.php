@@ -203,6 +203,9 @@ $(function() {
 			letter-spacing: 0.24px;
 			color: #5E5E5E;
 		}
+		.logo-margin-negative{
+margin-top: -100px;
+}
 	</style>
 
 
@@ -216,6 +219,7 @@ $(function() {
 		{{-- <div class="modal-header"><button type="button" class="close" data-dismiss="modal">×</button><h4 class="modal-title">10020 CAMPBELL LN E</h4></div> --}}
 		<div class="modal-header">
 			<h4 class="modal-title">Your Zip:<span id="modalzip"></span> </h4>
+			{{-- <h4 class="modal-title w-100 text-center"><img src="https://www.fillmurray.com/76/76" class="rounded-circle logo-margin-negative"></h4> --}}
 		</div>
 		<div class="modal-body text-center">
 			{{-- <h4>Your check availbilty status</h4> --}}
