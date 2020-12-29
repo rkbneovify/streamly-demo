@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Socialite;
 use App\User;
 use App\Models\RoleUser;
+use App\Models\Role;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Crypt;
@@ -597,10 +598,21 @@ try {
         }
 
         $existingUser = User::where('email', $user->getEmail())->first();
-
+        $role=Role::where('name','user')->first();
         if ($existingUser) {
+            $userRole= $existingUser->roles->pluck('name');
+            
+                if($userRole->isEmpty()){
+             RoleUser::create([
+                'user_id' => $existingUser->id,
+                'role_id' => $role->id,
+            ]);
             auth()->login($existingUser, true);
+        }else{
+            auth()->login($existingUser, true);}
         } else {
+
+        
             $newUser                    = new User;
             $newUser->provider_name     = 'google';
             $newUser->provider_id       = $user->getId();
@@ -611,6 +623,7 @@ try {
             $newUser->avatar            = $user->getAvatar();
             $newUser->save();
 
+            $newUser->roles()->sync($role->id);
             auth()->login($newUser, true);
         }
 
