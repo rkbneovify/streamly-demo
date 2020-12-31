@@ -64,3 +64,5 @@ opacity: 0;
 
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+ 
