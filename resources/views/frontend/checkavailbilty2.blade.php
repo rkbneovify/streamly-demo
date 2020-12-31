@@ -80,10 +80,11 @@ $(function() {
 			$('#modalzip').text(zipnumber.val()); 
 			$('#address-country').val("US"); 
 								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
-								 
+								
+								$('.circle').attr('id', 'allowed');
 								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px;color: #1BB525;'>&#x2705; " +data.message+"</span>");
 								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start you trial now!</a>");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Start now</button>');
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Start now</button>');
 								 
 								 $('#zip').css("color", "#1BB525");
 								 jQuery('#checkAvailibiltyModal').modal('show');
@@ -100,10 +101,10 @@ $(function() {
 									 // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
 									 $('#card-button').prop('disabled', true);
 								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
-												 
+								$('.circle').attr('id', 'error');
 								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area.<br /> Please call 1111111111 for more information</span>");
 								 $('#zip').css("color", "#FC243B");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" onclick="location.href=`{{ url("/contactform") }}`;" >Contact Us</button>');
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="location.href=`{{ url("/contactform") }}`;" >Contact Us</button>');
 							
 								 jQuery('#checkAvailibiltyModal').modal('show');
 
@@ -201,11 +202,52 @@ $(function() {
 
 		.modal-body p{
 			letter-spacing: 0.24px;
-			color: #5E5E5E;
+			color: #2C2828;
+			
 		}
 		.logo-margin-negative{
-margin-top: -100px;
+margin-top: -80px;
 }
+.whitecircle
+{ width:76px;
+    height:76px;
+    border-radius:36px;
+    font-size:20px;
+    color:#fff;
+    line-height:100px;
+    text-align:center;
+    background:#fff;
+    }
+.circle
+{ width:88px;
+    height:88px;
+    border-radius:44px;
+    font-size:20px;
+    color:#fff;
+    line-height:100px;
+    text-align:center;
+    background:#fff;
+    }
+    #allowed{
+
+      background-image: url("../frontend/img/newicon/allowed.png");
+      /* background-image: url("../frontend/img/streamlylogo5.png"); */
+
+/*background-size: cover;*/
+background-size: 76px;
+background-repeat: no-repeat;
+background-position: center;
+    }
+		 #error{
+
+      background-image: url("../frontend/img/newicon/error.png");
+      /* background-image: url("../frontend/img/streamlylogo5.png"); */
+
+/*background-size: cover;*/
+background-size: 76px;
+background-repeat: no-repeat;
+background-position: center;
+    }
 	</style>
 
 
@@ -218,14 +260,18 @@ margin-top: -100px;
 	<div class="modal-content">
 		{{-- <div class="modal-header"><button type="button" class="close" data-dismiss="modal">×</button><h4 class="modal-title">10020 CAMPBELL LN E</h4></div> --}}
 		<div class="modal-header">
-			<h4 class="modal-title">Your Zip:<span id="modalzip"></span> </h4>
-			{{-- <h4 class="modal-title w-100 text-center"><img src="https://www.fillmurray.com/76/76" class="rounded-circle logo-margin-negative"></h4> --}}
+			{{-- <h4 class="modal-title">Your Zip:<span id="modalzip"></span> </h4> --}}
+			<h4 class="modal-title w-100 text-center">	<svg class = "circle logo-margin-negative" expanded = "true" height = "200px" width = "200px" >
+			
+			</svg>
+			{{-- <img src="https://www.fillmurray.com/76/76" class="rounded-circle logo-margin-negative"></h4> --}}
 		</div>
 		<div class="modal-body text-center">
 			{{-- <h4>Your check availbilty status</h4> --}}
-			<p><strong>Message:</strong><span id="zipanswer"></span> </p>
-			<p><strong>City:</strong><span id="citymodal"></span> </p>
-			<p><strong>State:</strong><span id="statemodal"></span> </p>
+			<h4 style="height: height: 31px;">Your Zipcode:<span id="modalzip"></span> </h4>
+			<p ><span id="zipanswer"></span> </p>
+			<p><strong style="color: #909090;">City:</strong><span id="citymodal"></span> </p>
+			<p><strong style="color: #909090;">State:</strong><span id="statemodal"></span> </p>
 			
 			<div>
 				<form action="" method="POST">
@@ -238,7 +284,8 @@ margin-top: -100px;
 				{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 			</div>
 		</div>
-		<div class="modal-footer" ><span id="modalbutton"></span><button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button></div>
+		<div class="modal-footer" ><span id="modalbutton"></span><button type="button" class="btn " style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" data-dismiss="modal">Cancel</button>
+		</div>
 	</div>
 	</div>
 </div>
@@ -253,6 +300,9 @@ margin-top: -100px;
 
 	<section class="page-section">
 		<div class="container">
+			{{-- <svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+			
+			</svg> --}}
 				<h2 class="section-heading text-center" id="first-element-introduction" >Check Availability</h2>
 				<div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
   
@@ -298,7 +348,7 @@ margin-top: -100px;
 											</div>
 				
 				
-				
+
 											{!! csrf_field() !!}
 									</form>
 							
