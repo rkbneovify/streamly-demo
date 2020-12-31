@@ -232,9 +232,8 @@ use Laravel\Cashier\Cashier;?>
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>Device Management:</li>
-							
 							@foreach($allSession as $key => $user)
-							<li> {{$key+1}}. {{ $user->device_name ?? '' }} @if(session()->get('jwttoken')==$user->access_token)<span class="badge badge-success">current</span>@endif
+							<li> {{$key+1}}. {{ $user->device_name ?? '' }}, {{ $user->created_on ?? ''  }} @if(session()->get('jwttoken')==$user->access_token)<span class="badge badge-success">current</span>@endif
 								 <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true" data-id="{{ $user->id }}" data-devicename="{{$key+1}}.{{ $user->device_name }}" data-accesstoken="{{ $user->access_token }}"></i></li>
 							@endforeach
 							
