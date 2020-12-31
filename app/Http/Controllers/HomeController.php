@@ -326,22 +326,22 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     public function checkAvailabilty2()
     {
         
-$address = new Address([
-    'Address2' => '6406 Ivy Lane',
-    'City' => 'Greenbelt',
-    'State' => 'MD',
-    'Zip5' => 20770
-]);
-$message='';
-$response = $address->validate();
-if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];}else{
-    // print_r($response);
-    $message=isset($response['Address']['ReturnText'])?$response['Address']['ReturnText']:'Seems like valid addres';
-}
+// $address = new Address([
+//     'Address2' => '6406 Ivy Lane',
+//     'City' => 'Greenbelt',
+//     'State' => 'MD',
+//     'Zip5' => 20770
+// ]);
+// $message='';
+// $response = $address->validate();
+// if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];}else{
+//     // print_r($response);
+//     $message=isset($response['Address']['ReturnText'])?$response['Address']['ReturnText']:'Seems like valid addres';
+// }
 // if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
 // dd($response);
         $login = false; 
-        return view('frontend.checkavailbilty2',compact('login','response'));
+        return view('frontend.checkavailbilty2',compact('login'));
         // return view('frontend.verified');
     }
 
