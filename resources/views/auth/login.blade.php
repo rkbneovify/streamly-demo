@@ -6,13 +6,15 @@
   <title>Streamly | Log in</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <script async src="{{ asset('frontend/jquery-3.5.1.min.js') }}" ></script> 
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -31,7 +33,7 @@
 
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+              <span class="fa fa-envelope"></span>
             </div>
           </div>
           @if ($errors->has('email'))
@@ -43,9 +45,10 @@
         <div class="input-group mb-3">
           
         <input id="password" type="password" placeholder="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
-          <div class="input-group-append">
+         
+        <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-lock"></span>
+              <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password"></span>
             </div>
           </div>
           @if ($errors->has('password'))
@@ -54,6 +57,8 @@
                                     </span>
                                 @endif
         </div>
+        <div class="input-group mb-3">
+        <div class="g-recaptcha" data-sitekey="{{env('GOOGLE_RECAPTCHA_KEY')}}"></div></div>
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">
@@ -94,5 +99,35 @@
 <!-- AdminLTE App -->
 <script src="../../dist/js/adminlte.min.js"></script>
 
+<script src="https://www.google.com/recaptcha/api.js"></script>
 </body>
 </html>
+<style>
+     #g-recaptcha-response {
+display: block !important;
+position: absolute;
+margin: -78px 0 0 0 !important;
+width: 302px !important;
+height: 76px !important;
+z-index: -999999;
+opacity: 0;
+}
+</style>
+<script>
+  window.onload = function() {
+    var $recaptcha = document.querySelector('#g-recaptcha-response');
+
+    if($recaptcha) {
+        $recaptcha.setAttribute("required", "required");
+    }
+
+   
+$(document).on('click', '.toggle-password', function() {
+
+$(this).toggleClass("fa-eye fa-eye-slash");
+
+var input = $("#password");
+input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password');
+});
+};
+</script>
