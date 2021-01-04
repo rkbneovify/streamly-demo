@@ -237,10 +237,24 @@ function showPosition(position) {
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
             
-        });   player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
-            console.log("PLAYBACK_PROGRESS");
+        });   
+				// player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
+        //     console.log("PLAYBACK_PROGRESS");
+				// 		// PLAYBACK_TIME_UPDATED
             
-        });
+        // });	
+		/*	player.on(dashjs.MediaPlayer.events["PLAYBACK_TIME_UPDATED"], function (e) {
+            // console.log("PLAYBACK_TIME_UPDATED");
+						for (var name in e)
+            {
+
+                if (typeof e[name] != 'object') {
+                    console.log("    " + name + ": " + e[name]);
+                }
+            }
+						// PLAYBACK_TIME_UPDATED
+            
+        }); */
   }
   
   document.addEventListener("DOMContentLoaded", function () {

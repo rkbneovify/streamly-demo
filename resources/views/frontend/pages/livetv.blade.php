@@ -192,9 +192,9 @@ $.ajax({
 		    top: -30px;
 		}
 
-		.owl-stage-outer {
+		/* .owl-stage-outer {
 			height: 100%;
-		}
+		} */
 	</style>
 @endsection
 
