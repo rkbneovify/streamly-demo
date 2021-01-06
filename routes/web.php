@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/checkzip', 'HomeController@checkzipView');
 
 
 Route::get('search', 'HomeController@search')->name('search');
@@ -135,6 +136,7 @@ Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google
 Route::get('/google/login', 'HomeController@handleGoogleCallback');
 Route::post('/user/register', 'HomeController@createUser');
 Route::post('/user/contactformsend', 'HomeController@contactformsend');
+Route::post('/user/checkzipafterlogin', 'HomeController@checkzipAfterGoogleLogin');
 
 Route::post('/forgotpassword', 'Auth\ForgotPasswordController@webgetResetToken');
 Route::get('/invoice', 'Pages\Account\Setting@invoice');
