@@ -1,5 +1,15 @@
 <?php
 
+
+
+
+
+
+
+
+
+
+
 namespace Composer;
 
 use Composer\Semver\VersionParser;
@@ -19,7 +29,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '3c0f82e369f011375bb3873ba00c4ffcf4722259',
+    'reference' => '431659370d586a31a339ed5039636dea375ca784',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -69,6 +79,15 @@ private static $installed = array (
       ),
       'reference' => '03492f1a3bc74a05de23f93b94ac7cc5c173eec9',
     ),
+    'barryvdh/laravel-debugbar' => 
+    array (
+      'pretty_version' => 'v3.5.1',
+      'version' => '3.5.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '233c10688f4c1a6e66ed2ef123038b1363d1bedc',
+    ),
     'beyondcode/laravel-dump-server' => 
     array (
       'pretty_version' => '1.3.0',
@@ -77,6 +96,24 @@ private static $installed = array (
       array (
       ),
       'reference' => 'fcc88fa66895f8c1ff83f6145a5eff5fa2a0739a',
+    ),
+    'botman/botman' => 
+    array (
+      'pretty_version' => '2.6.1',
+      'version' => '2.6.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '127f7dc0aef5bc0561f8a2a8a3b246fe951b63e7',
+    ),
+    'botman/driver-web' => 
+    array (
+      'pretty_version' => '1.5.1',
+      'version' => '1.5.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '7399fd2994ee4c6c14c0a69268269e81fd2cd7f6',
     ),
     'cordoval/hamcrest-php' => 
     array (
@@ -554,7 +591,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '3c0f82e369f011375bb3873ba00c4ffcf4722259',
+      'reference' => '431659370d586a31a339ed5039636dea375ca784',
     ),
     'laravel/socialite' => 
     array (
@@ -628,6 +665,15 @@ private static $installed = array (
       ),
       'reference' => '159c3d2bf27568f9af87d6c3f4bb616a251eb12b',
     ),
+    'maximebf/debugbar' => 
+    array (
+      'pretty_version' => 'v1.16.4',
+      'version' => '1.16.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c86c717e4bf3c6d98422da5c38bfa7b0f494b04c',
+    ),
     'mobiledetect/mobiledetectlib' => 
     array (
       'pretty_version' => '2.8.34',
@@ -663,6 +709,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'f9eee5cec93dfb313a38b6b288741e84e53f02d5',
+    ),
+    'mpociot/pipeline' => 
+    array (
+      'pretty_version' => '1.0.2',
+      'version' => '1.0.2.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '3584db4a0de68067b2b074edfadf6a48b5603a6b',
     ),
     'mtdowling/jmespath.php' => 
     array (
@@ -1005,6 +1060,69 @@ private static $installed = array (
       ),
       'reference' => '7e1633a6964b48589b142d60542f9ed31bd37a92',
     ),
+    'react/cache' => 
+    array (
+      'pretty_version' => 'v1.1.0',
+      'version' => '1.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '44a568925556b0bd8cacc7b49fb0f1cf0d706a0c',
+    ),
+    'react/dns' => 
+    array (
+      'pretty_version' => 'v1.4.0',
+      'version' => '1.4.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '665260757171e2ab17485b44e7ffffa7acb6ca1f',
+    ),
+    'react/event-loop' => 
+    array (
+      'pretty_version' => 'v1.1.1',
+      'version' => '1.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '6d24de090cd59cfc830263cfba965be77b563c13',
+    ),
+    'react/promise' => 
+    array (
+      'pretty_version' => 'v2.8.0',
+      'version' => '2.8.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f3cff96a19736714524ca0dd1d4130de73dbbbc4',
+    ),
+    'react/promise-timer' => 
+    array (
+      'pretty_version' => 'v1.6.0',
+      'version' => '1.6.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'daee9baf6ef30c43ea4c86399f828bb5f558f6e6',
+    ),
+    'react/socket' => 
+    array (
+      'pretty_version' => 'v1.6.0',
+      'version' => '1.6.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e2b96b23a13ca9b41ab343268dbce3f8ef4d524a',
+    ),
+    'react/stream' => 
+    array (
+      'pretty_version' => 'v1.1.1',
+      'version' => '1.1.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '7c02b510ee3f582c810aeccd3a197b9c2f52ff1a',
+    ),
     'rhumsaa/uuid' => 
     array (
       'replaced' => 
@@ -1137,6 +1255,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '15b5229fe8c9c14954b21f2bac0cc003ffbc54a5',
+    ),
+    'spatie/macroable' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '7a99549fc001c925714b329220dea680c04bfa48',
     ),
     'stripe/stripe-php' => 
     array (
@@ -1439,6 +1566,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '75a63c33a8577608444246075ea0af0d052e452a',
+    ),
+    'tightenco/collect' => 
+    array (
+      'pretty_version' => 'v8.14.0',
+      'version' => '8.14.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8f79c602c872afd7c9371e193d6aa4ed13e97661',
     ),
     'tijsverkoyen/css-to-inline-styles' => 
     array (
