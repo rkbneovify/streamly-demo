@@ -562,6 +562,29 @@ height: 64px;
             <div class="text-center">
                 <h2 class="section-heading">Select Your Plan</h2>
             </div>
+
+<!-- Stats Card -->
+<!--
+<div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Stats</h5>
+      <table class="table table-striped">
+        <tr>
+          <td>Set commands</td>
+          {{-- <td>{{ $stats1['cmd_set'] }}</td> --}}
+        </tr>
+        <tr>
+          <td>Get hits</td>
+          {{-- <td>{{ $stats1['get_hits'] }}</td> --}}
+        </tr>
+        <tr>
+          <td>Get misses</td>
+          {{-- <td>{{ $stats1['get_misses'] }}</td> --}}
+        </tr>
+      </table>
+    </div>
+  </div>
+-->
             <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
                 @foreach ($plans->data as $plan)
                 <div class="col-sm-4 select-plan-card">
@@ -597,26 +620,6 @@ height: 64px;
             </div>
         </div>
     </section>
-<!-- Channel logo Grid-->
-{{-- <section class="page-section bg-light" id="portfolio">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="section-heading">Available Channels</h2>
-        </div>
-        <div class="">
-           
-            <div class="grid-container">
-                @foreach ($pagechannel as $channeldet)
-                <div class="item1"> 
-                    <img style='height: 100%; width: 100%; object-fit: contain'  src="{{  $channeldet->logo}}" alt="Logo of {{$channeldet->callSign}}">
-                </div>
-                @endforeach
-                
-
-              </div>
-        </div>
-    </div>
-</section> --}}
 
 <style>.custom-row .row{
     margin-top: 2rem;
