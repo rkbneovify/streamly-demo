@@ -502,7 +502,7 @@ height: 64px;
 	<header class="masthead">
 	    <div class="container">
             <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
-	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="headerlogo"/></div>
+	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" /></div>
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>

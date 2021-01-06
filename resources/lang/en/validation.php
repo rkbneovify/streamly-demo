@@ -131,6 +131,10 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'zip_code' => [
+            'exists' => 'Service not available at this zipcode or your zipcode is not valid!',
+            'required' => 'We need to know your zipcode!',
+        ],
     ],
 
     /*
