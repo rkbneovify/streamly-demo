@@ -621,6 +621,45 @@ try {
         return Socialite::driver('google')->redirect();
     }
 
+    public function checkzipAfterGoogleLogin(Request $request){
+        $user = $request->only('user');
+        $userData = json_decode($user['user'], true);
+//          dump($userData);
+//  dd($userData['id']);
+        $attributeNames = array(
+            'zip_code' => 'Zip Code',
+         );
+         $validator = Validator::make($request->only('zip_code'), [
+            'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
+            'zip_code'=>'required|exists:zipcodes,zipcode,status,1'
+        ]);
+         if ( $validator->fails() ) {
+            return redirect()->route('home')->withErrors($validator)->withInput();
+        } else{
+            $role=Role::where('name','user')->first();
+             $newUser                    = new User;
+            $newUser->provider_name     = 'google';
+            $newUser->provider_id       = $userData['id'];
+            $newUser->name              = $userData['name'];
+            $newUser->email             = $userData['email'];
+            $newUser->email_verified_at = now();
+            $newUser->is_active = 1;
+            $newUser->avatar            = $userData['avatar'];
+            // dd($newUser);
+            $newUser->save();
+
+            $newUser->roles()->sync($role->id);
+            auth()->login($newUser, true);
+            
+        return redirect('/');
+        }
+    }
+
+    public function checkzipView()
+    { $login = false;
+        $user = session()->get( 'user' );
+
+        return view('frontend.checkzip', compact('login','user')); }
     public function handleGoogleCallback()
     {
         try {
@@ -643,20 +682,12 @@ try {
         }else{
             auth()->login($existingUser, true);}
         } else {
+//todo enter zip if zip fails redirect back
+// redirect to screen,save the socialite deatails in session for short peroid and 
+//if zipscreen is succsfull store the user of else rediect back with apologies method
 
-        
-            $newUser                    = new User;
-            $newUser->provider_name     = 'google';
-            $newUser->provider_id       = $user->getId();
-            $newUser->name              = $user->getName();
-            $newUser->email             = $user->getEmail();
-            $newUser->email_verified_at = now();
-            $newUser->is_active = 1;
-            $newUser->avatar            = $user->getAvatar();
-            $newUser->save();
-
-            $newUser->roles()->sync($role->id);
-            auth()->login($newUser, true);
+return redirect('/checkzip')->with( [ 'user' => $user ] );
+           
         }
 
         return redirect('/');
