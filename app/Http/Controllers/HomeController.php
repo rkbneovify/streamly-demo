@@ -27,6 +27,8 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
 use App\Http\Requests\ContactFormRequest;
+
+use Illuminate\Support\Facades\Cache;
 class HomeController extends Controller
 {
 
@@ -52,20 +54,6 @@ class HomeController extends Controller
     public function index()
     { $plans = \Stripe\Plan::all(['active'=>true]);
         $imagePath=asset("/uploads/channellogo/notfound.png");
-        $record = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-  
-    ->orderBy('callSign', 'asc')
-    ->groupBy('channels.id');
-       
-       
-       $pagechannel=$record->get()->reject(function($element) use($imagePath) {
-        return $element->logo == $imagePath;
-    }); 
-
-
     $record2 = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
         
     ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
@@ -97,7 +85,51 @@ class HomeController extends Controller
             $login = false;
         }
 
-        return view('frontend.home', compact('login','plans','pagechannel2','pagechannel'));
+        return view('frontend.home', compact('login','plans','pagechannel2'));
+    }
+
+    public function indexCache()
+    { 
+        $stats = Cache::getMemcached()->getStats();
+        $plans = \Stripe\Plan::all(['active'=>true]);
+       //for a day cache
+           $pagechannel2  = Cache::remember('all_tasks',60*60*24, function () {
+
+        $imagePath=asset("/uploads/channellogo/notfound.png");
+            return  Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
+        
+            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            
+            
+            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
+        //     ->whereIn('channels.callSign', function($query)
+        // {
+        //     $query->select('CallSign')
+        //           ->from('gracenotechannels');
+                  
+        // })
+        ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc')->get()->reject(function($element) use($imagePath) {
+            return $element->logo == $imagePath;
+        })->groupBy('genrename');
+          });
+
+   
+   
+
+   
+       
+        //$plans=$plans->data;
+        if( Auth::check()){
+            $login = true;
+            $user=Auth::user();
+            if (!$user->subscribed('main')) {
+                return redirect('/selectplan');
+            } else {   return redirect('/livetv');}
+        } else {
+            $login = false;
+        }
+        $stats1 = array_pop($stats);
+        return view('frontend.home', compact('login','plans','pagechannel2','stats1'));
     }
 
     public function botman(){
