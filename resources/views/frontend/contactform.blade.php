@@ -170,6 +170,12 @@ $("#my_form").submit(function(event){
 							 @endforeach
 					 </div>
 			 @endif
+			 @if(session()->has('contactmessage'))
+ <div class="alert alert-success alert-dismissible ">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ session()->get('contactmessage') }}
+</div>
+@endif
 					<form action="{{ env("APP_URL") }}/user/contactformsend" method="post" class="login-form mt-3">
 							<div class="form-group">
 									<label for="contactname" class="control-label">Name</label>
