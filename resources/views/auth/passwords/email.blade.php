@@ -132,7 +132,7 @@
                         </div>
                     @endif
     <div class="card-body ">
-      <h3 class="login_txt" >You forgot your password?<br>Here you can easily retrieve a new password.</h3>
+      <h3 class="login_txt" >Forgot your password?<br>Enter your email to reset your password.</h3>
 
       <form method="POST" action="{{ route('password.email') }}">
                         @csrf
@@ -146,13 +146,13 @@
 @endif
         </div> --}}
         <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-          <label for="email" class="control-label">Send reset password link at                        </label>
+          <label for="email" class="control-label">Send reset password link to                       </label>
           
                         <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}">
         </div>
         <div class="row">
           <div class="col-12">
-            <button type="submit" class="btn btn-lg login-btn">Request new password</button>
+            <button type="submit" class="btn btn-lg login-btn">Request Reset Link</button>
           </div>
           <!-- /.col -->
         </div>

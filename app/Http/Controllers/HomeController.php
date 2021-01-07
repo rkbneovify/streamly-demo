@@ -558,16 +558,16 @@ if($responseCaptcha->success == true){
             // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
         });} catch (Exception $ex) {
              //$ex->getMessage();
-             return redirect()->back()->with('message', "We've got errors!".json_encode($ex->getMessage(), true));
+             return redirect()->back()->with('contactmessage', "We've got errors!".json_encode($ex->getMessage(), true));
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
     
-        return redirect()->back()->with('message', 'Thanks for contacting us!.');
+        return redirect()->back()->with('contactmessage', 'Thanks for contacting us!.');
     }else{
             // send back error message
             
             
-            return redirect()->back()->with('message', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
+            return redirect()->back()->with('contactmessage', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
             }
 
     }
@@ -682,9 +682,6 @@ try {
         }else{
             auth()->login($existingUser, true);}
         } else {
-//todo enter zip if zip fails redirect back
-// redirect to screen,save the socialite deatails in session for short peroid and 
-//if zipscreen is succsfull store the user of else rediect back with apologies method
 
 return redirect('/checkzip')->with( [ 'user' => $user ] );
            
