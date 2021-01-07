@@ -759,7 +759,7 @@ html.compatible-devices .vibrant-divider {
 				{{-- <li data-category="media_players" class="active media_players-icon"> <span data-i18n="media_players-device-name" class="device-name">Streaming Media Players</span> </li> --}}
 				{{-- <li data-category="hdtvs" class="hdtvs-icon"> <span data-i18n="hdtvs-device-name" class="device-name">Smart TVs</span> </li> --}}
 				{{-- <li data-category="game_consoles" class="game_consoles-icon"> <span data-i18n="game_consoles-device-name" class="device-name">Game Consoles</span> </li> --}}
-				<li data-category="mvpds" class="hdtvs-icon"> <span data-i18n="mvpds-device-name" class="device-name">Smart TVs</span> </li>
+				<li data-category="mvpds" class="hdtvs-icon"> <span data-i18n="mvpds-device-name" class="device-name">Televisions</span> </li>
 				{{-- <li data-category="blu_ray_players" class="blu_ray_players-icon"> <span data-i18n="blu_ray_players-device-name" class="device-name">Blu-ray Players</span> </li> --}}
 				<li data-category="phones_and_tablets" class="phones_and_tablets-icon"> <span data-i18n="phones_and_tablets-device-name" class="device-name">Smartphones &amp; Tablets</span> </li>
 				<li data-category="pcs_and_laptops" class="pcs_and_laptops-icon"> <span data-i18n="pcs_and_laptops-device-name" class="device-name">PCs &amp; Laptops</span> </li>
@@ -857,9 +857,9 @@ html.compatible-devices .vibrant-divider {
 					</div>
 			</div>
 			
-			<div class="device-logos grid-4 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/images/s/phones-and-tablets/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
+			<div class="device-logos grid-4 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
 							style="background-image: url(../frontend/images/s/phones-and-tablets/apple_logo_360.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Apple iOS</a> <a href="https://www.microsoft.com/en-us/mobile/phones/all/"
-							style="background-image: url(../frontend/images/s/phones-and-tablets/windows-phone.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a>
+							style="background-image: url(../frontend/images/s/phones-and-tablets/window.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a>
 					<div></div>
 			</div>
 	</div>
