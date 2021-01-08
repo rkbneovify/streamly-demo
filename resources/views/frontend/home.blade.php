@@ -572,7 +572,7 @@ height: 64px;
         <tr>
           <td>Set commands</td>
           {{-- <td>{{ $stats1['cmd_set'] }}</td> --}}
-        </tr>
+        </tr>item1
         <tr>
           <td>Get hits</td>
           {{-- <td>{{ $stats1['get_hits'] }}</td> --}}
@@ -716,10 +716,13 @@ height: 64px;
     </div>
 </section>
 <style>
-
+.item1{
+    height: 80px;
+    width: 80px;
+}
     .grid-container {
       display: grid;
-      grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto ;
+      grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto ;
       grid-gap: 5px;
       /* background-color: #2196F3; */
       padding: 10px;
