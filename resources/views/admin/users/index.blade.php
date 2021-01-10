@@ -67,55 +67,6 @@
                       </th>
                   </tr>
               </thead>
-              {{-- <tbody>
-                  @foreach($users as $key => $user)
-                  
-                        <tr data-entry-id="{{ $user->id }}">
-                        <td>
-                          #
-                      </td>
-                            <td>
-                                {{ $user->name ?? '' }}
-                            </td>
-                            <td> @foreach ($user->roles as $role)
-                                {{  $role->display_name}}
-                                @endforeach
-                            </td>
-                            
-                            <td>
-                                {{ $user->email ?? '' }}
-                            </td>
-                            <td class="project-state">
-                            @if ($user->is_active===1)
-                            <span class="badge badge-success">Active</span>
-@elseif ($user->is_active===0)
-<span class="badge badge-danger">Inactive</span>
-@else
-    unknown
-@endif
-                          
-                            
-                          
-                      </td>
-                      <td class="project-actions text-right">
-                          
-                          <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/view', $user->id) }}">View</a>
-                          <a class="btn btn-xs btn-info" href="{{ url('admin/users/edit', $user->id) }}">Edit</a>
-                          
-                                    <form action="{{ url('admin/users/destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="Delete">
-                                    </form>
-                                
-
-                         
-                          
-                      </td>
-
-                        </tr>
-                    @endforeach
-                </tbody> --}}
           </table>
         </div>
         

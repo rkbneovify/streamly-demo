@@ -158,11 +158,18 @@
                 Address availibilty
                 </p>
               </a>
-            </li><li class="nav-item ">
+            </li>            <li class="nav-item ">
               <a href=" {{ url('/admin/Outsidelocationplay') }}"  class="nav-link">
               <i class="nav-icon fas fa-search-location"></i>
                 <p>
                   Outside Location Play
+                </p>
+              </a>
+            </li><li class="nav-item ">
+              <a href=" {{ url('/admin/declinezipinquiries') }}"  class="nav-link">
+              <i class="nav-icon fas fa-search-location"></i>
+                <p>
+                  Declined zip inquiries
                 </p>
               </a>
             </li>

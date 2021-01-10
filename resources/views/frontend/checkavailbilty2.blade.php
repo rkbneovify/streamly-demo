@@ -1,16 +1,54 @@
 @extends('frontend/partials/master')
 
 @section('top-stylesheets')
+
+{{-- <link defer rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> --}}
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.structure.min.css" integrity="sha512-oM24YOsgj1yCDHwW895ZtK7zoDQgscnwkCLXcPUNsTRwoW1T1nDIuwkZq/O6oLYjpuz4DfEDr02Pguu68r4/3w==" crossorigin="anonymous" /> --}}
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" /> --}}
+<script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 @include('frontend.partials.sidenavRegisterAndLoginCSS')
+
 @endsection
 @section('stylesheets')
 <style>
+.ui-widget.ui-widget-content {
+    border: 1px solid #c5c5c5;
+}
+.ui-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    outline: 0;
+}
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
 
         .alert.alert-position {
             position: absolute;
             width: 100%;
             z-index: 1040;
         }
+				.ui-menu .ui-menu-item-wrapper {
+    position: relative;
+    padding: 3px 1em 3px .4em;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0;
+    cursor: pointer;
+    list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+.ui-menu-item .ui-menu-item-wrapper.ui-state-active {
+    background:#004E92 !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+} 
+
     </style>
 @endsection
 @section('stylesheets-bottom')
@@ -102,9 +140,9 @@ $(function() {
 									 $('#card-button').prop('disabled', true);
 								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
 								$('.circle').attr('id', 'error');
-								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area.<br /> Please call 1111111111 for more information</span>");
+								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area.</span>");
 								 $('#zip').css("color", "#FC243B");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="location.href=`{{ url("/contactform") }}`;" >Contact Us</button>');
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" id="ajaxSubmit" >Submit</button>');
 							
 								 jQuery('#checkAvailibiltyModal').modal('show');
 
@@ -113,7 +151,80 @@ $(function() {
 							 }
 					 });
 	
-});});
+});
+jQuery('body').on('click','#ajaxSubmit',function(e){
+               e.preventDefault();
+               $.ajaxSetup({
+                  headers: {
+                      
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+                  }
+              });
+               jQuery.ajax({
+                  url: "{{ url('/checkAvailabiltyStore') }}",
+                  method: 'post',
+                  data: {
+										email: jQuery('#email').val(),
+										zip: jQuery('#modalzip').text(),
+										city: jQuery('#citymodal').text(),
+										state: jQuery('#statemodal').text(),
+                  },
+                  success: function(result){
+										
+                  	if(result.errors)
+                  	{ console.log("fail");
+                  		jQuery('.alert-danger').html('');
+
+                  		jQuery.each(result.errors, function(key, value){
+                  			jQuery('.alert-danger').show();
+                  			jQuery('.alert-danger').append('<li>'+value+'</li>');
+                  		});
+                  	}
+                  	else
+                  	{ console.log("success");
+                  		jQuery('.alert-danger').hide();
+                  		// $('#open').hide();
+                  		$('#checkAvailibiltyModal').modal('hide');
+                  	}
+                  }});
+               });
+
+							 $( "#zip" ).autocomplete({
+        source: function( request, response ) {
+          // Fetch data
+					$.ajaxSetup({
+                  headers: {
+                      
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+                  }
+              });
+          $.ajax({
+                  url: "{{ url('/getzipcodes') }}",
+            type: 'post',
+            dataType: "json",
+            data: {
+               search: request.term
+            },
+            success: function( data ) {
+               response( data );
+							//  console.log(data);
+            }
+          });
+        },
+        select: function (event, ui) {
+           // Set selection
+           $('#zip').val(ui.item.label); // display the selected text
+          //  $('#employeeid').val(ui.item.value); // save selected id to input
+           return false;
+        },
+				open: function() {
+        $("ul.ui-menu").width( $(this).innerWidth() );
+        
+    }
+      });
+            
+
+});
 </script>
 	<style>
 		nav#mainNav {
@@ -266,26 +377,33 @@ background-position: center;
 			</svg>
 			{{-- <img src="https://www.fillmurray.com/76/76" class="rounded-circle logo-margin-negative"></h4> --}}
 		</div>
+		<div class="alert alert-danger" style="display:none"></div>
 		<div class="modal-body text-center">
 			{{-- <h4>Your check availbilty status</h4> --}}
+			<form method="post" action="{{url('checkAvailabiltyStore')}}" id="form">
+        @csrf
 			<h4 style="height: height: 31px;">Your Zipcode:<span id="modalzip"></span> </h4>
 			<p ><span id="zipanswer"></span> </p>
 			<p><strong style="color: #909090;">City:</strong><span id="citymodal"></span> </p>
 			<p><strong style="color: #909090;">State:</strong><span id="statemodal"></span> </p>
-			
+			Enter your email:<input type="email" id="email" >
+			{{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 			<div>
-				<form action="" method="POST">
+				{{-- <form action="" method="POST"> --}}
 					{{-- <input type="hidden" name="_method" value="DELETE">
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
 													<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Yes"> --}}
 
 				{{-- <a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">Close</a> --}}
-												</form>
+												{{-- </form> --}}
 				{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 			</div>
 		</div>
-		<div class="modal-footer" ><span id="modalbutton"></span><button type="button" class="btn " style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" data-dismiss="modal">Cancel</button>
-		</div>
+		<div class="modal-footer" >
+			<span id="modalbutton"></span>
+			
+			<button type="button" class="btn " style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;" data-dismiss="modal">Cancel</button>
+		</form>	</div>
 	</div>
 	</div>
 </div>
@@ -323,11 +441,16 @@ background-position: center;
   
 						alt="user icon" class="mx-auto d-block"  style="padding-top:5%">
 						<h5 class="text-center" style="color: #212529;padding-top:2%"> New Customer</h5>
-									<form  id="my_form" class="login-form mt-3">
+						  <!-- For defining autocomplete -->
+    {{-- <input type="number" id='zip_search' autocomplete="off"> --}}
+
+    <!-- For displaying selected option value from autocomplete suggestion -->
+    {{-- <input type="text" id='employeeid' readonly> --}}
+									<form  id="my_form" class="login-form mt-3" autocomplete="off">
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
 													<label for="zip" class="control-label text-center">Enter your zipcode</label>
-													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center" required><span id="zipanswer"></span>
+													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
 											</div>
 											{{-- <div class="form-group" id="third-element-introduction" >
 												<label for="Address2"  class="control-label ">Address</label>
