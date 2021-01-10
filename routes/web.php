@@ -85,28 +85,28 @@ Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');/
 Route::post('insertchannel','Admin\ChannelController@store')->name('insertchannel');
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
     // Zipcode Routes
-    Route::get('zipcode', 'ZipcodeController@index');
-    Route::get('allowedzipcode', 'ZipcodeController@allowedZipcodes');
-    Route::get('address', 'ZipcodeController@addressindex');
-    Route::get('addressdatatable', 'ZipcodeController@addressindexDatatables');
+    Route::get('zipcode', 'Admin\ZipcodeController@index');
+    Route::get('allowedzipcode', 'Admin\ZipcodeController@allowedZipcodes');
+    Route::get('address', 'Admin\ZipcodeController@addressindex');
+    Route::get('addressdatatable', 'Admin\ZipcodeController@addressindexDatatables');
 
-    Route::put('addressupdate/{id}','ZipcodeController@addressupdate')->name('addressupdate');
-    Route::get('/zipcode/create', 'ZipcodeController@create');
-    Route::get('/zipcode/view/{id}', 'ZipcodeController@show');
-    Route::get('/zipcode/edit/{id}', 'ZipcodeController@edit');
-    Route::get('/addressupdateedit/{id}', 'ZipcodeController@addressupdateedit');
-    //Route::post('zipcode/update', 'ZipcodeController@updateRole');
-    Route::post('insertzipcode','ZipcodeController@store')->name('insertzipcode');
-    Route::put('zipcodeupdate/{id}','ZipcodeController@update')->name('zipcodeupdate');
-    Route::delete('zipcode/destroy', 'ZipcodeController@massDestroy')->name('zipcode.massDestroy');
-    Route::get('zipcode/category', 'ZipcodeController@categoryData');
+    Route::put('addressupdate/{id}','Admin\ZipcodeController@addressupdate')->name('addressupdate');
+    Route::get('/zipcode/create', 'Admin\ZipcodeController@create');
+    Route::get('/zipcode/view/{id}', 'Admin\ZipcodeController@show');
+    Route::get('/zipcode/edit/{id}', 'Admin\ZipcodeController@edit');
+    Route::get('/addressupdateedit/{id}', 'Admin\ZipcodeController@addressupdateedit');
+    //Route::post('zipcode/update', 'Admin\ZipcodeController@updateRole');
+    Route::post('insertzipcode','Admin\ZipcodeController@store')->name('insertzipcode');
+    Route::put('zipcodeupdate/{id}','Admin\ZipcodeController@update')->name('zipcodeupdate');
+    Route::delete('zipcode/destroy', 'Admin\ZipcodeController@massDestroy')->name('zipcode.massDestroy');
+    Route::get('zipcode/category', 'Admin\ZipcodeController@categoryData');
     
-    Route::get('zipcode/allowedzipdata', 'ZipcodeController@allowedZipdata');
-    Route::get('zipcode/map', 'ZipcodeController@map');
-Route::get('zipcode/checkfenceweb', 'ZipcodeController@webfenceturf');
+    Route::get('zipcode/allowedzipdata', 'Admin\ZipcodeController@allowedZipdata');
+    Route::get('zipcode/map', 'Admin\ZipcodeController@map');
+Route::get('zipcode/checkfenceweb', 'Admin\ZipcodeController@webfenceturf');
 
 Route::get('channels/gracenote', 'Admin\GracenoteController@gracenoteData');
-    Route::delete('zipcode/{id}/delete', 'ZipcodeController@deleteRole');
+    Route::delete('zipcode/{id}/delete', 'Admin\ZipcodeController@deleteRole');
     
  //hls anaylzer
 
@@ -120,6 +120,8 @@ Route::put('fronttextupdate','Admin\FrontendTextController@update')->name('front
 Route::get('Outsidelocationplay', 'Admin\OutsideLocationPlayController@index');
 
 Route::get('Outsidelocationplay/data', 'Admin\OutsideLocationPlayController@OLPajaxData');
+Route::get('declinezipinquiries', 'Admin\DeclineZipsInquiryController@index')->name('declinezipinquiries');
+Route::get('declinezipinquiries/data', 'Admin\DeclineZipsInquiryController@ajaxIndex');
 
 });
 
@@ -163,6 +165,8 @@ Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('send
 Route::get('/verified', 'HomeController@verified');
 // Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
 Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty2');
+Route::post('/checkAvailabiltyStore', 'Admin\DeclineZipsInquiryController@failedzipinquery');
+Route::post('/getzipcodes', 'Admin\DeclineZipsInquiryController@getZipcodes');
 Route::get('/contactform', 'HomeController@contactform');
 Route::get('/devices', 'HomeController@showSupportedDevices');
 Route::get('/helpandsupport', 'HomeController@helpandsupp');
