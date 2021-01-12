@@ -1,4 +1,4 @@
-com.streamly.TVApp.Streamly
+com.streamly.TVApp.streamly
 anim abc_fade_in
 anim abc_fade_out
 anim abc_grow_fade_in_from_bottom
@@ -2779,6 +2779,7 @@ id browse_headers_dock
 id browse_headers_root
 id browse_title_group
 id btn_accept
+id btn_continue
 id btn_no
 id btn_ok
 id btn_register_view
@@ -3071,6 +3072,7 @@ id playback_fragment_root
 id playback_progress
 id playerView
 id playing
+id poptext
 id position
 id postLayout
 id privacy
@@ -3328,6 +3330,7 @@ layout dialog_register_device
 layout dialog_signout
 layout dialog_support
 layout dialog_terms_of_uses
+layout dialog_zip_code
 layout dp_example
 layout exo_list_divider
 layout exo_playback_control_view
@@ -3474,6 +3477,7 @@ string channels
 string com_crashlytics_android_build_id
 string comedy
 string common_google_play_services_unknown_issue
+string continuee
 string default_web_client_id
 string demo_link
 string email

@@ -12,11 +12,11 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.streamly.TVApp.Streamly"
+        applicationId "com.streamly.TVApp.streamly"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.6.1"
+        versionName "1.6.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

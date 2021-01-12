@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.streamly.TVApp.Streamly",
+  "applicationId": "com.streamly.TVApp.streamly",
   "variantName": "debug",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "properties": [],
       "versionCode": 1,
-      "versionName": "1.6.1",
+      "versionName": "1.6.4",
       "enabled": true,
       "outputFile": "app-debug.apk"
     }

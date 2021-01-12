@@ -2140,6 +2140,7 @@
     <string name="com.crashlytics.android.build_id" ns2:ignore="UnusedResources,TypographyDashes" translatable="false">00000000000000000000000000000000</string>
     <string name="comedy">Comedy</string>
     <string name="common_google_play_services_unknown_issue"><ns1:g id="app_name">%1$s</ns1:g> is having trouble with Google Play services. Please try again.</string>
+    <string name="continuee">Continue</string>
     <string name="default_web_client_id" translatable="false">380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com</string>
     <string name="demo_link">streamly.co/tv/562888</string>
     <string name="email">Email</string>
@@ -2187,7 +2188,7 @@
     <string name="firebase_database_url" translatable="false">https://streamlytv-1bf78.firebaseio.com</string>
     <string name="gcm_defaultSenderId" translatable="false">380909681859</string>
     <string name="google_api_key" translatable="false">AIzaSyBSoGGC265Zrj-ivVigKvm9F9KxkyZx-mo</string>
-    <string name="google_app_id" translatable="false">1:380909681859:android:69202ae2574e91de3bb676</string>
+    <string name="google_app_id" translatable="false">1:380909681859:android:41e05ed8f225127b3bb676</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBSoGGC265Zrj-ivVigKvm9F9KxkyZx-mo</string>
     <string name="google_storage_bucket" translatable="false">streamlytv-1bf78.appspot.com</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

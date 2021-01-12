@@ -156,7 +156,7 @@
             android:text="@string/programguide_error_fetching_content" />
 
         <!-- Data state -->
-        <com.streamly.TVApp.Streamly.ProgramGuideGridView
+        <com.streamly.TVApp.streamly.ProgramGuideGridView
             android:id="@+id/programguide_grid"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -170,7 +170,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/programguide_channel_column_width" />
 
-    <com.streamly.TVApp.Streamly.timeline.ProgramGuideTimelineRow
+    <com.streamly.TVApp.streamly.timeline.ProgramGuideTimelineRow
         android:id="@+id/programguide_time_row"
         android:layout_width="0dp"
         android:layout_height="@dimen/programguide_time_row_height"

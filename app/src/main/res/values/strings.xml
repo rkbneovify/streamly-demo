@@ -35,6 +35,7 @@
     <string name="sure_signout">Are you sure you want to logout from this device?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="continuee">Continue</string>
 
 
     <string name="programguide_title_no_program">No broadcast</string>

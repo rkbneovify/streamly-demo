@@ -444,6 +444,10 @@
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/layout/view_register_device.xml"
     },
     {
+        "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/layout_dialog_zip_code.xml.flat",
+        "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/layout/dialog_zip_code.xml"
+    },
+    {
         "merged": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/res/merged/debug/drawable-tvdpi_resize_imagee.png.flat",
         "source": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/src/main/res/drawable-tvdpi/resize_imagee.png"
     },

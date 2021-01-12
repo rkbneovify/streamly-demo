@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:380909681859:android:69202ae2574e91de3bb676",
+        "mobilesdk_app_id": "1:380909681859:android:41e05ed8f225127b3bb676",
         "android_client_info": {
-          "package_name": "com.streamly.TVApp.Streamly"
+          "package_name": "com.streamly.TVApp.streamly"
         }
       },
       "oauth_client": [
@@ -30,6 +30,13 @@
             {
               "client_id": "380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "380909681859-1a18u01v52vavfqalf8ikfdq4vf77jt6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.streamly.TVApp.Streamly"
+              }
             }
           ]
         }

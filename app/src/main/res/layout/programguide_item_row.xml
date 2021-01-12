@@ -22,7 +22,7 @@
     android:orientation="horizontal">
 
     <!-- Focusable is set false to prevent accessibility focus being put on this layout -->
-    <com.streamly.TVApp.Streamly.row.ProgramGuideRowGridView
+    <com.streamly.TVApp.streamly.row.ProgramGuideRowGridView
         android:id="@+id/row"
         android:layout_width="match_parent"
         android:layout_height="@dimen/programguide_program_row_height_with_empty_space"
