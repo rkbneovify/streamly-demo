@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use JWTAuth;
+use GuzzleHttp\Client as GuzzleClient;
 class GoogleAnalyticsController extends Controller
 {
     public function index(Request $request){
@@ -29,7 +30,8 @@ $response = curl_exec($req);
     }
 
     public function index2(Request $request){
-      
+        // dd($request);
+        $header = $request->server('HTTP_USER_AGENT');
         $screenResolution = $request->input('sr');
         $callSign=$request->input('callsign');
         $boolean=$request->input('inside_geofence');
@@ -38,6 +40,7 @@ $response = curl_exec($req);
         $cid = JWTAuth::user()->id.$now->timestamp;
         
         $uId=JWTAuth::user()->id;
+        // dd($request);
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -51,7 +54,8 @@ curl_setopt_array($curl, array(
   CURLOPT_CUSTOMREQUEST => 'POST',
   CURLOPT_HTTPHEADER => array(
     'Accept: */*',
-    'User-Agent: '.$header.''
+    'User-Agent: '.$header.'',
+    'Content-Type: text/plain;charset=UTF-8' 
   ),
 ));
 
@@ -60,6 +64,41 @@ $response = curl_exec($curl);
 curl_close($curl);
 echo $response;
 
+    }
+
+    public function index3(Request $request){
+        $header = $request->server('HTTP_USER_AGENT');
+        $screenResolution = $request->input('sr');
+        $callSign=$request->input('callsign');
+        $boolean=$request->input('inside_geofence');
+        $now = now();
+        $now->timestamp;
+        $cid = JWTAuth::user()->id.$now->timestamp;
+        
+        $uId=JWTAuth::user()->id;
+
+$headers = [
+
+    "Accept" => "*/*",
+    "User-Agent" => ".$header."
+];
+
+$client = new GuzzleClient([
+    'headers' => $headers
+]);
+
+
+$r = $client->request('POST', 'https://www.google-analytics.com/g/collect?v=2&tid=G-E50Q5Q9J8D&gtm=2oebu0&sr='.$screenResolution.'&ul=en-us&en=video_play&ep.call_sign='.$callSign.'&ep.inside_geofence='.$boolean.'&cid='.$cid.'&uid='.$uId.'');
+// $response = $r->getBody()->getContents();
+// echo $r->getStatusCode();
+if($r->getStatusCode()=='204')
+{
+$response = array('success' => true,'response_code'=>200,'message'=>'GA event logged successfully.');
+return response()->json($response, 200);
+    } else{
+
+$response = array('success' => false,'response_code'=>404,'message'=>'404');
+return response()->json($response, 404);}
     }
 }
 /* 
