@@ -73,7 +73,7 @@ Route::post('addtorecent', 'APIController@addToRecent');
  Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 
-Route::post('/ga', 'GoogleAnalyticsController@index2')->middleware(['jwt.verify']);
+Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes
@@ -106,6 +106,8 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
 
 Route::post('generic', 'Admin\BuyDRMController@proxyServer');
 Route::get('/qrcode', 'APIController@qrcodeapi');
+
+Route::post('/ga2', 'GoogleAnalyticsController@index3');
 
 // Route::fallback(function(){
 //     return response()->json([
