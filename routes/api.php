@@ -72,6 +72,8 @@ Route::get('my_recents', 'APIController@myRecents');
 Route::post('addtorecent', 'APIController@addToRecent');
  Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
+
+Route::post('/ga', 'GoogleAnalyticsController@index2')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes

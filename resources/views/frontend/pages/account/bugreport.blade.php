@@ -150,25 +150,25 @@ $("#my_form").submit(function(event){
 @include('frontend.partials.sidenavRegisterAndLogin')
 <section class="page-section custom-row">
 
-@if(session()->has('message'))
+@if(session()->has('mailmessage'))
  <div class="alert alert-success alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		{{ session()->get('message') }}
+		{{ session()->get('mailmessage') }}
 </div>
 @endif
-@if(session()->has('error'))
+@if(session()->has('mailerror'))
  <div class="alert alert-danger alert-dismissible ">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		{{ session()->get('error') }}
+		{{ session()->get('mailerror') }}
 </div>
 @endif
 <div class="container">
 	<h1 class="section-heading text-center">Bug Report Form</h1>
-				<p>Use this form to report any bugs you may find. Here is what each of the "bug severity" options mean:</p>
+				<p>We appreciate your assistance in making StreamlyTV the best it can be. Share any bugs with the form below, and we’ll respond as soon as possible!</p>
 				<ol>
-					<li><div id="minor">Minor:</div> These are bugs that don't really affect the app's playability. Things like missing or broken textures would fit into this category.</li>
-					<li><div id="moderate">Moderate:</div> The moderate category would include bugs that affect the functionality of some of the app's less important features. For example, a problem with an object the player can pick up would fall under the moderate category.</li>
-					<li><div id="major">Major:</div> A major bug affects the playability of the app's more important feature. A door not opening would be an example of a major bug.</li>
+					<li><div id="minor">Minor:</div> These are bugs that don't really affect the app's functionality. Things like missing words, or broken links would fit into this category.
+					.</li>
+					<li><div id="major">Major:</div> A major bug affects the playability of the app. A channel not playing, or the audio not working on a channel.</li>
 					<li><div id="app_breaking">app-breaking:</div> A app-breaking bug is a glitch that makes the app unplayable, either immediately after launch or during appplay. app crashes (especially persistent crashes) or other issues that make the app completely unplayable would fall under this category.</li>
 				</ol>
 			</div>
@@ -184,11 +184,9 @@ $("#my_form").submit(function(event){
 				<label for="occurrence" class="control-label">How often does it occur?</label>
 						<select class="form-control"  name="occurrence" id="occurrence" required>
 							<option value="--Please Select--">--Please Select--</option>
-							<option value="Rarely">Rarely</option>
-							<option value="Somewhat Rarely">Somewhat Rarely</option>
-							<option value="Somewhat Often">Somewhat Often</option>
-							<option value="Commonly">Commonly</option>
-							<option value="Very Commonly">Very Commonly</option>
+							<option value="Occasionally">Occasionally</option>
+							<option value="Often">Often</option>
+							<option value="Always">Always</option>
 						</select>
 			</div>
 					<div class="form-group col-md-6">
@@ -197,7 +195,6 @@ $("#my_form").submit(function(event){
 						<select class="form-control" name="bug_severity" id="bug_severity" required>
 							<option value="--Please Select--">--Please Select--</option>
 							<option value="Minor">Minor</option>
-							<option value="Moderate">Moderate</option>
 							<option value="Major">Major</option>
 							<option value="app-breaking">App-breaking</option>
 						</select></div></div>
@@ -205,8 +202,16 @@ $("#my_form").submit(function(event){
 						<div class="row">
 <div class="col-md-6 form-group">
 
-	<label for="debug_info" class="control-label">Please input any debug information here:</label>
-	<input type="text" class="form-control" name="debug_info" id="debug_info" placeholder="Ex. Exception at 0x0000000 - memory map"></div>
+	<label for="debug_info" class="control-label">Platform</label>
+	<select class="form-control" name="debug_info" id="debug_info" required>
+		<option value="--Please Select--">--Please Select--</option>
+		<option value="Website">Website</option>
+		<option value="Roku">Roku</option>
+		<option value="FireTV">FireTV</option>
+		<option value="AppleTV">AppleTV</option>
+	</select>
+	{{-- <input type="text" class="form-control" name="debug_info" id="debug_info" placeholder="Ex. Exception at 0x0000000 - memory map"> --}}
+</div>
 	<div class="col-md-6 form-group">
 
 	<label for="details" class="control-label">Any further questions, comments or issues:</label>

@@ -225,20 +225,20 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
     if($responseCaptcha->success == true){
     try{
         Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
-            $message->to(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
+            $message->to(env('MAIL_TO_ADDRESS'), env('APP_NAME'))
         
             ->subject(env('APP_NAME').': Feedback/Bug Report');
             // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
         });} catch (Exception $ex) {
              //$ex->getMessage();
-             return redirect()->back()->with('error', "We've got errors!".json_encode($ex->getMessage(), true));
+             return redirect()->back()->with('mailerror', "We've got errors!".json_encode($ex->getMessage(), true));
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
-        return redirect()->back()->with('message', "Feedback Sent!");}else{
+        return redirect()->back()->with('mailmessage', "Feedback Sent!");}else{
             // send back error message
             
             
-            return redirect()->back()->with('error', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
+            return redirect()->back()->with('mailerror', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
             }
     }
 
