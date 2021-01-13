@@ -199,6 +199,7 @@ Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
+Route::resource('bugreportings','Admin\BugReportingController');
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     
