@@ -233,6 +233,11 @@ function showPosition(position) {
             document.title = 'play...';
 
 						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+						setInterval(function(){ 
+							// console.log("15 secs");
+							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+							},15000);
+
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
