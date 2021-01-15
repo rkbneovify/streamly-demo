@@ -74,6 +74,7 @@ Route::post('addtorecent', 'APIController@addToRecent');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 
 Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify']);
+Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes

@@ -45,7 +45,8 @@
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
   } else { 
-		
+		localStorage.setItem("geofence", 'false'); 
+		// clientIP=11.009.987.987;
 		// var astrourl='https://api.astroip.co/'+clientIP+'/?api_key={{ env("ASTRO_IP") }}';
  
   }
