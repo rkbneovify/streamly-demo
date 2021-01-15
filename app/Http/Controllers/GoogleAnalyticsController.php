@@ -100,6 +100,42 @@ return response()->json($response, 200);
 $response = array('success' => false,'response_code'=>404,'message'=>'404');
 return response()->json($response, 404);}
     }
+
+    public function duration(Request $request){
+        $header = $request->server('HTTP_USER_AGENT');
+        $screenResolution = $request->input('sr');
+        $callSign=$request->input('callsign');
+        $boolean=$request->input('inside_geofence');
+        $now = now();
+        $now->timestamp;
+        $cid = JWTAuth::user()->id.$now->timestamp;
+        
+        $uId=JWTAuth::user()->id;
+
+$headers = [
+
+    "Accept" => "*/*",
+    "User-Agent" => ".$header."
+];
+
+$client = new GuzzleClient([
+    'headers' => $headers
+]);
+
+
+
+$r = $client->request('POST', 'https://www.google-analytics.com/g/collect?v=2&tid=G-E50Q5Q9J8D&gtm=2oebu0&sr='.$screenResolution.'&ul=en-us&cid='.$cid.'&uid='.$uId.'&en=video_livestream_duration&epn.livestream_seconds_watched=15&ep.call_sign='.$callSign.'&ep.inside_geofence='.$boolean.'');
+// $response = $r->getBody()->getContents();
+// echo $r->getStatusCode();
+if($r->getStatusCode()=='204')
+{
+$response = array('success' => true,'response_code'=>200,'message'=>'GA liveduration event logged successfully.');
+return response()->json($response, 200);
+    } else{
+
+$response = array('success' => false,'response_code'=>404,'message'=>'404');
+return response()->json($response, 404);}
+    }
 }
 /* 
  sr=1920x1080
