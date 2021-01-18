@@ -40,18 +40,72 @@
 
 <script>
 	(function () {
-		var longitude,latitude=true;
-		function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-		localStorage.setItem("geofence", 'false'); 
-		// clientIP=11.009.987.987;
-		// var astrourl='https://api.astroip.co/'+clientIP+'/?api_key={{ env("ASTRO_IP") }}';
- 
-  }
+function getLocation2() {
+if (navigator.geolocation) {
+	// console.log('inside the function');
+    var location_timeout = setTimeout("geolocFail(1)", 10000);
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        clearTimeout(location_timeout);
+
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        SetGeocodeLatLng(lat, lng);
+    }, function(error) {
+			// console.log('inside the function error occured');
+        clearTimeout(location_timeout);
+        geolocFail(2);
+    });
+} else {
+    // Fallback for no geolocation
+    geolocFail(3);
+}}
+getLocation2();
+function geolocFail(pa) {
+	// console.log('geolocFailfail ocuured',pa);
+var astrourl='https://api.astroip.co/{{getUserIpAddr()}}/?api_key={{ env("ASTRO_IP") }}';
+console.log("astrourl",astrourl);
+		 var myHeaders = new Headers();
+// myHeaders.append("Cookie", "ARRAffinity=069e115ca7c25625ebd8581b6dc49c782dc6ddd6cee7dc472cc3b69eeb2a234a; ARRAffinitySameSite=069e115ca7c25625ebd8581b6dc49c782dc6ddd6cee7dc472cc3b69eeb2a234a");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+// fetch("https://api.astroip.co/43.231.58.253/?api_key=e4c059f7-72fd-47f8-8e4f-9481d379d737", requestOptions)
+fetch(astrourl, requestOptions)
+
+  .then(response => response.json())
+	.then(function(data) {
+		// console.log(data.status_code);
+		console.log("lonng",data.geo.longitude);
+		console.log("latitude",data.geo.latitude);
+		let lat = data.geo.latitude;
+        let lng = data.geo.longitude;
+
+        SetGeocodeLatLng(lat, lng);
+    
+  
+  })
+  .catch(error => console.log('error', error));
+
 }
-getLocation();
+function SetGeocodeLatLng(lat,lng){
+	localStorage.setItem("LAT", lat); 
+	localStorage.setItem("lng", lng); 
+	console.log("LAT",lat);
+	console.log("lng",lng);
+	geofence();
+}
+function getGeocodeLat(){
+return	localStorage.getItem("LAT");
+}
+function getGeocodeLong(){
+return	localStorage.getItem("lng");
+}
 
 function geofence(){
 		var base_url = window.location.origin;
@@ -63,9 +117,9 @@ myHeaders.append("Accept", "application/json");
 myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
 
 var formdata = new FormData();
-formdata.append("latitude", latitude);
-formdata.append("longitude", longitude);
-formdata.append("deviceid", "jsjhhjds");
+formdata.append("latitude", getGeocodeLat());
+formdata.append("longitude", getGeocodeLong());
+formdata.append("deviceid", MediaDeviceInfo.deviceId||"not defined");
 
 var requestOptions = {
   method: 'POST',
@@ -73,7 +127,10 @@ var requestOptions = {
   body: formdata,
   redirect: 'follow'
 };
-
+for (var pair of formdata.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]); 
+}
+console.log("deviceid",MediaDeviceInfo.deviceId);
 fetch(url, requestOptions)
   .then(response => response.json())
   // .then(result => console.log(result))
@@ -83,12 +140,12 @@ fetch(url, requestOptions)
     // console.log(popupmsgtoggle);
 		if(popupmsgtoggle){
 			alert(JSON.stringify(data.popupmsg));
-			outsidelocationplay();
+			 outsidelocationplay();
 		}
   
-    // return fetch('https://api.spacexdata.com/v2/rockets/' + rocketId); // make a 2nd request and return a promise
   })
   .catch(error => console.log('error', error));}
+	// geofence();
 
 function outsidelocationplay(){
 		var base_url = window.location.origin;
@@ -100,9 +157,9 @@ myHeaders.append("Accept", "application/json");
 myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
 
 var formdata = new FormData();
-formdata.append("latitude", latitude);
-formdata.append("longitude", longitude);
-formdata.append("deviceid", "jsjhhjds");
+formdata.append("latitude", getGeocodeLat());
+formdata.append("longitude", getGeocodeLong());
+formdata.append("deviceid", MediaDeviceInfo.deviceId||"not defined");
 
 var requestOptions = {
   method: 'POST',
@@ -115,11 +172,7 @@ fetch(url, requestOptions)
   .then(response => response.text())
   // .then(result => console.log(result))
   .catch(error => console.log('error', error));}
-function showPosition(position) {
-	longitude=position.coords.longitude;
-	latitude=position.coords.latitude;
-	
-	geofence();}
+
 
 })();
 	$('document').ready(function(){
@@ -238,6 +291,7 @@ function showPosition(position) {
 							// console.log("15 secs");
 							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 							},15000);
+							
 
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
