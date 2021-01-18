@@ -80,7 +80,7 @@ echo $response;
 $headers = [
 
     "Accept" => "*/*",
-    "User-Agent" => ".$header."
+    "User-Agent" => $header
 ];
 
 $client = new GuzzleClient([
@@ -115,7 +115,7 @@ return response()->json($response, 404);}
 $headers = [
 
     "Accept" => "*/*",
-    "User-Agent" => ".$header."
+    "User-Agent" => $header
 ];
 
 $client = new GuzzleClient([

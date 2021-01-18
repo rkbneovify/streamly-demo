@@ -182,7 +182,8 @@ function getUserIpAddr(){
   }else{
       $ip = $_SERVER['REMOTE_ADDR'];
   }
-  return $ip;
+  return $ip=='127.0.0.1'?'43.231.58.253':$ip;
+  
 }
 
 //working with subscription pack
