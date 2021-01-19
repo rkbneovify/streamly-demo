@@ -76,7 +76,7 @@ $(function() {
         serverSide: true,
         ajax: "{{ url('admin/declinezipinquiries/data') }}",
         columns: [
-            {data: 'id', name: 'id'},
+          { data: 'DT_RowIndex', name: 'id'},
             {data: 'zip', name: 'zip'},
             {data: 'email', name: 'email'},
             {data: 'city', name: 'city'},

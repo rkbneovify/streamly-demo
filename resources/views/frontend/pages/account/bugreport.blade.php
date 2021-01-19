@@ -202,15 +202,15 @@ $("#my_form").submit(function(event){
 						<div class="row">
 <div class="col-md-6 form-group">
 
-	<label for="debug_info" class="control-label">Platform</label>
-	<select class="form-control" name="debug_info" id="debug_info" required>
+	<label for="platform_info" class="control-label">Platform</label>
+	<select class="form-control" name="platform_info" id="platform_info" required>
 		<option value="--Please Select--">--Please Select--</option>
 		<option value="Website">Website</option>
 		<option value="Roku">Roku</option>
 		<option value="FireTV">FireTV</option>
 		<option value="AppleTV">AppleTV</option>
 	</select>
-	{{-- <input type="text" class="form-control" name="debug_info" id="debug_info" placeholder="Ex. Exception at 0x0000000 - memory map"> --}}
+	{{-- <input type="text" class="form-control" name="platform_info" id="platform_info" placeholder="Ex. Exception at 0x0000000 - memory map"> --}}
 </div>
 	<div class="col-md-6 form-group">
 

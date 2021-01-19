@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Subscription;
+use App\Models\BugReporting;
 use Illuminate\Support\Arr;
 use Mail;
 use Exception;
@@ -211,7 +212,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         User Email:'.$request['email_input'].'.<br><br>
         Bug Severity:'.$request['bug_severity'].'.<br>
         Occurrence:'.$request['occurrence'].'.<br>
-        Debug info:'.$request['debug_info'].'.<br>
+        Platform info:'.$request['platform_info'].'.<br>
         Details:'.$request['details'].'.<br>
     </html>';
 
@@ -229,12 +230,22 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         
             ->subject(env('APP_NAME').': Feedback/Bug Report');
             // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
-        });} catch (Exception $ex) {
+        });
+
+            $outsideLocation = BugReporting::create([
+                'email' => $request['email_input'],
+                'occurences'=>$request['occurrence'],
+                'bug_severity'=>$request['bug_severity'],
+                'platform'=>$request['platform_info'],
+                'message'=>$request['details'],
+            ]);
+    
+    } catch (Exception $ex) {
              //$ex->getMessage();
              return redirect()->back()->with('mailerror', "We've got errors!".json_encode($ex->getMessage(), true));
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
-        return redirect()->back()->with('mailmessage', "Feedback Sent!");}else{
+        return redirect()->back()->with('mailmessage', "Bug Report Sent!");}else{
             // send back error message
             
             
