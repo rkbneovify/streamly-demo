@@ -13,6 +13,8 @@ use App\Http\Requests\BugReporting\Edit;
 use App\Http\Requests\BugReporting\Update;
 use App\Http\Requests\BugReporting\Destroy;
 
+use Yajra\DataTables\DataTables;
+
 
 /**
  * Description of BugReportingController
@@ -31,7 +33,22 @@ class BugReportingController extends Controller
     public function index(Index $request)
     {
         return view('admin.bug_reporting.index', ['records' => BugReporting::paginate(10)]);
-    }    /**
+    }  
+    
+    public function ajaxIndex(Request $request)
+    { 
+        return DataTables::of(BugReporting::all())
+        ->addIndexColumn()
+        // ->addColumn('action', function($row){
+
+        //        $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">View</a>';
+
+        //         return $btn;
+        // })
+        // ->rawColumns(['action'])
+        ->make(true);
+    }
+    /**
      * Display the specified resource.
      *
      * @param  Show  $request
