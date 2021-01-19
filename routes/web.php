@@ -122,6 +122,8 @@ Route::get('Outsidelocationplay', 'Admin\OutsideLocationPlayController@index');
 Route::get('Outsidelocationplay/data', 'Admin\OutsideLocationPlayController@OLPajaxData');
 Route::get('declinezipinquiries', 'Admin\DeclineZipsInquiryController@index')->name('declinezipinquiries');
 Route::get('declinezipinquiries/data', 'Admin\DeclineZipsInquiryController@ajaxIndex');
+Route::get('bugreport', 'Admin\BugReportingController@index')->name('bugreport');
+Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 
 });
 
