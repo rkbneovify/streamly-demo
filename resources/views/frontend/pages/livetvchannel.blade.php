@@ -328,12 +328,19 @@ fetch(url, requestOptions)
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
 
-		.owl-carousel .owl-item img {
+		/* .owl-carousel .owl-item img {
 		    display: block;
 		    width: auto;
 		    margin: 0 auto;
 		    height: 1.5rem;
-		}
+		} */
+		.channelogosame{
+
+display: block;
+margin: 0 auto;
+height: 100px;
+width: 100px;
+}
 
 		.owl-item {
 	        background-color: white;
@@ -526,8 +533,8 @@ fetch(url, requestOptions)
 					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}">
 						@else
 						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
-							@endif<div class="live-news-item">
-	<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
+							@endif<div class="live-news-item"><div class="channelogosame"><img style='height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+	
 										<p>{{  $channeldet->name??'no name'}}</p>
 					</div> </a>
 					@endforeach

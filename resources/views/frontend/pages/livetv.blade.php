@@ -45,6 +45,7 @@ headers: {
 			owl.owlCarousel({
 				slideBy: 6,
 				loop:true,
+				autoWidth:true, autoHeight:true,
 			    margin:20,
 			    nav: true,
 			    responsiveClass:true,
@@ -128,14 +129,22 @@ $.ajax({
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
 
-		.owl-carousel .owl-item img {
+		/* .owl-carousel .owl-item img {
 		    display: block;
 		    width: auto;
 		    margin: 0 auto;
 		    height: 1.5rem;
+		} */
+		.channelogosame{
+
+			display: block;
+    margin: 0 auto;
+			height: 100px;
+    width: 100px;
 		}
 
-		.owl-item {
+		.item {
+			
 	        background-color: white;
 		    padding: 2rem 0;
 		    text-align: center;
@@ -207,14 +216,15 @@ $.ajax({
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
 						
-						<div class="live-news-item">
+						<div class="live-news-item item" style="width:200px;height:280px">
 							
 							@if (!empty($channeldet->callSign))
 							<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}">
 								@else
 								<a href="{{url('livetv/'.$channeldet->name.'/'.$key)}}">
 									@endif
-						<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
+									<div class="channelogosame">	<img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+					
 							<p>{{  $channeldet->name??'no name'}}</p></a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
