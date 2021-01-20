@@ -4,11 +4,21 @@ import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.View;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.drm.DefaultDrmSessionManager;
 import com.google.android.exoplayer2.drm.DrmSessionManager;
 import com.google.android.exoplayer2.drm.ExoMediaCrypto;
@@ -16,13 +26,25 @@ import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
 import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
 import com.google.android.exoplayer2.drm.MediaDrmCallback;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
@@ -31,7 +53,6 @@ import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 import com.streamly.TVApp.streamly.utilities.NetworkKeys;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,10 +62,14 @@ import retrofit2.Response;
 
 public class PlayerActivity extends FragmentActivity {
     private static final String TAG=PlayerActivity.class.getSimpleName();
-    String authToken,uniqueId;
+    String authToken,uniqueId,userId;
     SimpleExoPlayer player;
     PlayerView playerView;
     private FirebaseAnalytics mFirebaseAnalytics;
+    Bundle params;
+    Handler handler = new Handler();
+    final int delay = 15000; //milliseconds
+    Runnable runnable;
 
 
     @Override
@@ -76,26 +101,35 @@ public class PlayerActivity extends FragmentActivity {
         player = new SimpleExoPlayer.Builder(this).build();
         playerView = findViewById(R.id.playerView);
         authToken= TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.AUTH_TOKEN, null);
+        userId= TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.USER_ID, null);
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        playerView.setUseController(false);
+
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        params = new Bundle();
+        Log.e("frooom",getIntent().getStringExtra("from"));
+        params.putString("call_sign", "HallDRAMA_20012021_Android");
+        params.putString("inside_geofence", "false");
+        params.putString("livestream_seconds_watched", "15");
+        mFirebaseAnalytics.setUserId(userId);
 
         /*Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.call_sign, "Test_HallDRAMA_CallSign");
         bundle.putString(FirebaseAnalytics.Param.inside_geofence, false);
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.video_play, bundle);*/
 
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id3258");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Streamly_name");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
 
-
-        /*Bundle params = new Bundle();
-        params.putString("call_sign", "Test_HallDRAMA_CallSign");
-        params.putString("inside_geofence", "false");
-        mFirebaseAnalytics.logEvent("video_play", params);*/
+        /*Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.call_sign, CallSignValue);
+        bundle.putString(FirebaseAnalytics.Param.inside_geofence, boolean);
+        bundle.putString(FirebaseAnalytics.Param.livestream_seconds_watched, 15);
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.video_livestream_duration, bundle);*/
 
          getLatLong();
     }
@@ -240,9 +274,11 @@ public class PlayerActivity extends FragmentActivity {
 //        String wvURL1="https://streamlytv.com/api/generic?drm-type=widevine";
 //        String wvUrl1="https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=widevine";
 //        String streamUrl2="https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd";
-
 //        Uri dashUri = Uri.parse("https://path/to/your/stream.mpd");
+
         Uri dashUri = Uri.parse(streamUrl.trim());
+//        Uri dashUri = Uri.parse("https://cdn.streamlytv.com/espn/index.m3u8");
+//        Uri dashUri = Uri.parse("https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd");
 
         Log.e(TAG, "1) license_server: "+ wvUrl+"\n"
                 +"2) DRM_key: "+drmKey+ "\n"
@@ -262,25 +298,148 @@ public class PlayerActivity extends FragmentActivity {
                 .setUuidAndExoMediaDrmProvider(widevineUuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
                 .build(mediaDrmCallback);
 
-        // Create a data source factory.
-        DataSource.Factory dataSourceFactory = getDefaultDataSourceFactory();
 
-        // Create a DASH media source pointing to a DASH manifest uri.
+
+        //todo HLs for the testing purpose
+//        HlsMediaSource mediaSource =new HlsMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(dashUri);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
+                Util.getUserAgent(this, "StreamlyTV"), null);
         MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
                 .setDrmSessionManager(drmSessionManager)
                 .createMediaSource(dashUri);
 
+//        DashMediaSource mediaSource = new DashMediaSource(dashUri, dataSourceFactory,
+//                new DefaultDashChunkSource.Factory(dataSourceFactory),
+//                null, null);
+
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+
+       player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+        //todo for the DRM protected streaming
+        // Create a data source factory.
+//        DataSource.Factory dataSourceFactory = getDefaultDataSourceFactory();
+        // Create a DASH media source pointing to a DASH manifest uri.
+//        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+//                .setDrmSessionManager(drmSessionManager)
+//                .createMediaSource(dashUri);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
         // Attach it to the view
         playerView.setPlayer(player);
 
         // Preapre the player with content
         player.prepare(mediaSource);
 
+        player.addListener(new Player.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, int reason) {
+
+            }
+
+            @Override
+            public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                /*if (isLoading){
+                    mFirebaseAnalytics.logEvent("video_play", params);
+                }*/
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                switch (playbackState) {
+                    case ExoPlayer.STATE_IDLE:
+                        break;
+
+                    case ExoPlayer.STATE_READY:
+                        break;
+
+                    case ExoPlayer.STATE_BUFFERING:
+                        break;
+
+                    case ExoPlayer.STATE_ENDED:
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onPlaybackSuppressionReasonChanged(int playbackSuppressionReason) {
+
+            }
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                if (isPlaying){
+                    mFirebaseAnalytics.logEvent("video_play", params);
+
+                    runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            //do something
+                            mFirebaseAnalytics.logEvent("video_livestream_duration",params);
+                            handler.postDelayed(this, delay);
+                        }
+                    };
+                    handler.postDelayed(runnable, delay);
+                }
+
+            }
+
+            @Override
+            public void onRepeatModeChanged(int repeatMode) {
+
+            }
+
+            @Override
+            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity(int reason) {
+
+            }
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+            }
+
+            @Override
+            public void onSeekProcessed() {
+
+            }
+        });
+
+        player.setPlayWhenReady(true);
+
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        handler.removeCallbacks(runnable);
         player.stop();
         Log.e(TAG,"back_press_called");
         finish();
@@ -289,6 +448,7 @@ public class PlayerActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        handler.removeCallbacks(runnable);
         Log.e(TAG,"on_stop_called");
         player.stop();
     }

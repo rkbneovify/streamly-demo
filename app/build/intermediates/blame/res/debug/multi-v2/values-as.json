@@ -4,6 +4,23 @@
             "outputFile": "/home/arun/StudioProjects/neovifyissueresolved28sep/neovifyissueresolved28sep/Streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-as/values-as.xml",
             "map": [
                 {
+                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/3399b3d4129bc0302e7129d1ab93f365/core-1.5.0-beta01/res/values-as/values-as.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    },
+                    "to": {
+                        "startLines": "70",
+                        "startColumns": "4",
+                        "startOffsets": "7505",
+                        "endColumns": "100",
+                        "endOffsets": "7601"
+                    }
+                },
+                {
                     "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/f195ccadeca4530fac86e149014adaea/jetified-play-services-basement-17.0.0/res/values-as/values.xml",
                     "from": {
                         "startLines": "4",
@@ -52,23 +69,6 @@
                         "startOffsets": "3026,3133,3234,3336,3430,3554,3666,3765,3859,3985,4110,4216,4342,4493,4612,4739,4842,4934,5066,5159,5270,5383,5493,5592,5708,5830,5945,6059,6169,6279,6399,6518,6634,6749,6836,6920,7026,7165,7322",
                         "endColumns": "106,100,101,93,123,111,98,93,125,124,105,125,150,118,126,102,91,131,92,110,112,109,98,115,121,114,113,109,109,119,118,115,114,86,83,105,138,156,99",
                         "endOffsets": "3128,3229,3331,3425,3549,3661,3760,3854,3980,4105,4211,4337,4488,4607,4734,4837,4929,5061,5154,5265,5378,5488,5587,5703,5825,5940,6054,6164,6274,6394,6513,6629,6744,6831,6915,7021,7160,7317,7417"
-                    }
-                },
-                {
-                    "source": "/home/arun/.gradle/caches/transforms-2/files-2.1/c63c18e7996d6645b4b44c0c42e61d2f/core-1.5.0-alpha05/res/values-as/values-as.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "100",
-                        "endOffsets": "151"
-                    },
-                    "to": {
-                        "startLines": "70",
-                        "startColumns": "4",
-                        "startOffsets": "7505",
-                        "endColumns": "100",
-                        "endOffsets": "7601"
                     }
                 }
             ]

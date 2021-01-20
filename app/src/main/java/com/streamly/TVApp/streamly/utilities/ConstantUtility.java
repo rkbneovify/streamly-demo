@@ -22,6 +22,7 @@ public class ConstantUtility {
     public static final String PREF_DATA="pref_data";
     public static final String LOADING ="Loading..." ;
     public static final String AUTH_TOKEN ="token";
+    public static final String USER_ID ="user_id";
     public final static String INCORRECT_CREDENTIALS ="Incorrect Username or Password";
     public static final String SERVER_ISSUE ="Server issue, try after sometime";
     public static final String FILL_EMAIL = "Fill Email ID";

@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
 //    implementation 'com.google.android.exoplayer:exoplayer:2.9.6'
     implementation 'com.google.android.exoplayer:exoplayer:2.11.4'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.11.4'
 //    implementation 'com.google.android.exoplayer:extension-rtmp:2.9.6'
 
     //New Blur lib added...

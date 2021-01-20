@@ -115,6 +115,8 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
 
             val intent1 = Intent(activity, PlayerActivity::class.java)
             intent1.putExtra("from", innerSchedule.playUrl)
+//            intent1.putExtra("callsign", channels[].name)
+//            intent1.putExtra("from", innerSchedule.)
             startActivity(intent1)
 
             Log.e(TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl

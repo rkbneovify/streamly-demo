@@ -126,6 +126,9 @@ public class LogInActivity extends FragmentActivity {
                     Log.e(TAG, "resCode "+response.code());
                 if (response.isSuccessful() && response.body()!=null){
                     String access_token=response.body().getAccessToken();
+                    Long userId=response.body().getUser().getId();
+
+                    TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID,userId.toString());
                     TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN,access_token);
                     CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                     startActivity(new Intent(LogInActivity.this, MainActivity.class));
