@@ -35,6 +35,7 @@
         <thead>
             <tr>
                 <th>No</th>
+                <th>Email</th>
                 <th>Occurences</th>
                 <th>Bug severity</th>
                 <th>Platform</th>
@@ -77,6 +78,7 @@ $(function() {
         ajax: "{{ url('admin/bugreport/data') }}",
         columns: [
             { data: 'DT_RowIndex', name: 'id'},
+            {data: 'email', name: 'email'},
             {data: 'occurences', name: 'occurences'},
             {data: 'bug_severity', name: 'bug_severity'},
             {data: 'platform', name: 'platform'},
