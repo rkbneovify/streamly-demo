@@ -185,7 +185,7 @@
 									<a href="{{url('livetv/'.$channeldet->name.'/'.$genr)}}">
 									@endif
 									<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
-					<p>{{  $channeldet->name??'no name'}}</p></a>
+					<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

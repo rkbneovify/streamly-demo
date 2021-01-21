@@ -182,7 +182,7 @@
 					
 
 					<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
-					<p>{{  $channeldet->callSign}}</p></a>
+					<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

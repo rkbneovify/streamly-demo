@@ -21,7 +21,7 @@ class LiveTv extends Controller
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id', 'channels.callSign', 'channels.name','channels.image', 'channels.url')
+        $record = Channel::select('channels.id', 'channels.callSign', 'channels.name','channels.stationName','channels.image', 'channels.url')
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
         
@@ -201,7 +201,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
           }
     }
     public function showChannelFunc($type){
-       $record= Channel::select('channels.id', 'channels.name','channels.callSign','channels.image', "channels.$type as url")
+       $record= Channel::select('channels.id', 'channels.name', 'channels.stationName','channels.callSign','channels.image', "channels.$type as url")
         
        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
        
@@ -227,7 +227,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id','channels.name', 'channels.callSign','channels.image', 'channels.url')
+        $record = Channel::select('channels.id','channels.name','channels.stationName', 'channels.callSign','channels.image', 'channels.url')
         
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
         
