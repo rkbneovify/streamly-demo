@@ -223,6 +223,14 @@ $.ajax({
 
 
 });
+
+var $tabs = $('.tabs .tab');
+
+$tabs.click(function(event) {
+  var selectedClass = 'is-tab-selected';
+  $tabs.removeClass(selectedClass);
+  $(event.target).addClass(selectedClass);
+});
 		});
 	</script>
 
@@ -672,12 +680,49 @@ height: 64px;
     height: 41px;
 
 }
+/* tab bar */
+.tabs {
+  /**
+   * Setting display to flex makes this container lay
+   * out its children using flexbox, the exact same
+   * as in the above "Stepper input" example.
+   */
+  display: flex;
+
+  border-bottom: 1px solid #D7DBDD;
+}
+
+  .tab {
+    cursor: pointer;
+    padding: 5px 30px;
+    
+    color:#FFFFFF;
+    font-size: 12px;
+    border-bottom: 2px solid transparent;
+    border: 2px solid #FF712F;
+  }
+
+  .tab.is-tab-selected {
+    background:#FF712F;
+    border-bottom-color: #4EBBE4;
+  }
 </style>
 <section class="page-section bg-light">
     <div class="container">
         <div class="text-center">
 
             <h2 class="section-heading">Available Channels</h2>
+            {{-- <div class="row"><div class="tabs">
+             <div class="tab is-tab-selected">Tab 1</div> 
+                <div class="tab"><a href="#Movies" data-toggle="collapse">Movies</a></div>
+                <div class="tab"><a href="#Others" data-toggle="collapse">Others</a></div>
+                <div class="tab"><a href="#News"  data-toggle="collapse">News</a></div>
+                <div class="tab"><a href="#Comedy"  data-toggle="collapse">Comedy</a></div>
+                <div class="tab"><a href="#Sports"  data-toggle="collapse">Sports</a></div>
+                <div class="tab"><a href="#Family"  data-toggle="collapse">Family</a></div>
+                <div class="tab"><a href="#Kids" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Kids</a></div>
+            
+              </div></div> --}}
             <div class="row">
                 <div class="col-centered" id="tab-buttons">
                     <a href="#Movies" class="btn btn-sm btn-default faq-btn" data-toggle="collapse">Movies</a>
@@ -699,7 +744,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center show" data-parent="#accordion">
         <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
+            <img  class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
     @else
@@ -707,7 +752,7 @@ height: 64px;
     <div id="{{$key}}" class="col-sm-12 collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
+            <img class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
     </div>
 @endif
@@ -719,23 +764,52 @@ height: 64px;
 .item1{
     height: 80px;
     width: 80px;
+    
+    /* background-color:#fff; */
+}
+
+.grid-container > div {
+  display: flex;
+  /* justify-content: center;
+  align-items: center; */
+  font-size: 2em;
+  /* color: #20263f; */
+  border-radius: 15px;
+      background-color: rgba(255, 255, 255, 0.8);
+      text-align: center;
+      padding: 10px 0;
+}
+.grid-container > div.item1 > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
     .grid-container {
-      display: grid;
+      /* display: grid;
       grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto ;
       grid-gap: 5px;
-      /* background-color: #2196F3; */
-      padding: 10px;
+      background-color: #2196F3;
+      padding: 10px; */
+
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  grid-auto-rows: 50px;
+  justify-items: center;
+  
+  justify-content: space-evenly;
+  padding: 10px;
     }
     
-    .grid-container > div {
+    
+    /* .grid-container > div {
         border-radius: 15px;
       background-color: rgba(255, 255, 255, 0.8);
       text-align: center;
       padding: 10px 0;
       font-size: 15px;
       
-    }
+    } */
     </style>
     <!-- Portfolio Grid-->
     {{-- <section class="page-section bg-light" id="portfolio">
