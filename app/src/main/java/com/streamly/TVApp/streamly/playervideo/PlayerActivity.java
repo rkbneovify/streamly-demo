@@ -109,7 +109,9 @@ public class PlayerActivity extends FragmentActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         params = new Bundle();
         Log.e("frooom",getIntent().getStringExtra("from"));
-        params.putString("call_sign", "HallDRAMA_20012021_Android");
+        Log.e("frooom",getIntent().getStringExtra("channel_name"));
+        String channelName=getIntent().getStringExtra("channel_name");
+        params.putString("call_sign", channelName+"_Android");
         params.putString("inside_geofence", "false");
         params.putString("livestream_seconds_watched", "15");
         mFirebaseAnalytics.setUserId(userId);

@@ -74,7 +74,9 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
             val id: String,
             val description: String,
             val metadata: String,
-            val playUrl: String
+            val playUrl: String,
+            val channelId: String
+
     )
 
 
@@ -89,7 +91,8 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
         if (programGuideSchedule.isCurrentProgram) {
             Log.e(TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
                     + "\nid: " + programGuideSchedule.id
-                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle)
+                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+                    + "\nchannel_name : " + innerSchedule.channelId)
 
             /*for (i in 0 until channel_showName_list.size) {
                 for (j in 0 until channels.size) {
@@ -113,8 +116,16 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                 }
             }*/
 
+            /*val channel = programGuideSchedule?.program?.channelId?.let {
+                programGuideManager.getChannelIndex(it)?.let { channelIndex ->
+                    channels[programGuideManager.getChannelIndex(it)!!].name
+                }
+            }
+            Log.e(TAG, "current_channel:$channel")*/
+
             val intent1 = Intent(activity, PlayerActivity::class.java)
             intent1.putExtra("from", innerSchedule.playUrl)
+            intent1.putExtra("channel_name", innerSchedule.channelId)
 //            intent1.putExtra("callsign", channels[].name)
 //            intent1.putExtra("from", innerSchedule.)
             startActivity(intent1)
@@ -141,6 +152,15 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
         val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
+
+        /*val channel = programGuideSchedule?.program?.channelId?.let {
+            programGuideManager.getChannelIndex(it)?.let { channelIndex ->
+                programGuideManager.getChannel(channelIndex)
+            }
+        }*/
+
+
+
         if (programGuideSchedule != null) {
             Glide.with(imageView)
                     .load("https://picsum.photos/462/240?random=" + programGuideSchedule.displayTitle.hashCode())
@@ -152,6 +172,7 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
         } else {
             Glide.with(imageView).clear(imageView)
         }
+
 
     }
 
@@ -275,6 +296,7 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
 
                                 val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
 
+
                                 val schedule = createSchedule(
                                         channels.get(k),
                                         verticallist[k].allItemsInSection!![p].title!!,
@@ -284,14 +306,16 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         channels.get(k).videoUrl.toString(),
                                         verticallist[k].allItemsInSection!![p].description!!,
-                                        channel_showName_list.get(k).toLong()
+                                        channel_showName_list.get(k).toLong(),
+                                        channel.headerTitle
+
                                 )
                                 scheduleList.add(schedule)
                                 nextTime = endTime
 
 //                                }
 
-                                val endTimee =
+                                /*val endTimee =
                                         if (nextTime.isBefore(MAX_CHANNEL_END_TIME))
                                             randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
                                         else MAX_CHANNEL_END_TIME
@@ -305,8 +329,9 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         channels.get(k).videoUrl.toString(),
                                         verticallist[k].allItemsInSection!![p].description!!,
-                                        channel_showName_list.get(k).toLong()
-                                )
+                                        channel_showName_list.get(k).toLong(),
+                                        channel.getHeaderTitle()
+                                )*/
 
                                 channelMap.put(channels.get(k).id, scheduleList)
 
@@ -340,7 +365,7 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
 //            endTime: ZonedDateTime,
             playUrl: String,
             description: String,
-            id: Long
+            id: Long,channelId: String
     ): ProgramGuideSchedule<SimpleProgram> {
 //        val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
@@ -356,7 +381,8 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                         id.toString(),
                         description,
                         metadata+"",
-                        playUrl
+                        playUrl,
+                        channelId
                 )
         )
     }
