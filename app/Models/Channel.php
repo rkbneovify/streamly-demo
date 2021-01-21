@@ -30,7 +30,7 @@ class Channel extends Model
 'url','callSign',
 'dash_url',
 'smooth_url',
-'genre_id','status','genres','image'];
+'genre_id','status','genres','image','stationName'];
 protected $appends = ['logo'];
 
     /**
