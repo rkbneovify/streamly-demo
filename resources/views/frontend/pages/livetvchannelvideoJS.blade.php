@@ -322,7 +322,7 @@
 							@endif<div class="live-news-item">
 
 						<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
-						<p>{{  $channeldet->name??'no name'}}</p>
+						<p>{{  $channeldet->stationName??$channeldet->name}}</p>
 					</div> </a>
 					@endforeach
 					</div>

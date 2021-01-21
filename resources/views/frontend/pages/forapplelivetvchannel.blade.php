@@ -491,7 +491,7 @@ width: 100px;
 							@endif<div class="live-news-item">
 								<div class="channelogosame"><img style='height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 						
-						<p>{{  $channeldet->name??'no name'}}</p>
+								<p>{{  $channeldet->stationName??$channeldet->name}}</p>
 					</div> </a>
 					@endforeach
 					</div>
