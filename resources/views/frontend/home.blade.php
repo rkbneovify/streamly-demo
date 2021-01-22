@@ -352,125 +352,90 @@ $tabs.click(function(event) {
 		max-width: 856px;
 	}
 	
-	.css-5nata0 .upper-section .content .apps,
-	[data-css-5nata0] .upper-section .content .apps {
-        margin: 20px 0;
-        width: 296px;
-height: 64px;
-  background: linear-gradient(to right, #F7B292 50%, #FF712F 50%);
-  background-size: 200% 100%;
-  background-position: right bottom;
-  transition: all .5s ease-out;
-  color: #202020;
-  padding: 1rem 2rem !important;
-		/* background-color: transparent; */
-		
-		align-self: flex-start;
-		-webkit-align-self: flex-start;
-	}
-	
-	.css-5nata0 .upper-section .devices-preview,
-	[data-css-5nata0] .upper-section .devices-preview {
-		position: relative;
-		right: -35%;
-		width: 100%;
-		max-width: 1200px;
-	}
-	
-	.css-5nata0 .upper-section .devices-preview img,
-	[data-css-5nata0] .upper-section .devices-preview img {
-		width: 100%;
-	}
-	
-	.css-5nata0 .support-platforms img,
-	[data-css-5nata0] .support-platforms img {
-		width: 100%;
-		height: auto;
-		padding: 0 36px;
-	}
-	
-	@media(max-width: 1100px) {
-		.css-5nata0,
-		[data-css-5nata0] {
-			padding: 100px 0;
-		}
-		.css-5nata0 .upper-section .content,
-		[data-css-5nata0] .upper-section .content {
-			position: unset;
-			margin-bottom: 60px;
-			display: -webkit-box;
-			display: -moz-box;
-			display: -ms-flexbox;
-			display: -webkit-flex;
-			display: flex;
-			align-items: center;
-			text-align: center;
-			-webkit-box-align: center;
-			-webkit-align-items: center;
-		}
-		.css-5nata0 .upper-section .content .title br,
-		[data-css-5nata0] .upper-section .content .title br {
-			display: none;
-		}
-		.css-5nata0 .upper-section .content .apps,
-		[data-css-5nata0] .upper-section .content .apps {
-			align-self: center;
-			-webkit-align-self: center;
-		}
-		.css-5nata0 .upper-section .devices-preview,
-		[data-css-5nata0] .upper-section .devices-preview {
-			right: 0;
-		}
-	}
-	
-	@media(max-width: 768px) {
-		.css-5nata0 .upper-section .content .title,
-		[data-css-5nata0] .upper-section .content .title {
-			font-size: 32px;
-			letter-spacing: 0.34px;
-		}
-		.css-5nata0 .upper-section .content .sub-title,
-		[data-css-5nata0] .upper-section .content .sub-title {
-			font-size: 16px;
-			letter-spacing: 0.17px;
-		}
-		.css-5nata0 .upper-section .content .apps,
-		[data-css-5nata0] .upper-section .content .apps {
-			align-self: center;
-			-webkit-align-self: center;
-		}
-	}
-	
-	@media(max-width: 425px) {
-		.css-5nata0 .support-platforms img,
-		[data-css-5nata0] .support-platforms img {
-			padding: 0 10px;
-		}
-	}
-    .css-5nata0 .upper-section .content,
-	[data-css-5nata0] .upper-section .content {
-		position: absolute;
-		left: 100px;
-	}
-    .css-fxmkwd .content,
-	[data-css-fxmkwd] .content {
-		display: -webkit-box;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: -webkit-flex;
-		display: flex;
-		flex-grow: 1;
-		flex-direction: column;
-		-webkit-flex-grow: 1;
-		-webkit-box-orient: vertical;
-		-webkit-box-direction: normal;
-		-webkit-flex-direction: column;
-	}
-    .css-5nata0 .upper-section .content, [data-css-5nata0] .upper-section .content {
-    position: absolute;
-    left: 100px;
-    /* color: #fff; */
-}
+    .css-5nata0 .upper-section .content .apps,[data-css-5nata0] .upper-section .content .apps {
+                margin: 26px 0 20px;
+                padding: 8px 30px;
+                font-size: 16px;
+                line-height: 21px;
+                background-color: transparent;
+                border: 2px solid #FFFFFF;
+                border-radius: 20px;
+                align-self: flex-start;
+                -webkit-align-self: flex-start;
+            }
+
+            .css-5nata0 .upper-section .devices-preview,[data-css-5nata0] .upper-section .devices-preview {
+                position: relative;
+                right: -35%;
+                width: 100%;
+                max-width: 1200px;
+            }
+
+            .css-5nata0 .upper-section .devices-preview img,[data-css-5nata0] .upper-section .devices-preview img {
+                width: 100%;
+            }
+
+            .css-5nata0 .support-platforms img,[data-css-5nata0] .support-platforms img {
+                width: 100%;
+                height: auto;
+                padding: 0 36px;
+            }
+
+            @media(max-width: 1100px) {
+                .css-5nata0,[data-css-5nata0] {
+                    padding:100px 0;
+                }
+
+                .css-5nata0 .upper-section .content,[data-css-5nata0] .upper-section .content {
+                    position: unset;
+                    margin-bottom: 60px;
+                    display: -webkit-box;
+                    display: -moz-box;
+                    display: -ms-flexbox;
+                    display: -webkit-flex;
+                    display: flex;
+                    align-items: center;
+                    text-align: center;
+                    -webkit-box-align: center;
+                    -webkit-align-items: center;
+                }
+
+                .css-5nata0 .upper-section .content .title br,[data-css-5nata0] .upper-section .content .title br {
+                    display: none;
+                }
+
+                .css-5nata0 .upper-section .content .apps,[data-css-5nata0] .upper-section .content .apps {
+                    align-self: center;
+                    -webkit-align-self: center;
+                }
+
+                .css-5nata0 .upper-section .devices-preview,[data-css-5nata0] .upper-section .devices-preview {
+                    right: 0;
+                }
+            }
+
+            @media(max-width: 768px) {
+                .css-5nata0 .upper-section .content .title,[data-css-5nata0] .upper-section .content .title {
+                    font-size:32px;
+                    letter-spacing: 0.34px;
+                }
+
+                .css-5nata0 .upper-section .content .sub-title,[data-css-5nata0] .upper-section .content .sub-title {
+                    font-size: 16px;
+                    letter-spacing: 0.17px;
+                }
+
+                .css-5nata0 .upper-section .content .apps,[data-css-5nata0] .upper-section .content .apps {
+                    align-self: center;
+                    -webkit-align-self: center;
+                }
+            }
+
+            @media(max-width: 425px) {
+                .css-5nata0 .support-platforms img,[data-css-5nata0] .support-platforms img {
+                    padding:0 10px;
+                }
+            }
 
 /* for genre channel */
 
@@ -510,7 +475,9 @@ height: 64px;
 	<header class="masthead">
 	    <div class="container">
             <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
-	        <div class="masthead-heading"><img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" /></div>
+	        <div class="masthead-heading">
+                <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
+                </div>
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
@@ -842,13 +809,8 @@ height: 64px;
             </div>
         </div>
     </section>  --}}
-     <section class="page-section " id="portfolio">
-        {{-- <div class="container">
-            <div class="text-center">
-                <h2 class="section-heading">Download Our App</h2>
-            </div>
-            
-        </div> --}}
+      <section class="page-section " id="portfolio">
+        
 
     <div class="css-thjkr7">
         <div class="css-5nata0">
@@ -860,7 +822,9 @@ height: 64px;
                         <br> Watch what you want, when you want.</div>
                     <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
                 </div>
-                <div class="devices-preview"><img class="lazy" data-src="{{url('../frontend/img/devices3.png')}}" 
+                {{-- <div class="content"><div class="title">Watch on all <br> your devices.</div><div class="sub-title">Download the free fuboTV apps for all your devices. <br> Watch what you want, when you want.</div>
+                <div role="button" aria-label="" class="apps css-q9bl1b"><a href="/welcome/apps">See all apps and devices</a></div></div> --}}
+                <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}" 
   
 alt="image of tv guide"
 ></div>
@@ -869,25 +833,25 @@ alt="image of tv guide"
 
         <div class="flex-container space-evenly">
             
-            <svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg>
+            <div><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+            <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+            </svg></div>
               
-              <svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg>
-              <svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg>
-              <svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg>
-              <svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg>
-              <svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
-                <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg> </div>
+              <div><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div> </div>
     </div>
     </section>
 <style>
@@ -898,6 +862,20 @@ alt="image of tv guide"
   margin: 0;
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
+}
+
+/* Responsive layout - makes a one column-layout instead of two-column layout */
+@media (max-width: 800px) {
+    
+  .flex-container>div {
+    text-align: center ;
+    flex: 0 50%;
+  }
+  .flex-container>div:not(:nth-last-child(-n+2))  {
+    /* background-color: red; */
+    padding-bottom: 5%;
+}
 }
 
 .space-evenly { 
@@ -1025,7 +1003,7 @@ background-position: center;
     }
     #appletv{
 
-      background-image: url("../frontend/img/newicon/appletv.png");
+        background-image: url("../frontend/img/newicon/appletv.png");
 
 /*background-size: cover;*/
 background-size: 60px;
@@ -1034,7 +1012,7 @@ background-position: center;
     }
     #iostv{
 
-      background-image: url("../frontend/img/newicon/ios.png");
+      background-image: url("../frontend/images/s/phones-and-tablets/apple_logo_360.png");
 
 /*background-size: cover;*/
 background-size: 50px;
