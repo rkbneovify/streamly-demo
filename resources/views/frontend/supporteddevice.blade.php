@@ -832,7 +832,7 @@ html.compatible-devices .vibrant-divider {
                 <a href="https://www.microsoft.com/en-us/mobile/phones/all/" style="background-image: url(../frontend/img/newicon/appletv.png)" title="Apple" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Apple</a>
                 
                 <a href="https://www.samsung.com/" style="background-image: url(../frontend/img/newicon/smarttv.png)" title="Samsung" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Samsung Smart tv</a>
-        <div></div>
+        
 </div>
 	</div>
 </section>
@@ -859,11 +859,11 @@ html.compatible-devices .vibrant-divider {
 					</div>
 			</div>
 			
-			<div class="device-logos grid-4 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
+			<div class="device-logos grid-2 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
                             style="background-image: url(../frontend/images/s/phones-and-tablets/apple_logo_360.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Apple iOS</a> 
-                            <a></a>
+                            
                             {{-- <a href="https://www.microsoft.com/en-us/mobile/phones/all/" style="background-image: url(../frontend/images/s/phones-and-tablets/window.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a> --}}
-					<div></div>
+					
 			</div>
 	</div>
 </section>
