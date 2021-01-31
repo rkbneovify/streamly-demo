@@ -27,4 +27,9 @@ class DashboardController extends Controller
         $users = User::count();
         return view('admin.dashboard', ['users' => $users]);
     }
+    public function testing() {
+        $encoded_auth_xml = getKeyOSAuthToken();
+        return view('frontend.drm.playlist', compact('encoded_auth_xml'));
+    }
+
 }

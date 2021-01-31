@@ -21,229 +21,10 @@
 
 
 <script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
-
-  
-
-
-	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css"> -->
-
-	<link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
-	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
-	<script defer src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
-
-	<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script> -->
-	<script>
-
-$(function () {
-    $.FindContainer = function () {
-        $('.tab-content>div').each(function findcontent() {
-            var newindex = $('.activetab').index();
-            var newheight = $('.activetab').height();
-            $('.tab-content').animate({
-                'height': newheight+20
-            }, 100);
-            var otherindex = $(this).index();
-            var substractindex = otherindex - newindex;
-            var currentwidth = $('.multipletab').width();
-            var newpositions = substractindex * currentwidth;
-            $(this).animate({
-                'left': newpositions
-            });
-        });
-    };
-    $.FindId = function () {
-        $('.tab-content>div').each(function () {
-            if ($(this).attr('id') == $('.active').attr('id')) {
-                $('.tab-content>div').removeClass('activetab');
-                $(this).addClass('activetab');
-            }
-        });
-    };
-    $('.tab-buttons>span').first().addClass('active');
-    $('.tab-content>div').each(function () {
-        var activeid = $('.active').attr('id');
-        if ($(this).attr('id') == activeid) {
-            $(this).addClass('activetab');
-        }
-        var currentheight = $('.activetab').height();
-        var currentwidth = $('.multipletab').width();
-        var currentindex = $(this).index();
-        var currentposition = currentindex * currentwidth;
-        $(this).css({
-            'left': currentposition,
-                'width': currentwidth - 40,
-                'padding': '10px 20px'
-        });
-        $(this).attr('data-position', currentposition);
-        $('.tab-content').css('height', currentheight+20);
-    });
-    $('.tab-buttons>span').click(function () {
-
-        $('.tab-buttons>span').removeClass('active');
-        $(this).addClass('active');
-        var currentid = $('.active').attr('id');
-        $.FindId();
-        $.FindContainer();
-    });
-    $('.next').click(function () {
-        var activetabindex = $('.activetab').index() + 1;
-        var containers = $('.tab-content>div').length;
-        if (containers == activetabindex) {
-            $('.tab-buttons>span').removeClass('active');
-            $('.tab-buttons>span').first().addClass('active');
-            var currentid = $('.active').attr('id');
-            $.FindId();
-            $.FindContainer();
-        } else {
-            var currentopen = $('.active').next();
-            $('.active').removeClass('active');
-            currentopen.addClass('active');
-            $.FindId();
-            $.FindContainer();
-        }
-    });
-  $('.prev').click(function(){
-    var activetabindex = $('.activetab').index();
-        if (activetabindex == 0) {
-            $('.tab-buttons>span').removeClass('active');
-            $('.tab-buttons>span').last().addClass('active');
-            var currentid = $('.active').attr('id');
-            $.FindId();
-            $.FindContainer();
-        } else {
-            var currentopen = $('.active').prev();
-            $('.active').removeClass('active');
-            currentopen.addClass('active');
-            $.FindId();
-            $.FindContainer();
-        }
-  });
-});
-		/*$('.live-news-carousel').owlCarousel({
-		    center: true,
-		    items:6,
-		    loop:true,
-		    margin:10,
-		    nav: true,
-		    responsive:{
-		        600:{
-		            items:4
-		        }
-		    }
-
-		});*/
-		$(document).ready(function() {
-     
-		var owl = $('.owl-carousel');
-		$.ajaxSetup({
-
-headers: {
-
-		'X-CSRF-TOKEN': $("input[name=_token]").val()
-
-}
-
-});
-			owl.owlCarousel({
-				slideBy: 6,
-				loop:true,
-			    margin:20,
-			    nav: true,
-			    responsiveClass:true,
-			    responsive:{
-			        0:{
-			            items:1,
-			            nav:true
-			        },
-			        600:{
-			            items:3,
-			            nav:false
-			        },
-			        1000:{
-			            items:6,
-			            nav:true,
-			            loop:false
-			        }
-			    }
-			});
-		
-		$(document).on('click','.btn-submit',function(e){
-
-
-e.preventDefault();
-let channelid = $(this).data('id');
-
-
-$.ajax({
-
-	 type:'POST',
-
-	 url:"{{ url('favorite') }}",
-
-	 data:{channelid:channelid,
-	 },
-
-	 success:function(data){
-	$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
-
-	 }
-
-});
-
-
-
-});	
-$(document).on('click','.btn-remove',function(e){
-	
-
-
-
-e.preventDefault();
-let channelid = $(this).data('id');
-
-$.ajax({
-
-	 type:'POST',
-
-	 url:"{{ url('unfavorite') }}",
-
-	 data:{channelid:channelid,
-	 },
-
-	 success:function(data){
-
-	$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
-
-	 }
-
-});
-
-
-
-});
-
-var $tabs = $('.tabs .tab');
-
-$tabs.click(function(event) {
-  var selectedClass = 'is-tab-selected';
-  $tabs.removeClass(selectedClass);
-  $(event.target).addClass(selectedClass);
-});
-		});
-	</script>
-
-
 @endsection
 @section('stylesheets')
     <style>
-               /* .grow { transition: width 2s;} */
-.grow:hover {     
-    /* width: 300px; */
-     /* background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box; */
-     
-}
+ 
 
         .alert.alert-position {
             position: absolute;
@@ -443,23 +224,6 @@ $tabs.click(function(event) {
 	
     </style>
 @endsection
-@section('stylesheets-bottom')
-
-{{-- <script>
-    jQuery(document).ready(function(){
-        
-
-        jQuery('.forgot-password').on('click', function(){
-            jQuery('#resetPassword').modal('show');
-        });
-    });
-</script> --}}
-{{-- <script type="text/javascript">
-    @if ($errors->has('forgotpassword-email'))
-    jQuery('#resetPassword').modal('show');
-    @endif
-    </script> --}}
-@endsection
 @section('content')
     {{-- {{$errors}} --}}
     {{-- @if($errors->any())
@@ -481,7 +245,7 @@ $tabs.click(function(event) {
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
-	        <a class="btn btn-primary btn-xl js-scroll-trigger grow" href="#services">START TODAY</a>
+	        <a class="btn btn-primary btn-xl js-scroll-trigger " href="#services">START TODAY</a>
 	    </div>
 	</header>
 
@@ -647,49 +411,14 @@ $tabs.click(function(event) {
     height: 41px;
 
 }
-/* tab bar */
-.tabs {
-  /**
-   * Setting display to flex makes this container lay
-   * out its children using flexbox, the exact same
-   * as in the above "Stepper input" example.
-   */
-  display: flex;
 
-  border-bottom: 1px solid #D7DBDD;
-}
-
-  .tab {
-    cursor: pointer;
-    padding: 5px 30px;
-    
-    color:#FFFFFF;
-    font-size: 12px;
-    border-bottom: 2px solid transparent;
-    border: 2px solid #FF712F;
-  }
-
-  .tab.is-tab-selected {
-    background:#FF712F;
-    border-bottom-color: #4EBBE4;
-  }
 </style>
 <section class="page-section bg-light">
     <div class="container">
         <div class="text-center">
 
             <h2 class="section-heading">Available Channels</h2>
-            {{-- <div class="row"><div class="tabs">
-             <div class="tab is-tab-selected">Tab 1</div> 
-                <div class="tab"><a href="#Movies" data-toggle="collapse">Movies</a></div>
-                <div class="tab"><a href="#Others" data-toggle="collapse">Others</a></div>
-                <div class="tab"><a href="#News"  data-toggle="collapse">News</a></div>
-                <div class="tab"><a href="#Comedy"  data-toggle="collapse">Comedy</a></div>
-                <div class="tab"><a href="#Sports"  data-toggle="collapse">Sports</a></div>
-                <div class="tab"><a href="#Family"  data-toggle="collapse">Family</a></div>
-                <div class="tab"><a href="#Kids" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Kids</a></div>
-            
-              </div></div> --}}
+           
             <div class="row">
                 <div class="col-centered" id="tab-buttons">
                     <a href="#Movies" class="btn btn-sm btn-default faq-btn" data-toggle="collapse">Movies</a>
@@ -752,11 +481,6 @@ $tabs.click(function(event) {
   object-fit: contain;
 }
     .grid-container {
-      /* display: grid;
-      grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto ;
-      grid-gap: 5px;
-      background-color: #2196F3;
-      padding: 10px; */
 
   display: grid;
   grid-gap: 40px;
@@ -769,46 +493,7 @@ $tabs.click(function(event) {
     }
     
     
-    /* .grid-container > div {
-        border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.8);
-      text-align: center;
-      padding: 10px 0;
-      font-size: 15px;
-      
-    } */
     </style>
-    <!-- Portfolio Grid-->
-    {{-- <section class="page-section bg-light" id="portfolio">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-heading">Download Our App</h2>
-            </div>
-            <div class="row h-100 w-100">
-                <div class="col-sm-5 align-self-center">
-                	<h3>Now Watch Live TV any time Anywhere at your ease</h3>
-                	<p>We are available on:</p>
-                	<div class="row tv-logos">
-                		<div class="col-sm-3">
-                			<img class="img-fluid" src="{{ asset('frontend/img/apple-tv.png') }}">
-                		</div>
-                		<div class="col-sm-3">
-                			<img class="img-fluid" src="{{ asset('frontend/img/fire-tv.png') }}">
-                		</div>
-                		<div class="col-sm-3">
-                			<img class="img-fluid" src="{{ asset('frontend/img/android-tv.png') }}">
-                		</div>
-                		<div class="col-sm-3">
-                			<img class="img-fluid" src="{{ asset('frontend/img/roku-tv.png') }}">
-                		</div>
-                	</div>
-                </div>
-                <div class="col-sm-7">
-                	<img class="img-fluid" src="{{ asset('frontend/img/ce_mobile.png') }}">
-                </div>
-            </div>
-        </div>
-    </section>  --}}
       <section class="page-section " id="portfolio">
         
 
