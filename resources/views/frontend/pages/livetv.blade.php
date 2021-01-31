@@ -8,15 +8,11 @@
 
 		
 	</style>
-	<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css">
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.2/owl.theme.min.css"> -->
 
 	<link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
 	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 	<script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
 
-	<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"></script> -->
 	<script>
 		/*$('.live-news-carousel').owlCarousel({
 		    center: true,
