@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	@yield('top-stylesheets')
+	
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
 	<link rel="icon" type="image/png" href="{{ asset('frontend/img/favicon/streamy_favicon_16.png') }}"/>
 	
 	<!-- Bootstrap style -->
-
+	@yield('top-stylesheets')
 	<link rel="stylesheet" href="{{ asset('frontend/bootstrap.min.css') }}" />
 
 	<!-- Bootstrap script -->
