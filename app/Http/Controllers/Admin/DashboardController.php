@@ -28,8 +28,12 @@ class DashboardController extends Controller
         return view('admin.dashboard', ['users' => $users]);
     }
     public function testing() {
+        $channels = Channel::select('url','name',DB::raw('IFNULL(stationName,name) stationName'))
+        ->where('status','=','1')
+        ->orderBy('name', 'asc')
+        ->get();
         $encoded_auth_xml = getKeyOSAuthToken();
-        return view('frontend.drm.playlist', compact('encoded_auth_xml'));
+        return view('frontend.drm.playlist', compact('encoded_auth_xml','channels'));
     }
 
 }

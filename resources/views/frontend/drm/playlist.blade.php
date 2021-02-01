@@ -47,6 +47,7 @@
 
 <script>
 	$('document').ready(function(){
+		
 		var types = {mp4:'video/mp4',webm:'video/webm', m3u: 'application/x-mpegURL'};
 		var videoList = [{
   sources: [{
@@ -128,7 +129,7 @@
                  var currentplaylist= myPlayer.playlist();
                  let position=myPlayer.playlist.currentItem();
                  let lenh=videoList.length + 1;
-                 console.log('len',lenh);
+                //  console.log('len',lenh);
                    var new_url = $("#myInput").val();
                   videoList.push( {
   sources: [{
@@ -139,10 +140,30 @@
 });
 
 myPlayer.playlist(videoList,position);
- console.table(videoList);
+//  console.table(videoList);
  var updatedplaylist= myPlayer.playlist();
-                  console.log('updatedplaylist',updatedplaylist);
+                  // console.log('updatedplaylist',updatedplaylist);
 								});
+								$("#clearPlaylist").on('click', function () {
+									
+									myPlayer.playlist([]);
+								});
+								$("#pushasplaylist").on('click', function () {
+									var favorite = [];
+            $.each($("input[name='CheckBoxInputName']:checked"), function(){
+                // favorite.push($(this).val()+ $(this).data('name'));
+								favorite.push( {
+  sources: [{
+    src: $(this).val(),
+    type: 'application/x-mpegURL'
+  }],
+  poster: 'http://media.w3.org/2010/05/bunny/poster.png',name : $(this).data('name'),
+});
+            });
+						// console.log('playlist',favorite);
+						myPlayer.playlist(favorite)
+            // alert("My favourite sports are: " + favorite.join(", "));	
+						});
 								
 						
 								var button = videojs.getComponent('Button')
@@ -200,6 +221,41 @@ myPlayer.playlist(videoList,position);
 
           myPlayer.getChild('controlBar').addChild('NextButton', {}, 2)		
 					});
+
+					
+
+						
+						$('#filter').keyup(debounce(function(){
+        
+				var filterinput = $(this).val();
+				var exp = new RegExp(filterinput, 'i');
+						$(".list-group span label").each(function() {
+      var $self = $(this);
+      if(!exp.test($self.text())) {
+        $self.parent().hide();
+      } else {
+        $self.parent().show();
+      }
+    });
+       
+    },500));
+			//http://davidwalsh.name/javascript-debounce-function
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
+				
+
 	});
 		
 	</script>
@@ -303,6 +359,33 @@ myPlayer.playlist(videoList,position);
         height: 240px;
         
       }
+			.list-group-item {
+  user-select: none;
+}
+
+.list-group input[type="checkbox"] {
+  display: none;
+}
+
+.list-group input[type="checkbox"] + .list-group-item {
+  cursor: pointer;
+}
+
+.list-group input[type="checkbox"] + .list-group-item:before {
+  content: "\2713";
+  color: transparent;
+  font-weight: bold;
+  margin-right: 1em;
+}
+
+.list-group input[type="checkbox"]:checked + .list-group-item {
+  background-color: #0275D8;
+  color: #FFF;
+}
+
+.list-group input[type="checkbox"]:checked + .list-group-item:before {
+  color: inherit;
+}
 
 /* 
 		.channel-detail {
@@ -358,6 +441,7 @@ myPlayer.playlist(videoList,position);
 					</div>
 					
 				</div>
+				
 				<!-- <div class="row">
 					
 					<div class="offset-md-3 col-xs-6 video-container">
@@ -383,8 +467,6 @@ myPlayer.playlist(videoList,position);
 
 	
         
-		<input type="text" placeholder="paste your link here" id="myInput" size="50">
-		<button id="add">Add video(m3u8 url only)</button>
 
 {{-- <div> example:
 	<p>https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd</p>
@@ -394,6 +476,45 @@ myPlayer.playlist(videoList,position);
 	"https://d2rghg6apqy7xc.cloudfront.net/dvp/test_dash/005/unencrypted/montereypop_16_min_2265099.mpd
 </div> --}}
 		</div>
-	</section>
+		<br />
+		<br />
+
+<div class="container">
+	<button id="clearPlaylist">Clear playlist</button>
+	<br />
+	<br />
+	<input type="text" placeholder="paste your indiviual link here" class="form-control" id="myInput" size="50">
+	<button id="add">Add video(m3u8 url only) in playlist</button>
+	<br />
+	<br />
+	<input type="text" placeholder="Search the channels" id="filter" class="form-control colsearch">
+			<p> Tap on channel names to select and push the channels to playlist </p>
+
+	<button id="pushasplaylist">Push as playlist</button>
+	@foreach ($channels->chunk(4) as $chunk)
+	<div class="row">
+			@foreach ($chunk as $channel)
+					<div class="col-md-3">
+						<div class="list-group">
+				
+				
+							
+	<span>
+		<input type="checkbox" name="CheckBoxInputName" value="{{$channel->url}}" id="{{$channel->name}}" class="LocChk" data-name="{{$channel->name}}" data-logo="{{$channel->logo}}"/>
+		<label class="list-group-item" for="{{$channel->name}}"><sub>{{$channel->name}}</sub>&nbsp;{{$channel->stationName}}</label></span>						
+							
+						</div>
+					</div>
+			@endforeach
+	</div>
+@endforeach
 	
+	
+
+	
+	</div>
+	</section>
+	<section>
+	
+	</section> 
 @endsection
