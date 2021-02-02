@@ -303,13 +303,14 @@ public class PlayerActivity extends FragmentActivity {
 
 
         //todo HLs for the testing purpose
-//        HlsMediaSource mediaSource =new HlsMediaSource.Factory(dataSourceFactory)
-//                .createMediaSource(dashUri);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
                 Util.getUserAgent(this, "StreamlyTV"), null);
-        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
-                .setDrmSessionManager(drmSessionManager)
+        HlsMediaSource mediaSource =new HlsMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(dashUri);
+
+//        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+//                .setDrmSessionManager(drmSessionManager)
+//                .createMediaSource(dashUri);
 
 //        DashMediaSource mediaSource = new DashMediaSource(dashUri, dataSourceFactory,
 //                new DefaultDashChunkSource.Factory(dataSourceFactory),

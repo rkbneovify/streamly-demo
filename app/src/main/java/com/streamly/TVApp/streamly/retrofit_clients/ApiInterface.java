@@ -58,7 +58,7 @@ public interface ApiInterface {
     @GET("/api/auth/channellist")
     Call<ChannellistModel> getChannelList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
-    @Headers("Accept: application/json")
+    @Headers("User-Agent: iphone")
     @GET("/api/auth/channellist")
     Observable<ChannellistModel> getChannelList2(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
@@ -68,8 +68,7 @@ public interface ApiInterface {
     Call<ChannelScheduleModel> gotScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 */
 
-    @Headers("Accept: application/json")
-//    @GET("oldchanneldayschdeule")//api/auth/channeldayschdeule
+    @Headers("User-Agent: iphone")
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
