@@ -107,11 +107,12 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
 
 Route::post('generic', 'Admin\BuyDRMController@proxyServer');
 Route::get('/qrcode', 'APIController@qrcodeapi');
-
 Route::post('/ga2', 'GoogleAnalyticsController@index3');
+
 Route::get('/vuechannellist', 'EpgController@channellist');
-Route::get('/vueprogramlist', 'EpgController@programelist');
 Route::get('/vueprogramlistwithid', 'EpgController@programelistwithid');
+Route::get('/vueprogramlist', 'EpgController@programelist');
+Route::get('/vuesinglechanneldetails', 'EpgController@singlechanneldetails');
 
 // Route::fallback(function(){
 //     return response()->json([
