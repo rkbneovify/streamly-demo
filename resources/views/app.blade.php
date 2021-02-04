@@ -46,7 +46,9 @@
             {{-- {{ Auth::user()->name }}
           <p>{{$login}} </p>   --}}
             <div class="container">
-                <div id="dutylist"></div>
+                <div id="app">
+                    <example-component></example-component>
+                </div>
 
                 
                     
