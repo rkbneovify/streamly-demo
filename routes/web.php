@@ -199,6 +199,7 @@ Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
+Route::get('/vue', 'EpgController@staticepg');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
