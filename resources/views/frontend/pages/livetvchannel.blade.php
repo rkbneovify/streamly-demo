@@ -301,6 +301,9 @@ fetch(url, requestOptions)
 				// player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
         //     console.log("PLAYBACK_PROGRESS");
 				// 		// PLAYBACK_TIME_UPDATED
+				// gtag('event', 'player_error', {'error_code': 15,'error_msg': 'errrootmsg',
+				// 'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+
             
         // });	
 		/*	player.on(dashjs.MediaPlayer.events["PLAYBACK_TIME_UPDATED"], function (e) {
