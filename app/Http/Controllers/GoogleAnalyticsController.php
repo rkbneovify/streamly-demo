@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use JWTAuth;
 use GuzzleHttp\Client as GuzzleClient;
+use Validator;
 class GoogleAnalyticsController extends Controller
 {
     public function index(Request $request){
@@ -71,6 +72,22 @@ echo $response;
         $screenResolution = $request->input('sr');
         $callSign=$request->input('callsign');
         $boolean=$request->input('inside_geofence');
+        $query = $request->all();
+        $validator = Validator::make($query, [
+            'callsign' => 'required',
+            'inside_geofence' => 'required',
+            'sr' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'data' => 'Validation Error.',
+                'message' => $validator->errors(),
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }
         $now = now();
         $now->timestamp;
         $cid = JWTAuth::user()->id.$now->timestamp;
@@ -106,6 +123,23 @@ public function duration(Request $request){
         $screenResolution = $request->input('sr');
         $callSign=$request->input('callsign');
         $boolean=$request->input('inside_geofence');
+        $query = $request->all();
+        $validator = Validator::make($query, [
+            
+            'callsign' => 'required',
+            'inside_geofence' => 'required',
+            'sr' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'data' => 'Validation Error.',
+                'message' => $validator->errors(),
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }
         $now = now();
         $now->timestamp;
         $cid = JWTAuth::user()->id.$now->timestamp;
@@ -147,6 +181,24 @@ public function playererror(Request $request){
         $cid = JWTAuth::user()->id.$now->timestamp;
         
         $uId=JWTAuth::user()->id;
+        $query = $request->all();
+        $validator = Validator::make($query, [
+            'errmsg' => 'required',
+            'errcode' => 'required',
+            'callsign' => 'required',
+            'inside_geofence' => 'required',
+            'sr' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'data' => 'Validation Error.',
+                'message' => $validator->errors(),
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }
 
 $headers = [
 
