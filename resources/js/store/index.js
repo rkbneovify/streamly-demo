@@ -17,7 +17,7 @@ export default {
 	actions: {
        allCategoryFromDatabase(context){
 
-          axios.get("https://jsonplaceholder.typicode.com/posts")
+          axios.get("/api/category")
 
                .then((response)=>{
                   console.log(response.data)

@@ -1,6 +1,6 @@
 <template>
   <div>
-      Home
+      Home yo
     <ul v-if="posts && posts.length">
       <li v-for="post of posts" v-bind:key="post.id">
         <p><strong>{{post.title}}</strong></p>
