@@ -8,6 +8,10 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+
+import Vuex from 'vuex'
+Vue.use(Vuex)
+import storeData from "./store/index"
 import router from "./router";
 import App from "./components/App";
 /**
@@ -20,7 +24,9 @@ import App from "./components/App";
 
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-
+const store = new Vuex.Store(
+    storeData
+ )
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
@@ -31,7 +37,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
-    router,               // <-- register router with Vue
+    router, 
+    store,               // <-- register router with Vue
     render: (h) => h(App) // <-- render App component
 
 });
