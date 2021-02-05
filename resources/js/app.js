@@ -11,9 +11,15 @@ window.Vue = require('vue');
 
 import Vuex from 'vuex'
 Vue.use(Vuex)
-import storeData from "./store/index"
+import store from "./store/index"
 import router from "./router/index";
-import App from "./components/App";
+import App from "./App";
+
+import VueRx from 'vue-rx'
+import { Observable } from 'rxjs/Observable'
+import { Subscription } from 'rxjs/Subscription' // Disposable if using RxJS4
+import { Subject } from 'rxjs/Subject' // required for domStreams option
+import Rx from 'rxjs/Rx'
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -24,9 +30,12 @@ import App from "./components/App";
 
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
-const store = new Vuex.Store(
-    storeData
- )
+Vue.use(VueRx, {
+    Rx,
+    Observable,
+    Subscription,
+    Subject
+  })
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 /**
