@@ -1,41 +1,33 @@
-export default {
+/*eslint-disable*/
+import Vue from 'vue'
+import Vuex from 'vuex'
+import VuexPersist from 'vuex-persist'
 
-	state: {
+import channelList from './channelList'
+import channel from './channel'
+import favourite from './favourite'
 
-       category: []
+Vue.use(Vuex)
 
-	},
+const vuexLocalStorage = new VuexPersist({
+  key: 'STREAMLY_STORAGE', // The key to store the state on in the storage provider.
+  storage: window.localStorage, // or window.sessionStorage or localForage
+  // Function that passes the state and returns the state with only the objects you want to store.
+  reducer: state => ({
+    favourite: state.favourite
+    // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
+  })
+  // Function that passes a mutation and lets you decide if it should update the state in localStorage.
+  // filter: mutation => (true)
+})
+// const debug = process.env.NODE_ENV !== 'production'
 
-	getters: {
-
-       getCategoryFormGetters(state){ //take parameter state
-
-          return state.category
-       }
-	},
-
-	actions: {
-       allCategoryFromDatabase(context){
-
-          axios.get("/api/category")
-
-               .then((response)=>{
-                  console.log(response.data)
-                  context.commit("categories",response.data) //categories will be run from mutation
-
-               })
-
-               .catch(()=>{
-                  
-                  console.log("Error........")
-                  
-               })
-       }
-	},
-
-	mutations: {
-       categories(state,data) {
-          return state.category = data
-       }
-	}
-}
+export default new Vuex.Store({
+  modules: {
+    channel,
+    channelList,
+    favourite
+  },
+  strict: true,
+  plugins: [vuexLocalStorage.plugin]
+})

@@ -219,4 +219,8 @@ $channelExtRef2->address = "http://linear-poster.astro.com.my/prod/logo/Golden_H
         public function category(){
 return Genre::get();
         }
+
+        public function vuehtml(){
+            return view('vue');
+        }
 }
