@@ -45,7 +45,6 @@
         
             {{-- {{ Auth::user()->name }}
           <p>{{$login}} </p>   --}}
-            <div class="container">
                 <div id="app">
                     <example-component></example-component>
                 </div>
@@ -55,7 +54,6 @@
     
     
     
-            </div>
             
         
         </section>
