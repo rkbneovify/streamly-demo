@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Http\Request;
 use App\Models\Channel;
+use App\Models\Genre;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use Validator;
@@ -213,5 +214,9 @@ $channelExtRef2->address = "http://linear-poster.astro.com.my/prod/logo/Golden_H
 
             $obj = array($channelExtRef, $channelExtRef2);
             return $obj;
+        }
+
+        public function category(){
+return Genre::get();
         }
 }
