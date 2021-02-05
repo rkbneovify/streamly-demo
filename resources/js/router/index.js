@@ -1,23 +1,59 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+/* eslint-disable*/
+import Vue from 'vue'
+import Router from 'vue-router'
+import Loader from '../components/Loader'
+import ChannelList from '../components/ChannelList'
+import store from '../store/'
 
-import PageHome from "../pages/Home";
-import PageAbout from "../pages/About";
+Vue.use(Router)
 
-Vue.use(VueRouter);
+let router = new Router({
+//   mode: 'history',
+  routes: [{
+    path: '/channelList',
+    name: 'ChannelList',
+    component: ChannelList
+  }, {
+    path: '/',
+    name: 'Loader',
+    component: Loader
+  }]
+})
 
-const router = new VueRouter({
-    mode: "history",
-    routes: [
-        {
-            path: "/",
-            component: PageHome
-        },
-        {
-            path: "/about",
-            component: PageAbout
+router.beforeEach((to, from, next) => {
+  switch (to.name) {
+    case 'ChannelList':
+      {
+        if (store.getters.channelList.length < 1) {
+          router.push('/')
+        } else {
+          next()
         }
-    ]
-});
+        break;
+      }
+    default:
+      {
+        next()
+        break;
+      }
 
-export default router;
+  }
+
+})
+
+router.afterEach((to, from, next) => {
+
+  switch (to.name) {
+    case 'Loader':
+      {
+        store.dispatch('fetchChannelList')
+        break;
+      }
+    default:
+      {
+        break;
+      }
+  }
+})
+
+export default router
