@@ -114,6 +114,7 @@ Route::get('/vuechannellist', 'EpgController@channellist');
 Route::get('/vueprogramlistwithid', 'EpgController@programelistwithid');
 Route::get('/vueprogramlist', 'EpgController@programelist');
 Route::get('/vuesinglechanneldetails', 'EpgController@singlechanneldetails');
+Route::get('/category', 'EpgController@category');
 
 // Route::fallback(function(){
 //     return response()->json([

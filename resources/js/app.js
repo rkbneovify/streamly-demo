@@ -12,7 +12,7 @@ window.Vue = require('vue');
 import Vuex from 'vuex'
 Vue.use(Vuex)
 import storeData from "./store/index"
-import router from "./router";
+import router from "./router/index";
 import App from "./components/App";
 /**
  * The following block of code may be used to automatically register your

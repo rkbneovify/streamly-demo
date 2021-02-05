@@ -37770,7 +37770,7 @@ var render = function() {
   return _c("section", { staticClass: "content" }, [
     _c("div", { staticClass: "container-fluid" }, [
       _c("div", { staticClass: "form-group" }, [
-        _c("label", [_vm._v("Select")]),
+        _c("label", [_vm._v("Selectg")]),
         _vm._v(" "),
         _c(
           "select",
@@ -37784,7 +37784,7 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                         " +
-                      _vm._s(category.title) +
+                      _vm._s(category.name) +
                       "\n                    "
                   )
                 ]
@@ -37820,7 +37820,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._v("\n    Home\n  "),
+    _vm._v("\n    Home yo\n  "),
     _vm.posts && _vm.posts.length
       ? _c(
           "ul",
@@ -54444,7 +54444,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _store_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store/index */ "./resources/js/store/index.js");
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router */ "./resources/js/router.js");
+/* harmony import */ var _router_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./router/index */ "./resources/js/router/index.js");
 /* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/App */ "./resources/js/components/App.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -54479,7 +54479,7 @@ Vue.component('example-component', __webpack_require__(/*! ./components/ExampleC
 
 var app = new Vue({
   el: '#app',
-  router: _router__WEBPACK_IMPORTED_MODULE_2__["default"],
+  router: _router_index__WEBPACK_IMPORTED_MODULE_2__["default"],
   store: store,
   // <-- register router with Vue
   render: function render(h) {
@@ -54808,10 +54808,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/router.js":
-/*!********************************!*\
-  !*** ./resources/js/router.js ***!
-  \********************************/
+/***/ "./resources/js/router/index.js":
+/*!**************************************!*\
+  !*** ./resources/js/router/index.js ***!
+  \**************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -54820,8 +54820,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
-/* harmony import */ var _pages_Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages/Home */ "./resources/js/pages/Home.vue");
-/* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pages/About */ "./resources/js/pages/About.vue");
+/* harmony import */ var _pages_Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../pages/Home */ "./resources/js/pages/Home.vue");
+/* harmony import */ var _pages_About__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/About */ "./resources/js/pages/About.vue");
 
 
 
@@ -54862,7 +54862,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   actions: {
     allCategoryFromDatabase: function allCategoryFromDatabase(context) {
-      axios.get("https://jsonplaceholder.typicode.com/posts").then(function (response) {
+      axios.get("/api/category").then(function (response) {
         console.log(response.data);
         context.commit("categories", response.data); //categories will be run from mutation
       })["catch"](function () {
@@ -54897,8 +54897,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/kashyap/Desktop/Oodles Work/8 jun/4feb2021/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/kashyap/Desktop/Oodles Work/8 jun/4feb2021/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/kashyap/Desktop/self-learning/5feb2021/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/kashyap/Desktop/self-learning/5feb2021/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
