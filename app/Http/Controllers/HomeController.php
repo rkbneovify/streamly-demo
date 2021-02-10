@@ -18,6 +18,7 @@ use App\Models\Map;
 use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
+use App\Models\Gracenote;
 use ctwillie\Usps\Address;
 use App\Models\FrontendText;
 use App\Models\AddressesCheckAvailability;
@@ -28,6 +29,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
 use App\Http\Requests\ContactFormRequest;
 
+use App\Models\Genre;
 use Illuminate\Support\Facades\Cache;
 class HomeController extends Controller
 {
@@ -727,6 +729,28 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
         
 
         return view('frontend.search');
+    }
+
+    public function search2(Request $request)
+    {
+      $genre = Genre::get();
+      $channels = Channel::select('url','name',DB::raw('IFNULL(stationName,name) stationName'))
+      ->where('status','=','1')
+      ->orderBy('name', 'asc')
+      ->get();
+
+      $sortBy = 'id';
+    $orderBy = 'desc';
+    $perPage = 20;
+    $q = null;
+
+    if ($request->has('orderBy')) $orderBy = $request->query('orderBy');
+    if ($request->has('sortBy')) $sortBy = $request->query('sortBy');
+    if ($request->has('perPage')) $perPage = $request->query('perPage');
+    if ($request->has('q')) $q = $request->query('q');
+
+    $users = Gracenote::search($q)->orderBy($sortBy, $orderBy)->paginate($perPage);
+        return view('frontend.search2',compact('genre','channels','users', 'orderBy', 'sortBy', 'q', 'perPage'));
     }
     public function autocomplete(Request $request)
     { $user=Auth::user();

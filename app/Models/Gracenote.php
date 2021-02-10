@@ -65,4 +65,16 @@ public function gracenotechannel()
         return $this->belongsTo(Gracenotechannel::class,'CallSign');
     }
 
+
+    public function scopeSearch($query, $q)
+{
+    if ($q == null) return $query;
+    return $query
+            ->where('StationName', 'LIKE', "%{$q}%")
+            ->orWhere('email', 'LIKE', "%{$q}%")
+            ->orWhere('website', 'LIKE', "%{$q}%")
+            ->orWhere('twitter', 'LIKE', "%{$q}%")
+            ->orWhere('notes', 'LIKE', "%{$q}%");
+}
+
 }
