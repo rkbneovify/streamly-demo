@@ -79,7 +79,7 @@
 				highlight: true,
 				minLength: 2
 			}, {
-				name: 'bloodhound',
+				name: 'users',
 				source: bloodhound.ttAdapter(),
 				display: function(data) {
 					console.log('data',data);
