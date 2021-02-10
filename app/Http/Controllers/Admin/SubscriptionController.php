@@ -366,7 +366,7 @@ class SubscriptionController extends Controller
                 ])->get();
                 return response()->json(['message' => 'Zipcode not allowed or invalid','city'=>$data2->pluck('city')->first()??'Invalid City','state'=>$data2->pluck('state')->first()??'Invalid State'], 404);
             }
-            return response()->json(['message' => 'Zipcode allowed','city'=>$data->pluck('city')->first(),'state'=>$data->pluck('state')->first()], 200); 
+            return response()->json(['message' => 'Congratulations!  Your zipcode is in our service area.<br> Proceed to the next step to subscribe','city'=>$data->pluck('city')->first(),'state'=>$data->pluck('state')->first()], 200); 
 
         }
     }
