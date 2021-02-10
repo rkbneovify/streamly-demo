@@ -488,9 +488,11 @@ if($responseCaptcha->success == true){
     $html='<html>
         Hi, '.$request['name'].'<br><br>
 
-        Thank you for registering on '.env('APP_NAME').'.
-
-        Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
+        Thank you for registering for '.env('APP_NAME').'.<br><br>
+        Please click the following link to verify your account.
+        <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a><br><br>
+        Thank you!<br>
+        The '.env('APP_NAME').' Team!
     </html>';
 
     try{
@@ -524,7 +526,7 @@ if($responseCaptcha->success == true){
             // return "We've got errors!".json_encode($ex->getMessage(), true);
         }
 
-        return redirect('/')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
+        return redirect('/')->with('message', 'Thanks! We have sent you an email to verify your email address. Click  on the verification link in the email to activate your account. ');
 }else{
     // send back error message
     

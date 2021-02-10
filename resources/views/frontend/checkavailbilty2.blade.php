@@ -120,9 +120,10 @@ $(function() {
 								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
 								
 								$('.circle').attr('id', 'allowed');
-								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px;color: #1BB525;'>&#x2705; " +data.message+"</span>");
+								$("#emailzipquery").hide();
+								 $('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important;letter-spacing: 1.6px;color: #1BB525 ;'>&#x2705; " +data.message+"</span>");
 								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start you trial now!</a>");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Start now</button>');
+								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Subscribe</button>');
 								 
 								 $('#zip').css("color", "#1BB525");
 								 jQuery('#checkAvailibiltyModal').modal('show');
@@ -140,7 +141,7 @@ $(function() {
 									 $('#card-button').prop('disabled', true);
 								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
 								$('.circle').attr('id', 'error');
-								 $('#zipanswer').html("<span style='text-align: left;font: normal normal normal 16px/25px Poppins;letter-spacing: 1.6px; color:#FC243B;'>&#10060; Our apologies, your location is outside of the streamly service area.</span>");
+								 $('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important; letter-spacing: 1.6px; color:#FC243B;'> Unfortunately, the location you have entered is outside of the Streamly service area.<br> Enter your email in the box below to be notified if Streamly comes to your area.</span>");
 								 $('#zip').css("color", "#FC243B");
 								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" id="ajaxSubmit" >Submit</button>');
 							
@@ -386,7 +387,7 @@ background-position: center;
 			<p ><span id="zipanswer"></span> </p>
 			<p><strong style="color: #909090;">City:</strong><span id="citymodal"></span> </p>
 			<p><strong style="color: #909090;">State:</strong><span id="statemodal"></span> </p>
-			Enter your email:<input type="email" id="email" >
+			<span id="emailzipquery">Enter your email:<input type="email" id="email" ></span>
 			{{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 			<div>
 				{{-- <form action="" method="POST"> --}}
