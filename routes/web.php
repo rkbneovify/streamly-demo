@@ -23,6 +23,7 @@ Route::get('/checkzip', 'HomeController@checkzipView');
 
 
 Route::get('search', 'HomeController@search')->name('search');
+Route::get('search2', 'HomeController@search2')->name('search2');
 Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 
@@ -204,6 +205,10 @@ Route::get('/vuehtml', 'EpgController@vuehtml');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
+
+Route::view('/search3', 'frontend.search3');
+
+Route::get('/user/find', 'SearchController@searchUsers');
 Route::resource('bugreportings','Admin\BugReportingController');
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
