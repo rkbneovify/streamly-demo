@@ -206,8 +206,10 @@ Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-c
 
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
 
-Route::view('/search3', 'frontend.search3');
+Route::view('/search4', 'frontend.search4');
+Route::get('/upcomingevent/{callsign}/{EventTitle}', 'SearchController@upcomingEvent');
 
+// Route::get('/user/find', 'SearchController@searchevents');
 Route::get('/user/find', 'SearchController@searchUsers');
 Route::resource('bugreportings','Admin\BugReportingController');
 Route::get('/stripesync', function (Request $request) {
