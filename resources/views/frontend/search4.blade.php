@@ -7,7 +7,8 @@
 <script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
 
     <!-- Import typeahead.js -->
-    <script src="{{ asset('frontend/autocomplete/typeahead.bundle.js')}}"></script>
+    {{-- <script src="{{ asset('frontend/autocomplete/typeahead.bundle.js')}}"></script> --}}
+    <script src="{{ asset('frontend/autocomplete/typeahead.bundle.min.js')}}"></script>
 <style>
 	nav#mainNav {
 		background-color: #004E92;
