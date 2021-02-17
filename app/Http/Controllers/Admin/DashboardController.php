@@ -36,4 +36,15 @@ class DashboardController extends Controller
         return view('frontend.drm.playlist', compact('encoded_auth_xml','channels'));
     }
 
+    public function debugmpd(){
+        try {
+            $encoded_auth_xml = getKeyOSAuthToken();
+              return view('frontend.debug', compact('encoded_auth_xml'));
+            }
+            catch(Exception $e) {
+              
+              return $e->getMessage();
+            }
+    }
+
 }

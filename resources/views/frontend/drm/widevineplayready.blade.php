@@ -34,9 +34,13 @@
 						player.on('ready', function() {
                 // Setup dash + pr/wv
 								var wvprDashSrc = {
-                    src: 'https://cdn.streamlytv.com/streamly/ngrp:AETVP.stream_all/manifest.mpd',
+                    src: 'https://channelstore1.streamlytv.com/drmtest/index.mpd',
                     type: 'application/dash+xml',
-                    keySystems: {
+                    // keySystems: {
+                    //     'com.widevine.alpha': "https://streamlytv.com/api/generic?drm-type=widevine",
+                    //     'com.microsoft.playready': "{{ url('/api/generic?drm-type=playready') }}"
+                    // }
+										keySystems: {
                         'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
                         'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
                     }
