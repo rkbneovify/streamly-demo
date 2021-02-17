@@ -10730,8 +10730,20 @@ a#navbarDropdownMenuLink:after {
   border-radius: 27px;
   color: #FFFFFF;
 }
+#search-typehead{
+  background: transparent;
+  border: 1px solid #707070;
+  border-radius: 27px;
+  color: #FFFFFF;
+}
 
 .navbar-shrink #search-btn-header{
+  background: #1c619e 0% 0% no-repeat padding-box !important;
+  border: 1px solid #707070;
+  border-radius: 27px;
+  color: #FFFFFF; 
+}
+.navbar-shrink #search-typehead{
   background: #1c619e 0% 0% no-repeat padding-box !important;
   border: 1px solid #707070;
   border-radius: 27px;

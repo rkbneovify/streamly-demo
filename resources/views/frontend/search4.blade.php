@@ -155,20 +155,7 @@ width: 100px;
 @endsection
 @section('content')
 <section class="page-section">
-	{{-- <div class="container" style="margin-top: 50px;">
-		<div class="row">
-				<div class="col-lg-3"></div>
-				<div class="col-lg-6">
-						<h4 class="text-center">Autocomplete Search Box with <br> Laravel + Ajax + jQuery</h4><hr>
-						<div class="form-group">
-								<label>Type a search name</label>
-								<input type="text" name="search" id="search" placeholder="Enter search name" class="form-control">
-						</div>
-						<div id="search_list"></div>                    
-				</div>
-				<div class="col-lg-3"></div>
-		</div>
-</div> --}}
+	
 
 <div class="container">
   <form class="mx-2 my-auto d-inline w-100">
