@@ -72,6 +72,30 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         textKids=findViewById(R.id.text_kids);
         settingText=findViewById(R.id.setting_text);
         goBackText=findViewById(R.id.go_back_text);
+        imageSearch.setFocusable(true);
+        imageSearch.setFocusableInTouchMode(true);
+        textAll.setFocusable(true);
+        textAll.setFocusableInTouchMode(true);
+        textOthers.setFocusable(true);
+        textOthers.setFocusableInTouchMode(true);
+        textFamily.setFocusable(true);
+        textFamily.setFocusableInTouchMode(true);
+        textComedy.setFocusable(true);
+        textComedy.setFocusableInTouchMode(true);
+        textSports.setFocusable(true);
+        textSports.setFocusableInTouchMode(true);
+        textNews.setFocusable(true);
+        textNews.setFocusableInTouchMode(true);
+        textMovies.setFocusable(true);
+        textMovies.setFocusableInTouchMode(true);
+        textKids.setFocusable(true);
+        textKids.setFocusableInTouchMode(true);
+        settingText.setFocusable(true);
+        settingText.setFocusableInTouchMode(true);
+        goBackText.setFocusable(true);
+        goBackText.setFocusableInTouchMode(true);
+
+
         imageSearch.setOnClickListener(this);
         textAll.setOnClickListener(this);
         textOthers.setOnClickListener(this);

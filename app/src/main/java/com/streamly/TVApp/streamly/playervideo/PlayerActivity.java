@@ -113,21 +113,20 @@ public class PlayerActivity extends FragmentActivity {
         String channelName=getIntent().getStringExtra("channel_name");
         params.putString("call_sign", channelName+"_Android");
         params.putString("inside_geofence", "false");
-        params.putString("livestream_seconds_watched", "15");
         mFirebaseAnalytics.setUserId(userId);
 
-        /*Bundle bundle = new Bundle();
+       /* Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.call_sign, "Test_HallDRAMA_CallSign");
         bundle.putString(FirebaseAnalytics.Param.inside_geofence, false);
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.video_play, bundle);*/
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.video_play, bundle);
 
-        /*Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "id3258");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Streamly_name");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
-        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-        /*Bundle bundle = new Bundle();
+        Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.call_sign, CallSignValue);
         bundle.putString(FirebaseAnalytics.Param.inside_geofence, boolean);
         bundle.putString(FirebaseAnalytics.Param.livestream_seconds_watched, 15);
@@ -302,12 +301,15 @@ public class PlayerActivity extends FragmentActivity {
 
 
 
-        //todo HLs for the testing purpose
+
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
                 Util.getUserAgent(this, "StreamlyTV"), null);
+        //todo HLs for the testing purpose
         HlsMediaSource mediaSource =new HlsMediaSource.Factory(dataSourceFactory)
+                .setDrmSessionManager(drmSessionManager)
                 .createMediaSource(dashUri);
 
+        //todo DASH for the testing purpose
 //        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
 //                .setDrmSessionManager(drmSessionManager)
 //                .createMediaSource(dashUri);
@@ -388,6 +390,7 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
+
                 if (isPlaying){
                     mFirebaseAnalytics.logEvent("video_play", params);
 
@@ -395,6 +398,7 @@ public class PlayerActivity extends FragmentActivity {
                         @Override
                         public void run() {
                             //do something
+                            params.putString("livestream_seconds_watched", "15");
                             mFirebaseAnalytics.logEvent("video_livestream_duration",params);
                             handler.postDelayed(this, delay);
                         }
@@ -416,6 +420,11 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
+                Log.e(TAG,"error_msg"+error.toString());
+                params.putString("error_color", "red");
+                params.putString("error_msg", error.getSourceException().toString());
+                mFirebaseAnalytics.logEvent("player_error", params);
+//                Log.e(TAG,"error_msg2 "+error.getSourceException());
 
             }
 
