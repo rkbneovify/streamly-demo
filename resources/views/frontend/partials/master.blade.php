@@ -67,6 +67,8 @@
 <link rel="stylesheet" href="{{ asset('frontend/style.css') }}" />
 <script defer src="{{ asset('frontend/script.js') }}" ></script>
 
+    <!-- Import typeahead.js -->
+    <script src="{{ asset('frontend/autocomplete/typeahead.bundle.min.js')}}"></script>
 @yield('stylesheets-bottom')
 
 </body>
@@ -102,7 +104,61 @@
 	</style>
 	<script type="text/javascript">
 			$(document).ready(function () {
-			 
+
+				var output='';
+    var url='';
+      var bloodhound = new Bloodhound({
+      datumTokenizer: Bloodhound.tokenizers.whitespace,
+      queryTokenizer: Bloodhound.tokenizers.whitespace,
+      remote: {
+        url: '/user/find?q=%QUERY%',
+        wildcard: '%QUERY%'
+      },
+    });
+    
+    $('#search-typehead').typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    }, {
+      name: 'users',
+      source: bloodhound,
+      display: function(data) {
+        console.log(data);
+        return data.StationName  //Input value to be set when you select a suggestion. 
+      },
+      templates: {
+        empty: [
+          '<div class="list-group search-results-dropdown"><div class="list-group-item">Nothing found.</div></div>'
+        ],
+        header: [
+          '<div class="list-group search-results-dropdown">'
+        ],
+        suggestion: function(data) {
+          if(data.type=='event'){
+            url='/upcomingevent/'+data.CallSign+'/'+data.StationName;
+            // console.log(url);
+           output='<a href="'+url+'"<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"><img src="../frontend/autocomplete/tv_show.png" width="70px" height="70px"> Show: '+ data.StationName + '</div></a></div>'
+          }else{
+            // if(data.CallSign==null){
+            //   url='/livetv/'+data.StationName+'/'+data.genrename;
+            // }else{
+            //   url='/livetv/'+data.CallSign+'/'+data.genrename;
+            // }
+            url='/livetv/'+data.CallSign+'/'+data.genrename;
+            
+            // if (!empty($row->callSign)){
+            //         $url=$FRONTEND_URL.'/livetv/'.$row->callSign.'/'.$row->genrename['0'];}else{
+            //             $url=$FRONTEND_URL.'/livetv/'.$row->name.'/'.$row->genrename['0']; 
+            //         }
+            // console.log(url);
+            output='<a href="'+url+'"<div style="font-weight:normal; margin-top:-10px ! important;" class="list-group-item"> <img src="'+data.image+'" width="auto" height="70px">Channel: '+ data.StationName + '</div></a></div>'
+          }
+        return output;
+        }
+      }
+    });
+			 /**
 							$('#search-btn-header').on('keyup',function() {
 											var query = $(this).val(); 
 											$.ajax({
@@ -120,6 +176,7 @@
 											})
 											// end of ajax call
 							});
+							*/
 	
 							
 							$(document).on('click', 'li', function(){
