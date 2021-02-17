@@ -744,7 +744,7 @@
       $xml_root->addChild('Signature', base64_encode($signature));
 
       # Remove private key from the memory.
-      openssl_free_key($pkeid);
+      // openssl_free_key($pkeid); //remove this line
 
       return $xml_root->asXML();
     }
