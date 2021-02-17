@@ -207,6 +207,7 @@ Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-c
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
 
 Route::view('/search4', 'frontend.search4');
+Route::get('/debug', 'Admin\DashboardController@debugmpd');
 Route::get('/upcomingevent/{callsign}/{EventTitle}', 'SearchController@upcomingEvent');
 
 // Route::get('/user/find', 'SearchController@searchevents');

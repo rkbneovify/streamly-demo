@@ -59,7 +59,7 @@
         },
         "com.microsoft.playready": {
           serverURL: "{{ url('/api/generic?drm-type=playready') }}",
-          httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
+          // httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
           clearkeys: ""
         }
       });
