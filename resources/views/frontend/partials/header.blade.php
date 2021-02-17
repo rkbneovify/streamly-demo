@@ -22,10 +22,11 @@
                 @if( isset($login) && $login)
 
                     <li class="nav-item">
+                       
                         <div class="form-group has-search">
                             <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" />
-
-                            <input type="text" name="search" class="form-control" id="search-btn-header" placeholder="Search channels or shows">
+                            <input type="text" id="search-typehead" class="form-control typeahead" placeholder="Search channels or shows">
+                            {{-- <input type="text" name="search" class="form-control typeahead" id="search-btn-header" placeholder="Search channels or shows"> --}}
                             <div id="search_list"></div>  
                         </div>
                     </li>
