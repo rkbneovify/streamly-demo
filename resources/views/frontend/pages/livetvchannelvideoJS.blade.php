@@ -39,12 +39,163 @@
 <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 <script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 
+<script src="{{ asset('frontend/dueljs/duel.min.js') }}" ></script>
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
 
 
 <script>
 	$('document').ready(function(){
-		var player = videojs('player',  {
+		function getLocation2() {
+if (navigator.geolocation) {
+	// console.log('inside the function');
+    var location_timeout = setTimeout("geolocFail(1)", 10000);
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        clearTimeout(location_timeout);
+
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        SetGeocodeLatLng(lat, lng);
+    }, function(error) {
+			// console.log('inside the function error occured');
+        clearTimeout(location_timeout);
+        geolocFail(2);
+    });
+} else {
+    // Fallback for no geolocation
+    geolocFail(3);
+}}
+getLocation2();
+function geolocFail(pa) {
+	// console.log('geolocFailfail ocuured',pa);
+var astrourl='https://api.astroip.co/{{getUserIpAddr()}}/?api_key={{ env("ASTRO_IP") }}';
+console.log("astrourl",astrourl);
+		 var myHeaders = new Headers();
+// myHeaders.append("Cookie", "ARRAffinity=069e115ca7c25625ebd8581b6dc49c782dc6ddd6cee7dc472cc3b69eeb2a234a; ARRAffinitySameSite=069e115ca7c25625ebd8581b6dc49c782dc6ddd6cee7dc472cc3b69eeb2a234a");
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+// fetch("https://api.astroip.co/43.231.58.253/?api_key=e4c059f7-72fd-47f8-8e4f-9481d379d737", requestOptions)
+fetch(astrourl, requestOptions)
+
+  .then(response => response.json())
+	.then(function(data) {
+		// console.log(data.status_code);
+		console.log("lonng",data.geo.longitude);
+		console.log("latitude",data.geo.latitude);
+		let lat = data.geo.latitude;
+        let lng = data.geo.longitude;
+
+        SetGeocodeLatLng(lat, lng);
+    
+  
+  })
+  .catch(error => console.log('error', error));
+
+}
+function SetGeocodeLatLng(lat,lng){
+	localStorage.setItem("LAT", lat); 
+	localStorage.setItem("lng", lng); 
+	console.log("LAT",lat);
+	console.log("lng",lng);
+	geofence();
+}
+function getGeocodeLat(){
+return	localStorage.getItem("LAT");
+}
+function getGeocodeLong(){
+return	localStorage.getItem("lng");
+}
+
+function geofence(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/geofence';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", getGeocodeLat());
+formdata.append("longitude", getGeocodeLong());
+formdata.append("deviceid", MediaDeviceInfo.deviceId||"not defined");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+for (var pair of formdata.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]); 
+}
+console.log("deviceid",MediaDeviceInfo.deviceId);
+fetch(url, requestOptions)
+  .then(response => response.json())
+  // .then(result => console.log(result))
+	.then(function(data) {
+    var popupmsgtoggle = data.popupmsgtoggle;
+		localStorage.setItem("geofence", data.success); 
+    // console.log(popupmsgtoggle);
+		if(popupmsgtoggle){
+			alert(JSON.stringify(data.popupmsg));
+			 outsidelocationplay();
+		}
+  
+  })
+  .catch(error => console.log('error', error));}
+	// geofence();
+
+function outsidelocationplay(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/outsidelocationplay';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", getGeocodeLat());
+formdata.append("longitude", getGeocodeLong());
+formdata.append("deviceid", MediaDeviceInfo.deviceId||"not defined");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.text())
+  // .then(result => console.log(result))
+  .catch(error => console.log('error', error));}
+
+	var player;
+
+var CallSignValueURL = window.location.pathname.split('/')[2];
+	/*** open a channel named player 
+*/
+var tabplayer = duel.channel('tabplayer');
+
+/**
+ * Register a new player channel event
+ */
+ tabplayer.on('stop', function () {
+ 
+
+ document.title = 'Stopped';
+ player.pause();
+});
+// Init player.
+		 player = videojs('player',  {
           preload: true,
           autoplay: true,
           controls: true,
@@ -85,9 +236,24 @@
 
 							// Set the source to the player to init/start the playback.
 							player.src(wvprDashSrc);
+							player.on('play', function() {
+  console.log("it's playing bro");
+	tabplayer.broadcast('stop');
+	 document.title = 'play...';
 
+						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+						setInterval(function(){ 
+							// console.log("15 secs");
+							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+							},15000);
+});					
+	player.on('pause', function() {
+  console.log("it's paused bro");
+});
 					
 					});
+
+
 					player.tech().on('retryplaylist', () => {
       
         console.log('lets try reloading the url');
@@ -319,10 +485,9 @@
 					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}">
 						@else
 						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
-							@endif<div class="live-news-item">
-
-						<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
-						<p>{{  $channeldet->stationName??$channeldet->name}}</p>
+							@endif<div class="live-news-item"><div class="channelogosame"><img style='height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+	
+										<p>{{  $channeldet->stationName??$channeldet->name}}</p>
 					</div> </a>
 					@endforeach
 					</div>
