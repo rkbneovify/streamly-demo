@@ -311,12 +311,20 @@ var tabplayer = duel.channel('tabplayer');
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
 
-		.owl-carousel .owl-item img {
+		/* .owl-carousel .owl-item img {
 		    display: block;
 		    width: auto;
 		    margin: 0 auto;
 		    height: 1.5rem;
-		}
+		} */
+
+		.channelogosame{
+
+display: block;
+margin: 0 auto;
+height: 100px;
+width: 100px;
+}
 
 		.owl-item {
 	        background-color: white;
