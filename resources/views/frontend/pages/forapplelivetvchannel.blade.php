@@ -269,7 +269,12 @@ fetch(url, requestOptions)
 	 document.title = 'play...';
 
 						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
-});						player.on('pause', function() {
+						setInterval(function(){ 
+							// console.log("15 secs");
+							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+							},15000);
+});					
+	player.on('pause', function() {
   console.log("it's paused bro");
 });
 					});
