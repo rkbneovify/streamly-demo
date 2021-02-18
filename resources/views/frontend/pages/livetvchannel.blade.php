@@ -498,9 +498,9 @@ width: 100px;
               </div>
           </div>
 
-						<div class="channel-detail">
+						{{-- <div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 				<!-- <div class="row">
