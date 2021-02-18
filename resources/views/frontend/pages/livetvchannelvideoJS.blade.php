@@ -455,9 +455,9 @@ width: 100px;
 							<source src="" type="application/dash+xml"/>
 					</video>
 
-						<div class="channel-detail">
+						{{-- <div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
-						</div>
+						</div> --}}
 					</div>
 				</div>
 				<!-- <div class="row">
