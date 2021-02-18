@@ -33,6 +33,7 @@ class LiveTv extends Controller
     //           ->from('gracenotechannels');
               
     // })
+    ->where('channels.status','=','1')
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
     
@@ -213,6 +214,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
 //              ->from('gracenotechannels');
              
 //    })
+->where('channels.status','=','1')
    ->groupBy('channels.id') ->orderBy('channels.name', 'asc');
    return $record;
     }
@@ -239,6 +241,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
     //           ->from('gracenotechannels');
               
     // })
+    ->where('channels.status','=','1')
     ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
        
     
