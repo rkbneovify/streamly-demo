@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
+
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
@@ -138,7 +140,8 @@ public class LogInActivity extends FragmentActivity {
                     edPassword.setText("");
 
                 }else if (response.code()==401){
-                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                    LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
+                    CommonUtility.showToast(LogInActivity.this,logInModel.getMessage());
                 } else if (response.code()==429){
 //                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                     CommonUtility.showToast(LogInActivity.this,ConstantUtility.MAX_USER_LOGIN);
