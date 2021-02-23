@@ -4,7 +4,9 @@
 	
 
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	{{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>{{ config('app.name', 'Streamly') }}</title>
 	<link rel="icon" type="image/png" href="{{ asset('frontend/img/favicon/streamy_favicon_16.png') }}"/>

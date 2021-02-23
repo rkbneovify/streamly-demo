@@ -20,11 +20,13 @@
 
 
 
-<script src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
+<script defer src='https://cdn.jsdelivr.net/npm/botman-web-widget@0/build/js/widget.js'></script>
 @endsection
 @section('stylesheets')
     <style>
- 
+ #botmanWidgetRoot>div{
+     /* min-width: 360px !important; */
+ }
 
         .alert.alert-position {
             position: absolute;
@@ -407,12 +409,13 @@
   position:relative;
   box-shadow:0 0 10px rgba(0,0,0,0.5);
   
-    width: 163px;
-    height: 41px;
+    /* width: 163px;
+    height: 41px; */
 
 }
 
 </style>
+
 <section class="page-section bg-light">
     <div class="container">
         <div class="text-center">
@@ -421,11 +424,12 @@
            
             <div class="row">
                 <div class="col-centered" id="tab-buttons">
-                    <a href="#Movies" class="btn btn-sm btn-default faq-btn" data-toggle="collapse">Movies</a>
+
+                    <a href="#Comedy" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">Comedy</a>
+                    <a href="#Movies" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Movies</a>
                 
                     <a href="#Others" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Others</a>
                 
-                    <a href="#Comedy" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Comedy</a>
                     <a href="#News" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">News</a>
                     <a href="#Sports" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Sports</a>
                     <a href="#Family" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Family</a>
@@ -433,11 +437,11 @@
                 </div>
             </div>
         </div>
-    <div class="row col-centered" id="accordion">
+   <div class="row col-centered " id="accordion">
         @foreach($pagechannel2 as $key => $user)
         
-        @if($key=='Movies')
-    <div id="{{$key}}" class="col-sm-12 collapse  text-center show" data-parent="#accordion">
+        @if($key=='Comedy')
+    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
         <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
             <img  class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
@@ -445,12 +449,12 @@
     </div>
     @else
 
-    <div id="{{$key}}" class="col-sm-12 collapse  text-center " data-parent="#accordion">
+    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
             <img class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
         </div>  @endforeach</div></div>
-    </div>
+    </div> 
 @endif
     @endforeach
 </div>
@@ -465,6 +469,8 @@
 }
 
 .grid-container > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   /* justify-content: center;
   align-items: center; */
@@ -475,27 +481,33 @@
       text-align: center;
       padding: 10px 0;
 }
-.grid-container > div.item1 > img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-    .grid-container {
 
+.grid-container {
+/* width: 100%; */
+  display: -ms-grid;
   display: grid;
   grid-gap: 40px;
   grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   grid-auto-rows: 50px;
   justify-items: center;
   
-  justify-content: space-evenly;
+  -webkit-box-pack: space-evenly;
+  
+      -ms-flex-pack: space-evenly;
+  
+          justify-content: space-evenly;
   padding: 10px;
     }
+    .grid-container > div.item1 > img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
     
     
     </style>
       <section class="page-section " id="portfolio">
-        
 
     <div class="css-thjkr7">
         <div class="css-5nata0">
@@ -540,22 +552,27 @@ alt="image of tv guide"
     </div>
     </section>
 <style>
-    .flex-container {
+   .flex-container {
         width: 100%;   
     
   padding: 0;
   margin: 0;
   list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
 /* Responsive layout - makes a one column-layout instead of two-column layout */
 @media (max-width: 800px) {
     
-  .flex-container>div {
+    .flex-container>div {
     text-align: center ;
-    flex: 0 50%;
+    -webkit-box-flex: 0;
+        -ms-flex: 0 50%;
+            flex: 0 50%;
   }
   .flex-container>div:not(:nth-last-child(-n+2))  {
     /* background-color: red; */
@@ -564,7 +581,9 @@ alt="image of tv guide"
 }
 
 .space-evenly { 
-  justify-content: space-evenly; 
+  -webkit-box-pack: space-evenly; 
+      -ms-flex-pack: space-evenly; 
+          justify-content: space-evenly; 
 }
     .hovicon {
         display: inline-block;
