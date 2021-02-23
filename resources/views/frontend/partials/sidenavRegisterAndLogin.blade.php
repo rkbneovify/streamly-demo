@@ -29,15 +29,17 @@
                       <input type="checkbox" class="form-check-input" id="remember-me">
                       <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
 
-                      <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password">Forgot password?</a></label>
-                  </div>
-                  @if(env('GOOGLE_RECAPTCHA_KEY'))
-                  <div class="form-group">
-                  <div class="col-md-12 text-right">
-                  <div class="g-recaptcha" data-sitekey="{{env('GOOGLE_RECAPTCHA_KEY')}}"></div>
-                  </div>
-          </div>
-          @endif
+                    </div>
+                 <div>  <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password">Forgot password?</a></label></div> 
+                 
+                    @if(env('GOOGLE_RECAPTCHA_KEY'))
+                    <div class="form-group">
+                    <div class="col-md-12 text-right">
+                    <div class="g-recaptcha" data-sitekey="{{env('GOOGLE_RECAPTCHA_KEY')}}"></div>
+                    </div>
+            </div>
+            @endif
+                <div>&nbsp;</div>
                   <div class="form-group mt-3">
                       <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
                   </div>
