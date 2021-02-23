@@ -55,10 +55,12 @@ opacity: 0;
 
         @media only screen and (max-width: 450px) {
             #mySidenav.show{width:100%;}
+            #mySidenavRegister.show{ width: 100%; }
         }
 
         @media (min-width: 451px) and (max-width: 900px) {
             #mySidenav.show{width:50%;}
+            #mySidenavRegister.show{ width: 100%; }
         }
         </style>
 
