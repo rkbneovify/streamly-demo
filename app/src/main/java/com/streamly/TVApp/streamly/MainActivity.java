@@ -53,8 +53,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EPG Channels");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new EpgFragment(MainActivity.this))
                 .commit();
 
@@ -114,8 +112,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
 
         switch (v.getId()){
-
-
             case R.id.image_search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 break;

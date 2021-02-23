@@ -1,7 +1,9 @@
 package com.streamly.TVApp.streamly.playervideo.zipcode;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
@@ -95,6 +99,9 @@ public class ZipCodeDialog extends Dialog {
 
                     }else if (response.code()==401){
                         CommonUtility.showToast(context,response.body().getMessage());
+                        TokenStorage.clearSharedToken(context);
+                        context.startActivity(new Intent(context, LogInActivity.class));
+                        ((Activity)context).finish();
                     }
                     else if (response.code()==403 || response.body().getSuccess()==false){
                         CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);

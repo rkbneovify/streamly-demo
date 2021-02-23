@@ -11,6 +11,7 @@ public class ConstantUtility {
     public static final String CHANNELLIST=ApiConfig.BASE_URL+"channelgenre";
     @Nullable
     public static final String CHANNELDAYSSCHEDULE=ApiConfig.BASE_URL+"channeldayschdeule";
+    public static final String IPNOTVALID ="IP is not valid for getting coordinate" ;
 
     private ConstantUtility() {
         throw new IllegalStateException("Utility class");

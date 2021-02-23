@@ -6,7 +6,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiResponse;
@@ -43,7 +45,8 @@ public class GeofenceRepo {
                     Log.e(TAG, "success "+response);
                 }else {
                     Log.e(TAG, "elseResponse "+response);
-                    apiResponse.postValue(new ApiResponse(response.body(),response.code()));
+                    GeofenceModel geofenceModel=new Gson().fromJson(response.errorBody().string(),GeofenceModel.class);
+                    apiResponse.postValue(new ApiResponse(geofenceModel,response.code()));
 
                 }
             }catch (Exception ex){

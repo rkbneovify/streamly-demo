@@ -105,8 +105,6 @@ public class ProfileDialog extends Dialog {
 
                     }else if (response.code()==401){
                         CommonUtility.showToast(context,response.body().getMessage());
-
-
                         TokenStorage.clearSharedToken(context);
                         context.startActivity(new Intent(context, LogInActivity.class));
                         ((Activity)context).finish();

@@ -1,6 +1,7 @@
 package com.streamly.TVApp.streamly.epg.family
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
@@ -19,9 +20,11 @@ import com.streamly.TVApp.streamly.HomeBean
 import com.streamly.TVApp.streamly.R
 import com.streamly.TVApp.streamly.VerticalHomeBean
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
+import com.streamly.TVApp.streamly.log_in.LogInActivity
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
+import com.streamly.TVApp.streamly.utilities.CommonUtility
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -206,7 +209,11 @@ class FamilyFragment (context: Context): ProgramGuideFragment<FamilyFragment.Sim
 
                 },{
                     //error
-                    Toast.makeText(requireContext(),it.message, Toast.LENGTH_SHORT).show()
+                    if (it.toString().contains("401")){
+                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
+                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
+                        (activity as Activity).finish()
+                    }
                 })
     }
 

@@ -15,8 +15,8 @@ android {
         applicationId "com.streamly.TVApp.streamly"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 2
-        versionName "1.9"
+        versionCode 3
+        versionName "1.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
