@@ -9,11 +9,6 @@
 			width: 100%;
 	}
 
-	.dash-video-player {
-			position: relative;  /* This position relative is needed to position the menus */
-			width: 640px;
-			margin: 0 auto;
-	}
 	.inputForm div {
 					margin-bottom: 10px;
 			}
@@ -199,6 +194,7 @@ var tabplayer = duel.channel('tabplayer');
           preload: true,
           autoplay: true,
           controls: true,
+					responsive: true,
           controlBar: {
               'liveDisplay': true,
               'pictureInPictureToggle': true,
@@ -450,7 +446,7 @@ width: 100px;
 				
 					<div class="col-md-8 col-centered">
 						{{-- <video id="my-player" class="video-js" controls></video> --}}
-            <video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
+            <video id="player"  class="video-js vjs-default-skin vjs-fluid" controls></video>
 							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
 							<source src="" type="application/dash+xml"/>
 					</video>

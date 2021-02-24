@@ -9,11 +9,6 @@
 			width: 100%;
 	}
 
-	.dash-video-player {
-			position: relative;  /* This position relative is needed to position the menus */
-			width: 640px;
-			margin: 0 auto;
-	}
 	.inputForm div {
 					margin-bottom: 10px;
 			}
@@ -199,6 +194,7 @@ fetch(url, requestOptions)
           preload: true,
           autoplay: true,
           controls: true,
+					responsive: true,
           controlBar: {
               'liveDisplay': true,
               'pictureInPictureToggle': true,
@@ -453,7 +449,7 @@ width: 100px;
 				
 					<div class="col-md-8 col-centered">
 						
-						<video id="my-player" class="video-js" controls></video>
+						<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls></video>
 
 						{{-- <div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
