@@ -212,12 +212,7 @@ var tabplayer = duel.channel('tabplayer');
 		player.httpSourceSelector();
 
 					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
-					player.eme({
-							// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
-							emeHeaders: {
-									'customdata': '{{$encoded_auth_xml}}'
-							}
-					});
+					player.eme();
 
 					player.on('ready', function() {
 							// Setup dash + pr/wv
@@ -225,8 +220,8 @@ var tabplayer = duel.channel('tabplayer');
 									src: '{{$url[0]->url??"no url found"}}',
 									type: 'application/dash+xml',
 									keySystems: {
-                        'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
-                        'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+                        'com.widevine.alpha': "{{ url('/api/generic?drm-type=widevine') }}",
+                        'com.microsoft.playready': "{{ url('/api/generic?drm-type=playready') }}"
                     }
 							};
 
