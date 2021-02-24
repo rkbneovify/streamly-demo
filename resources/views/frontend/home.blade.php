@@ -177,6 +177,7 @@
                     display: -ms-flexbox;
                     display: -webkit-flex;
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
                     text-align: center;
                     -webkit-box-align: center;
