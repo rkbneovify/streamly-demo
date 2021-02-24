@@ -13,10 +13,10 @@
     </style>
 @endsection
 @section('stylesheets-bottom')
-<script type="text/javascript">
 
 @include('frontend.partials.sidenavRegisterAndLoginJS')
 
+<script type="text/javascript">
 $("#my_form").submit(function(event){
 	event.preventDefault(); //prevent default action 
 	var zipnumber = $("[name='zip']");
