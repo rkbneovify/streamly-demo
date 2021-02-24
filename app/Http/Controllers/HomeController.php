@@ -60,7 +60,7 @@ class HomeController extends Controller
         
     ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
     
-    
+    ->where('channels.status','=','1')
     ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
 //     ->whereIn('channels.callSign', function($query)
 // {
