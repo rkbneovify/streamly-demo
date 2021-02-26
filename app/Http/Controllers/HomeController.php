@@ -56,25 +56,26 @@ class HomeController extends Controller
     public function index()
     { $plans = \Stripe\Plan::all(['active'=>true]);
         $imagePath=asset("/uploads/channellogo/notfound.png");
-    $record2 = Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
-        
-    ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-    
-    ->where('channels.status','=','1')
-    ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-//     ->whereIn('channels.callSign', function($query)
-// {
-//     $query->select('CallSign')
-//           ->from('gracenotechannels');
-          
-// })
-->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
    
+$second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+       
+       ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+       ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+       ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
-   
-  $pagechannel2=$record2->get()->reject(function($element) use($imagePath) {
-    return $element->logo == $imagePath;
-})->groupBy('genrename');
+->where('channels.status','=','1')
+->orderBy('channels.StationName', 'asc');
+
+
+
+$pagechannel=$second->get()
+->reject(function($element) use($imagePath) {
+    
+    return $element->image === null;
+})->groupBy('genrenae');
+
+$Genrekey=$pagechannel->keys();
        
         //$plans=$plans->data;
         if( Auth::check()){
@@ -87,7 +88,7 @@ class HomeController extends Controller
             $login = false;
         }
 
-        return view('frontend.home', compact('login','plans','pagechannel2'));
+        return view('frontend.home', compact('login','plans','pagechannel','Genrekey'));
     }
 
     public function indexCache()

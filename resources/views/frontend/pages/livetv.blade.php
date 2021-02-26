@@ -204,7 +204,10 @@ $.ajax({
 @endsection
 
 @section('content')
-	<section class="page-section">
+	
+		<section class="page-section">
+			
+			
 		@foreach($pagechannel as $key => $user)
 		<div class="container">
 				<h4 class="section-heading">{{$key}}</h4>
@@ -214,14 +217,11 @@ $.ajax({
 						
 						<div class="live-news-item item" style="width:200px;height:280px">
 							
-							@if (!empty($channeldet->callSign))
-							<a href="{{url('livetv/'.$channeldet->callSign.'/'.$key)}}">
-								@else
-								<a href="{{url('livetv/'.$channeldet->name.'/'.$key)}}">
-									@endif
+							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
+								
 									<div class="channelogosame">	<img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
-							<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
+							<p>{{  $channeldet->StationName??$channeldet->name}}</p></a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 
