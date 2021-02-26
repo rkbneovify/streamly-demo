@@ -318,22 +318,18 @@ public function login(Request $request)
     return response()->json($response, 200);
     }
     public function genrenameFunc($type){
-        $record = Channel::select('channels.id', 'channels.callSign','channels.image', "channels.$type as url",DB::raw('IFNULL(channels.callSign,channels.name) callSign'))
-        
-        
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        
-        ->where('channels.status','=','1')
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    //     ->whereIn('channels.callSign', function($query)
-    // {
-    //     $query->select('CallSign')
-    //           ->from('gracenotechannels');
-              
-    // })
-    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
     
-       return $record;
+       $second=Channel::select('channels.id',
+DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('IFNULL(genre.name,"Others") genrename'))
+       
+       ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+       ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+       ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+->where('channels.status','=','1')
+->orderBy('channels.StationName', 'asc');
+return $second;
+
     }
     public function favoriteChannel(Request $request)
     { try { 

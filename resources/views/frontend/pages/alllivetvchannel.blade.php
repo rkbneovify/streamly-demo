@@ -172,15 +172,13 @@ width: 100px;
 				<div class="col-md-2">
 				
 					<div class="live-news-item">
-						@if (!empty($channeldet->callSign))
-						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$channeldet->genrename['0'])}}">
-							@else
-								<a href="{{url('livetv/'.$channeldet->name.'/'.$channeldet->genrename['0'])}}">
-									@endif
+					
+								<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
+								
 						{{-- <img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"> --}}
-						<div class="channelogosame"><img style='height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+						<div class="channelogosame"><img style='height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 						
-						<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
+						<p>{{  $channeldet->StationName}}</p></a>
 						<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

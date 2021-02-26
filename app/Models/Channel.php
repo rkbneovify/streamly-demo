@@ -20,9 +20,9 @@ class Channel extends Model
     * Database table name
     */
     protected $table = 'channels';
-    protected $casts = [
-        'genrename' => 'array'
-      ];
+    // protected $casts = [
+    //     'genrename' => 'array'
+    //   ];
     /**
     * Mass assignable columns
     */
