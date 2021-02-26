@@ -426,34 +426,33 @@
             <div class="row">
                 <div class="col-centered" id="tab-buttons">
 
-                    <a href="#Comedy" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">Comedy</a>
-                    <a href="#Movies" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Movies</a>
-                
-                    <a href="#Others" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Others</a>
-                
-                    <a href="#News" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">News</a>
-                    <a href="#Sports" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Sports</a>
-                    <a href="#Family" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Family</a>
-                    <a href="#Kids" class="btn btn-sm btn-default collapsed faq-btn" data-toggle="collapse">Kids</a>
+ @foreach ($Genrekey as $genre) 
+ @if ($loop->first)  
+ <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$genre}}</a>
+ @else
+ <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$genre}}</a>
+ @endif
+ @endforeach
+                    
                 </div>
             </div>
         </div>
    <div class="row col-centered " id="accordion">
-        @foreach($pagechannel2 as $key => $user)
-        
-        @if($key=='Comedy')
-    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
-        <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
-        <div class="item1"> 
-            <img  class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
-        </div>  @endforeach</div></div>
-    </div>
+        @foreach($pagechannel as $key => $user)
+        @if ($loop->first)  
+        <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
+            <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
+            <div class="item1"> 
+                <img  class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+            </div>  @endforeach</div></div>
+        </div> 
+   
     @else
 
     <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->callSign}}">
+            <img class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
         </div>  @endforeach</div></div>
     </div> 
 @endif

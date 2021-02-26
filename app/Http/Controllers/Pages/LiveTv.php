@@ -10,6 +10,8 @@ use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\SessionTable;
+
+use App\Models\Gracenotechannel;
 class LiveTv extends Controller
 { 
     public function showPage(){
@@ -21,25 +23,19 @@ class LiveTv extends Controller
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id', 'channels.callSign', 'channels.name','channels.stationName','channels.image', 'channels.url')
-        
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    //     ->whereIn('channels.callSign', function($query)
-    // {
-    //     $query->select('CallSign')
-    //           ->from('gracenotechannels');
-              
-    // })
+        $second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+        DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+               
+               ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+               ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+               ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
     ->where('channels.status','=','1')
-    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
-       
+    ->orderBy('channels.StationName', 'asc');
+    
     
        
-      $pagechannel=$record->get()->groupBy('genrename');
-      //$pagechannel->toArray(); 
+      $pagechannel=$second->get()->groupBy('genrenae');
     
         
 
@@ -174,7 +170,7 @@ $channelData= Gracenote::where('CallSign', $callSign)->get();
 
 $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('url');
 
-  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+$relatedchannel=$record->get()->where('genrenae',$genre);
 
   return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
 }else{ 
@@ -188,35 +184,35 @@ $channelData= Gracenote::where('CallSign', $callSign)->get();
 
 $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
 
-  $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+  $relatedchannel=$record->get()->where('genrenae',$genre);
 
 
 }
 
        
       
-    	return view('frontend.pages.livetvchannelvideoJS', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+    	return view('frontend.pages.livetvchannelvideoJS', compact('login','relatedchannel','channelData','url','encoded_auth_xml'));
     }catch(Exception $e) {
             
             return $e->getMessage();
           }
     }
     public function showChannelFunc($type){
-       $record= Channel::select('channels.id', 'channels.name', 'channels.stationName','channels.callSign','channels.image', "channels.$type as url")
-        
-       ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-       
-       
-       ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-//        ->whereIn('channels.callSign', function($query)
-//    {
-//        $query->select('CallSign')
-//              ->from('gracenotechannels');
-             
-//    })
+      
+
+   $second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+   DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 
+   'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'), "channels.$type as url")
+          
+          ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+          ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+          ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
 ->where('channels.status','=','1')
-   ->groupBy('channels.id') ->orderBy('channels.name', 'asc');
-   return $record;
+->orderBy('channels.StationName', 'asc');
+
+return $second;
+
     }
 
     public function showAllPage()
@@ -229,24 +225,19 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
             return redirect()->route('home');
         }
 
-        $record = Channel::select('channels.id','channels.name','channels.stationName', 'channels.callSign','channels.image', 'channels.url')
-        
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    //     ->whereIn('channels.callSign', function($query)
-    // {
-    //     $query->select('CallSign')
-    //           ->from('gracenotechannels');
-              
-    // })
-    ->where('channels.status','=','1')
-    ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc');
+    $second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+    DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+           
+           ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+->where('channels.status','=','1')
+->orderBy('channels.StationName', 'asc');
+
+
        
-    
-       
-      $pagechannel=$record->get();
+      $pagechannel=$second->get()->unique();
         
         return view('frontend.pages.alllivetvchannel', compact('login','pagechannel'));
 
