@@ -29,6 +29,13 @@ class ZipcodeController extends Controller
        
        return view('admin.zipcodes.index');
     }  
+    public function index2()
+    {   
+        // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
+        // return view('admin.zipcodes.index', compact('zipcodes'));
+       
+       return view('admin.zipcodes.index2');
+    }  
     public function allowedZipcodes()
     { 
         // $zipcodes = Zipcode::select('zipcodes.*')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->paginate(10);
@@ -224,7 +231,68 @@ class ZipcodeController extends Controller
          }
         return view('admin.zipcodes.map', compact('geojson'));
     }
+    
+   /*
+   AJAX request
+   */
+   public function categoryData2(Request $request){
 
+    ## Read value
+    $draw = $request->get('draw');
+    $start = $request->get("start");
+    $rowperpage = $request->get("length"); // Rows display per page
+
+    $columnIndex_arr = $request->get('order');
+    $columnName_arr = $request->get('columns');
+    $order_arr = $request->get('order');
+    $search_arr = $request->get('search');
+
+    $columnIndex = $columnIndex_arr[0]['column']; // Column index
+    $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+    $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+    $searchValue = $search_arr['value']; // Search value
+
+    // Total records
+    $totalRecords = Zipcode::select('count(*) as allcount')->count();
+    $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->where('zipcode', 'like', '%' .$searchValue . '%')->count();
+
+    // Fetch records
+    $records = Zipcode::orderBy($columnName,$columnSortOrder)
+      ->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%')
+      ->orWhere('zipcodes.city', 'like', '%' .$searchValue . '%')
+      ->select('zipcodes.*')
+      ->skip($start)
+      ->take($rowperpage)
+      ->get();
+
+    $data_arr = array();
+    
+    foreach($records as $record){
+       $id = $record->id;
+       $zipcode = $record->zipcode;
+       $city = $record->city;
+       $state = $record->state;
+       $status = $record->status;
+
+       $data_arr[] = array(
+         "id" => $id,
+         "zipcode" => $zipcode,
+         "city" => $city,
+         "state" => $state,
+         "status" => $status
+       );
+    }
+
+    $response = array(
+       "draw" => intval($draw),
+       "iTotalRecords" => $totalRecords,
+       "iTotalDisplayRecords" => $totalRecordswithFilter,
+       "aaData" => $data_arr
+    );
+
+    echo json_encode($response);
+    exit;
+  }
     public function webfenceturf()
     {   $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
         # Build GeoJSON feature collection array
