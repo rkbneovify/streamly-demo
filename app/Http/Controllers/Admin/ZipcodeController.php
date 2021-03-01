@@ -253,14 +253,17 @@ class ZipcodeController extends Controller
     $searchValue = $search_arr['value']; // Search value
 
     // Total records
-    $totalRecords = Zipcode::select('count(*) as allcount')->count();
-    $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->where('zipcode', 'like', '%' .$searchValue . '%')->count();
+    $totalRecords = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
+    $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+    ->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%')->count();
 
     // Fetch records
     $records = Zipcode::orderBy($columnName,$columnSortOrder)
       ->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%')
       ->orWhere('zipcodes.city', 'like', '%' .$searchValue . '%')
+      ->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%')
       ->select('zipcodes.*')
+      ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
       ->skip($start)
       ->take($rowperpage)
       ->get();
@@ -273,13 +276,22 @@ class ZipcodeController extends Controller
        $city = $record->city;
        $state = $record->state;
        $status = $record->status;
+       
+
+     // view Button
+     $viewButton = "<a href='/admin/zipcode/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
+     $editButton = "<a href='/admin/zipcode/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
+
+
+     $action = $viewButton." ".$editButton;
 
        $data_arr[] = array(
          "id" => $id,
          "zipcode" => $zipcode,
          "city" => $city,
          "state" => $state,
-         "status" => $status
+         "status" => $status,
+         "action" => $action
        );
     }
 
