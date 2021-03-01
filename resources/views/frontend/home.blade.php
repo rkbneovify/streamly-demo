@@ -477,7 +477,7 @@
   font-size: 2em;
   /* color: #20263f; */
   border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color:  #000; 
       text-align: center;
       padding: 10px 0;
 }
