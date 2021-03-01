@@ -117,12 +117,12 @@ $(function() {
 			$('#statemodal').text(data.state); 
 			$('#modalzip').text(zipnumber.val()); 
 			$('#address-country').val("US"); 
-								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
+								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a></p>');
 								
 								$('.circle').attr('id', 'allowed');
 								$("#emailzipquery").hide();
 								 $('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important;letter-spacing: 1.6px;color: #1BB525 ;'>&#x2705; " +data.message+"</span>");
-								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start you trial now!</a>");
+								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start Your Trial Now!</a>");
 								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Subscribe</button>');
 								 
 								 $('#zip').css("color", "#1BB525");

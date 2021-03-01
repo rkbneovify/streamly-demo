@@ -114,7 +114,7 @@ $('body').on('blur','[name="zip"]',function(){
 								 $('#City').val(data.city); 
 			$('#State').val(data.state); 
 			$('#address-country').val("US"); 
-								 $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start you trial now!</a></p>');
+								 $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a></p>');
 							 },
 							 error:function(xhr, status, error){ 
 								 if(xhr.status==404) {
