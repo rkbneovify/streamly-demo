@@ -1,50 +1,89 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Datatables AJAX pagination with Search and Sort - Laravel</title>
-
-    <!-- Meta -->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-   
-    <!-- CSS -->
+@extends('master')
+@section('stylesheets')
 <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+    @stop
 
-    <!-- Script -->
-<script  type="text/javascript" src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>   
+    @section('content')
 
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>zipcode</h1> {{ session()->get( 'info' ) }}
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">zipcode</li>
+              </ol>
+            </div>
+          </div>
+        </div><!-- /.container-fluid -->
+      </section>
+  
+      <!-- Main content -->
+      <section class="content">
+      <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
+                                          Add new zipcode 
+                                      </a>
+  
+        <!-- Default box -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">zipcode</h3>
+  
+            <div class="card-tools">
+              <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                <i class="fas fa-minus"></i></button>
+              <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                <i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <table id="empTable" class="table table-striped projects">
+                <thead>
+                    <tr>
+                        <th style="width: 1%">
+                            #
+                        </th>
+                        <th style="width: 20%">
+                        city
+                        </th>
+                        <th style="width: 20%">
+                        zipcode
+                        </th>
+                        <th style="width: 20%">
+                        state
+                        </th><th style="width: 20%">
+                        status
+                        </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                   </table>
+            
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+  
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+  @endsection
 
-    <!-- Datatables CSS CDN -->
-    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"> -->
-
-    <!-- jQuery CDN -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-
-    <!-- Datatables JS CDN -->
-    <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> -->
-
-  </head>
-  <body>
-
-    <table id='empTable' width='100%' border="1" style='border-collapse: collapse;'>
-      <thead>
-        <tr>
-          <td>S.no</td>
-          <td>city</td>
-          <td>zipcode</td>
-          <td>state</td>
-          <td>status</td>
-        </tr>
-      </thead>
-    </table>
-
-    <!-- Script -->
-    <script type="text/javascript">
+    @section('scripts')
+    <script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>
+    <script>   
     $(document).ready(function(){
 
       // DataTable
       $('#empTable').DataTable({
+        pageLength: 100,
          processing: true,
          serverSide: true,
          ajax: "{{url('admin/zipcode/category2') }}",
@@ -54,10 +93,27 @@
             { data: 'zipcode' },
             { data: 'state' },
             { data: 'status' },
-         ]
+        { data: 'action' },
+            
+         ],
+        columnDefs: [
+        {       
+            "render": function(data, type, row) {
+                if (row.status==1) {
+                    return '<span class="dotgreen"></span> Active';
+                }
+                else if (row.status==0) {
+                    return '<span class="dotred"></span> Inactive';
+                }
+                else {
+                    return '<span class="label label-default">unknown</span>';
+                }
+             }, "targets": [4]
+        }
+        ]
       });
 
     });
-    </script>
-  </body>
-</html>
+  </script>
+    @stop
+ 
