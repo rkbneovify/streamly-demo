@@ -272,7 +272,8 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
            $email = $record->email;
            $name = $record->name;
            $status = $record->is_active;
-           $role = $record->roles[0]->display_name;
+        //    $role = $record->roles->first()->display_name;
+           $role = $record->roles;
            
     
          // view Button

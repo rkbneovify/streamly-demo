@@ -119,6 +119,11 @@
             "render": function(data, type, row,meta) {
                 return meta.row+1;
              }, "targets": [0]
+        },{       
+            "render": function(data, type, row) {
+                // console.log("role",data[0].display_name);
+                return data[0].display_name;
+             }, "targets": [3]
         }
         ]
       });
