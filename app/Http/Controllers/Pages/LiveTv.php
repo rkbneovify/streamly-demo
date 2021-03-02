@@ -51,6 +51,11 @@ class LiveTv extends Controller
          
     	if( Auth::check()){
             $login = true;
+            $userRole= Auth::user()->roles->pluck('name');
+            if($userRole[0]=='user'){
+            if (!Auth::user()->subscribed('main')) {
+                return redirect('/selectplan');
+            }}
         } else {
             $login = false;
             return redirect()->route('home');
@@ -142,6 +147,12 @@ if (count($active_session) >= $login_limit) {
          
     	if( Auth::check()){
             $login = true;
+            
+            $userRole= Auth::user()->roles->pluck('name');
+            if($userRole[0]=='user'){
+            if (!Auth::user()->subscribed('main')) {
+                return redirect('/selectplan');
+            }}
         } else {
             $login = false;
             return redirect()->route('home');

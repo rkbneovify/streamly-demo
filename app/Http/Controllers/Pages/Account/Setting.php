@@ -156,8 +156,8 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
             return redirect()->back()->withInput()->withErrors($validator);
         }
         
-        // $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
-        $input = $request->only('password');
+        $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
+        // $input = $request->only('password','zipcode');
        
     
         

@@ -1,4 +1,42 @@
 @extends('master')
+@section('stylesheets')
+<script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<style>
+  .ui-widget.ui-widget-content {
+    border: 1px solid #c5c5c5;
+}
+.ui-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    outline: 0;
+}
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
+
+  				.ui-menu .ui-menu-item-wrapper {
+    position: relative;
+    padding: 3px 1em 3px .4em;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0;
+    cursor: pointer;
+    list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+.ui-menu-item .ui-menu-item-wrapper.ui-state-active {
+    background:#004E92 !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+} 
+
+</style>
+@stop
 @section('content')
 
 
@@ -215,7 +253,7 @@
                     <label for="gender" class="col-md-4 control-label">gender</label>
       
       
-                    <input id="gender" type="text" class="form-control" name="gender"  required
+                    <input id="gender" type="text" class="form-control" name="gender"   
                       autofocus>
       
                     @if ($errors->has('gender'))
@@ -225,9 +263,6 @@
                     @endif
       
                   </div> 
-
-                     
-                    </div>
                     <!-- /.card-body -->
                   </div>
                   <!-- /.card -->
@@ -248,3 +283,44 @@
           </div>
           <!-- /.content-wrapper -->
           @endsection
+
+    @section('scripts')
+    <script type="text/javascript">
+
+      $(document).ready(function(){	
+        		 $( "#zipcode" ).autocomplete({
+        source: function( request, response ) {
+          // Fetch data
+					$.ajaxSetup({
+                  headers: {
+                      
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+                  }
+              });
+          $.ajax({
+                  url: "{{ url('/getzipcodes') }}",
+            type: 'post',
+            dataType: "json",
+            data: {
+               search: request.term
+            },
+            success: function( data ) {
+               response( data );
+							//  console.log(data);
+            }
+          });
+        },
+        select: function (event, ui) {
+           // Set selection
+           $('#zipcode').val(ui.item.label); // display the selected text
+          //  $('#employeeid').val(ui.item.value); // save selected id to input
+           return false;
+        },
+				open: function() {
+        $("ul.ui-menu").width( $(this).innerWidth() );
+        
+    }
+      });
+      });
+      </script>
+    @stop
