@@ -282,12 +282,12 @@ $(function() {
     
         columns: [
             { data: 'id', name: 'id' },
-            { data: 'name', name: 'name',orderable: true },
+            { data: 'StationName', name: 'name',orderable: true },
             { data: 'url', name: 'url' },
-            { data: 'fullName', name: 'fullName' ,searchable: true},
+            { data: 'genrename', name: 'genrename' ,searchable: true},
             
             { data: 'status', name: 'status' ,orderable:false},
-            { data: 'photo', name: 'photo',orderable: false, searchable: false },
+            { data: 'logo', name: 'logo',orderable: false, searchable: false },
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
@@ -312,6 +312,10 @@ $(function() {
             "render": function(data, type, row) {
              return row.dash_url;
              }, "targets": [6]
+        },{       
+            "render": function(data, type, row) {
+             return '<a href="../uploads/channellogo/'+row.image+'" target="_blank"><img src="../uploads/channellogo/'+row.image+'"" width="50px" height="50px"></a>';
+             }, "targets": [5]
         },
         {
     "targets": 2,
