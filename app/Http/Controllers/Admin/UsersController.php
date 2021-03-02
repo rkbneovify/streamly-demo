@@ -234,22 +234,88 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         
     }
 
-    public function UserAjaxData()
-    {  
+    public function UserAjaxData(Request $request)
+    {   ## Read value
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+    
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+    
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+    
+        // Total records
+        $totalRecords = User::select('count(*) as allcount')->count();
+        $totalRecordswithFilter = User::select('count(*) as allcount')
+        ->where('email', 'like', '%' .$searchValue . '%')->count();
+    
+        // Fetch records
+        $records = User::with('roles')->orderBy($columnName,$columnSortOrder)
+          ->where('email', 'like', '%' .$searchValue . '%')
+          ->orWhere('name', 'like', '%' .$searchValue . '%')
+        //   ->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%')
+          ->select('users.*')
+          ->skip($start)
+          ->take($rowperpage)
+          ->get();
+    
+        $data_arr = array();
+        
+        foreach($records as $record){
+           $id = $record->id;
+           $email = $record->email;
+           $name = $record->name;
+           $status = $record->is_active;
+           $role = $record->roles[0]->display_name;
+           
+    
+         // view Button
+         $viewButton = "<a href='/admin/users/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
+         $editButton = "<a href='/admin/users/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
+         $deleteButton = '<a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
+    
+    
+         $action = $viewButton." ".$editButton." ".$deleteButton;
+    
+           $data_arr[] = array(
+             "id" => $id,
+             "email" => $email,
+             "name" => $name,
+             "role" => $role,
+             "status" => $status,
+             "action" => $action
+           );
+        }
+    
+        $response = array(
+           "draw" => intval($draw),
+           "iTotalRecords" => $totalRecords,
+           "iTotalDisplayRecords" => $totalRecordswithFilter,
+           "aaData" => $data_arr
+        );
+    
+        echo json_encode($response);
+        exit;
 
 
-        return DataTables::of(User::with('roles'))
-        ->addColumn('roles', function ($row) {
-            $options = '';
-            foreach ($row->roles as $role){
-                $options .= $role->display_name;
-            }
-           return $options;
-            })
-        ->addColumn('action', function($row) {
-            return ' <a href="/admin/users/edit/'. $row->id .'" class="btn btn-xs btn-primary">View/Edit</a> <a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
-        })
-        ->addIndexColumn()
-        ->make(true);
+        // return DataTables::of(User::with('roles'))
+        // ->addColumn('roles', function ($row) {
+        //     $options = '';
+        //     foreach ($row->roles as $role){
+        //         $options .= $role->display_name;
+        //     }
+        //    return $options;
+        //     })
+        // ->addColumn('action', function($row) {
+        //     return ' <a href="/admin/users/edit/'. $row->id .'" class="btn btn-xs btn-primary">View/Edit</a> <a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
+        // })
+        // ->addIndexColumn()
+        // ->make(true);
     }
 }
