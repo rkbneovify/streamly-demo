@@ -182,13 +182,83 @@ class ZipcodeController extends Controller
         })
         ->make(true);
     }
-    public function allowedZipdata()
-    {  $data = Zipcode::select('zipcodes.*')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
-        return DataTables::of($data)
-        ->addColumn('action', function($row) {
-            return '<a href="/admin/zipcode/view/'. $row->id .'" class="btn btn-xs btn-primary">View</a> <a href="/admin/zipcode/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+    public function allowedZipdata(Request $request)
+    {  
+        ## Read value
+        $draw = $request->get('draw');
+        $start = $request->get("start");
+        $rowperpage = $request->get("length"); // Rows display per page
+    
+        $columnIndex_arr = $request->get('order');
+        $columnName_arr = $request->get('columns');
+        $order_arr = $request->get('order');
+        $search_arr = $request->get('search');
+    
+        $columnIndex = $columnIndex_arr[0]['column']; // Column index
+        $columnName = $columnName_arr[$columnIndex]['data']; // Column name
+        $columnSortOrder = $order_arr[0]['dir']; // asc or desc
+        $searchValue = $search_arr['value']; // Search value
+    
+        // Total records
+        $totalRecords = Zipcode::select('count(*) as allcount')->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->count();
+        $totalRecordswithFilter = Zipcode::select('count(*) as allcount')->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+        ->where([
+            ['zipcodes.status', '=', '1'],
+            ['zipcodes.zipcode', 'like', '%' .$searchValue . '%'],
+        ])->count();
+    
+        // Fetch records
+        $records = Zipcode::orderBy($columnName,$columnSortOrder)
+        ->where('zipcodes.status', '=',  '1')
+        ->where(function ($query) use ($searchValue) {
+            $query->where('zipcodes.zipcode', 'like', '%' .$searchValue . '%');
+            $query->orWhere('zipcodes.city', 'like', '%' .$searchValue . '%');
+            $query->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%');
         })
-        ->make(true);
+          ->select('zipcodes.*')
+          ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')
+          ->skip($start)
+          ->take($rowperpage)
+          ->get();
+    
+        $data_arr = array();
+        
+        foreach($records as $record){
+           $id = $record->id;
+           $zipcode = $record->zipcode;
+           $city = $record->city;
+           $state = $record->state;
+           $status = $record->status;
+           
+    
+         // view Button
+         $viewButton = "<a href='/admin/zipcode/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
+         $editButton = "<a href='/admin/zipcode/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
+    
+    
+         $action = $viewButton." ".$editButton;
+    
+           $data_arr[] = array(
+             "id" => $id,
+             "zipcode" => $zipcode,
+             "city" => $city,
+             "state" => $state,
+             "status" => $status,
+             "action" => $action
+           );
+        }
+    
+        $response = array(
+           "draw" => intval($draw),
+           "iTotalRecords" => $totalRecords,
+           "iTotalDisplayRecords" => $totalRecordswithFilter,
+           "aaData" => $data_arr
+        );
+    
+        echo json_encode($response);
+        exit;
+    
+
     }
 
     public function map()
