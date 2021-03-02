@@ -122,7 +122,7 @@
         },{       
             "render": function(data, type, row) {
                 // console.log("role",data[0].display_name);
-                return data[0].display_name;
+                return data[0].display_name?data[0].display_name:'No user role';
              }, "targets": [3]
         }
         ]
