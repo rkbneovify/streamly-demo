@@ -50,11 +50,11 @@ class UsersController extends Controller
             'name' => $request->name,
             'email'=>$request->email,
             'password'=>Hash::make($request->password),
-            'contact'=>$request->contact,
-            'gender'=>$request->gender,
-            'dob'=>$request->dob,
-            'country'=>$request->country,
-            'address'=>$request->address,
+            'contact'=>$request->contact??'null',
+            'gender'=>$request->gender??'null',
+            'dob'=>$request->dob??'null',
+            'country'=>$request->country??'null',
+            'address'=>$request->address??'null',
             'zipcode'=>$request->zipcode,
             'email_verified_at'=>$email_verified_at
         ]);
