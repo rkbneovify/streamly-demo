@@ -436,42 +436,26 @@ $reco=$record->get();
     }
 
     public function channelData()
-     {  
-        return DataTables::of(Channel::query())
-        ->addColumn('fullName',function ($data){
-            $genres = Genre::pluck('name', 'id'); 
-            $arrVal=explode(',',$data->genres);
-            $options = '';
-            foreach ($genres as $id => $genre) {
-                if(in_array($id, $arrVal)){
-                                 
-                $options .= ''.$genre.' ';
-            } else{
-                $options .= '';}
-                
-            }
-            $return = 
-            '' . $options . '';
+     {   
+        $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),'channels.status',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.url","channels.dash_url","channels.smooth_url")
+           
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+           
+           ->leftJoin('gracenotechannels', 'channels.callSign', '=', 'gracenotechannels.CallSign')
+           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+    
+    ->groupBy('channels.id','gracenotechannels.StationName')
+    ->orderBy('channels.name', 'asc')->get();
      
-         return $return;
-    
-    
-        })
+        return DataTables::of($second)
+        
         ->addColumn('action', function($row) {
             return '<a 
             class="btn btn-xs btn-primary" id="vidplay" data-toggle="modal"  >View video</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
         })
-        ->editColumn('photo', function ($row) {
-            if ($row->image!='') {
-                $url=asset("/uploads/channellogo/$row->image");
-                return  '<a href="'.$url.'" target="_blank"><img src='.$url.' width="50px" height="50px"></a>';
-                
-                  
-            }
-
-            return '';
-        })
-      ->rawColumns(['photo', 'action'])
+        
+      ->rawColumns([ 'action'])
         ->make(true);
     }
     
