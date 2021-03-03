@@ -198,6 +198,7 @@ Route::get('/drm2', 'Admin\BuyDRMController@WidevinePlayer2');
 Route::get('/ism', 'Admin\BuyDRMController@WidevinePlayer3');
 Route::get('/ism2', 'Admin\BuyDRMController@WidevinePlayer4');
 Route::get('/fair', 'Admin\BuyDRMController@fairPlayer');
+Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 
