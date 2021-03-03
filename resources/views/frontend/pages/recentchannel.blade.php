@@ -181,7 +181,7 @@
 					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genr)}}">
 					
 
-					<img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
+					<img class="lazy" style="background-color: #4D5659;" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
 					<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 

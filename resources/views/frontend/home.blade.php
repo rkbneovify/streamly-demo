@@ -443,7 +443,7 @@
         <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
             <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
             <div class="item1"> 
-                <img  class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+                <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
             </div>  @endforeach</div></div>
         </div> 
    
@@ -452,7 +452,7 @@
     <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
         <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img class="lazy" data-src="{{  $channeldet2->logo}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+            <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
         </div>  @endforeach</div></div>
     </div> 
 @endif
