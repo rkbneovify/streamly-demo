@@ -211,6 +211,10 @@ fetch(url, requestOptions)
 					player.httpSourceSelector();
 					player.eme();
 					player.on('ready', function() {
+							// Helper functions.
+							var base64DecodeUint8Array = function (a) { var b = window.atob(a), c = b.length, d = new Uint8Array(new ArrayBuffer(c)); for (i = 0; i < c; i++)d[i] = b.charCodeAt(i); return d };
+							var base64EncodeUint8Array = function (a) { for (var d, e, f, g, h, i, j, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", c = "", k = 0; k < a.length;)d = a[k++], e = k < a.length ? a[k++] : Number.NaN, f = k < a.length ? a[k++] : Number.NaN, g = d >> 2, h = (3 & d) << 4 | e >> 4, i = (15 & e) << 2 | f >> 6, j = 63 & f, isNaN(e) ? i = j = 64 : isNaN(f) && (j = 64), c += b.charAt(g) + b.charAt(h) + b.charAt(i) + b.charAt(j); return c };
+							var arrayToString = function (a) { var b = new Uint16Array(a.buffer); return String.fromCharCode.apply(null, b) };
 
 							// Setup hls + fp
 							var fairplayHlsSrc = {
@@ -218,12 +222,39 @@ fetch(url, requestOptions)
 									src: '{{$url[0]->url??"no url found"}}',
 									type: 'application/x-mpegURL',
 									keySystems: {
-    'com.apple.fps.1_0': {
-      certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
-      licenseUri: "{{ url('/api/generic?drm-type=fairplay') }}"
-    }
-  }
-									
+											'com.apple.fps.1_0': {
+													certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
+
+													getContentId: function (emeOptions, initData) {
+															var contentId = arrayToString(initData);
+
+															if (contentId.indexOf("skd://") > -1)
+																	return contentId.split("skd://")[1].substr(0, 32);
+
+															throw 'Invalid Content ID format. The format of the Content ID must be the following: skd://xxx where xxx is the Key ID in hex format.';
+													},
+
+													getLicense: function (emeOptions, contentId, keyMessage, callback) {
+															var data = 'spc=' + base64EncodeUint8Array(keyMessage) + '&assetId=' + contentId;
+															$.ajax({
+																	url: 'https://fp-keyos.licensekeyserver.com/getkey',
+																	type: 'POST',
+																	data: data,
+																	// If you are using proxy, please, remove 'headers' object.
+																	headers: {
+																			'customdata': '{{$encoded_auth_xml}}'
+																	},
+																	contentType: 'application/x-www-form-urlencoded',
+																	success: function (result) {
+																			callback(null, base64DecodeUint8Array(result));
+																	},
+																	error: function (err) {
+																			callback(err);
+																	}
+															});
+													}
+											}
+									}
 							};
 
 							// Set the source to the player to init/start the playback.
@@ -239,7 +270,7 @@ fetch(url, requestOptions)
 							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 							},15000);
 });					
-	player.on('pause', function() {
+player.on('pause', function() {
   console.log("it's paused bro");
 });
 					});
