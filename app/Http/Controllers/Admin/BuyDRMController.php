@@ -8,7 +8,7 @@ class BuyDRMController extends Controller
 {   
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['WidevinePlayer','WidevinePlayer2','WidevinePlayer3','fairPlayer','fairPlayer2','verify','support','privacypol','termofuse','proxyServer','do_post','WidevinePlayer4']]);
+        $this->middleware('jwt.verify', ['except' => ['fairPlayernotoken','WidevinePlayer','WidevinePlayer2','WidevinePlayer3','fairPlayer','fairPlayer2','verify','support','privacypol','termofuse','proxyServer','do_post','WidevinePlayer4']]);
     }
 
 
@@ -114,6 +114,22 @@ class BuyDRMController extends Controller
           $encoded_auth_xml = getKeyOSAuthToken();
          
             return view('frontend.drm.fairplay', compact('encoded_auth_xml'));
+          }
+          catch(Exception $e) {
+            
+            return $e->getMessage();
+          }
+        
+        
+    } 
+    public function fairPlayernotoken()
+    {  
+        
+     
+        try {
+          $encoded_auth_xml = getKeyOSAuthToken();
+         
+            return view('frontend.drm.fairplayproxy', compact('encoded_auth_xml'));
           }
           catch(Exception $e) {
             
