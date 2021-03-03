@@ -219,7 +219,7 @@ $.ajax({
 							
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
 								
-									<div class="channelogosame">	<img style='height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
 							<p>{{  $channeldet->StationName??$channeldet->name}}</p></a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
