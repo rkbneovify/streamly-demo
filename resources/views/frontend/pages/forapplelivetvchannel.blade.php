@@ -485,14 +485,10 @@ width: 100px;
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
 					@foreach ($relatedchannel as $channeldet)
 
-					@if (!empty($channeldet->callSign))
-					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genre)}}">
-						@else
-						<a href="{{url('livetv/'.$channeldet->name.'/'.$genre)}}">
-							@endif<div class="live-news-item">
-								<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
-						
-								<p>{{  $channeldet->stationName??$channeldet->name}}</p>
+						<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
+						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
+	
+										<p>{{  $channeldet->StationName}}</p>
 					</div> </a>
 					@endforeach
 					</div>
