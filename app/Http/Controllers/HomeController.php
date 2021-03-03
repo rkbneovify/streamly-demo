@@ -57,7 +57,7 @@ class HomeController extends Controller
     { $plans = \Stripe\Plan::all(['active'=>true]);
         $imagePath=asset("/uploads/channellogo/notfound.png");
    
-$second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+$second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
 DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
        
        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
