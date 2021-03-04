@@ -27,15 +27,17 @@
 <link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 <script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
-{{-- <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet"> --}}
-<script src="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video.min.js"></script>
-{{-- <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script> --}}
-<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@6.13.0/dist/video-js.css">
+<!--Video.js-->
+<script src="https://cdn.jsdelivr.net/npm/video.js@6.13.0/dist/video.min.js"></script>
+<!--Dash.js-->
+<script src="https://cdn.jsdelivr.net/npm/dashjs@2.9.3/dist/dash.all.min.js"></script>
+<!--Dash.js plugin for Video.js-->
+<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-dash@2.11.0/dist/videojs-dash.min.js"></script>
+
 <script src="{{ asset('frontend/videojs/videojs-http-source-selector.min.js') }}" ></script>
 
 <script src="{{ asset('frontend/dueljs/duel.min.js') }}" ></script>
-<script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
 
 
 <script>
@@ -209,20 +211,26 @@ var tabplayer = duel.channel('tabplayer');
           }
       });
 	
-		player.httpSourceSelector();
 
-					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
-					player.eme();
 
 					player.on('ready', function() {
 							// Setup dash + pr/wv
 							var wvprDashSrc = {
 									src: '{{$url[0]->url??"no url found"}}',
 									type: 'application/dash+xml',
-									keySystems: {
-                        'com.widevine.alpha': "{{ url('/api/generic?drm-type=widevine') }}",
-                        'com.microsoft.playready': "{{ url('/api/generic?drm-type=playready') }}"
-                    }
+									keySystemOptions: [
+    {
+      name: 'com.widevine.alpha',
+      options: {
+        serverURL: "{{ url('/api/generic?drm-type=widevine') }}"
+      }
+    },{
+      name: 'com.microsoft.playready',
+      options: {
+        serverURL: "{{ url('/api/generic?drm-type=playready') }}"
+      }
+    }
+  ]
 							};
 
 							// Set the source to the player to init/start the playback.
