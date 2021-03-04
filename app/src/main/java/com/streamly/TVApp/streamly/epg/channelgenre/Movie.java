@@ -10,7 +10,7 @@ public class Movie {
     @SerializedName("callSign")
     private String mCallSign;
     @SerializedName("genrename")
-    private List<String> mGenrename;
+    private String mGenrename;
     @SerializedName("id")
     private Long mId;
     @SerializedName("image")
@@ -28,11 +28,11 @@ public class Movie {
         mCallSign = callSign;
     }
 
-    public List<String> getGenrename() {
+    public String getGenrename() {
         return mGenrename;
     }
 
-    public void setGenrename(List<String> genrename) {
+    public void setGenrename(String genrename) {
         mGenrename = genrename;
     }
 

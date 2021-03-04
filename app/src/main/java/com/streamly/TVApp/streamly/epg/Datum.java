@@ -67,4 +67,16 @@ public class Datum {
         mUrl = url;
     }
 
+
+    @Override
+    public String toString() {
+        return "{" +
+                "mCallSign='" + mCallSign + '\'' +
+                ", mGenrename=" + mGenrename +
+                ", mId=" + mId +
+                ", mImage='" + mImage + '\'' +
+                ", mLogo='" + mLogo + '\'' +
+                ", mUrl='" + mUrl + '\'' +
+                '}';
+    }
 }

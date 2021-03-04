@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.streamly.TVApp.streamly.channelschedule.Datum
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
@@ -38,11 +39,12 @@ import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
-class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
+class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.streamly.epg.Datum>) : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 
 
     val eContext = context
+    val list = dataListm
     val channels = ArrayList<SimpleChannel>()
     lateinit var MIN_CHANNEL_START_TIME: ZonedDateTime
     lateinit var MAX_CHANNEL_START_TIME: ZonedDateTime
@@ -215,27 +217,52 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
         /*  for (i in 0 until data.size) {
               channels.add(SimpleChannel(data[i].id.toString(),SpannedString(data[i].callSign),data[i].logo,data[i].url))
           }*/
-        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
-        apiInterface.getChannelList2("Bearer $authToken")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    //success
+//        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+//        apiInterface.getChannelList2("Bearer $authToken")
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    //success
 
-                    it.data.forEach {
+
+//                  Log.e("listitem" , list[0].genrename[0].toString())
+                    list.forEach {
+
+
+                        Log.e("item" , "{ " +  it +  " }")
+
+
+
+//                        Log.e("listitem" , it.id.toString());
                         channels.add(SimpleChannel(it.id.toString(), SpannedString(it.callSign), it.logo, it.url))
                     }
+
+
+
+        Log.e("item" , "-------------------------------------------------")
+
+
+
+
+
+
+//                    it.data.forEach {
+//                        channels.add(SimpleChannel(it.id.toString(), SpannedString(it.callSign), it.logo, it.url))
+//                    }
                     //Log.e("### arrayList", channels.toString())
 
 
-                }, {
-                    //error
-                    if (it.toString().contains("401")){
-                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
-                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
-                        (activity as Activity).finish()
-                    }
-                })
+
+
+//
+//                }, {
+//                    //error
+//                    if (it.toString().contains("401")){
+//                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
+//                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
+//                        (activity as Activity).finish()
+//                    }
+//                })
     }
 
     //#neovifyissueresolved28sep
@@ -246,6 +273,10 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
         apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     //success
+
+
+
+                    Log.e("secondapi" , "success");
                     val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
 
@@ -258,12 +289,14 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                         dayss = (m.group()).toLong()
                     }
 
+
                     for (i in 0 until it.data.size) {
                         verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
                         verticalBean.headerTitle = it.data[i].callSign
                         homelist = ArrayList()
+
 
                         it.data[i].programs.forEach {
                             homeBean = HomeBean()
@@ -279,6 +312,8 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                             homeBean.start_time = st
                             homeBean.end_time = et
                             homelist.add(homeBean)
+
+
                         }
 
                         verticalBean.allItemsInSection = homelist
@@ -298,26 +333,44 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
 
 //                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
                         while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
+
                             for (p in 0 until verticallist[k].allItemsInSection!!.size) {
 
        val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
 
 
-                                val schedule = createSchedule(
-                                        channels.get(k),
-                                        verticallist[k].allItemsInSection!![p].title!!,
+                                try{
+
+
+                                    Log.e("channels" ,channel.headerTitle.toString());
+
+//
+                                   val schedule = createSchedule(
+                                           channels.get(k),
+                                           verticallist[k].allItemsInSection!![p].title!!,
 //                                           nextTime,
 //                                           endTime,
-                                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                                        channels.get(k).videoUrl.toString(),
-                                        verticallist[k].allItemsInSection!![p].description!!,
-                                        channel_showName_list.get(k).toLong(),
-                                        channel.headerTitle
+                                           verticallist[k].allItemsInSection!![p]!!.start_time!!,
+                                           verticallist[k].allItemsInSection!![p]!!.end_time!!,
+                                           channels.get(k).videoUrl.toString(),
+                                           verticallist[k].allItemsInSection!![p].description!!,
+                                           channel_showName_list.get(k).toLong(),
+                                           channel.headerTitle
 
-                                )
-                                scheduleList.add(schedule)
-                                nextTime = endTime
+                                   )
+
+                                   scheduleList.add(schedule)
+                                   nextTime = endTime
+
+
+                               }
+                               catch(e : Exception){
+                                   Log.e("Exception : " , e.toString());
+                               }
+
+
+
+
 
 //                                }
 
@@ -339,14 +392,21 @@ class EpgFragment(context: Context) : ProgramGuideFragment<EpgFragment.SimplePro
                                         channel.getHeaderTitle()
                                 )*/
 
-                                channelMap.put(channels.get(k).id, scheduleList)
+
+
+                                    channelMap.put(channels.get(k).id, scheduleList)
+
+
 
                             }
+
+
 
                         }
                         k += 1
 
                     }
+
                     val pair = Pair(channels, channelMap)
 //                    setData(pair.first, pair.second, localDate, ((m.group().toInt()).toLong()))
 //                    Log.e(TAG, "::>>>>dayss: " + dayss)

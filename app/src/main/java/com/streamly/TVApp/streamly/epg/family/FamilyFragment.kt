@@ -194,13 +194,15 @@ class FamilyFragment (context: Context): ProgramGuideFragment<FamilyFragment.Sim
         /*for (i in 0 until data.size) {
             channels.add(SimpleChannel(data[i].id.toString(),SpannedString(data[i].callSign),data[i].logo,data[i].url))
         }*/
+
+
         val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
         apiInterface.getChannelGenre2("Bearer $authToken")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe(
+                        {
                     //success
-
                     it.data.family.forEach {
                         channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
                     }
@@ -209,6 +211,8 @@ class FamilyFragment (context: Context): ProgramGuideFragment<FamilyFragment.Sim
 
                 },{
                     //error
+                    Log.e("responseCode" , it.toString());
+
                     if (it.toString().contains("401")){
                         CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
                         activity!!.startActivity(Intent(activity, LogInActivity::class.java))

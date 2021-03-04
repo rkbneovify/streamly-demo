@@ -13,12 +13,10 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.streamly.TVApp.streamly.ProgramGuideFragment
+import com.streamly.TVApp.streamly.*
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
-import com.streamly.TVApp.streamly.HomeBean
-import com.streamly.TVApp.streamly.R
-import com.streamly.TVApp.streamly.VerticalHomeBean
+import com.streamly.TVApp.streamly.epg.Datum
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
 import com.streamly.TVApp.streamly.log_in.LogInActivity
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
@@ -41,11 +39,12 @@ import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-class KidsFragment (context: Context): ProgramGuideFragment<KidsFragment.SimpleProgram>() {
+class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuideFragment<KidsFragment.SimpleProgram>() {
 //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 
 
     val eContext=context
+    val list =dataListm
     val channels = ArrayList<SimpleChannel>()
     lateinit var MIN_CHANNEL_START_TIME: ZonedDateTime
     lateinit var MAX_CHANNEL_START_TIME: ZonedDateTime
@@ -192,30 +191,37 @@ class KidsFragment (context: Context): ProgramGuideFragment<KidsFragment.SimpleP
 
     @SuppressLint("CheckResult")
     private fun getFirstApi(authToken: String) {
-        /*for (i in 0 until data.size) {
-            channels.add(SimpleChannel(data[i].id.toString(),SpannedString(data[i].callSign),data[i].logo,data[i].url))
-        }*/
-        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
-        apiInterface.getChannelGenre2("Bearer $authToken")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    //success
+//        /*for (i in 0 until data.size) {
+//            channels.add(SimpleChannel(data[i].id.toString(),SpannedString(data[i].callSign),data[i].logo,data[i].url))
+//        }*/
+//        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+//        apiInterface.getChannelGenre2("Bearer $authToken")
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    //success
+//
+//                    it.data.kids.forEach {
+//                        channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
+//                    }
+//
+//                    Log.e("### kidsList",it.data.kids.size.toString())
+//
+//                },{
+//                    //error
+//                    if (it.toString().contains("401")){
+//                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
+//                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
+//                        (activity as Activity).finish()
+//                    }
+//                })
 
-                    it.data.kids.forEach {
+        list.forEach {
+
+            Log.e("list----"  , it.toString())
                         channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
-                    }
+        }
 
-                    Log.e("### kidsList",it.data.kids.size.toString())
-
-                },{
-                    //error
-                    if (it.toString().contains("401")){
-                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
-                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
-                        (activity as Activity).finish()
-                    }
-                })
     }
 
     //#neovifyissueresolved28sep
