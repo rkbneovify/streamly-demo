@@ -49,9 +49,19 @@ class Payment extends Controller
     }
 
     public function pay(Request $request,$StripeplanId) {
-        
+        // dd($request);
+        $attributeNames = array(
+            'zip' => 'Zip Code',
+         );
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'zip' => 'required|regex:/^[0-9]{3,7}$/',
+            'zip'=>'required|exists:zipcodes,zipcode,status,1'
+        ], ['zip.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
         $user = auth()->user();
         $trial_days=$request->trial_days;
+        
         try {
             // check already subscribed and if already subscribed with picked plan
         if( $user->subscribed('main') && ! $user->subscribedToPlan($StripeplanId, 'main') ) {
