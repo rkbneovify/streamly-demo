@@ -1,7 +1,52 @@
 @extends('frontend/partials/master')
 
 @section('top-stylesheets')
+<script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 	<style>
+		  .ui-widget.ui-widget-content {
+    border: 1px solid #c5c5c5;
+}
+.ui-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    outline: 0;
+}
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
+
+  				.ui-menu .ui-menu-item-wrapper {
+    position: relative;
+    padding: 3px 1em 3px .4em;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0;
+    cursor: pointer;
+    list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+.ui-menu-item .ui-menu-item-wrapper.ui-state-active {
+    background:#004E92 !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+} 
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 		button[disabled] {
   cursor: not-allowed;
 	pointer-events: all !important;
@@ -187,8 +232,14 @@
 													 --}}
 													 <div class="form-group">
 														<label for="card-element" class="control-label">Name on Card</label>
-														<input type="text" id="name" name="name" class="form-control">
-														
+														<input type="text" id="name" name="name" class="form-control" required>
+														@if ($errors->has('name'))
+														<span class="help-block">
+														<div class="alert alert-danger alert-dismissible ">
+																<button type="button" class="close" data-dismiss="alert">&times;</button>
+																<p style="color:red">{{ $errors->first('name') }}</p></div>
+														</span>
+														@endif
 												</div>
 											
 												<div class="form-row">
@@ -201,9 +252,16 @@
 													</div><div class="col-md-6">
 															<div class='form-group zip required'>
 																	<label class='control-label'>Credit card zip</label>
-																	<input autocomplete='off' class='form-control'  name="zip" type='number'>
+																	<input id="zipcode"  autocomplete='off' class='form-control'  name="zip" type='number'>
 																	<small id="ziphelp" ></small>
 															</div>
+															@if ($errors->has('zip'))
+															<span class="help-block">
+															<div class="alert alert-danger alert-dismissible ">
+																	<button type="button" class="close" data-dismiss="alert">&times;</button>
+																	<p style="color:red">{{ $errors->first('zip') }}</p></div>
+															</span>
+															@endif
 													</div>
 											</div>
 											<div class="form-row">
@@ -373,7 +431,9 @@ $('body').on('focusout','[name="zip"]',function(){
         // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
 				bt.disabled = true;
       $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+'</p>');
-              
+			$('#address-city').val(''); 
+			$('#address-state').val(''); 
+			$('#address-country').val("US");        
   
     }
        // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
@@ -386,6 +446,41 @@ $('body').on('focusout','[name="zip"]',function(){
 $('body').on('keydown','[name="username"],[name="email"],[name="coupon"]',function(e){
     return e.which !== 32;
 });
+
+
+$( "#zipcode" ).autocomplete({
+        source: function( request, response ) {
+          // Fetch data
+					$.ajaxSetup({
+                  headers: {
+                      
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+                  }
+              });
+          $.ajax({
+                  url: "{{ url('/getzipcodes') }}",
+            type: 'post',
+            dataType: "json",
+            data: {
+               search: request.term
+            },
+            success: function( data ) {
+               response( data );
+							//  console.log(data);
+            }
+          });
+        },
+        select: function (event, ui) {
+           // Set selection
+           $('#zipcode').val(ui.item.label); // display the selected text
+          //  $('#employeeid').val(ui.item.value); // save selected id to input
+           return false;
+        },
+				open: function() {
+        $("ul.ui-menu").width( $(this).innerWidth() );
+        
+    }
+      });
 
 });
             const stripe = Stripe('{{ env("STRIPE_KEY") }}');
