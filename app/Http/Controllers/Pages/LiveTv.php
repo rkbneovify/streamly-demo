@@ -164,7 +164,7 @@ $active_session = SessionTable::where([
 ['status', '=', '1'],
 ['users_id', '=', $user_id],
  ])->get()->toArray();
- if (count($active_session) >= $login_limit) {
+ if (count($active_session) > $login_limit) {
     $login = true;
     //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
     //  $login = false; 
@@ -202,7 +202,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
 
        
       
-    	return view('frontend.pages.livetvchannelvideoJS', compact('login','relatedchannel','channelData','url','encoded_auth_xml'));
+    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','channelData','url','encoded_auth_xml'));
     }catch(Exception $e) {
             
             return $e->getMessage();
