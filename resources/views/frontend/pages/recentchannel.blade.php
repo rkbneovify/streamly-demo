@@ -111,7 +111,7 @@
 		 },
 	
 		 success:function(data){
-		$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+		$('#'+channelid).html('<p>Added to favorites</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
 	
 		 }
 	
@@ -139,7 +139,7 @@
 	
 		 success:function(data){
 	
-		$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+		$('#'+channelid).html('<p>Add to favorites</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
 	
 		 }
 	
@@ -178,10 +178,13 @@
 			<div class="col-md-2">
 				
 				<div class="live-news-item">
-					<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genr)}}">
 					
-
-					<img class="lazy" style="background-color: #4D5659;" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
+						@if (!empty($channeldet->callSign))
+						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genr)}}">
+							@else
+									<a href="{{url('livetv/'.$channeldet->name.'/'.$genr)}}">
+									@endif
+									<img class="lazy" style="background-color: #4D5659;" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
 					<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -193,9 +196,9 @@
 <div class="panel-footer" id="{{ $channeldet->id }}">
 {{-- {{ $channeldet->id }} --}}
 @if ($channeldet->favorited())	
-<p>Added to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
+<p>Added to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
 @else
-<p>Add to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
+<p>Add to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
 @endif
 
 </div>
@@ -213,4 +216,5 @@
 </div>
 </div>
 </section>
+<section></section>
 @endsection
