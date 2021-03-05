@@ -107,6 +107,18 @@
 			letter-spacing: 0.24px;
 			color: #5E5E5E;
 		}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
 	</style>
 
 @endsection
@@ -148,7 +160,7 @@
         <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
           <label for="email" class="control-label">Enter zipcode                   </label>
           
-                        <input type="text" id="zip-code" name="zip_code" class="form-control" value="{{old('zip_code')}}" required>
+                        <input  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" id="zip-code" name="zip_code" class="form-control" value="{{old('zip_code')}}" required>
 				</div>
 				{{-- <input type="hidden" name="user[]" value="{{$user}}"> --}}
 				<input type="hidden" name="user" value="{{ json_encode($user,TRUE)}}">

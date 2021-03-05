@@ -272,7 +272,7 @@ input[type=number] {
 														</div>
 												</div><div class="col-md-6">
 														<div class='form-group  required'>
-																<label class='control-label'>Address (cont.)</label>
+																<label class='control-label'>Address 2</label>
 																<input id="address-line2" name="address_line2" class="form-control" placeholder="" />
 																
 														</div>
