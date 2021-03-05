@@ -149,7 +149,7 @@
           </div><div class="col-md-6">
               <div class='form-group zip required'>
                   <label class='control-label'>Credit card zip</label>
-                  <input autocomplete='off' class='form-control'  name="zip" type='number' required>
+                  <input autocomplete='off' class='form-control'  name="zip" type='number' pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  required>
                   <small id="ziphelp" ></small>
               </div>
           </div>
@@ -219,7 +219,18 @@
 
 
 @section('scripts')
-
+<style>/* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  </style>
 <script src="https://js.stripe.com/v3/"></script>
 
         <script>

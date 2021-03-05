@@ -27,6 +27,18 @@
     color: #333333;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
         .alert.alert-position {
             position: absolute;
             width: 100%;
@@ -216,6 +228,8 @@ jQuery('body').on('click','#ajaxSubmit',function(e){
            // Set selection
            $('#zip').val(ui.item.label); // display the selected text
           //  $('#employeeid').val(ui.item.value); // save selected id to input
+					$('#City').val(ui.item.city); 
+			$('#State').val(ui.item.state); 
            return false;
         },
 				open: function() {
@@ -451,7 +465,7 @@ background-position: center;
 										@csrf
 											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
 													<label for="zip" class="control-label text-center">Enter your zipcode</label>
-													<input type="number"  placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
+													<input  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
 											</div>
 											{{-- <div class="form-group" id="third-element-introduction" >
 												<label for="Address2"  class="control-label ">Address</label>
