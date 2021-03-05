@@ -75,7 +75,7 @@
               <label for="callSign" class="col-md-4 control-label">callSign</label>
 
 
-              <input id="callSign" type="text" class="form-control" name="callSign"  required
+              <input id="callSign" type="text" class="form-control" name="callSign"  
                 autofocus>
 
               @if ($errors->has('callSign'))

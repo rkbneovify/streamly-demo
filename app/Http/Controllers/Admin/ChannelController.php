@@ -260,6 +260,7 @@ $record = $this->channeljsonFunc($type);
 
         if ($model->save()) {
             
+        $model->genresync()->attach($request->genres);
             return redirect('admin/channelstatus')->with('info','Channel Added Successfully');
         
             } else {
@@ -336,6 +337,7 @@ $record = $this->channeljsonFunc($type);
         }
         else{$model->update($input); //update the subscription info
 
+            $model->genresync()->sync($request->genres);
             return redirect('admin/channelstatus')->with('info','Channel updated Successfully');
        }
         }  /**
