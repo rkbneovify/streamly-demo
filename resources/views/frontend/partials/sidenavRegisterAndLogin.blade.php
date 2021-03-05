@@ -106,7 +106,7 @@
 
                   <div class="form-group">
                       <label for="zip-code" class="control-label">Home zip code</label>
-                      <input type="text" id="zip-code" name="zip_code" class="form-control" value="{{old('zip_code')}}" required>
+                      <input type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" id="zip-code" name="zip_code" class="form-control" value="{{old('zip_code')}}" required>
                   </div>
 
                   <span class="remove-p-a-r">By clicking “REGISTER” you agree to the Streamly <br />
