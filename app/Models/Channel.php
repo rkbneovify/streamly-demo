@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use App\Models\FavouriteChannel;
+use App\Models\Genre;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 /**
@@ -47,7 +48,11 @@ protected $appends = ['logo'];
     {
         return $this->belongsTo(Genre::class,'genre_id');
     }
-
+    public function genresync()
+    {
+        return $this->belongsToMany(Genre::class, 'channels_genre', 
+        'channels_id', 'genre_id');
+    }
     public function getLogoAttribute($size=null)
 { if ($this->image) {
     $imagePath=asset("/uploads/channellogo/".$this->image);
