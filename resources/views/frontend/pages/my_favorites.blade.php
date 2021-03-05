@@ -111,7 +111,7 @@
 		 },
 	
 		 success:function(data){
-		$('#'+channelid).html('<p>Added to favorite</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+		$('#'+channelid).html('<p>Added to favorites</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
 	
 		 }
 	
@@ -139,7 +139,7 @@
 	
 		 success:function(data){
 	
-		$('#'+channelid).html('<p>Add to favorite</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+		$('#'+channelid).html('<p>Add to favorites</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
 	
 		 }
 	
@@ -196,9 +196,9 @@
 <div class="panel-footer" id="{{ $channeldet->id }}">
 {{-- {{ $channeldet->id }} --}}
 @if ($channeldet->favorited())	
-<p>Added to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
+<p>Added to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
 @else
-<p>Add to favorite</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
+<p>Add to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
 @endif
 
 </div>
