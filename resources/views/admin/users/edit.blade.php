@@ -2,6 +2,18 @@
 @section('stylesheets')
 <script defer src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
   .ui-widget.ui-widget-content {
     border: 1px solid #c5c5c5;
 }
@@ -256,7 +268,7 @@
               <label for="zipcode" class="col-md-4 control-label">zipcode</label>
 
               
-                <input id="zipcode" type="text" class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
+                <input id="zipcode" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"  class="form-control" name="zipcode" autofocus value="{{$user->zipcode}}" >
 
                 @if ($errors->has('zipcode'))
                 <span class="help-block">

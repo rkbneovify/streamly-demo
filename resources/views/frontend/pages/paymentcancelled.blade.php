@@ -252,7 +252,7 @@ input[type=number] {
 													</div><div class="col-md-6">
 															<div class='form-group zip required'>
 																	<label class='control-label'>Credit card zip</label>
-																	<input id="zipcode"  autocomplete='off' class='form-control'  name="zip" type='number'>
+																	<input id="zipcode"  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" autocomplete='off' class='form-control'  name="zip" type='number'>
 																	<small id="ziphelp" ></small>
 															</div>
 															@if ($errors->has('zip'))
