@@ -93,16 +93,18 @@ background: #fff;
   name="filter"
   placeholder="latitude"
   />
-  <button type="button" onclick="getInputValue();">Get Value</button>
+  <button type="button" onclick="getInputValue();">Check coordinates</button>
   </div>
 <div id='fitBounds' onclick='fly()'>Fly to next location</div>
 <script>
     let data ={!! json_encode($geojson, JSON_HEX_TAG) !!};
+
+let firstzipcordinates=data['features'][0]['geometry']['coordinates'][0][0];
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic2FoaWxrYXNoeWFwNjQiLCJhIjoiY2tkNDFxYmtoMXQxbjJybXlleGxhejE4MSJ9.LGSnbgHFFcuBE8wXHxIMiA';
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: [-160.4914,55.3192
+        center:  firstzipcordinates?firstzipcordinates:[-160.4914,55.3192
         ],
         zoom: 10
     });
@@ -155,6 +157,9 @@ JSON.stringify(e.point) +
 '<br />' +
 // e.lngLat is the longitude, latitude geographical position of the event
 JSON.stringify(e.lngLat.wrap());
+// console.log("e",e.lngLat);
+document.getElementById("lat").value = e.lngLat.lat;
+document.getElementById("lon").value = e.lngLat.lng;
 });
     // This variable will track your current coordinate array's index.
 var idx = 0;
@@ -223,16 +228,16 @@ function getInputValue(){
    turf.featureEach(data, function (currentFeature, featureIndex) {
     
     var geom = turf.getType(currentFeature)
-   console.log('currentFeature',currentFeature);
+  //  console.log('currentFeature',currentFeature);
   // console.log('featureIndex',featureIndex);
-  console.log('geom',geom);
+  // console.log('geom',geom);
   // console.log('geom',geome);
   if(geom == 'MultiPolygon') {
             
                       let coordinates =turf.multiPolygon( currentFeature.geometry.coordinates);
                       // console.log('multipolygon coordinate',coordinates);
                        ptsWithin = turf.booleanPointInPolygon(point, coordinates);
-                           console.log("Found in Multipolygon: : ", ptsWithin);
+                          //  console.log("Found in Multipolygon: : ", ptsWithin);
                            if(ptsWithin){
        zip=currentFeature.properties.title;
       // console.log('zipcode',zip);
@@ -243,12 +248,12 @@ function getInputValue(){
     let coordinates = turf.polygon(currentFeature.geometry.coordinates);
       //  console.log('polygon',coordinates);     
     found = turf.booleanPointInPolygon(point, coordinates);
-    console.log('found',found);
+    // console.log('found',found);
     if(found){
        zip=currentFeature.properties.title;
       // console.log('zipcode',zip);
     }
-                 console.log("Found in polygon: ", found);
+                //  console.log("Found in polygon: ", found);
    }
   // 
   //=featureIndex

@@ -50,12 +50,12 @@ background: #fff;
 <div id='fitBounds' onclick='fly()'>Fly to next location</div>
 <script>
     let data ={!! json_encode($geojson, JSON_HEX_TAG) !!};
-
+let firstzipcordinates=data['features'][0]['geometry']['coordinates'][0][0];
 	mapboxgl.accessToken = 'pk.eyJ1Ijoic2FoaWxrYXNoeWFwNjQiLCJhIjoiY2tkNDFxYmtoMXQxbjJybXlleGxhejE4MSJ9.LGSnbgHFFcuBE8wXHxIMiA';
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: [-160.4914,55.3192
+        center: firstzipcordinates?firstzipcordinates:[-160.4914,55.3192
         ],
         zoom: 10
     });
