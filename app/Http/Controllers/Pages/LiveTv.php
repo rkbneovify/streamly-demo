@@ -179,11 +179,13 @@ if($isDevice=='apple')  { //for apple serve m3u8
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('url');
+$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$url=$Channel->get('url');
+$channelId=$Channel->get('id');
 
 $relatedchannel=$record->get()->where('genrenae',$genre);
 
-  return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+  return view('frontend.pages.forapplelivetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml','channelId'));
 }else{ 
     // echo " non apple device";
     //for non apple "dash_url as url"
@@ -193,8 +195,9 @@ $relatedchannel=$record->get()->where('genrenae',$genre);
    
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
-
+$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$url=$Channel->get('dash_url as url');
+$channelId=$Channel->get('id');
   $relatedchannel=$record->get()->where('genrenae',$genre);
 
 
@@ -202,7 +205,7 @@ $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->ge
 
        
       
-    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','channelData','url','encoded_auth_xml'));
+    	return view('frontend.pages.livetvchannel', compact('login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
     }catch(Exception $e) {
             
             return $e->getMessage();

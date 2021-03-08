@@ -174,6 +174,7 @@ fetch(url, requestOptions)
   .catch(error => console.log('error', error));}
 
 
+
 })();
 	$('document').ready(function(){
 		var owl = $('.owl-carousel');
@@ -201,6 +202,30 @@ fetch(url, requestOptions)
 			});
 		
 	});
+
+function Addrecent(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/addtorecent';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("channelids", '{{$channelId[0]->id}}');
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.text())
+  // .then(result => console.log(result))
+  .catch(error => console.log('error', error));	}
 	var player,firstLoad = true;
  
   function init() {
@@ -291,7 +316,7 @@ fetch(url, requestOptions)
 							// console.log("15 secs");
 							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 							},15000);
-							
+							Addrecent();//save to recents
 
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
@@ -462,7 +487,7 @@ width: 100px;
 
 
 	<section class="page-section">
-{{-- {{$channelData}} --}}
+
 		<div class="full-width">
 			<div class="container">
 				<div class="row">
@@ -528,6 +553,7 @@ width: 100px;
 
 		<div class="container" style="margin-top: 4%;">
 			<h4 class="section-heading">Similar Channels</h4>
+			
 			<div class="row">
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
 					@foreach ($relatedchannel as $channeldet)
