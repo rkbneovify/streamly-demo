@@ -173,6 +173,31 @@ fetch(url, requestOptions)
   .then(response => response.text())
   // .then(result => console.log(result))
   .catch(error => console.log('error', error));}
+
+
+	function Addrecent(){
+		var base_url = window.location.origin;
+	let url=base_url+'/api/auth/addtorecent';
+		
+
+	var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("channelids", '{{$channelId[0]->id}}');
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch(url, requestOptions)
+  .then(response => response.text())
+  // .then(result => console.log(result))
+  .catch(error => console.log('error', error));	}
 				var player;
 
 		var CallSignValueURL = window.location.pathname.split('/')[2];
@@ -269,6 +294,7 @@ fetch(url, requestOptions)
 							// console.log("15 secs");
 							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 							},15000);
+							Addrecent();//save to recents
 });					
 player.on('pause', function() {
   console.log("it's paused bro");
