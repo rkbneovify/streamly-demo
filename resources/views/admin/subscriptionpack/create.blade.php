@@ -138,21 +138,24 @@
                 <input type="text" class="form-control amount" value="{{old('trial_period_days')}}" name="trial_period_days" id="trial_period_days" placeholder="10">
                 @if($errors->first('trial_period_days')) <p class="text-danger text-sm danger_text">{{ $errors->first('trial_period_days') }}</p> @endif
             </div>
-            <div class="form-row">
+            <div class="form-row" id="dynamic_field">
+              
               <div class="col-md-6">
                   <div class='form-group cvc required'>
                       <label class='control-label'>Text 1</label>
-                      <textarea name="text1" class='form-control' rows="5" cols="20"></textarea>
+                      <textarea name="text[text1]" class='form-control' rows="5" cols="20"></textarea>
                       <small class="help-block" style="display:none;"></small>
                   </div>
               </div><div class="col-md-6">
                   <div class='form-group zip required'>
                       <label class='control-label'>Text 2</label>
-                      <textarea name="text2" class='form-control' rows="5" cols="20"></textarea>
+                      <textarea name="text[text2]" class='form-control' rows="5" cols="20"></textarea>
                       <small id="ziphelp" ></small>
                   </div>
               </div>
+              
           </div>
+          <div class="row">  <div class="col-12"><button type="button" name="add" id="add" class="btn btn-primary">Add More</button></div></div>
               
             </div>
             <!-- /.card-body -->
@@ -183,6 +186,24 @@
 @section('scripts')
 
 <script>
+$(document).ready(function(){ 
+var i=1;
+      var number_of_child_divs =  $('#dynamic_field').children('.col-md-6').length;
+      var j=0;
+    $('#add').click(function(){  
+      j=i+ number_of_child_divs;
+    i++;  
+    
+    $('#dynamic_field').append(`<div class="col-md-6" id="row`+i+`" ><div class="form-group cvc required"><label class="control-label">Text `+j+` </label>
+        <textarea name="text[text`+j+`]" class="form-control" rows="5" cols="20"></textarea> <small class="help-block" style="display:none;"></small> </div>
+      <div class="row"><button type="button" name="remove" id="`+i+`" class="btn btn-danger btn_remove">X</button></div></div>`);  
+});  
+
+
+$(document).on('click', '.btn_remove', function(){  
+    var button_id = $(this).attr("id");   
+    $('#row'+button_id+'').remove();  
+}); 
 $(document).on('change','#plan_interval',function(e){
   var interval = $('#plan_interval').val();
   if(interval == 'custom'){
@@ -233,6 +254,6 @@ $('#interval_count').on('blur',function () {
         $('#interval_count').val(0);
         alert("Please input valid days.");
     }
-});
+});}); 
 </script>
 @stop
