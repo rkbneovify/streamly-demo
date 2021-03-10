@@ -65,6 +65,22 @@
 	left: 13px;
 	top:6px;
 }
+
+
+details > summary {
+    list-style-type: none;
+}
+
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+details > summary::before {
+    content: '\002630';
+}
+details[open] > summary::before {
+    content: '\2715';
+}
 	</style>
   
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
