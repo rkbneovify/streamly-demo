@@ -14,18 +14,6 @@
 			width: 640px;
 			margin: 0 auto;
 	}
-	.inputForm div {
-					margin-bottom: 10px;
-			}
-
-			label {
-					width: 135px;
-					display: inline-block;
-			}
-
-			input[type="text"] {
-					width: 500px;
-			}
 </style>
 
 <link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
@@ -306,6 +294,7 @@ fetch(url, requestOptions)
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
 	player.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], function () {
+		
 						console.log("bro it is playing");
 						//hit geo fence api check if inside or not if not than pop will come up to log the info
             tabplayer.broadcast('stop');
@@ -480,6 +469,25 @@ width: 100px;
 		.owl-stage-outer {
 			height: 100%;
 		}
+		#overlay {
+  position: absolute; 
+  /* top: 100px;  */
+	left: 5px;
+  top: 5px;
+  color: #FFF; 
+  text-align: center;
+  font-size: 20px;
+  background-color: #000;
+  /* width: 640px; */
+	width: fit-content; 
+	
+	/* height: fit-content; */
+  padding: 10px 0;
+  z-index: 2;
+	/* height: 100%; */
+	
+}
+
 	</style>
 @endsection
 
@@ -492,7 +500,24 @@ width: 100px;
 			<div class="container">
 				<div class="row">
 					<div class="col-md-8 col-centered">
-						<video  autoplay="" preload="auto" id="videoPlayer"   > </video>
+						<video  autoplay="" preload="auto" id="videoPlayer" > </video>
+
+  <div id="overlay">
+		
+<details>
+  <summary>Menu</summary><ul style="
+  list-style: none;
+  max-height: 300px;
+	
+  overflow-x: hidden;
+  overflow-y: scroll;">
+		@foreach ($allchannel as $channel)	
+  <a href ='/livetv/{{$channel->CallSign}}/{{$channel->genrenae}}'
+	{{-- /livetv/'+data.CallSign+'/'+data.genrename --}}
+	><li><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>{{$channel->StationName}}</li></a>
+	@endforeach
+</ul>
+</details> </div>
             <div id="videoController" class="video-controller unselectable">
               <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
                   <span id="iconPlayPause" class="icon-play"></span>
@@ -555,6 +580,8 @@ width: 100px;
 			<h4 class="section-heading">Similar Channels</h4>
 			
 			<div class="row">
+				{{-- {{$allchannel }} --}}
+				
 				<div class="live-news-carousel arrow-custom-car owl-carousel">
 					@foreach ($relatedchannel as $channeldet)
 
