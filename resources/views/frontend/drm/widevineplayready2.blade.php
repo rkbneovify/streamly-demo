@@ -15,7 +15,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@2.0.9/dist/videojs-contrib-quality-levels.min.js"></script>
 	
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-overlay/1.1.4/videojs-overlay.min.js" integrity="sha512-Irzpe7nqWcHdM2s+j7WqeLatQZiRT5IL6p7CUodqQdopoZc2Nf1Gb515BCP603S7RdfhPTIuKXXFRwQOnvNBeg==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/videojs-overlay/1.1.4/videojs-overlay.css" integrity="sha512-EM37fvCe8JZsfwiXYX9neImZ3oiwbmH16VGG8PMi0HhBU9TJi+/nVQ9+bNSwheGFfUsFqg36L9eEkDO3bjsTzg==" crossorigin="anonymous" />
 <script>
 	$('document').ready(function(){
 		var player = videojs('player', {
@@ -35,7 +36,30 @@
     'fullscreenToggle': true,
           }
       });
-	
+			player.overlay({
+        content: 'Default overlay content',
+        debug: true,
+        overlays: [{
+          content: 'The video is Pause!',
+          start: 'pause',
+          end: 'play'
+        }, {
+          start: 0,
+          end: 15,
+          align: 'bottom-left'
+        }, {
+          start: 15,
+          end: 30,
+          align: 'bottom'
+        }, {
+          start: 30,
+          end: 45,
+          align: 'bottom-right'
+        }, {
+          start: 20,
+          end: 'pause'
+        }]
+      });
 		player.httpSourceSelector();
 
 					// Init eme plugin to work with DRM. Set header common for all license related requests: https://github.com/videojs/videojs-contrib-eme/tree/v3.5.0#emeheaders
