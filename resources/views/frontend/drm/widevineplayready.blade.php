@@ -5,6 +5,66 @@
 		nav#mainNav {
 			background-color: #004E92;
 		}
+
+/* Player parent DIV  */
+.play-parent {
+	width:100%;  /* width depends on your layout and needs  */
+	position:relative;
+	overflow:hidden;
+}
+/* Semi-transparent DIV element to cover entire player */
+.div-over {
+	background:red;
+	/* background:rgba(0,0,0,0.5); */
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:2147483647;
+	display:none;
+	overflow:hidden;
+}
+/* Centered DIV element for our banner ad */
+.overlay {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	display:inline-block;
+}
+/* Close button */
+.over-close {
+	width: 28px;
+	height: 28px;
+	position: absolute;
+	top:10px;
+	right:10px;
+	background:#fff;
+	cursor:pointer;
+	border-radius:50%;
+	-webkit-border-radius:50%;
+	-moz-border-radius:50%;
+}
+.over-close:after {
+	content: '';
+	height: 16px;
+	border-left: 2px solid #222;
+	position: absolute;
+	transform: rotate(45deg);
+	left: 13px;
+	top:6px;
+}
+
+.over-close:before {
+	content: '';
+	height: 16px;
+	border-left: 2px solid #222;
+	position: absolute;
+	transform: rotate(-45deg);
+	left: 13px;
+	top:6px;
+}
 	</style>
   
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
@@ -19,6 +79,7 @@
  
 		<script>
 		$('document').ready(function(){
+			
 			var player = videojs('player');
 		
 			player.httpSourceSelector();
@@ -32,9 +93,37 @@
             });
  
 						player.on('ready', function() {
+							var show_on_start = true;  <!--// Set true to show overlay banner before video start-->
+
+							<!--// Find overlay elements-->
+		 var parent = player.el().parentNode;
+		 var closeBtn = parent.querySelector('.over-close');
+		 var overlay = parent.querySelector('.div-over');
+		 <!--// Close overlay and play media file on close button click-->
+		 closeBtn.addEventListener('click',function(e) {
+			overlay.style.display='none';
+			player.play();
+		 }, false);
+
+		 <!--// Show overlay on Pause event-->
+ 		 this.on("pause", function(){
+			if (!this.seeking() && this.paused()) {
+				overlay.style.display='block';
+			}
+		 });
+
+		 <!--// Hide overlay on Play event-->
+		 this.on('play', function(e) {
+			overlay.style.display='none';
+		 });
+		 if(show_on_start) {
+			player.pause(); overlay.style.display='block';
+		 } else {
+			overlay.style.display='none';
+		 }
                 // Setup dash + pr/wv
 								var wvprDashSrc = {
-                    src: 'https://channelstore1.streamlytv.com/drmtest/index.mpd',
+                    src: 'https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8',
                     type: 'application/dash+xml',
                     // keySystems: {
                     //     'com.widevine.alpha': "https://streamlytv.com/api/generic?drm-type=widevine",
@@ -188,12 +277,21 @@
 			<div class="container">
 				<div class="row">
 				
-					<div class="col-md-8 col-centered">
-							<video id="player" width="600" height="300" class="video-js vjs-default-skin" controls></video>
+					<div class="col-md-8 col-centered ">
+							<video id="player" width="600" height="300" class="video-js vjs-default-skin play-parent" controls></video>
 							<!-- <source src="http://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8" type="application/x-mpegURL"/> -->
 							<source src="" type="application/x-mpegURL"/>
 					</video>
-
+					<div class="div-over">
+						<div class="overlay" style="background-color: yellow;">
+							<details>
+								<summary>Epcot Center</summary>
+								<p>Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international pavilions, award-winning fireworks and seasonal special events.</p>
+							</details>
+							
+						</div>
+						<div class="over-close">
+					</div></div>
 						<div class="channel-detail">
 							<p>ghghg</p>
 						</div>

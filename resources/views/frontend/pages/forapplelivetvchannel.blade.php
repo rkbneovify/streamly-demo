@@ -9,18 +9,6 @@
 			width: 100%;
 	}
 
-	.inputForm div {
-					margin-bottom: 10px;
-			}
-
-			label {
-					width: 135px;
-					display: inline-block;
-			}
-
-			input[type="text"] {
-					width: 500px;
-			}
 </style>
 
 <link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
@@ -235,6 +223,11 @@ fetch(url, requestOptions)
       });
 					player.httpSourceSelector();
 					player.eme();
+					// Set relative position for player and overlay parent <div> element
+player.el().parentNode.style.position='relative';
+// Get overlay element
+var overlay = document.querySelector("#my_overlay");
+
 					player.on('ready', function() {
 							// Helper functions.
 							var base64DecodeUint8Array = function (a) { var b = window.atob(a), c = b.length, d = new Uint8Array(new ArrayBuffer(c)); for (i = 0; i < c; i++)d[i] = b.charCodeAt(i); return d };
@@ -288,6 +281,7 @@ fetch(url, requestOptions)
   console.log("it's playing bro");
 	tabplayer.broadcast('stop');
 	 document.title = 'play...';
+       overlay.style.display="none";
 
 						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 						setInterval(function(){ 
@@ -298,7 +292,15 @@ fetch(url, requestOptions)
 });					
 player.on('pause', function() {
   console.log("it's paused bro");
+	overlay.style.display="block";
+
 });
+
+// Hide banner ad on overlay click (close) and ply video
+overlay.onclick = function() {
+ overlay.style.display="none";
+  player.play();
+}
 					});
 			})();
 	$('document').ready(function(){
@@ -461,22 +463,71 @@ width: 100px;
 		.owl-stage-outer {
 			height: 100%;
 		}
+
+		#my_overlay {
+	/* background:rgba(0,0,0,0.5); */
+	background:yellow;
+
+		width: fit-content; 
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:99;
+	display:none;
+	overflow:hidden;
+}
+#my_overlay .overlay-in {
+	position:absolute;
+	left: 5px;
+  top: 5px;
+	transform: translate(-50%, -50%);
+	display:inline-block;
+}
+#my_overlay .overlay-close {
+	width: 28px;
+	height: 28px;
+	background:url(/images/overlay svg);
+	top:10px;
+	left:10px;
+	cursor:pointer;
+	position:absolute;
+}
 	</style>
 @endsection
 
 @section('content')
 
-
+https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html
 	<section class="page-section">
 {{-- {{$channelData}} --}}
 		<div class="full-width">
 			<div class="container">
 				<div class="row">
 				
-					<div class="col-md-8 col-centered">
+					<div class="col-md-8 col-centered" >
 						
-						<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls></video>
-
+						<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls ></video>
+						<div id="my_overlay">
+							<div class="oberlay-in">
+								 
+<details>
+  <summary>Menu</summary><ul style="
+  list-style: none;
+  max-height: 300px;
+	
+  overflow-x: hidden;
+  overflow-y: scroll;">
+		@foreach ($allchannel as $channel)	
+  <a href ='/livetv/{{$channel->CallSign}}/{{$channel->genrenae}}'
+	{{-- /livetv/'+data.CallSign+'/'+data.genrename --}}
+	><li><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>{{$channel->StationName}}</li></a>
+	@endforeach
+</ul>
+</details> 
+							</div>
+							<div class="overlay-close"></div>
+					 </div>
 						{{-- <div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
 						</div> --}}
