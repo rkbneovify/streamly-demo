@@ -9,6 +9,67 @@
 			width: 100%;
 	}
 
+
+/* Player parent DIV  */
+.play-parent {
+	width:100%;  /* width depends on your layout and needs  */
+	position:relative;
+	overflow:hidden;
+}
+/* Semi-transparent DIV element to cover entire player */
+.div-over {
+	/* background:#27507E; */
+	/* background:rgba(0,0,0,0.5); */
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:2147483647;
+	display:none;
+	overflow:hidden;
+}
+/* Centered DIV element for our banner ad */
+.overlay {
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	display:inline-block;
+}
+/* Close button */
+.over-close {
+	width: 28px;
+	height: 28px;
+	position: absolute;
+	top:10px;
+	right:10px;
+	background:#fff;
+	cursor:pointer;
+	border-radius:50%;
+	-webkit-border-radius:50%;
+	-moz-border-radius:50%;
+}
+.over-close:after {
+	content: '';
+	height: 16px;
+	border-left: 2px solid #222;
+	position: absolute;
+	transform: rotate(45deg);
+	left: 13px;
+	top:6px;
+}
+
+.over-close:before {
+	content: '';
+	height: 16px;
+	border-left: 2px solid #222;
+	position: absolute;
+	transform: rotate(-45deg);
+	left: 13px;
+	top:6px;
+}
+
 </style>
 
 <link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
@@ -223,12 +284,37 @@ fetch(url, requestOptions)
       });
 					player.httpSourceSelector();
 					player.eme();
-					// Set relative position for player and overlay parent <div> element
-player.el().parentNode.style.position='relative';
-// Get overlay element
-var overlay = document.querySelector("#my_overlay");
 
 					player.on('ready', function() {
+
+						var show_on_start = true;  <!--// Set true to show overlay banner before video start-->
+
+<!--// Find overlay elements-->
+var parent = player.el().parentNode;
+var closeBtn = parent.querySelector('.over-close');
+var overlay = parent.querySelector('.div-over');
+<!--// Close overlay and play media file on close button click-->
+		 closeBtn.addEventListener('click',function(e) {
+			overlay.style.display='none';
+			player.play();
+		 }, false);
+
+		 <!--// Show overlay on Pause event-->
+ 		 this.on("pause", function(){
+			if (!this.seeking() && this.paused()) {
+				overlay.style.display='block';
+			}
+		 });
+
+		 <!--// Hide overlay on Play event-->
+		 this.on('play', function(e) {
+			overlay.style.display='none';
+		 });
+		 if(show_on_start) {
+			player.pause(); overlay.style.display='block';
+		 } else {
+			overlay.style.display='none';
+		 }
 							// Helper functions.
 							var base64DecodeUint8Array = function (a) { var b = window.atob(a), c = b.length, d = new Uint8Array(new ArrayBuffer(c)); for (i = 0; i < c; i++)d[i] = b.charCodeAt(i); return d };
 							var base64EncodeUint8Array = function (a) { for (var d, e, f, g, h, i, j, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", c = "", k = 0; k < a.length;)d = a[k++], e = k < a.length ? a[k++] : Number.NaN, f = k < a.length ? a[k++] : Number.NaN, g = d >> 2, h = (3 & d) << 4 | e >> 4, i = (15 & e) << 2 | f >> 6, j = 63 & f, isNaN(e) ? i = j = 64 : isNaN(f) && (j = 64), c += b.charAt(g) + b.charAt(h) + b.charAt(i) + b.charAt(j); return c };
@@ -281,7 +367,6 @@ var overlay = document.querySelector("#my_overlay");
   console.log("it's playing bro");
 	tabplayer.broadcast('stop');
 	 document.title = 'play...';
-       overlay.style.display="none";
 
 						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 						setInterval(function(){ 
@@ -292,15 +377,9 @@ var overlay = document.querySelector("#my_overlay");
 });					
 player.on('pause', function() {
   console.log("it's paused bro");
-	overlay.style.display="block";
 
 });
 
-// Hide banner ad on overlay click (close) and ply video
-overlay.onclick = function() {
- overlay.style.display="none";
-  player.play();
-}
 					});
 			})();
 	$('document').ready(function(){
@@ -464,41 +543,27 @@ width: 100px;
 			height: 100%;
 		}
 
-		#my_overlay {
-	/* background:rgba(0,0,0,0.5); */
-	background:yellow;
+		details > summary {
+    list-style-type: none;
+}
 
-		width: fit-content; 
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index:99;
-	display:none;
-	overflow:hidden;
+details > summary::-webkit-details-marker {
+    display: none;
 }
-#my_overlay .overlay-in {
-	position:absolute;
-	left: 5px;
-  top: 5px;
-	transform: translate(-50%, -50%);
-	display:inline-block;
+
+details > summary::before {
+    content: '\002630';
 }
-#my_overlay .overlay-close {
-	width: 28px;
-	height: 28px;
-	background:url(/images/overlay svg);
-	top:10px;
-	left:10px;
-	cursor:pointer;
-	position:absolute;
+details[open] > summary::before {
+    content: '\2715';
 }
+
 	</style>
 @endsection
 
 @section('content')
 
-https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html
+{{-- https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html --}}
 	<section class="page-section">
 {{-- {{$channelData}} --}}
 		<div class="full-width">
@@ -508,14 +573,16 @@ https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html
 					<div class="col-md-8 col-centered" >
 						
 						<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls ></video>
-						<div id="my_overlay">
-							<div class="oberlay-in">
-								 
+
+					<div class="div-over">
+						<div class="overlay" >
+										 
 <details>
   <summary>Menu</summary><ul style="
   list-style: none;
   max-height: 300px;
 	
+  background-color: #27507E;
   overflow-x: hidden;
   overflow-y: scroll;">
 		@foreach ($allchannel as $channel)	
@@ -525,9 +592,11 @@ https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html
 	@endforeach
 </ul>
 </details> 
-							</div>
-							<div class="overlay-close"></div>
-					 </div>
+							
+						</div>
+						<div class="over-close">
+					</div></div>
+						
 						{{-- <div class="channel-detail">
 							<p>{{$channelData[0]->callSign??'channel detail'}}</p>
 						</div> --}}
