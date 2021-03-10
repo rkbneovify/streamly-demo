@@ -290,11 +290,13 @@ fetch(url, requestOptions)
 							// var url = "https://livesim.dashif.org/livesim/testpic_2s/Manifest.mpd";
 							var url = "{{$url[0]->url??'no url found'}}";
               // var url = "http://videos.electroteque.org/playready/big_buck_bunny.ism/Manifest";
+							var overlay = document.getElementById('overlay');
+							overlay.style.display='block';
                   player.initialize(document.querySelector("video"), url, false);
                   var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
   controlbar.initialize();
 	player.on(dashjs.MediaPlayer.events["PLAYBACK_PLAYING"], function () {
-		
+		overlay.style.display='none';
 						console.log("bro it is playing");
 						//hit geo fence api check if inside or not if not than pop will come up to log the info
             tabplayer.broadcast('stop');
@@ -310,6 +312,7 @@ fetch(url, requestOptions)
         });
         player.on(dashjs.MediaPlayer.events["PLAYBACK_PAUSED"], function () {
             console.log("bro it is paused");
+						overlay.style.display='block';
             
         });   
 				// player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
@@ -488,6 +491,22 @@ width: 100px;
 	
 }
 
+details > summary {
+    list-style-type: none;
+
+}
+
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+details > summary::before {
+    content: '\002630';
+}
+details[open] > summary::before {
+    content: '\2715';
+}
+
 	</style>
 @endsection
 
@@ -509,6 +528,7 @@ width: 100px;
   list-style: none;
   max-height: 300px;
 	
+  background-color: #27507E;
   overflow-x: hidden;
   overflow-y: scroll;">
 		@foreach ($allchannel as $channel)	
