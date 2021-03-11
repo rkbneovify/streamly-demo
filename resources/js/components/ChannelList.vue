@@ -31,7 +31,9 @@
 
                 <!-- Channel list -->
                 <div class="channel__name__box" @click.prevent="onChannelClick(channel)" :data-channel="channel.channelId" v-for="channel in filteredChannelList" v-bind:key="channel.channelId" track-by="channel.channelId">
-              
+              <div class="favourite" @click.stop="onClick(channel)">
+                        <a v-bind:href="'/livetv/'+ channel.CallSign+'/'+channel.genrename[0]">View </a>
+                      </div>
                     <div class="channel__name">
                       
                         <div>{{channel.channelTitle}}</div>
