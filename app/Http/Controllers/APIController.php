@@ -440,11 +440,13 @@ if($count >=  $limit){
 }
         $now = Carbon::now('utc')->toDateTimeString();
        
-        
+        $ActiveChannelIds=Channel::toBase()->select('id')->where('status','=','1')->pluck('id')
+         ->toArray();
         $channelid = $request->input('channelids');
-       
-        $channels= preg_split('/,/', $channelid, -1, PREG_SPLIT_NO_EMPTY);
-        $channelArr= array_unique($channels, SORT_NUMERIC);
+        $channels= explode(',',$channelid);
+
+        $channelIDArrByUser= array_unique($channels, SORT_NUMERIC);
+        $channelArr = array_intersect($ActiveChannelIds,$channelIDArrByUser);  
         $model=new RecentChannel;
     
         
@@ -466,26 +468,7 @@ foreach ($channelArr as $value) {
 }
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
-        
-$recentschannel = JWTAuth::user()->recentschannel;
-if($isDevice=='apple')    {
-    $recentschannel->map(function ($address)  {
-
-      unset($address['dash_url']);
-        return $address;
-    
-    });
-}else{
-
-$recentschannel->map(function ($address)  {
-
-         
-    $address['url'] = $address['dash_url'];
-  unset($address['dash_url']);
-    return $address;
-
-});
-}
+$recentschannel=$this->getRecentsChannelUrlForDevice($isDevice);
 
      $response = [
         'success' => true,
@@ -507,6 +490,29 @@ $recentschannel->map(function ($address)  {
 
     
 }
+public function getRecentsChannelUrlForDevice($isDevice){
+           
+$recentschannel = JWTAuth::user()->recentschannel;
+if($isDevice=='apple')    {
+    $recentschannel->map(function ($address)  {
+
+      unset($address['dash_url']);
+        return $address;
+    
+    });
+}else{
+
+$recentschannel->map(function ($address)  {
+
+         
+    $address['url'] = $address['dash_url'];
+  unset($address['dash_url']);
+    return $address;
+
+});
+}
+return $recentschannel;
+}
 public function myRecents(Request $request)
     { try { 
         
@@ -514,26 +520,7 @@ public function myRecents(Request $request)
         $isDevice=isDeviceAppleRokuOthers($ua);
         
        
-        $recentschannel = JWTAuth::user()->recentschannel;
-        if($isDevice=='apple')   {
-            $recentschannel->map(function ($address)  {
-
-              unset($address['dash_url']);
-                return $address;
-            
-            });
-        }else{
-        
-        $recentschannel->map(function ($address)  {
-
-                 
-            $address['url'] = $address['dash_url'];
-          unset($address['dash_url']);
-            return $address;
-        
-        });
-    }
-       
+        $recentschannel=$this->getRecentsChannelUrlForDevice($isDevice);
 
         $response = [
             'success' => true,
