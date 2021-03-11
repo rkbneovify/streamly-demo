@@ -24,7 +24,13 @@ class EpgController extends Controller
         
         $type='url';
 $record = $this->channeljsonFunc($type);
-$pagechannel=$record->get();
+$pagechannel=$record->get()->map(function ($message, $key) {
+        
+    $message->genrename = json_decode($message->genrename, true);
+
+
+return $message;
+});
  //  return response()->json($record->toSql());
  $response = [
     'responseMessage' => 'Success',
@@ -36,25 +42,19 @@ return response()->json($response, 200);
     }
 
     public function channeljsonFunc($type){
-        // DB::raw('concat(channels.id,"") channelStbNumber')
-        $record = Channel::select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber')
-        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-        // ->selectRaw("concat( '[',GROUP_CONCAT(IFNULL(QUOTE(g.name), 'Others')),']') genrename")
-        // ->selectRaw("GROUP_CONCAT(g.name) genrename")
-        // ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
-        ->where('channels.status','=','1')
-        // ->selectRaw("JSON_ARRAY(GROUP_CONCAT(IFNULL(g.name, 'Others'))) genrename")
-        
-        ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-    //     ->whereIn('channels.callSign', function($query)
-    // {
-    //     $query->select('CallSign')
-    //           ->from('gracenotechannels');
-              
-    // })
-    ->orderBy('callSign', 'asc')
-    ->groupBy('channels.id');
-    return $record;
+  
+    $second=Channel::select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
+    // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
+           
+        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+           
+           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+    
+    ->where('channels.status','=','1')
+    ->groupBy('channels.id')
+    ->orderBy('channels.name', 'asc');
+    return $second;
     }
     public function programelist(Request $request) {
          $grace= Gracenote::select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
