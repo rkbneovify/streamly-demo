@@ -212,32 +212,8 @@ class BuyDRMController extends Controller
   }
 
   $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
-  try {    
-    // Create authentication XML object instance.
-    $auth_xml_generator = new \KeyOSAuthXMLGenerator($certificate);
-
-    // Set authentication XML expiration time in UTC. For production you would want to set this value to time enough to acquire
-    // a license (1 minute or less). For test purposes especially if you don't regenerate the authentication XML and use
-    // it as static value on your HTML page (which you should not do in production), you can set the time to a day or week etc...
-    $auth_xml_generator->setAuthXMLExpirationTime('+1 day');
-	
-    // Settings for PlayReady license.
-    $lic_simple = $auth_xml_generator->newSimpleLicense();
-
-    // Settings for Widevine license.
-    $wv_lic = $auth_xml_generator->newWidevineLicense();
-
-    // Settings for FairPlay license.
-    $fp_lic = $auth_xml_generator->newFairPlayLicense();
-
-    // Generate, sign and Base64-encode authentication XML
-    $generated_auth_xml = $auth_xml_generator->generateAuthenticationXML();
-    $signed_auth_xml = $auth_xml_generator->signAuthenticationXML($generated_auth_xml);
-    $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($signed_auth_xml);
-  }
-  catch(Exception $e) {
-    exit ('Error: ' . $e->getMessage());
-  }
+  
+  $encoded_auth_xml=$this->getTheEncodedAuthXml($certificate);
 
   // POST Headers may be different depending on the DRM type.
   if (strtolower($drm_type) === 'playready') {
@@ -293,5 +269,33 @@ class BuyDRMController extends Controller
       exit('CURL request failed.');
 
     return $response;
+  }
+
+  protected function getTheEncodedAuthXml($certificate){
+    try {    
+      // Create authentication XML object instance.
+      $auth_xml_generator = new \KeyOSAuthXMLGenerator($certificate);
+  
+      // Set authentication XML expiration time in UTC. For production you would want to set this value to time enough to acquire
+      // a license (1 minute or less). For test purposes especially if you don't regenerate the authentication XML and use
+      // it as static value on your HTML page (which you should not do in production), you can set the time to a day or week etc...
+      $auth_xml_generator->setAuthXMLExpirationTime('+1 day');
+    
+      // Settings for PlayReady license.
+      $lic_simple = $auth_xml_generator->newSimpleLicense();
+  
+      // Settings for Widevine license.
+      $wv_lic = $auth_xml_generator->newWidevineLicense();
+  
+      // Settings for FairPlay license.
+      $fp_lic = $auth_xml_generator->newFairPlayLicense();
+  
+      // Generate, sign and Base64-encode authentication XML
+      $generated_auth_xml = $auth_xml_generator->generateAuthenticationXML();
+      $signed_auth_xml = $auth_xml_generator->signAuthenticationXML($generated_auth_xml);
+     return $encoded_auth_xml = $auth_xml_generator->encodeAuthenticationXML($signed_auth_xml);
+    }catch(Exception $e) {
+      exit ('Error: ' . $e->getMessage());
+    }
   }
 }
