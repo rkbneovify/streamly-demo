@@ -435,90 +435,16 @@ function getDeviceIdforAPI($request){
 
 
 function sortplayererrorcode($code,$isDevice){
-  $weberrorcode=[0,1,2,3,4,5];
-  $rokuerrorcode=[0,-1,-2,-3,-4,-5,-6];
-  $appleTVerrorcode=[11863,11867,11853,11866];
-  $color = '';
+ 
   if($isDevice=='appletv') {
-    if(in_array($code, $appleTVerrorcode)){
-  
-      switch($code){
-        case 11863:
-          $color='blue';
-          break;
-      case 11867:
-        $color='green';
-        break;
-        case 11853:
-        $color='yellow';
-        break;
-        case 11866:
-        $color='red';
-        break;
-      }
-      return $color;
-    } else{
-  
-      return $color='black';
-  
-    }
+    return $color= AppleTVErrorCode($code);
   }
   if($isDevice=='roku'){
-    // return 'tyi';
-    // return in_array($code, $rokuerrorcode);
-    if(in_array($code, $rokuerrorcode)){
-      switch($code){
-        case 0:
-        case -2:
-          $color='blue';
-          break;
-      case -1:
-        $color='green';
-        break;
-        case -6:
-        $color='yellow';
-        break;
-        case -5:
-        $color='red';
-        break;
-        case -4:
-        $color='pink';
-        break; 
-        case -3:
-        $color='white';
-        break;
-      } 
-      return $color;
-    }else{ return 'black';}
+    return $color= RokuTVErrorCode($code);
     
   }
   if($isDevice=='videojs'){
-    if(in_array($code, $appleTVerrorcode)){
-      switch($code){
-        
-        case 2:
-          $color='blue';
-          break;
-      case 3:
-        $color='green';
-        break;
-        case 5:
-        $color='yellow';
-        break;
-        case 4:
-        $color='red';
-        break;
-        case 1:
-        $color='pink';
-        break; 
-        case 0:
-        $color='white';
-        break;
-      }
-  
-      return $color;
-    }else{ return $color='black';}
-    
+    return $color=VideoJSErrorCode($code);
   }
   
   }
@@ -545,6 +471,94 @@ return $resp;
 }catch(\GuzzleHttp\Exception\RequestException $e){
 
 }
+}
+
+ function RokuTVErrorCode($code)
+{  
+  $rokuerrorcode=[0,-1,-2,-3,-4,-5,-6];
+  $color = '';
+  if(in_array($code, $rokuerrorcode)){
+    switch($code){
+      case 0:
+      case -2:
+        $color='blue';
+        break;
+    case -1:
+      $color='green';
+      break;
+      case -6:
+      $color='yellow';
+      break;
+      case -5:
+      $color='red';
+      break;
+      case -4:
+      $color='pink';
+      break; 
+      case -3:
+      $color='white';
+      break;
+    } 
+    return $color;
+  }else{ return 'black';}
+} 
+
+function AppleTVErrorCode($code)
+{  
+  $appleTVerrorcode=[11863,11867,11853,11866];
+  $color = '';
+  if(in_array($code, $appleTVerrorcode)){
+  
+    switch($code){
+      case 11863:
+        $color='blue';
+        break;
+    case 11867:
+      $color='green';
+      break;
+      case 11853:
+      $color='yellow';
+      break;
+      case 11866:
+      $color='red';
+      break;
+    }
+    return $color;
+  } else{
+
+    return $color='black';
+
+  }
+}
+function VideoJSErrorCode($code)
+{  $weberrorcode=[0,1,2,3,4,5];
+  $color = '';
+  if(in_array($code, $appleTVerrorcode)){
+    switch($code){
+      
+      case 2:
+        $color='blue';
+        break;
+    case 3:
+      $color='green';
+      break;
+      case 5:
+      $color='yellow';
+      break;
+      case 4:
+      $color='red';
+      break;
+      case 1:
+      $color='pink';
+      break; 
+      case 0:
+      $color='white';
+      break;
+    }
+
+    return $color;
+  }else{ return $color='black';}
+  
 }
 
 ?>
