@@ -54,12 +54,10 @@
         "com.widevine.alpha": {
           // serverURL: "//demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=widevine",
           serverURL: "{{ url('/api/generic?drm-type=widevine') }}",
-          // httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
           clearkeys: ""
         },
         "com.microsoft.playready": {
           serverURL: "{{ url('/api/generic?drm-type=playready') }}",
-          // httpRequestHeaders: {customdata:'{{$encoded_auth_xml}}'},
           clearkeys: ""
         }
       });

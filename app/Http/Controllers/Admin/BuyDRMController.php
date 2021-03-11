@@ -155,9 +155,8 @@ class BuyDRMController extends Controller
         
     } 
 
-    public function proxyServer(){
-
-  // License challenge/payload.
+public function getPayload(){
+             // License challenge/payload.
   $payload = '';
 
   // Get the challenge/payload string that player sent to this script.
@@ -168,6 +167,11 @@ class BuyDRMController extends Controller
   if (empty($payload)) {
     exit('`Challenge/payload` is empty.');
   }
+
+  return $payload;
+    }
+public function get_drm_type(){
+ 
 
   // Get DRM type.
   $drm_type = '';
@@ -182,22 +186,31 @@ class BuyDRMController extends Controller
   if (empty($drm_type)) {
     exit('Neither `x-keyos-drm-type` header, nor `drm-type` query param set.');
   }
-
+return $drm_type;
+    }
+public function get_la_url($drm_type){
+ 
+// Alter license acquisition URLs if needed
+if ($drm_type == 'widevine') {
+  $la_url = 'https://wv-keyos.licensekeyserver.com/';
+}
+else if ($drm_type == 'playready') {
+  $la_url = 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx';
+}
+else if ($drm_type == 'fairplay') {
+  $la_url = 'https://fp-keyos.licensekeyserver.com/getkey';
+}
+else {
+  exit('Neither `x-keyos-la-url` header, nor `la-url` query param set. Can\'t determine license acquisition URL.');
+}
+return $la_url;
+    }
+public function proxyServer(){
+      $payload =  $this->getPayload();
+$drm_type =$this->get_drm_type();
   $drm_type = strtolower($drm_type);
 
-  // Alter license acquisition URLs if needed
-  if ($drm_type == 'widevine') {
-    $la_url = 'https://wv-keyos.licensekeyserver.com/';
-  }
-  else if ($drm_type == 'playready') {
-    $la_url = 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx';
-  }
-  else if ($drm_type == 'fairplay') {
-    $la_url = 'https://fp-keyos.licensekeyserver.com/getkey';
-  }
-  else {
-    exit('Neither `x-keyos-la-url` header, nor `la-url` query param set. Can\'t determine license acquisition URL.');
-  }
+  $la_url=$this->get_la_url($drm_type);
 
   // The SERVICE_CERTIFICATE_REQUEST is a 2 byte payload in the license acquisition request: 0x0804 (CAQ=).
   if (strtolower($drm_type) === 'widevine' && strlen($payload) === 2 && unpack('H*', $payload)[1] === '0804') {
