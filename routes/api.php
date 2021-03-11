@@ -51,14 +51,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
        Route::get('zipcode', 'ZipcodeController@zipjson');
        //channel api
 
-    Route::get('channellist', 'Admin\ChannelController@channeljson');
-    Route::get('check', 'Admin\ChannelController@checkdevice');
-    Route::post('channelschdeule', 'Admin\ChannelController@channelschedulejson');
-    Route::get('channeldayschdeule', 'Admin\ChannelController@channelDaysSchedule');
-    Route::get('oldchanneldayschdeule', 'Admin\ChannelController@oldchannelDaysSchedule');
-    Route::get('frontendepg', 'Admin\ChannelController@frontEpgchannelDaysSchedule');
-    Route::get('frontendepg2', 'Admin\ChannelController@frontEpgchannelDaysSchedule2');
-    Route::get('frontendepgpacific', 'Admin\ChannelController@PacificFrontEpgchannelDaysSchedule');
+    Route::get('channellist', 'Admin\ChannelAPIController@channeljson');
+    Route::get('check', 'Admin\ChannelAPIController@checkdevice');
+    Route::post('channelschdeule', 'Admin\ChannelAPIController@channelschedulejson');
+    Route::get('channeldayschdeule', 'Admin\ChannelAPIController@channelDaysSchedule');
+    Route::get('oldchanneldayschdeule', 'Admin\ChannelAPIController@oldchannelDaysSchedule');
+    Route::get('frontendepg', 'Admin\ChannelAPIController@frontEpgchannelDaysSchedule');
+    Route::get('frontendepg2', 'Admin\ChannelAPIController@frontEpgchannelDaysSchedule2');
+    Route::get('frontendepgpacific', 'Admin\ChannelAPIController@PacificFrontEpgchannelDaysSchedule');
     Route::get('timezonefrontendepg', 'Admin\ChannelController@timezoneEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
