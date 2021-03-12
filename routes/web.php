@@ -148,7 +148,7 @@ Route::post('/user/checkzipafterlogin', 'HomeController@checkzipAfterGoogleLogin
 Route::post('/forgotpassword', 'Auth\ForgotPasswordController@webgetResetToken');
 Route::get('/invoice', 'Pages\Account\Setting@invoice');
 Route::get('user/invoice/{invoice}','Pages\Account\Setting@invoicePDF' );
-Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage');
+Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage')->name('payment');
 Route::get('/selectplan', 'Pages\Payment@showPlan');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
 Route::get('/currentepisode', 'Pages\LiveTv@getcurrentepisode');
