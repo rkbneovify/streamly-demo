@@ -221,7 +221,10 @@ $.ajax({
 								
 									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain' class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
-							<p>{{  $channeldet->StationName??$channeldet->name}}</p></a>
+							<p  style=" max-width: 20ch;
+							overflow: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis;">{{  $channeldet->StationName??$channeldet->name}}</p></a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 
