@@ -43,7 +43,10 @@ class Payment extends Controller
             $login = false;
             return redirect()->route('home');
         }
-
+        if (Auth::user()->subscribed('main')) {
+            
+            return redirect()->route('payment',[Auth::user()->subscription('main')->stripe_plan]);
+        } 
     	return view('frontend.pages.plans', compact('login','plans'));
         
     }
