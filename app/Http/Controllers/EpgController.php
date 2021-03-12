@@ -43,7 +43,7 @@ return response()->json($response, 200);
 
     public function channeljsonFunc($type){
   
-    $second=Channel::select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
+    $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
     // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
            
         ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
@@ -57,7 +57,7 @@ return response()->json($response, 200);
     return $second;
     }
     public function programelist(Request $request) {
-         $grace= Gracenote::select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
+         $grace= Gracenote::toBase()->select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
          'channels.id as channelId','EventTitle as programmeTitle','StartDateTime as displayDateTime','EventDescription as shortSynopsis')
          ->addSelect(DB::raw("'fakeValue' as fakeColumn"),DB::raw("'fakeValue2' as fakeColumn2"),
          DB::raw("'fakeValue3' as fakeColumn3"),DB::raw("null as epgEventImage"),DB::raw("'' as subGenre"),DB::raw("'' as actors"))
@@ -69,7 +69,7 @@ return response()->json($response, 200);
          ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
     AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
      ->orderBy('gracenote.StartDateTime', 'asc')
-      
+     ->where('channels.status','=','1')
       ->get();
         //  dd($grace);
          $response = [
@@ -113,7 +113,7 @@ return response()->json($response, 200);
             // $ids = $str_arr;
             // dump($ids);
             // dd($str_arr);
-            $users = Gracenote::select(DB::raw('concat(gracenote.id,"") eventID'),'channels.id as channelId',
+            $users = Gracenote::toBase()->select(DB::raw('concat(gracenote.id,"") eventID'),'channels.id as channelId',
             DB::raw('concat(channels.id,"") channelStbNumber'),DB::raw("'false' as channelHD"),'gracenote.StationName as channelTitle',
             DB::raw("'null' as epgEventImage"),
             DB::raw("gracenote.Rating as certification"),'StartDateTime as displayDateTimeUtc','StartDateTime as displayDateTime',
@@ -127,6 +127,7 @@ return response()->json($response, 200);
             
            
             // Channel::select('gracenote.')
+            ->whereRaw('channels.status = ?','1')
             ->wherein('channels.id',$str_arr)
             ->whereBetween('gracenote.StartDateTime', [$query['periodStart'], $query['periodEnd']])
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
