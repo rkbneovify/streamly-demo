@@ -477,15 +477,22 @@ width: 100px;
   /* top: 100px;  */
 	left: 5px;
   top: 5px;
-  color: #FFF; 
+  /* color: #FFF;  */
   text-align: center;
   font-size: 20px;
-  background-color: #000;
-  /* width: 640px; */
-	width: fit-content; 
+  /* background-color: #000; */
+  /* width: 30%; */
+	width: 530px;
+	background: #063056 0% 0% no-repeat padding-box;
+border-radius: 4px;
+opacity: 0.55;
+backdrop-filter: blur(50px);
+-webkit-backdrop-filter: blur(50px);
+	/* width: fit-content;  */
+	/* background-size: 50%; */
 	
-	/* height: fit-content; */
-  padding: 10px 0;
+	height: fit-content;
+  /* padding: 10px 0; */
   z-index: 2;
 	/* height: 100%; */
 	
@@ -493,7 +500,7 @@ width: 100px;
 
 details > summary {
     list-style-type: none;
-
+background-color: #fff;
 }
 
 details > summary::-webkit-details-marker {
@@ -505,6 +512,14 @@ details > summary::before {
 }
 details[open] > summary::before {
     content: '\2715';
+}
+details[open] {
+	background: rgba( 39, 80, 126, 0.30 );
+box-shadow: 0 8px 32px 0 #063056;
+backdrop-filter: blur( 2.5px );
+-webkit-backdrop-filter: blur( 2.5px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 	</style>
@@ -528,13 +543,23 @@ details[open] > summary::before {
   list-style: none;
   max-height: 300px;
 	
-  background-color: #27507E;
+  /* background-color: #27507E; */
   overflow-x: hidden;
   overflow-y: scroll;">
 		@foreach ($allchannel as $channel)	
   <a href ='/livetv/{{$channel->CallSign}}/{{$channel->genrenae}}'
 	{{-- /livetv/'+data.CallSign+'/'+data.genrename --}}
-	><li><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>{{$channel->StationName}}</li></a>
+	><li ><div style="
+	display: flex;
+  justify-content: center;
+  align-items: center;
+	width: 490px;
+		height: 150px;
+		border: 2px solid #FFFFFF;
+		
+	border-radius: 10px;   "><img style='height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
+		{{-- {{$channel->StationName}} --}}
+	</li></a>
 	@endforeach
 </ul>
 </details> </div>
