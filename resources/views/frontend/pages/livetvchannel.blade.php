@@ -481,8 +481,8 @@ width: 100px;
   text-align: center;
   font-size: 20px;
   /* background-color: #000; */
-  /* width: 30%; */
-	width: 530px;
+  width: 80%;
+	/* width: 530px; */
 	background: #063056 0% 0% no-repeat padding-box;
 border-radius: 4px;
 opacity: 0.55;
@@ -553,11 +553,11 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 	display: flex;
   justify-content: center;
   align-items: center;
-	width: 490px;
+	width: 100%;
 		height: 150px;
 		border: 2px solid #FFFFFF;
 		
-	border-radius: 10px;   "><img style='height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
+	border-radius: 10px;   "><img style=' height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
 		{{-- {{$channel->StationName}} --}}
 	</li></a>
 	@endforeach
