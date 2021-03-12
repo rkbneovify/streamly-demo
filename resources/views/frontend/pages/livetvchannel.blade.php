@@ -633,7 +633,10 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 						<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
 						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 	
-										<p>{{  $channeldet->StationName}}</p>
+										<p  style=" max-width: 20ch;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;">{{  $channeldet->StationName}}</p>
 					</div> </a>
 					@endforeach
 					</div>
