@@ -118,7 +118,7 @@ width: 100px;
 		 },
 	
 		 success:function(data){
-		$('#'+channelid).html('<p>Added to favorites</p> <button data-id='+channelid+' class="btn btn-danger btn-remove" >Remove</button>');
+		$('#'+channelid).html('<p>Added to favorites</p> <span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:2em">♥</span>');
 	
 		 }
 	
@@ -146,7 +146,7 @@ width: 100px;
 	
 		 success:function(data){
 	
-		$('#'+channelid).html('<p>Add to favorites</p> <button data-id='+channelid+' class="btn btn-success btn-submit" >Add</button>');
+		$('#'+channelid).html('<p>Add to favorites</p> <span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:2em" >♡</span>');
 	
 		 }
 	
@@ -178,7 +178,10 @@ width: 100px;
 						{{-- <img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"> --}}
 						<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 						
-						<p>{{  $channeldet->StationName}}</p></a>
+						<p style=" max-width: 20ch;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;">{{  $channeldet->StationName}}</p></a>
 						<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 
@@ -189,9 +192,10 @@ width: 100px;
 	<div class="panel-footer" id="{{ $channeldet->id }}">
 	{{-- {{ $channeldet->id }} --}}
 	@if ($channeldet->favorited())	
-	<p>Added to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-danger btn-remove" >Remove</button>
+	<p>Added to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:2em">♥</span>
 	@else
-	<p>Add to favorites</p> <button data-id="{{ $channeldet->id }}" class="btn btn-success btn-submit" >Add</button>
+	<p>Add to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:2em">♡</span>
+	
 	@endif
 	
 	</div>
