@@ -351,6 +351,7 @@ class ZipcodeController extends Controller
      // view Button
      $viewButton = "<a href='/admin/zipcode/view/".$id."' class='btn btn-xs btn-primary'>View</a>";
      $editButton = "<a href='/admin/zipcode/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
+     $action2 ="<input type='checkbox' class='update_check' id='delcheck_".$id."'  value='".$id."'>";
 
 
      $action = $viewButton." ".$editButton;
@@ -361,7 +362,8 @@ class ZipcodeController extends Controller
          "city" => $city,
          "state" => $state,
          "status" => $status,
-         "action" => $action
+         "action" => $action,
+         "action2" => $action2
        );
     }
 
@@ -461,6 +463,21 @@ class ZipcodeController extends Controller
     
             return redirect('admin/address')->with('info','AddressesCheckAvailability updated Successfully');
        }    }
+
+       public function UpdateAll(Request $request)
+       {
+           $ids = $request->id;
+           
+        //    print_r($ids);exit;
+           $input['status'] = 1;
+           if(Zipcode::whereIn('id', $ids)->where('status', '=', 0)->update($input)){
+            return response()->json(['success'=>"Zipcode Updated successfully."],200);
+           }else{
+            return response()->json(['error'=>"Zipcode Updated Erro."],400);
+           }
+
+           
+       }
     
 }
 

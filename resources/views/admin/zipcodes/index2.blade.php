@@ -1,6 +1,7 @@
 @extends('master')
 @section('stylesheets')
-<link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+{{-- <link href="{{ asset('dist/css/jquery.dataTables.min.css') }}" rel="stylesheet"> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css" integrity="sha512-1k7mWiTNoyx2XtmI96o+hdjP8nn0f3Z2N4oF/9ZZRgijyV4omsKOXEnqL1gKQNPy2MTSP9rIEWGcH/CInulptA==" crossorigin="anonymous" />
     @stop
 
     @section('content')
@@ -61,6 +62,8 @@
                         status
                         </th>
                         <th>Action</th>
+                        <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" id='delete_record' value='Update' ></th>
+    
                     </tr>
                 </thead>
                    </table>
@@ -77,7 +80,8 @@
   @endsection
 
     @section('scripts')
-    <script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('dist/js/jquery.dataTables.min.js') }}"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js" integrity="sha512-BkpSL20WETFylMrcirBahHfSnY++H2O1W+UnEEO4yNIl+jI2+zowyoGJpbtk6bx97fBXf++WJHSSK2MV4ghPcg==" crossorigin="anonymous"></script>
     <script>   
     $(document).ready(function(){
 
@@ -93,7 +97,8 @@
             { data: 'zipcode' },
             { data: 'state' },
             { data: 'status' },
-        { data: 'action' },
+        { data: 'action', orderable: false, searchable: false },
+        { data: 'action2' , orderable: false, searchable: false},
             
          ],
         columnDefs: [
@@ -112,6 +117,46 @@
         }
         ]
       });
+       // Check all 
+   $('#checkall').click(function(){
+      if($(this).is(':checked')){
+         $('.update_check').prop('checked', true);
+      }else{
+         $('.update_check').prop('checked', false);
+      }
+   });
+
+   $(document).on('click', '#delete_record', function(){
+        var id = [];
+        if(confirm("Are you sure you want to Delete this data?"))
+        {
+            $('.update_check:checked').each(function(){
+                id.push($(this).val());
+            });
+            if(id.length > 0)
+            {
+                $.ajax({
+                    url:"{{url('admin/zipcode/updateall') }}",
+                    method:"get",
+                    data:{id:id},
+                    success:function(data)
+                    {
+                        alert(data.success);
+                        console.log(data.success);
+                        $('#empTable').DataTable().ajax.reload();
+                    },
+          error: function (data) {
+            alert(data.responseJSON.error);
+              console.log('Error:', data);
+          }
+                });
+            }
+            else
+            {
+                alert("Please select atleast one checkbox");
+            }
+        }
+    });
 
     });
   </script>
