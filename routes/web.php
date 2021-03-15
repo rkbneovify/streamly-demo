@@ -103,6 +103,7 @@ Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channel
     Route::delete('zipcode/destroy', 'Admin\ZipcodeController@massDestroy')->name('zipcode.massDestroy');
     Route::get('zipcode/category', 'Admin\ZipcodeController@categoryData');
     Route::get('zipcode/category2', 'Admin\ZipcodeController@categoryData2');
+    Route::get('zipcode/updateall', 'Admin\ZipcodeController@UpdateAll');
     
     Route::get('zipcode/allowedzipdata', 'Admin\ZipcodeController@allowedZipdata');
     Route::get('zipcode/map', 'Admin\ZipcodeController@map');
