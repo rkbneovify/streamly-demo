@@ -62,7 +62,7 @@
                         status
                         </th>
                         <th>Action</th>
-                        <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" id='delete_record' value='Update' ></th>
+                        <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="1" value='Activate selected' ><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
     
                     </tr>
                 </thead>
@@ -126,28 +126,33 @@
       }
    });
 
-   $(document).on('click', '#delete_record', function(){
-        var id = [];
-        if(confirm("Are you sure you want to Delete this data?"))
+   $(document).on('click', '.update_record', function(){
+        var id = [];var status;
+        if(confirm("Are you sure you want to Update this data?"))
         {
             $('.update_check:checked').each(function(){
                 id.push($(this).val());
             });
             if(id.length > 0)
-            {
+            {   
+              status= this.id;
                 $.ajax({
                     url:"{{url('admin/zipcode/updateall') }}",
                     method:"get",
-                    data:{id:id},
+                    data:{id:id,status:status},
                     success:function(data)
                     {
-                        alert(data.success);
-                        console.log(data.success);
+                        alert(data.message);
+                        console.log(data.message);
                         $('#empTable').DataTable().ajax.reload();
                     },
-          error: function (data) {
-            alert(data.responseJSON.error);
-              console.log('Error:', data);
+          error: function (xhr, status, error) {
+            alert(xhr.responseJSON.message);
+          //   $.each(xhr.responseJSON.errors, function (key, item) 
+          // {
+          //   $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
+          // });
+          xhr.responseJSON.errors!== undefined?console.table(xhr.responseJSON.errors):console.table(xhr);
           }
                 });
             }
