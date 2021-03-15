@@ -83,6 +83,8 @@ Route::get('/channelstatus2', 'Admin\ChannelController@index2');//channel
 Route::get('/channelstatus/view/{id}', 'Admin\ChannelController@show');//channel
 Route::get('/channelstatus/edit/{id}', 'Admin\ChannelController@edit');//channel
 Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');//ajax channel data
+
+Route::get('channelstatus/updateall', 'Admin\ChannelController@UpdateAll');
 Route::post('insertchannel','Admin\ChannelController@store')->name('insertchannel');
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
     // Zipcode Routes

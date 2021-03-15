@@ -102,6 +102,9 @@
                       <th style="width: 20%" style="display:none">
                       ism
                       </th>
+
+                      <th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="1" value='Activate selected' ><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
+    
                   </tr>
               </thead>
           </table>
@@ -287,13 +290,14 @@ $(function() {
             { data: 'genrename', name: 'genrename' ,searchable: true},
             
             { data: 'status', name: 'status' ,orderable:false},
-            { data: 'logo', name: 'logo',orderable: false, searchable: false },
+            { data: 'image', name: 'logo',orderable: false, searchable: false },
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
             {data: 'action', name: 'action', orderable: false, searchable: false},
             { data: 'callSign', name: 'callSign',orderable: true },
 
             {data: 'smooth_url', name: 'smooth_url', orderable: false, searchable: false ,},
+            {data: 'action2', name: 'action2', orderable: false, searchable: false},
         ],
         columnDefs: [
         {       
@@ -331,7 +335,7 @@ $(function() {
         
         ]
     });
-    $('#data-table').on('click', 'tr', function () {
+    $('#data-table').on('click', '.videoplay', function () {
     
         var name = $('td', this).eq(1).text();
         var mpd = $('td', this).eq(6).text();
@@ -359,6 +363,52 @@ $(function() {
     $("#myModal").on('hide.bs.modal', function(){
       player.reset()
         // $("#videoPlayer").attr('src', '');
+    });
+
+    // Check all 
+   $('#checkall').click(function(){
+      if($(this).is(':checked')){
+         $('.update_check').prop('checked', true);
+      }else{
+         $('.update_check').prop('checked', false);
+      }
+   });
+
+   $(document).on('click', '.update_record', function(){
+        var id = [];var status;
+        if(confirm("Are you sure you want to Update this data?"))
+        {
+            $('.update_check:checked').each(function(){
+                id.push($(this).val());
+            });
+            if(id.length > 0)
+            {   
+              status= this.id;
+                $.ajax({
+                    url:"{{url('admin/channelstatus/updateall') }}",
+                    method:"get",
+                    data:{id:id,status:status},
+                    success:function(data)
+                    {
+                        alert(data.message);
+                        console.log(data.message);
+                        $('#data-table').DataTable().ajax.reload();
+                    },
+          error: function (xhr, status, error) {
+            alert(xhr.responseJSON.message);
+          //   $.each(xhr.responseJSON.errors, function (key, item) 
+          // {
+          //   $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
+          // });
+          xhr.responseJSON.errors!== undefined?console.table(xhr.responseJSON.errors):console.table(xhr);
+          }
+                });
+            }
+            else
+            {
+                alert("Please select atleast one checkbox");
+            }
+        }
     });
 });
 

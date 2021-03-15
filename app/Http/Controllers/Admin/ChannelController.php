@@ -27,7 +27,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index','index2','show','create','edit','update','destroy','store','channelData']]);
+        $this->middleware('jwt.verify', ['except' => ['index','index2','show','create','edit','update','destroy','store','channelData','UpdateAll']]);
     }
     public function index()
     {  
@@ -36,7 +36,8 @@ class ChannelController extends Controller
         
         $ua = request()->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
-if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ return view('admin.channels.index', compact('record','encoded_auth_xml'));}
+if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('record','encoded_auth_xml'));} else{ 
+    return view('admin.channels.index', compact('record','encoded_auth_xml'));}
         
     } 
     public function index2()
@@ -282,14 +283,35 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
         
         ->addColumn('action', function($row) {
             return '<a 
-            class="btn btn-xs btn-primary" id="vidplay" data-toggle="modal"  >View video</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+            class="btn btn-xs btn-primary videoplay" id="vidplay" data-toggle="modal"  >View video</a> <a href="/admin/channelstatus/edit/'. $row->id .'" class="btn btn-xs btn-info">Edit</a>';
+        })->addColumn('action2', function($row) {
+            return "<input type='checkbox' class='update_check' id='delcheck_".$row->id."'  value='".$row->id."'>";
         })
         
-      ->rawColumns([ 'action'])
+      ->rawColumns([ 'action','action2'])
         ->make(true);
     }
    
+    public function UpdateAll(Request $request)
+    {  $this->validate($request, [
+     'id' => 'required|array',
+     "id.*"  => "required|numeric|distinct",
+     'status' => 'required|numeric|min:0|max:1',
 
+ ]);
+        $ids = $request->id;
+        $status = $request->status;
+        
+     //    print_r($ids);exit;
+        $input['status'] = $status;
+        if(Channel::whereIn('id', $ids)->update($input)){
+         return response()->json(['message'=>"Channel Updated successfully."],200);
+        }else{
+         return response()->json(['message'=>"Channel Updated Error Occured"],400);
+        }
+
+        
+    }
 
 
 public function transformClientCollection($api)
