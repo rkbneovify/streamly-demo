@@ -465,15 +465,21 @@ class ZipcodeController extends Controller
        }    }
 
        public function UpdateAll(Request $request)
-       {
+       {  $this->validate($request, [
+        'id' => 'required|array',
+        "id.*"  => "required|numeric|distinct",
+        'status' => 'required|numeric|min:0|max:1',
+
+    ]);
            $ids = $request->id;
+           $status = $request->status;
            
         //    print_r($ids);exit;
-           $input['status'] = 1;
-           if(Zipcode::whereIn('id', $ids)->where('status', '=', 0)->update($input)){
-            return response()->json(['success'=>"Zipcode Updated successfully."],200);
+           $input['status'] = $status;
+           if(Zipcode::whereIn('id', $ids)->update($input)){
+            return response()->json(['message'=>"Zipcode Updated successfully."],200);
            }else{
-            return response()->json(['error'=>"Zipcode Updated Erro."],400);
+            return response()->json(['message'=>"Zipcode Updated Error occured"],400);
            }
 
            
