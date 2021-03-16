@@ -47,6 +47,7 @@ router.afterEach((to, from, next) => {
     case 'Loader':
       {
         store.dispatch('fetchChannelList')
+        store.dispatch('fetchFavoriteList')
         break;
       }
     default:

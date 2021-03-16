@@ -111,10 +111,6 @@ Route::post('generic', 'Admin\BuyDRMController@proxyServer');
 Route::get('/qrcode', 'APIController@qrcodeapi');
 Route::post('/ga2', 'GoogleAnalyticsController@index3');
 
-Route::get('/vuechannellist', 'EpgController@channellist');
-Route::get('/vueprogramlistwithid', 'EpgController@programelistwithid');
-Route::get('/vueprogramlist', 'EpgController@programelist');
-Route::get('/vuesinglechanneldetails', 'EpgController@singlechanneldetails');
 Route::get('/category', 'EpgController@category');
 
 // Route::fallback(function(){

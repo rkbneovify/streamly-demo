@@ -8,6 +8,8 @@ use App\Models\Genre;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use Validator;
+
+use Illuminate\Support\Facades\Auth;
 class EpgController extends Controller
 {
     protected function setUp()
@@ -76,6 +78,21 @@ return response()->json($response, 200);
             'responseMessage' => 'Success',
             'responseCode'=>'200',
             'getevent'=>$grace, 
+            // 'count'=>$pagechannel->count(),
+            
+        ];
+        return response()->json($response, 200);
+        }
+
+    public function favoritelist(Request $request) {
+        
+
+    $myFavorites = Auth::user()->favorites->pluck('id');
+        //  dd($myFavorites);
+         $response = [
+            'responseMessage' => 'Success',
+            'responseCode'=>'200',
+            'favorites'=>$myFavorites, 
             // 'count'=>$pagechannel->count(),
             
         ];

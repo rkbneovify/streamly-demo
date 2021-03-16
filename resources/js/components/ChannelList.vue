@@ -30,16 +30,19 @@
                 </div>
 
                 <!-- Channel list -->
-                <div class="channel__name__box" @click.prevent="onChannelClick(channel)" :data-channel="channel.channelId" v-for="channel in filteredChannelList" v-bind:key="channel.channelId" track-by="channel.channelId">
-              <div class="favourite" @click.stop="onClick(channel)">
+                <div class="channel__name__box" @click.prevent="onChannelClick(channel)" :data-channel="channel.channelId" v-for=" (channel, index)  in filteredChannelList" v-bind:index="index" v-bind:key="channel.channelId" track-by="channel.channelId">
+              <div class="favourite" v-bind:index="index" v-bind:key="channel.CallSign" @click.stop="onClick(channel)">
                         <a v-bind:href="'/livetv/'+ channel.CallSign+'/'+channel.genrename[0]">View </a>
                       </div>
-                    <div class="channel__name">
+                    <div class="channel__name" v-bind:index="index" v-bind:key="channel.CallSign+index">
                       
-                        <div>{{channel.channelTitle}}</div>
-                        <div style="font-size:0.8em;font-weight:bold;color: #4085ce;">{{channel.channelStbNumber}}</div>
+                        <div v-bind:index="index" style=" max-width: 12ch;
+							overflow: hidden;
+							white-space: nowrap;
+							text-overflow: ellipsis;">{{channel.channelTitle}}</div>
+                        <div v-bind:index="index" style="font-size:0.8em;font-weight:bold;color: #4085ce;">{{channel.channelStbNumber}}</div>
                     </div>
-                    <div class="favourite" @click.stop="onFavouriteClick(channel)">
+                    <div v-bind:index="index" v-bind:key="channel.CallSign+'fav'" class="favourite" @click.stop="onFavouriteClick(channel)">
                         <span v-show="favouriteListComputed.indexOf(channel.channelId) != -1">♥</span>
                         <span v-show="favouriteListComputed.indexOf(channel.channelId) == -1">♡</span>
                     </div>
@@ -212,7 +215,9 @@ export default {
       }
     },
     async fetchFavouriteList() {
-      let list = await this.$store.dispatch('getFavouriteList')
+      let list = await this.$store.dispatch('getFavouriteList');
+     // let list = await this.$store.dispatch('fetchFavoriteList');
+     // console.log('list',list);
       this.favouriteList = list
     },
     fetchProgrammes(channelList) {
