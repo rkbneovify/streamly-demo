@@ -281,6 +281,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
          $editButton = "<a href='/admin/users/edit/".$id."' class='btn btn-xs btn-info'>Edit</a>";
          $deleteButton = '<a href="javascript:void(0)" id="btn-delete" data-toggle="tooltip"  data-id="'.$id.'" data-original-title="Delete" class="deleteItem btn btn-danger btn-xs ">Delete</a>';
     
+         $action2 ="<input type='checkbox' class='update_check' id='delcheck_".$id."'  value='".$id."'>";
     
          $action = $viewButton." ".$editButton." ".$deleteButton;
     
@@ -290,7 +291,8 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
              "name" => $name,
              "role" => $role,
              "status" => $status,
-             "action" => $action
+             "action" => $action,
+             "action2" => $action2
            );
         }
     
@@ -318,5 +320,26 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         // })
         // ->addIndexColumn()
         // ->make(true);
+    }
+
+    public function UpdateAll(Request $request)
+    {  $this->validate($request, [
+     'id' => 'required|array',
+     "id.*"  => "required|numeric|distinct",
+     'status' => 'required|numeric|min:0|max:1',
+
+ ]);
+        $ids = $request->id;
+        $status = $request->status;
+        
+     //    print_r($ids);exit;
+        $input['is_active'] = $status;
+        if(User::whereIn('id', $ids)->update($input)){
+         return response()->json(['message'=>"User Updated successfully."],200);
+        }else{
+         return response()->json(['message'=>"User Updated Error Occured"],400);
+        }
+
+        
     }
 }
