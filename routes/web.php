@@ -74,6 +74,7 @@ Route::put('userupdate/{id}','Admin\UsersController@update')->name('userupdate')
 Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
 Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
 
+Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
 
   //channel
   Route::get('/channelstatus/create', 'Admin\ChannelController@create');//channels Statust
