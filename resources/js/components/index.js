@@ -46,7 +46,8 @@ router.afterEach((to, from, next) => {
   switch (to.name) {
     case 'Loader':
       {
-        store.dispatch('fetchChannelList')
+        store.dispatch('fetchChannelList');
+        store.dispatch('fetchFavoriteList');
         break;
       }
     default:

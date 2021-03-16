@@ -4,7 +4,8 @@ export const PATH = '/'
 export const API_ENDPOINTS = {
   'CHANNEL_LIST': 'api/vuechannellist',
   'CHANNEL_DETAILS': 'api/vuesinglechanneldetails',
-  'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid'
+  'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid',
+  'FAVORITE_LIST': 'api/vuefavoritelist'
 }
 
 
