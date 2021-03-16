@@ -2160,6 +2160,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /*eslint-disable*/
 
@@ -2305,6 +2308,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
               case 2:
                 list = _context.sent;
+                // let list = await this.$store.dispatch('fetchFavoriteList');
+                // console.log('list',list);
                 _this3.favouriteList = list;
 
               case 4:
@@ -6969,7 +6974,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #368ed2;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    border: 1px solid #dcdcdc;\n    padding: 0 10px;\n    display: flex;\n    flex: 0 0 40px;\n    flex-direction: row;\n    justify-content: space-between;\n    align-items: center;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-around;\n    font-size: 0.8em;\n    background-color: #333;\n    color: #4085ce;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: bold;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #4085ce;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    padding-left: 15px;\n    box-sizing: border-box;\n    background-color: rgb(51, 51, 51);\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 42px;\n    /*border: 1px solid #dcdcdc;*/\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n    padding: 8px 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n    color: rgb(198, 88, 42);\n    line-height: 15px;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n        flex-direction: column;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n        flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #368ed2;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    border: 1px solid #dcdcdc;\n    padding: 0 10px;\n    display: flex;\n    flex: 0 0 40px;\n    flex-direction: row;\n    justify-content: space-between;\n    align-items: center;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-around;\n    font-size: 0.8em;\n    background-color: #333;\n    color: #4085ce;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: bold;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #4085ce;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    padding-left: 15px;\n    box-sizing: border-box;\n    background-color: rgb(51, 51, 51);\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 42px;\n    /*border: 1px solid #dcdcdc;*/\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n    padding: 8px 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n    color: rgb(198, 88, 42);\n    line-height: 15px;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n        flex-direction: column;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n        flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
 
 // exports
 
@@ -83379,7 +83384,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._l(_vm.filteredChannelList, function(channel) {
+            _vm._l(_vm.filteredChannelList, function(channel, index) {
               return _c(
                 "div",
                 {
@@ -83387,6 +83392,7 @@ var render = function() {
                   staticClass: "channel__name__box",
                   attrs: {
                     "data-channel": channel.channelId,
+                    index: index,
                     "track-by": "channel.channelId"
                   },
                   on: {
@@ -83400,7 +83406,9 @@ var render = function() {
                   _c(
                     "div",
                     {
+                      key: channel.CallSign,
                       staticClass: "favourite",
+                      attrs: { index: index },
                       on: {
                         click: function($event) {
                           $event.stopPropagation()
@@ -83425,26 +83433,49 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "channel__name" }, [
-                    _c("div", [_vm._v(_vm._s(channel.channelTitle))]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticStyle: {
-                          "font-size": "0.8em",
-                          "font-weight": "bold",
-                          color: "#4085ce"
-                        }
-                      },
-                      [_vm._v(_vm._s(channel.channelStbNumber))]
-                    )
-                  ]),
+                  _c(
+                    "div",
+                    {
+                      key: channel.CallSign + index,
+                      staticClass: "channel__name",
+                      attrs: { index: index }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "max-width": "12ch",
+                            overflow: "hidden",
+                            "white-space": "nowrap",
+                            "text-overflow": "ellipsis"
+                          },
+                          attrs: { index: index }
+                        },
+                        [_vm._v(_vm._s(channel.channelTitle))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticStyle: {
+                            "font-size": "0.8em",
+                            "font-weight": "bold",
+                            color: "#4085ce"
+                          },
+                          attrs: { index: index }
+                        },
+                        [_vm._v(_vm._s(channel.channelStbNumber))]
+                      )
+                    ]
+                  ),
                   _vm._v(" "),
                   _c(
                     "div",
                     {
+                      key: channel.CallSign + "fav",
                       staticClass: "favourite",
+                      attrs: { index: index },
                       on: {
                         click: function($event) {
                           $event.stopPropagation()
@@ -83506,11 +83537,11 @@ var render = function() {
             _vm._l(_vm.hoursList, function(n) {
               return _c("div", { key: n, staticClass: "header__time" }, [
                 _vm._v(
-                  "\n                    " +
+                  "\n                        " +
                     _vm._s(n) +
                     ":00 to " +
                     _vm._s(n + 1) +
-                    ":00\n                "
+                    ":00\n                    "
                 )
               ])
             }),
@@ -101749,6 +101780,7 @@ router.afterEach(function (to, from, next) {
     case 'Loader':
       {
         _store___WEBPACK_IMPORTED_MODULE_4__["default"].dispatch('fetchChannelList');
+        _store___WEBPACK_IMPORTED_MODULE_4__["default"].dispatch('fetchFavoriteList');
         break;
       }
 
@@ -102251,14 +102283,10 @@ var actions = {
 
             case 4:
               response = _context3.sent;
-              console.log('fetchChannelList', response); // Delay for showing loading screen
-              // setTimeout(function() {
-              // let response = await fetch(['./static/channels.json']);
-
-              _context3.next = 8;
+              _context3.next = 7;
               return response.data;
 
-            case 8:
+            case 7:
               data = _context3.sent;
 
               if (data.responseCode != "200") {
@@ -102269,7 +102297,7 @@ var actions = {
               } // }, 2000)
 
 
-            case 10:
+            case 9:
             case "end":
               return _context3.stop();
           }
@@ -102344,7 +102372,8 @@ var PATH = '/';
 var API_ENDPOINTS = {
   'CHANNEL_LIST': 'api/vuechannellist',
   'CHANNEL_DETAILS': 'api/vuesinglechanneldetails',
-  'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid'
+  'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid',
+  'FAVORITE_LIST': 'api/vuefavoritelist'
 };
 var API_DATE_FORMAT = "YYYY-MM-DD H:mm"; // Example : "2017-08-17 23:59"
 
@@ -102359,12 +102388,28 @@ var API_DATE_FORMAT = "YYYY-MM-DD H:mm"; // Example : "2017-08-17 23:59"
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _mutation_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutation-types */ "./resources/js/store/mutation-types.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _mutation_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mutation-types */ "./resources/js/store/mutation-types.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./config */ "./resources/js/store/config.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
+
+
 var _mutations;
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 /*eslint-disable*/
+
+
+
  // State
 
 var state = {
@@ -102385,9 +102430,20 @@ var getters = {
   }
 }; // Mutations
 
-var mutations = (_mutations = {}, _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_0__["MODIFY_FAVOURITES"], function (state, favourites) {
+var mutations = (_mutations = {}, _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST"], function (state) {
+  state.fetching = true;
+  state.fetched = false;
+}), _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST_SUCCESS"], function (state, favourites) {
+  state.fetching = false;
+  state.fetched = true;
   state.favourites = favourites;
-}), _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_0__["CLEAR_FAVOURITES"], function (state) {
+}), _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST_ERROR"], function (state, errorMessage) {
+  state.fetching = false;
+  state.fetched = false;
+  state.errorMessage = errorMessage;
+}), _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_1__["MODIFY_FAVOURITES"], function (state, favourites) {
+  state.favourites = favourites;
+}), _defineProperty(_mutations, _mutation_types__WEBPACK_IMPORTED_MODULE_1__["CLEAR_FAVOURITES"], function (state) {
   state.favourites = {};
 }), _mutations); // Actions
 
@@ -102395,8 +102451,10 @@ var actions = {
   getFavouriteList: function getFavouriteList(_ref) {
     var state = _ref.state;
     var favourites = [];
+    console.log('statefav', state.favourites);
 
     for (var i in state.favourites) {
+      // favourites.push(state.favourites[i])
       favourites.push(state.favourites[i].channelId);
     }
 
@@ -102404,23 +102462,93 @@ var actions = {
   },
   clearFavouriteList: function clearFavouriteList(_ref2) {
     var commit = _ref2.commit;
-    commit(_mutation_types__WEBPACK_IMPORTED_MODULE_0__["MODIFY_FAVOURITES"]);
+    commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["MODIFY_FAVOURITES"]);
   },
   toggleFavourites: function toggleFavourites(_ref3, _ref4) {
     var state = _ref3.state,
         commit = _ref3.commit;
     var channel = _ref4.channel;
+    var model = {
+      CallSign: null,
+      channelId: null,
+      channelStbNumber: null,
+      channelTitle: null
+    };
+
+    var result = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.pick(channel, lodash__WEBPACK_IMPORTED_MODULE_2___default.a.keys(model)); // console.log('togglechannel',channel)
+    // console.log('togglechannelresult',result)
+
+
     var favourites = Object.assign({}, state.favourites); // Array copy  
 
-    var channelId = channel.channelId;
+    var channelId = result.channelId;
 
     if (favourites[channelId]) {
       delete favourites[channelId];
     } else {
-      favourites[channelId] = channel;
+      favourites[channelId] = result;
     }
 
-    commit(_mutation_types__WEBPACK_IMPORTED_MODULE_0__["MODIFY_FAVOURITES"], favourites);
+    commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["MODIFY_FAVOURITES"], favourites);
+  },
+
+  /**
+  * Fetches All Channels
+  */
+  fetchingFavoriteList: function fetchingFavoriteList(_ref5) {
+    var commit = _ref5.commit;
+    commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST"]);
+  },
+
+  /**
+  * Fetches All the channels
+  * @param {object} store - vuex store
+  */
+  fetchFavoriteList: function fetchFavoriteList(_ref6) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var state, commit, getters, dispatch, response, data, arr, a, myarr;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              state = _ref6.state, commit = _ref6.commit, getters = _ref6.getters, dispatch = _ref6.dispatch;
+              commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST"]);
+              _context.next = 4;
+              return axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_3__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_3__["API_ENDPOINTS"].FAVORITE_LIST));
+
+            case 4:
+              response = _context.sent;
+              _context.next = 7;
+              return response.data;
+
+            case 7:
+              data = _context.sent;
+
+              if (data.responseCode != "200") {
+                commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST_ERROR"], data.responseMessage);
+              } else {
+                arr = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.keyBy(data.favorites);
+                a = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.map(arr, function (o) {
+                  return {
+                    channelId: o
+                  };
+                }); //  console.log('achanged',a);
+
+                myarr = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.keyBy(a, 'channelId');
+                console.log('myarrwithchannelid', myarr);
+                commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST_SUCCESS"], myarr); // console.log('fav',data.favorites)
+                // Fetching Programme data
+                // dispatch('fetchProgrammeTimingList')
+              } // }, 2000)
+
+
+            case 9:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -102488,7 +102616,7 @@ var vuexLocalStorage = new vuex_persist__WEBPACK_IMPORTED_MODULE_2__["default"](
 /*!**********************************************!*\
   !*** ./resources/js/store/mutation-types.js ***!
   \**********************************************/
-/*! exports provided: INCREMENT, FETCHING_CHANNEL_LIST, FETCHING_CHANNEL_LIST_SUCCESS, FETCHING_CHANNEL_LIST_ERROR, SAVE_SORTED_CHANNEL_LIST, SET_PROGRAMME_DATE, MODIFY_FAVOURITES, CLEAR_FAVOURITES, FETCHING_CHANNEL_DETAILS, FETCHING_CHANNEL_DETAILS_SUCCESS, FETCHING_CHANNEL_DETAILS_ERROR, CLEAR_CHANNEL_DETAILS, CACHE_CHANNEL_DETAILS, FETCHING_CHANNEL_LIST_PROGRAMME, FETCHING_CHANNEL_LIST_PROGRAMME_SUCCESS, FETCHING_CHANNEL_LIST_PROGRAMME_ERROR */
+/*! exports provided: INCREMENT, FETCHING_CHANNEL_LIST, FETCHING_CHANNEL_LIST_SUCCESS, FETCHING_CHANNEL_LIST_ERROR, SAVE_SORTED_CHANNEL_LIST, SET_PROGRAMME_DATE, MODIFY_FAVOURITES, CLEAR_FAVOURITES, FETCHING_FAVORITE_LIST, FETCHING_FAVORITE_LIST_SUCCESS, FETCHING_FAVORITE_LIST_ERROR, FETCHING_CHANNEL_DETAILS, FETCHING_CHANNEL_DETAILS_SUCCESS, FETCHING_CHANNEL_DETAILS_ERROR, CLEAR_CHANNEL_DETAILS, CACHE_CHANNEL_DETAILS, FETCHING_CHANNEL_LIST_PROGRAMME, FETCHING_CHANNEL_LIST_PROGRAMME_SUCCESS, FETCHING_CHANNEL_LIST_PROGRAMME_ERROR */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -102501,6 +102629,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PROGRAMME_DATE", function() { return SET_PROGRAMME_DATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MODIFY_FAVOURITES", function() { return MODIFY_FAVOURITES; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLEAR_FAVOURITES", function() { return CLEAR_FAVOURITES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_FAVORITE_LIST", function() { return FETCHING_FAVORITE_LIST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_FAVORITE_LIST_SUCCESS", function() { return FETCHING_FAVORITE_LIST_SUCCESS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_FAVORITE_LIST_ERROR", function() { return FETCHING_FAVORITE_LIST_ERROR; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_CHANNEL_DETAILS", function() { return FETCHING_CHANNEL_DETAILS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_CHANNEL_DETAILS_SUCCESS", function() { return FETCHING_CHANNEL_DETAILS_SUCCESS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCHING_CHANNEL_DETAILS_ERROR", function() { return FETCHING_CHANNEL_DETAILS_ERROR; });
@@ -102518,7 +102649,10 @@ var SAVE_SORTED_CHANNEL_LIST = 'SAVE_SORTED_CHANNEL_LIST';
 var SET_PROGRAMME_DATE = 'SET_PROGRAMME_DATE'; // Favourite
 
 var MODIFY_FAVOURITES = 'MODIFY_FAVOURITES';
-var CLEAR_FAVOURITES = 'CLEAR_FAVOURITES'; // Channel
+var CLEAR_FAVOURITES = 'CLEAR_FAVOURITES';
+var FETCHING_FAVORITE_LIST = 'FETCHING_FAVORITE_LIST';
+var FETCHING_FAVORITE_LIST_SUCCESS = 'FETCHING_FAVORITE_LIST_SUCCESS';
+var FETCHING_FAVORITE_LIST_ERROR = 'FETCHING_FAVORITE_LIST_ERROR'; // Channel
 
 var FETCHING_CHANNEL_DETAILS = 'FETCHING_CHANNEL_DETAILS';
 var FETCHING_CHANNEL_DETAILS_SUCCESS = 'FETCHING_CHANNEL_DETAILS_SUCCESS';

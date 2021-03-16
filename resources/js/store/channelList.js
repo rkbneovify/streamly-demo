@@ -226,7 +226,7 @@ const actions = {
 
     commit(TYPES.FETCHING_CHANNEL_LIST)
     let response = await axios.get(`${PATH}${API_ENDPOINTS.CHANNEL_LIST}`);
-    console.log('fetchChannelList',response);
+    // console.log('fetchChannelList',response);
     // Delay for showing loading screen
     // setTimeout(function() {
     // let response = await fetch(['./static/channels.json']);
