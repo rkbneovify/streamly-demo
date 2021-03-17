@@ -2436,7 +2436,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['isChannelListFetching', 'isChannelListFetched', 'channelList'])),
   watch: {
-    isChannelListFetched: function isChannelListFetched(oldVal, newVal) {// automatically route
+    isChannelListFetched: function isChannelListFetched(oldVal, newVal) {
+      this.$router.push('ChannelList'); // automatically route
       // setTimeout(()=>{
       // 	router.push({ name: name })
       // },1000)
