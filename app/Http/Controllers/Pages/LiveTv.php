@@ -157,26 +157,16 @@ if (count($active_session) >= $login_limit) {
             $login = false;
             return redirect()->route('home');
         }
-        $login_limit = 5;$user_id = Auth::user()->id;
+ if(session()->has('jwttoken') && session()->get('jwttoken')!=='no jwt'){
 
-//find all by user_id and and status=active
-$active_session = SessionTable::where([
-['status', '=', '1'],
-['users_id', '=', $user_id],
- ])->get()->toArray();
- if (count($active_session) >= $login_limit) {
-    $login = true;
-    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
-    //  $login = false; 
-        return view('frontend.deviceLimitReached',compact('login'));
- }
-        $ua = request()->server('HTTP_USER_AGENT');
-        $isDevice=isDeviceAppleRokuOthers($ua);
+
+    $ua = request()->server('HTTP_USER_AGENT');
+    $isDevice=isDeviceAppleRokuOthers($ua);
 if($isDevice=='apple')  { //for apple serve m3u8
-    // echo "apple device";
-    $type='url';
-    $record = $this->showChannelFunc($type);
-    $allchannel=$record->get()->unique();
+// echo "apple device";
+$type='url';
+$record = $this->showChannelFunc($type);
+$allchannel=$record->get()->unique();
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
 $Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
@@ -185,28 +175,47 @@ $channelId=$Channel->get('id');
 
 $relatedchannel=$record->get()->where('genrenae',$genre);
 
-  return view('frontend.pages.forapplelivetvchannel', compact('allchannel','login','relatedchannel','genre','channelData','url','encoded_auth_xml','channelId'));
+return view('frontend.pages.forapplelivetvchannel', compact('allchannel','login','relatedchannel','genre','channelData','url','encoded_auth_xml','channelId'));
 }else{ 
-    // echo " non apple device";
-    //for non apple "dash_url as url"
-    $type='dash_url';
-    $record = $this->showChannelFunc($type);
-    $allchannel=$record->get()->unique();
-   
+// echo " non apple device";
+//for non apple "dash_url as url"
+$type='dash_url';
+$record = $this->showChannelFunc($type);
+$allchannel=$record->get()->unique();
+
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
 $Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
 $url=$Channel->get('dash_url as url');
 $channelId=$Channel->get('id');
-  $relatedchannel=$record->get()->where('genrenae',$genre);
+$relatedchannel=$record->get()->where('genrenae',$genre);
 
 
 }
 
-       
-      
-    	return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
-    }catch(Exception $e) {
+   
+  
+    return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
+     
+ } else{
+     
+    $login_limit = 5;$user_id = Auth::user()->id;
+
+    //find all by user_id and and status=active
+    $active_session = SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+     ])->get()->toArray();
+    $login = true;
+    if (count($active_session) <$login_limit) {
+    return view('frontend.RefreshVideoPlayToken',compact('login'));}else{return view('frontend.deviceLimitReached',compact('login'));}
+    
+    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
+    //  $login = false; 
+        
+
+ }
+ }catch(Exception $e) {
             
             return $e->getMessage();
           }
