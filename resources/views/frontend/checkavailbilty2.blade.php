@@ -105,6 +105,13 @@ $("#my_form").submit(function(event){
 
 $(function() {
 
+$("#checkAvailibiltyModal").on("hide.bs.modal", function () {
+    // put your default event here
+		$('#City').val(''); 
+			$('#State').val(''); 
+			$('#zip').val(''); 
+		
+});
 	jQuery('.cancel-subscription').on('click', function(){
 				jQuery('#checkAvailibiltyModal').modal('show');
 			});
