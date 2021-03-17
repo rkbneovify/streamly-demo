@@ -71,9 +71,19 @@ const actions = {
     let channelId = result.channelId
 
     if (favourites[channelId]) {
-      delete favourites[channelId]
+      delete favourites[channelId];
+      axios.post(`${PATH}${API_ENDPOINTS.REMOVE_FAVORITE}`, {
+        channelid: channelId
+      })
+      .then(response => console.log('Fav removed',response.data))
+      .catch(response => console.log(response.error));
     } else {
-      favourites[channelId] = result
+      favourites[channelId] = result;
+      axios.post(`${PATH}${API_ENDPOINTS.ADD_FAVORITE}`, {
+        channelid: channelId
+      })
+      .then(response => console.log('Fav added',response.data))
+      .catch(response => console.log(response.error));
     }
     commit(TYPES.MODIFY_FAVOURITES, favourites)
   },
