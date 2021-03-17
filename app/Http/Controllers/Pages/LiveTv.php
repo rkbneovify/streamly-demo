@@ -366,6 +366,7 @@ public function showRecent()
        
       $myRecent=Auth::user()->recentschannel;
         
+        // return view('frontend.pages.recentchannel',compact('myRecent','genres','login'));
         return view('frontend.pages.recentchannel',compact('myRecent','genres','login'));
 
     }
