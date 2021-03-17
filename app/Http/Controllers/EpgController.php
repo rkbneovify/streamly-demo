@@ -241,4 +241,57 @@ return Genre::get();
         public function vuehtml(){
             return view('vue');
         }
+
+        public function favoriteChannel(Request $request)
+        { try { 
+            $channelid = $request->input('channelid');
+            Auth::user()->favorites()->syncWithoutDetaching($channelid);
+            $response = [
+                'success' => true,
+                'data' => 'Channel id '.$channelid.' added' ,
+                'message' => 'Successfully added to favourite channel','response_code'=>200,
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error'=>$exception->getMessage(),
+                'response_code'=>500,
+                
+            ], 500);
+        }
+            
+        }
+        
+        /**
+         * Unfavorite a particular post
+         *
+         * @param  Post $post
+         * @return Response
+         */
+        public function unFavoriteChannel(Request $request)
+        {  try { 
+            $channelid = $request->input('channelid');
+            Auth::user()->favorites()->detach($channelid);
+            $response = [
+                'success' => true,
+                'data' => 'Channel id '.$channelid.' removed' ,
+                'message' => 'Successfully removed from favourite channel list','response_code'=>200,
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error'=>$exception->getMessage(),
+                'response_code'=>500,
+                
+            ], 500);
+        }
+        
+            
+        }
 }

@@ -102373,7 +102373,9 @@ var API_ENDPOINTS = {
   'CHANNEL_LIST': 'api/vuechannellist',
   'CHANNEL_DETAILS': 'api/vuesinglechanneldetails',
   'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid',
-  'FAVORITE_LIST': 'api/vuefavoritelist'
+  'FAVORITE_LIST': 'api/vuefavoritelist',
+  'ADD_FAVORITE': 'api/vuefavorite',
+  'REMOVE_FAVORITE': 'api/vueunfavorite'
 };
 var API_DATE_FORMAT = "YYYY-MM-DD H:mm"; // Example : "2017-08-17 23:59"
 
@@ -102485,8 +102487,22 @@ var actions = {
 
     if (favourites[channelId]) {
       delete favourites[channelId];
+      axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("".concat(_config__WEBPACK_IMPORTED_MODULE_3__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_3__["API_ENDPOINTS"].REMOVE_FAVORITE), {
+        channelid: channelId
+      }).then(function (response) {
+        return console.log('Fav removed', response.data);
+      })["catch"](function (response) {
+        return console.log(response.error);
+      });
     } else {
       favourites[channelId] = result;
+      axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("".concat(_config__WEBPACK_IMPORTED_MODULE_3__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_3__["API_ENDPOINTS"].ADD_FAVORITE), {
+        channelid: channelId
+      }).then(function (response) {
+        return console.log('Fav added', response.data);
+      })["catch"](function (response) {
+        return console.log(response.error);
+      });
     }
 
     commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["MODIFY_FAVOURITES"], favourites);
