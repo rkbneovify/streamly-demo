@@ -12,12 +12,14 @@
 		body{
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
-		 img {
-		    display: block;
-		    width: auto;
-		    margin: 0 auto;
-		    height: 1.5rem;
-		}
+
+		.channelogosame{
+
+display: block;
+margin: 0 auto;
+height: 100px;
+width: 100px;
+}
 
 		.full-width {
 			background: #000000 0% 0% no-repeat padding-box;
@@ -184,8 +186,12 @@
 							@else
 									<a href="{{url('livetv/'.$channeldet->name.'/'.$genr)}}">
 									@endif
-									<img class="lazy" style="background-color: #4D5659;" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}">
-					<p>{{  $channeldet->stationName??$channeldet->name}}</p></a>
+									<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
+					
+									<p style=" max-width: 20ch;
+									overflow: hidden;
+									white-space: nowrap;
+									text-overflow: ellipsis;">{{  $channeldet->stationName??$channeldet->name}}</p></a>
 					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 
