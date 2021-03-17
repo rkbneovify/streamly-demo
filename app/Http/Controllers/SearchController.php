@@ -25,7 +25,11 @@ class SearchController extends Controller
  DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), DB::raw("CONCAT('$imagePath/',channels.`image`) image"),DB::raw('IFNULL(genre.name,"Others") genrename'))
         ->where('gracenotechannels.StationName', 'LIKE', '%'.$q.'%')
         ->orWhere('channels.name', 'LIKE', '%'.$q.'%')
-        ->rightJoin('channels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+        // ->rightJoin('channels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+        ->join('channels', function($q) {
+            $q->on('gracenotechannels.CallSign', '=', 'channels.callSign')
+               ->where('channels.status', '=', '1'); //second join condition
+        })
         ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
         ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 ->union($first)->orderByRaw(1)->take(10)->get();
