@@ -143,6 +143,8 @@ private TextView settingText,goBackText;
                         recyclerView.setAdapter(adapter);
 
 
+                        fragment("all" , datumList);
+
 
 
                     } else if (response.code() == 401) {

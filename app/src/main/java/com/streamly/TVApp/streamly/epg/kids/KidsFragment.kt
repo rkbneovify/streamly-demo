@@ -217,9 +217,7 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 //                })
 
         list.forEach {
-
-            Log.e("list----"  , it.toString())
-                        channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
+             channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
         }
 
     }
