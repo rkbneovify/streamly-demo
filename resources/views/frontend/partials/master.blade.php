@@ -78,6 +78,10 @@
 
 
 <style>
+  .typeahead::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #fafafa;
+  opacity: 1; /* Firefox */
+}
 	#search_list{position: absolute;
     width: auto; 
     background: white;
