@@ -30,6 +30,7 @@ export default {
   },
   watch: {
     isChannelListFetched(oldVal, newVal) {
+      this.$router.push('ChannelList')
       // automatically route
       // setTimeout(()=>{
       // 	router.push({ name: name })
