@@ -193,6 +193,8 @@ Route::get('api/vueprogramlistwithid', 'EpgController@programelistwithid');
 Route::get('api/vuefavoritelist', 'EpgController@favoritelist');
 Route::get('api/vueprogramlist', 'EpgController@programelist');
 Route::get('api/vuesinglechanneldetails', 'EpgController@singlechanneldetails');
+Route::post('api/vuefavorite', 'EpgController@favoriteChannel');
+Route::post('api/vueunfavorite', 'EpgController@unFavoriteChannel');
 
 
 Route::get('/ffmpeg', 'VideoAnylyzerController@index');
