@@ -49,7 +49,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('tvprofile', 'Auth\AuthController@tvprofile');
     Route::put('updateprofile','Auth\AuthController@updateprofile');
        //zipcodes
-       Route::get('zipcode', 'ZipcodeController@zipjson');
+       Route::get('zipcode', 'Admin\ZipcodeController@zipjson');
        //channel api
 
     Route::get('channellist', 'Admin\ChannelAPIController@channeljson');
