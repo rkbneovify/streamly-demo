@@ -25,7 +25,7 @@
 @section('stylesheets')
     <style>
  #botmanWidgetRoot>div{
-     /* min-width: 360px !important; */
+    z-index: 1000 !important;
  }
 
         .alert.alert-position {
