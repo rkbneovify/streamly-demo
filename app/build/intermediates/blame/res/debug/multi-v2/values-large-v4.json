@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/aman/Desktop/streamly/streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-large-v4/values-large-v4.xml",
+            "outputFile": "D:\\oddles streamly project video\\StreamlyGit\\streamly\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-large-v4\\values-large-v4.xml",
             "map": [
                 {
-                    "source": "/home/aman/.gradle/caches/transforms-2/files-2.1/85c369933fb904d8076fc1c8452f77be/appcompat-1.2.0/res/values-large-v4/values-large-v4.xml",
+                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\85c369933fb904d8076fc1c8452f77be\\appcompat-1.2.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

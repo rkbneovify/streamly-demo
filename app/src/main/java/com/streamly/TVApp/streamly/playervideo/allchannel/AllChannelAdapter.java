@@ -48,8 +48,9 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
         holder.itemView.setOnClickListener(view -> {
 
             Log.e("playerac" , "done");
+            Log.e("playerac" , "id "+channelList.get(position).getId().toString());
             if (ctx instanceof PlayerActivity) {
-                ((PlayerActivity)ctx).playNext(channelList.get(position).getId().toString() , channelList.get(position).getUrl());
+                ((PlayerActivity)ctx).playNext(channelList.get(position).getId().toString() , channelList.get(position).getUrl(),channelList.get(position).getId().toString());
             }
             else{
                 Log.e("playerac" , "no");

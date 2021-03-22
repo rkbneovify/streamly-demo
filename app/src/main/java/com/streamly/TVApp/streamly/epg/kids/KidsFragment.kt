@@ -95,7 +95,8 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
         if (programGuideSchedule.isCurrentProgram) {
             Log.e(TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
                     + "\nid: " + programGuideSchedule.id
-                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle)
+                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+            )
 
             /*for (i in 0 until channel_showName_list.size) {
                for (j in 0 until channels.size) {
@@ -230,10 +231,10 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
         apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                    .subscribe(
                            {
-                    //success
-                           val showNames = ArrayList<String>()
+                               //success
+                               val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                               Log.e("### episodeData",it.data.size.toString())
+                               Log.e("### episodeData", it.data.size.toString())
 
                                //#neovifyissueresolved28sep
                                val p: Pattern = Pattern.compile("\\d+")
@@ -274,13 +275,13 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 
                                val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
 
-                       var k = 0
-                       Log.e("### verticalList ","$k <ss>"+ channels.size)
+                               var k = 0
+                               Log.e("### verticalList ", "$k <ss>" + channels.size)
 
-                             verticallist.forEach  first@ { channel ->
+                               verticallist.forEach first@{ channel ->
 //                           Log.e("###${TAG}", "outSideIT " + channel)
 
-                                       if (k<channels.size) {
+                                   if (k < channels.size) {
                                        val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
                                        var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 
@@ -302,6 +303,8 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
                                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                                        verticallist[k].allItemsInSection!![p].description!!,
                                                        channels.get(k).videoUrl.toString())
+                                               Log.e(TAG, "getSecondApi: "+channels.get(k).id )
+
                                                scheduleList.add(schedule)
                                                nextTime = endTime
 
@@ -326,23 +329,23 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 
                                        }
 
-                                   }else{
-                                           Log.e("### $TAG else ","$k <ss>"+ channels.size)
-                                           return@first
-                                       }
+                                   } else {
+                                       Log.e("### $TAG else ", "$k <ss>" + channels.size)
+                                       return@first
+                                   }
 
-                                       k += 1
+                                   k += 1
                                }
-                       val pair = Pair(channels, channelMap)
-                       setData(pair.first, pair.second, localDate, dayss!!)
-                       setState(State.Content)
+                               val pair = Pair(channels, channelMap)
+                               setData(pair.first, pair.second, localDate, dayss!!)
+                               setState(State.Content)
 
-                   },
+                           },
                            {
-                    //error
-                    Log.e("###$TAG","error "+it.message)
-                    Log.e("###$TAG","error "+it.localizedMessage)
-                })
+                               //error
+                               Log.e("###$TAG", "error " + it.message)
+                               Log.e("###$TAG", "error " + it.localizedMessage)
+                           })
     }
 
 

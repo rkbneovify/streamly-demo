@@ -58,6 +58,14 @@ public interface ApiInterface {
     @GET("/api/auth/channellist")
     Call<ChannellistModel> getChannelList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
+    @Headers("Accept: application/json")
+    @GET("/api/auth/my_recents")
+    Call<ChannellistModel> getRecentList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    @Headers("Accept: application/json")
+    @POST("/api/auth/addtorecent")
+    Call<ChannellistModel> postRecentList(@Header(NetworkKeys.KEY_AUTH) String authorization_token,@Query(NetworkKeys.KEY_CHANNELIDS) String channel_ids);
+
 //    @Headers("User-Agent: iphone")
     @GET("/api/auth/channellist")
     Observable<ChannellistModel> getChannelList2(@Header(NetworkKeys.KEY_AUTH) String authorization_token);

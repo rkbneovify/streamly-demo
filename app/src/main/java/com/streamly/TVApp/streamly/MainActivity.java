@@ -59,7 +59,7 @@ private TextView settingText,goBackText;
 
     List<String> generList = new ArrayList<String>();
     List<Datum> recentList;
-    List<Datum> recentList2;
+
     Map<String , List<Datum>> dataList = new HashMap<String , List<Datum>>();
 
     @Override
@@ -168,8 +168,7 @@ private TextView settingText,goBackText;
                         }
 
 
-//recentList2=new ArrayList<>();
-//                        Log.e(TAG, "onResponse: "+recentList2 );
+
                         dataList.put("All" , datumList);
                         dataList.put("Recent" , recentList);
                         for(String s : generList){

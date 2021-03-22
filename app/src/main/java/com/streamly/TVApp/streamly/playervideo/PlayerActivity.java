@@ -96,6 +96,7 @@ public class PlayerActivity extends FragmentActivity {
     AllChannelAdapter allChannelAdapter;
     ImageView logoImage , menuImage , drawerCloseImage;
     LinearLayout drawerLayout;
+    String channel_id="";
 
     @Override
     protected void onStart() {
@@ -160,11 +161,15 @@ public class PlayerActivity extends FragmentActivity {
     }
 
 
-    public void playNext(String channelN , String videoUrl){
+    public void playNext(String channelN , String videoUrl,String channelId){
+        Log.e(TAG, "playNext: "+channelId );
+        Log.e(TAG, "playNext: "+videoUrl );
+        Log.e(TAG, "playNext: "+channelN );
 
         Intent i = new Intent(this , PlayerActivity.class);
         i.putExtra("from", videoUrl);
         i.putExtra("channel_name", channelN);
+        i.putExtra("channel_id", channelId);
         startActivity(i);
         finish();
     }
@@ -280,6 +285,12 @@ public class PlayerActivity extends FragmentActivity {
     private void initializePlayer(String drmKey, String wvUrl) {
         String streamUrl=getIntent().getStringExtra("from");
 
+        String channelIdIntent=getIntent().getStringExtra("channel_id");
+        if(channelIdIntent!=null)
+        {
+            channel_id=channelIdIntent;
+        }
+
         // URL of the KeyOS MultiKey License API for Widevine
 //        String wvUrl = "https://wv-keyos.licensekeyserver.com/";
 //        String wvURL1="http://127.0.0.1:8000/api/generic?drm-type=widevine";
@@ -295,7 +306,9 @@ public class PlayerActivity extends FragmentActivity {
         Log.e(TAG, "1) license_server: "+ wvUrl+"\n"
                 +"2) DRM_key: "+drmKey+ "\n"
                 +"3) Stream_URL: "+streamUrl+ "\n"
-                + "4) dash_uri: "+dashUri);
+                + "4) dash_uri: "+dashUri
+                + "5) channel_id: "+channelIdIntent
+        );
 
         // Identifies the Widevine DRM
         UUID widevineUuid = UUID.fromString("edef8ba9-79d6-4ace-a3c8-27dcd51d21ed");
@@ -467,6 +480,7 @@ public class PlayerActivity extends FragmentActivity {
         });
 
         player.setPlayWhenReady(true);
+        postRecentViewChannel(channel_id);
 
     }
 
@@ -500,6 +514,16 @@ public class PlayerActivity extends FragmentActivity {
 
                        channelList = response.body().getData();
                        Log.e("channelList-------" , channelList.get(0).getUrl());
+                       Log.e("channelList-------" , channelList.get(0).getId().toString());
+                       Log.e("channelList-------" , wvUrl);
+                       String url=getIntent().getStringExtra("from");
+                       for(int i=0; i<channelList.size(); i++){
+                           if(url.equals(channelList.get(i).getUrl()))
+                           {
+                               channel_id=channelList.get(i).getId().toString();
+                               Log.e(TAG, "onResponse: channel list id "+channelList.get(i).getId().toString() );
+                           }
+                       }
 
 
                        allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this , LinearLayoutManager.VERTICAL , false));
@@ -509,6 +533,7 @@ public class PlayerActivity extends FragmentActivity {
                        menuImage.setVisibility(View.VISIBLE);
 
                         initializePlayer(drmKey , wvUrl);
+
 
                     } else if (response.code() == 401) {
                         CommonUtility.showToast(PlayerActivity.this, response.body().getMessage());
@@ -536,6 +561,47 @@ public class PlayerActivity extends FragmentActivity {
         });
     }
 
+    private void postRecentViewChannel(String channelId) {
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<ChannellistModel> call = apiInterface.postRecentList("Bearer " + authToken,channelId);
+        call.enqueue(new Callback<ChannellistModel>() {
+            @Override
+            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
+                try {
 
+                    if (response.isSuccessful() && response.body() != null) {
+
+//                        recentList = response.body().getData();
+                        Log.e(TAG, "onResponse: recent list "+response.body().getData() );
+
+
+
+
+
+                    } else if (response.code() == 401) {
+                        CommonUtility.showToast(PlayerActivity.this, response.body().getMessage());
+
+                    } else if (response.code() == 404) {
+                        TokenStorage.clearSharedToken(PlayerActivity.this);
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SESSION_EXPIRED);
+
+
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Log.e(TAG, "Exception " + ex);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChannellistModel> call, Throwable t) {
+                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+                CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+            }
+        });
+    }
 
 }
