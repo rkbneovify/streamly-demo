@@ -58,6 +58,8 @@ private TextView settingText,goBackText;
     private RecyclerView recyclerView;
 
     List<String> generList = new ArrayList<String>();
+    List<Datum> recentList;
+    List<Datum> recentList2;
     Map<String , List<Datum>> dataList = new HashMap<String , List<Datum>>();
 
     @Override
@@ -81,11 +83,54 @@ private TextView settingText,goBackText;
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
 
-
+        getRecentList();
         getChannelList();
 
 
 
+    }
+
+    private void getRecentList() {
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<ChannellistModel> call = apiInterface.getRecentList("Bearer " + authToken);
+        call.enqueue(new Callback<ChannellistModel>() {
+            @Override
+            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
+                try {
+
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        recentList = response.body().getData();
+                        Log.e(TAG, "onResponse: recent list "+response.body().getData() );
+
+
+
+
+
+                    } else if (response.code() == 401) {
+                        CommonUtility.showToast(MainActivity.this, response.body().getMessage());
+
+                    } else if (response.code() == 404) {
+                        TokenStorage.clearSharedToken(MainActivity.this);
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SESSION_EXPIRED);
+
+
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Log.e(TAG, "Exception " + ex);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChannellistModel> call, Throwable t) {
+                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+                CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+            }
+        });
     }
 
     public void fragment(String type , List<Datum> dataListm){
@@ -97,7 +142,7 @@ private TextView settingText,goBackText;
     }
 
     private void getChannelList() {
-
+        Log.e(TAG, "getChannelList: "+authToken );
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ChannellistModel> call = apiInterface.getChannelList("Bearer " + authToken);
         call.enqueue(new Callback<ChannellistModel>() {
@@ -108,6 +153,7 @@ private TextView settingText,goBackText;
                     if (response.isSuccessful() && response.body() != null) {
 
                         List<Datum> datumList = response.body().getData();
+                        Log.e(TAG, "onResponse: all "+response.body().getData() );
 
                         for (int i = 0; i < datumList.size(); i++) {
 
@@ -122,8 +168,10 @@ private TextView settingText,goBackText;
                         }
 
 
-
+//recentList2=new ArrayList<>();
+//                        Log.e(TAG, "onResponse: "+recentList2 );
                         dataList.put("All" , datumList);
+                        dataList.put("Recent" , recentList);
                         for(String s : generList){
                             Log.e("doneok" , s);
 
