@@ -168,6 +168,7 @@ Route::get('/privacy', 'Pages\Faq@privacy');
 Route::get('/accessibility', 'Pages\Faq@accessibility');
 
 Route::get('/account/settings', 'Pages\Account\Setting@showSettingpage');
+Route::get('/account/settings2', 'Pages\Account\Setting@showSettingpage2');
 Route::get('/account/refresh', 'Pages\Account\Setting@userAskedtoRefreshToken');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
