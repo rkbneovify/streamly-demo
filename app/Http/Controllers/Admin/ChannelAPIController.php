@@ -14,10 +14,81 @@ class ChannelAPIController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['checkdevice','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','PacificFrontEpgchannelDaysSchedule']]);
+        $this->middleware('jwt.verify', ['except' => ['checkdevice','sortdevice','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','PacificFrontEpgchannelDaysSchedule']]);
     }
 
 
+    public function sortdevice(Request $request)
+    {  
+        $ua = $request->server('HTTP_USER_AGENT');
+        $isDevice=isDeviceAppleRokuOthers($ua);
+        if($isDevice=='roku'){
+            $response = [
+                'success' => true,
+                'data'=>'ism links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For roku devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);  
+        }else if($isDevice=='firetv'){
+
+            $response = [
+                'success' => true,
+                'useragent'=>$ua,
+                'data'=>'mpd links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For firetv devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else if($isDevice=='appletv'){
+
+            $response = [
+                'success' => true,
+                'useragent'=>$ua,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For appletv devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else if($isDevice=='apple'){
+
+            $extra2=$this->getBodyClass();
+            $extra=$this->logGetDeviceName();
+            $response = [
+                'success' => true,
+                'extra' => $extra,
+                'extra2' => $extra2,
+                'useragent'=>$ua,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else{
+             $extra2=$this->getBodyClass();
+            $extra=$this->logGetDeviceName();
+            $response = [
+                'success' => true,
+                'extra' => $extra,
+                'extra2' => $extra2,
+                'useragent'=>$ua,
+                'data'=>'mpd links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For non-apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }
+    }
     public function checkdevice(Request $request)
     {  
         $ua = $request->server('HTTP_USER_AGENT');
