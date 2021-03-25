@@ -54,6 +54,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     Route::get('channellist', 'Admin\ChannelAPIController@channeljson');
     Route::get('check', 'Admin\ChannelAPIController@checkdevice');
+    Route::get('sort', 'Admin\ChannelAPIController@sortdevice');
     Route::post('channelschdeule', 'Admin\ChannelAPIController@channelschedulejson');
     Route::get('channeldayschdeule', 'Admin\ChannelAPIController@channelDaysSchedule');
     Route::get('oldchanneldayschdeule', 'Admin\ChannelAPIController@oldchannelDaysSchedule');
