@@ -270,6 +270,8 @@ function isDeviceAppleRokuOthers($ua){
 
 $Firetv = (stripos($ua,"AFT") !== false);
 $samsung_smart_tv = (stripos($ua,"SMART-TV") !== false);
+$smart_tv = (stripos($ua,"SmartTV") !== false);
+$Tizen = (stripos($ua,"Tizen") !== false);
   $iPod    = (stripos($ua,"iPod") !== false);
 $iPhone  = (stripos($ua,"iPhone") !== false);
 $iPad    = (stripos($ua,"iPad") !== false);
@@ -286,15 +288,15 @@ $Apple_TV = (stripos($ua,"Apple TV") !== false);
   return 'roku';
 }else if($Firetv){
   return 'firetv';
- }else if($Firetv){
+ }else if($samsung_smart_tv||$Tizen||$smart_tv){
   return 'smarttv';
  }else if( $Darwin||$Apple_TV||$appletv&&!$Android)  {
   return 'appletv';
- }else if( $iPod || $iPhone||$iPad||$iPadOS||$Safari&&!$Android)  {
-  return 'apple';
  }else if($Chrome){
   return 'chrome';
-}else{
+} else if( $iPod || $iPhone||$iPad||$iPadOS||$Safari&&!$Android)  {
+  return 'apple';
+ }else{
    return 'others';
  }
 }
@@ -569,6 +571,104 @@ function VideoJSErrorCode($code)
     return $color;
   }else{ return $color='black';}
   
+}
+function getBodyClass()
+{
+    $agent = new Agent();
+    $browser_css_classes = array();
+    $unsupported = [];
+    if ($mobile = $agent->isMobile()) {
+        $browser_css_classes['device'] = 'device-mobile';
+        $browser_css_classes['classes'] = "data-form-factor='2' data-os='4'";
+    }
+    if ($tablet = $agent->isTablet()) {
+        $browser_css_classes['device'] = 'device-tablet';
+        $browser_css_classes['classes'] = "data-form-factor='3' data-os='1'";
+    }
+
+    if ($ipad = $agent->is('iPad')) {
+      $browser_css_classes['device'] = 'device-ipad';
+      $browser_css_classes['classes'] = "data-form-factor='3' data-os='5'";
+  }
+    if ($iphone = $agent->is('iPhone')) {
+        $browser_css_classes['device'] = 'device-iphone';
+        $browser_css_classes['classes'] = "data-form-factor='2' data-os='5'";
+    }
+    $other_browser = $agent->browser();
+    if ($agent->browser() == "Safari") {
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-safari';
+        if ($agent->version('Safari') < 5) {
+            $unsupported['browser'] = 'Safari';
+        }
+    }
+    if ($agent->browser() == "Chrome") {
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-chrome';
+        $browser_css_classes['browserversion'] = 'browser-chrome-' . (int) $agent->version('Chrome');
+        if ($agent->version('Chrome') < 30) {
+            $unsupported['browser'] = 'Chrome';
+        }
+    }
+    if ($agent->browser() == "Firefox") {
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-firefox';
+        $browser_css_classes['browserversion'] = 'browser-firefox-' . (int) $agent->version('Firefox');
+        if ($agent->version('Firefox') < 25) {
+            $unsupported['browser'] = 'Firefox';
+        }
+    }
+    if ($browser = $agent->browser() == "IE") {
+        $version = $agent->version("IE");
+        $version = str_replace('.0', '', $version);
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-ie';
+        $browser_css_classes['browser'] = 'browser-ie-' . (int) $version;
+        if ((int) $version < 10) {
+            $browser_css_classes['browserversion'] = 'browser-lt-ie10';
+        }
+        if ((int) $version < 9) {
+            $unsupported['browser'] = 'Internet Explorer';
+        }
+        $browser_css_classes['browserversion'] = 'browser-ie' . $version;
+    }
+    if ($other_browser) {
+        $browser_css_classes['browser'] = 'browser-' . strtolower($other_browser);
+        $version = (int) $agent->version($other_browser);
+        $browser_css_classes['browserversion'] = 'browser-' . strtolower($other_browser) . '-' . $version;
+    }
+    $windows=$agent->is('Windows');
+    if ($windows) {
+        $browser_css_classes['platform'] = 'os-windows';
+    }
+    $OSX=$agent->is('OS X');
+    if ($OSX) {
+        $browser_css_classes['platform'] = 'os-mac';
+    }
+    if ($agent->is('AndroidOS')) {
+        $browser_css_classes['platform'] = 'os-andriod';
+    }
+   $oslinux= $agent->is('Ubuntu')||$agent->is('Linux')&&!$agent->is('AndroidOS');
+    if ($oslinux) {
+        $browser_css_classes['platform'] = 'os-linux';
+    }
+    if ($agent->isDesktop()) {
+        $browser_css_classes['device'] = 'desktop';
+
+        $browser_css_classes['classes'] = "data-form-factor='1'";
+        if($oslinux){
+          $browser_css_classes['classes'] = "data-form-factor='1' data-os='3'";
+        }
+        if($OSX){
+          $browser_css_classes['classes'] = "data-form-factor='1' data-os='2'";
+        }
+        if($windows){
+          $browser_css_classes['classes'] = "data-form-factor='1' data-os='1'";
+        }
+    }
+    $browser_css_classes2 = implode(' ', $browser_css_classes);
+    $browser_css_classes['full']= $browser_css_classes2;
+    return $browser_css_classes;
 }
 
 ?>

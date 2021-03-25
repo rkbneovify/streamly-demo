@@ -773,6 +773,131 @@ background-position: center;
 .NZp2ef {
  background-color:#e8eaed;
 }
+
+/*browser used */
+.eIXuRc+.eIXuRc.EGriic {
+	border-top: 1px solid #dadce0;
+	margin-right: -24px;
+	margin-top: 24px
+}
+
+.eIXuRc {
+	padding-top: 24px
+}
+
+.NQ9Zpd {
+	letter-spacing: .07272727em;
+	font-family: Roboto, Arial, sans-serif;
+	font-size: .6875rem;
+	font-weight: 500;
+	line-height: 1rem;
+	text-transform: uppercase;
+	color: #5f6368;
+	padding-bottom: 16px
+}
+
+.YrUtyd {
+	align-items: flex-start;
+	display: flex;
+	flex-wrap: wrap
+}
+
+
+.YrUtyd+.FgENu {
+	padding-top: 12px
+}
+
+.FgENu+.YrUtyd {
+	padding-top: 24px
+}
+.Qc8ulc {
+	align-items: center;
+	display: -webkit-inline-box;
+	display: inline-flex;
+	padding-bottom: 12px;
+	width: 100%
+}
+
+.Qc8ulc:last-child {
+	padding-bottom: 0
+}
+
+@media (min-width:720px) {
+	.Qc8ulc {
+		width: 50%
+	}
+	.Qc8ulc:nth-last-child(2) {
+		padding-bottom: 0
+	}
+}
+
+
+.CCq0jd {
+	padding-right: 16px;
+	width: 20px
+}
+
+.CCq0jd[data-nest-device="true"] {
+	height: 32px;
+	width: 32px
+}
+
+.aiicHc {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -147px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='1'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -42px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='2'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -84px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='3'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -105px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='4'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -126px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='5'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -63px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='6'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 0;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
+.aiicHc[data-browser='7'] {
+	background: no-repeat url(https://www.gstatic.com/identity/boq/accountsettingssecuritycommon/images/sprites/browsers-7aaa748b21991550f4cff35726a2e195.png) 0 -21px;
+	background-size: 20px 167px;
+	width: 20px;
+	height: 20px
+}
+
 	</style>
 
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -957,11 +1082,24 @@ background-position: center;
                                        <div>India</div>
                                        <div jsname="WQnlqf">1 hour ago</div>
                                     </div>
-                                    <div class="device-more-details IfKkJe"></div>
-                                    <a class="device-more-details" role="button">More details</a>
+                                    <div class="eIXuRc EGriic">
+                                       <div class="NQ9Zpd" role="heading" aria-level="4"><span>Browsers you’re signed in on</span></div>
+                                       <div>
+                                          <div class="YrUtyd" role="list">
+                                             <div class="Qc8ulc" role="listitem">
+                                                <span class="CCq0jd">
+                                                   <div class="aiicHc" data-browser="1"></div>
+                                                </span>
+                                                <span title="Chrome 89.0.4389.105">Chrome</span>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
                                  </div>
+
+                             
                               </div>
-                              <div class="TDjQOc" data-device-id="Acb514901592fd168" jsname="vGRBjf" jscontroller="r55wJe" jsaction="rcuQ6b:npT2md;JIbuQc:idoEib;" data-source="3">
+                               <div class="TDjQOc" data-device-id="Acb514901592fd168" jsname="vGRBjf" jscontroller="r55wJe" jsaction="rcuQ6b:npT2md;JIbuQc:idoEib;" data-source="3">
                                  <div role="button" class="U26fgb JRtysb WzwrXb" jscontroller="iSvg6e" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc(preventMouseEvents=true|preventDefault=true); touchcancel:JMtRjd;;keydown:I481le;" jsshadow="" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
                                     <div class="NWlf3e MbhUzd" jsname="ksKsZd"></div>
                                     <span jsslot="" class="MhXXcc oJeWuf">

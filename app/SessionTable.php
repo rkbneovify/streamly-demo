@@ -20,6 +20,7 @@ class SessionTable extends Model
         'logintime',
         'mac_address',
         'connected_devices',
+        'device',
         'status',
         'created_on',
         'modified_on'];

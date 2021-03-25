@@ -58,7 +58,7 @@ class ChannelAPIController extends Controller
             return response()->json($response, 200);
         }else if($isDevice=='apple'){
 
-            $extra2=$this->getBodyClass();
+            $extra2=getBodyClass();
             $extra=$this->logGetDeviceName();
             $response = [
                 'success' => true,
@@ -73,7 +73,7 @@ class ChannelAPIController extends Controller
             // return response()->json($reco);
             return response()->json($response, 200);
         }else{
-             $extra2=$this->getBodyClass();
+             $extra2=getBodyClass();
             $extra=$this->logGetDeviceName();
             $response = [
                 'success' => true,
@@ -94,8 +94,15 @@ class ChannelAPIController extends Controller
         $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
         if($isDevice=='roku'){
+
+            $browser_css_classes = array();
+
+        $browser_css_classes['device'] = 'device-rokutv';
+        $browser_css_classes['classes'] = "data-form-factor='10'";
             $response = [
                 'success' => true,
+                'extra2' => $browser_css_classes,
+                'useragent'=>$ua,
                 'data'=>'ism links', 
                 // 'data'=>$pagechannel->count(), 
                 'message' => 'For roku devices',
@@ -103,9 +110,57 @@ class ChannelAPIController extends Controller
             ];
             // return response()->json($reco);
             return response()->json($response, 200);  
+        }else if($isDevice=='appletv'){
+            $browser_css_classes = array();
+
+        $browser_css_classes['device'] = 'device-appletv';
+        $browser_css_classes['classes'] = "data-form-factor='10'";
+            $response = [
+                'success' => true,
+                'extra2' => $browser_css_classes,
+                'useragent'=>$ua,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else if($isDevice=='firetv'){
+            $browser_css_classes = array();
+
+        $browser_css_classes['device'] = 'device-firetv';
+        $browser_css_classes['classes'] = "data-form-factor='12'";
+            $response = [
+                'success' => true,
+                'extra2' => $browser_css_classes,
+                'useragent'=>$ua,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
+        }else if($isDevice=='smarttv'){
+            $browser_css_classes = array();
+
+        $browser_css_classes['device'] = 'device-smarttv';
+        $browser_css_classes['classes'] = "data-form-factor='13'";
+            $response = [
+                'success' => true,
+                'extra2' => $browser_css_classes,
+                'useragent'=>$ua,
+                'data'=>'m3u8 links', 
+                // 'data'=>$pagechannel->count(), 
+                'message' => 'For apple devices',
+                'response_code'=>200,
+            ];
+            // return response()->json($reco);
+            return response()->json($response, 200);
         }else if($isDevice=='apple'){
 
-            $extra2=$this->getBodyClass();
+            $extra2=getBodyClass();
             $extra=$this->logGetDeviceName();
             $response = [
                 'success' => true,
@@ -120,7 +175,7 @@ class ChannelAPIController extends Controller
             // return response()->json($reco);
             return response()->json($response, 200);
         }else{
-             $extra2=$this->getBodyClass();
+             $extra2=getBodyClass();
             $extra=$this->logGetDeviceName();
             $response = [
                 'success' => true,
@@ -155,81 +210,7 @@ class ChannelAPIController extends Controller
         return $platform. ' ' .$browser . ' ' . $version;
     }
 }
-    private function getBodyClass()
- {
-     $agent = new Agent();
-     $browser_css_classes = array();
-     $unsupported = [];
-     if ($mobile = $agent->isMobile()) {
-         $browser_css_classes[] = 'device-mobile';
-     }
-     if ($tablet = $agent->isTablet()) {
-         $browser_css_classes[] = 'device-tablet';
-     }
-     if ($iphone = $agent->is('iPhone')) {
-         $browser_css_classes[] = 'device-iphone';
-     }
-     if ($ipad = $agent->is('iPad')) {
-         $browser_css_classes[] = 'device-ipad';
-     }
-     $other_browser = $agent->browser();
-     if ($agent->browser() == "Safari") {
-         $other_browser = false;
-         $browser_css_classes[] = 'browser-safari';
-         if ($agent->version('Safari') < 5) {
-             $unsupported['browser'] = 'Safari';
-         }
-     }
-     if ($agent->browser() == "Chrome") {
-         $other_browser = false;
-         $browser_css_classes[] = 'browser-chrome';
-         $browser_css_classes[] = 'browser-chrome-' . (int) $agent->version('Chrome');
-         if ($agent->version('Chrome') < 30) {
-             $unsupported['browser'] = 'Chrome';
-         }
-     }
-     if ($agent->browser() == "Firefox") {
-         $other_browser = false;
-         $browser_css_classes[] = 'browser-firefox';
-         $browser_css_classes[] = 'browser-firefox-' . (int) $agent->version('Firefox');
-         if ($agent->version('Firefox') < 25) {
-             $unsupported['browser'] = 'Firefox';
-         }
-     }
-     if ($browser = $agent->browser() == "IE") {
-         $version = $agent->version("IE");
-         $version = str_replace('.0', '', $version);
-         $other_browser = false;
-         $browser_css_classes[] = 'browser-ie';
-         $browser_css_classes[] = 'browser-ie-' . (int) $version;
-         if ((int) $version < 10) {
-             $browser_css_classes[] = 'browser-lt-ie10';
-         }
-         if ((int) $version < 9) {
-             $unsupported['browser'] = 'Internet Explorer';
-         }
-         $browser_css_classes[] = 'browser-ie' . $version;
-     }
-     if ($other_browser) {
-         $browser_css_classes[] = 'browser-' . strtolower($other_browser);
-         $version = (int) $agent->version($other_browser);
-         $browser_css_classes[] = 'browser-' . strtolower($other_browser) . '-' . $version;
-     }
-     if ($agent->is('Windows')) {
-         $browser_css_classes[] = 'os-windows';
-     }
-     if ($agent->is('OS X')) {
-         $browser_css_classes[] = 'os-mac';
-     }
-     if ($agent->isDesktop()) {
-         $browser_css_classes[] = 'desktop';
-     } else {
-         //Don't display errors on non-desktop devices
-         $unsupported = [];
-     }
-     $browser_css_classes = implode(' ', $browser_css_classes);
-     return $browser_css_classes;
- }
+  
     public function channeljson(Request $request) 
     {   $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
