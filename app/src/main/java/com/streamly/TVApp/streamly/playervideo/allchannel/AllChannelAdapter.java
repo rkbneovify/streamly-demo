@@ -42,7 +42,7 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
 
-        holder.textView.setText(position+1 + "");
+        holder.textView.setText(channelList.get(position).getId().toString());
         Glide.with(ctx).load(channelList.get(position).getLogo()).into(holder.imageView);
 
         holder.itemView.setOnClickListener(view -> {
