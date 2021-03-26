@@ -405,7 +405,7 @@ $session_tab->access_token = $token;
 $session_tab->user_ip = getUserIpAddr();
 $session_tab->mac_address = $deviceDetails;
 $session_tab->connected_devices = $connected_devices;
-$session_tab->device = json_encode($deviceInfoClasses);
+$session_tab->device = $deviceInfoClasses;
 $session_tab->logintime = Carbon::now();
 $session_tab->status = 1;
 $session_tab->created_on = $date;
@@ -606,6 +606,8 @@ function getBodyClass()
     if ($agent->browser() == "Safari") {
         $other_browser = false;
         $browser_css_classes['browser'] = 'browser-safari';
+        $browser_css_classes['browserclass'] = "data-browser='3'";
+        $browser_css_classes['browserversion'] = 'browser-safari-' . (int) $agent->version('Safari');
         if ($agent->version('Safari') < 5) {
             $unsupported['browser'] = 'Safari';
         }
@@ -614,6 +616,8 @@ function getBodyClass()
         $other_browser = false;
         $browser_css_classes['browser'] = 'browser-chrome';
         $browser_css_classes['browserversion'] = 'browser-chrome-' . (int) $agent->version('Chrome');
+
+        $browser_css_classes['browserclass'] = "data-browser='1'";
         if ($agent->version('Chrome') < 30) {
             $unsupported['browser'] = 'Chrome';
         }
@@ -622,6 +626,8 @@ function getBodyClass()
         $other_browser = false;
         $browser_css_classes['browser'] = 'browser-firefox';
         $browser_css_classes['browserversion'] = 'browser-firefox-' . (int) $agent->version('Firefox');
+
+        $browser_css_classes['browserclass'] = "data-browser='2'";
         if ($agent->version('Firefox') < 25) {
             $unsupported['browser'] = 'Firefox';
         }
@@ -632,6 +638,8 @@ function getBodyClass()
         $other_browser = false;
         $browser_css_classes['browser'] = 'browser-ie';
         $browser_css_classes['browser'] = 'browser-ie-' . (int) $version;
+
+        $browser_css_classes['browserclass'] = "data-browser='4'";
         if ((int) $version < 10) {
             $browser_css_classes['browserversion'] = 'browser-lt-ie10';
         }
@@ -642,6 +650,8 @@ function getBodyClass()
     }
     if ($other_browser) {
         $browser_css_classes['browser'] = 'browser-' . strtolower($other_browser);
+
+        $browser_css_classes['browserclass'] = "data-browser='7'";
         $version = (int) $agent->version($other_browser);
         $browser_css_classes['browserversion'] = 'browser-' . strtolower($other_browser) . '-' . $version;
     }
