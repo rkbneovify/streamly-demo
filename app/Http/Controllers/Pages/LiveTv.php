@@ -142,7 +142,6 @@ if (count($active_session) >= $login_limit) {
     public function showChannel2($callSign,$genre){
      
         try {
-            $encoded_auth_xml = getKeyOSAuthToken();
     
          
     	if( Auth::check()){
@@ -157,11 +156,39 @@ if (count($active_session) >= $login_limit) {
             $login = false;
             return redirect()->route('home');
         }
- if(session()->has('jwttoken') && session()->get('jwttoken')!=='no jwt'){
+        $login_limit = 5; $user_id = Auth::user()->id;
+        $encoded_auth_xml = getKeyOSAuthToken();
 
+ $activeNowsession = SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+    ['access_token', '=', session()->get('jwttoken')],
+     ])->get()->count(); 
+     //find all by user_id and and status=active
+$active_session = SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+     ])->get()->toArray(); 
+
+     if($activeNowsession!=0){
 
     $ua = request()->server('HTTP_USER_AGENT');
     $isDevice=isDeviceAppleRokuOthers($ua);
+    if($isDevice=='chrome'){
+        
+        $type='dash_url';
+        $record = $this->showChannelFunc($type);
+        
+       
+    $channelData= Gracenote::where('CallSign', $callSign)->get();
+    
+    $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
+    
+      $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
+    
+    return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
+    
+    }
 if($isDevice=='apple')  { //for apple serve m3u8
 // echo "apple device";
 $type='url';
@@ -196,25 +223,18 @@ $relatedchannel=$record->get()->where('genrenae',$genre);
    
   
     return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
-     
- } else{
-     
-    $login_limit = 5;$user_id = Auth::user()->id;
-
-    //find all by user_id and and status=active
-    $active_session = SessionTable::where([
-    ['status', '=', '1'],
-    ['users_id', '=', $user_id],
-     ])->get()->toArray();
-    $login = true;
-    if (count($active_session) <$login_limit) {
-    return view('frontend.RefreshVideoPlayToken',compact('login'));}else{return view('frontend.deviceLimitReached',compact('login'));}
+   
+     }else{
+        if (count($active_session) <$login_limit) 
+        return view('frontend.RefreshVideoPlayToken',compact('login'));
     
-    //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
-    //  $login = false; 
-        
-
- }
+     }
+     if (count($active_session) >= $login_limit) {
+        $login = true;
+        //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
+        //  $login = false; 
+            return view('frontend.deviceLimitReached',compact('login'));
+        }
  }catch(Exception $e) {
             
             return $e->getMessage();
