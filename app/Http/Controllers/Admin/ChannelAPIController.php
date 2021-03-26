@@ -93,104 +93,66 @@ class ChannelAPIController extends Controller
     {  
         $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
-        if($isDevice=='roku'){
+        $isTV=isTV($isDevice);
+        // print_r($isTV);
+        // exit;
+        if($isTV !== false){
+            if($isTV['device']=='device-rokutv'){
+               $result= $this->checkdeviceFunc($device=$isTV['device'],$type='ism',$ua,$isTV);
+                
+                return $result;  
+            }else if($isTV['device']=='device-appletv'){
+                $result= $this->checkdeviceFunc($device=$isTV['device'],$type='m3u8',$ua,$isTV);
+                
+                return $result;  
+            }else{
+                $result= $this->checkdeviceFunc($device=$isTV['device'],$type='mpd',$ua,$isTV);
+                
+                return $result;  
+            } 
+        }
+        
+        if($isDevice=='apple'){
 
-            $browser_css_classes = array();
+            $result= $this->checkdeviceFunc($device=$isDevice,$type='m3u8',$ua,$isTV=false);
 
-        $browser_css_classes['device'] = 'device-rokutv';
-        $browser_css_classes['classes'] = "data-form-factor='10'";
-            $response = [
-                'success' => true,
-                'extra2' => $browser_css_classes,
-                'useragent'=>$ua,
-                'data'=>'ism links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For roku devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);  
-        }else if($isDevice=='appletv'){
-            $browser_css_classes = array();
-
-        $browser_css_classes['device'] = 'device-appletv';
-        $browser_css_classes['classes'] = "data-form-factor='10'";
-            $response = [
-                'success' => true,
-                'extra2' => $browser_css_classes,
-                'useragent'=>$ua,
-                'data'=>'m3u8 links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For apple devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);
-        }else if($isDevice=='firetv'){
-            $browser_css_classes = array();
-
-        $browser_css_classes['device'] = 'device-firetv';
-        $browser_css_classes['classes'] = "data-form-factor='12'";
-            $response = [
-                'success' => true,
-                'extra2' => $browser_css_classes,
-                'useragent'=>$ua,
-                'data'=>'m3u8 links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For apple devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);
-        }else if($isDevice=='smarttv'){
-            $browser_css_classes = array();
-
-        $browser_css_classes['device'] = 'device-smarttv';
-        $browser_css_classes['classes'] = "data-form-factor='13'";
-            $response = [
-                'success' => true,
-                'extra2' => $browser_css_classes,
-                'useragent'=>$ua,
-                'data'=>'m3u8 links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For apple devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);
-        }else if($isDevice=='apple'){
-
-            $extra2=getBodyClass();
-            $extra=$this->logGetDeviceName();
-            $response = [
-                'success' => true,
-                'extra' => $extra,
-                'extra2' => $extra2,
-                'useragent'=>$ua,
-                'data'=>'m3u8 links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For apple devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);
+            return $result;  
+           
         }else{
-             $extra2=getBodyClass();
-            $extra=$this->logGetDeviceName();
-            $response = [
-                'success' => true,
-                'extra' => $extra,
-                'extra2' => $extra2,
-                'useragent'=>$ua,
-                'data'=>'mpd links', 
-                // 'data'=>$pagechannel->count(), 
-                'message' => 'For non-apple devices',
-                'response_code'=>200,
-            ];
-            // return response()->json($reco);
-            return response()->json($response, 200);
+            $result= $this->checkdeviceFunc($device='non-apple',$type='mpd',$ua,$isTV=false);
+
+            return $result;  
         }
     }
+   private function checkdeviceFunc($device,$type,$ua,$isTV){
+    if($isTV==false){
+        $extra2=getBodyClass();
+    $extra=$this->logGetDeviceName();
+    $response = [
+        'success' => true,
+        'extra' => $extra,
+        'extra2' => $extra2,
+        'useragent'=>$ua,
+        'data'=>$type.' links', 
+        // 'data'=>$pagechannel->count(), 
+        'message' => 'For '.$device.' devices',
+        'response_code'=>200,
+    ];
+    // return response()->json($reco);
+    return response()->json($response, 200);}else{
+        $response = [
+            'success' => true,
+            'extra2' => $isTV,
+            'useragent'=>$ua,
+            'data'=>$type.' links', 
+            'message' => 'For '.$device.' devices',
+            'response_code'=>200,
+        ];
+    
+        return response()->json($response, 200);  
+    }
+    
+   }
    private function logGetDeviceName()
 { $agent = new Agent();
     if ($agent->is('Android')) {
