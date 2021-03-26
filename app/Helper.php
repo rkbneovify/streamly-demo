@@ -668,6 +668,7 @@ function getBodyClass()
     }
     $browser_css_classes2 = implode(' ', $browser_css_classes);
     $browser_css_classes['full']= $browser_css_classes2;
+    $browser_css_classes['useragent']= request()->header('User-Agent');
     return $browser_css_classes;
 }
 
@@ -699,6 +700,8 @@ function isTV($device)
         $browser_css_classes['classes'] = "data-form-factor='13'";
       break;
     }
+
+    $browser_css_classes['useragent']= request()->header('User-Agent');
     return $browser_css_classes;
   } else{
 
