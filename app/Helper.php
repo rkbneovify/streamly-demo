@@ -671,4 +671,40 @@ function getBodyClass()
     return $browser_css_classes;
 }
 
+
+function isTV($device)
+{  
+  $tv=['roku','appletv','firetv','smarttv'];
+  $color = '';
+  if(in_array($device, $tv)){
+  
+    $browser_css_classes = array();
+    switch($device){
+      case 'roku':
+
+        $browser_css_classes['device'] = 'device-rokutv';
+        $browser_css_classes['classes'] = "data-form-factor='10'";
+        
+        break;
+    case 'appletv':
+      $browser_css_classes['device'] = 'device-appletv';
+      $browser_css_classes['classes'] = "data-form-factor='10'";
+      break;
+      case 'firetv':
+        $browser_css_classes['device'] = 'device-firetv';
+        $browser_css_classes['classes'] = "data-form-factor='12'";
+      break;
+      case 'smarttv':
+        $browser_css_classes['device'] = 'device-smarttv';
+        $browser_css_classes['classes'] = "data-form-factor='13'";
+      break;
+    }
+    return $browser_css_classes;
+  } else{
+
+    return $browser_css_classes=false;
+
+  }
+}
+
 ?>
