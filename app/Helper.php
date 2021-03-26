@@ -391,6 +391,13 @@ function sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices){
 }
 
 function sessionTableStore($user_id,$token,$deviceDetails,$connected_devices){
+  $ua =  request()->header('User-Agent');
+  $isDevice=isDeviceAppleRokuOthers($ua);
+      $isTV=isTV($isDevice);
+      if($isTV !== false){$deviceInfoClasses=$isTV;}else{
+        $deviceInfoClasses=getBodyClass();
+      }
+// dd($deviceInfoClasses);
   $date = date('Y-m-d H:i:s');
 $session_tab = new SessionTable();
 $session_tab->users_id = $user_id;
@@ -398,6 +405,7 @@ $session_tab->access_token = $token;
 $session_tab->user_ip = getUserIpAddr();
 $session_tab->mac_address = $deviceDetails;
 $session_tab->connected_devices = $connected_devices;
+$session_tab->device = json_encode($deviceInfoClasses);
 $session_tab->logintime = Carbon::now();
 $session_tab->status = 1;
 $session_tab->created_on = $date;
@@ -666,8 +674,6 @@ function getBodyClass()
           $browser_css_classes['classes'] = "data-form-factor='1' data-os='1'";
         }
     }
-    $browser_css_classes2 = implode(' ', $browser_css_classes);
-    $browser_css_classes['full']= $browser_css_classes2;
     $browser_css_classes['useragent']= request()->header('User-Agent');
     return $browser_css_classes;
 }
