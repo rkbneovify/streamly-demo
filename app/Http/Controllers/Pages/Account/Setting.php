@@ -111,10 +111,37 @@ class Setting extends Controller
         ['users_id', '=', $id],
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
+        return view('frontend.pages.account.setting4', compact('login','allSession'));
+    }
+    public function showSettingpage3(){
+        $invoices='1';
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+       $id= Auth::user()->id;
+        $userinfo = User::find($id);
+        // $roles = Role::get(); //get all roles
+        // $userRoles = $user->roles->pluck('id')->toArray();
+        //dd($roles);
+        // $allSession=SessionTable::with('user')->select('device')
+        // ->selectRaw("id,users_id , connected_devices,access_token,created_on, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        // ->where([
+        // ['status', '=', '1'],
+        // ['users_id', '=', $id],
+        //  ])->orderBy('connected_devices', 'asc')->get();
+         $allSession=SessionTable::where([
+        ['status', '=', '1'],
+        ['users_id', '=', $id],
+         ])->orderBy('connected_devices', 'asc')->get();
+         $currentMonth = date('m');
       
          
+    //   dd($allSession);
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting4', compact('login','allSession'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession'));
     }
 
     public function sessiondestroy($id,Request $request)

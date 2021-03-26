@@ -12,7 +12,9 @@ class SessionTable extends Model
     
     protected $table = 'session_table';
     public $timestamps = false;
-    
+    protected $casts = [
+     'device' => 'array'
+   ];
     protected $fillable=[
         'users_id',
         'access_token',
