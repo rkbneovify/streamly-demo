@@ -176,18 +176,19 @@ $active_session = SessionTable::where([
     $isDevice=isDeviceAppleRokuOthers($ua);
     if($isDevice=='chrome'){
         
-        $type='dash_url';
-        $record = $this->showChannelFunc($type);
-        
-       
-    $channelData= Gracenote::where('CallSign', $callSign)->get();
     
-    $url= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)->get('dash_url as url');
-    
-      $relatedchannel=$record->get()->groupBy('genrename')->get($genre);
-    
-    return view('frontend.pages.livetvchannel', compact('login','relatedchannel','genre','channelData','url','encoded_auth_xml'));
-    
+$type='dash_url';
+$record = $this->showChannelFunc($type);
+$allchannel=$record->get()->unique();
+
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$url=$Channel->get('dash_url as url');
+$channelId=$Channel->get('id');
+$relatedchannel=$record->get()->where('genrenae',$genre);
+return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
+   
     }
 if($isDevice=='apple')  { //for apple serve m3u8
 // echo "apple device";
