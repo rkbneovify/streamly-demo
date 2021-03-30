@@ -286,7 +286,7 @@ body:not(.uOat3d) .device-box-card-inside:not(.VfPpkd-ksKsZd-mWPk3d).device-box-
 .jpoelc {
  position:relative;
 }
-.JRtysb {
+.dotmenu1 {
  -moz-user-select:none;
  -moz-transition:background .3s;
  transition:background .3s;
@@ -306,7 +306,7 @@ body:not(.uOat3d) .device-box-card-inside:not(.VfPpkd-ksKsZd-mWPk3d).device-box-
  width:48px;
  z-index:0;
 }
-.JRtysb.RDPZE {
+.dotmenu1.RDPZE {
  cursor:default;
 }
 .NWlf3e {
@@ -322,7 +322,7 @@ body:not(.uOat3d) .device-box-card-inside:not(.VfPpkd-ksKsZd-mWPk3d).device-box-
  top:0;
  visibility:hidden;
 }
-.JRtysb.iWO5td>.NWlf3e {
+.dotmenu1.iWO5td>.NWlf3e {
  transition:-webkit-transform .3s cubic-bezier(0.0,0.0,0.2,1);
  transition:transform .3s cubic-bezier(0.0,0.0,0.2,1);
  -moz-transform:translate(-50%,-50%) scale(2.2);
@@ -330,25 +330,25 @@ body:not(.uOat3d) .device-box-card-inside:not(.VfPpkd-ksKsZd-mWPk3d).device-box-
  opacity:1;
  visibility:visible;
 }
-.JRtysb.j7nIZb>.NWlf3e {
+.dotmenu1.j7nIZb>.NWlf3e {
  -moz-transform:translate(-50%,-50%) scale(2.2);
  transform:translate(-50%,-50%) scale(2.2);
  visibility:visible;
 }
-.WzwrXb.u3bW4e {
+.dotmenu2.u3bW4e {
  background-color:rgba(153,153,153,0.4);
 }
-.WzwrXb.iWO5td>.NWlf3e {
+.dotmenu2.iWO5td>.NWlf3e {
  background-image:radial-gradient(circle farthest-side,rgba(153,153,153,0.4),rgba(153,153,153,0.4) 80%,rgba(153,153,153,0) 100%);
 }
 .ZDSs1.iWO5td>.NWlf3e {
  background-image:radial-gradient(circle farthest-side,rgba(204,204,204,0.251),rgba(204,204,204,0.251) 80%,rgba(204,204,204,0) 100%);
 }
-.WzwrXb.RDPZE {
+.dotmenu2.RDPZE {
  color:rgba(68,68,68,0.502);
  fill:rgba(68,68,68,0.502);
 }
-.U26fgb.u3bW4e {
+.dotmenu.u3bW4e {
  outline:1px solid transparent;
 }
 .device-details {
@@ -898,6 +898,155 @@ background-position: center;
 	height: 20px
 }
 
+
+/*threeedot menu*/
+.dotmenubody {
+	overflow-x: hidden;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch
+}
+
+.dotinnermenubody {
+	float: left;
+	padding: 16px 0
+}
+.dotmenufull.dotmenufull2 {
+	transition: left .2s cubic-bezier(0.0, 0.0, 0.2, 1), max-width .2s cubic-bezier(0.0, 0.0, 0.2, 1), max-height .2s cubic-bezier(0.0, 0.0, 0.2, 1), opacity .05s linear, top .2s cubic-bezier(0.0, 0.0, 0.2, 1)
+}
+.dotmenufull1 .dotinnermenubody {
+	padding: 8px 0
+}
+
+.dotinnermenuitem {
+	color: #222;
+	cursor: pointer;
+	display: block;
+	outline: none;
+	overflow: hidden;
+	padding: 0 24px;
+	position: relative
+}
+
+.dotinnermenuitemname {
+	box-flex: 1;
+	flex-grow: 1;
+	min-width: 0
+}
+
+.uyYuVb {
+	display: flex;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 40px;
+	height: 40px;
+	position: relative;
+	white-space: nowrap
+}
+
+.dotmenufull.e5Emjc .dotinnermenuitem {
+	padding-left: 64px
+}
+
+.dotmenufull.CblTmf .dotinnermenuitem {
+	padding-right: 48px
+}
+.dotinnermenuitem.RDPZE .PCdOIb {
+	opacity: .26
+}
+
+.dotinnermenuitem.FwR7Pc {
+	outline: 1px solid transparent;
+	background-color: #eeeeee
+}
+
+.dotinnermenuitem.RDPZE {
+	color: #b8b8b8;
+	cursor: default
+}
+
+.dotinnermenuitem.N2RpBe::before {
+	transform: rotate(45deg);
+	transform-origin: left;
+	content: "\0000a0";
+	display: block;
+	border-right: 2px solid #222;
+	border-bottom: 2px solid #222;
+	height: 16px;
+	left: 24px;
+	opacity: .54;
+	position: absolute;
+	top: 13%;
+	width: 7px;
+	z-index: 0
+}
+
+.dotmenufull.CblTmf .dotinnermenuitem.N2RpBe::before {
+	left: auto;
+	right: 16px
+}
+
+.dotinnermenuitem.RDPZE::before {
+	border-color: #b8b8b8;
+	opacity: 1
+}
+
+.dotmenufull.CblTmf .dotinnermenuitem.N2RpBe::before {
+	left: auto;
+	right: 16px
+}
+.dotinnermenuitem.qs41qe>.aBBjbd {
+	animation: quantumWizBoxInkSpread .3s ease-out;
+	animation-fill-mode: forwards;
+	background-image: radial-gradient(circle farthest-side, #bdbdbd, #bdbdbd 80%, rgba(189, 189, 189, 0) 100%);
+	background-size: cover;
+	opacity: 1;
+	top: 0;
+	left: 0
+}
+.dotmenufull1 .dotinnermenuitem {
+	color: #202124
+}
+
+.dotmenufull1 .dotinnermenuitem.FwR7Pc {
+	background-color: rgba(232, 234, 237, 0.4)
+}
+
+.dotmenufull1 .dotinnermenuitem.qs41qe>.aBBjbd {
+	background-image: radial-gradient(circle farthest-side, #dadce0, #dadce0 80%, rgba(218, 220, 224, 0) 100%)
+}
+
+@media screen and (max-width:840px) {
+	.dotinnermenubody {
+		padding: 8px 0
+	}
+	.dotinnermenuitem {
+		padding: 0 16px
+	}
+	.dotmenufull.e5Emjc .dotinnermenuitem {
+		padding-left: 48px
+	}
+	.PCdOIb {
+		left: 12px
+	}
+}
+
+
+.dotmenufull1.dotmenufull {
+	background-color: #fff;
+	box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 2px 6px 2px rgba(60, 64, 67, .15);
+	border-radius: 4px
+}
+
+/*Display and hide the  menu*/
+.toggle-content {
+	display: none;
+}
+
+.toggle-content.is-visible {
+	display: block;
+}
+
+
 	</style>
 
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -923,6 +1072,13 @@ background-position: center;
 		});
 	</script>
 	<script type="text/javascript">
+	    function myFunction(el) {
+  el.classList.toggle("iWO5td");
+//   el.parentElement
+el.nextElementSibling.classList.toggle("is-visible");
+//   console.log("el",el.parentElement);
+//   console.log("next",el.nextElementSibling);
+}
 		@if (count($errors) > 0)
 		jQuery('#changePassword').modal('show');
 		@endif
@@ -988,7 +1144,7 @@ background-position: center;
                @endforeach --}}
 					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
                   @foreach($allSession as $key => $device)
-                  <div data-item-id="{{$key+1}}" class="F4S0Db" role="listitem">
+                  <div data-item-id="{{$key+1}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
                      <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A8b4a0279f3be6a6c" {!!$device->device['classes']!!}>
                         <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
                            <div class="device-details">
@@ -1032,6 +1188,47 @@ background-position: center;
                               </div>
                            </div>
                         </div>
+
+												<div class="TDjQOc" data-device-id="Acb514901592fd168"  data-source="3">
+													<div role="button" class="dotmenu dotmenu1 dotmenu2 "  onclick="myFunction(this)"  aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
+														 <div class="NWlf3e MbhUzd"  style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div>
+														 <span jsslot="" class="MhXXcc oJeWuf">
+																<span class="Lw7GHd snByac">
+																	 <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="gnN5i NMm5M">
+																			<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+																	 </svg>
+																</span>
+														 </span>
+													</div>
+													<div class="dotmenufull dotmenufull1 dotmenufull2 toggle-content" role="menu" tabindex="0" 
+													data-back-to-cancel="false" 
+	style="position: absolute; max-width: 256px; max-height: 136px;z-index:1;
+	right: 1%; top: 100%;
+	">
+		 <div class="dotmenubody"  style="max-width: 256px; max-height: 136px;">
+				<div class="dotinnermenubody dotinnermenubody1" style="width: 256px; height: auto; min-width: 256px;">
+					 <span  class="dotinnermenuitem"  aria-label="Sign out this device" role="menuitem" tabindex="-1">
+							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+							<div class="uyYuVb oJeWuf" jsname="cEoysc">
+								 <div class="dotinnermenuitemname">Sign out</div>
+							</div>
+					 </span>
+					 <span jsslot="" class="dotinnermenuitem"  aria-label="Find phone" role="menuitem" tabindex="-1">
+							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+							<div class="uyYuVb oJeWuf" jsname="CUoVIc">
+								 <div class="dotinnermenuitemname">Add a name</div>
+							</div>
+					 </span>
+					 <span jsslot="" class="dotinnermenuitem"  aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+							<div class="uyYuVb oJeWuf" jsname="nJTW3e">
+								 <div class="dotinnermenuitemname">Don’t recognize this device?</div>
+							</div>
+					 </span>
+				</div>
+		 </div>
+	</div>
+											 </div>
                         <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
                      </div>
                   </div>

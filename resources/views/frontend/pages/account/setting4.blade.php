@@ -897,6 +897,153 @@ background-position: center;
 	width: 20px;
 	height: 20px
 }
+/*threeedot menu*/
+.XvhY1d {
+	overflow-x: hidden;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch
+}
+
+.JAPqpe {
+	float: left;
+	padding: 16px 0
+}
+.JPdR6b.qjTEB {
+	transition: left .2s cubic-bezier(0.0, 0.0, 0.2, 1), max-width .2s cubic-bezier(0.0, 0.0, 0.2, 1), max-height .2s cubic-bezier(0.0, 0.0, 0.2, 1), opacity .05s linear, top .2s cubic-bezier(0.0, 0.0, 0.2, 1)
+}
+.rVZeG .JAPqpe {
+	padding: 8px 0
+}
+
+.z80M1 {
+	color: #222;
+	cursor: pointer;
+	display: block;
+	outline: none;
+	overflow: hidden;
+	padding: 0 24px;
+	position: relative
+}
+
+.jO7h3c {
+	box-flex: 1;
+	flex-grow: 1;
+	min-width: 0
+}
+
+.uyYuVb {
+	display: flex;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 40px;
+	height: 40px;
+	position: relative;
+	white-space: nowrap
+}
+
+.JPdR6b.e5Emjc .z80M1 {
+	padding-left: 64px
+}
+
+.JPdR6b.CblTmf .z80M1 {
+	padding-right: 48px
+}
+.z80M1.RDPZE .PCdOIb {
+	opacity: .26
+}
+
+.z80M1.FwR7Pc {
+	outline: 1px solid transparent;
+	background-color: #eeeeee
+}
+
+.z80M1.RDPZE {
+	color: #b8b8b8;
+	cursor: default
+}
+
+.z80M1.N2RpBe::before {
+	transform: rotate(45deg);
+	transform-origin: left;
+	content: "\0000a0";
+	display: block;
+	border-right: 2px solid #222;
+	border-bottom: 2px solid #222;
+	height: 16px;
+	left: 24px;
+	opacity: .54;
+	position: absolute;
+	top: 13%;
+	width: 7px;
+	z-index: 0
+}
+
+.JPdR6b.CblTmf .z80M1.N2RpBe::before {
+	left: auto;
+	right: 16px
+}
+
+.z80M1.RDPZE::before {
+	border-color: #b8b8b8;
+	opacity: 1
+}
+
+.JPdR6b.CblTmf .z80M1.N2RpBe::before {
+	left: auto;
+	right: 16px
+}
+.z80M1.qs41qe>.aBBjbd {
+	animation: quantumWizBoxInkSpread .3s ease-out;
+	animation-fill-mode: forwards;
+	background-image: radial-gradient(circle farthest-side, #bdbdbd, #bdbdbd 80%, rgba(189, 189, 189, 0) 100%);
+	background-size: cover;
+	opacity: 1;
+	top: 0;
+	left: 0
+}
+.rVZeG .z80M1 {
+	color: #202124
+}
+
+.rVZeG .z80M1.FwR7Pc {
+	background-color: rgba(232, 234, 237, 0.4)
+}
+
+.rVZeG .z80M1.qs41qe>.aBBjbd {
+	background-image: radial-gradient(circle farthest-side, #dadce0, #dadce0 80%, rgba(218, 220, 224, 0) 100%)
+}
+
+@media screen and (max-width:840px) {
+	.JAPqpe {
+		padding: 8px 0
+	}
+	.z80M1 {
+		padding: 0 16px
+	}
+	.JPdR6b.e5Emjc .z80M1 {
+		padding-left: 48px
+	}
+	.PCdOIb {
+		left: 12px
+	}
+}
+
+
+.rVZeG.JPdR6b {
+	background-color: #fff;
+	box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 2px 6px 2px rgba(60, 64, 67, .15);
+	border-radius: 4px
+}
+
+/*Display and hide the  menu*/
+.toggle-content {
+	display: none;
+}
+
+.toggle-content.is-visible {
+	display: block;
+}
+
 
 	</style>
 
@@ -923,6 +1070,13 @@ background-position: center;
 		});
 	</script>
 	<script type="text/javascript">
+     function myFunction(el) {
+  el.classList.toggle("iWO5td");
+//   el.parentElement
+el.nextElementSibling.classList.toggle("is-visible");
+//   console.log("el",el.parentElement);
+//   console.log("next",el.nextElementSibling);
+}
 		@if (count($errors) > 0)
 		jQuery('#changePassword').modal('show');
 		@endif
@@ -1007,67 +1161,42 @@ background-position: center;
                               <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
                            </div>
                         </div>
-                        <div data-item-id="A3941cb85d6bafecb" class="F4S0Db" role="listitem">
-                           <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A3941cb85d6bafecb" data-form-factor="2" data-os="4">
-                              <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
-                                 <div class="device-details">
-                                    <div class="device-logo device-logo-div" data-form-factor="12" ></div>
-                                 </div>
-                                 <div class="midline"></div>
-                                 <div class="device-detail-txt">
-                                    <div class="device-name-div">
-                                       <div role="heading" aria-level="3" class="device-name">Fire Tv</div>
-                                    </div>
-                                    <div class="device-location">
-                                       <div>India</div>
-                                       <div jsname="WQnlqf">4 minutes ago</div>
-                                    </div>
-                                    <div class="device-more-details IfKkJe"></div>
-                                    <a class="device-more-details" role="button">More details</a>
-                                 </div>
-                              </div>
-                              <div class="TDjQOc" data-device-id="A3941cb85d6bafecb" data-android-device-manager-id="lbpOY6nFgYXfNGQaqJQhbYU9k59yRnjeKbYskEWvfmE=" jsname="vGRBjf" jscontroller="r55wJe" jsaction="rcuQ6b:npT2md;JIbuQc:idoEib;" data-source="3">
-                                 <div role="button" class="U26fgb JRtysb WzwrXb" jscontroller="iSvg6e" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc(preventMouseEvents=true|preventDefault=true); touchcancel:JMtRjd;;keydown:I481le;" jsshadow="" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
-                                    <div class="NWlf3e MbhUzd" jsname="ksKsZd"></div>
-                                    <span jsslot="" class="MhXXcc oJeWuf">
-                                       <span class="Lw7GHd snByac">
-                                          <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="gnN5i NMm5M">
-                                             <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
-                                          </svg>
-                                       </span>
-                                    </span>
-                                    <div jsname="xl07Ob" style="display:none" aria-hidden="true">
-                                       <div class="JPdR6b rVZeG" jscontroller="uY3Nvd" jsaction="IpSVtb:TvD9Pc;fEN2Ze:xzS4ub;frq95c:LNeFm;cFpp9e:J9oOtd; click:H8nU8b; mouseup:H8nU8b; keydown:I481le; keypress:Kr2w4b; blur:O22p3e; focus:H8nU8b" role="menu" tabindex="0" jsshadow="" data-back-to-cancel="false">
-                                          <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;">
-                                             <div class="JAPqpe K0NPx">
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="cEoysc">
-                                                      <div class="jO7h3c">Sign out</div>
-                                                   </div>
-                                                </span>
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="CUoVIc">
-                                                      <div class="jO7h3c">Find phone</div>
-                                                   </div>
-                                                </span>
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="nJTW3e">
-                                                      <div class="jO7h3c">Don’t recognize this device?</div>
-                                                   </div>
-                                                </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                              <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
-                           </div>
-                        </div>
-                        <div data-item-id="Acb514901592fd168" class="F4S0Db" role="listitem">
+                        
+<div data-item-id="A3941cb85d6bafecb" class="F4S0Db" role="listitem">
+   <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="Acb514901592fd168" data-form-factor="2" data-os="4">
+      <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
+         <div class="device-details">
+            <div class="device-logo device-logo-div" data-form-factor="2" data-os="4"></div>
+         </div>
+         <div class="midline"></div>
+         <div class="device-detail-txt">
+            <div class="device-name-div">
+               <div role="heading" aria-level="3" class="device-name">Redmi Note 8</div>
+            </div>
+            <div class="device-location">
+               <div>India</div>
+               <div jsname="WQnlqf">1 minute ago</div>
+            </div>
+            <div class="device-more-details IfKkJe"></div>
+            <a class="device-more-details" role="button">More details</a>
+         </div>
+      </div>
+      <div class="TDjQOc" data-device-id="Acb514901592fd168" jsname="vGRBjf" jscontroller="r55wJe" jsaction="rcuQ6b:npT2md;JIbuQc:idoEib;" data-source="3">
+         <div role="button" class="U26fgb JRtysb WzwrXb iWO5td" jscontroller="iSvg6e" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc(preventMouseEvents=true|preventDefault=true); touchcancel:JMtRjd;;keydown:I481le;j9grLe:.CLIENT;HUObcd:.CLIENT" jsshadow="" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="true" data-menu-corner="top-end" data-anchor-corner="bottom-end" id="ow32" __is_owner="true">
+            <div class="NWlf3e MbhUzd" jsname="ksKsZd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div>
+            <span jsslot="" class="MhXXcc oJeWuf">
+               <span class="Lw7GHd snByac">
+                  <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="gnN5i NMm5M">
+                     <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                  </svg>
+               </span>
+            </span>
+         </div>
+      </div>
+      <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
+   </div>
+</div>
+                        <div data-item-id="Acb514901592fd168" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
                            <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="Acb514901592fd168" data-form-factor="2" data-os="4">
                               <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
                                  <div class="device-details">
@@ -1076,7 +1205,7 @@ background-position: center;
                                  <div class="midline"></div>
                                  <div class="device-detail-txt">
                                     <div class="device-name-div">
-                                       <div role="heading" aria-level="3" class="device-name">Redmi Note 8</div>
+                                       <div role="heading" aria-level="3" class="device-name">MMRedmi Note 8</div>
                                     </div>
                                     <div class="device-location">
                                        <div>India</div>
@@ -1100,8 +1229,8 @@ background-position: center;
                              
                               </div>
                                <div class="TDjQOc" data-device-id="Acb514901592fd168" jsname="vGRBjf" jscontroller="r55wJe" jsaction="rcuQ6b:npT2md;JIbuQc:idoEib;" data-source="3">
-                                 <div role="button" class="U26fgb JRtysb WzwrXb" jscontroller="iSvg6e" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc(preventMouseEvents=true|preventDefault=true); touchcancel:JMtRjd;;keydown:I481le;" jsshadow="" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
-                                    <div class="NWlf3e MbhUzd" jsname="ksKsZd"></div>
+                                 <div role="button" class="U26fgb JRtysb WzwrXb " jscontroller="iSvg6e"  onclick="myFunction(this)"  jsshadow="" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
+                                    <div class="NWlf3e MbhUzd" jsname="ksKsZd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div>
                                     <span jsslot="" class="MhXXcc oJeWuf">
                                        <span class="Lw7GHd snByac">
                                           <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="gnN5i NMm5M">
@@ -1109,33 +1238,35 @@ background-position: center;
                                           </svg>
                                        </span>
                                     </span>
-                                    <div jsname="xl07Ob" style="display:none" aria-hidden="true">
-                                       <div class="JPdR6b rVZeG" jscontroller="uY3Nvd" jsaction="IpSVtb:TvD9Pc;fEN2Ze:xzS4ub;frq95c:LNeFm;cFpp9e:J9oOtd; click:H8nU8b; mouseup:H8nU8b; keydown:I481le; keypress:Kr2w4b; blur:O22p3e; focus:H8nU8b" role="menu" tabindex="0" jsshadow="" data-back-to-cancel="false">
-                                          <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;">
-                                             <div class="JAPqpe K0NPx">
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="cEoysc">
-                                                      <div class="jO7h3c">Sign out</div>
-                                                   </div>
-                                                </span>
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="CUoVIc">
-                                                      <div class="jO7h3c">Find phone</div>
-                                                   </div>
-                                                </span>
-                                                <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
-                                                   <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
-                                                   <div class="uyYuVb oJeWuf" jsname="nJTW3e">
-                                                      <div class="jO7h3c">Don’t recognize this device?</div>
-                                                   </div>
-                                                </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </div>
                                  </div>
+                                 <div class="JPdR6b rVZeG qjTEB toggle-content" jscontroller="uY3Nvd"  role="menu" tabindex="0" jsshadow="" 
+                                 data-back-to-cancel="false" jsowner="ow32" 
+         style="position: absolute; max-width: 256px; max-height: 136px;z-index:1;
+         right: 1%; top: 100%;
+         ">
+            <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;" style="max-width: 256px; max-height: 136px;">
+               <div class="JAPqpe K0NPx" style="width: 256px; height: auto; min-width: 256px;">
+                  <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="cEoysc">
+                        <div class="jO7h3c">Sign out</div>
+                     </div>
+                  </span>
+                  <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="CUoVIc">
+                        <div class="jO7h3c">Add a name</div>
+                     </div>
+                  </span>
+                  <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="nJTW3e">
+                        <div class="jO7h3c">Don’t recognize this device?</div>
+                     </div>
+                  </span>
+               </div>
+            </div>
+         </div>
                               </div>
                               <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
                            </div>
@@ -1385,6 +1516,81 @@ background-position: center;
 					</div>
 				</div> --}}
 		</div>
+      <div style="display: none;">
+         <div class="JPdR6b rVZeG qjTEB" jscontroller="uY3Nvd" jsaction="IpSVtb:TvD9Pc;fEN2Ze:xzS4ub;frq95c:LNeFm;cFpp9e:J9oOtd; click:H8nU8b; mouseup:H8nU8b; keydown:I481le; keypress:Kr2w4b; blur:O22p3e; focus:H8nU8b;RdYeUb:.CLIENT" role="menu" tabindex="0" jsshadow="" data-back-to-cancel="false" jsowner="ow32" style="position: absolute; max-width: 280px; max-height: 136px; left: 442.438px; top: 281px;">
+            <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;" style="max-width: 280px; max-height: 136px;">
+                <div class="JAPqpe K0NPx" style="width: 280px; height: auto; min-width: 280px;">
+                    <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
+                        <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                        <div class="uyYuVb oJeWuf" jsname="cEoysc">
+                            <div class="jO7h3c">Sign out</div>
+                        </div>
+                    </span>
+                    <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
+                        <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                        <div class="uyYuVb oJeWuf" jsname="CUoVIc">
+                            <div class="jO7h3c">Find phone</div>
+                        </div>
+                    </span>
+                    <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+                        <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                        <div class="uyYuVb oJeWuf" jsname="nJTW3e">
+                            <div class="jO7h3c">Don’t recognize this device?</div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+     
+     <div class="JPdR6b rVZeG qjTEB" jscontroller="uY3Nvd" jsaction="IpSVtb:TvD9Pc;fEN2Ze:xzS4ub;frq95c:LNeFm;cFpp9e:J9oOtd; click:H8nU8b; mouseup:H8nU8b; keydown:I481le; keypress:Kr2w4b; blur:O22p3e; focus:H8nU8b;RdYeUb:.CLIENT" role="menu" tabindex="0" jsshadow="" data-back-to-cancel="false" jsowner="ow37" style="position: absolute; max-width: 280px; max-height: 136px; left: 588.156px; top: 273px;">
+         <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;" style="max-width: 280px; max-height: 136px;">
+             <div class="JAPqpe K0NPx" style="width: 280px; height: auto; min-width: 280px;">
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="cEoysc">
+                         <div class="jO7h3c">Sign out</div>
+                     </div>
+                 </span>
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="CUoVIc">
+                         <div class="jO7h3c">Find phone</div>
+                     </div>
+                 </span>
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="nJTW3e">
+                         <div class="jO7h3c">Don’t recognize this device?</div>
+                     </div>
+                 </span>
+             </div>
+         </div>
+     </div>
+     <div class="JPdR6b rVZeG qjTEB" jscontroller="uY3Nvd" jsaction="IpSVtb:TvD9Pc;fEN2Ze:xzS4ub;frq95c:LNeFm;cFpp9e:J9oOtd; click:H8nU8b; mouseup:H8nU8b; keydown:I481le; keypress:Kr2w4b; blur:O22p3e; focus:H8nU8b;RdYeUb:.CLIENT" role="menu" tabindex="0" jsshadow="" data-back-to-cancel="false" jsowner="ow42" style="position: absolute; max-width: 280px; max-height: 136px; left: 16px; top: 584px;">
+         <div class="XvhY1d" jsaction="mousedown:p8EH2c; touchstart:p8EH2c;" style="max-width: 280px; max-height: 136px;">
+             <div class="JAPqpe K0NPx" style="width: 280px; height: auto; min-width: 280px;">
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Sign out this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="cEoysc">
+                         <div class="jO7h3c">Sign out</div>
+                     </div>
+                 </span>
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="Find phone" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="CUoVIc">
+                         <div class="jO7h3c">Find phone</div>
+                     </div>
+                 </span>
+                 <span jsslot="" class="z80M1" jsaction="click:o6ZaF(preventDefault=true); mousedown:lAhnzb; mouseup:Osgxgf; mouseenter:SKyDAe; mouseleave:xq3APb;touchstart:jJiBRc; touchmove:kZeBdd; touchend:VfAz8(preventMouseEvents=true)" jsname="j7LFlb" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+                     <div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
+                     <div class="uyYuVb oJeWuf" jsname="nJTW3e">
+                         <div class="jO7h3c">Don’t recognize this device?</div>
+                     </div>
+                 </span>
+             </div>
+         </div>
+     </div></div>
 		
 	</section>
 	
