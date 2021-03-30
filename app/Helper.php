@@ -632,6 +632,26 @@ function getBodyClass()
             $unsupported['browser'] = 'Firefox';
         }
     }
+    if ($agent->browser() == "Edge") {
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-edge';
+        $browser_css_classes['browserversion'] = 'browser-edge-' . (int) $agent->version('Edge');
+
+        $browser_css_classes['browserclass'] = "data-browser='6'";
+        if ($agent->version('Edge') < 25) {
+            $unsupported['browser'] = 'Edge';
+        }
+    }
+    if ($agent->browser() == "Opera"||$agent->browser() == "Opera Mini") {
+        $other_browser = false;
+        $browser_css_classes['browser'] = 'browser-opera';
+        $browser_css_classes['browserversion'] = 'browser-opera-' . (int) $agent->version('Opera')||$agent->version('Opera Mini');
+
+        $browser_css_classes['browserclass'] = "data-browser='5'";
+        if ($agent->version('Opera') < 25) {
+            $unsupported['browser'] = 'Opera';
+        }
+    }
     if ($browser = $agent->browser() == "IE") {
         $version = $agent->version("IE");
         $version = str_replace('.0', '', $version);
