@@ -43,7 +43,7 @@ public protocol CachedResponseHandler {
                   completion: @escaping (CachedURLResponse?) -> Void)
 }
 
-// MARK: -
+// MARK:-
 
 /// `ResponseCacher` is a convenience `CachedResponseHandler` making it easy to cache, not cache, or modify a cached
 /// response.

@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 class SettingsVC: UIViewController {
     
     // MARK: Properties
@@ -56,6 +58,7 @@ class SettingsVC: UIViewController {
     
     private func initialSetup()
     {
+       
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         DispatchQueue.global(qos: .background).async

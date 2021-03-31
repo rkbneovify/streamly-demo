@@ -46,7 +46,11 @@ class LoginVC: UIViewController {
        lazy var viewModel: ContactDataViewModel = {
            return ContactDataViewModel()
        }()
-     var termsData = ""
+    var termsData = ""
+    var qrData:QRResponse?
+    lazy var qrModel: QRViewModel = {
+        return QRViewModel()
+    }()
 
     //MARK: Lifecycle Methods
     override func viewDidLoad() {
@@ -81,6 +85,11 @@ class LoginVC: UIViewController {
         DispatchQueue.global(qos: .background).async
             {
                 self.makeAPiCallTerms()
+
+        }
+        DispatchQueue.global(qos: .background).async
+            {
+                self.qrmakeAPiCall()
 
         }
 
@@ -133,6 +142,21 @@ class LoginVC: UIViewController {
            }
        }
 
+    private func qrmakeAPiCall()
+    {
+        qrModel.getQrData()
+        self.qrinitVM()
+    }
+
+    private func qrinitVM()
+    {
+        qrModel.qrData = { qryModel in
+            self.qrData = qryModel
+
+
+        }
+    }
+
     //MARK: Action
     @IBAction func btnActions( _ sender:UIButton)
     {
@@ -163,7 +187,11 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 5
         {
-            self.showSimpleAlertWithMessage("For registration, Please visit streamlytv.com")
+            let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+            popUPViewsVC.isFetchData = ( qrData == nil) ? false : true
+            popUPViewsVC.qrData = self.qrData
+            self.present(popUPViewsVC, animated:true, completion:nil)
+
 
         }
         else if sender.tag == 6
@@ -202,6 +230,7 @@ extension LoginVC
                 selfStrong.removeSpinner()
                 if response?.success == true {
                     Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
+                    Utility.setStringObject(value: response?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                     if self?.remeberMeFlag ?? false {
                         Utility.setStringObject(value: self?.passwordField.text ?? "", key: Constant.UserDefault.password)
                         Utility.setStringObject(value: self?.userIDField.text ?? "", key: Constant.UserDefault.userField)

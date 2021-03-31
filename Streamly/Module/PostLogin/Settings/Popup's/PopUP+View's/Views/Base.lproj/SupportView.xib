@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,10 +14,37 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="1223" height="500"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person_singing" translatesAutoresizingMaskIntoConstraints="NO" id="rl5-mJ-D7b">
+                    <rect key="frame" x="0.0" y="0.0" width="1223" height="500"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RVp-oq-Fom">
+                    <rect key="frame" x="0.0" y="0.0" width="1223" height="500"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="LMJ-oI-wSQ">
+                        <rect key="frame" x="0.0" y="0.0" width="1223" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.65108751470000004" alpha="0.39538402290000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <blurEffect style="dark"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </visualEffectView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For Help and Support You can call us on below numbers." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lM1-jq-s71">
                     <rect key="frame" x="50" y="100" width="1123" height="36"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="30"/>
@@ -54,17 +81,33 @@
             </subviews>
             <color key="backgroundColor" white="0.55000000000000004" alpha="0.94999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="rl5-mJ-D7b" secondAttribute="bottom" id="5Tv-QW-7eN"/>
                 <constraint firstItem="Rsc-1j-qTP" firstAttribute="top" secondItem="lM1-jq-s71" secondAttribute="bottom" constant="37" id="74C-Re-odZ"/>
+                <constraint firstItem="RVp-oq-Fom" firstAttribute="bottom" secondItem="rl5-mJ-D7b" secondAttribute="bottom" id="JcR-9S-sMH"/>
                 <constraint firstAttribute="trailing" secondItem="lM1-jq-s71" secondAttribute="trailing" constant="50" id="R6R-B5-dyA"/>
                 <constraint firstItem="Rsc-1j-qTP" firstAttribute="centerX" secondItem="lM1-jq-s71" secondAttribute="centerX" id="UBf-h3-XK6"/>
+                <constraint firstItem="RVp-oq-Fom" firstAttribute="top" secondItem="rl5-mJ-D7b" secondAttribute="top" id="UVW-hb-iJV"/>
+                <constraint firstItem="rl5-mJ-D7b" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="WWF-pd-MYg"/>
+                <constraint firstItem="RVp-oq-Fom" firstAttribute="trailing" secondItem="rl5-mJ-D7b" secondAttribute="trailing" id="WpZ-nR-702"/>
                 <constraint firstItem="hcS-iq-jR7" firstAttribute="centerX" secondItem="Rsc-1j-qTP" secondAttribute="centerX" id="Wvp-H4-c0e"/>
+                <constraint firstAttribute="trailing" secondItem="rl5-mJ-D7b" secondAttribute="trailing" id="kS0-UW-FlP"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="ldf-1y-J6b"/>
                 <constraint firstItem="hcS-iq-jR7" firstAttribute="top" secondItem="Rsc-1j-qTP" secondAttribute="bottom" constant="100" id="o3t-ll-L5I"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="obM-nv-eyz"/>
                 <constraint firstItem="lM1-jq-s71" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="snc-BZ-4xE"/>
+                <constraint firstItem="rl5-mJ-D7b" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vWa-oG-0y3"/>
+                <constraint firstItem="RVp-oq-Fom" firstAttribute="leading" secondItem="rl5-mJ-D7b" secondAttribute="leading" id="vhI-9L-c0h"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="82" y="218"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                    <real key="value" value="8"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
+            <point key="canvasLocation" x="81.5" y="218"/>
         </view>
     </objects>
+    <resources>
+        <image name="person_singing" width="448" height="299"/>
+    </resources>
 </document>

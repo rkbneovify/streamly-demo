@@ -13,18 +13,25 @@ import AVKit
 import AVFoundation
 
 
+
 class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetResourceLoaderDelegate {
 
     // MARK: Properties
     let overlayView = UIView(frame: CGRect(x: (appDelegate?.window?.frame.width ?? 0) - 400, y: 50, width: 200, height: 200))
-    var url:URL?
+    var str = ""
+    var isAllowedZipCode:Bool?
     var isfromRcent = true
+    var isPopAllow = false
+    var channelObject:ChannelDetails?
     weak var delegatee:AddRecentData?
     var recentData: RecentData?
+    var geoData:GeoFenceAddress?
     var idS = ""
+    var timer: Timer?
     lazy var viewModel: EPGViewModel = {
         return EPGViewModel()
     }()
+
 
     // MARK: LifeCycle
 
@@ -36,10 +43,35 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
         {
             self.callAPI()
         }
+
+        if !(isAllowedZipCode ?? false)
+        {
+            if !isPopAllow {
+            self.showAlertWithMessage(str)
+            }
+            else {
+                self.playChannel()
+            }
+            DispatchQueue.global(qos: .background).async
+                {
+                    self.makeApiGeoFencing()
+
+            }
+        }
+        else {
+            self.playChannel()
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
+        self.timer?.invalidate()
+        self.timer = nil
 
 
         /// set the data into HomeNewVC
@@ -55,23 +87,119 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
     // MARK: Helpers
     private func initialSetup()
     {
-        overlayView.addSubview(UIImageView(image: UIImage(named: "Logo2")))
+
+        overlayView.addSubview(UIImageView(image: UIImage(named: "Logo2")?.alpha(0.5)))
         contentOverlayView?.addSubview(overlayView)
+
         // Create the asset instance and the resouce loader because we will be asked
         // for the license to playback DRM protected asset.
-        let asset = AVURLAsset(url: url!)
-        self.delegate = self
-        let queue = DispatchQueue(label: "FP License Acquire")
-        asset.resourceLoader.setDelegate(self, queue: queue)
 
-        // Create the player item and the player to play it back in.
-        let playerItem = AVPlayerItem(asset: asset)
-//        playerItem.externalMetadata = sampleExternalMetaData()
-//        playerItem.navigationMarkerGroups = [sampleNavigationMarkerGroup()]
-//        playerItem.interstitialTimeRanges = sampleInterstitialTimeRanges()
-        player = AVPlayer(playerItem: playerItem)
-        player?.automaticallyWaitsToMinimizeStalling = false
-        player?.play()
+    }
+
+    private func setuPTimer()
+    {
+        timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+    }
+
+    @objc func runTimedCode()
+    {
+        self.makeApiTimer()
+    }
+
+    private func playChannel()
+    {
+        if let url = URL(string: self.channelObject?.url ?? "")
+        {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(playerItemDidReadyToPlay(notification:)),
+                                                   name: .AVPlayerItemNewAccessLogEntry,
+                                                   object: player?.currentItem)
+
+
+            let asset = AVURLAsset(url: url)
+            self.delegate = self
+            let queue = DispatchQueue(label: "FP License Acquire")
+            asset.resourceLoader.setDelegate(self, queue: queue)
+
+            // Create the player item and the player to play it back in.
+            let playerItem = AVPlayerItem(asset: asset)
+            player = AVPlayer(playerItem: playerItem)
+            playerItem.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions(), context: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(playbackStalled(_:)), name: .AVPlayerItemPlaybackStalled, object: playerItem)
+            player?.automaticallyWaitsToMinimizeStalling = true
+            player?.play()
+        }
+    }
+
+    @objc func playerItemDidReadyToPlay(notification: Notification) {
+            if let _ = notification.object as? AVPlayerItem {
+                // player is ready to play now!!
+                self.makeApiCallSign()
+                self.setuPTimer()
+            }
+    }
+
+       @objc func playbackStalled(_ notification: Notification?) {
+            print("hello")
+        }
+
+
+
+        override func observeValue(forKeyPath keyPath: String?,
+                                   of object: Any?,
+                                   change: [NSKeyValueChangeKey : Any]?,
+                                   context: UnsafeMutableRawPointer?) {
+
+            // Only handle observations for the playerItemContext
+    //        guard context == &playerItemContext else {
+    //            super.observeValue(forKeyPath: keyPath,
+    //                               of: object,
+    //                               change: change,
+    //                               context: context)
+    //            return
+    //        }
+
+            if keyPath == #keyPath(AVPlayerItem.status) {
+                let status: AVPlayerItem.Status
+                if let statusNumber = change?[.newKey] as? NSNumber {
+                    status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+                } else {
+                    status = .unknown
+                }
+
+                // Switch over status value
+                switch status {
+                case .readyToPlay:
+                      debugPrint("hello")
+                    // Player item is ready to play.
+                case .failed:
+                    debugPrint("failed")
+                    handleErrorWithMessage(player?.currentItem?.error?.localizedDescription, error:player?.currentItem?.error)
+                    // Player item failed. See error.
+                case .unknown:
+                     debugPrint("unknown")
+                    handleErrorWithMessage(player?.currentItem?.error?.localizedDescription, error:player?.currentItem?.error)
+                    // Player item is not yet ready.
+                @unknown default:
+                    debugPrint("hello")
+                }
+            }
+        }
+    
+        func handleErrorWithMessage(_ message: String?, error: Error? = nil) {
+
+            self.makeApiError(message ?? "", "\((error as NSError?)?.code ?? 0)")
+        }
+
+    func showAlertWithMessage(_ message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: appName, message: message, preferredStyle: .actionSheet)
+            let okAction = UIAlertAction(title: "Continue", style: .default, handler:{ (action: UIAlertAction!) in
+                self.playChannel()
+            })
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     private func callAPI()
@@ -82,6 +210,23 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
                 self.initVMRecent()
         }
     }
+
+    private func makeApiGeoFencing(){
+        viewModel.postOutsideAddress()
+        initVMGeoData()
+
+    }
+
+    private func initVMGeoData() {
+
+        viewModel.geoData = { geoDataModel in
+
+            self.geoData = geoDataModel
+
+        }
+
+    }
+
 
     private func makeApiCallRecent(){
         viewModel.postRecentData(idS)
@@ -97,28 +242,50 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
 
     }
 
-    @objc func playerItemFailedToPlay(_ notification: Notification) {
-        self.player?.play()
-        _ = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
-
+    func makeApiCallSign()
+    {
+        DispatchQueue.global(qos: .background).async
+            {
+                self.viewModel.postCallSign(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false)
+        }
     }
 
+    func makeApiTimer()
+       {
+           DispatchQueue.global(qos: .background).async
+               {
+                   self.viewModel.setPlayTimer(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false)
+           }
+       }
+
+    func makeApiError(_ errorMsg:String, _ errorCode:String)
+    {
+        DispatchQueue.global(qos: .background).async
+            {
+                self.viewModel.postgaError(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false,errorMsg,errorCode)
+        }
+    }
+
+
+
+
+
     func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource loadingRequest: AVAssetResourceLoadingRequest) -> Bool {
-        print("jfjfjf")
+        //print("jfjfjf")
 
         // Getting data for KSM server. Get the URL from tha manifest, we wil need it later as it
         // contains the assetId required for the license request.
         guard
             let url = loadingRequest.request.url else {
-                print(#function, "Unable to read URL from loadingRequest")
+                //print(#function, "Unable to read URL from loadingRequest")
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -1, userInfo: nil))
                 return false
         }
 
         // Link to your certificate on BuyDRM's side.
         guard
-            let certificateData = try? Data(contentsOf: URL(string: "https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der")!) else {
-                print(#function, "Unable to read the certificate data.")
+            let certificateData = try? Data(contentsOf: URL(string: Constant.drmCertificateURL)!) else {
+                //print(#function, "Unable to read the certificate data.")
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -2, userInfo: nil))
                 return false
         }
@@ -130,12 +297,12 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
             let contentIdData = contentId?.data(using: String.Encoding.utf8),
             let spcData = try? loadingRequest.streamingContentKeyRequestData(forApp: certificateData, contentIdentifier: contentIdData, options: nil) else {
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -3, userInfo: nil))
-                print(#function, "Unable to read the SPC data.")
+                //print(#function, "Unable to read the SPC data.")
                 return false
         }
 
         // Prepare to get the license i.e. CKC.
-        let requestUrl = "https://fp-keyos.licensekeyserver.com/getkey"
+        let requestUrl = Constant.drmRequestURL
         let stringBody = "spc=\(spcData.base64EncodedString())&assetId=\(contentId ?? "")"
         let postData = NSData(data: stringBody.data(using: String.Encoding.utf8)!)
 
@@ -143,7 +310,7 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
         var request = URLRequest(url: URL(string: requestUrl)!)
         request.httpMethod = "POST"
         request.httpBody = postData as Data
-        request.allHTTPHeaderFields = ["customdata" : "PEtleU9TQXV0aGVudGljYXRpb25YTUw+CjxEYXRhPgogIDxHZW5lcmF0aW9uVGltZT4yMDIwLTA4LTI4IDExOjU4OjI2LjUzMjwvR2VuZXJhdGlvblRpbWU+CiAgPEV4cGlyYXRpb25UaW1lPjIwMjAtMDktMjcgMTE6NTg6MjYuNTMzPC9FeHBpcmF0aW9uVGltZT4KICA8VW5pcXVlSWQ+MWYxNThkNmRhYjgyN2I1NWQ3ZTU4ODI1NGMwYzM1ZmU8L1VuaXF1ZUlkPgogIDxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+CiAgPFdpZGV2aW5lUG9saWN5IGZsX0NhblBsYXk9InRydWUiIGZsX0NhblBlcnNpc3Q9ImZhbHNlIiAvPgogIDxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPgogICAgPFNlY3VyaXR5TGV2ZWw+MTwvU2VjdXJpdHlMZXZlbD4KICA8L1dpZGV2aW5lQ29udGVudEtleVNwZWM+CiAgPEZhaXJQbGF5UG9saWN5IHBlcnNpc3RlbnQ9ImZhbHNlIiAvPgogIDxMaWNlbnNlIHR5cGU9InNpbXBsZSIgLz4KPC9EYXRhPgo8U2lnbmF0dXJlPmhBaHYrY05nQUJDWmZ2VVFnZGhteE9WNjQzak5YZ0M5V1NWbm52aDBaTE1iNVA5clN2UFB3SEJqekc2VVl6dFh4N3dlVzcvWURzUXJrU2hsUkVMSW5ITThFRGRSMGNBS3FxYVhDUnhhRmtGQUtxaVZmVjJsYVJTazdEUlpMUmp4bWF4S1RWcXl5RWdHdE16MDBJREovZDZRSVJzLzlFSzhkM29KNEJKSmluYWpNYzZiak9QbzRpZVhJOUdoN1p2UFdvYXJqVXg0eEhuUncvd2UvV2xuVHBsNTAvVUhwbFdaTzVoempZUS8wNlV5VXFUU1B3cUFSejh0WTFZL1JVY1NTTm4wM0IwWUxBWG5XVFRRSmJsTzBlSFBXV0doUmZqQ2NuazhEYVMyZk1HL0h4UHU5dEJJZVhWcDRBM1FER21sTkplVy80MVM4Z2tSWkJjalRoWWZQdz09PC9TaWduYXR1cmU+CjwvS2V5T1NBdXRoZW50aWNhdGlvblhNTD4="]
+        request.allHTTPHeaderFields = ["customdata" : Constant.drmXMl]
         let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         let task = session.dataTask(with: request) { data, response, error in
@@ -152,27 +319,49 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
                 // The response from the KeyOS MultiKey License server may be an error inside JSON.
                 do {
                     let parsedData = try JSONSerialization.jsonObject(with: data) as! [String:Any]
-                    let errorId = parsedData["errorid"] as! String
-                    let errorMsg = parsedData["errormsg"] as! String
-                    print(#function, "License request failed with an error: \(errorMsg) [\(errorId)]")
-                } catch let error as NSError {
-                    print(#function, "License request failed. Can't parse the response. \(error)")
+                    _ = parsedData["errorid"] as! String
+                    _ = parsedData["errormsg"] as! String
+                    //print(#function, "License request failed with an error: \(errorMsg) [\(errorId)]")
+                } catch let _ as NSError {
+                    //print(#function, "License request failed. Can't parse the response. \(error)")
                 }
 
                 // The response from the KeyOS MultiKey License server is Base64 encoded.
                 let dataRequest = loadingRequest.dataRequest!
 
                 // This command sends the CKC to the player.
-                dataRequest.respond(with: Data(base64Encoded: data)!)
+                if let data_temp =  Data(base64Encoded: data)
+                {
+                    dataRequest.respond(with: data_temp)
+                }
                 loadingRequest.finishLoading()
             } else {
-                print(#function, error?.localizedDescription ?? "Error during CKC request.")
+                //print(#function, error?.localizedDescription ?? "Error during CKC request.")
             }
         }
 
         task.resume()
 
         // Tell the AVPlayer instance to wait. We are working on getting what it wants.
+        return true
+    }
+
+    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForResponseTo authenticationChallenge: URLAuthenticationChallenge) -> Bool {
+        print("0")
+        return true
+    }
+
+    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel authenticationChallenge: URLAuthenticationChallenge) {
+        print("1")
+    }
+
+    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, didCancel loadingRequest: AVAssetResourceLoadingRequest) {
+        print("2")
+    }
+
+
+    func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForRenewalOfRequestedResource renewalRequest: AVAssetResourceRenewalRequest) -> Bool {
+        print("4")
         return true
     }
     // MARK: AVPlayerViewControllerDelegate
@@ -188,76 +377,6 @@ class PlayerVC: AVPlayerViewController, AVPlayerViewControllerDelegate,AVAssetRe
          has been played.
          */
         playerViewController.requiresLinearPlayback = false
-    }
-
-    // MARK: Meta data
-
-    func sampleExternalMetaData() -> [AVMetadataItem] {
-        let titleItem = AVMutableMetadataItem()
-        titleItem.identifier = AVMetadataIdentifier.commonIdentifierTitle
-        titleItem.value = "Apple Special Event, September 2015" as NSString
-        titleItem.extendedLanguageTag = "und"
-
-        let descriptionItem = AVMutableMetadataItem()
-        descriptionItem.identifier = AVMetadataIdentifier.commonIdentifierDescription
-        descriptionItem.value = "Check out iPhone 6s and iPhone 6s Plus, learn about the powerful iPad Pro, take a look at the new features and bands for Apple Watch, and see the premiere of the all-new Apple TV." as NSString
-        descriptionItem.extendedLanguageTag = "und"
-
-        return [titleItem, descriptionItem]
-    }
-
-    func sampleNavigationMarkerGroup() -> AVNavigationMarkersGroup {
-        let group = AVNavigationMarkersGroup(title: "Announcements", timedNavigationMarkers: [
-            timedMetaDataGroupWithTitle("Apple Watch", startTime: 90, endTime: 917),
-            timedMetaDataGroupWithTitle("iPad Pro", startTime: 917, endTime: 1691),
-            timedMetaDataGroupWithTitle("Apple Pencil", startTime: 1691, endTime: 3105),
-            timedMetaDataGroupWithTitle("Apple TV", startTime: 3105, endTime: 4968),
-            timedMetaDataGroupWithTitle("iPhone", startTime: 4968, endTime: 7328)
-        ])
-
-        return group
-    }
-
-    func sampleInterstitialTimeRanges() -> [AVInterstitialTimeRange] {
-        let ranges = [
-            AVInterstitialTimeRange(timeRange: timeRange(withStartTime: 728, duration: 53)),
-            AVInterstitialTimeRange(timeRange: timeRange(withStartTime: 1015, duration: 55)),
-            AVInterstitialTimeRange(timeRange: timeRange(withStartTime: 3305, duration: 759)),
-            AVInterstitialTimeRange(timeRange: timeRange(withStartTime: 7261, duration: 61))
-        ]
-
-        return ranges
-    }
-
-    // MARK: Convenience
-
-    func timedMetaDataGroupWithTitle(_ title: String, startTime: TimeInterval, endTime: TimeInterval) -> AVTimedMetadataGroup {
-        // Create an `AVMetadataItem` for the title.
-        let titleItem = AVMutableMetadataItem()
-        titleItem.identifier = AVMetadataIdentifier.commonIdentifierTitle
-        titleItem.value = title as NSString
-        titleItem.extendedLanguageTag = "und"
-
-        // Create a `CMTimeRange` from the supplied information.
-        let range = timeRange(from: startTime, to: endTime)
-
-        return AVTimedMetadataGroup(items: [titleItem], timeRange: range)
-    }
-
-    func timeRange(from startTime: TimeInterval, to endTime: TimeInterval) -> CMTimeRange {
-        let cmStartTime = CMTimeMakeWithSeconds(Float64(startTime), preferredTimescale: 100)
-        let cmEndTime = CMTimeMakeWithSeconds(Float64(endTime), preferredTimescale: 100)
-        let timeRange = CMTimeRangeFromTimeToTime(start: cmStartTime, end: cmEndTime)
-
-        return timeRange
-    }
-
-    func timeRange(withStartTime startTime: TimeInterval, duration: TimeInterval) -> CMTimeRange {
-        let cmStartTime = CMTimeMakeWithSeconds(Float64(startTime), preferredTimescale: 100)
-        let cmDuration = CMTimeMakeWithSeconds(Float64(duration), preferredTimescale: 100)
-        let timeRange = CMTimeRange(start: cmStartTime, duration: cmDuration)
-
-        return timeRange
     }
 }
 

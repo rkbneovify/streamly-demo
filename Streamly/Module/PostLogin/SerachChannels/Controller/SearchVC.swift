@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import AVKit
+
 
 class SearchVC: UIViewController {
 
@@ -40,10 +40,25 @@ class SearchVC: UIViewController {
             self.filtterdChannelList = channelList?.data
           }
       }
+     var geoData:GeoFenceAddress?
+     lazy var viewModelEpg: EPGViewModel = {
+          return EPGViewModel()
+      }()
      var filtterdChannelList:[ChannelDetails]?
      lazy var viewModel: SearchDataViewModel = {
           return SearchDataViewModel()
       }()
+
+    var videoPlaybackViewController: VideoPlaybackViewController
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        videoPlaybackViewController = VideoPlaybackViewController()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder: NSCoder) {
+        videoPlaybackViewController = VideoPlaybackViewController()
+        super.init(coder: coder)
+    }
 
     //  MARK: Outlets
 
@@ -57,6 +72,15 @@ class SearchVC: UIViewController {
         super.viewDidLoad()
         self.initialSetup()
 
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        DispatchQueue.global(qos: .background).async
+            {
+                self.makeApiGeoFencing()
+
+        }
     }
 
     //  MARK: Helper
@@ -73,6 +97,23 @@ class SearchVC: UIViewController {
 //        self.initVM()
     }
 
+    private func makeApiGeoFencing(){
+           viewModelEpg.postAddressData()
+           initVMGeoData()
+
+       }
+
+
+    private func initVMGeoData() {
+
+           viewModelEpg.geoData = { geoDataModel in
+
+               self.geoData = geoDataModel
+
+           }
+
+       }
+
 //    private func makeApiCall(){
 //        self.showSpinner(onView: self.view)
 //          viewModel.delegate = self
@@ -85,7 +126,7 @@ class SearchVC: UIViewController {
 //          viewModel.searchData = { contactModel in
 //            self.channelList = contactModel
 //            self.filtterdChannelList = contactModel.message?.data
-//          //  debugPrint(self.channelList?.message?.data?[0])
+//          //  //debugPrint(self.channelList?.message?.data?[0])
 //
 //              self.removeSpinner()
 //
@@ -106,7 +147,13 @@ extension SearchVC:UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (filtterdChannelList?.isEmpty ?? true || filtterdChannelList == nil){
+            self.collectionView.setEmptyMessage("No record's found")
+        } else {
+            self.collectionView.restore()
+        }
         return filtterdChannelList?.count ?? 0
+
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -129,14 +176,19 @@ extension SearchVC:UICollectionViewDelegate
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let item = filtterdChannelList?[(indexPath as NSIndexPath).row] else {return}
-        let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-        guard let url = URL(string: item.url ?? "") else {return}
-        viewController.url = url
-        self.present(viewController, animated: true, completion: nil)
-        
+
+        let flag = self.geoData?.success ?? false
+        guard let item = filtterdChannelList?[(indexPath.item)] else {return}
+        present(videoPlaybackViewController, animated: true) {
+            self.videoPlaybackViewController.channelObject = item
+            self.videoPlaybackViewController.isAllowedZipCode = flag
+            self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
+            self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
+            self.videoPlaybackViewController.filterData = self.filtterdChannelList
+            self.videoPlaybackViewController.loadAndPlay()
         
     }
+  }
 }
 
 // MARK: UISearchResultsUpdating
@@ -155,7 +207,6 @@ extension SearchVC:HandleError
         self.removeSpinner()
         self.showSimpleAlertWithMessage("Something went wrong!")
     }
-
 }
 
 

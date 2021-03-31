@@ -16,6 +16,7 @@ class PopUPTvVC: UIViewController {
     @IBOutlet weak var tableview:UITableView!
     @IBOutlet weak var backView:UIView!
     @IBOutlet weak var okButton:UIButton!
+    @IBOutlet weak var alertBlurImage: UIImageView!
 
     // MARK: - Properties
     var profileItemArr:[(heading:String,data:String)]?
@@ -91,7 +92,7 @@ class PopUPTvVC: UIViewController {
         
         viewModel.registredDevice = { contactModel in
             self.deviceList = contactModel.data
-            debugPrint("")
+            //debugPrint("")
             self.removeSpinner()
 
             

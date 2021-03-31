@@ -12,6 +12,7 @@ target 'Streamly' do
   pod 'SDWebImage'
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Analytics'
+  pod 'Firebase/Database'
 
   target 'StreamlyTests' do
     inherit! :search_paths

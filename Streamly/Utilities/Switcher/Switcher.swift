@@ -13,9 +13,9 @@ class Switcher {
     //functionToCheckUserLog
     static func updateRootVC() {
         let status = UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin)
-        debugPrint(status)
+        //debugPrint(status)
         let reachability = Reachability.isConnectedToNetwork()
-        debugPrint(reachability)
+        //debugPrint(reachability)
         if reachability == true{
             if (status == true) {
                 //logedIn

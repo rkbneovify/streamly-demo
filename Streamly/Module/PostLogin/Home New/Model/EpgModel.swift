@@ -70,6 +70,7 @@ struct ProgramArray : Codable {
     let end : TimeInterval?
     let start : TimeInterval?
     let title:String?
+    let description:String?
   //  var schedule: Schedule?
     var startDate: Date {
         return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
@@ -89,13 +90,16 @@ struct ProgramArray : Codable {
         case end = "end"
         case start = "start"
         case title = "title"
+        case description = "description"
     }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         end = try values.decodeIfPresent(TimeInterval.self, forKey: .end)
         start = try values.decodeIfPresent(TimeInterval.self, forKey: .start)
+        description = try values.decodeIfPresent(String.self, forKey: .description)
         title = try values.decodeIfPresent(String.self, forKey: .title)
+
 
     }
     

@@ -30,7 +30,7 @@ open class RequestParameter {
   }
 
   public static func createRequestParameter(_ url: String, method: Alamofire.HTTPMethod, headers: [String: String]? = nil, parameters: [String: String]? = nil) -> RequestParameter {
-    debugPrint("url is : \(url)")
+    //debugPrint("url is : \(url)")
     return RequestParameter(url: url, method: method, headers: headers, parameters: parameters)
   }
 

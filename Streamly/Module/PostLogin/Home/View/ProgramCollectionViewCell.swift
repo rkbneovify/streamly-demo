@@ -45,7 +45,7 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         
 
         let firstDate = Utility.getCurrentDateTime()
-        print(firstDate)
+        //print(firstDate)
         let secondDate = (Utility.getDateFromTimeStampByFormat(from: timstamp , "dd/MM/yyyy hh:mm a") ?? "")
 
         if  (firstDate.toDate()?.compare(secondDate.toDate()!) == .orderedDescending){
@@ -93,7 +93,7 @@ class ProgramCollectionViewCell: UICollectionViewCell {
             let numberOfHours = CGFloat(intervals / 3600)
             let width = CGFloat(numberOfHours) * (408 * 2)
             self.liveViewTraling.constant = cellWidth - width
-                //print(width)
+                ////print(width)
         }
         else  {
             self.liveViewTraling.constant = 0.0

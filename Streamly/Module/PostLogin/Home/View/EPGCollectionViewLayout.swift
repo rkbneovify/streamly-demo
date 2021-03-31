@@ -128,12 +128,15 @@ extension CustomCollectionViewLayout {
                 {
                     var comp: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
                     comp.timeZone = TimeZone(abbreviation: "UTC")!
-                    let d1 = Calendar.current.date(from: comp)!
 
-                    let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].start ?? 0))
-                    let intervals = d2.timeIntervalSince(d1)
-                    let numberOfHours = CGFloat(intervals / 3600)
-                    xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 2)
+                    if let d1 = Calendar.current.date(from: comp)?.dayBefore
+                    {
+
+                        let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].start ?? 0))
+                        let intervals = d2.timeIntervalSince(d1)
+                        let numberOfHours = CGFloat(intervals / 3600)
+                        xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 2)
+                    }
                 }
 
                 attributes.frame = CGRect(x: xOffset, y: yOffset, width: itemSize.width, height: itemSize.height).integral

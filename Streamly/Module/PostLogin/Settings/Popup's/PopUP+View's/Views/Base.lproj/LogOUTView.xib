@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -13,10 +13,37 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB">
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB">
             <rect key="frame" x="0.0" y="0.0" width="1223" height="488"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person_singing" translatesAutoresizingMaskIntoConstraints="NO" id="O1t-VJ-F4X">
+                    <rect key="frame" x="0.0" y="0.0" width="1223" height="488"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8cU-2X-Sb7">
+                    <rect key="frame" x="0.0" y="0.0" width="1223" height="488"/>
+                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Nf2-p1-WUa">
+                        <rect key="frame" x="0.0" y="0.0" width="1223" height="488"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.6510875146713615" alpha="0.39538402288732394" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                <real key="value" value="8"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <blurEffect style="dark"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="8"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </visualEffectView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Are you sure you want to logout from this device?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U8w-hE-e1U">
                     <rect key="frame" x="268" y="117" width="687" height="36"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -78,19 +105,30 @@
             <color key="backgroundColor" white="0.55000000000000004" alpha="0.94999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="iIZ-VV-eJg" firstAttribute="centerY" secondItem="nrj-M2-BTN" secondAttribute="centerY" id="0R1-3T-WLB"/>
+                <constraint firstAttribute="bottom" secondItem="8cU-2X-Sb7" secondAttribute="bottom" id="1on-Ao-gc5"/>
+                <constraint firstItem="O1t-VJ-F4X" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="5kG-mB-kXx"/>
+                <constraint firstAttribute="trailing" secondItem="O1t-VJ-F4X" secondAttribute="trailing" id="82l-Dn-Dq9"/>
                 <constraint firstItem="iIZ-VV-eJg" firstAttribute="leading" secondItem="nrj-M2-BTN" secondAttribute="trailing" constant="114" id="AR7-aj-7P6"/>
                 <constraint firstItem="nrj-M2-BTN" firstAttribute="top" secondItem="U8w-hE-e1U" secondAttribute="bottom" constant="134" id="EsA-f4-iaF"/>
+                <constraint firstAttribute="bottom" secondItem="O1t-VJ-F4X" secondAttribute="bottom" id="FdG-7R-is3"/>
                 <constraint firstItem="U8w-hE-e1U" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="HaL-wq-c1Y"/>
                 <constraint firstItem="U8w-hE-e1U" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="117" id="JPW-oa-2en"/>
+                <constraint firstItem="O1t-VJ-F4X" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="K4s-Ya-osh"/>
                 <constraint firstItem="nrj-M2-BTN" firstAttribute="leading" secondItem="U8w-hE-e1U" secondAttribute="leading" id="TMg-bE-mvd"/>
+                <constraint firstAttribute="trailing" secondItem="8cU-2X-Sb7" secondAttribute="trailing" id="fxb-XD-P78"/>
+                <constraint firstItem="8cU-2X-Sb7" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="lbe-RP-5hW"/>
+                <constraint firstItem="8cU-2X-Sb7" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="uXj-cp-hrJ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <userDefinedRuntimeAttributes>
                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                    <real key="value" value="10"/>
+                    <real key="value" value="8"/>
                 </userDefinedRuntimeAttribute>
             </userDefinedRuntimeAttributes>
-            <point key="canvasLocation" x="51" y="103"/>
+            <point key="canvasLocation" x="50.5" y="103"/>
         </view>
     </objects>
+    <resources>
+        <image name="person_singing" width="448" height="299"/>
+    </resources>
 </document>

@@ -92,7 +92,7 @@ class PopUPViewsVC: UIViewController {
         self.backViewHeight.constant = 500
         if isfromLogin
             {
-                self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+             //   self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         }
         self.view.layoutIfNeeded()
         let customView = SupportView()

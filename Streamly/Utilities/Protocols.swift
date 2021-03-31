@@ -27,3 +27,7 @@ protocol AddRecentData:NSObject {
     func addRecentData(_ data:RecentData)
 }
 
+protocol PressContinue:NSObject {
+    func goBack(_ index:IndexPath)
+}
+

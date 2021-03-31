@@ -6,6 +6,7 @@ disabled_rules: # rule identifiers to exclude from running
 - control_statement
 - type_name
 - Variable_name_length
+- identifier_name
 
 opt_in_rules: # some rules are only opt-in
   - empty_count
@@ -77,10 +78,12 @@ excluded: iPhone # excluded via string
 #allowed_symbols: ["_"] # these are allowed in type names
 
 identifier_name:
-  min_length: # only min_length
-    error: 3 # only error
-  excluded: # excluded via string array
-    - id
+min_length: 2
+max_length:
+  warning: 90
+  error: 1000
+excluded:
+  - id
     - URL
     - GlobalAPIKey
 

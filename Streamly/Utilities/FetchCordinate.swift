@@ -43,7 +43,7 @@ final class Address:NSObject, CLLocationManagerDelegate
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        debugPrint(error)
+        //debugPrint(error)
     }
     
 }

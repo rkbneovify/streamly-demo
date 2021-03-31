@@ -14,7 +14,8 @@ class DataItemCollectionViewCell: UICollectionViewCell {
     static let reuseIdentifier = "DataItemCell"
     var representedDataItem: ChannelArray?
     
-    @IBOutlet weak var label: UILabel!
+    @IBOutlet weak var channelID: UILabel!
+    @IBOutlet weak var channelNameLbl: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var content:UIView!
 
@@ -31,8 +32,9 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         //imageView.adjustsImageWhenAncestorFocused = true
         // imageView.clipsToBounds = false
         
-        label.alpha = 0.4
+      //  channelNameLbl.alpha = 1.0
         self.content.layer.cornerRadius = 8.0
+        self.content.borderWidth = 0.0
         //self.content.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
 
     }
@@ -43,7 +45,7 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
         // Reset the label's alpha value so it's initially hidden.
-        label.alpha = 0.4
+        self.content.borderWidth = 0.0
     }
     
     // MARK: UIFocusEnvironment
@@ -56,10 +58,10 @@ class DataItemCollectionViewCell: UICollectionViewCell {
          */
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
-                self.label.alpha = 1.0
+                self.content.borderWidth = 4.0
             }
             else {
-                self.label.alpha = 0.4
+                self.content.borderWidth = 0.0
             }
         }, completion: nil)
     }

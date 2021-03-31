@@ -21,12 +21,12 @@ class ContactDataViewModel: NSObject {
             in
             if let contactModel = DataParserContact.parseContactData(data!) {
                 self.contactData!((contactModel))
-                debugPrint(contactModel)
+                //debugPrint(contactModel)
             }
-            debugPrint("Success")
+            //debugPrint("Success")
         }) { (error, data, code)  in
 
-            debugPrint("failure")
+            //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
             if code == 401 {
                 Constant.logOut()
@@ -39,12 +39,12 @@ class ContactDataViewModel: NSObject {
             in
             if let logoutModel = DataParserLogOut.parseContactData(data!) {
                 self.logoutdata!((logoutModel))
-                debugPrint(logoutModel)
+                //debugPrint(logoutModel)
             }
-            debugPrint("Success")
+            //debugPrint("Success")
         }) { (error, data, code)  in
             
-            debugPrint("failure")
+            //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
             if code == 401 {
                 Constant.logOut()
@@ -57,12 +57,12 @@ class ContactDataViewModel: NSObject {
                in
                if let privacyModel = DataParserPrivacy.parseContactData(data!) {
                    self.privacyResponseData!((privacyModel))
-                   print(privacyModel)
+                   //print(privacyModel)
                }
-               debugPrint("Success")
+               //debugPrint("Success")
            }) { (error, data, code)  in
 
-               debugPrint("failure")
+               //debugPrint("failure")
                self.delegate?.handleError(error?.localizedDescription ?? "")
             if code == 401 {
                 Constant.logOut()
@@ -75,12 +75,12 @@ class ContactDataViewModel: NSObject {
                   in
                   if let privacyModel = DataParserPrivacy.parseContactData(data!) {
                       self.privacyResponseData!((privacyModel))
-                      print(privacyModel)
+                      //print(privacyModel)
                   }
-                  debugPrint("Success")
+                  //debugPrint("Success")
               }) { (error, data, code)  in
 
-                  debugPrint("failure")
+                  //debugPrint("failure")
                   self.delegate?.handleError(error?.localizedDescription ?? "")
                 if code == 401 {
                     Constant.logOut()
@@ -98,7 +98,7 @@ class DataParserContact {
 
             return contactModelElement
         } catch {
-            debugPrint(error)
+            //debugPrint(error)
         }
         return nil
     }
@@ -113,7 +113,7 @@ class DataParserLogOut {
 
             return contactModelElement
         } catch {
-            debugPrint(error)
+            //debugPrint(error)
         }
         return nil
     }
@@ -128,7 +128,7 @@ class DataParserPrivacy {
 
             return contactModelElement
         } catch {
-            debugPrint(error)
+            //debugPrint(error)
         }
         return nil
     }

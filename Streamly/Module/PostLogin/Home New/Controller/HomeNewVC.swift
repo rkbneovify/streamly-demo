@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import TVUIKit
+
+
 
 class HomeNewVC: UIViewController {
     
@@ -14,7 +17,7 @@ class HomeNewVC: UIViewController {
     var channelList:EPGResponse?
     {
         didSet {
-            self.selectCategories(11)
+            self.selectCategories(0)
         }
     }
     var genrsList: ChannelListResponse?
@@ -36,8 +39,91 @@ class HomeNewVC: UIViewController {
             self.setupEPGLayout()
         }
     }
-    var selectedCategories = 0
+    var videoPlaybackViewController: VideoPlaybackViewController
+
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        videoPlaybackViewController = VideoPlaybackViewController()
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder: NSCoder) {
+        videoPlaybackViewController = VideoPlaybackViewController()
+        super.init(coder: coder)
+    }
+    var selectedCategories = -1
+    //    {
+    //        didSet {
+    //            switch selectedCategories {
+    //            case CategoriesSelect.all.rawValue:
+    //                self.allButton.backgroundColor = UIColor.firstGradientColor
+    //                self.recentButton.backgroundColor = UIColor.clear
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.clear
+    //                self.newsButton.backgroundColor = UIColor.clear
+    //                self.moviesButton.backgroundColor = UIColor.clear
+    //                self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.recent.rawValue:
+    //                //  guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
+    //                self.allButton.backgroundColor = UIColor.clear
+    //                self.recentButton.backgroundColor = UIColor.firstGradientColor
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.clear
+    //                self.newsButton.backgroundColor = UIColor.clear
+    //                self.moviesButton.backgroundColor = UIColor.clear
+    //                self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.myChannels.rawValue:
+    //                debugPrint("myChannels")
+    //                //                self.allButton.backgroundColor = UIColor.clear
+    //                //                               self.recentButton.backgroundColor = UIColor.firstGradientColor
+    //                //                               self.myChannelButton.backgroundColor = UIColor.clear
+    //                //                               self.sportsButton.backgroundColor = UIColor.clear
+    //                //                               self.newsButton.backgroundColor = UIColor.clear
+    //                //                               self.moviesButton.backgroundColor = UIColor.clear
+    //            //                               self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.sports.rawValue:
+    //                //     guard  self.selectedCategories != CategoriesSelect.sports.rawValue else {return}
+    //                self.allButton.backgroundColor = UIColor.clear
+    //                self.recentButton.backgroundColor = UIColor.clear
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.firstGradientColor
+    //                self.newsButton.backgroundColor = UIColor.clear
+    //                self.moviesButton.backgroundColor = UIColor.clear
+    //                self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.news.rawValue:
+    //                //     guard  self.selectedCategories != CategoriesSelect.news.rawValue else {return}
+    //                self.allButton.backgroundColor = UIColor.clear
+    //                self.recentButton.backgroundColor = UIColor.clear
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.clear
+    //                self.newsButton.backgroundColor = UIColor.firstGradientColor
+    //                self.moviesButton.backgroundColor = UIColor.clear
+    //                self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.movies.rawValue:
+    //                //  guard  self.selectedCategories != CategoriesSelect.movies.rawValue else {return}
+    //                self.allButton.backgroundColor = UIColor.clear
+    //                self.recentButton.backgroundColor = UIColor.clear
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.clear
+    //                self.newsButton.backgroundColor = UIColor.clear
+    //                self.moviesButton.backgroundColor = UIColor.firstGradientColor
+    //                self.kidsButton.backgroundColor = UIColor.clear
+    //            case  CategoriesSelect.kids.rawValue:
+    //                //   guard  self.selectedCategories != CategoriesSelect.kids.rawValue else {return}
+    //                self.allButton.backgroundColor = UIColor.clear
+    //                self.recentButton.backgroundColor = UIColor.clear
+    //                self.myChannelButton.backgroundColor = UIColor.clear
+    //                self.sportsButton.backgroundColor = UIColor.clear
+    //                self.newsButton.backgroundColor = UIColor.clear
+    //                self.moviesButton.backgroundColor = UIColor.clear
+    //                self.kidsButton.backgroundColor = UIColor.firstGradientColor
+    //            default:
+    //                return
+    //
+    //            }
+    //        }
+    //    }
     var recentIDs:[Int] = []
+    let fixedCategoriesArray = ["ALL","RECENT","MY CHANNELS"]
     var timer:Timer?
     var lastContentOffset: CGPoint = CGPoint.zero
     let currentView = UIView()
@@ -45,6 +131,7 @@ class HomeNewVC: UIViewController {
     let spinnerImageView = UIImageView(frame: CGRect.zero)
     var formatter = DateFormatter()
     var captureImageView = UIImageView(frame: CGRect.zero)
+    let group = DispatchGroup()
     lazy var viewModel: EPGViewModel = {
         return EPGViewModel()
     }()
@@ -76,12 +163,9 @@ class HomeNewVC: UIViewController {
 
     }()
     
-    override var preferredFocusedView: UIView? {
-        get {
-            return self.allButton
-        }
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        return [self.cateGiriesCollectionView]
     }
-    
     // MARK: - Outlets
     @IBOutlet weak var collectionView:UICollectionView!
         {
@@ -98,19 +182,27 @@ class HomeNewVC: UIViewController {
                                     forCellWithReuseIdentifier: "timeCell")
         }
     }
+    @IBOutlet weak var cateGiriesCollectionView:UICollectionView!
     @IBOutlet weak var searchButton:          UIButton!
-    @IBOutlet weak var allButton:             UIButton!
-    @IBOutlet weak var recentButton:          UIButton!
-    @IBOutlet weak var myChannelButton:       UIButton!
-    @IBOutlet weak var sportsButton:          UIButton!
-    @IBOutlet weak var newsButton:            UIButton!
-    @IBOutlet weak var moviesButton:          UIButton!
-    @IBOutlet weak var kidsButton:            UIButton!
+    //    @IBOutlet weak var allButton:             UIButton!
+    //    @IBOutlet weak var recentButton:          UIButton!
+    //    @IBOutlet weak var myChannelButton:       UIButton!
+    //    @IBOutlet weak var sportsButton:          UIButton!
+    //    @IBOutlet weak var newsButton:            UIButton!
+    //    @IBOutlet weak var moviesButton:          UIButton!
+    //    @IBOutlet weak var kidsButton:            UIButton!
     @IBOutlet weak var settingsButton:        UIButton!
+    @IBOutlet weak var descriptionLbl:        UILabel!
     
+    @IBOutlet weak var discriptionStartTimeLbl: UILabel!
+    @IBOutlet weak var discriptionHeader: UILabel!
+    @IBOutlet weak var discriptionThumbNail: UIImageView!
+    @IBOutlet weak var discriptionView: UIView!
+
     // MARK: - LifeCycle
-    override func viewDidLoad()
+    override func viewDidLoad() 
     {
+        //self.allButton.backgroundColor = UIColor.firstGradientColor
         super.viewDidLoad()
         self.intialSetup()
         // Do any additional setup after loading the view.
@@ -118,6 +210,11 @@ class HomeNewVC: UIViewController {
     
     override func viewWillLayoutSubviews() {
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bacgroundImage")!)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        appDelegate?.getDrmKey()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -133,10 +230,20 @@ class HomeNewVC: UIViewController {
         super.viewDidDisappear(animated)
         invalidateTimer()
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        //self.collectionView.setContentOffset(self.getCurrenOffset(), animated: false)
+
+    }
     
     // MARK: - Helper
     private func intialSetup()
     {
+
+        
+        self.collectionView.isScrollEnabled = false
+        self.discriptionView.isHidden = true
         formatter.dateFormat = "hh:mm a"
         collectionView.contentInsetAdjustmentBehavior = .never
         if let layout = collectionView?.collectionViewLayout as? CustomCollectionViewLayout
@@ -198,6 +305,11 @@ class HomeNewVC: UIViewController {
                 self.makeApiCallRecent()
                 self.initVMRecent()
         }
+
+        group.notify(queue: .main)
+        {
+            self.removeSpinner()
+        }
     }
     
     
@@ -221,13 +333,13 @@ class HomeNewVC: UIViewController {
     private func configureButtons()
     {
         //self.liveButton.layer.borderWidth = 0.0
-        self.allButton.layer.borderWidth = 0.0
-        self.recentButton.layer.borderWidth = 0.0
-        self.myChannelButton.layer.borderWidth = 0.0
-        self.sportsButton.layer.borderWidth = 0.0
-        self.newsButton.layer.borderWidth = 0.0
-        self.moviesButton.layer.borderWidth = 0.0
-        self.kidsButton.layer.borderWidth = 0.0
+        //        self.allButton.layer.borderWidth = 0.0
+        //        self.recentButton.layer.borderWidth = 0.0
+        //        self.myChannelButton.layer.borderWidth = 0.0
+        //        self.sportsButton.layer.borderWidth = 0.0
+        //        self.newsButton.layer.borderWidth = 0.0
+        //        self.moviesButton.layer.borderWidth = 0.0
+        //        self.kidsButton.layer.borderWidth = 0.0
         self.settingsButton.layer.borderWidth = 0.0
         self.searchButton.layer.borderWidth = 0.0
         
@@ -239,58 +351,62 @@ class HomeNewVC: UIViewController {
         var comp1: DateComponents = Calendar.current.dateComponents([.year, .month, .day,.hour,.minute], from: Date())
         comp1.timeZone = TimeZone(abbreviation: "UTC")!
         comp.timeZone = TimeZone(abbreviation: "UTC")!
-        let d1 = Calendar.current.date(from: comp)!
-        let d2 = Calendar.current.date(from: comp1)!
-        let intervals = (d2.timeIntervalSince(d1))
-        let numberOfHours = CGFloat(intervals / 3600)
+        if let d1 = Calendar.current.date(from: comp)?.dayBefore
+        {
+            let d2 = Calendar.current.date(from: comp1)!
+            let intervals = (d2.timeIntervalSince(d1))
+            let numberOfHours = CGFloat(intervals / 3600)
+            var offset = self.collectionView.contentOffset
+            offset.x = (((CGFloat(numberOfHours) * (408*2))) - (297 + 36))
+            return offset
+        }
         var offset = self.collectionView.contentOffset
-        offset.x = (((CGFloat(numberOfHours) * (408*2))) - (297 + 36))
+        offset.x = 0.0
         return offset
+
+
         
     }
     
     private func setupEPGLayout()
     {
+        collectionView.collectionViewLayout.invalidateLayout()
         collectionView.reloadData()
+        collectionView.layoutIfNeeded()
         startTimer()
         self.collectionView.setContentOffset(self.getCurrenOffset(), animated: false)
     }
     
-    private func selectCategories(_ sender:Int)
+    private func selectCategories(_ sender:Int, key:String? = nil)
     {
         invalidateTimer()
         switch sender {
         case CategoriesSelect.all.rawValue:
-            guard  self.selectedCategories != CategoriesSelect.all.rawValue else {return}
+            guard  self.selectedCategories != sender else {return}
+            self.filteredList?.removeAll()
             self.filteredList = self.channelList?.data
-            self.selectedCategories = CategoriesSelect.all.rawValue
+            self.selectedCategories = sender
         case  CategoriesSelect.recent.rawValue:
             guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
-            guard  self.selectedCategories != CategoriesSelect.recent.rawValue else {return}
+            guard  self.selectedCategories != sender else {return}
+            self.filteredList?.removeAll()
             self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
-            self.selectedCategories = CategoriesSelect.recent.rawValue
+            self.selectedCategories = sender
         case  CategoriesSelect.myChannels.rawValue:
+            guard  self.selectedCategories != sender else {return}
+            self.selectedCategories = sender
             debugPrint("myChannels")
-        case  CategoriesSelect.sports.rawValue:
-            guard  self.selectedCategories != CategoriesSelect.sports.rawValue else {return}
-            self.filteredList = self.loadData(self.genrsList?.data?.Sports ?? [])
-            self.selectedCategories = CategoriesSelect.sports.rawValue
-        case  CategoriesSelect.news.rawValue:
-            guard  self.selectedCategories != CategoriesSelect.news.rawValue else {return}
-            self.filteredList = self.loadData(self.genrsList?.data?.News ?? [])
-            self.selectedCategories = CategoriesSelect.news.rawValue
-        case  CategoriesSelect.movies.rawValue:
-            guard  self.selectedCategories != CategoriesSelect.movies.rawValue else {return}
-            self.filteredList = self.loadData(self.genrsList?.data?.Movies ?? [])
-            self.selectedCategories = CategoriesSelect.movies.rawValue
-        case  CategoriesSelect.kids.rawValue:
-            guard  self.selectedCategories != CategoriesSelect.kids.rawValue else {return}
-            self.filteredList = self.loadData(self.genrsList?.data?.Kids ?? [])
-            self.selectedCategories = CategoriesSelect.kids.rawValue
         default:
-            return
-            
+            guard  self.selectedCategories != sender else {return}
+            self.filteredList?.removeAll()
+            self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
+            self.selectedCategories = sender
         }
+        self.cateGiriesCollectionView.reloadData()
+        var offset = self.cateGiriesCollectionView.contentOffset
+        offset.x = CGFloat(130 * sender)
+        self.cateGiriesCollectionView.setContentOffset(offset, animated: true)
+
     }
     
     private func loadData(_ categories:[ChannelList]) -> [ChannelDetails]?
@@ -308,6 +424,7 @@ class HomeNewVC: UIViewController {
     }
     
     private func makeApiCall(){
+        group.enter()
         self.showSpinner(onView: self.view)
         viewModel.delegate = self
         viewModel.getEPGData()
@@ -315,15 +432,15 @@ class HomeNewVC: UIViewController {
     }
     
     private func initVM() {
-        
         viewModel.epgData = { epgModel in
-            self.removeSpinner()
+            self.group.leave()
             self.channelList = epgModel
             
         }
     }
     
     private func makeApiCallChannelList(){
+        group.enter()
         viewModel.getChannelList()
         
     }
@@ -331,13 +448,16 @@ class HomeNewVC: UIViewController {
     private func initVMList() {
         
         viewModel.channelData = { epgModel in
+            self.group.leave()
             
             self.genrsList = epgModel
+            self.cateGiriesCollectionView.reloadData()
         }
         
     }
     
     private func makeApiCallRecent(){
+        group.enter()
         viewModel.getRecentData()
         
     }
@@ -351,7 +471,7 @@ class HomeNewVC: UIViewController {
     private func initVMRecent() {
         
         viewModel.recentData = { recentModel in
-            
+            self.group.leave()
             self.recentData = recentModel
             self.recentIDs = self.recentData?.data?.map { $0.id ?? 0} ?? []
         }
@@ -390,13 +510,12 @@ class HomeNewVC: UIViewController {
         let searchController = UISearchController(searchResultsController: viewVC)
         searchController.searchResultsUpdater = viewVC
         searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Channels)", comment: "")
-        
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
-        
-        viewVC.channelList = self.channelList
+
         guard let rootViewController = view.window?.rootViewController else { fatalError("Unable to get root view controller.") }
         viewVC.channelList = self.channelList
+        viewVC.geoData = self.geoData
         // searchController.view.backgroundColor = UIColor.li
         rootViewController.present(searchController, animated: true, completion: nil)
     }
@@ -409,7 +528,7 @@ class HomeNewVC: UIViewController {
     
     @IBAction func categoriesAction(_ sender:UIButton) {
         
-        self.selectCategories(sender.tag)
+        // self.selectCategories(sender.tag)
         
         
     }
@@ -419,17 +538,32 @@ class HomeNewVC: UIViewController {
 extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int
     {
-        guard let channels = filteredList, channels.count > 0 else { return 0}
-        return (channels.count + 1)
+        if self.collectionView == collectionView
+        {
+            guard let channels = filteredList, !channels.isEmpty else { return 0}
+            return (channels.count + 1)
+        }
+        else {
+            return 1
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let data =  filteredList else { return 0}
-        return ((section == 0) ? daysData : ((data[section - 1].programs?.count ?? 0) + 1))
+        if self.collectionView == collectionView
+        {
+            guard let data =  filteredList else { return 0}
+            return ((section == 0) ? daysData : ((data[section - 1].programs?.count ?? 0) + 1))
+        }
+        else {
+            guard let data =  self.genrsList?.allGenre else { return fixedCategoriesArray.count}
+            return data.count + fixedCategoriesArray.count
+        }
     }
 
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        //        if self.collectionView == collectionView
+        //        {
         if indexPath.section == 0
         {
             let timeCell = cell as? TimeCollectionViewCell
@@ -459,42 +593,164 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
             }
 
         }
+        // }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0
+        if self.collectionView == collectionView
         {
-            guard let timeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "timeCell", for: indexPath) as? TimeCollectionViewCell else {return UICollectionViewCell()}
-            return timeCell
-        }
-        else {
-            
-            if indexPath.row == 0
+            if indexPath.section == 0
             {
-                guard let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as? ChannelCollectionViewCell else {return UICollectionViewCell()}
-
-                return channelCell
+                guard let timeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "timeCell", for: indexPath) as? TimeCollectionViewCell else {return UICollectionViewCell()}
+                return timeCell
             }
             else {
-                guard let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as? ProgramCollectionViewCell else {return UICollectionViewCell()}
 
-                return programCell
+                if indexPath.row == 0
+                {
+                    guard let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as? ChannelCollectionViewCell else {return UICollectionViewCell()}
+
+                    return channelCell
+                }
+                else {
+                    guard let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as? ProgramCollectionViewCell else {return UICollectionViewCell()}
+
+                    return programCell
+                }
+
             }
-            
+        }
+        else {
+            guard let cateGories = collectionView.dequeueReusableCell(withReuseIdentifier: AllGenrsListingCell.identifier, for: indexPath) as? AllGenrsListingCell else {return UICollectionViewCell()}
+            switch indexPath.row {
+            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                cateGories.confiGureData(self.fixedCategoriesArray[indexPath.row], indexPath.row == self.selectedCategories ? true : false)
+
+            default:
+                if let data = genrsList?.allGenre
+                {
+                    cateGories.confiGureData(data[indexPath.row - 3], indexPath.row == self.selectedCategories ? true : false)
+
+                }
+            }
+
+            return cateGories
+
         }
         
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        debugPrint("section = " + "\(indexPath.section), " + "row = " + "\(indexPath.row)")
-        if indexPath.section != 0
+
+
+    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
+        if self.collectionView == collectionView
         {
-            guard let _ = self.geoData?.success else { return self.showSimpleAlertWithMessage("We are not serving in your area!")}
-            guard let item = filteredList?[(indexPath.section - 1)] else {return}
-            let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-            guard let url = URL(string: item.url ?? "") else {return}
-            viewController.url = url
-            self.present(viewController, animated: true, completion: nil)
+            guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
+                return true}
+            guard let indexPath: NSIndexPath = self.collectionView.indexPath(for: programCell) as NSIndexPath? else { return true}
+            if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
+            {
+                self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
+                self.discriptionView.isHidden = false
+                self.discriptionHeader.text = programs[indexPath.item - 1].title ?? ""
+                self.discriptionThumbNail.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
+                self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""
+                self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "hh:mm a") ?? "")"
+
+            }
+            //print(indexPath)
+
+            return true
+        }
+        else {
+            return true
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
+        if self.collectionView == collectionView
+        {
+            self.collectionView.isScrollEnabled = false
+            if context.nextFocusedIndexPath != nil && !collectionView.isScrollEnabled {
+                if let nextFocusedIndexPath = context.nextFocusedIndexPath {
+                    if nextFocusedIndexPath.section != 0 && nextFocusedIndexPath.row == 0
+                    {
+                        self.collectionView.isScrollEnabled = false
+                        invalidateTimer()
+
+                        collectionView.scrollToItem(
+                            at: nextFocusedIndexPath,
+                            at: .centeredVertically,
+                            animated: true)
+                        return true
+
+                    }
+                    else if nextFocusedIndexPath.section == 0
+                    {
+                        self.collectionView.isScrollEnabled = false
+                        return true
+                    }
+                    else {
+                        self.collectionView.isScrollEnabled = true
+                        return true
+                        //                    invalidateTimer()
+                        //                    collectionView.scrollToItem(
+                        //                        at: nextFocusedIndexPath,
+                        //                        at: .centeredHorizontally,
+                        //                        animated: false)
+                    }
+                }
+            }
+            return true
+        }
+        else {
+            if context.nextFocusedIndexPath != nil && !collectionView.isScrollEnabled {
+                if let nextFocusedIndexPath = context.nextFocusedIndexPath {
+                    collectionView.scrollToItem(
+                        at: nextFocusedIndexPath,
+                        at: .centeredHorizontally,
+                        animated: true)
+
+                }
+
+            }
+            return true
+        }
+
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if self.collectionView == collectionView
+        {
+            if indexPath.section != 0
+            {
+                let flag = self.geoData?.success ?? false
+                guard let item = filteredList?[(indexPath.section - 1)] else {return}
+                present(videoPlaybackViewController, animated: true) {
+                    self.videoPlaybackViewController.channelObject = item
+                    self.videoPlaybackViewController.isAllowedZipCode = flag
+                    self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
+                    self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
+                    self.videoPlaybackViewController.filterData = self.filteredList
+                    self.videoPlaybackViewController.loadAndPlay()
+                }
+                //                let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+//                viewController.channelObject = item
+//                viewController.isAllowedZipCode = flag
+//                viewController.str = geoData?.popupmsg ?? ""
+//                viewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
+//                self.present(viewController, animated: true, completion: nil)
+            }
+        }
+        else {
+            switch indexPath.row {
+            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                self.selectCategories(indexPath.row, key: nil)
+
+            default:
+                self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
+
+            }
+
         }
     }
 }
@@ -548,7 +804,7 @@ extension HomeNewVC {
             self.collectionView.reloadData()
             self.collectionView.layoutIfNeeded()
 
-           DispatchQueue.main.async(execute: {
+            DispatchQueue.main.async(execute: {
                 /* Scroll to the previous saved position */
                 self.collectionView.setContentOffset(offset, animated: false)
             })
@@ -578,84 +834,75 @@ extension HomeNewVC{
                 
             }, completion: nil)
         }
-        else if allButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.allButton.layer.borderWidth = 3.0
-                self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-        else if recentButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.recentButton.layer.borderWidth = 3.0
-                self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-        else if myChannelButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.myChannelButton.layer.borderWidth = 3.0
-                self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-            
-        else if sportsButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.sportsButton.layer.borderWidth = 3.0
-                self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-        else if newsButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.newsButton.layer.borderWidth = 3.0
-                self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-        else if moviesButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.moviesButton.layer.borderWidth = 3.0
-                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-        else if kidsButton.isFocused{
-            coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
-                self.kidsButton.layer.borderWidth = 3.0
-                self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
-                
-            }, completion: nil)
-        }
-            //        else if liveButton.isFocused{
+            //        else if allButton.isFocused{
             //            coordinator.addCoordinatedAnimations({ () -> Void in
             //                self.configureButtons()
-            //                self.liveButton.layer.borderWidth = 3.0
-            //                self.liveButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //                self.allButton.layer.borderWidth = 3.0
+            //                self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
             //
             //
             //            }, completion: nil)
             //        }
-            
-            
-            
+            //        else if recentButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.recentButton.layer.borderWidth = 3.0
+            //                self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+            //        else if myChannelButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.myChannelButton.layer.borderWidth = 3.0
+            //                self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+            //
+            //        else if sportsButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.sportsButton.layer.borderWidth = 3.0
+            //                self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+            //        else if newsButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.newsButton.layer.borderWidth = 3.0
+            //                self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+            //        else if moviesButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.moviesButton.layer.borderWidth = 3.0
+            //                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+            //        else if kidsButton.isFocused{
+            //            coordinator.addCoordinatedAnimations({ () -> Void in
+            //                self.configureButtons()
+            //                self.kidsButton.layer.borderWidth = 3.0
+            //                self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+            //
+            //
+            //            }, completion: nil)
+            //        }
+
         else {
-            self.configureButtons()
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.configureButtons()
+            }, completion: nil)
         }
     }
 }
@@ -665,8 +912,8 @@ extension HomeNewVC:AddRecentData
     func addRecentData(_ data: RecentData) {
         self.recentData = data
     }
-    
-    
+
+
 }
 
 extension HomeNewVC :GetChannelData
@@ -681,38 +928,44 @@ extension HomeNewVC:UIScrollViewDelegate
 {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView)
     {
-        invalidateTimer()
+        if scrollView == self.collectionView
+        {
+            invalidateTimer()
+        }
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView)
     {
-        let scrollViewOffset = scrollView.contentOffset
-        if !(timer?.isValid ?? false)
+        if self.collectionView == scrollView
         {
-            if (self.lastContentOffset.x < scrollView.contentOffset.x)
+            let scrollViewOffset = scrollView.contentOffset
+            if !(timer?.isValid ?? false)
             {
-                let frame = (CGRect(x: currentView.frame.origin.x+(lastContentOffset.x - scrollView.contentOffset.x), y: currentView.frame.origin.y, width: currentView.frame.size.width, height: currentView.frame.size.height))
-                currentView.frame = frame
-                
+                if (self.lastContentOffset.x < scrollView.contentOffset.x)
+                {
+                    let frame = (CGRect(x: currentView.frame.origin.x+(lastContentOffset.x - scrollView.contentOffset.x), y: currentView.frame.origin.y, width: currentView.frame.size.width, height: currentView.frame.size.height))
+                    currentView.frame = frame
+
+                }
+                else if (self.lastContentOffset.x > scrollView.contentOffset.x)
+                {
+                    let frame = (CGRect(x: currentView.frame.origin.x-(scrollView.contentOffset.x - lastContentOffset.x), y: currentView.frame.origin.y, width: currentView.frame.size.width, height: currentView.frame.size.height))
+                    currentView.frame = frame
+                }
+                if scrollView.contentOffset.x >= (297 + getCurrenOffset().x)
+                {
+                    currentTimeLabel.isHidden = true
+                    spinnerImageView.isHidden = true
+                    currentView.isHidden = true
+                }
+                else
+                {
+                    currentTimeLabel.isHidden = true
+                    spinnerImageView.isHidden = false
+                    currentView.isHidden = false
+                }
             }
-            else if (self.lastContentOffset.x > scrollView.contentOffset.x)
-            {
-                let frame = (CGRect(x: currentView.frame.origin.x-(scrollView.contentOffset.x - lastContentOffset.x), y: currentView.frame.origin.y, width: currentView.frame.size.width, height: currentView.frame.size.height))
-                currentView.frame = frame
-            }
-            if scrollView.contentOffset.x >= (297 + getCurrenOffset().x)
-            {
-                currentTimeLabel.isHidden = true
-                spinnerImageView.isHidden = true
-                currentView.isHidden = true
-            }
-            else
-            {
-                currentTimeLabel.isHidden = true
-                spinnerImageView.isHidden = false
-                currentView.isHidden = false
-            }
+            self.lastContentOffset = scrollViewOffset
         }
-        self.lastContentOffset = scrollViewOffset
     }
 }
 

@@ -25,16 +25,16 @@ class NetworkManagerWrapper: NSObject {
         if let data = dataResponse.value {
           let responseString = String(data: data, encoding: .utf8)
           if responseString != nil {
-       //     debugPrint("Response string:\(responseString!)")
+       //     //debugPrint("Response string:\(responseString!)")
           }
           else {
-          //  debugPrint("Response string is null")
+          //  //debugPrint("Response string is null")
           }
         }
       #endif
 
       if let error = dataResponse.error {
-        debugPrint(error)
+        //debugPrint(error)
         failure(error, dataResponse.value, nil)
       }
       else if dataResponse.response?.statusCode == 200 || dataResponse.response?.statusCode == 201 {

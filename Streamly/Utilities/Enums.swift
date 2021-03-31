@@ -34,8 +34,32 @@ enum ValidationErrorMessages:String
         case .passwordInvalid:return "Password should be min \(passwordMinLimit) character and max \(passwordMaxLimit)"
         case .somethingWentWrong:return "Something Went wrong! Please try again"
     }
-    }
+  }
 
+}
+
+//MARK:-: API endPoints
+
+enum API:String {
+
+    case getConnectedDevice = "auth/connecteddevice"
+    case getContactInfo     = "auth/support"
+    case logOut             = "auth/logout"
+    case login              = "auth/login"
+    case privacyData        = "auth/privacypol"
+    case getSearchData      = "auth/search"
+    case getEpgData         = "auth/channeldayschdeule"
+    case getChannelGenerics = "auth/channelgenre"
+    case getTermsData       = "auth/termofuse"
+    case getRecentData      = "auth/my_recents"
+    case addToRecent        = "auth/addtorecent"
+    case getGeoFenceData    = "auth/geofence"
+    case getQrCodeData      = "qrcode"
+    case postOutsideAdress  = "auth/outsidelocationplay"
+    case setCallSign        = "auth/ga"
+    case setplayTimer       = "auth/ga/duration"
+    case playererror        = "auth/ga/playererror"
+    case getdrmkey          = "auth/getdrmkey"
 }
 
 /// for settings childView
@@ -48,7 +72,7 @@ enum CustomPopUp:Int {
 /// for Categories
 enum CategoriesSelect:Int {
 
-    case all = 11, recent, myChannels,sports,news,movies,kids
+    case all = 0, recent, myChannels
 }
 
 enum AppStoryboard : String {

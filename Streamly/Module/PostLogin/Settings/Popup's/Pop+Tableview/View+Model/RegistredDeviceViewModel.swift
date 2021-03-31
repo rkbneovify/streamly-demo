@@ -18,12 +18,12 @@ class RegistredDeviceViewModel: NSObject {
             in
             if let contactModel = DataParser.parseContactData(data!) {
                 self.registredDevice!((contactModel))
-                debugPrint(contactModel)
+                //debugPrint(contactModel)
             }
-            debugPrint("Success")
+            //debugPrint("Success")
         }) { (error, data, code)  in
 
-            debugPrint("failure")
+            //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")
             if code == 401 {
                 Constant.logOut()
@@ -41,7 +41,7 @@ class DataParser {
 
             return contactModelElement
         } catch {
-            debugPrint(error)
+            //debugPrint(error)
         }
         return nil
     }

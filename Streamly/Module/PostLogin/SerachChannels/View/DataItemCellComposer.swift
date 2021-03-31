@@ -31,7 +31,8 @@ class DataItemCellComposer {
         
         // Set the cell's properties.
      //   cell.representedDataItem = dataItem
-        cell.label.text = dataItem.StationName ?? ""
+        cell.channelNameLbl.text = dataItem.StationName ?? ""
+        cell.channelID.text = "\(dataItem.id ?? 0)"
         cell.imageView.alpha = 1.0
        // cell.imageView.image =  UIImage(named: "hbo")
        cell.imageView.sd_setImage(with: URL(string: dataItem.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))

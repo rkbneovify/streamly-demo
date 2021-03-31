@@ -31,8 +31,8 @@ class Utility {
         let domain = Bundle.main.bundleIdentifier!
         UserDefaults.standard.removePersistentDomain(forName: domain)
         UserDefaults.standard.synchronize()
-        debugPrint(Array(UserDefaults.standard.dictionaryRepresentation().keys).count)
-        debugPrint("LogoutDone")
+        //debugPrint(Array(UserDefaults.standard.dictionaryRepresentation().keys).count)
+        //debugPrint("LogoutDone")
         Switcher.updateRootVC()
     }
     
