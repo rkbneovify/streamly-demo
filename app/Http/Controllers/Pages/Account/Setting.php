@@ -228,6 +228,20 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         
         
     }
+    public function updatePersonalDeviceName(Request $request, $id)
+    {  $validator = Validator::make($request->all(), [
+        'devicename' => 'required|string|max:20'
+    ]);
+    if($validator->fails()) {
+        return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
+    }
+        $user=SessionTable::where('id', $id)->update( [
+            'device->personaldevicename' => $request->devicename
+        ]);
+     return redirect('account/settings')->with('message','Device name Updated Successfully');
+        
+        
+    }
 
     public function destroy($id)
     {  
