@@ -1061,6 +1061,13 @@ background-position: center;
 				$('#deleteFormDevice').attr('action', '/user/sessiondestroy/'+ id );
 				jQuery('#removeDevice').modal('show');
 			});
+			jQuery('.add-device-name').on('click', function(){
+				const id = $(this).data('id');
+				const accesstoken = $(this).data('accesstoken');
+				$('#accesstoken').val(accesstoken);
+				$('#DeviceNameUpdate').attr('action', '/user/personaldevicename/'+ id );
+				jQuery('#changeDeviceName').modal('show');
+			});
 
 			jQuery('.cancel-subscription').on('click', function(){
 				jQuery('#cancelSubscription').modal('show');
@@ -1069,9 +1076,19 @@ background-position: center;
 			jQuery('.change-password').on('click', function(){
 				jQuery('#changePassword').modal('show');
 			});
+
+@if ($errors->has('devicename'))
+console.log("it has devicename error");
+const id = {{  session()->get( 'deviceidseesion' )}};
+console.log("gotid",id);
+				$('#DeviceNameUpdate').attr('action', '/user/personaldevicename/'+ id );
+$('#changeDeviceName').modal('show');
+
+@endif
+@if ($errors->has('old_password')||$errors->has('password')||$errors->has('password_confirmation') )
+		jQuery('#changePassword').modal('show');
+		@endif
 		});
-	</script>
-	<script type="text/javascript">
 	    function myFunction(el) {
   el.classList.toggle("iWO5td");
 //   el.parentElement
@@ -1079,9 +1096,8 @@ el.nextElementSibling.classList.toggle("is-visible");
 //   console.log("el",el.parentElement);
 //   console.log("next",el.nextElementSibling);
 }
-		@if (count($errors) > 0)
-		jQuery('#changePassword').modal('show');
-		@endif
+		
+
 		</script>
 @endsection
 
@@ -1090,6 +1106,89 @@ el.nextElementSibling.classList.toggle("is-visible");
 
 	<section class="page-section">
 
+		<div class="modal fade" id="changePassword">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body text-center">
+					@if (count($errors) > 0)
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+					 <form action="{{ url("/userupdate", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+
+						<div class="form-group {{ $errors->has('old_password') ? ' has-error' : '' }}">
+							<label for="oldpassword">Old Password</label>
+							<input type="password" class="form-control" name="old_password" id="oldpassword">
+						</div>
+
+						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+							<label for="newpassword">New Password</label>
+							<input type="text" class="form-control" name="password" id="newpassword">
+						</div>
+
+						<div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+							<label for="cnewpassword">Confirm New Password</label>
+							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
+						</div>
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-sm" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">
+								Update
+							</button>
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+						</div>
+					</form>
+				</div>
+
+			</div>
+	    </div>
+	</div>
+		<div class="modal fade" id="changeDeviceName">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body text-center">
+					@if (count($errors) > 0)
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+						<form  id="DeviceNameUpdate" method="POST" >
+            @csrf
+            @method('PUT')
+
+						<div class="form-group {{ $errors->has('devicename') ? ' has-error' : '' }}">
+							<label for="devicename">Device Name</label>
+							<input type="text" class="form-control" name="devicename" id="devicename" maxlength="20">
+						</div>
+
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-sm" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">
+								Update
+							</button>
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+						</div>
+					</form>
+				</div>
+
+			</div>
+	    </div>
+	</div>
 
 	<div class="modal fade" id="removeDevice">
 		<div class="modal-dialog">
@@ -1154,6 +1253,9 @@ el.nextElementSibling.classList.toggle("is-visible");
                            <div class="device-detail-txt">
                               <div class="device-name-div">
                                  <div role="heading" aria-level="3" class="device-name">{{$device->device['platform']??$device->device['device']}}</div>
+																 @isset($device->device['personaldevicename'])
+																 <div class="personal-device-name">{{$device->device['personaldevicename']}}</div>
+																 @endisset
                                  
                               </div>
                               <div class="device-location">
@@ -1210,13 +1312,13 @@ el.nextElementSibling.classList.toggle("is-visible");
 					 <span  class="dotinnermenuitem"  aria-label="Sign out this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="cEoysc">
-								 <div class="dotinnermenuitemname">Sign out</div>
+								 <div class="dotinnermenuitemname remove-device" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}" >Sign out</div>
 							</div>
 					 </span>
 					 <span jsslot="" class="dotinnermenuitem"  aria-label="Find phone" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="CUoVIc">
-								 <div class="dotinnermenuitemname">Add a name</div>
+								 <div class="dotinnermenuitemname add-device-name" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
 							</div>
 					 </span>
 					 <span jsslot="" class="dotinnermenuitem"  aria-label="I do not recognize this device" role="menuitem" tabindex="-1">

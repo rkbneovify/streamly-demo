@@ -182,6 +182,7 @@ Route::get('/contactform', 'HomeController@contactform');
 Route::get('/devices', 'HomeController@showSupportedDevices');
 Route::get('/helpandsupport', 'HomeController@helpandsupp');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
+Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->name('user.personaldevicename');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
