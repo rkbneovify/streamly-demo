@@ -1089,6 +1089,52 @@ el.nextElementSibling.classList.toggle("is-visible");
 	<section class="page-section">
 
 
+      <div class="modal fade" id="changePassword">
+         <div class="modal-dialog">
+           <div class="modal-content">
+  
+              <div class="modal-body text-center">
+                 @if (count($errors) > 0)
+            <div class="alert alert-danger">
+              <strong>Whoops!</strong> There were some problems with your input.<br><br>
+              <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+            @endif
+                  <form action="{{ url("/userupdate", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
+              @csrf
+              @method('PUT')
+  
+                    <div class="form-group {{ $errors->has('old_password') ? ' has-error' : '' }}">
+                       <label for="oldpassword">Old Password</label>
+                       <input type="password" class="form-control" name="old_password" id="oldpassword">
+                    </div>
+  
+                    <div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+                       <label for="newpassword">New Password</label>
+                       <input type="text" class="form-control" name="password" id="newpassword">
+                    </div>
+  
+                    <div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
+                       <label for="cnewpassword">Confirm New Password</label>
+                       <input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
+                    </div>
+  
+                    <div class="text-center">
+                       <button type="submit" class="btn btn-sm" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">
+                          Update
+                       </button>
+                       {{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+                    </div>
+                 </form>
+              </div>
+  
+           </div>
+         </div>
+     </div>
 	<div class="modal fade" id="removeDevice">
 		<div class="modal-dialog">
 		<div class="modal-content">
