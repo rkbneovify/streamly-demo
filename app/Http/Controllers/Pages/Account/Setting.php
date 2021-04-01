@@ -238,7 +238,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         $user=SessionTable::where('id', $id)->update( [
             'device->personaldevicename' => $request->devicename
         ]);
-     return redirect('account/settings')->with('message','Device name Updated Successfully');
+     return redirect('account/settings3')->with('message','Device name Updated Successfully');
         
         
     }
