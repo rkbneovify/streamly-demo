@@ -1246,7 +1246,7 @@ el.nextElementSibling.classList.toggle("is-visible");
 					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
                   @foreach($allSession as $key => $device)
                   <div data-item-id="{{$key+1}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
-                     <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A8b4a0279f3be6a6c" {!!$device->device['classes']!!}>
+                     <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A8b4a0279f3be6a6c" {!!$device->device['classes']??''!!}>
                         <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
                            <div class="device-details">
                               <div class="device-logo device-logo-div" {!!$device->device['classes']??''!!}></div>
@@ -1254,7 +1254,7 @@ el.nextElementSibling.classList.toggle("is-visible");
                            <div class="midline"></div>
                            <div class="device-detail-txt">
                               <div class="device-name-div">
-                                 <div role="heading" aria-level="3" class="device-name">{{$device->device['platform']??$device->device['device']}}</div>
+                                 <div role="heading" aria-level="3" class="device-name">{{$device->device['platform']??$device->device['device']??''}}</div>
 																 @isset($device->device['personaldevicename'])
 																 <div class="personal-device-name">{{$device->device['personaldevicename']}}</div>
 																 @endisset
