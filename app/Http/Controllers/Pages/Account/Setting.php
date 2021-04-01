@@ -123,25 +123,32 @@ class Setting extends Controller
         }
        $id= Auth::user()->id;
         $userinfo = User::find($id);
-        // $roles = Role::get(); //get all roles
-        // $userRoles = $user->roles->pluck('id')->toArray();
-        //dd($roles);
-        // $allSession=SessionTable::with('user')->select('device')
-        // ->selectRaw("id,users_id , connected_devices,access_token,created_on, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
-        // ->where([
-        // ['status', '=', '1'],
-        // ['users_id', '=', $id],
-        //  ])->orderBy('connected_devices', 'asc')->get();
          $allSession=SessionTable::where([
         ['status', '=', '1'],
         ['users_id', '=', $id],
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
-      
+         $subscription=Auth::user()->subscriptions()->first();
+         
+         if(!$userinfo->subscribed('main')){
+            $plan = (object) ['amount'=>'0'];
+         } else {
+            
+         
+            $stripe_plan=$subscription->stripe_plan;
+         
+            $plan = \Stripe\Plan::retrieve($stripe_plan);
+           // dd($plan);
+           $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+        //    $invoices = Auth::user()->invoicesIncludingPending();
+        //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
+            // ch_1HSfl3LqTwOy7LECVmOdkimy
+        //  dd($invoices);
+         }
          
     //   dd($allSession);
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices'));
     }
 
     public function sessiondestroy($id,Request $request)
@@ -238,7 +245,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         $user=SessionTable::where('id', $id)->update( [
             'device->personaldevicename' => $request->devicename
         ]);
-     return redirect('account/settings3')->with('message','Device name Updated Successfully');
+     return redirect('account/settings')->with('message','Device name Updated Successfully');
         
         
     }

@@ -1106,6 +1106,28 @@ el.nextElementSibling.classList.toggle("is-visible");
 
 	<section class="page-section">
 
+		<div class="modal fade" id="cancelSubscription">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+
+				<div class="modal-body text-center">
+					<h4>Cancel Subscription</h4>
+					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
+					<div>
+						<form action="{{ url('user/subscriptiondestroy', Auth::user()->id) }}" method="POST">
+							<input type="hidden" name="_method" value="DELETE">
+															<input type="hidden" name="_token" value="{{ csrf_token() }}">
+															<input style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" type="submit" class="btn btn-sm" value="Yes">
+
+						<a class="btn btn-sm" href="javascript:void(0)" data-dismiss="modal" style="border: 1px solid #707070;border-radius: 6px;padding: 0.5rem 1.5rem;">No</a>
+														</form>
+						{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
+					</div>
+				</div>
+
+			</div>
+	    </div>
+	</div>
 		<div class="modal fade" id="changePassword">
 	    <div class="modal-dialog">
 			<div class="modal-content">
@@ -1219,28 +1241,8 @@ el.nextElementSibling.classList.toggle("is-visible");
 @endif
 		<div class="container">
 				<h2 class="section-heading text-center">Account Settings</h2>
-				{{-- <div class="row setting-cards">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>Device Management:<i class="fa fa-linux" aria-hidden="true"></i></li>
-							@foreach($allSession as $key => $user)
-							<li> {{$key+1}}. {{ $user->device_name ?? '' }}, {{ $user->created_on ?? ''  }} @if(session()->get('jwttoken')==$user->access_token)<span class="badge badge-success">current</span>@endif
-								 <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true" data-id="{{ $user->id }}" data-devicename="{{$key+1}}.{{ $user->device_name }}" data-accesstoken="{{ $user->access_token }}"></i></li>
-							@endforeach
-							
-						</ul>
-					</div>
-				</div> --}}
+				
 				<div class="">
-               {{-- @foreach($allSession as $key => $user)
-               <li> {{$key+1}}. @json($user->device,JSON_PRETTY_PRINT),@json($user->device['classes'],JSON_PRETTY_PRINT),{{ $user->device_name ?? '' }}, {{ $user->created_on ?? ''  }} 
-                  @if(session()->get('jwttoken')==$user->access_token)
-                  <span class="badge badge-success">current</span>
-                  @endif
-                   <i class="fa fa-trash pull-right light-brown remove-device" aria-hidden="true" 
-                   data-id="{{ $user->id }}" 
-                   data-devicename="{{$key+1}}.{{ $user->device_name }}" data-accesstoken="{{ $user->access_token }}"></i></li>
-               @endforeach --}}
 					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
                   @foreach($allSession as $key => $device)
                   <div data-item-id="{{$key+1}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
@@ -1340,12 +1342,111 @@ el.nextElementSibling.classList.toggle("is-visible");
                          </div>
 				
 
-				{{-- <div class="row setting-cards mt-5">
-					<div class="text-center col-centered col-md-8">
-						<a class="btn btn-lg account-save-btn" href="javascript:void(0)">SAVE CHANGES</a>
-						<a class="btn btn-lg account-cancel-btn ml-4" style="width: 12rem;" href="javascript:void(0)">Cancel</a>
+
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>Profile Management</li>
+							<li>
+								Email:
+							<span class="pull-right">{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
+							</li>
+							<li>
+								Password:
+								<span class="pull-right">
+									<a href="javascript:void(0)" class="change-password">Change password</a>
+								</span>
+							</li>
+						</ul>
 					</div>
-				</div> --}}
+				</div>
+				@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->cancelled())
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Current Pack
+								<b><span class="pull-right">You canceled you subscription</span></b>
+							</li>
+							
+							<li>
+								Select Plan
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  href="/selectplan">Select plan</a></span></b>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+				
+				@elseif (Auth::user()->subscribed('main')) 
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Current Pack
+								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
+							</li>
+							<li>
+								{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}
+								<b><span class="pull-right">{{$subscription->created_at ?? ''}}</span></b>
+							</li>
+							<li>
+								Payment method 
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></span></b>
+								
+							</li>
+							<li>
+								<a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Invoice
+								<b><span class="pull-right">Download</span></b>
+							</li>
+							@foreach ($invoices as $invoice)
+							<li>
+								<?php if($invoice->date){
+									$invoicedate=date('M d, Y',$invoice->date);} else {$invoicedate='';}?>
+								{{-- {{$invoice}} --}}
+								{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}
+								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a> 
+									{{-- <a href="/user/invoice/{{ $invoice->id }}">Download se</a> --}}
+								</span></b>
+								
+							</li>
+							@endforeach
+						</ul>
+					</div>
+				</div>
+				@else
+				<div class="row setting-cards mt-5">
+					<div class="col-centered col-md-8">
+						<ul class="setting-card">
+							<li>
+								Current Pack
+								<b><span class="pull-right">		No Plan Selected</span></b>
+							</li>
+							
+							<li>
+								Select Plan
+								{{-- {{$subscription}} --}}
+								<b><span class="pull-right"><a  href="/selectplan">Select plan</a></span></b>
+								
+							</li>
+						</ul>
+					</div>
+				</div>
+        @endif
+				
 		</div>
 		
 	</section>
