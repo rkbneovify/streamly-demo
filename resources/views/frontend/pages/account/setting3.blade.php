@@ -1321,7 +1321,7 @@ el.nextElementSibling.classList.toggle("is-visible");
 								 <div class="dotinnermenuitemname add-device-name" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
 							</div>
 					 </span>
-					 <span jsslot="" class="dotinnermenuitem"  aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+					 <span style="display: none;" jsslot="" class="dotinnermenuitem"  aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="nJTW3e">
 								 <div class="dotinnermenuitemname">Don’t recognize this device?</div>
