@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@indexCache')->name('home');
 Route::get('/checkzip', 'HomeController@checkzipView');
 
 

@@ -86,6 +86,8 @@
     </div>
   </div>
   <!-- ./col -->
+<a href="https://datastudio.google.com/reporting/46eda86a-4e98-43dd-8553-fc72bff273e3/page/hAFBC">Reports</a>
+  
 </div>
 <!-- /.row -->
       </div><!-- /.container-fluid -->

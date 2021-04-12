@@ -76,7 +76,7 @@ $pagechannel=$second->get()
 })->groupBy('genrenae');
 
 $Genrekey=$pagechannel->keys();
-       
+    //    dd($pagechannel);
         //$plans=$plans->data;
         if( Auth::check()){
             $login = true;
@@ -96,31 +96,32 @@ $Genrekey=$pagechannel->keys();
         $stats = Cache::getMemcached()->getStats();
         $plans = \Stripe\Plan::all(['active'=>true]);
        //for a day cache
-           $pagechannel2  = Cache::remember('all_tasks',60*60*24, function () {
+           $pagechannel  = Cache::remember('pagechannel',60*60*24, function () {
 
-        $imagePath=asset("/uploads/channellogo/notfound.png");
-            return  Channel::select('channels.id', DB::raw('IFNULL(channels.callSign,channels.name) callSign'),'channels.image', 'channels.url')
-        
-            ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(g.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+            $imagePath=asset("/uploads/channellogo/notfound.png");
+   
+            $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+            DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+                   
+                   ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+                   ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                   ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
             
-            
-            ->leftJoin('genre as g', DB::raw("FIND_IN_SET(g.id, channels.genres)"), DB::raw('>'),DB::raw('0'))
-        //     ->whereIn('channels.callSign', function($query)
-        // {
-        //     $query->select('CallSign')
-        //           ->from('gracenotechannels');
-                  
-        // })
-        ->groupBy('channels.id') ->orderBy('channels.callSign', 'asc')->get()->reject(function($element) use($imagePath) {
-            return $element->logo == $imagePath;
-        })->groupBy('genrename');
+            ->where('channels.status','=','1')
+            ->orderBy('channels.StationName', 'asc');
+                
+return $second->get()
+->reject(function($element) use($imagePath) {
+    
+    return $element->image === null;
+})->groupBy('genrenae');
           });
 
    
    
 
-   
-       
+          $Genrekey=$pagechannel->keys();
+    //    dd($Genrekey);
         //$plans=$plans->data;
         if( Auth::check()){
             $login = true;
@@ -132,7 +133,7 @@ $Genrekey=$pagechannel->keys();
             $login = false;
         }
         $stats1 = array_pop($stats);
-        return view('frontend.home', compact('login','plans','pagechannel2','stats1'));
+        return view('frontend.home', compact('login','plans','pagechannel','stats1','Genrekey'));
     }
 
     public function botman(){

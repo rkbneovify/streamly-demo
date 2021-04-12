@@ -20,6 +20,7 @@ class Kernel extends HttpKernel
         //\App\Http\Middleware\DatabaseSwitcher::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+        \Barryvdh\Cors\HandleCors::class, 
     ];
 
     /**
