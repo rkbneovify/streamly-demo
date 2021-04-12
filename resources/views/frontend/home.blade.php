@@ -221,246 +221,8 @@
                 }
             }
 
-/* for genre channel */
+/* for genre channel items*/
 
-
-	
-    </style>
-@endsection
-@section('content')
-    {{-- {{$errors}} --}}
-    {{-- @if($errors->any())
-         <div class="alert alert-danger alert-dismissible ">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Error!</strong> {{$errors->first()}}
-        </div>
-    @endif --}}
-
-    
-
-	<!-- Masthead-->
-	<header class="masthead">
-	    <div class="container">
-            <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
-	        <div class="masthead-heading">
-                <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
-                </div>
-	       
-            <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
-            <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
-	        <a class="btn btn-primary btn-xl js-scroll-trigger " href="#services">START TODAY</a>
-	    </div>
-	</header>
-
-
-    @include('frontend.partials.sidenavRegisterAndLogin')
-
-{{--   
-	<div class="modal fade" id="resetPassword">
-        
-	    <div class="modal-dialog">
-			<div class="modal-content"><h3 class="login_txt" style="
-                padding-left: 20px;
-                padding-top: 20px;
-            ">Forget password</h3>
-				<div class="modal-body text-center">
-					@if (count($errors) > 0)
-          <div class="alert alert-danger">
-            <strong>Whoops!</strong> There were some problems with your input.<br><br>
-            <ul>
-              @foreach ($errors->all() as $error)
-              <li>{{ $error }}</li>
-              @endforeach
-            </ul>
-          </div>
-          @endif
-          {{-- <form action="{{ url('/forgotpassword') }}" method="POST"> --}}
-             {{-- <form method="POST" action="{{ route('password.email') }}"> --}}
-            {!! csrf_field() !!}
-						{{-- <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
-							<label for="email" class="control-label">Send reset password link at                        </label>
-							
-                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}">
-						</div>
-
-
-						<div class="text-center">
-							<button type="submit" class="btn btn-lg login-btn" >
-								Email me!
-							</button> --}}
-							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
-						{{-- </div>
-					</form>
-				</div>
-
-			</div>
-	    </div>
-	</div> --}}
-
-
-	<!-- Select Plan-->
-    <section class="page-section" id="services">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-heading">Select Your Plan</h2>
-            </div>
-
-<!-- Stats Card -->
-<!--
-<div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Stats</h5>
-      <table class="table table-striped">
-        <tr>
-          <td>Set commands</td>
-          {{-- <td>{{ $stats1['cmd_set'] }}</td> --}}
-        </tr>item1
-        <tr>
-          <td>Get hits</td>
-          {{-- <td>{{ $stats1['get_hits'] }}</td> --}}
-        </tr>
-        <tr>
-          <td>Get misses</td>
-          {{-- <td>{{ $stats1['get_misses'] }}</td> --}}
-        </tr>
-      </table>
-    </div>
-  </div>
--->
-            <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
-                @foreach ($plans->data as $plan)
-                <div class="col-sm-4 select-plan-card">
-                	<div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
-                		<p>{{ $plan->nickname }}</p>
-
-                    <h3>$ {{$plan->amount_decimal/100}}/ {{$plan->interval_count}} {{$plan->interval}}</h3>
-
-                		<hr/>
-
-                        <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
-                            <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
-                            @foreach ($plan->metadata->jsonSerialize() as $key => $value)
-                  
-                    
-                    <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
-                    @endforeach
-                          </ul>
-
-                        <?php
-
-                        if ( isset($login) && $login ) {
-                            $selectPLanLink = 'href=/payment';
-                        } else {
-                            $selectPLanLink = 'onclick=openNavReg() href=javascript:void(0);';
-                        }
-
-                        ?>
-
-                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" {{$selectPLanLink}} >SELECT PLAN</a>
-                	</div>
-                </div> @endforeach
-            </div>
-        </div>
-    </section>
-
-<style>.custom-row .row{
-    margin-top: 2rem;
-}
-.col-centered {
-		    margin: 0 auto;
-		    position: relative;
-		}
-
-		.faq-btn{
-			background: #004E92 0% 0% no-repeat padding-box;
-			border: 0.25px solid #707070;
-			border-radius: 18px;
-			color: white;
-			padding: 0.4rem 1rem;
-		}
-
-		.faq-btn.collapsed {
-			background: #FFFFFF 0% 0% no-repeat padding-box;
-			color: #5E5E5E;
-		}
-
-		#accordion-child .card {
-		    margin-top: 5px;
-		}
-
-		[data-toggle="collapse"] .fa:before {   
-		  content: "\f107";
-		}
-
-		[data-toggle="collapse"].collapsed .fa:before {
-		  content: "\f106";
-		}
-        #tab-buttons>a { display:block;
-  float:left;
-  cursor:pointer;
-  color:#666;
-  font:400 15px 'pt sans',sans-serif;
-  
-  padding:0 15px;
-  line-height:40px !important;
-  border: 2px solid #FF712F;}
-  #tab-buttons>a:not(.collapsed){
-  background:#FF712F;
-  color:#FFFFFF;
-  position:relative;
-  box-shadow:0 0 10px rgba(0,0,0,0.5);
-  
-    /* width: 163px;
-    height: 41px; */
-
-}
-
-</style>
-
-<section class="page-section bg-light">
-    <div class="container">
-        <div class="text-center">
-
-            <h2 class="section-heading">Available Channels</h2>
-           
-            <div class="row">
-                <div class="col-centered" id="tab-buttons">
-
- @foreach ($Genrekey as $genre) 
- @if ($loop->first)  
- <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$genre}}</a>
- @else
- <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$genre}}</a>
- @endif
- @endforeach
-                    
-                </div>
-            </div>
-        </div>
-   <div class="row col-centered " id="accordion">
-        @foreach($pagechannel as $key => $user)
-        @if ($loop->first)  
-        <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
-            <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
-            <div class="item1"> 
-                <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
-            </div>  @endforeach</div></div>
-        </div> 
-   
-    @else
-
-    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
-        <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
-        <div class="item1"> 
-            <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
-        </div>  @endforeach</div></div>
-    </div> 
-@endif
-    @endforeach
-</div>
-    </div>
-</section>
-<style>
 .item1{
     height: 80px;
     width: 80px;
@@ -504,55 +266,10 @@
   -o-object-fit: contain;
      object-fit: contain;
 }
-    
-    
-    </style>
-      <section class="page-section " id="portfolio">
 
-    <div class="css-thjkr7">
-        <div class="css-5nata0">
-            <div class="upper-section">
-                <div class="content">
-                    <div class="title">Watch on all
-                        <br> your devices.</div>
-                    <div class="sub-title">Download the free Streamly apps for all your devices.
-                        <br> Watch what you want, when you want.</div>
-                    <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
-                </div>
-                {{-- <div class="content"><div class="title">Watch on all <br> your devices.</div><div class="sub-title">Download the free fuboTV apps for all your devices. <br> Watch what you want, when you want.</div>
-                <div role="button" aria-label="" class="apps css-q9bl1b"><a href="/welcome/apps">See all apps and devices</a></div></div> --}}
-                <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}" 
-  
-alt="image of tv guide"
-></div>
-            </div>
-        </div>
+/*devices circle*/
 
-        <div class="flex-container space-evenly">
-            
-            <div><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
-            <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-            </svg></div>
-              
-              <div><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
-              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
-              <div><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
-              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
-              <div><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
-              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
-              <div><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
-              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
-              <div><svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
-              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div> </div>
-    </div>
-    </section>
-<style>
-   .flex-container {
+.flex-container {
         width: 100%;   
     
   padding: 0;
@@ -747,5 +464,284 @@ background-position: center;
   stroke-width: 0.5;
   transform: scale(15);
     }
+	
+    </style>
+@endsection
+@section('content')
+    {{-- {{$errors}} --}}
+    {{-- @if($errors->any())
+         <div class="alert alert-danger alert-dismissible ">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error!</strong> {{$errors->first()}}
+        </div>
+    @endif --}}
+
+    
+
+	<!-- Masthead-->
+	<header class="masthead">
+	    <div class="container">
+            <p style=" text-transform: uppercase;"><strong>Your alternative to Cable!</strong></p>
+	        <div class="masthead-heading">
+                <img src="{{ asset('frontend/img/streamlylogo5.png') }}"  loading="lazy" alt="logo of streamly" class="img-fluid" />
+                </div>
+	       
+            <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
+            <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
+	        <a class="btn btn-primary btn-xl js-scroll-trigger " href="#services">START TODAY</a>
+	    </div>
+	</header>
+
+
+    @include('frontend.partials.sidenavRegisterAndLogin')
+
+{{--   
+	<div class="modal fade" id="resetPassword">
+        
+	    <div class="modal-dialog">
+			<div class="modal-content"><h3 class="login_txt" style="
+                padding-left: 20px;
+                padding-top: 20px;
+            ">Forget password</h3>
+				<div class="modal-body text-center">
+					@if (count($errors) > 0)
+          <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+              @foreach ($errors->all() as $error)
+              <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
+          @endif
+          {{-- <form action="{{ url('/forgotpassword') }}" method="POST"> --}}
+             {{-- <form method="POST" action="{{ route('password.email') }}"> --}}
+            {!! csrf_field() !!}
+						{{-- <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
+							<label for="email" class="control-label">Send reset password link at                        </label>
+							
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}">
+						</div>
+
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-lg login-btn" >
+								Email me!
+							</button> --}}
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+						{{-- </div>
+					</form>
+				</div>
+
+			</div>
+	    </div>
+	</div> --}}
+
+
+	<!-- Select Plan-->
+    <section class="page-section" id="services">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-heading">Select Your Plan</h2>
+            </div>
+
+<!-- Stats Card -->
+
+{{-- <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Stats</h5>
+      <table class="table table-striped">
+        <tr>
+          <td>Set commands</td>
+          <td>{{ $stats1['cmd_set'] }}</td>
+        </tr>item1
+        <tr>
+          <td>Get hits</td>
+          <td>{{ $stats1['get_hits'] }}</td>
+        </tr>
+        <tr>
+          <td>Get misses</td>
+          <td>{{ $stats1['get_misses'] }}</td>
+        </tr>
+      </table>
+    </div>
+  </div> --}}
+
+            <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
+                @foreach ($plans->data as $plan)
+                <div class="col-sm-4 select-plan-card">
+                	<div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
+                		<p>{{ $plan->nickname }}</p>
+
+                    <h3>$ {{$plan->amount_decimal/100}}/ {{$plan->interval_count}} {{$plan->interval}}</h3>
+
+                		<hr/>
+
+                        <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
+                            <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
+                            @foreach ($plan->metadata->jsonSerialize() as $key => $value)
+                  
+                    
+                    <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
+                    @endforeach
+                          </ul>
+
+                        <?php
+
+                        if ( isset($login) && $login ) {
+                            $selectPLanLink = 'href=/payment';
+                        } else {
+                            $selectPLanLink = 'onclick=openNavReg() href=javascript:void(0);';
+                        }
+
+                        ?>
+
+                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" {{$selectPLanLink}} >SELECT PLAN</a>
+                	</div>
+                </div> @endforeach
+            </div>
+        </div>
+    </section>
+
+<style>.custom-row .row{
+    margin-top: 2rem;
+}
+.col-centered {
+		    margin: 0 auto;
+		    position: relative;
+		}
+
+		.faq-btn{
+			background: #004E92 0% 0% no-repeat padding-box;
+			border: 0.25px solid #707070;
+			border-radius: 18px;
+			color: white;
+			padding: 0.4rem 1rem;
+		}
+
+		.faq-btn.collapsed {
+			background: #FFFFFF 0% 0% no-repeat padding-box;
+			color: #5E5E5E;
+		}
+
+		#accordion-child .card {
+		    margin-top: 5px;
+		}
+
+		[data-toggle="collapse"] .fa:before {   
+		  content: "\f107";
+		}
+
+		[data-toggle="collapse"].collapsed .fa:before {
+		  content: "\f106";
+		}
+        #tab-buttons>a { display:block;
+  float:left;
+  cursor:pointer;
+  color:#666;
+  font:400 15px 'pt sans',sans-serif;
+  
+  padding:0 15px;
+  line-height:40px !important;
+  border: 2px solid #FF712F;}
+  #tab-buttons>a:not(.collapsed){
+  background:#FF712F;
+  color:#FFFFFF;
+  position:relative;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+  
+    /* width: 163px;
+    height: 41px; */
+
+}
+
 </style>
+
+<section class="page-section bg-light">
+    <div class="container">
+        <div class="text-center">
+
+            <h2 class="section-heading">Available Channels</h2>
+           
+            <div class="row">
+                <div class="col-centered" id="tab-buttons">
+
+ @foreach ($Genrekey as $genre) 
+ @if ($loop->first)  
+ <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$genre}}</a>
+ @else
+ <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$genre}}</a>
+ @endif
+ @endforeach
+                    
+                </div>
+            </div>
+        </div>
+   <div class="row col-centered " id="accordion">
+        @foreach($pagechannel as $key => $user)
+        @if ($loop->first)  
+        <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
+            <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
+            <div class="item1"> 
+                <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+            </div>  @endforeach</div></div>
+        </div> 
+   
+    @else
+
+    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
+        <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
+        <div class="item1"> 
+            <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+        </div>  @endforeach</div></div>
+    </div> 
+@endif
+    @endforeach
+</div>
+    </div>
+</section>
+      <section class="page-section " id="portfolio">
+
+    <div class="css-thjkr7">
+        <div class="css-5nata0">
+            <div class="upper-section">
+                <div class="content">
+                    <div class="title">Watch on all
+                        <br> your devices.</div>
+                    <div class="sub-title">Download the free Streamly apps for all your devices.
+                        <br> Watch what you want, when you want.</div>
+                    <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
+                </div>
+                {{-- <div class="content"><div class="title">Watch on all <br> your devices.</div><div class="sub-title">Download the free fuboTV apps for all your devices. <br> Watch what you want, when you want.</div>
+                <div role="button" aria-label="" class="apps css-q9bl1b"><a href="/welcome/apps">See all apps and devices</a></div></div> --}}
+                <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}" 
+  
+alt="image of tv guide"
+></div>
+            </div>
+        </div>
+
+        <div class="flex-container space-evenly">
+            
+            <div><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+            <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+            </svg></div>
+              
+              <div><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div>
+              <div><svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
+              <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
+              </svg></div> </div>
+    </div>
+    </section>
 @endsection
