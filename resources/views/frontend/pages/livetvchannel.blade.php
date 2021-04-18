@@ -233,34 +233,7 @@ fetch(url, requestOptions)
         player.pause();
     });
       player = dashjs.MediaPlayer().create();
-      // player.updateSettings({ 'debug': { 'logLevel': dashjs.Debug.LOG_LEVEL_NONE }});
-      // player.updateSettings({
-      //     // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-      //     'streaming': {
-			// 			'liveDelay': 10,
-			// 			'fastSwitchEnabled': true  ,
-      //         //Set retryIntervals of MPD (file with description of the resources forming a streaming service, that a DASH client uses to
-      //         //determine which assets to request in order to perfom adaptive streaming of the content.
-      //         //In other word, make 3 attemps to load files, each attemps with an interval of 5 seconds (5000 milliseconds).
-      //         'retryIntervals': {MPD: 5000},
-      //         'retryAttempts': {MPD: 3}
-      //     },'abr': { 'autoSwitchBitrate': { 'video': false } }
-      // });
-			// player.updateSettings({
-      //     // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
-      //     'streaming': {
-			// 			'liveDelay': 2,
-      //                   'liveCatchUpMinDrift': 0.05,
-      //                   'liveCatchUpPlaybackRate': 0.5,
-      //                   'stableBufferTime': 2,
-      //                   'bufferTimeAtTopQuality': 2,
-      //                   'bufferTimeAtTopQualityLongForm': 2,
-      //                   'bufferToKeep': 2,
-      //                   'bufferAheadToKeep': 2,
-      //                   'lowLatencyEnabled': true,
-      //                   'fastSwitchEnabled': true,
-      //     },'abr': { 'autoSwitchBitrate': { 'video': false } }
-      // });
+      
 			player.updateSettings({
          // 'debug': {'logLevel': dashjs.Debug.LOG_LEVEL_DEBUG},
          'streaming': {
@@ -315,26 +288,6 @@ fetch(url, requestOptions)
 						overlay.style.display='block';
             
         });   
-				// player.on(dashjs.MediaPlayer.events["PLAYBACK_PROGRESS"], function () {
-        //     console.log("PLAYBACK_PROGRESS");
-				// 		// PLAYBACK_TIME_UPDATED
-				// gtag('event', 'player_error', {'error_code': 15,'error_msg': 'errrootmsg',
-				// 'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
-
-            
-        // });	
-		/*	player.on(dashjs.MediaPlayer.events["PLAYBACK_TIME_UPDATED"], function (e) {
-            // console.log("PLAYBACK_TIME_UPDATED");
-						for (var name in e)
-            {
-
-                if (typeof e[name] != 'object') {
-                    console.log("    " + name + ": " + e[name]);
-                }
-            }
-						// PLAYBACK_TIME_UPDATED
-            
-        }); */
   }
   
   document.addEventListener("DOMContentLoaded", function () {
@@ -598,26 +551,6 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 						</div> --}}
 					</div>
 				</div>
-				<!-- <div class="row">
-					
-					<div class="offset-md-3 col-xs-6 video-container">
-						<video id="example_video_1" class="video-js vjs-default-skin"
-						  controls preload="auto" width="640" height="264"
-						  poster="//vjs.zencdn.net/v/oceans.png"
-						  data-setup='{"example_option":true}'>
-						 <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
-						</video>
-
-					</div>
-					<div class="col-xs-3">
-						<div>
-							<p>Times Now Global</p>
-							<p>News Bulletin</p>
-							<p>04:00 - 05:00PM</p>
-							<p>Genre : <a href="javascript:void(0)">News</a></p>
-						</div>
-					</div>
-				</div> -->
 			</div>
 		</div>
 
