@@ -10,7 +10,28 @@ use App\Models\Channel;
 use Carbon\Carbon;
 class TizenEPGController extends Controller
 {
-    //
+    //channel search
+    public function channelSearchSchedule(Request $request){
+      $search = request()->get('search');
+      $StartTime = request()->get('StartTime');
+      $record=Gracenote::select('gracenote.EventTitle as Title','gracenote.EventType as CatType','gracenote.EventType as Category',DB::raw('DATE_FORMAT(gracenote.StartDateTime,"%Y-%m-%dT%TZ") StartTime'),DB::raw('DATE_FORMAT(gracenote.EndDateTime,"%Y-%m-%dT%TZ") EndTime'))
+      ->selectRaw("JSON_OBJECT('ChanId', concat(channels.id,''), 'CallSign', concat(channels.callSign,''),'ChanNum', concat(channels.id,'')) as Channel")
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN ? AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   AND `gracenote`.`EventTitle` LIKE "%'.$search.'%"',$StartTime)
+      ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign');
+      $reco=$record->get();
+      // $reco=$record->toSql(); echo $reco;exit; 
+      
+
+      $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28", "Count"=>strval( $reco->count()),
+      'Programs' => $reco];
+      $response = [
+            
+          'ProgramList' => $a,
+         
+      ];
+     
+  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+    }
        
 //channel with 7 day of schdule
 public function channelDaysSchedule(Request $request){
@@ -61,7 +82,7 @@ $reco=$record->get(); //echo $reco;exit;
   }  
       // return response()->json($record->toSql());
       // return json_encode($api);
-$a=["AsOf"=> '2021-04-23T00:00:00Z', "Version"=> "0.28",'Channels' => $reco];
+$a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels' => $reco];
       $response = [
           
         //   'count' => $reco->count(),
