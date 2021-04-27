@@ -24,7 +24,9 @@ class EntrustRole {
         $user=JWTAuth::user();
         if($user){
             if ($role != null && !$user->hasRole(explode('|', $role))) {
-                return response()->json(['status'=>false,'success'=>false,'message' => 'unauthorised']);
+                if($request->wantsJson()){
+                return response()->json(['status'=>false,'success'=>false,'message' => 'unauthorised']);}
+                else{abort(403, 'Unauthorized');}
             }    
         }
         
