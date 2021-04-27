@@ -195,7 +195,7 @@ Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
 Route::get('api/vuechannellist', 'EpgController@channellist');
 Route::get('api/vueprogramlistwithid', 'EpgController@programelistwithid');
 Route::get('api/tizenepg', 'TizenEPGController@channelDaysSchedule');
-Route::get('api/tizensearchepg', 'TizenEPGController@channelSearchSchedule');
+Route::get('api/tizenepg/search', 'TizenEPGController@channelSearchSchedule');
 Route::get('api/vuefavoritelist', 'EpgController@favoritelist');
 Route::get('api/vueprogramlist', 'EpgController@programelist');
 Route::get('api/vuesinglechanneldetails', 'EpgController@singlechanneldetails');
