@@ -355,7 +355,11 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
 }
 // if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
  
-        $login = false; 
+if(Auth::check()){
+    $login = true;
+} else {
+    $login = false;
+}
         return view('frontend.checkavailbilty',compact('login','response'));
         // return view('frontend.verified');
     }
@@ -376,7 +380,11 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
 // }
 // if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
 // dd($response);
-        $login = false; 
+if(Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+        }
         return view('frontend.checkavailbilty2',compact('login'));
         // return view('frontend.verified');
     }
@@ -442,7 +450,8 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     public function helpandsupp()
     {
         
-        $login = false; 
+        if( Auth::check()){
+            $login = true;}else{ $login = false; }
         $frontendjson = FrontendText::find(1)->frontendjson;
         $supportemail=$frontendjson['supportemail']??'contact@streamlytv.com';
        $supportphone= $frontendjson['supportphone']??'1234656477';
@@ -662,7 +671,9 @@ try {
     }
 
     public function checkzipView()
-    { $login = false;
+    { 
+        if( Auth::check()){
+            $login = true;}else{ $login = false; }
         $user = session()->get( 'user' );
 
         return view('frontend.checkzip', compact('login','user')); }
