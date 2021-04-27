@@ -142,7 +142,8 @@ class AuthController extends Controller
             if($request->wantsJson()){
             $response = array('success' =>true ,'response_code'=>200,'message'=>'Account successfully verified');
             return response()->json($response, 200);}
-            else { $login = false; return view('frontend.verified',compact('login')); }
+            else { if( Auth::check()){
+                $login = true;}else{ $login = false; } return view('frontend.verified',compact('login')); }
 
         }else{
             $response = array('success' =>false ,'response_code'=>401,'message'=>'Invalid verification token');
