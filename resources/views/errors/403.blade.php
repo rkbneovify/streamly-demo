@@ -1,4 +1,5 @@
-@extends('frontend/partials/master')
+<?php $login= Auth::check()?true:false; ?>
+@extends('frontend/partials/master',['login'=>$login])
 
 @section('top-stylesheets')
 @include('frontend.partials.sidenavRegisterAndLoginCSS')
