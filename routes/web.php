@@ -29,6 +29,7 @@ Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 
 
+Route::get('/subscriptions/allcust','Admin\SubscriptionController@showAllcustomer');
 
 
 
