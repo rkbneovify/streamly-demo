@@ -88,6 +88,48 @@ dump($item);
         // return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
         
     }   
+
+    public function syncStripeUser()
+    {    $arrayStripeEmail = array();
+         $customers = \Stripe\Customer::all(['limit' => 100]);
+        //  foreach ($customers->autoPagingIterator() as $customer) {
+        //     dump($customer->subscriptions->data);
+        //   }
+        //  $subscriptions = $customers->subscriptions->all();
+        //  $customers = \Stripe\Plan::all();
+        //  dump($subscriptions);
+         echo "<br>";
+         dump($customers->data);
+         foreach ($customers->data as $key2 => $customer) {
+            echo ($key2+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+            array_push($arrayStripeEmail, $customer->email);
+        }
+        // While we have more results, iterate through them
+        while ($customers->has_more) {
+            $startcuscount=count($customers->data);
+            // Add the `starting_after` parameter to reflect the last customer ID
+            $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id));
+            foreach ($customers->data as $key2 => $customer) {
+                ($key2+$startcuscount+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+                array_push($arrayStripeEmail, $customer->email);
+            }}
+            // whereIn('email', $emailAddresses)
+            $DBuserEmails = User::select('email')->where([
+                ['is_active', '=', '1'],
+                ['email_verified_at', '<>',NULL ],
+                ['stripe_id', '<>',NULL ],
+                 ])->pluck('email')->toArray();
+                 echo "<br>DB_Emails<br>";
+                 dump($DBuserEmails);
+                 echo "<br>Stripe_emails<br>";
+                 
+            dump($arrayStripeEmail);
+            
+            
+        //  $plans->data;//Customers::with('country')->paginate(20);
+        // return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
+        
+    }
    
     /**
      * Display the specified resource.
