@@ -40,7 +40,56 @@ class SubscriptionController extends Controller
          $plans->data;//Customers::with('country')->paginate(20);
         return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
         
-    }    /**
+    }   
+    public function showAllcustomer()
+    {    
+        // $users = User::all()->pluck('name', 'id');
+        // $subscriptions = Subscription::paginate(20);
+        //  $customers = \Stripe\Customer::all(['expand' => ['data.subscriptions']]);
+        // $plans = \Stripe\Plan::all(['active'=>true]);
+        $subscriptions = \Stripe\Subscription::all(['status'=>'active','expand' => ['data.plan','data.customer']]);
+        foreach ($subscriptions->data as $key => $subscription) {
+            echo ($key+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."<br>";
+        }
+        // echo "subscriptions".count($subscriptions->data);
+        while ($subscriptions->has_more) {
+            $startsubscriptioncount=count($subscriptions->data);
+            // Add the `starting_after` parameter to reflect the last customer ID
+            $subscriptions = \Stripe\Subscription::all(array("limit" => 100, "starting_after" => $subscription->id,'expand' => ['data.plan','data.customer']));
+            foreach ($subscriptions->data  as $key => $subscription) {
+                echo ($key+$startsubscriptioncount+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."<br>";
+            }}
+            echo "-----------end----------";
+        $item = new \Stripe\SubscriptionItem();
+        dump($subscriptions->data);
+dump($item);
+         $customers = \Stripe\Customer::all(['limit' => 100]);
+        //  foreach ($customers->autoPagingIterator() as $customer) {
+        //     dump($customer->subscriptions->data);
+        //   }
+        //  $subscriptions = $customers->subscriptions->all();
+        //  $customers = \Stripe\Plan::all();
+        //  dump($subscriptions);
+         echo "<br>";
+         dump($customers->data);
+         foreach ($customers->data as $key2 => $customer) {
+            echo ($key2+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+        }
+        // While we have more results, iterate through them
+        while ($customers->has_more) {
+            $startcuscount=count($customers->data);
+            // Add the `starting_after` parameter to reflect the last customer ID
+            $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id));
+            foreach ($customers->data as $key2 => $customer) {
+                ($key2+$startcuscount+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+            }}
+            
+        //  $plans->data;//Customers::with('country')->paginate(20);
+        // return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
+        
+    }   
+   
+    /**
      * Display the specified resource.
      *
      * @param  Show  $request
