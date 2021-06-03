@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,7 +45,7 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     Route::put('subscriptionupdate/{id}','Admin\SubscriptionController@update')->name('subscriptionupdate');
     Route::delete('subscriptiondestroy/{id}','Admin\SubscriptionController@destroy')->name('subscriptiondestroy');
 
-
+    Route::get('/subscriptions/allcust','Admin\SubscriptionController@showAllcustomer');
     //gracenote
     Route::get('/channels', 'Admin\GracenoteController@index');//gracenote
     Route::get('/channels/create', 'Admin\GracenoteController@create');//gracenote
@@ -64,6 +63,10 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
+    Route::resource('/hotels', 'Admin\HotelController');
+    Route::resource('/hotelcontracts', 'Admin\HotelContractsController');
+
+    Route::get('hoteladmin/data', 'Admin\HotelController@HotelAdminUserAjaxData');
     Route::get('user/data', 'Admin\UsersController@UserAjaxData');
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
