@@ -28,6 +28,8 @@ Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 
 
+Route::get('/subscriptions/allcust','Admin\SubscriptionController@showAllcustomer');
+Route::get('/subscriptions/syncuser','Admin\SubscriptionController@syncStripeUser');
 
 
 
