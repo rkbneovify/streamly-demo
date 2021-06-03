@@ -462,25 +462,5 @@ dump($item);
         }
     }
 
-    public function showAllcustomer()
-    {    
-        // $users = User::all()->pluck('name', 'id');
-        // $subscriptions = Subscription::paginate(20);
-        //  $customers = \Stripe\Customer::all(['expand' => ['data.subscriptions']]);
-        // $plans = \Stripe\Plan::all(['active'=>true]);
-        $plans = \Stripe\subscriptionItems::all();
-        dump($plans->data);
-         $customers = \Stripe\Customer::all();
-        //  foreach ($customers->autoPagingIterator() as $customer) {
-        //     dump($customer->subscriptions->data);
-        //   }
-        //  $subscriptions = $customers->subscriptions->all();
-        //  $customers = \Stripe\Plan::all();
-        //  dump($subscriptions);
-         echo "<br>";
-         dd($customers->data);
-        //  $plans->data;//Customers::with('country')->paginate(20);
-        // return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
-        
-    }   
+    
 }
