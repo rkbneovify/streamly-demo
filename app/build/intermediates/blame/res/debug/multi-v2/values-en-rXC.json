@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\oddles streamly project video\\StreamlyGit\\streamly\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-en-rXC\\values-en-rXC.xml",
+            "outputFile": "/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\f1285bc90af8a1aa84b55fffda5c903b\\core-1.6.0-alpha01\\res\\values-en-rXC\\values-en-rXC.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "203",
-                        "endOffsets": "254"
-                    },
-                    "to": {
-                        "startLines": "69",
-                        "startColumns": "4",
-                        "startOffsets": "13915",
-                        "endColumns": "203",
-                        "endOffsets": "14114"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\0d6ed556fb6e77579e82887eed6c92f4\\leanback-1.0.0\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "source": "/home/vikash/.gradle/caches/transforms-2/files-2.1/0d6ed556fb6e77579e82887eed6c92f4/leanback-1.0.0/res/values-en-rXC/values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\85c369933fb904d8076fc1c8452f77be\\appcompat-1.2.0\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "source": "/home/vikash/.gradle/caches/transforms-2/files-2.1/3bd259c6ead853f53778c49bbf716e48/core-1.6.0-beta02/res/values-en-rXC/values-en-rXC.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "203",
+                        "endOffsets": "254"
+                    },
+                    "to": {
+                        "startLines": "69",
+                        "startColumns": "4",
+                        "startOffsets": "13915",
+                        "endColumns": "203",
+                        "endOffsets": "14114"
+                    }
+                },
+                {
+                    "source": "/home/vikash/.gradle/caches/transforms-2/files-2.1/85c369933fb904d8076fc1c8452f77be/appcompat-1.2.0/res/values-en-rXC/values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

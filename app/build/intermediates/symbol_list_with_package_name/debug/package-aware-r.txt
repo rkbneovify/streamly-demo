@@ -525,6 +525,7 @@ attr navigationContentDescription
 attr navigationIcon
 attr navigationMode
 attr nestedScrollFlags
+attr nestedScrollViewStyle
 attr numberOfColumns
 attr numberOfRows
 attr numericModifiers
@@ -600,6 +601,7 @@ attr progressBarPadding
 attr progressBarStyle
 attr queryBackground
 attr queryHint
+attr queryPatterns
 attr radioButtonStyle
 attr ratingBarStyle
 attr ratingBarStyleIndicator
@@ -649,6 +651,7 @@ attr selectableItemBackground
 attr selectableItemBackgroundBorderless
 attr selectedAnimationDelay
 attr selectedAnimationDuration
+attr shortcutMatchRequired
 attr showAsAction
 attr showDividers
 attr showPaths
@@ -4168,6 +4171,7 @@ styleable AspectRatioFrameLayout resize_mode
 styleable BlurDialog blurDialogCornerRadius blurDialogDuration blurDialogIcon blurDialogTitle blurDialogTitleSize
 styleable BlurView blurOverlayColor
 styleable ButtonBarLayout allowStacking
+styleable Capability queryPatterns shortcutMatchRequired
 styleable CardView android_minWidth android_minHeight cardBackgroundColor cardCornerRadius cardElevation cardMaxElevation cardPreventCornerOverlap cardUseCompatPadding contentPadding contentPaddingBottom contentPaddingLeft contentPaddingRight contentPaddingTop
 styleable ColorStateListItem android_color android_alpha alpha
 styleable CompoundButton android_button buttonCompat buttonTint buttonTintMode

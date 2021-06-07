@@ -83,9 +83,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PlayerActivity extends FragmentActivity {
-    private static final String TAG=PlayerActivity.class.getSimpleName();
+    private static final String TAG = PlayerActivity.class.getSimpleName();
     private ProgressDialog dialog;
-    String authToken,uniqueId,userId;
+    String authToken, uniqueId, userId;
     SimpleExoPlayer player;
     PlayerView playerView;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -96,10 +96,11 @@ public class PlayerActivity extends FragmentActivity {
     RecyclerView allChannelRecyclerView;
     List<Datum> channelList;
     AllChannelAdapter allChannelAdapter;
-    ImageView logoImage , menuImage , drawerCloseImage;
+    ImageView logoImage, menuImage, drawerCloseImage;
     LinearLayout drawerLayout;
-    String channel_id="";
-    String  item="0";
+    String channel_id = "";
+    String item = "0";
+    String rvItemClick = "0";
 
     @Override
     protected void onStart() {
@@ -134,22 +135,21 @@ public class PlayerActivity extends FragmentActivity {
         drawerCloseImage = findViewById(R.id.drawer_close);
         drawerLayout = findViewById(R.id.player_channel_frame);
         allChannelRecyclerView = findViewById(R.id.player_channel_list);
-        authToken= TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.AUTH_TOKEN, null);
-        userId= TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.USER_ID, null);
+        authToken = TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.AUTH_TOKEN, null);
+        userId = TokenStorage.readSharedToken(PlayerActivity.this, ConstantUtility.USER_ID, null);
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         playerView.setUseController(false);
-        dialog= CommonUtility.custom_loader(this);
+        dialog = CommonUtility.custom_loader(this);
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         params = new Bundle();
-        String channelName=getIntent().getStringExtra("channel_name");
-        if(getIntent().getStringExtra("item")!=null)
-        {
-                     item= getIntent().getStringExtra("item");
+        String channelName = getIntent().getStringExtra("channel_name");
+        if (getIntent().getStringExtra("item") != null) {
+            item = getIntent().getStringExtra("item");
         }
 
-        params.putString("call_sign", channelName+"_Android");
+        params.putString("call_sign", channelName + "_Android");
         params.putString("inside_geofence", "false");
         mFirebaseAnalytics.setUserId(userId);
 
@@ -166,63 +166,76 @@ public class PlayerActivity extends FragmentActivity {
         });
 
 
-         getLatLong();
+        getLatLong();
     }
 
 
-    public void playNext(String channelN , String videoUrl,String channelId){
-        Log.e(TAG, "playNext: "+channelId );
-        Log.e(TAG, "playNext: "+videoUrl );
-        Log.e(TAG, "playNext: "+channelN );
-
-        Intent i = new Intent(this , PlayerActivity.class);
-        i.putExtra("from", videoUrl);
-        i.putExtra("channel_name", channelN);
-        i.putExtra("channel_id", channelId);
-        i.putExtra("item", "1");
-        startActivity(i);
-        finish();
+    public void playNext(String channelN, String videoUrl, String channelId) {
+        Log.e(TAG, "playNext: " + channelId);
+        Log.e(TAG, "playNext: " + videoUrl);
+        Log.e(TAG, "playNext: " + channelN);
+        rvItemClick = "1";
+//        Intent i = new Intent(this , PlayerActivity.class);
+//        i.putExtra("from", videoUrl);
+//        i.putExtra("channel_name", channelN);
+//        i.putExtra("channel_id", channelId);
+//        i.putExtra("item", "1");
+//        startActivity(i);
+//        finish();
 //
-//getDrmKey2(videoUrl,channelId, channelN);
+//        handler.removeCallbacks(runnable);
+//        player.stop();
+//        Log.e(TAG,"back_press_called");
+//        finish();
+
+        player.stop();
+
+
+        menuImage.setVisibility(View.VISIBLE);
+        drawerLayout.setVisibility(View.GONE);
+        getDrmKey2(videoUrl, channelId, channelN);
 
 //        initializePlayer2("",videoUrl,channelN,channelId);
     }
 
 
-
     private void getLatLong() {
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        Log.e(TAG,"IP_Address: "+ip);
+        Log.e(TAG, "IP_Address: " + ip);
 //        157.42.78.63
 
 
-        IpViewModel ipViewModel=new ViewModelProvider(this).get(IpViewModel.class);
-        ipViewModel.getLatLong("57.42.78.63",PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
+        IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
+        ipViewModel.getLatLong("57.42.78.63", PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
-                IpModel ipModel= (IpModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()){
+                IpModel ipModel = (IpModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
                     case 200:
-                        Log.e(TAG,"ipGetStatus= "+ipModel.getStatus());
-                        if (ipModel.getStatus().equals("fail")){
-                            CommonUtility.showToast(PlayerActivity.this,ConstantUtility.IPNOTVALID);
-                            Log.e(TAG,"emulator IP is not valid for getting coordinate");
+                        Log.e(TAG, "ipGetStatus= " + ipModel.getStatus());
+                        if (ipModel.getStatus().equals("fail")) {
+                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.IPNOTVALID);
+                            Log.e(TAG, "emulator IP is not valid for getting coordinate");
                             finish();
-                        }else {
-                            Double dbLat=ipModel.getLat();
-                            Double dblon=ipModel.getLon();
-                            postGeofenceCall(dbLat,dblon);
+                        } else {
+                            Double dbLat = ipModel.getLat();
+                            Double dblon = ipModel.getLon();
+                            postGeofenceCall(dbLat, dblon);
                         }
                         break;
-                    case 401: CommonUtility.showToast(PlayerActivity.this,ipModel.getMessage());
-                    break;
-                    case 403: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
+                    case 401:
+                        CommonUtility.showToast(PlayerActivity.this, ipModel.getMessage());
                         break;
-                    case 404: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
+                    case 403:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
-                    case 500: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
-                    break;
+                    case 404:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    case 500:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
                 }
 
             }
@@ -232,35 +245,41 @@ public class PlayerActivity extends FragmentActivity {
 
 
     private void postGeofenceCall(Double dbLat, Double dblon) {
-        Map<String, Double> map=new HashMap<>();
-        map.put("latitude",dbLat);
-        map.put("longitude",dblon);
+        Map<String, Double> map = new HashMap<>();
+        map.put("latitude", dbLat);
+        map.put("longitude", dblon);
 //        map.put("latitude",33.88768366489836);
 //        map.put("longitude",-17.90419095752048);
 
-        GeofenceViewModel viewModel= new ViewModelProvider(this).get(GeofenceViewModel.class);
-        viewModel.getData(map,PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
+        GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
+        viewModel.getData(map, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
-                GeofenceModel geofenceModel= (GeofenceModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()){
-                    case 200:  getDrmKey();
-                    break;
-                    case 401:  TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this,geofenceModel.getMessage());
+                GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        getDrmKey();
+                        break;
+                    case 401:
+                        TokenStorage.clearSharedToken(PlayerActivity.this);
+                        CommonUtility.showToast(PlayerActivity.this, geofenceModel.getMessage());
                         startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
                         finish();
                         break;
-                    case 403: if(item.equals("1")){
-                        getDrmKey();
-                        item="0";
-                    }else{String popMessage="You are away from your home zip code:  click here to continue viewing.";
-                        ZipCodeDialog zipCodeDialog=new ZipCodeDialog(PlayerActivity.this, popMessage,uniqueId, dbLat+"",dblon+"",authToken);
-                        zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                        zipCodeDialog.show();
-                        getDrmKey();}
+                    case 403:
+                        if (item.equals("1")) {
+                            getDrmKey();
+                            item = "0";
+                        } else {
+                            String popMessage = "You are away from your home zip code:  click here to continue viewing.";
+                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken);
+                            zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            zipCodeDialog.show();
+                            getDrmKey();
+                        }
                         break;
-                    default: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
+                    default:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                 }
             }
         });
@@ -268,64 +287,71 @@ public class PlayerActivity extends FragmentActivity {
     }
 
     private void getDrmKey() {
-        DrmViewModel viewModel=new ViewModelProvider(this).get(DrmViewModel.class);
+        DrmViewModel viewModel = new ViewModelProvider(this).get(DrmViewModel.class);
         viewModel.getData(PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
-                DrmKeyModel drmKeyModel= (DrmKeyModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()){
-                    case 200: String drmKey=drmKeyModel.getData();
-                        String wvUrl= drmKeyModel.getWidevinelicense();
-                        Log.e(TAG, "onChanged: getDrmKey "+wvUrl );
-                        Log.e(TAG, "onChanged: getDrmKey "+drmKey );
+                DrmKeyModel drmKeyModel = (DrmKeyModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        String drmKey = drmKeyModel.getData();
+                        String wvUrl = drmKeyModel.getWidevinelicense();
+                        Log.e(TAG, "onChanged: getDrmKey " + wvUrl);
+                        Log.e(TAG, "onChanged: getDrmKey " + drmKey);
                         //call all channel api....
-                        getChannelList(drmKey,wvUrl);
+                        getChannelList(drmKey, wvUrl);
                         break;
                     case 401:
                         TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this,drmKeyModel.getMessage());
+                        CommonUtility.showToast(PlayerActivity.this, drmKeyModel.getMessage());
                         startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
                         finish();
                         break;
-                    case 404:  TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SESSION_EXPIRED);
+                    case 404:
+                        TokenStorage.clearSharedToken(PlayerActivity.this);
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SESSION_EXPIRED);
                         startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
                         finish();
                         break;
-                    default: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
+                    default:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
                 }
             }
         });
 
     }
+
     private void getDrmKey2(String videoUrl, String channelId, String channelN) {
-        DrmViewModel viewModel=new ViewModelProvider(this).get(DrmViewModel.class);
+        DrmViewModel viewModel = new ViewModelProvider(this).get(DrmViewModel.class);
         viewModel.getData(PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
-                DrmKeyModel drmKeyModel= (DrmKeyModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()){
-                    case 200: String drmKey=drmKeyModel.getData();
-                        String wvUrl= drmKeyModel.getWidevinelicense();
+                DrmKeyModel drmKeyModel = (DrmKeyModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        String drmKey = drmKeyModel.getData();
+                        String wvUrl = drmKeyModel.getWidevinelicense();
                         //call all channel api....
 //                        getChannelList(drmKey,wvUrl);
-                        Log.e(TAG, "onChanged: getDrmKey2 "+wvUrl );
-                        Log.e(TAG, "onChanged: getDrmKey2 "+drmKey );
-                                initializePlayer2(drmKey,wvUrl,channelN,channelId,videoUrl);
+                        Log.e(TAG, "onChanged: getDrmKey2 " + wvUrl);
+                        Log.e(TAG, "onChanged: getDrmKey2 " + drmKey);
+                        initializePlayer2(drmKey, wvUrl, channelN, channelId, videoUrl);
                         break;
                     case 401:
                         TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this,drmKeyModel.getMessage());
+                        CommonUtility.showToast(PlayerActivity.this, drmKeyModel.getMessage());
                         startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
                         finish();
                         break;
-                    case 404:  TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SESSION_EXPIRED);
+                    case 404:
+                        TokenStorage.clearSharedToken(PlayerActivity.this);
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SESSION_EXPIRED);
                         startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
                         finish();
                         break;
-                    default: CommonUtility.showToast(PlayerActivity.this,ConstantUtility.SERVER_ISSUE);
+                    default:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
                 }
             }
@@ -333,17 +359,16 @@ public class PlayerActivity extends FragmentActivity {
 
     }
 
-    private void initializePlayer2(String drmKey, String wvUrl, String channelN, String channelId,String videoUrl) {
-        Log.e(TAG, "initializePlayer2: "+drmKey );
-        Log.e(TAG, "initializePlayer2: "+wvUrl );
-        Log.e(TAG, "initializePlayer2: "+channelN );
-        Log.e(TAG, "initializePlayer2: "+channelId );
-        String streamUrl=videoUrl;
+    private void initializePlayer2(String drmKey, String wvUrl, String channelN, String channelId, String videoUrl) {
+        Log.e(TAG, "initializePlayer2: " + drmKey);
+        Log.e(TAG, "initializePlayer2: " + wvUrl);
+        Log.e(TAG, "initializePlayer2: " + channelN);
+        Log.e(TAG, "initializePlayer2: " + channelId);
+        String streamUrl = videoUrl;
 
-        String channelIdIntent=channelId;
-        if(channelIdIntent!=null)
-        {
-            channel_id=channelIdIntent;
+        String channelIdIntent = channelId;
+        if (channelIdIntent != null) {
+            channel_id = channelIdIntent;
         }
 
         // URL of the KeyOS MultiKey License API for Widevine
@@ -358,18 +383,18 @@ public class PlayerActivity extends FragmentActivity {
 //        Uri dashUri = Uri.parse("https://cdn.streamlytv.com/espn/index.m3u8");
 //        Uri dashUri = Uri.parse("https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd");
 
-        Log.e(TAG, "1) license_server: "+ wvUrl+"\n"
-                +"2) DRM_key: "+drmKey+ "\n"
-                +"3) Stream_URL: "+streamUrl+ "\n"
-                + "4) dash_uri: "+dashUri
-                + "5) channel_id: "+channelIdIntent
+        Log.e(TAG, "1) license_server: " + wvUrl + "\n"
+                + "2) DRM_key: " + drmKey + "\n"
+                + "3) Stream_URL: " + streamUrl + "\n"
+                + "4) dash_uri: " + dashUri
+                + "5) channel_id: " + channelIdIntent
         );
 
         // Identifies the Widevine DRM
         UUID widevineUuid = UUID.fromString("edef8ba9-79d6-4ace-a3c8-27dcd51d21ed");
 
         // Security token required to acquire a license. Base64 encoded Authentication XML
-        String[] keyRequestProperties = new String[] { "x-keyos-authorization", drmKey };
+        String[] keyRequestProperties = new String[]{"x-keyos-authorization", drmKey};
 //        String[] keyRequestProperties = new String[] { "customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTEwLTE5IDE0OjUxOjU1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMTAtMTkgMTU6MDY6NTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZjEzNGMxNjBlYjU1ZTE5ZTJjMjUxODM1YjZlYjdjZDY8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+dS9YQVgxNnNxU2FvUU43UW9FKzY3TlNuTzY0UXFhbUVBOUFsYnNVSlozOWdUT1l3NEpDTW9md3NaYkFQWWVJaS9DKy9SMkJweHJwVEpuWS9ZRGx2dERoSFluYlNwYy9wMXNKcUxOdmREaE4yejEwS2wyT0hKekE1OTdxU0Urcnd2d3BHd09FSm1iVEFidm8zK3FTQVdsTnQ0dWJoMTg0M1VQU3FYMDVZNFEzdlJLWXdzSzR5SUxRdFJuTStENDJsWXcvcTlpc0pUR0pGVWRqY1hJVnh3QWdPRGpDNEdWQVIycXM1VXhHY1cyT0c0THd6ZWpkeUkwMENrK1FYZHpNcTVab3pUZ243a2ZJaGpPS0JETUx0L2VrNnhNYTZ2VjRTQlZEdWxkYnZCR1BjZW9CVzNYWDc1WFY4VjZxdUxJM29GM3FTM3FZQzUvNkJiRmNuQ0k2YjFRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="};
 
         // Create the DRM session manager and set required request parameters.
@@ -377,8 +402,6 @@ public class PlayerActivity extends FragmentActivity {
         DrmSessionManager<ExoMediaCrypto> drmSessionManager = new DefaultDrmSessionManager.Builder()
                 .setUuidAndExoMediaDrmProvider(widevineUuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
                 .build(mediaDrmCallback);
-
-
 
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
@@ -403,8 +426,6 @@ public class PlayerActivity extends FragmentActivity {
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
 
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
         //todo for the DRM protected streaming
         // Create a data source factory.
@@ -470,27 +491,26 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
 
-                if (isPlaying){
+                if (isPlaying) {
 
 
 //                    logoImage.setVisibility(View.VISIBLE);
 //                    menuImage.setVisibility(View.GONE);
 
 //
-//                    mFirebaseAnalytics.logEvent("video_play", params);
+                    mFirebaseAnalytics.logEvent("video_play", params);
 //
-//                    runnable = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //do something
-//                            params.putString("livestream_seconds_watched", "15");
-//                            mFirebaseAnalytics.logEvent("video_livestream_duration",params);
-//                            handler.postDelayed(this, delay);
-//                        }
-//                    };
-//                    handler.postDelayed(runnable, delay);
-                }
-                else{
+                    runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            //do something
+                            params.putString("livestream_seconds_watched", "15");
+                            mFirebaseAnalytics.logEvent("video_livestream_duration", params);
+                            handler.postDelayed(this, delay);
+                        }
+                    };
+                    handler.postDelayed(runnable, delay);
+                } else {
 //                    logoImage.setVisibility(View.GONE);
 //                    menuImage.setVisibility(View.VISIBLE);
 
@@ -510,10 +530,10 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Log.e(TAG,"error_msg"+error.toString());
-//                params.putString("error_color", "red");
-//                params.putString("error_msg", error.getSourceException().toString());
-//                mFirebaseAnalytics.logEvent("player_error", params);
+                Log.e(TAG, "error_msg" + error.toString());
+                params.putString("error_color", "red");
+                params.putString("error_msg", error.getSourceException().toString());
+                mFirebaseAnalytics.logEvent("player_error", params);
 //                Log.e(TAG,"error_msg2 "+error.getSourceException());
 
             }
@@ -538,14 +558,16 @@ public class PlayerActivity extends FragmentActivity {
         postRecentViewChannel(channel_id);
 
     }
+
     private void initializePlayer(String drmKey, String wvUrl) {
 //        dialog.show();
-        String streamUrl=getIntent().getStringExtra("from");
+        Log.i(TAG, "initializePlayer: "+drmKey);
+        Log.i(TAG, "initializePlayer: "+wvUrl);
+        String streamUrl = getIntent().getStringExtra("from");
 
-        String channelIdIntent=getIntent().getStringExtra("channel_id");
-        if(channelIdIntent!=null)
-        {
-            channel_id=channelIdIntent;
+        String channelIdIntent = getIntent().getStringExtra("channel_id");
+        if (channelIdIntent != null) {
+            channel_id = channelIdIntent;
         }
 
         // URL of the KeyOS MultiKey License API for Widevine
@@ -560,18 +582,18 @@ public class PlayerActivity extends FragmentActivity {
 //        Uri dashUri = Uri.parse("https://cdn.streamlytv.com/espn/index.m3u8");
 //        Uri dashUri = Uri.parse("https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd");
 
-        Log.e(TAG, "1) license_server: "+ wvUrl+"\n"
-                +"2) DRM_key: "+drmKey+ "\n"
-                +"3) Stream_URL: "+streamUrl+ "\n"
-                + "4) dash_uri: "+dashUri
-                + "5) channel_id: "+channelIdIntent
+        Log.e(TAG, "1) license_server: " + wvUrl + "\n"
+                + "2) DRM_key: " + drmKey + "\n"
+                + "3) Stream_URL: " + streamUrl + "\n"
+                + "4) dash_uri: " + dashUri
+                + "5) channel_id: " + channelIdIntent
         );
 
         // Identifies the Widevine DRM
         UUID widevineUuid = UUID.fromString("edef8ba9-79d6-4ace-a3c8-27dcd51d21ed");
 
         // Security token required to acquire a license. Base64 encoded Authentication XML
-        String[] keyRequestProperties = new String[] { "x-keyos-authorization", drmKey };
+        String[] keyRequestProperties = new String[]{"x-keyos-authorization", drmKey};
 //        String[] keyRequestProperties = new String[] { "customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTEwLTE5IDE0OjUxOjU1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMTAtMTkgMTU6MDY6NTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZjEzNGMxNjBlYjU1ZTE5ZTJjMjUxODM1YjZlYjdjZDY8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+dS9YQVgxNnNxU2FvUU43UW9FKzY3TlNuTzY0UXFhbUVBOUFsYnNVSlozOWdUT1l3NEpDTW9md3NaYkFQWWVJaS9DKy9SMkJweHJwVEpuWS9ZRGx2dERoSFluYlNwYy9wMXNKcUxOdmREaE4yejEwS2wyT0hKekE1OTdxU0Urcnd2d3BHd09FSm1iVEFidm8zK3FTQVdsTnQ0dWJoMTg0M1VQU3FYMDVZNFEzdlJLWXdzSzR5SUxRdFJuTStENDJsWXcvcTlpc0pUR0pGVWRqY1hJVnh3QWdPRGpDNEdWQVIycXM1VXhHY1cyT0c0THd6ZWpkeUkwMENrK1FYZHpNcTVab3pUZ243a2ZJaGpPS0JETUx0L2VrNnhNYTZ2VjRTQlZEdWxkYnZCR1BjZW9CVzNYWDc1WFY4VjZxdUxJM29GM3FTM3FZQzUvNkJiRmNuQ0k2YjFRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="};
 
         // Create the DRM session manager and set required request parameters.
@@ -579,8 +601,6 @@ public class PlayerActivity extends FragmentActivity {
         DrmSessionManager<ExoMediaCrypto> drmSessionManager = new DefaultDrmSessionManager.Builder()
                 .setUuidAndExoMediaDrmProvider(widevineUuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
                 .build(mediaDrmCallback);
-
-
 
 
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
@@ -602,9 +622,7 @@ public class PlayerActivity extends FragmentActivity {
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
 
-       player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
-
-
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -649,15 +667,15 @@ public class PlayerActivity extends FragmentActivity {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
                     case ExoPlayer.STATE_IDLE:
-                        Log.e(TAG, "onPlayerStateChanged: idle " );
+                        Log.e(TAG, "onPlayerStateChanged: idle ");
                         break;
 
                     case ExoPlayer.STATE_READY:
-                        Log.e(TAG, "onPlayerStateChanged: ready " );
+                        Log.e(TAG, "onPlayerStateChanged: ready ");
                         break;
 
                     case ExoPlayer.STATE_BUFFERING:
-                        Log.e(TAG, "onPlayerStateChanged: buffering " );
+                        Log.e(TAG, "onPlayerStateChanged: buffering ");
                         break;
 
                     case ExoPlayer.STATE_ENDED:
@@ -675,7 +693,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
 
-                if (isPlaying){
+                if (isPlaying) {
 
 
 //                    logoImage.setVisibility(View.VISIBLE);
@@ -689,13 +707,12 @@ public class PlayerActivity extends FragmentActivity {
                         public void run() {
                             //do something
                             params.putString("livestream_seconds_watched", "15");
-                            mFirebaseAnalytics.logEvent("video_livestream_duration",params);
+                            mFirebaseAnalytics.logEvent("video_livestream_duration", params);
                             handler.postDelayed(this, delay);
                         }
                     };
                     handler.postDelayed(runnable, delay);
-                }
-                else{
+                } else {
 //                    logoImage.setVisibility(View.GONE);
 //                    menuImage.setVisibility(View.VISIBLE);
 
@@ -715,7 +732,7 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Log.e(TAG,"error_msg"+error.toString());
+                Log.e(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
                 mFirebaseAnalytics.logEvent("player_error", params);
@@ -749,7 +766,7 @@ public class PlayerActivity extends FragmentActivity {
         super.onBackPressed();
         handler.removeCallbacks(runnable);
         player.stop();
-        Log.e(TAG,"back_press_called");
+        Log.e(TAG, "back_press_called");
         finish();
     }
 
@@ -757,7 +774,7 @@ public class PlayerActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         handler.removeCallbacks(runnable);
-        Log.e(TAG,"on_stop_called");
+        Log.e(TAG, "on_stop_called");
         player.stop();
     }
 
@@ -772,27 +789,30 @@ public class PlayerActivity extends FragmentActivity {
 
                     if (response.isSuccessful() && response.body() != null) {
 
-                       channelList = response.body().getData();
-                       Log.e("channelList-------" , channelList.get(0).getUrl());
-                       Log.e("channelList-------" , channelList.get(0).getId().toString());
-                       Log.e("channelList-------" , wvUrl);
-                       String url=getIntent().getStringExtra("from");
-                       for(int i=0; i<channelList.size(); i++){
-                           if(url.equals(channelList.get(i).getUrl()))
-                           {
-                               channel_id=channelList.get(i).getId().toString();
-                               Log.e(TAG, "onResponse: channel list id "+channelList.get(i).getId().toString() );
-                           }
-                       }
+                        channelList = response.body().getData();
+                        Log.e("channelList-------", channelList.get(0).getUrl());
+                        Log.e("channelList-------", channelList.get(0).getId().toString());
+                        Log.e("channelList-------", wvUrl);
+                        String url = getIntent().getStringExtra("from");
+                        for (int i = 0; i < channelList.size(); i++) {
+                            if (url.equals(channelList.get(i).getUrl())) {
+                                channel_id = channelList.get(i).getId().toString();
+                                Log.e(TAG, "onResponse: channel list id " + channelList.get(i).getId().toString());
+                            }
+                        }
 
 
-                       allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this , LinearLayoutManager.VERTICAL , false));
-                       allChannelAdapter = new AllChannelAdapter(PlayerActivity.this , channelList);
-                       allChannelRecyclerView.setAdapter(allChannelAdapter);
+                        allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this, LinearLayoutManager.VERTICAL, false));
+                        allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList);
+                        allChannelRecyclerView.setAdapter(allChannelAdapter);
 
-                       menuImage.setVisibility(View.VISIBLE);
+                        menuImage.setVisibility(View.VISIBLE);
+                        if (rvItemClick.equals("1")) {
+                            rvItemClick = "0";
 
-                        initializePlayer(drmKey , wvUrl);
+                        } else {
+                            initializePlayer(drmKey, wvUrl);
+                        }
 
 
                     } else if (response.code() == 401) {
@@ -823,7 +843,7 @@ public class PlayerActivity extends FragmentActivity {
 
     private void postRecentViewChannel(String channelId) {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<ChannellistModel> call = apiInterface.postRecentList("Bearer " + authToken,channelId);
+        Call<ChannellistModel> call = apiInterface.postRecentList("Bearer " + authToken, channelId);
         call.enqueue(new Callback<ChannellistModel>() {
             @Override
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
@@ -832,10 +852,7 @@ public class PlayerActivity extends FragmentActivity {
                     if (response.isSuccessful() && response.body() != null) {
 
 //                        recentList = response.body().getData();
-                        Log.e(TAG, "onResponse: recent list "+response.body().getData() );
-
-
-
+                        Log.e(TAG, "onResponse: recent list " + response.body().getData());
 
 
                     } else if (response.code() == 401) {

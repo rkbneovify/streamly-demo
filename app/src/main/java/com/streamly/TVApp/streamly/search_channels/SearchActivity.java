@@ -127,6 +127,10 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            Log.e(TAG, "onActivityResult: "+requestCode );
+            Log.e(TAG, "onActivityResult: "+resultCode );
+            Log.e(TAG, "onActivityResult: "+data.getDataString() );
+            Log.e(TAG, "onActivityResult: "+data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) );
             // Populate the wordsList with the String values the recognition engine thought it heard
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (!matches.isEmpty()) {

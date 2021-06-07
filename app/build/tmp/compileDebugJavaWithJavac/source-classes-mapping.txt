@@ -28,10 +28,13 @@ com/streamly/TVApp/streamly/QRCode/QRCodeActivity.java
 com/streamly/TVApp/streamly/playervideo/drm/DrmKeyRepo.java
  com.streamly.TVApp.streamly.playervideo.drm.DrmKeyRepo
  com.streamly.TVApp.streamly.playervideo.drm.DrmKeyRepo$1
+com/streamly/TVApp/streamly/search_channels/SearchAdapter.java
+ com.streamly.TVApp.streamly.search_channels.SearchAdapter
+ com.streamly.TVApp.streamly.search_channels.SearchAdapter$1
+ com.streamly.TVApp.streamly.search_channels.SearchAdapter$2
+ com.streamly.TVApp.streamly.search_channels.SearchAdapter$MyViewHolder
 com/streamly/TVApp/streamly/retrofit_clients/ApiClient.java
  com.streamly.TVApp.streamly.retrofit_clients.ApiClient
-com/streamly/TVApp/streamly/playervideo/ip/IpModel.java
- com.streamly.TVApp.streamly.playervideo.ip.IpModel
 com/streamly/TVApp/streamly/epg/channelgenre/Comedy.java
  com.streamly.TVApp.streamly.epg.channelgenre.Comedy
 com/streamly/TVApp/streamly/MainActivity.java
@@ -46,12 +49,23 @@ com/streamly/TVApp/streamly/settings/support/Data.java
  com.streamly.TVApp.streamly.settings.support.Data
 com/streamly/TVApp/streamly/settings/profile/profilemodel/Data.java
  com.streamly.TVApp.streamly.settings.profile.profilemodel.Data
-com/streamly/TVApp/streamly/playervideo/zipcode/OutstationLocationModel.java
- com.streamly.TVApp.streamly.playervideo.zipcode.OutstationLocationModel
+com/streamly/TVApp/streamly/playervideo/PlayerActivity.java
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$1
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$2
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$3
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$4
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$5
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$5$1
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$6
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$6$1
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$7
+ com.streamly.TVApp.streamly.playervideo.PlayerActivity$8
 com/streamly/TVApp/streamly/utilities/CommonUtility.java
  com.streamly.TVApp.streamly.utilities.CommonUtility
-com/streamly/TVApp/streamly/playervideo/ip/IpViewModel.java
- com.streamly.TVApp.streamly.playervideo.ip.IpViewModel
+com/streamly/TVApp/streamly/playervideo/allchannel/AllChannelAdapter.java
+ com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter
+ com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter$MyViewHolder
 com/streamly/TVApp/streamly/utilities/ErrorUtils.java
  com.streamly.TVApp.streamly.utilities.ErrorUtils
 com/streamly/TVApp/streamly/settings/signout/SignOutDialog.java
@@ -118,10 +132,10 @@ com/streamly/TVApp/streamly/playervideo/zipcode/ZipCodeDialog.java
  com.streamly.TVApp.streamly.playervideo.zipcode.ZipCodeDialog$2
 com/streamly/TVApp/streamly/termsofuses/TermsModel.java
  com.streamly.TVApp.streamly.termsofuses.TermsModel
-com/streamly/TVApp/streamly/epg/channelgenre/Family.java
- com.streamly.TVApp.streamly.epg.channelgenre.Family
 com/streamly/TVApp/streamly/log_in/Role.java
  com.streamly.TVApp.streamly.log_in.Role
+com/streamly/TVApp/streamly/epg/channelgenre/Family.java
+ com.streamly.TVApp.streamly.epg.channelgenre.Family
 com/streamly/TVApp/streamly/playervideo/drm/DrmViewModel.java
  com.streamly.TVApp.streamly.playervideo.drm.DrmViewModel
  com.streamly.TVApp.streamly.playervideo.drm.DrmViewModel$1
@@ -146,10 +160,10 @@ com/streamly/TVApp/streamly/settings/support/SupportModel.java
  com.streamly.TVApp.streamly.settings.support.SupportModel
 com/streamly/TVApp/streamly/settings/support/SupportTextType.java
  com.streamly.TVApp.streamly.settings.support.SupportTextType
-com/streamly/TVApp/streamly/epg/SimpleProgram.java
- com.streamly.TVApp.streamly.epg.SimpleProgram
 com/streamly/TVApp/streamly/log_in/User.java
  com.streamly.TVApp.streamly.log_in.User
+com/streamly/TVApp/streamly/epg/SimpleProgram.java
+ com.streamly.TVApp.streamly.epg.SimpleProgram
 com/streamly/TVApp/streamly/epg/channelgenre/Data.java
  com.streamly.TVApp.streamly.epg.channelgenre.Data
 com/streamly/TVApp/streamly/channelschedule/Datum.java
@@ -162,12 +176,12 @@ com/streamly/TVApp/streamly/epg/SimpleChannel.java
  com.streamly.TVApp.streamly.epg.SimpleChannel
 com/streamly/TVApp/streamly/retrofit_clients/ApiResponse.java
  com.streamly.TVApp.streamly.retrofit_clients.ApiResponse
+com/streamly/TVApp/streamly/QRCode/QrModel.java
+ com.streamly.TVApp.streamly.QRCode.QrModel
 com/streamly/TVApp/streamly/epg/GenereAdapter.java
  com.streamly.TVApp.streamly.epg.GenereAdapter
  com.streamly.TVApp.streamly.epg.GenereAdapter$1
  com.streamly.TVApp.streamly.epg.GenereAdapter$MyViewHolder
-com/streamly/TVApp/streamly/QRCode/QrModel.java
- com.streamly.TVApp.streamly.QRCode.QrModel
 com/streamly/TVApp/streamly/playervideo/ip/IpRepo.java
  com.streamly.TVApp.streamly.playervideo.ip.IpRepo
  com.streamly.TVApp.streamly.playervideo.ip.IpRepo$1
@@ -183,24 +197,11 @@ com/streamly/TVApp/streamly/settings/privacy/PrivacyDialog.java
  com.streamly.TVApp.streamly.settings.privacy.PrivacyDialog
  com.streamly.TVApp.streamly.settings.privacy.PrivacyDialog$1
  com.streamly.TVApp.streamly.settings.privacy.PrivacyDialog$2
+com/streamly/TVApp/streamly/playervideo/ip/IpModel.java
+ com.streamly.TVApp.streamly.playervideo.ip.IpModel
 com/streamly/TVApp/streamly/epg/channelgenre/Movie.java
  com.streamly.TVApp.streamly.epg.channelgenre.Movie
-com/streamly/TVApp/streamly/playervideo/allchannel/AllChannelAdapter.java
- com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter
- com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter$MyViewHolder
-com/streamly/TVApp/streamly/playervideo/PlayerActivity.java
- com.streamly.TVApp.streamly.playervideo.PlayerActivity
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$1
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$2
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$3
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$4
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$5
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$6
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$6$1
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$7
- com.streamly.TVApp.streamly.playervideo.PlayerActivity$8
-com/streamly/TVApp/streamly/search_channels/SearchAdapter.java
- com.streamly.TVApp.streamly.search_channels.SearchAdapter
- com.streamly.TVApp.streamly.search_channels.SearchAdapter$1
- com.streamly.TVApp.streamly.search_channels.SearchAdapter$2
- com.streamly.TVApp.streamly.search_channels.SearchAdapter$MyViewHolder
+com/streamly/TVApp/streamly/playervideo/zipcode/OutstationLocationModel.java
+ com.streamly.TVApp.streamly.playervideo.zipcode.OutstationLocationModel
+com/streamly/TVApp/streamly/playervideo/ip/IpViewModel.java
+ com.streamly.TVApp.streamly.playervideo.ip.IpViewModel

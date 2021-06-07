@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\oddles streamly project video\\StreamlyGit\\streamly\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v23\\values-v23.xml",
+            "outputFile": "/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\36b10c90efc95bde2638b7d844967045\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
+                    "source": "/home/vikash/.gradle/caches/transforms-2/files-2.1/36b10c90efc95bde2638b7d844967045/cardview-1.0.0/res/values-v23/values-v23.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\vikey\\.gradle\\caches\\transforms-2\\files-2.1\\85c369933fb904d8076fc1c8452f77be\\appcompat-1.2.0\\res\\values-v23\\values-v23.xml",
+                    "source": "/home/vikash/.gradle/caches/transforms-2/files-2.1/85c369933fb904d8076fc1c8452f77be/appcompat-1.2.0/res/values-v23/values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,39,43,44,45,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
