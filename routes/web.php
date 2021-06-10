@@ -20,10 +20,15 @@ Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
 // Route::get('/', 'HomeController@indexCache')->name('home');
 Route::get('/checkzip', 'HomeController@checkzipView');
-
+Route::get('/tags', function() {
+    return view('frontend.mydata2');
+});
+Route::get('/tags/find', 'HomeController@find');
 
 Route::get('search', 'HomeController@search')->name('search');
+Route::get('mydata', 'HomeController@mydata')->name('mydata');
 Route::get('search2', 'HomeController@search2')->name('search2');
+Route::get('dataforselect2', 'HomeController@getdataforselect22')->name('dataforselect2');
 Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
 
 

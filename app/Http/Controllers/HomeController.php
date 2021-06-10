@@ -739,11 +739,73 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
 
     }
 
-    public function search()
-    {
-        
+    public function search(Request $request)
+    {   $posts = Channel::paginate(8);
+        $data = '';
+        if ($request->ajax()) {
+            foreach ($posts as $post) {
+                $data.='<li>'.$post->id.' <strong>'.$post->name.'</strong> : '.$post->stationName??'unknown'.'</li>';
+            }
+            return $data;
+        }
 
         return view('frontend.search');
+    }
+    public function mydata(Request $request)
+    {   $posts = Channel::orderBy('name', 'asc')->paginate(8);
+        // dd($posts);
+        // $data = '';
+        if ($request->ajax()) {
+            $view = view('data',compact('posts'))->render();
+
+            return response()->json(['html'=>$view]);
+        }
+
+        return view('frontend.mydata',compact('posts'));
+    }
+
+    public function getdataforselect22(Request $request){
+        
+        if ($request->ajax()) {
+
+            $term = trim($request->term);
+            $posts = DB::table('channels')->select('id','name as text')
+                ->where('name', 'LIKE',  '%' . $term. '%')
+                ->orderBy('name', 'asc')->simplePaginate(10);
+           
+            $morePages=true;
+           $pagination_obj= json_encode($posts);
+        //    return $pagination_obj;
+           if (empty($posts->nextPageUrl())){
+            $morePages=false;
+           }
+            $results = array(
+              "results" => $posts->items(),
+              "pagination" => array(
+                "more" => $morePages
+              )
+            );
+        
+            return \Response::json($results);
+        }
+    }
+    public function find(Request $request)
+    {
+        $term = trim($request->q);
+
+        if (empty($term)) {
+            return \Response::json([]);
+        }
+
+        $tags = Channel::where('name', 'LIKE', '%'.$term.'%')->limit(5)->get();
+
+        $formatted_tags = [];
+
+        foreach ($tags as $tag) {
+            $formatted_tags[] = ['id' => $tag->id, 'text' => $tag->name];
+        }
+
+        return \Response::json($formatted_tags);
     }
 
     public function search2(Request $request)
