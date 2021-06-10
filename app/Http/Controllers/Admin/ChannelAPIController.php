@@ -364,17 +364,37 @@ $reco=$record->get(); //echo $reco;exit;
   }  
       // return response()->json($record->toSql());
       // return json_encode($api);
-
+//       $record= DB::table('gracenote');
+// $reco=$record->get();
+// dd($reco);
       $response = [
-          'success' => true,
-          'date'=>date("Y-m-d"),
-        //   'count' => $reco->count(),
-          'data' => $reco,
-         
-          'message' => 'Schedule data for 3 days found',
-          'response_code'=>200,
-      ];
-      // return response()->json($reco);
+        'success' => true,
+        'date'=>date("Y-m-d"),
+      //   'count' => $reco->count(),
+        'data' => $reco,
+       
+        'message' => 'Schedule data for 3 days found',
+        'response_code'=>200,
+    ];
+    $responsejson=json_encode($response);
+$data=gzencode($responsejson,9);
+// $response = [
+//     'success' => true,
+//     'date'=>date("Y-m-d"),
+//   //   'count' => $reco->count(),
+//     'data' => $data,
+   
+//     'message' => 'Schedule data for 3 days found',
+//     'response_code'=>200,
+// ];
+return response($data)->withHeaders([
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Allow-Methods'=> 'GET',            
+    'Content-type' => 'application/json; charset=utf-8',
+    'Content-Length'=> strlen($data),
+    'Content-Encoding' => 'gzip'
+]);
+      
      
   return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
   //  return  response()->json([

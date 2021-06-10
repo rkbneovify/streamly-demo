@@ -22,7 +22,10 @@ use Laravel\Cashier\Exceptions\IncompletePayment;
  */
 
 class SubscriptionController extends Controller
-{    public function __construct()
+{    
+    // https://hotexamples.com/examples/stripe/Plan/-/php-plan-class-examples.html
+    // https://hotexamples.com/examples/stripe/Customer/all/php-customer-all-method-examples.html
+    public function __construct()
     {
         
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
@@ -42,27 +45,84 @@ class SubscriptionController extends Controller
         
     }   
     public function showAllcustomer()
-    {    
+    {    $arrayStripeEmail= array();
+      $arrayStripeEmailCustArray= array();
         // $users = User::all()->pluck('name', 'id');
         // $subscriptions = Subscription::paginate(20);
         //  $customers = \Stripe\Customer::all(['expand' => ['data.subscriptions']]);
         // $plans = \Stripe\Plan::all(['active'=>true]);
-        $subscriptions = \Stripe\Subscription::all(['status'=>'active','expand' => ['data.plan','data.customer']]);
+        $subscriptions = \Stripe\Subscription::all(['status'=>'active','expand' => ['data.plan','data.customer','data.items']]);
         foreach ($subscriptions->data as $key => $subscription) {
-            echo ($key+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."<br>";
+            array_push($arrayStripeEmail, $subscription->customer->email);
+            $arrayStripeEmailCust = new \stdClass; 
+            //customerdetails
+            $arrayStripeEmailCust->email = $subscription->customer->email;
+            $arrayStripeEmailCust->customerid = $subscription->customer->id;
+            $arrayStripeEmailCust->customercreated = date("m-d-y", $subscription->customer->created);
+            //activesubscriptiondetails
+            $arrayStripeEmailCust->subscriptionid = $subscription->id;
+            $arrayStripeEmailCust->subscriptionstatus = $subscription->status;
+            $arrayStripeEmailCust->subscriptionquantity = $subscription->quantity;
+            $arrayStripeEmailCust->subscriptionplanid = $subscription->plan->id;
+            //subscription item
+            $arrayStripeEmailCust->subscriptionitem = $subscription->items->data[0]->id;
+            $arrayStripeEmailCust->subscriptioncreated = date("m-d-y", $subscription->created);
+            array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
+            
+            echo ($key+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."items".$subscription->items->data[0]->id."<br>";
+            dump($subscription->items->data[0]->id);
         }
         // echo "subscriptions".count($subscriptions->data);
         while ($subscriptions->has_more) {
             $startsubscriptioncount=count($subscriptions->data);
             // Add the `starting_after` parameter to reflect the last customer ID
-            $subscriptions = \Stripe\Subscription::all(array("limit" => 100, "starting_after" => $subscription->id,'expand' => ['data.plan','data.customer']));
+            $subscriptions = \Stripe\Subscription::all(array("limit" => 100, "starting_after" => $subscription->id,'expand' => ['data.plan','data.customer','data.items']));
             foreach ($subscriptions->data  as $key => $subscription) {
-                echo ($key+$startsubscriptioncount+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."<br>";
+                //push emails in seperate array
+                array_push($arrayStripeEmail, $subscription->customer->email);
+                $arrayStripeEmailCust = new \stdClass; 
+                //customerdetails
+                $arrayStripeEmailCust->email = $subscription->customer->email;
+                $arrayStripeEmailCust->customerid = $subscription->customer->id;
+                $arrayStripeEmailCust->customercreated = date("m-d-y", $subscription->customer->created);
+                //activesubscriptiondetails
+                $arrayStripeEmailCust->subscriptionid = $subscription->id;
+                $arrayStripeEmailCust->subscriptionstatus = $subscription->status;
+                $arrayStripeEmailCust->subscriptionquantity = $subscription->quantity;
+                $arrayStripeEmailCust->subscriptionplanid = $subscription->plan->id;
+                //subscription item
+                $arrayStripeEmailCust->subscriptionitem = $subscription->items->data[0]->id;
+                $arrayStripeEmailCust->subscriptioncreated = date("m-d-y", $subscription->created);
+                array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
+                echo ($key+$startsubscriptioncount+1).").".$subscription->id . " created " . date("m-d-y", $subscription->created) ." stripe_status " .  $subscription->status . " quantity " .  $subscription->quantity ." plan " .  $subscription->plan->id." Email " .  $subscription->customer->email."items".$subscription->items->data[0]->id."<br>";
+                dump($subscription->items->data[0]->id);
             }}
             echo "-----------end----------";
-        $item = new \Stripe\SubscriptionItem();
+        // $item = new \Stripe\SubscriptionItem();
         dump($subscriptions->data);
-dump($item);
+// dump($item);
+$DBuserEmails = User::select('email')->where([
+    ['is_active', '=', '1'],
+    ['email_verified_at', '<>',NULL ],
+    ['stripe_id', '<>',NULL ],
+     ])->pluck('email')->toArray();
+
+     $differenceArray = array_diff($arrayStripeEmail, $DBuserEmails);
+     dump($differenceArray);
+foreach ($arrayStripeEmailCustArray as $key => $object) {
+    
+    // echo $object->email."<br>";
+    if (in_array($object->email, $differenceArray)) {
+        // unset($arrayStripeEmailCustArray[$key];
+        echo "key".$key;
+        echo "<br>Match found".$object->email."<br>";
+    } else{
+        unset($arrayStripeEmailCustArray[$key]);
+    }
+}
+echo "after diff";
+dump($arrayStripeEmailCustArray);
+dd($arrayStripeEmailCustArray);
          $customers = \Stripe\Customer::all(['limit' => 100]);
         //  foreach ($customers->autoPagingIterator() as $customer) {
         //     dump($customer->subscriptions->data);
@@ -91,7 +151,9 @@ dump($item);
 
     public function syncStripeUser()
     {    $arrayStripeEmail = array();
-         $customers = \Stripe\Customer::all(['limit' => 100]);
+      
+      $arrayStripeEmailCustArray = array();
+         $customers = \Stripe\Customer::all(['limit' => 100,'expand' => ['data.subscriptions']]);
         //  foreach ($customers->autoPagingIterator() as $customer) {
         //     dump($customer->subscriptions->data);
         //   }
@@ -101,17 +163,31 @@ dump($item);
          echo "<br>";
          dump($customers->data);
          foreach ($customers->data as $key2 => $customer) {
-            echo ($key2+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+            echo ($key2+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email;
+            // echo "sub".$customer->subscriptions->data. "<br>";
+            dump($customer->subscriptions->data);
             array_push($arrayStripeEmail, $customer->email);
+            $arrayStripeEmailCust = new \stdClass; 
+            $arrayStripeEmailCust->email = $customer->email;
+            $arrayStripeEmailCust->customerid = $customer->id;
+            $arrayStripeEmailCust->created = date("m-d-y", $customer->created);
+            array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
         }
         // While we have more results, iterate through them
         while ($customers->has_more) {
             $startcuscount=count($customers->data);
             // Add the `starting_after` parameter to reflect the last customer ID
-            $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id));
+            $customers = \Stripe\Customer::all(array("limit" => 100, "starting_after" => $customer->id,'expand' => ['data.subscriptions']));
             foreach ($customers->data as $key2 => $customer) {
-                ($key2+$startcuscount+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email. "<br>";
+                ($key2+$startcuscount+1).").".$customer->id . " created " . date("m-d-y", $customer->created) . " email " .  $customer->email;
+                // echo "sub".$customer->subscriptions->data['id']. "<br>";
+                dump($customer->subscriptions->data);
                 array_push($arrayStripeEmail, $customer->email);
+                $arrayStripeEmailCust = new \stdClass; 
+                $arrayStripeEmailCust->email = $customer->email;
+            $arrayStripeEmailCust->customerid = $customer->id;
+            $arrayStripeEmailCust->created = date("m-d-y", $customer->created);
+            array_push($arrayStripeEmailCustArray, $arrayStripeEmailCust);
             }}
             // whereIn('email', $emailAddresses)
             $DBuserEmails = User::select('email')->where([
@@ -124,12 +200,59 @@ dump($item);
                  echo "<br>Stripe_emails<br>";
                  
             dump($arrayStripeEmail);
-            
+            $differenceArray = array_diff($arrayStripeEmail, $DBuserEmails);
+            dump($differenceArray);
+            // echo "<br> Email and customer:<br>";
+            // dump($arrayStripeEmailCust);
+            dump($arrayStripeEmailCustArray);
+        
+foreach ($arrayStripeEmailCustArray as $key => $object) {
+    
+    // echo $object->email."<br>";
+    if (in_array($object->email, $differenceArray)) {
+        // unset($arrayStripeEmailCustArray[$key];
+        echo "key".$key;
+        echo "<br>Match found".$object->email."<br>";
+    } else{
+        unset($arrayStripeEmailCustArray[$key]);
+    }
+}
+echo "after diff";
+dump($arrayStripeEmailCustArray);
+            // coustmer add
+            // insert the emails as users(created at with a custmer id & updated at at now) and make them roles of user ''from next time when making coustemer set there userlrole in metadata'
+            //we'll get the user id
+            //now insert it in subscription, or with customer id check if they have subscription
+            //check for subscription items
+            if (!empty($differenceArray)){
+             $this->insertInDB($differenceArray);
+            }
+  
             
         //  $plans->data;//Customers::with('country')->paginate(20);
         // return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
         
     }
+
+              
+ private function insertInDB($arrEmails){
+    echo "helloLets inertinDB";
+return print_r($arrEmails);
+/**
+try {
+DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
+    foreach ($role_ids as $key => $role_id) {
+        $workflow->menus()->attach($menu_ids[$key], ['role_id' => $role_id]);
+        $menu = Menu::find($menu_ids[$key]);
+        foreach ($menu->permissions as $permission) {
+            $workflow->permissions()->attach($permission->id, ['role_id' => $role_id]);
+        }
+    }
+    flash()->success('Pemetaan proses aliran kerja berhasil disimpan.');
+});} catch (\Exception $ex) {
+    $response->setMessages(['Exception: ' . $ex->getMessage()]);
+} */
+}
    
     /**
      * Display the specified resource.
