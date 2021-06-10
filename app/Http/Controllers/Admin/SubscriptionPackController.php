@@ -30,8 +30,9 @@ class SubscriptionPackController extends Controller
     public function index()
     {  
         // $subscriptionpack = SubscriptionPack::all();
-        $plan = \Stripe\Plan::all();
+        $plan = \Stripe\Plan::all(['expand' => ['data.tiers']]);
         $product = \Stripe\Product::all();
+        // dd($plan->data);
        // return view('pages.subscription_pack.index', ['records' => SubscriptionPack::paginate(10)]);
        return view('admin.subscriptionpack.index', compact('plan','product'));
     }    /**
