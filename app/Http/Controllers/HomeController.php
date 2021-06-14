@@ -54,7 +54,8 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    { $plans = \Stripe\Plan::all(['active'=>true]);
+    { 
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
         $imagePath=asset("/uploads/channellogo/notfound.png");
    
 $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
@@ -77,7 +78,8 @@ $pagechannel=$second->get()
 
 $Genrekey=$pagechannel->keys();
     //    dd($pagechannel);
-        //$plans=$plans->data;
+        // $plansgg=$plans->data;
+        // dd($plansgg);
         if( Auth::check()){
             $login = true;
             $user=Auth::user();
