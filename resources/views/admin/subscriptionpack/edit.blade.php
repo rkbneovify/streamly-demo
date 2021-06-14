@@ -1,3 +1,5 @@
+<?php 
+use Laravel\Cashier\Cashier;?>
 @extends('master')
 @section('content')
 
@@ -72,9 +74,81 @@
                                     </span>
                                     @endif
               </div>
-              <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
+
+    @if (!empty($plan->tiers))
+    <div class="form-group {{ $errors->has('created') ? ' has-error' : '' }}">
+              
+              <label for="created">Tier</label>
+              
+    <table class="table table-bordered">
+	<thead >
+		<tr >
+			<td >
+				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><span>Quantity</span></span>
+				</div>
+			</td>
+			<td >
+				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><span>Price per unit</span></span>
+				</div>
+			</td>
+			<td >
+				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><span>Flat amount</span></span>
+				</div>
+			</td>
+		</tr>
+	</thead>
+	<tbody >
+  @foreach($plan->tiers as $id => $tier)
+    @if($loop->first)
+    <tr >
+			<td class="">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the first <strong>{{$id+1}} to {{ $tier->up_to }}</strong></span></span>
+				</div>
+			</td>
+			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
+			</td>
+			<td class="Table-cel">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
+			</td>
+		</tr>
+        @endif
+        @if(!($id==0) && !($id == array_key_last($plan->tiers)))
+		<tr >
+			<td class="">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the next <strong>{{$plan->tiers[$id-1]->up_to + 1}}   to {{$tier->up_to}}</strong></span></span>
+				</div>
+			</td>
+			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
+			</td>
+			<td class="Table-cel">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
+			</td>
+		</tr>
+        @endif
+        @if($loop->last)  
+		<tr >
+			<td class="">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the rest {{ $tier->up_to }}</span></span>
+				</div>
+			</td>
+			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
+			</td>
+			<td class="Table-cel">
+				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
+			</td>
+		</tr>
+        @endif
+        @endforeach
+	</tbody>
+</table>
+ </div>
+@elseif (!empty($plan->amount))
+<div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
                 <label for="rate">Rate($)</label>
-                <input type="text" name="rate" class="form-control" disabled value="{{ $plan->currency  }} {{ $plan->amount/100  }}">
+                <input type="text" name="rate" class="form-control" disabled value="{{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD')}} ">
                 
                 @if ($errors->has('rate'))
                                         <span class="help-block">
@@ -82,6 +156,9 @@
                                     </span>
                                     @endif
               </div>
+@else
+unknown
+@endif
               <div class="form-group {{ $errors->has('created') ? ' has-error' : '' }}">
               
                 <label for="created">Created on</label>

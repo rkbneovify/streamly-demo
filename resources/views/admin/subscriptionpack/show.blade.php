@@ -148,7 +148,7 @@ use Laravel\Cashier\Cashier;?>
 @elseif (!empty($plan->amount))
 <div class="form-group{{ $errors->has('rate') ? ' has-error' : '' }}">
                 <label for="rate">Rate($)</label>
-                <input type="text" name="rate" class="form-control" disabled value="{{ $plan->currency  }} {{ $plan->amount/100  }}">
+                <input type="text" name="rate" class="form-control" disabled value="{{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD')}} ">
                 
                 @if ($errors->has('rate'))
                                         <span class="help-block">

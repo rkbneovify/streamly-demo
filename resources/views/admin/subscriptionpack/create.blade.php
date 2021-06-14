@@ -81,6 +81,69 @@
               </div> --}}
 
               <div class="form-group">
+                <label for="">billing_scheme:</label>
+                <select name="billing_scheme" id="billing_scheme">
+                    <option value="per_unit">per_unit</option>
+                    <option value="tiered" id="custom_tiered">tiered</option>
+                   </select>
+                    <div class="tiered" style="display: none">
+            
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     
+                        <div class="well clearfix">
+        <a class="btn btn-primary pull-right add-record" data-added="0"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add Row</a>
+      </div>
+      <table class="table table-bordered" id="tbl_posts">
+        <thead>
+          <tr> <td> </td>
+            <th>#</th>
+            <th>FIRST UNIT</th>
+            <th>LAST UNIT</th>
+            <th>PER UNIT($)</th>
+            <th>FLAT FEE($)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="tbl_posts_body">
+          <tr id="rec-1">
+          <th scope="row"><span class="tiertext">FOR THE FIRST</span></th>
+            <td><span class="sn">1</span>.</td>
+            <td><span class="firstunit">0</span></td>
+            <td><input class="up_to" name="rows[1][up_to]" type="number" min="1" max="1000" value="1" /></td>
+            <td><input class="unit_amount" name="rows[1][unit_amount]" type="number" min="1" value="1" step="any" required /></td>
+            <td><input class="flat_amount" name="rows[1][flat_amount]" type="number" min="0" value="0" step="any" required  /></td>
+            <td></td>
+          </tr>
+          <tr id="rec-2">
+          <th scope="row"><span class="tiertext">FOR THE NEXT</span></th>
+            <td><span class="sn">2</span>.</td>
+            <td><span class="firstunit">2</span></td>
+            <td><input class="up_to" name="rows[2][up_to]" type="number" value="1000" max="1000"   /></td>
+            <td><input class="unit_amount" name="rows[2][unit_amount]" type="number" min="1" value="1" step="any" required  /></td>
+            <td><input class="flat_amount" name="rows[2][flat_amount]" type="number" min="0"  value="0" step="any" required  /></td>
+            <td></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div> 
+  
+  <div style="display:none;">
+    <table id="sample_table">
+      <tr id="">
+      <th scope="row"><span class="tiertext"></span></th>
+       <td><span class="sn"></span>.</td>
+       <td><span class="firstunit"></span></td>
+       <td><input class="up_to"  type="number"  max="1000"  readonly/></td>
+       <td><input class="unit_amount"  type="number" value="1" min="1" step="any" required  /></td>
+            <td><input class="flat_amount"  value="0" type="number" min="0" step="any" required  /></td>
+            <td><a class="btn btn-xs delete-record" data-id="0"><span>&#128465;&#65039;</span></a></td>
+     </tr>
+   </table>
+ </div>
+                  
+            </div>
+              <div class="form-group">
                 <label for="">Interval:</label>
                 <select name="plan_interval" id="plan_interval">
                     <option value="day">Daily</option>
@@ -92,7 +155,8 @@
                     <option value="custom" id="custom_interval">Custom</option>
                 </select>
                     <div class="custom" style="display: none">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="interval_count" value="0" maxlength="3" class="" id="interval_count" style="width: 5%">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="text" name="interval_count" value="0" maxlength="3" class="" id="interval_count" style="width: 5%">
                         <select name="coustom_interval" id="custom_interval">
                             <option value="month" id="mnth">months</option>
                             <option value="week" id="week">weeks</option>
@@ -128,7 +192,7 @@
               </div> --}}
 
 
-              <div class="form-group">
+              <div class="form-group" id="plan_amount_div">
                 <label for="">Amount: <span class="text-red text-md">*</span></label><span id="symbol"> $</span>
                 <input type="text" class="form-control amount" value="{{old('plan_amount')}}" name="plan_amount" id="plan_amount" placeholder="5.25">
                 @if($errors->first('plan_amount')) <p class="text-danger text-sm danger_text">{{ $errors->first('plan_amount') }}</p> @endif
@@ -206,6 +270,7 @@ $(document).on('click', '.btn_remove', function(){
 }); 
 $(document).on('change','#plan_interval',function(e){
   var interval = $('#plan_interval').val();
+  console.log('interval',interval);
   if(interval == 'custom'){
       $("#interval_count").val(0);
       $('.custom').css('display','block');
@@ -213,6 +278,19 @@ $(document).on('change','#plan_interval',function(e){
   else{
       $("#interval_count").val(0);
       $('.custom').css('display','none');
+  }
+}); 
+$(document).on('change','#billing_scheme',function(e){
+  var billing_scheme = $('#billing_scheme').val();
+  // console.log('billing_scheme',billing_scheme);
+  if(billing_scheme == 'tiered'){
+      $("#interval_count").val(0);
+      $('.tiered').css('display','block');
+      $('#plan_amount_div').css('display','none');
+  }
+  else{
+      $("#interval_count").val(0);
+      $('.tiered').css('display','none');
   }
 });
 
@@ -254,6 +332,113 @@ $('#interval_count').on('blur',function () {
         $('#interval_count').val(0);
         alert("Please input valid days.");
     }
-});}); 
+});
+jQuery(document).delegate('a.add-record', 'click', function(e) {
+//   var arr = $('input[name="up_to[]"]').map(function () {
+//     return parseInt(this.value); // $(this).val()
+// }).get();
+// arr.pop();//remove the last infinity
+// console.log("arrLastUnit",arr);
+// console.log("max",Math.max(...arr));
+// var lastmaxvalue=Math.max(...arr);
+     e.preventDefault();    
+     var content = jQuery('#sample_table tr'),
+     size = jQuery('#tbl_posts >tbody >tr').length + 1,
+     element = null,    
+     element = content.clone();
+     element.attr('id', 'rec-'+size);
+    //  element.attr('min', lastmaxvalue);
+     element.find('.delete-record').attr('data-id', size);
+     element.appendTo('#tbl_posts_body');
+     element.find('.sn').html(size);
+     element.find('.tiertext').html('FOR THE NEXT');
+     element.find('.up_to').attr('name', 'rows['+size+'][up_to]');
+     element.find('.unit_amount').attr('name', 'rows['+size+'][unit_amount]');
+     element.find('.flat_amount').attr('name', 'rows['+size+'][flat_amount]');
+     
+    //  console.log('lastunitinput',$('tr#rec-'+size-1+'td input.up_to'));
+    var value = parseInt(size); 
+   var vals = (size-1);
+    //  console.log('lastunitinputid','tr#rec-'+vals);
+    //  console.log('lastunitinputval',$('tr#rec-'+vals+' '+'td input.up_to').val());
+    $('tr#rec-'+size+' '+'td input.up_to').val(1000);	
+     $('tr#rec-'+size+' '+'td input.up_to').prop('min',parseInt($('tr#rec-'+vals+' '+'td input.up_to').val()));
+     if($('tr#rec-'+vals+' '+'td input.up_to').val()=='1000'){
+       console.log('infinity is present');
+      var v= (parseInt($('tr#rec-'+vals+' '+'td span.firstunit').text())+1);
+      $('tr#rec-'+vals+' '+'td input.up_to').val(v);
+      element.find('input.up_to').prop('min',parseInt($('tr#rec-'+vals+' '+'td input.up_to').val()));
+
+   element.find('.firstunit').html(parseInt($('tr#rec-'+vals+' '+'td input.up_to').val())+1);
+     }else{
+      // $('tr#rec-'+vals+' '+'td input.up_to').val()
+      element.find('.firstunit').html(parseInt($('tr#rec-'+vals+' '+'td input.up_to').val())+1);
+      element.find('input.up_to').prop('min',parseInt($('tr#rec-'+vals+' '+'td input.up_to').val()));
+     }
+     
+    //  console.log('firstunit',element.find('.firstunit:last').text());
+   });
+    jQuery(document).delegate('a.delete-record', 'click', function(e) {
+     e.preventDefault();    
+     var didConfirm = confirm("Are you sure You want to delete");
+     if (didConfirm == true) {
+      var id = jQuery(this).attr('data-id');
+      var targetDiv = jQuery(this).attr('targetDiv');
+      jQuery('#rec-' + id).remove();
+      
+    //regnerate index number on table
+    $('#tbl_posts_body tr').each(function(index){
+      if(index==0){
+        $(this).find('th span.tiertext').html('FOR THE FIRST');
+        $(this).find('td span.firstunit').html('0');
+      }else{
+        $(this).find('th span.tiertext').html('FOR THE NEXT');
+        // $(this).prev('.firstunit').html('0');
+      }
+		$(this).find('span.sn').html(index+1);
+    });
+    return true;
+  } else {
+    return false;
+  }
+});
+
+$(document).on('change', 'input.up_to', function() {
+  
+  var _this = $(this);	
+  // if($(this).val().length==$(this).attr("maxlength")){
+            // $(this).next().focus();
+            //  var xthis = this;
+            var inputvalue = parseInt(_this.val()); 
+   var valsfirst = (inputvalue+1);
+   var _closet=_this.closest('tr').next();
+   _closet.find('span.firstunit').html( valsfirst);
+   _closet.find('input.up_to').prop('min',inputvalue);
+            // console.log('focusval',$(this).next());
+        // }
+        
+  var min = parseInt(_this.attr('min')); // if min attribute is not defined, 1 is default	
+  var max = parseInt(_this.attr('max')); // if max attribute is not defined, 100 is default	
+//  console.log("minn",min);	
+//  console.log("maxx",max);	
+//  console.log("valll",inputvalue);	
+//  console.log('val',_this.val());
+   if (inputvalue < min){	
+    _this.val(min+2);
+    
+   _closet.find('span.firstunit').html( min+3);
+   _closet.find('input.up_to').prop('min',min+2);
+    }	
+  if (inputvalue > max){	
+    _this.val(max);}
+
+    });
+
+
+
+
+}); 
+
+
 </script>
 @stop
