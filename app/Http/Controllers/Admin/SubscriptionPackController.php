@@ -101,13 +101,18 @@ return $plans->data;
         $plan_id=Str::random(12);
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
-        $plan = \Stripe\Plan::create(array("id" => $plan_id, 
-        "name" => $request->plan_name, 
-        "currency" => "USD", 
-        "amount" => $amount, 
-        "interval" => $interval, 
-        "interval_count" => $interval_count,
-        'trial_period_days' => $request->trial_period_days));
+            $plan_args=[];
+            // if($billing_scheme=='per_unit'){
+            // billing_scheme => 'per_unit'}else{[billing_scheme => 'tiered','up_to'=>'5','flat_amount'=>'']},
+            // $plan_args = array('amount' => $amount, 'interval' => $interval, 'name' => $name, 'currency' => $currency, 'id' => $plan_id, 'interval_count' => $interval_count);
+            $plan_args=array("id" => $plan_id, 
+            "name" => $request->plan_name, 
+            "currency" => "USD", 
+            "amount" => $amount, 
+            "interval" => $interval, 
+            "interval_count" => $interval_count,
+            'trial_period_days' => $request->trial_period_days);  
+        $plan = \Stripe\Plan::create($plan_args);
     } catch (Exception $e) {
         print_r($e);
     }
@@ -131,9 +136,18 @@ return $plans->data;
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $amount = number_format($request->plan_amount, 2);
-        $amount = (int) ($amount * 100);
+    { 
+        // dump($request);
+        if($request->billing_scheme=='tiered'){
+
+            $tiers= $this->ProcessTiers($request->rows);
+            //  dump($request->rows);
+            //todo don't let negative values in array
+        }else{
+            $amount= $this->convertpricetonumber($request->plan_amount);
+            
+        }
+    //    dd($tiers);
         $interval = strtolower($request->plan_interval);
         $interval_count = 1;
         if ($interval == 'custom') {
@@ -151,18 +165,37 @@ return $plans->data;
         
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
-        $plan = \Stripe\Plan::create(array("id" => $plan_id, 
+            // $tiers=[{'unit_amount'=>'200','up_to'=>'5'},{'unit_amount'=>'300','up_to'=>'8'}];
+            if($request->billing_scheme=='tiered'){
+                $planParams=array(
+                    "id" => $plan_id, 
+                    "tiers" => $tiers, 
+                    "billing_scheme" => "tiered", 
+                    "tiers_mode" => "graduated", 
+                "nickname" => $request->plan_name, 
+                "currency" => "USD", 
+                // "amount" => $amount, 
+                "interval" => $interval, 
+                "interval_count" => $interval_count,
+                "product"=>$product_id,
+                "trial_period_days" => $request->trial_period_days,"metadata" => $request->text);
+            }else{
+                //non tier plan
+                $planParams=array("id" => $plan_id, 
         "nickname" => $request->plan_name, 
         "currency" => "USD", 
         "amount" => $amount, 
         "interval" => $interval, 
         "interval_count" => $interval_count,
         "product"=>$product_id,
-        "trial_period_days" => $request->trial_period_days,"metadata" => $request->text));
+        "trial_period_days" => $request->trial_period_days,"metadata" => $request->text);
+            }
+            // dd($planParams);
+        $plan = \Stripe\Plan::create($planParams);
         
         return redirect('admin/subscriptionpack')->with('info','SubscriptionPack Added Successfully');
     } catch (Exception $e) {
-        
+
         return redirect('admin/subscriptionpack')->with('info',json_encode($e->getMessage(), true));
     }
         /*
@@ -181,6 +214,35 @@ return $plans->data;
     } 
 
 
+    public function ProcessTiers($data){
+  
+$find=['unit_amount','flat_amount'];
+$arr='';
+array_walk_recursive($data, function (&$v, $k)use($find,$arr) { 
+    if(in_array($k,$find)){ 
+        $v = $this->convertpricetonumber($v); 
+    } 
+    if($k == 'up_to'){
+        $v=(int)$v;
+     }
+     if($k == 'up_to' && $v=='1000') {
+        $v='inf';
+      }
+     
+        
+});
+
+return $data;
+
+}
+
+public function convertpricetonumber($rawamountprice){
+    $rawamount = number_format($rawamountprice, 2);
+    $amount = (int) ($rawamount * 100);
+    return $amount;
+}
+        
+     
     public function edit($id)
     {
         $plan = \Stripe\Plan::retrieve($id);
