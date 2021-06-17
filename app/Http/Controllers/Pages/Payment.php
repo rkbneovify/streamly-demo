@@ -15,6 +15,29 @@ class Payment extends Controller
         $this->middleware('auth');
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
     }
+    public function showTierPage($stripeplanID){
+        if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+
+            return redirect()->route('home');
+        }
+        $plandetails = \Stripe\Plan::retrieve($stripeplanID,['expand' => ['data.tiers']]);
+        //  dd(Auth::user()->invoices());
+        //  $catIds = array_column($plandetails->tiers, 'up_to');
+        //  dump($plandetails->tiers);
+        //  dd($catIds);
+        $frontendjson = FrontendText::find(1)->frontendjson;
+        if (Auth::user()->subscription('main') && Auth::user()->subscription('main')->cancelled() ){
+        return view('frontend.pages.paymentcancelledtier', compact('login','stripeplanID','plandetails','frontendjson'));
+    }else{
+        return view('frontend.pages.paymenttier', compact('login','stripeplanID','plandetails','frontendjson'));
+    }
+       
+
+
+    }
     public function showPage($stripeplanID){
 
     	if( Auth::check()){
@@ -36,7 +59,7 @@ class Payment extends Controller
         
     }
     public function showPlan(){
-        $plans = \Stripe\Plan::all(['active'=>true]);
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
     	if( Auth::check()){
             $login = true;
         } else {
@@ -64,35 +87,43 @@ class Payment extends Controller
         ], ['zip.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
         $user = auth()->user();
         $trial_days=$request->trial_days;
-        
+        // dump($request->tier);
+        // dump($request->quantity);
+        // dump($request->tiers_modes);volumegraduated
+        // dump($request->billing_scheme);per_unit tiered
+        // dump($request->quantity);
+        $quantity=$request->quantity??1;
+        // dd($StripeplanId);
         try {
             // check already subscribed and if already subscribed with picked plan
         if( $user->subscribed('main') && ! $user->subscribedToPlan($StripeplanId, 'main') ) {
 
             // swap if different plan attempt
-            $user->subscription('main')->swap($StripeplanId);
+            $user->subscription('main')->quantity($quantity)->swap($StripeplanId);
 
         }else {
             
            // if user has a coupon, create new subscription with coupon applied
            if( $coupon = $request->get('coupon') ) {
             if(!empty($trial_days)){
-                $user->newSubscription( 'main', $StripeplanId)->trialDays($trial_days)
+                $user->newSubscription( 'main', $StripeplanId)->quantity($quantity)->trialDays($trial_days)
                 ->withCoupon($coupon)
                 ->create($request->payment_method, ['email' => $user->email]); 
             }else{ $user->newSubscription( 'main', $StripeplanId)
+                ->quantity($quantity)
                     ->withCoupon($coupon)
                     ->create($request->payment_method, ['email' => $user->email]);}
            
 
         } else {
-        
+        //check for trial days
             // Create subscription
             if(!empty($trial_days)){
                 $newSubscription = $user->newSubscription('main', $StripeplanId)
-                
+                ->quantity($quantity)
                 ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);}else{
                     $newSubscription = $user->newSubscription('main', $StripeplanId)
+                    ->quantity($quantity)
                     ->create($request->payment_method, ['email' => $user->email]);}
         }}
         } catch ( IncompletePayment $exception ){

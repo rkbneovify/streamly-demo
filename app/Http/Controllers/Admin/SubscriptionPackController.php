@@ -138,8 +138,10 @@ return $plans->data;
     public function store(Request $request)
     { 
         // dump($request);
-        if($request->billing_scheme=='tiered'){
-
+        if($request->billing_scheme=='tiered'||'volume'){
+            // $catIds = array_column($request->rows, 'up_to');
+            // dump($catIds);
+            // dd(sort($catIds));
             $tiers= $this->ProcessTiers($request->rows);
             //  dump($request->rows);
             //todo don't let negative values in array
@@ -166,12 +168,12 @@ return $plans->data;
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
             // $tiers=[{'unit_amount'=>'200','up_to'=>'5'},{'unit_amount'=>'300','up_to'=>'8'}];
-            if($request->billing_scheme=='tiered'){
+            if($request->billing_scheme=='tiered'||'volume'){
                 $planParams=array(
                     "id" => $plan_id, 
                     "tiers" => $tiers, 
                     "billing_scheme" => "tiered", 
-                    "tiers_mode" => "graduated", 
+                    "tiers_mode" => $request->billing_scheme, 
                 "nickname" => $request->plan_name, 
                 "currency" => "USD", 
                 // "amount" => $amount, 
@@ -215,17 +217,22 @@ return $plans->data;
 
 
     public function ProcessTiers($data){
-  
+//   dd(array_key_last($data));
+// $lastEl = array_values(array_slice($data, -1))[0];
+// dump($data);
+// dd($lastEl['up_to']);
 $find=['unit_amount','flat_amount'];
-$arr='';
-array_walk_recursive($data, function (&$v, $k)use($find,$arr) { 
+ $lastKey = array_key_last($data);
+ $lastValue= $data[$lastKey]['up_to'];
+
+array_walk_recursive($data, function (&$v, $k)use($find,$lastValue) { 
     if(in_array($k,$find)){ 
         $v = $this->convertpricetonumber($v); 
     } 
     if($k == 'up_to'){
         $v=(int)$v;
      }
-     if($k == 'up_to' && $v=='1000') {
+     if($k == 'up_to' && $v==$lastValue) {
         $v='inf';
       }
      
