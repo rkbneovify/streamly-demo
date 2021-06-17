@@ -85,6 +85,7 @@
                 <select name="billing_scheme" id="billing_scheme">
                     <option value="per_unit">per_unit</option>
                     <option value="tiered" id="custom_tiered">tiered</option>
+                    <option value="volume" id="custom_volume">volume</option>
                    </select>
                     <div class="tiered" style="display: none">
             
@@ -134,7 +135,7 @@
       <th scope="row"><span class="tiertext"></span></th>
        <td><span class="sn"></span>.</td>
        <td><span class="firstunit"></span></td>
-       <td><input class="up_to"  type="number"  max="1000"  readonly/></td>
+       <td><input class="up_to"  type="number"  max="1000"  /></td>
        <td><input class="unit_amount"  type="number" value="1" min="1" step="any" required  /></td>
             <td><input class="flat_amount"  value="0" type="number" min="0" step="any" required  /></td>
             <td><a class="btn btn-xs delete-record" data-id="0"><span>&#128465;&#65039;</span></a></td>
@@ -283,7 +284,7 @@ $(document).on('change','#plan_interval',function(e){
 $(document).on('change','#billing_scheme',function(e){
   var billing_scheme = $('#billing_scheme').val();
   // console.log('billing_scheme',billing_scheme);
-  if(billing_scheme == 'tiered'){
+  if(billing_scheme == 'tiered'||'volume'){
       $("#interval_count").val(0);
       $('.tiered').css('display','block');
       $('#plan_amount_div').css('display','none');
