@@ -50,6 +50,9 @@
                           Subscription
                       </th>
                       <th style="width: 20%">
+                          Quantity
+                      </th>
+                      <th style="width: 20%">
                           Start Date
                       </th><th style="width: 20%">
                           Expiry Date
@@ -88,14 +91,21 @@
     {{-- <td>{{ $subscription->stripe_plan }}</td> --}}
     
     
+    
     <td>
       @foreach($plans as $id => $pack)
      
-      {{ ( $pack->id == $subscription->stripe_plan) ? $pack->nickname : '' }}
+      @if( $pack->id == $subscription->stripe_plan) 
+     {{$pack->nickname }} 
+       @if (!empty($pack->tiers)) 
+       <span class="badge badge-success">Tiers Plan</span>
+       @endif 
+      @endif 
         
       
       @endforeach
     </td>
+    <td>{{ $subscription->quantity }}</td>
     <td>{{ $subscription->created_at ??'' }}</td>
     <td>{{ $subscription->renews_at ??'' }}</td>
     <td >
