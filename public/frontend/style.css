@@ -4259,6 +4259,9 @@ input[type=button].btn-block {
   .navbar-expand-lg .navbar-nav .dropdown-menu {
     position: absolute;
   }
+  .dropdown-menu.show {
+    left: -50;
+}
   .navbar-expand-lg .navbar-nav .nav-link {
     padding-right: 1rem;
     padding-left: 1rem;
