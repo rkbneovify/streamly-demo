@@ -89,13 +89,9 @@
               <div class="form-group{{ $errors->has('users_id') ? ' has-error' : '' }}">
                 <label for="users_id">User</label>
                 
-                <select name="users_id" id="users_id" class="form-control" >
-                    @foreach($users as $id => $users)
-                        <option value="{{ $users->id }}" >
-                            {{ $users->name }}
-                        </option>
-                    @endforeach
-                </select>
+                <select id='users_id'  name="users_id" class="form-control">
+        <option value='0'>- Search User -</option>
+     </select>
                 @if ($errors->has('users_id'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('users_id') }}</strong>
@@ -232,9 +228,30 @@
   }
   </style>
 <script src="https://js.stripe.com/v3/"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
           $(function() {
+            $("#users_id").select2({
+    placeholder: 'Channel...',
+    // width: '350px',
+    allowClear: true,
+    ajax: {
+        url: '/dataforselectuser',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term || '',
+                page: params.page || 1
+            }
+        },
+        cache: true
+    }
+});
+
+
             var bt = document.getElementById('card-button');
 $('body').on('blur','[name="coupon"]',function(){
     $coupon = $(this);
