@@ -791,6 +791,31 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
             return \Response::json($results);
         }
     }
+    public function getdataforselectUser(Request $request){
+        
+        if ($request->ajax()) {
+
+            $term = trim($request->term);
+            $posts = DB::table('users')->select('id','name as text')
+                ->where('name', 'LIKE',  '%' . $term. '%')
+                ->orderBy('name', 'asc')->simplePaginate(10);
+           
+            $morePages=true;
+           $pagination_obj= json_encode($posts);
+        //    return $pagination_obj;
+           if (empty($posts->nextPageUrl())){
+            $morePages=false;
+           }
+            $results = array(
+              "results" => $posts->items(),
+              "pagination" => array(
+                "more" => $morePages
+              )
+            );
+        
+            return \Response::json($results);
+        }
+    }
     public function find(Request $request)
     {
         $term = trim($request->q);
