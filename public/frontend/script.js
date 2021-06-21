@@ -32,9 +32,24 @@
     });
 
     // Closes responsive menu when a scroll trigger link is clicked
-    $(".js-scroll-trigger").click(function () {
-        $(".navbar-collapse").collapse("hide");
+    $('.js-scroll-trigger').on('click',function(){
+      $(".navbar-collapse").collapse("hide");
     });
+    const $dropdown = $(".dropdown");
+const $dropdownToggle = $(".dropdown-toggle");
+const $dropdownMenu = $(".dropdown-menu");
+const showClass = "show";
+$('.navbar-toggler').on('click',function(){
+  
+  $dropdown.addClass(showClass);
+  $dropdown.find($dropdownToggle).attr("aria-expanded", "true");
+        $dropdown.find($dropdownMenu).addClass(showClass);
+
+
+
+});
+
+
 
     // Activate scrollspy to add active class to navbar items on scroll
     $("body").scrollspy({
@@ -54,6 +69,7 @@
     navbarCollapse();
     // Collapse the navbar when page is scrolled
     $(window).scroll(navbarCollapse);
+    
 })(jQuery); // End of use strict
 
 
