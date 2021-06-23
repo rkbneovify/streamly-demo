@@ -26,7 +26,7 @@ Route::get('/tags', function() {
 Route::get('/tags/find', 'HomeController@find');
 
 Route::get('search', 'HomeController@search')->name('search');
-Route::get('mydata', 'HomeController@mydata')->name('mydata');
+Route::get('mydata', 'HomeController@mydata')->name('mydata');//infinite scroll
 Route::get('search2', 'HomeController@search2')->name('search2');
 Route::get('dataforselect2', 'HomeController@getdataforselect22')->name('dataforselect2');
 Route::get('dataforselectuser', 'HomeController@getdataforselectUser')->name('dataforselectuser');
