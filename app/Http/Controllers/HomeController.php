@@ -797,7 +797,7 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
 
             $term = trim($request->term);
             $posts = DB::table('users')->select('id','name as text')
-                ->where('name', 'LIKE',  '%' . $term. '%')
+                ->where('name', 'LIKE',  '%' . $term. '%')->where('is_active','=','1')
                 ->orderBy('name', 'asc')->simplePaginate(10);
            
             $morePages=true;
