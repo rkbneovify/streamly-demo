@@ -1,5 +1,7 @@
 <?php 
-use Laravel\Cashier\Cashier;?>
+use Laravel\Cashier\Cashier;
+$login= Auth::check()?true:false;
+?>
 @extends('frontend/partials/master')
 
 @section('top-stylesheets')

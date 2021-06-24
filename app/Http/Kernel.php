@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
         'role'=> \App\Http\Middleware\EntrustRole::class,
         'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
+        'subscribed' => \App\Http\Middleware\Subscribed::class,
     ];
 
     /**

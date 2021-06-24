@@ -15,6 +15,7 @@ class ChannelAPIController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['checkdevice','sortdevice','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','PacificFrontEpgchannelDaysSchedule']]);
+        $this->middleware('subscribed')->only('channeljson','channelDaysSchedule','channelschedulejson');
     }
 
 
