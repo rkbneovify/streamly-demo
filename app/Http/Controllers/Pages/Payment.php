@@ -60,17 +60,12 @@ class Payment extends Controller
     }
     public function showPlan(){
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
-    	if( Auth::check()){
-            $login = true;
-        } else {
-            $login = false;
-            return redirect()->route('home');
-        }
+    
         if (Auth::user()->subscribed('main')) {
             
             return redirect()->route('payment',[Auth::user()->subscription('main')->stripe_plan]);
         } 
-    	return view('frontend.pages.plans', compact('login','plans'));
+    	return view('frontend.pages.plans', compact('plans'));
         
     }
 
