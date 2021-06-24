@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use App\SessionTable;
+use App\HotelRoomTable;
 use App\Models\Subscription;
 use Jenssegers\Agent\Agent;
      function checkLoginLimit($user_id,$token,$deviceDetails){
@@ -764,4 +765,49 @@ function GetLimitForUser($user_id){
  return $limit;
 }
 
+ function CheckPreviousHotelRooms($quantity,$userid){
+  $HotelRoomTableCount=HotelRoomTable::where("user_id", "=", $userid)->get()->toArray();
+  if(count($HotelRoomTableCount)==0){
+    MakeHotelRooms($quantity,$userid);
+  } else{
+    $userIdExistInSubScribedWithquantity = Subscription::select('quantity')
+    ->where('user_id', '=', $userid)->orderBy("id", "DESC")->skip(1)->take(1)->value('quantity');
+                                   //  dd($userIdExistInSubScribedWithquantity);
+                                   
+    if(!empty($userIdExistInSubScribedWithquantity)){
+     $newquantity=$quantity;
+     $previousquantity =$userIdExistInSubScribedWithquantity;
+     if($previousquantity<$newquantity){
+       $newquantityofroom= $newquantity-$previousquantity;
+       //add rooms
+       MakeHotelRooms($newquantityofroom,$userid);
+     } else if($previousquantity>$newquantity){
+       $newquantityofroom= $previousquantity-$newquantity;
+       //remove rooms
+       RemoveHotelRooms($newquantityofroom,$userid);
+     }
+    }else{
+      MakeHotelRooms($quantity,$userid);
+    }
+  }
+   
+ 
+ }
+ function MakeHotelRooms($quantity,$userid)
+{ 
+    for ($i=0; $i <$quantity; $i++) { 
+      HotelRoomTable::create([
+          'hotel_room' => 'Room'.$i,
+          'user_id' => $userid
+      ]);
+  }
+} 
+
+function RemoveHotelRooms($quantity,$userid)
+{  HotelRoomTable::where("user_id", "=", $userid)
+  ->orderBy("id", "DESC")
+  ->take($quantity)
+  ->delete();
+  
+}
 ?>
