@@ -126,6 +126,10 @@ class Payment extends Controller
                     ->quantity($quantity)
                     ->create($request->payment_method, ['email' => $user->email]);}
         }}
+        if($request->tier=='tiered'){
+            
+            CheckPreviousHotelRooms($quantity,$user->id);
+        }
         } catch ( IncompletePayment $exception ){
             return redirect()->back()->with(['error_message' => $exception->getMessage()]);
         }
