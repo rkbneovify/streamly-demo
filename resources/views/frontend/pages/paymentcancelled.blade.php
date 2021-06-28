@@ -132,6 +132,16 @@ input[type=number] {
 		<div class="container">
 			<div class="text-center">
 				<h2 class="section-heading">Add Your Billing Details</h2>
+				@if(session('error_message'))
+                            <div role="alert" class="mb-4">
+                                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                    Payment Failed
+                                </div>
+                                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                                    <p>{{ session('error_message') }}</p>
+                                </div>
+                            </div>
+                        @endif
 				<div class="row">
 					<div class="col-md-4 text-left">
 						<div class="row subscription-box">
@@ -202,7 +212,7 @@ input[type=number] {
                                     <p>{{ session('error_message') }}</p>
                                 </div>
                             </div>
-                        @endif
+                        @endif					
 								<form id="signup-form" action="{{ url('insertpay', [$stripeplanID]) }}" method="post" class="mt-3 text-left" style="padding: 2rem;">
 				                    {{-- <div class="form-group">
 				                        <label for="card" class="control-label">Card Number</label>
@@ -317,6 +327,7 @@ input[type=number] {
 										@endif
 				                    
 													<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">	
+													<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 													<div class="form-group mt-3">
 				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled>
 				                        	<span style="width: 100%;">SUBMIT</span>
