@@ -332,6 +332,7 @@ input[type=number] {
 												</span> @else <span class="remove-p-a-r">
 											{{$frontendjson['billingdetailspage']}}	</span> @endif
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
+						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
 							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> <span style="width: 100%;">SUBMIT</span> </button>
 						</div> {!! csrf_field() !!} </form>

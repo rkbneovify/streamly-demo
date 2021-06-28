@@ -137,6 +137,16 @@ input[type=number] {
 	<div class="container">
 		<div class="text-center">
 			<h2 class="section-heading">Add Your Billing Details</h2>
+			@if(session('error_message'))
+                            <div role="alert" class="mb-4">
+                                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                    Payment Failed
+                                </div>
+                                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                                    <p>{{ session('error_message') }}</p>
+                                </div>
+                            </div>
+                        @endif
 			@if(!auth()->user()->subscribed('main'))
 			<div class="row text-center">
 				<div class="col-md-4 ">
@@ -339,6 +349,7 @@ input[type=number] {
 														</span> @else <span class="remove-p-a-r">
 				                  {{$frontendjson['billingdetailspage']}}	</span> @endif
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
+						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
 							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;"> <span style="width: 100%;">SUBMIT</span> </button>
 						</div> {!! csrf_field() !!} </form>
