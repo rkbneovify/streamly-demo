@@ -13,7 +13,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Connected device details</li>
+              <li class="breadcrumb-item active">Hotel Room details</li>
             </ol>
           </div>
         </div>
@@ -26,7 +26,8 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">User: {{$allSession[0]->user->name ?? ''}}</h3>
+          <h3 class="card-title">User: {{$allSession[0]->user->name ?? ''}}</h3><br>
+          <p>Email: {{$allSession[0]->user->email ?? ''}}</p>
            
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -43,7 +44,7 @@
                           #
                       </th>
                       <th style="width: 20%">
-                          Device id
+                          Hotel
                       </th>
                       <th style="width: 20%">
                           Device Name
@@ -52,9 +53,9 @@
                           Email
                       </th> --}}
                       
-                      {{-- <th style="width: 8%" class="text-center">
+                      <th style="width: 8%" class="text-center">
                           Status
-                      </th> --}}
+                      </th> 
                       <th style="width: 20%">
                       </th>
                   </tr>
@@ -67,17 +68,18 @@
                           #
                       </td>
                       <td>
-                       {{ $user->device_id ?? '' }}
+                       {{ $user->id ?? '' }}
                     </td>
                             
                             
                             <td>
-                                {{ $user->device_name ?? '' }}
+                                {{ $user->hotel_room ?? '' }}
                             </td>
-                            {{-- <td class="project-state">
-                            @if ($user->is_active===1)
+                             <td class="project-state">
+                            @if ($user->session_id!==null)
                             <span class="badge badge-success">Active</span>
-@elseif ($user->is_active===0)
+                            {{$user->session->id}}
+@elseif ($user->session_id==null)
 <span class="badge badge-danger">Inactive</span>
 @else
     unknown
@@ -85,7 +87,7 @@
                           
                             
                           
-                      </td> --}}
+                      </td> 
                       <td class="project-actions text-right">
                           
                           {{-- <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
