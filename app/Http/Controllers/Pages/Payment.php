@@ -89,6 +89,7 @@ class Payment extends Controller
         // dump($request->quantity);
         $quantity=$request->quantity??1;
         // dd($StripeplanId);
+        $previousURL=$request->input('previousurl');
         try {
             // check already subscribed and if already subscribed with picked plan
         if( $user->subscribed('main') && ! $user->subscribedToPlan($StripeplanId, 'main') ) {
@@ -125,11 +126,81 @@ class Payment extends Controller
             
             CheckPreviousHotelRooms($quantity,$user->id);
         }
-        } catch ( IncompletePayment $exception ){
-            return redirect()->back()->with(['error_message' => $exception->getMessage()]);
-        }
+        } catch(\Stripe\Exception\CardException $e) {
+            // Since it's a decline, \Stripe\Exception\CardException will be caught
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
 
-        return redirect()->back();
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+          } catch (\Stripe\Exception\RateLimitException $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+            // Too many requests made to the API too quickly
+          } catch (\Stripe\Exception\InvalidRequestException $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+            // Invalid parameters were supplied to Stripe's API
+          } catch (\Stripe\Exception\AuthenticationException $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+            // Authentication with Stripe's API failed
+            // (maybe you changed API keys recently)
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+          } catch (\Stripe\Exception\ApiConnectionException $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+            // Network communication with Stripe failed
+          } catch (\Stripe\Exception\ApiErrorException $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+            // Display a very generic error to the user, and maybe send
+            // yourself an email
+          } catch (Exception $e) {
+            echo 'Status is:' . $e->getHttpStatus() . '\n';
+            echo 'Type is:' . $e->getError()->type . '\n';
+            echo 'Code is:' . $e->getError()->code . '\n';
+            // param is '' in this case
+            echo 'Param is:' . $e->getError()->param . '\n';
+            echo 'Message is:' . $e->getError()->message . '\n';
+
+            return redirect($previousURL)->with(['error_message' => $e->getMessage()]);
+            // Something else happened, completely unrelated to Stripe
+          }
+
+        // return redirect()->back();
     }
     
 }
