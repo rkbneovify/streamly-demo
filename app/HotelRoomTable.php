@@ -32,10 +32,10 @@ class HotelRoomTable extends Model
     protected $guarded = [];
     public function user()
     {
-        return $this->belongsTo(User::class,'users_id');
+        return $this->belongsTo(User::class,'user_id');
     } 
      public function session()
     {
-        return $this->belongsTo(User::class,'session_id');
+        return $this->belongsTo(SessionTable::class,'session_id');
     }
 }

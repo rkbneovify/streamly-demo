@@ -8,12 +8,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Users</h1> {{ session()->get( 'info' ) }}
+            <h1>Users with rooms</h1> {{ session()->get( 'info' ) }}
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Users</li>
+              <li class="breadcrumb-item active">Users with rooms</li>
             </ol>
           </div>
         </div>
@@ -26,7 +26,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Users</h3>
+          <h3 class="card-title">Users with rooms</h3>
            
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -46,7 +46,10 @@
                           User Name
                       </th>
                       <th style="width: 20%">
-                         No. connected device
+                          User Email
+                      </th>
+                      <th style="width: 20%">
+                         No. hotel rooms
                       </th>
                       {{-- <th style="width: 30%">
                           Email
@@ -69,6 +72,9 @@
                             <td>
                                 {{ $user->user->name ?? '' }}
                             </td>
+                            <td>
+                                {{ $user->user->email ?? '' }}
+                            </td>
                             
                             
                             <td>
@@ -88,8 +94,8 @@
                       </td> --}}
                       <td class="project-actions text-right">
                           
-                          <a  class="btn btn-xs btn-primary" href="{{ url('admin/users/connected', $user->users_id) }}">View</a>
-                          {{-- <a class="btn btn-xs btn-info" href="{{ url('admin/users/connected', $user->users_id) }}">Edit</a>
+                          <a  class="btn btn-xs btn-primary" href="{{ url('admin/hotelroomsess', $user->user_id) }}">View</a>
+                          {{-- <a class="btn btn-xs btn-info" href="{{ url('admin/hotelroomsess', $user->user_id) }}">Edit</a>
                           
                                     <form action="{{ url('admin/users/destroy', $user->users_id) }}" method="POST" onsubmit="return confirm('{{ trans('Are You Sure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">

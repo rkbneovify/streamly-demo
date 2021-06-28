@@ -71,7 +71,10 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/subscriptionpack/plans', 'Admin\SubscriptionPackController@viewPlan');
     // User routes
     Route::get('/users', 'Admin\UsersController@index');
-    Route::resource('/hotels', 'Admin\HotelController');
+    Route::get('/hotelrooms', 'Admin\HotelController@hotelrooms');
+    Route::get('/hotelroomsess', 'Admin\HotelController@activeSession');
+    Route::get('/hotelroomsess/{id}', 'Admin\HotelController@connectedhotel');
+    
     Route::resource('/hotelcontracts', 'Admin\HotelContractsController');
 
     Route::get('hoteladmin/data', 'Admin\HotelController@HotelAdminUserAjaxData');
