@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\User;
+use App\HotelRoomTable;
 class HotelController extends Controller
 {
     /**
@@ -18,7 +19,55 @@ class HotelController extends Controller
         
         return view('admin.hotels.index');
     }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function hotelrooms()
+    {
+        
+        return view('admin.hotels.hotelrooms');
+    }
 
+    public function activeSession(){
+        // $user = JWTAuth::user();//all the user info
+        $uid= 6;
+        //  $user['id'];
+        //and get the number of last connected device
+    //     $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+    //     ->where([
+    //     ['status', '=', '1'],
+    //     ['users_id', '=', $uid],
+    //      ])->orderBy('connected_devices', 'asc');
+    //     $s='';$numofdevice='';
+    // $s=$prevConnectDevicecount->toSql();
+    // echo $s; 
+    // $numofdevice=$prevConnectDevicecount->count();
+   
+     
+        //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+        //  return response()->json($response, 200);
+         //get the users with there session
+         $allSession=HotelRoomTable::with('user')->selectRaw("id,user_id , count(id) activesession")->groupBy('user_id')->get();// echo $allSession; exit;
+        //  dd($allSession);
+        return view('admin.hotels.sessions', compact('allSession'));
+    }
+    public function connectedhotel($id)
+    {
+        $user = User::find($id);
+        $roles = Role::get(); //get all roles
+        $userRoles = $user->roles->pluck('id')->toArray();
+        //dd($roles);
+        
+        
+        $allSession=HotelRoomTable::with('user','session')
+        ->where([
+        ['user_id', '=', $id],
+         ])->orderBy('id', 'asc')->get();
+        //  dd($allSession);
+        return view('admin.hotels.connected',compact('allSession'));
+    }
     /**
      * Show the form for creating a new resource.
      *

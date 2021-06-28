@@ -72,14 +72,21 @@
             <ul class="nav nav-treeview">
               
               <li class="nav-item">
-                <a href=" {{ url('/admin/hotels') }}" class="nav-link">
+                <a href=" {{ url('/admin/hotelrooms') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Hotel users</p>
                 </a>
-              </li><li class="nav-item">
+              </li>
+              <!-- <li class="nav-item">
                 <a href=" {{ url('/admin/hotelcontracts') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Hotel contracts</p>
+                  </a>
+                </li> -->
+              <li class="nav-item">
+                <a href=" {{ url('/admin/hotelroomsess') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Hotel rooms</p>
                   </a>
                 </li>
             </ul>
