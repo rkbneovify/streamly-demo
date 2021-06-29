@@ -200,7 +200,7 @@ class Payment extends Controller
             // Something else happened, completely unrelated to Stripe
           }
 
-        // return redirect()->back();
+        return redirect()->back();
     }
     
 }
