@@ -137,16 +137,7 @@ input[type=number] {
 	<div class="container">
 		<div class="text-center">
 			<h2 class="section-heading">Add Your Billing Details</h2>
-			@if(session('error_message'))
-                            <div role="alert" class="mb-4">
-                                <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                                    Payment Failed
-                                </div>
-                                <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                                    <p>{{ session('error_message') }}</p>
-                                </div>
-                            </div>
-                        @endif
+	
 			@if(!auth()->user()->subscribed('main'))
 			<div class="row text-center">
 				<div class="col-md-4 ">
@@ -263,7 +254,9 @@ input[type=number] {
 								<div class="col-md-8" style="padding: 2rem;"> {{-- <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> --}} <span><strong>Final amount</strong> </span> <span style="display: block;" id="totalprice2">{{Cashier::formatAmount($invoiceFirst->total??'0', $plandetails->currency??'USD')}}</span> </div> {{--
 								<div class="col-md-4" style="padding: 2rem;"> <img src="{{ asset('frontend/img/paypal.svg') }}"> <span style="display: block;">Paypal</span> </div> --}} </div> {{-- {{dd(auth()->user())}} --}}
 							<!-- If user is not subscribed to a plan, show them the payment form -->@if(!auth()->user()->subscribed('main')) @if(session('error_message'))
-							<div role="alert" class="mb-4">
+							
+ <div class="alert alert-danger alert-dismissible ">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
 								<div class="bg-red-500 text-white font-bold rounded-t px-4 py-2"> Payment Failed </div>
 								<div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
 									<p>{{ session('error_message') }}</p>
