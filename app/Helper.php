@@ -727,7 +727,7 @@ function isTV($device)
         break;
     case 'appletv':
       $browser_css_classes['device'] = 'device-appletv';
-      $browser_css_classes['classes'] = "data-form-factor='10'";
+      $browser_css_classes['classes'] = "data-form-factor='11'";
       break;
       case 'firetv':
         $browser_css_classes['device'] = 'device-firetv';
