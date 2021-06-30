@@ -236,7 +236,7 @@ return $plans->data;
         );
         return $planParams;
     }
-    public function ProcessTiers($data){
+    private function ProcessTiers($data){
 //   dd(array_key_last($data));
 // $lastEl = array_values(array_slice($data, -1))[0];
 // dump($data);
