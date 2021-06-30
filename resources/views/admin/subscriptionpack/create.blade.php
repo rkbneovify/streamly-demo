@@ -289,9 +289,12 @@ $(document).on('change','#billing_scheme',function(e){
       $('.tiered').css('display','block');
       $('#plan_amount_div').css('display','none');
   }
-  else{
+   if(billing_scheme == 'per_unit'){
+    // console.log("billingschecne",billing_scheme);
       $("#interval_count").val(0);
       $('.tiered').css('display','none');
+      $('#plan_amount_div').css('display','block');
+
   }
 });
 
