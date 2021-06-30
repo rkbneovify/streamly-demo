@@ -60,7 +60,7 @@ class SubscriptionPackController extends Controller
         $Product = \Stripe\Product::all();
  $Product->data;
         return view('admin.subscriptionpack.create', compact('plan_id','Product'));
-    }  
+    } 
     public function viewPlan(Request $request){
       //  \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
 $plans = \Stripe\Plan::all(['active'=>false]);
@@ -136,63 +136,48 @@ return $plans->data;
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
-        // dump($request);
-        if($request->billing_scheme=='tiered'||'volume'){
-            // $catIds = array_column($request->rows, 'up_to');
-            // dump($catIds);
-            // dd(sort($catIds));
-            $tiers= $this->ProcessTiers($request->rows);
-            //  dump($request->rows);
-            //todo don't let negative values in array
-        }else{
-            $amount= $this->convertpricetonumber($request->plan_amount);
-            
+    {   
+        $billing_scheme=$request->billing_scheme;
+        // dump($request->billing_scheme);
+        // dd($request);
+        $planParams= $this->GetPlanParams($request);
+        switch($billing_scheme){
+            case 'tiered':
+                $billing_scheme = 'tiered';
+                $tiers= $this->ProcessTiers($request->rows);
+                $tierDetails= array("tiers" => $tiers, 
+                "billing_scheme" => "tiered", 
+                "tiers_mode" => $request->billing_scheme);
+                $planParams = array_merge($planparam, $tierDetails);
+                    
+                break;
+            case 'volume':
+                $billing_scheme = 'volume';
+                $tiers= $this->ProcessTiers($request->rows);
+                $tierDetails= array("tiers" => $tiers, 
+                "billing_scheme" => "tiered", 
+                "tiers_mode" => $request->billing_scheme);
+                $planParams = array_merge($planParams, $tierDetails);
+                break;
+            case 'per_unit':
+                $billing_scheme = 'per_unit';
+                $amount= $this->convertpricetonumber($request->plan_amount);
+                $amountDetails= array(
+                "amount" => $amount);
+                $planParams = array_merge($planParams, $amountDetails);
+                break;
+            default:
+                $billing_scheme = 'per_unit';
+                $amount= $this->convertpricetonumber($request->plan_amount);
+                $amountDetails= array(
+                    "amount" => $amount);
+                    $planParams = array_merge($planParams, $amountDetails);
+                break;
         }
-    //    dd($tiers);
-        $interval = strtolower($request->plan_interval);
-        $interval_count = 1;
-        if ($interval == 'custom') {
-            $interval_count = (int) $request->interval_count;
-            $interval = $request->coustom_interval;
-        } else {
-            if ($interval == '3-month' || $interval == '6-month') {
-                $array = explode('-', $interval);
-                $interval_count = (int) $array[0];
-                $interval = $array[1];
-            }
-        }
-        $plan_id=Str::random(12);
-        $product_id=$request->product;
-        
+       
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
-            // $tiers=[{'unit_amount'=>'200','up_to'=>'5'},{'unit_amount'=>'300','up_to'=>'8'}];
-            if($request->billing_scheme=='tiered'||'volume'){
-                $planParams=array(
-                    "id" => $plan_id, 
-                    "tiers" => $tiers, 
-                    "billing_scheme" => "tiered", 
-                    "tiers_mode" => $request->billing_scheme, 
-                "nickname" => $request->plan_name, 
-                "currency" => "USD", 
-                // "amount" => $amount, 
-                "interval" => $interval, 
-                "interval_count" => $interval_count,
-                "product"=>$product_id,
-                "trial_period_days" => $request->trial_period_days,"metadata" => $request->text);
-            }else{
-                //non tier plan
-                $planParams=array("id" => $plan_id, 
-        "nickname" => $request->plan_name, 
-        "currency" => "USD", 
-        "amount" => $amount, 
-        "interval" => $interval, 
-        "interval_count" => $interval_count,
-        "product"=>$product_id,
-        "trial_period_days" => $request->trial_period_days,"metadata" => $request->text);
-            }
-            // dd($planParams);
+           
         $plan = \Stripe\Plan::create($planParams);
         
         return redirect('admin/subscriptionpack')->with('info','SubscriptionPack Added Successfully');
@@ -216,6 +201,41 @@ return $plans->data;
     } 
 
 
+    private function GetPlanInterval($request){
+        $interval = strtolower($request->plan_interval);
+        $interval_count = 1;
+        if ($interval == 'custom') {
+            $interval_count = (int) $request->interval_count;
+            $interval = $request->coustom_interval;
+        } else {
+            if ($interval == '3-month' || $interval == '6-month') {
+                $array = explode('-', $interval);
+                $interval_count = (int) $array[0];
+                $interval = $array[1];
+            }
+        }
+
+        return [$interval_count,$interval];
+    }
+    private function GetPlanParams($request){
+       
+       $intervalvalues= $this->GetPlanInterval($request);
+       $interval_count = (int) $intervalvalues[0];
+                $interval = $intervalvalues[1];
+        $plan_id=Str::random(12);
+        $product_id=$request->product;
+        $planParams = array(
+            "id" => $plan_id,
+            "nickname" => $request->plan_name,
+            "currency" => "USD",
+            "interval" => $interval,
+            "interval_count" => $interval_count,
+            "product" => $product_id,
+            "trial_period_days" => $request->trial_period_days,
+            "metadata" => $request->text
+        );
+        return $planParams;
+    }
     public function ProcessTiers($data){
 //   dd(array_key_last($data));
 // $lastEl = array_values(array_slice($data, -1))[0];
