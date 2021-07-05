@@ -28,7 +28,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','loginWithPasscode']]);
     }
 
     public function register(Request $request){
@@ -116,6 +116,38 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
+    public function loginWithPasscode(Request $request){
+        $deviceDetails	=getDeviceIdforAPI($request);
+       $passcode= $request->only('passcode');
+       $uid=UnHashUserID($passcode['passcode']);
+       $user = User::find($uid);
+        // $user = User::where('email', '=', $email)->first();
+
+        $expirationInMinutes = 43800;//one month in minutes
+        JWTAuth::factory()->setTTL($expirationInMinutes);
+        $token = JWTAuth::fromUser($user);
+        // $credentials = c;
+        // $user=JWTAuth::user();
+
+        if($user->email_verified_at==null){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+        }
+
+        if($user->is_active==0){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+        }
+       $userRole= $user->roles->pluck('name');
+       //todo hotel check
+       if($userRole[0]=='user'){
+        
+        checkLoginLimit($uid,$token,$deviceDetails);
+        exit;
+        
+    }
+        // $user_data=array('name'=>$user->name,'email'=>$user->email,'token'=>$token);
+        
+        // return response()->json($user_data,200);
+    }
     public function verify(Request $request)
     {
        
