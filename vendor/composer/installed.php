@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '431659370d586a31a339ed5039636dea375ca784',
+    'reference' => '3e3b3f51192ac4b42902864974662f5a54b20acd',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -304,6 +304,15 @@
       ),
       'reference' => '8c3d0a3f6af734494ad8f6fbbee0ba92422859f3',
     ),
+    'hashids/hashids' => 
+    array (
+      'pretty_version' => '4.1.0',
+      'version' => '4.1.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '8cab111f78e0bd9c76953b082919fc9e251761be',
+    ),
     'illuminate/auth' => 
     array (
       'replaced' => 
@@ -568,7 +577,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '431659370d586a31a339ed5039636dea375ca784',
+      'reference' => '3e3b3f51192ac4b42902864974662f5a54b20acd',
     ),
     'laravel/socialite' => 
     array (
