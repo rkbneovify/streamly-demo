@@ -122,6 +122,10 @@ class Setting extends Controller
             return redirect()->route('home');
         }
        $id= Auth::user()->id;
+      
+       $hasid = HashUserID($id);
+    //  dump($hasid);
+    //  dd(UnHashUserID($hasid));
         $userinfo = User::find($id);
          $allSession=SessionTable::where([
         ['status', '=', '1'],
@@ -148,7 +152,7 @@ class Setting extends Controller
          
     //   dd($allSession);
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid'));
     }
 
     public function sessiondestroy($id,Request $request)

@@ -4,6 +4,7 @@ use App\SessionTable;
 use App\HotelRoomTable;
 use App\Models\Subscription;
 use Jenssegers\Agent\Agent;
+use Hashids\Hashids;
      function checkLoginLimit($user_id,$token,$deviceDetails){
         $login_limit =  GetLimitForUser($user_id);
     //find all by user_id and and status=active
@@ -808,6 +809,19 @@ function RemoveHotelRooms($quantity,$userid)
   ->orderBy("id", "DESC")
   ->take($quantity)
   ->delete();
+  
+}
+function HashUserID($id)
+{  
+  $hashids = new Hashids('streamly',10);
+  
+  $hasid = $hashids->encode($id);
+  return $hasid;
+}
+function UnHashUserID($hasid)
+{ 
+  $hashids = new Hashids('streamly',10);
+  return $hashids->decode($hasid)['0'];
   
 }
 ?>

@@ -1357,6 +1357,12 @@ el.nextElementSibling.classList.toggle("is-visible");
 									<a href="javascript:void(0)" class="change-password">Change password</a>
 								</span>
 							</li>
+							@if ( Auth::user()->subscribed('main'))
+								<li><details>
+    <summary>Get PassCode for logging in TV</summary>
+    {{$hasid}}
+</details></li>
+@endif
 						</ul>
 					</div>
 				</div>
