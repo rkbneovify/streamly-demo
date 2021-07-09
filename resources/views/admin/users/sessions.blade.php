@@ -46,11 +46,11 @@
                           User Name
                       </th>
                       <th style="width: 20%">
-                         No. connected device
+                      Email
                       </th>
-                      {{-- <th style="width: 30%">
-                          Email
-                      </th> --}}
+                      <th style="width: 30%">
+                          No. connected device
+                      </th> 
                       
                       {{-- <th style="width: 8%" class="text-center">
                           Status
@@ -68,6 +68,9 @@
                       </td>
                             <td>
                                 {{ $user->user->name ?? '' }}
+                            </td>
+                            <td>
+                                {{ $user->user->email ?? '' }}
                             </td>
                             
                             
