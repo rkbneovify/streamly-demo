@@ -821,7 +821,12 @@ function HashUserID($id)
 function UnHashUserID($hasid)
 { 
   $hashids = new Hashids('streamly',10);
+  if (!$hashids->decode($hasid)) {
+    return false;
+} else {
   return $hashids->decode($hasid)['0'];
+}
+ 
   
 }
 ?>
