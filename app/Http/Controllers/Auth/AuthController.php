@@ -120,6 +120,11 @@ class AuthController extends Controller
         $deviceDetails	=getDeviceIdforAPI($request);
        $passcode= $request->only('passcode');
        $uid=UnHashUserID($passcode['passcode']);
+       if(!$uid){
+          
+        $response = array('success' =>false ,'response_code'=>404,'message'=>'User not found');
+        return response()->json($response, 404);    
+       }
        $user = User::find($uid);
         // $user = User::where('email', '=', $email)->first();
 

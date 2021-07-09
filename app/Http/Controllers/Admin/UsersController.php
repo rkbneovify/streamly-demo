@@ -196,13 +196,14 @@ class UsersController extends Controller
     }
 
      public function sessiondestroy($id,Request $request)
-    {   $input=$request->only('access_token');
+    {  $input=$request->only('access_token');
       $tokenString=$input['access_token'];
-        $myarr=[];
+      $myarr=[];
         array_push($myarr,$id );  
        // print_r($myarr);
         $user= SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
         SessionTable::where([
+        ['users_id', '=', $id],
         ['status', '=', '1'],
         ['connected_devices', '!=', '1'],
          ])
@@ -214,24 +215,115 @@ config([
   'jwt.blacklist_enabled' => true
 ]);
 // JWTAuth::parseToken()->invalidate();
+$errors=[];
 try{
 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
 }catch (Exception $e) {
-    return redirect()->back()->with('info','Exception occured '.$e->getMessage().'');
+    $errors['error']=$e->getMessage();
 }catch (JWTException $e){
-    return redirect()->back()->with('info',''.$e->getMessage().'');
+    $errors['error']=$e->getMessage();
 }
         
          if($user){
-            return redirect()->back()->with('info','User Session Deleted Successfully');
-                      
-        
+             if($errors){
+            return redirect()->back()->with('info','User Session Deleted Successfully'.json_encode($errors));
+        }
+
+        return redirect()->back()->with('info','User Session Deleted Successfully');
+
         }else{
             return redirect()->back()->with('info','User Session Not found');
             
         }
 
         
+    }
+
+    private function destroyJWTtoken($JwtValues)
+{
+    $errors=[];
+        foreach ($JwtValues as $key => $value) {
+            
+            // if ($details == "error") {
+            //     array_push($this->errors, $model);
+            //     continue;
+            // }
+            // $user = JWTAuth::setToken($value['access_token'])->toUser();
+            // if($user == null){
+            //     dd('user is null bro');
+            //     }
+            // dd($user);
+            try { 
+                config([
+                    'jwt.blacklist_enabled' => true
+                  ]);
+                JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($value['access_token']), $forceForever = false);
+                 
+            } catch (Exception $e) {
+                if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+                    $value['error']=$e->getMessage();
+                    array_push($errors, $value);
+                    
+                }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+                    $value['error']=$e->getMessage();
+                    array_push($errors, $value);
+                    
+                }else{
+                    $value['error']=$e->getMessage();
+                    array_push($errors, $value);
+                    
+                }
+                continue;
+            }
+
+        
+    }
+    // dump($errors);
+    if(!empty($errors)){
+    return $errors;}else{
+        return 'no error';
+    }
+}
+     public function multisessiondestroy(Request $request)
+    {  
+        $this->validate($request, [
+            'id' => 'required|array',
+            "id.*"  => "required|numeric|distinct",
+       
+        ]);
+               $ids = $request->id;
+            //   dd($ids);
+               $user= SessionTable::select('id','connected_devices','users_id','access_token')->whereIn('id', $ids)->get();
+            //    dump($user->toArray());
+               
+           $r= $this->destroyJWTtoken($user->toArray());
+           
+
+            $userid=$user['0']['users_id'];
+            $q='';
+            if(!$r=='no error'){
+             $q=count($r).' error were found';
+            }
+            // dump($userid);
+            // dd($ids);
+            // return response()->json(['message'=>json_encode($items)],200);
+            $sessionRemove= SessionTable::whereIn('id', $ids)->update(['status' => 0,'modified_on' => Carbon::now()]);
+            SessionTable::where('users_id', $userid)->where([
+            ['status', '=', '1'],
+            ['connected_devices', '!=', '1'],
+             ])
+             ->update([
+               'connected_devices' => DB::raw('`connected_devices` - 1 ')
+               ]);
+            if($sessionRemove){
+                if(!$q){
+             return response()->json(['message'=>"User Session Deleted Successfully.".$q,'jwterror'=>$r],200);
+                }
+
+            return response()->json(['message'=>"User Session Deleted Successfully."],200);
+        }else{
+         return response()->json(['message'=>"User Session Not found"],400);
+        }
     }
 
     public function UserAjaxData(Request $request)
