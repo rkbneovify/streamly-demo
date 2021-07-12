@@ -1,5 +1,5 @@
-<?php 
-use Laravel\Cashier\Cashier;?>
+<?php
+use Laravel\Cashier\Cashier; ?>
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
@@ -1293,46 +1293,38 @@ el.nextElementSibling.classList.toggle("is-visible");
                            </div>
                         </div>
 
-												<div class="TDjQOc" data-device-id="Acb514901592fd168"  data-source="3">
-													<div role="button" class="dotmenu dotmenu1 dotmenu2 "  onclick="myFunction(this)"  aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
-														 <div class="NWlf3e MbhUzd"  style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div>
-														 <span jsslot="" class="MhXXcc oJeWuf">
+						<div class="TDjQOc" data-device-id="Acb514901592fd168" data-source="3">
+	<div role="button" class="dotmenu dotmenu1 dotmenu2 " onclick="myFunction(this)" aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
+		<div class="NWlf3e MbhUzd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div> <span jsslot="" class="MhXXcc oJeWuf">
 																<span class="Lw7GHd snByac">
 																	 <svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="gnN5i NMm5M">
 																			<path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
 																	 </svg>
-																</span>
-														 </span>
-													</div>
-													<div class="dotmenufull dotmenufull1 dotmenufull2 toggle-content" role="menu" tabindex="0" 
-													data-back-to-cancel="false" 
-	style="position: absolute; max-width: 256px; max-height: 136px;z-index:1;
+																</span> </span>
+	</div>
+	<div class="dotmenufull dotmenufull1 dotmenufull2 toggle-content" role="menu" tabindex="0" data-back-to-cancel="false" style="position: absolute; max-width: 256px; max-height: 136px;z-index:1;
 	right: 1%; top: 100%;
 	">
-		 <div class="dotmenubody"  style="max-width: 256px; max-height: 136px;">
-				<div class="dotinnermenubody dotinnermenubody1" style="width: 256px; height: auto; min-width: 256px;">
-					 <span  class="dotinnermenuitem"  aria-label="Sign out this device" role="menuitem" tabindex="-1">
+		<div class="dotmenubody" style="max-width: 256px; max-height: 136px;">
+			<div class="dotinnermenubody dotinnermenubody1" style="width: 256px; height: auto; min-width: 256px;"> <span class="dotinnermenuitem" aria-label="Sign out this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="cEoysc">
 								 <div class="dotinnermenuitemname remove-device" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}" >Sign out</div>
 							</div>
-					 </span>
-					 <span jsslot="" class="dotinnermenuitem"  aria-label="Find phone" role="menuitem" tabindex="-1">
+					 </span> <span jsslot="" class="dotinnermenuitem" aria-label="Find phone" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="CUoVIc">
 								 <div class="dotinnermenuitemname add-device-name" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
 							</div>
-					 </span>
-					 <span style="display: none;" jsslot="" class="dotinnermenuitem"  aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+					 </span> <span style="display: none;" jsslot="" class="dotinnermenuitem" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="nJTW3e">
 								 <div class="dotinnermenuitemname">Don’t recognize this device?</div>
 							</div>
-					 </span>
-				</div>
-		 </div>
+					 </span> </div>
+		</div>
 	</div>
-											 </div>
+</div>
                         <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>
                      </div>
                   </div>
@@ -1418,8 +1410,14 @@ el.nextElementSibling.classList.toggle("is-visible");
 							</li>
 							@foreach ($invoices as $invoice)
 							<li>
-								<?php if($invoice->date){
-									$invoicedate=date('M d, Y',$invoice->date);} else {$invoicedate='';}?>
+								<?php if ($invoice->date)
+{
+    $invoicedate = date('M d, Y', $invoice->date);
+}
+else
+{
+    $invoicedate = '';
+} ?>
 								{{-- {{$invoice}} --}}
 								{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}
 								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
