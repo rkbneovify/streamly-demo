@@ -241,6 +241,11 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
 
     private function destroyJWTtoken($JwtValues)
 {
+    // \Tymon\JWTAuth\Blacklist::has
+    // false === \Tymon\JWTAuth\Blacklist::has(
+    //     \Tymon\JWTAuth\Facades\JWTAuth::getPayload($token)
+    // )
+
     $errors=[];
         foreach ($JwtValues as $key => $value) {
             
