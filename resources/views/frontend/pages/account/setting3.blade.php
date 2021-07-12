@@ -283,6 +283,11 @@ body:not(.uOat3d) .device-box-card-inside:not(.VfPpkd-ksKsZd-mWPk3d).device-box-
  right:0;
  top:0;
 }
+.TDjQOc2 {
+ position:absolute;
+ left:0;
+ top:0;
+}
 .jpoelc {
  position:relative;
 }
@@ -1088,6 +1093,62 @@ $('#changeDeviceName').modal('show');
 @if ($errors->has('old_password')||$errors->has('password')||$errors->has('password_confirmation') )
 		jQuery('#changePassword').modal('show');
 		@endif
+
+// Check all 
+$('#checkall').click(function(){
+      if($(this).is(':checked')){
+         $('.update_check').prop('checked', true);
+      }else{
+         $('.update_check').prop('checked', false);
+      }
+   });
+		$(document).on('click', '.update_record', function(){
+        var id = [];var status;
+        
+        if(confirm("Are you sure you want to Update this data?"))
+        {
+            $('.update_check:checked').each(function(){
+                id.push($(this).val());
+            });
+            console.log("id",id); 
+            if(id.length > 0)
+            {   
+              
+              status= this.id;
+                $.ajax({
+                    url:"{{url('admin/multisessiondestroy') }}",
+                    headers: {'x-csrf-token': '{{ csrf_token() }}'},
+                    method:"post",
+                    data:{id:id,status:status},
+                    success:function(data)
+                    { 
+                      console.log(data);
+                        alert(data.message);
+                        // console.log(data.message);
+                        // console.log('data',data);
+                        $.each(id, function( index, value ) {
+                         // alert( index + ": " + value );
+                          $('#'+value+'').fadeTo(400, 0, function () { 
+                           $(this).remove();
+                            });
+                       });
+                    },
+          error: function (xhr, status, error) {
+            alert(xhr.responseJSON.message);
+            console.log(xhr.responseJSON);
+          //   $.each(xhr.responseJSON.errors, function (key, item) 
+          // {
+          //   $("#errors").append("<li class='alert alert-danger'>"+item+"</li>")
+          // });
+          }
+                });
+            }
+            else
+            {
+                alert("Please select atleast one checkbox");
+            }
+        }
+    });
 		});
 	    function myFunction(el) {
   el.classList.toggle("iWO5td");
@@ -1243,9 +1304,11 @@ el.nextElementSibling.classList.toggle("is-visible");
 				<h2 class="section-heading text-center">Account Settings</h2>
 				
 				<div class="">
+				<th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
+    
 					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
                   @foreach($allSession as $key => $device)
-                  <div data-item-id="{{$key+1}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
+                  <div data-item-id="{{$key+1}}" id="{{$device->id}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
                      <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A8b4a0279f3be6a6c" {!!$device->device['classes']??''!!}>
                         <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
                            <div class="device-details">
@@ -1323,6 +1386,14 @@ el.nextElementSibling.classList.toggle("is-visible");
 							</div>
 					 </span> </div>
 		</div>
+	</div>
+</div>
+						<div class="TDjQOc2" data-device-id="Acb514901592fd168" data-source="3">
+	<div role="button" class="dotmenu dotmenu1 dotmenu2 "  aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
+		<div class="NWlf3e MbhUzd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div> <span jsslot="" class="MhXXcc oJeWuf">
+																<span class="Lw7GHd snByac">
+																<input type='checkbox' class='update_check' id='delcheck_{{$device->id}}'  value='{{$device->id}}'>
+																</span> </span>
 	</div>
 </div>
                         <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>

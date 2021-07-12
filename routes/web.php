@@ -88,7 +88,7 @@ Route::get('/users/edit/{id}', 'Admin\UsersController@edit');
 Route::put('userupdate/{id}','Admin\UsersController@update')->name('userupdate');
 Route::delete('users/destroy/{id}', 'Admin\UsersController@destroy');
 Route::delete('users/sessiondestroy/{id}', 'Admin\UsersController@sessiondestroy')->name('users.sessiondestroy');
-Route::post('/multisessiondestroy', 'Admin\UsersController@multisessiondestroy')->name('multisessiondestroy');
+
 
 Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
 
@@ -257,3 +257,4 @@ Route::get('/stripesync', function (Request $request) {
  });
 //  Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
+Route::post('admin/multisessiondestroy', 'Admin\UsersController@multisessiondestroy')->name('multisessiondestroy')->middleware(['auth']);
