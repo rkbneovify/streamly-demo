@@ -154,6 +154,29 @@ class Setting extends Controller
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
     	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid'));
     }
+    public function showSettingpage4(){
+        $invoices='1';
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+       $id= Auth::user()->id;
+      
+       $hasid = HashUserID($id);
+    //  dump($hasid);
+    //  dd(UnHashUserID($hasid));
+        $userinfo = User::find($id);
+         $allSession=SessionTable::where([
+        ['status', '=', '1'],
+        ['users_id', '=', $id],
+         ])->orderBy('connected_devices', 'asc')->get();
+        
+         
+         
+    	return view('frontend.pages.account.devicemanagement', compact('login','allSession','userinfo','hasid'));
+    }
 
     public function sessiondestroy($id,Request $request)
     {   $input=$request->only('access_token');
@@ -336,7 +359,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         $token = JWTAuth::fromUser($user);
 
         $deviceDetails=getDeviceIdforWeb();
-        $login_limit = 5;
+        $login_limit = GetLimitForUser($user_id);
         //find all by user_id and and status=active
         $active_session = SessionTable::where([
         ['status', '=', '1'],
