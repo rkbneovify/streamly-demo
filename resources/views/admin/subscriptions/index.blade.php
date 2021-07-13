@@ -1,3 +1,6 @@
+<?php 
+// dd($subscriptions);
+ ?>
 @extends('master')
 @section('content')
 
@@ -47,6 +50,9 @@
                           User Name
                       </th>
                       <th style="width: 20%">
+                          Email
+                      </th>
+                      <th style="width: 20%">
                           Subscription
                       </th>
                       <th style="width: 20%">
@@ -73,11 +79,12 @@
               
     <td>
       
-       @foreach($users as   $key => $value)
-                       {{ ( $key == $subscription->user_id) ? $value  : '' }} 
+      
+                       {{ $subscription->user->name??'' }} 
                        
-                  @endforeach
+              
     </td>
+    <td>{{ $subscription->user->email??'' }} </td>
     {{-- <select name="product" id="product" class="form-control" disabled>
                   
       @foreach($plans as $id => $pack)
