@@ -37,11 +37,11 @@ class SubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {    $users = User::all()->pluck('name', 'id');
-        $subscriptions = Subscription::get();
+    {    
+        $subscriptions = Subscription::with('user')->get();
         $plans = \Stripe\Plan::all();
          $plans->data;//Customers::with('country')->paginate(20);
-        return view('admin.subscriptions.index', compact('subscriptions','plans','users'));
+        return view('admin.subscriptions.index', compact('subscriptions','plans'));
         
     }   
     public function showAllcustomer()
