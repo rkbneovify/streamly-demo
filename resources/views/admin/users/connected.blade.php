@@ -49,6 +49,12 @@
                       <th style="width: 20%">
                           Device Name
                       </th>
+                      <th style="width: 20%">
+                      User agent
+                      </th>
+                      <th style="width: 20%">
+                      Created on
+                      </th>
                       {{-- <th style="width: 30%">
                           Email
                       </th> --}}
@@ -76,6 +82,12 @@
                             
                             <td>
                                 {{ $user->device_name ?? '' }}
+                            </td>
+                            <td>
+                                {{ $user->useragent ?? '' }}
+                            </td>
+                            <td>
+                                {{ $user->created_on ?? '' }}
                             </td>
                             {{-- <td class="project-state">
                             @if ($user->is_active===1)
