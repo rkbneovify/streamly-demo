@@ -187,7 +187,7 @@ class UsersController extends Controller
         $roles = Role::get(); //get all roles
         $userRoles = $user->roles->pluck('id')->toArray();
         //dd($roles);
-        $allSession=SessionTable::with('user')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        $allSession=SessionTable::with('user')->selectRaw("id,users_id , connected_devices,access_token, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,created_on, JSON_EXTRACT(device,'$.useragent') AS useragent")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $id],
