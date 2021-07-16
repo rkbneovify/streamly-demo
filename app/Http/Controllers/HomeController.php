@@ -625,9 +625,9 @@ config([
 try {
     JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
     }catch (Exception $e) {
-        return redirect('account/settings')->with('message','Exception occured '.$e->getMessage().'');
+        return redirect()->back()->with('message','Exception occured '.$e->getMessage().'');
     }catch (JWTException $e){
-        return redirect('account/settings')->with('message',''.$e->getMessage().'');
+        return redirect()->back()->with('message',''.$e->getMessage().'');
     }
      
                 }
