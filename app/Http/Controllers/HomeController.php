@@ -441,7 +441,12 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     } 
     
     public function showSupportedDevices(){
-       
+       /**
+        * *normal coment
+       *! This needs to be changed
+       *? think twice before testing this method
+       * TODO: Refactor the view
+       */ 
         if( Auth::check()){
             $login = true;}else{ $login = false; }
        
