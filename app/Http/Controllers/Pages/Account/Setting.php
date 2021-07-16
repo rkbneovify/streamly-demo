@@ -200,18 +200,18 @@ config([
 try {
 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
 }catch (Exception $e) {
-    return redirect('account/settings')->with('message','Exception occured '.$e->getMessage().'');
+    return redirect()->back()->with('message','Exception occured '.$e->getMessage().'');
 }catch (JWTException $e){
-    return redirect('account/settings')->with('message',''.$e->getMessage().'');
+    return redirect()->back()->with('message',''.$e->getMessage().'');
 }
 
         
          if($user){
-            return redirect('account/settings')->with('message','Device Session Deleted Successfully');
+            return redirect()->back()->with('message','Device Session Deleted Successfully');
                       
         
         }else{
-            return redirect('account/settings')->with('message','Device Session Not found');
+            return redirect()->back()->with('message','Device Session Not found');
             
         }
 
@@ -258,7 +258,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
        // dd($input); exit; get all the post data
         $user = User::find($id);
         $user->update($input); //update the user info
-     return redirect('account/settings')->with('message','Password Updated Successfully');
+     return redirect()->back()->with('message','Password Updated Successfully');
         
         
     }
@@ -272,7 +272,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         $user=SessionTable::where('id', $id)->update( [
             'device->personaldevicename' => $request->devicename
         ]);
-     return redirect('account/settings')->with('message','Device name Updated Successfully');
+     return redirect()->back()->with('message','Device name Updated Successfully');
         
         
     }
