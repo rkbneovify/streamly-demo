@@ -135,7 +135,7 @@ return $second->get()
             $login = false;
         }
         $stats1 = array_pop($stats);
-        return view('frontend.home', compact('login','plans','pagechannel','stats1','Genrekey'));
+        return view('frontend.homecache', compact('login','plans','pagechannel','stats1','Genrekey'));
     }
 
     public function botman(){
