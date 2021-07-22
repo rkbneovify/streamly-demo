@@ -41,7 +41,7 @@ use Hashids\Hashids;
         return response()->json([
           'success' => false,
           'response_code'=>429,
-          'message'=>'Your account is in use on 5 devices. Please stop playing on other devices to continue',
+          'message'=>'Your account is in use on '.$login_limit .' devices. Please stop playing on other devices to continue',
           //'loggedindeviceinfointheseId'=>$myarr,
         ],429)->send();
         
