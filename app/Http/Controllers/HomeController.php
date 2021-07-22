@@ -89,16 +89,24 @@ $Genrekey=$pagechannel->keys();
         } else {
             $login = false;
         }
-
-        return view('frontend.home', compact('login','plans','pagechannel','Genrekey'));
+    //   dump($plans->data);
+      $d=collect($plans->data)
+      ->groupBy('billing_scheme');
+    //   ->where('billing_scheme', 'per_unit')
+      
+      $plansdetails=$d->all();
+      $plankey=$d->keys();
+        return view('frontend.home', compact('login','plans','pagechannel','Genrekey','plansdetails','plankey'));
     }
 
     public function indexCache()
     { 
         $stats = Cache::getMemcached()->getStats();
+        $getAllKeys = Cache::getMemcached()->getAllKeys();
+        dump($getAllKeys);
         $plans = \Stripe\Plan::all(['active'=>true]);
        //for a day cache
-           $pagechannel  = Cache::remember('pagechannel',60*60*24, function () {
+           $pagechannel  = Cache::remember('homepagechannel',60*60*24, function () {
 
             $imagePath=asset("/uploads/channellogo/notfound.png");
    
@@ -135,7 +143,7 @@ return $second->get()
             $login = false;
         }
         $stats1 = array_pop($stats);
-        return view('frontend.homecache', compact('login','plans','pagechannel','stats1','Genrekey'));
+        return view('frontend.homecache', compact('login','plans','pagechannel','stats1','Genrekey','getAllKeys'));
     }
 
     public function botman(){

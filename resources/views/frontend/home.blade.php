@@ -538,145 +538,73 @@ background-position: center;
 			</div>
 	    </div>
 	</div> --}}
+    <style>
+    
+details > summary {
+    list-style-type: none;
+}
 
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+details > summary::before {
+    content: '\002630';
+}
+details[open] > summary::before {
+    content: '\2715';
+}</style>
 
 	<!-- Select Plan-->
-    <section class="page-section" id="services">
-        <div class="container">
-            <div class="text-center">
-                <h2 class="section-heading">Select Your Plan</h2>
-            </div>
+<section class="page-section bg-light genre">
+    <div class="container">
+        <div class="text-center">
 
-<!-- Stats Card -->
+            <h2 class="section-heading">Available Plans</h2>
+           
+            <div class="row">
+                <div class="col-centered" id="tab-buttons">
 
-{{-- <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Stats</h5>
-      <table class="table table-striped">
-        <tr>
-          <td>Set commands</td>
-          <td>{{ $stats1['cmd_set'] }}</td>
-        </tr>item1
-        <tr>
-          <td>Get hits</td>
-          <td>{{ $stats1['get_hits'] }}</td>
-        </tr>
-        <tr>
-          <td>Get misses</td>
-          <td>{{ $stats1['get_misses'] }}</td>
-        </tr>
-      </table>
-    </div>
-  </div> --}}
-
-            <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
-                @foreach ($plans->data as $plan)
-                <div class="col-sm-4 select-plan-card">
-                	<div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
-                		<p>{{ $plan->nickname }}</p>
-                        @if (!empty($plan->tiers))
-                        <details>
-  <summary><h3>Tiers {{$plan->interval_count}} {{$plan->interval}}</h3></summary>
-  <table class="table table-bordered">
-	<thead style="background-color:#FFFFFF;">
-		<tr >
-			<td >
-				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Quantity</strong></span>
-				</div>
-			</td>
-			<td >
-				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Price per unit</strong></span>
-				</div>
-			</td>
-			<td >
-				<div  style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Flat amount</strong></span>
-				</div>
-			</td>
-		</tr>
-	</thead>
-	<tbody >
-  @foreach($plan->tiers as $id => $tier)
-    @if($loop->first)
-    <tr >
-			<td class="">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the first <strong>{{$id+1}} to {{ $tier->up_to }}</strong></span></span>
-				</div>
-			</td>
-			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
-			</td>
-			<td class="Table-cel">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
-			</td>
-		</tr>
-        @endif
-        @if(!($id==0) && !($id == array_key_last($plan->tiers)))
-		<tr >
-			<td class="">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the next <strong>{{$plan->tiers[$id-1]->up_to + 1}}   to {{$tier->up_to}}</strong></span></span>
-				</div>
-			</td>
-			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
-			</td>
-			<td class="Table-cel">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
-			</td>
-		</tr>
-        @endif
-        @if($loop->last)  
-		<tr >
-			<td class="">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the rest {{ $tier->up_to }}</span></span>
-				</div>
-			</td>
-			<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span >{{Cashier::formatAmount($tier->amount??'0', $plan->currency??'USD')}}</span></div>
-			</td>
-			<td class="Table-cel">
-				<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plan->currency??'USD')}}</span></div>
-			</td>
-		</tr>
-        @endif
-        @endforeach
-	</tbody>
-</table>
- </details>
-                        @elseif (!empty($plan->amount))
-                        <h3> {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD')}}/ {{$plan->interval_count}} {{$plan->interval}}</h3>
-
-                        @else
-<h3>unknown</h3>
-@endif
+ @foreach ($plankey as $plank) 
+ @if ($loop->first)  
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$plank}}</a>
+ @else
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$plank}}</a>
+ @endif
+ @endforeach
                     
-                		<hr/>
-
-                        <ul style="position: relative;width: 75%;padding-left: 20px;margin: 0 auto;">
-                            <li>Trial days: {{$plan->trial_period_days??'no trials'}} days</li>
-                            @foreach ($plan->metadata->jsonSerialize() as $key => $value)
-                  
-                    
-                    <li>{{$value??'Lorem Ipsum is simply dummy text of the printing'}}</li>
-                    @endforeach
-                          </ul>
-
-                        <?php
-
-                        if ( isset($login) && $login ) {
-                            $selectPLanLink = 'href=/payment';
-                        } else {
-                            $selectPLanLink = 'onclick=openNavReg() href=javascript:void(0);';
-                        }
-
-                        ?>
-
-                		<a class="btn btn-primary btn-select-plan btn-xl js-scroll-trigger" {{$selectPLanLink}} >SELECT PLAN</a>
-                	</div>
-                </div> @endforeach
+                </div>
             </div>
         </div>
-    </section>
+   <div class="row " id="accordion">
+        @foreach($plansdetails as $key => $singlePlansDetails)
+        @if ($loop->first)  
+        <div id="{{$key}}" class=" collapse  text-center show" data-parent="#accordion">
+        <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
+           @foreach ($singlePlansDetails as $singlePlansDetail)
+            
+           @component('components.plan',['singlePlansDetail' => $singlePlansDetail,'type'=>'per_unit'])
+		
+		@endcomponent
+              @endforeach</div>
+        </div> 
+   
+    @else
 
+    <div id="{{$key}}" class=" collapse  text-center " data-parent="#accordion">
+        <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
+           @foreach ($singlePlansDetails as $singlePlansDetail)
+            
+           @component('components.plan',['singlePlansDetail' => $singlePlansDetail,'type'=>'tiered'])
+		
+		@endcomponent
+              @endforeach</div>
+        </div>
+@endif
+    @endforeach
+</div>
+    </div>
+</section>
 <style>.custom-row .row{
     margin-top: 2rem;
 }
