@@ -6,9 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,20 +18,11 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
-import com.streamly.TVApp.streamly.epg.comedy.ComedyFragment;
-import com.streamly.TVApp.streamly.epg.family.FamilyFragment;
-import com.streamly.TVApp.streamly.epg.kids.KidsFragment;
-import com.streamly.TVApp.streamly.epg.movies.MoviesFragment;
-import com.streamly.TVApp.streamly.epg.news.NewsFragment;
-import com.streamly.TVApp.streamly.epg.others.OtherFragment;
-import com.streamly.TVApp.streamly.epg.sports.SportFragment;
+import com.streamly.TVApp.streamly.epg.channel.ChannelFragment;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
-import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.search_channels.SearchActivity;
-import com.streamly.TVApp.streamly.search_channels.SearchAdapter;
-import com.streamly.TVApp.streamly.search_channels.SearchModel;
 import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
@@ -135,14 +126,9 @@ private TextView settingText,goBackText;
     }
 
     public void fragment(String type , List<Datum> dataListm){
-        for(int j=0; j<dataListm.size(); j++)
-        {
-            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getCallSign()) ;
-            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getGenrename());
-            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getId());
-        }
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new KidsFragment(MainActivity.this , dataListm))
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this , dataListm))
                     .commit();
 
 
