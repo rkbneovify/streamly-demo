@@ -65,7 +65,13 @@ class Payment extends Controller
             
             return redirect()->route('payment',[Auth::user()->subscription('main')->stripe_plan]);
         } 
-    	return view('frontend.pages.plans', compact('plans'));
+        $d=collect($plans->data)
+      ->groupBy('billing_scheme');
+    //   ->where('billing_scheme', 'per_unit')
+      
+      $plansdetails=$d->all();
+      $plankey=$d->keys();
+    	return view('frontend.pages.plans', compact('plans','plansdetails','plankey'));
         
     }
 
