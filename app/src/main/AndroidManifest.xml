@@ -3,12 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.streamly.TVApp.streamly">
 
-    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
-    <uses-feature android:name="android.software.leanback" android:required="true" /> <!-- Used for loading the channel images with Glide -->
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="false" />
+    <uses-feature
+        android:name="android.software.leanback"
+        android:required="true" /> <!-- Used for loading the channel images with Glide -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -22,9 +25,10 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name="com.streamly.TVApp.streamly.QRCode.QRCodeActivity"></activity>
-        <activity android:name="com.streamly.TVApp.streamly.search_channels.SearchActivity" />
-        <activity android:name="com.streamly.TVApp.streamly.playervideo.PlayerActivity"></activity>
+        <activity android:name=".HotelQRCode.HotelQRCodeActivity"></activity>
+        <activity android:name=".QRCode.QRCodeActivity" />
+        <activity android:name=".search_channels.SearchActivity" />
+        <activity android:name=".playervideo.PlayerActivity" />
         <!--
         <activity
             android:name=".MainActivity"
@@ -41,13 +45,13 @@
         </activity>
         -->
         <activity
-            android:name="com.streamly.TVApp.streamly.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:windowSoftInputMode="stateAlwaysVisible" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
         <!--  -->
         <!-- </activity> -->
-        <activity android:name="com.streamly.TVApp.streamly.log_in.LogInActivity" />
+        <activity android:name=".log_in.LogInActivity" />
         <activity
-            android:name="com.streamly.TVApp.streamly.splash.SplashActivity"
+            android:name=".splash.SplashActivity"
             android:banner="@drawable/app_icon_tv"
             android:icon="@drawable/app_icon_tv"
             android:logo="@drawable/app_icon_tv">
@@ -57,7 +61,7 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.streamly.TVApp.streamly.MainActivity" />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

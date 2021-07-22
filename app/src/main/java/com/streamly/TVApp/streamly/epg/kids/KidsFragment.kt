@@ -13,10 +13,14 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.security.ProviderInstaller
 import com.streamly.TVApp.streamly.*
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.epg.Datum
+import com.streamly.TVApp.streamly.epg.family.FamilyFragment
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
 import com.streamly.TVApp.streamly.log_in.LogInActivity
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
@@ -31,11 +35,14 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import javax.net.ssl.SSLContext
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
@@ -216,9 +223,10 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 //                        (activity as Activity).finish()
 //                    }
 //                })
-
+        Log.e(TAG,"kids fragment data list 0 "+list)
         list.forEach {
              channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
+
         }
 
     }
@@ -232,6 +240,7 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
                    .subscribe(
                            {
                                //success
+                               Log.e(TAG,"GET SECHEDULELIST "+it.message);
                                val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
                                Log.e("### episodeData", it.data.size.toString())
@@ -246,30 +255,43 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 
                                //#neovifyissueresolved28sep
                                for (i in 0 until it.data.size) {
-                                   verticalBean = VerticalHomeBean()
+
+                                   for (j in 0 until channels.size)
+                                   {
+                                       if (it.data[i].callSign.toString() == channels[j].name.toString())
+                                       {
+
+                                           verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                                   verticalBean.headerTitle = it.data[i].callSign
-                                   homelist = ArrayList()
+                                           verticalBean.headerTitle = it.data[i].callSign
+                                           Log.e(TAG,"call sign 1 "+it.data[i].callSign)
 
-                                   it.data[i].programs.forEach {
-                                       homeBean = HomeBean()
-                                       showNames.add(it.title)
-                                       showName_list.add(it.title)
+                                           homelist = ArrayList()
 
-                                       val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
-                                       val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
+                                           it.data[i].programs.forEach {
+                                               homeBean = HomeBean()
 
-                                       homeBean.title = it.title
-                                       homeBean.description = it.description
-                                       homeBean.start_time = st
-                                       homeBean.end_time = et
-                                       homelist.add(homeBean)
+                                               showNames.add(it.title)
+                                               showName_list.add(it.title)
+
+                                               val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
+                                               val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
+
+                                               homeBean.title = it.title
+                                               homeBean.description = it.description
+                                               homeBean.start_time = st
+                                               homeBean.end_time = et
+                                               homelist.add(homeBean)
+                                           }
+
+                                           verticalBean.allItemsInSection = homelist
+                                           channel_showName_list.add(it.data[i].getmId())
+                                           verticallist.add(verticalBean)
+                                       }
                                    }
 
-                                   verticalBean.allItemsInSection = homelist
-                                   channel_showName_list.add(it.data[i].getmId())
-                                   verticallist.add(verticalBean)
+
                                }
 
 
@@ -282,6 +304,7 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
 //                           Log.e("###${TAG}", "outSideIT " + channel)
 
                                    if (k < channels.size) {
+
                                        val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
                                        var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 
@@ -304,6 +327,7 @@ class KidsFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuid
                                                        verticallist[k].allItemsInSection!![p].description!!,
                                                        channels.get(k).videoUrl.toString())
                                                Log.e(TAG, "getSecondApi: "+channels.get(k).id )
+                                               Log.e(TAG, "getSecondApi 2 : "+channels.get(k).name )
 
                                                scheduleList.add(schedule)
                                                nextTime = endTime

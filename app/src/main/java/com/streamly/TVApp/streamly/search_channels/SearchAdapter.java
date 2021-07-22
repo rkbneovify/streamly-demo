@@ -31,9 +31,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     private SearchActivity searchActivity;
 
 
+
     public SearchAdapter() {
     }
-
     public SearchAdapter(Context context, List<SearchModel> list, SearchActivity searchActivity) {
         this.context = context;
         this.list = list;

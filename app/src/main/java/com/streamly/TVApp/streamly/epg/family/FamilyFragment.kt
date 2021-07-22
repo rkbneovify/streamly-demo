@@ -246,6 +246,8 @@ class FamilyFragment (context: Context): ProgramGuideFragment<FamilyFragment.Sim
 
                             //#neovifyissueresolved28sep
                             for (i in 0 until it.data.size) {
+
+
                                 verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
@@ -282,6 +284,7 @@ class FamilyFragment (context: Context): ProgramGuideFragment<FamilyFragment.Sim
 //                           Log.e("###${TAG}", "outSideIT " + channel)
 
                                 if (k<channels.size) {
+
                                     val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
                                     var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 

@@ -17,6 +17,4 @@ public class NetworkKeys {
     public static final String KEY_APP_JSON="application/json";
     public static final String KEY_SUPPORT="/api/auth/support";
 
-
-
 }

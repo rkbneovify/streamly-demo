@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
+import com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
@@ -32,7 +33,7 @@ public class LogInActivity extends FragmentActivity {
     private  String uniqueId;
     private EditText edUserName,edPassword;
     private TextView txtNeedHelp;
-    private Button btnSignIn,btnRegisterView,btnTermsUses;
+    private Button btnSignIn,btnRegisterView,btnTermsUses,btnHotelLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class LogInActivity extends FragmentActivity {
         setContentView(R.layout.activity_log_in);
         initViews();
          uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.i(TAG, "onCreate: tv uniqueId "+uniqueId);
 
 
         dialog= CommonUtility.custom_loader(LogInActivity.this);
@@ -104,6 +106,14 @@ public class LogInActivity extends FragmentActivity {
                 terms.show();
             }
         });
+        btnHotelLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LogInActivity.this, HotelQRCodeActivity.class));
+
+
+            }
+        });
     }
 
 
@@ -112,6 +122,7 @@ public class LogInActivity extends FragmentActivity {
         edPassword=findViewById(R.id.ed_password);
         txtNeedHelp=findViewById(R.id.txt_need_help);
         btnSignIn=findViewById(R.id.btn_sign_in);
+        btnHotelLogin=findViewById(R.id.btn_hotel_sign_in);
         btnRegisterView=findViewById(R.id.btn_register_view);
         btnTermsUses=findViewById(R.id.btn_terms_uses);
     }

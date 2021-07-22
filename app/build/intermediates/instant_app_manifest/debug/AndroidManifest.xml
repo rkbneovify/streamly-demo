@@ -33,6 +33,7 @@
         android:testOnly="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true" >
+        <activity android:name="com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity" />
         <activity android:name="com.streamly.TVApp.streamly.QRCode.QRCodeActivity" />
         <activity android:name="com.streamly.TVApp.streamly.search_channels.SearchActivity" />
         <activity android:name="com.streamly.TVApp.streamly.playervideo.PlayerActivity" />

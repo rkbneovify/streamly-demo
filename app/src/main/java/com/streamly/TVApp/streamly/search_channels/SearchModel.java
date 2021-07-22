@@ -7,6 +7,7 @@ public class SearchModel {
 
 
     public SearchModel() {
+
     }
 
     public SearchModel(String channelTitle, String logoUrl) {

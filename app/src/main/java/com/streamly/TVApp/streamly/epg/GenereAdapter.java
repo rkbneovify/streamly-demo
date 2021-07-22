@@ -54,6 +54,7 @@ public class GenereAdapter extends RecyclerView.Adapter<GenereAdapter.MyViewHold
             @Override
             public void onClick(View view) {
                 if (ctx instanceof MainActivity) {
+
                     ((MainActivity)ctx).fragment(keyList.get(position) , dataList.get(keyList.get(position)));
                 }
             }

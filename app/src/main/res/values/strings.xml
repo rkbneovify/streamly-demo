@@ -2,6 +2,7 @@
     <string name="app_name">Streamly TV</string>
     <string name="sign_in">Sign In</string>
     <string name="signIn">Sign in</string>
+    <string name="hotelSignIn">Hotel Sign in</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="register_account">Don\'t have an account?</string>
@@ -90,7 +91,9 @@
     <string name="family">Family</string>
     <string name="no_data_found">No Data Found....!</string>
     <string name="activate_account">Activate your Streamly Account on your TV</string>
+    <string name="hotel_account">Hotel Login Streamly on your TV</string>
     <string name="stay_text">Stay on this while you sign in on your phone or computer</string>
+    <string name="stay_text1">Stay on this while you sign in on your phone</string>
     <string name="scan_qr">Scan this QR code</string>
     <string name="text_qr_with_phone">Try using a phone camera or a QR code scanner</string>
     <string name="open_link_browser">Open the link in a browser</string>

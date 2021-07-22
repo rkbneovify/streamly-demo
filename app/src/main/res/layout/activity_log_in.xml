@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="@dimen/_200sdp"
-        android:layout_height="@dimen/_170sdp"
+        android:layout_height="@dimen/_200sdp"
         android:background="@drawable/edittext_outline"
         android:orientation="vertical"
         android:paddingLeft="@dimen/_20sdp"
@@ -188,7 +188,20 @@
 
 
         </LinearLayout>
-
+        <Button
+            android:id="@+id/btn_hotel_sign_in"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:background="@drawable/signin_focused"
+            android:text="@string/hotelSignIn"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:fontFamily="@font/helvetica_neue_bold"
+            android:textAllCaps="false"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/_7ssp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:padding="@dimen/_2sdp" />
 
     </LinearLayout>
 </LinearLayout>

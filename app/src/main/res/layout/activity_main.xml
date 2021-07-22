@@ -174,17 +174,17 @@
                 android:id="@+id/setting_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_8sdp"
-                android:layout_marginRight="@dimen/_8sdp"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
                 android:background="@drawable/options_states"
                 android:fontFamily="@font/helvetica_neue_light"
                 android:padding="@dimen/_2sdp"
                 android:drawableLeft="@drawable/ic_setting_icon"
                 android:drawablePadding="10dp"
                 android:text="@string/settings"
-                android:textAlignment="viewEnd"
+                android:gravity="center_vertical|right"
                 android:textAllCaps="true"
-                android:textSize="@dimen/_9ssp"
+                android:textSize="@dimen/_8ssp"
                 android:textStyle="bold" />
 
             <TextView

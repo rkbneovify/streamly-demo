@@ -21,12 +21,14 @@ import retrofit2.Response;
 
 public class DrmKeyRepo {
     private final String TAG= GeofenceRepo.class.getSimpleName();
+    private Integer defaultImage = -1;
 
         public ApiInterface endpoints;
 
         public DrmKeyRepo() {
             endpoints = ApiClient.getClient().create(ApiInterface.class);
         }
+
 
 
         public LiveData<ApiResponse> getDrmKey(Context context) {

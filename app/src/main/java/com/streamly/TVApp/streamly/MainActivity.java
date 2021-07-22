@@ -67,6 +67,7 @@ private TextView settingText,goBackText;
         super.onCreate(savedInstanceState);
         AndroidThreeTen.init(this);
         setContentView(R.layout.activity_main);
+
         initViews();
         authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
@@ -134,6 +135,12 @@ private TextView settingText,goBackText;
     }
 
     public void fragment(String type , List<Datum> dataListm){
+        for(int j=0; j<dataListm.size(); j++)
+        {
+            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getCallSign()) ;
+            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getGenrename());
+            Log.e(TAG,"MainActivity data list "+dataListm.get(j).getId());
+        }
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new KidsFragment(MainActivity.this , dataListm))
                     .commit();
@@ -161,8 +168,12 @@ private TextView settingText,goBackText;
 //                            String channelLogo = datumList.get(i).getLogo();
 //                            String videoUrl = datumList.get(i).getUrl();
 
+
                             if(!generList.contains(datumList.get(i).getGenrename().get(0)))
-                            generList.add(datumList.get(i).getGenrename().get(0));
+                            {
+                                generList.add(datumList.get(i).getGenrename().get(0));
+                            }
+
 
 
                         }
@@ -176,16 +187,22 @@ private TextView settingText,goBackText;
 
                             List<Datum> tempList = new ArrayList<Datum>();
                             for(int i=0 ; i<datumList.size() ; i++){
-                                if(datumList.get(i).getGenrename().get(0).equals(s)){
-                                    Log.e("done" , "here");
-                                    tempList.add(datumList.get(i));
+                                for(int k=0; k<datumList.get(i).getGenrename().size(); k++)
+                                {
+                                    if(datumList.get(i).getGenrename().get(k).equals(s)){
+                                        Log.e("done" , "here");
+                                        tempList.add(datumList.get(i));
+                                    }
                                 }
+
                             }
                             dataList.put(s , tempList);
                         }
 
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
+
+                        Log.e("TAG","data list  "+datumList);
                         GenereAdapter adapter = new GenereAdapter(MainActivity.this, dataList);
                         recyclerView.setAdapter(adapter);
 

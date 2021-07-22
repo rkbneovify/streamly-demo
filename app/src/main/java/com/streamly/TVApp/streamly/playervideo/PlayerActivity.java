@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -37,6 +38,7 @@ import com.google.android.exoplayer2.drm.MediaDrmCallback;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -291,6 +293,7 @@ public class PlayerActivity extends FragmentActivity {
         viewModel.getData(PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
+                Log.i(TAG, "onChanged: "+apiResponse.toString());
                 DrmKeyModel drmKeyModel = (DrmKeyModel) apiResponse.getApiResponse();
                 switch (apiResponse.getResponseCode()) {
                     case 200:
@@ -422,8 +425,9 @@ public class PlayerActivity extends FragmentActivity {
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(32*1024, 64*1024, 1024, 1024).createDefaultLoadControl();
 
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector,loadControl);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -544,6 +548,7 @@ public class PlayerActivity extends FragmentActivity {
             }
 
             @Override
+
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
 
             }
@@ -555,6 +560,7 @@ public class PlayerActivity extends FragmentActivity {
         });
 
         player.setPlayWhenReady(true);
+        player.setRepeatMode(Player.REPEAT_MODE_ALL);
         postRecentViewChannel(channel_id);
 
     }
@@ -580,6 +586,7 @@ public class PlayerActivity extends FragmentActivity {
 
         Uri dashUri = Uri.parse(streamUrl.trim());
 //        Uri dashUri = Uri.parse("https://cdn.streamlytv.com/espn/index.m3u8");
+//        Uri dashUri = Uri.parse("https://5db313b643fd8.streamlock.net:443/ZerounoTVEventi/ZerounoTVEventi/playlist.m3u8");
 //        Uri dashUri = Uri.parse("https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd");
 
         Log.e(TAG, "1) license_server: " + wvUrl + "\n"
@@ -621,7 +628,8 @@ public class PlayerActivity extends FragmentActivity {
 
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-
+//        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(32*1024, 64*1024, 1024, 1024).createDefaultLoadControl();
+//        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(99*1024, 120*1024, 1024, 1024).createDefaultLoadControl();
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
 
 
@@ -643,21 +651,25 @@ public class PlayerActivity extends FragmentActivity {
         player.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, int reason) {
-
+                Log.i(TAG, "onTimelineChanged: 1 "+timeline);
+                Log.i(TAG, "onTimelineChanged: 2 "+reason);
             }
 
             @Override
             public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
-
+                Log.i(TAG, "onTimelineChanged: 3 "+timeline);
+                Log.i(TAG, "onTimelineChanged: 4 "+reason);
             }
 
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
+                Log.i(TAG, "onTracksChanged: "+trackGroups);
+                Log.i(TAG, "onTracksChanged: "+trackSelections);
             }
 
             @Override
             public void onLoadingChanged(boolean isLoading) {
+                Log.i(TAG, "onLoadingChanged: "+isLoading);
                 /*if (isLoading){
                     mFirebaseAnalytics.logEvent("video_play", params);
                 }*/
@@ -667,18 +679,19 @@ public class PlayerActivity extends FragmentActivity {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
                     case ExoPlayer.STATE_IDLE:
-                        Log.e(TAG, "onPlayerStateChanged: idle ");
+                        Log.i(TAG, "onPlayerStateChanged: idle ");
                         break;
 
                     case ExoPlayer.STATE_READY:
-                        Log.e(TAG, "onPlayerStateChanged: ready ");
+                        Log.i(TAG, "onPlayerStateChanged: ready ");
                         break;
 
                     case ExoPlayer.STATE_BUFFERING:
-                        Log.e(TAG, "onPlayerStateChanged: buffering ");
+                        Log.i(TAG, "onPlayerStateChanged: buffering ");
                         break;
 
                     case ExoPlayer.STATE_ENDED:
+                        Log.i(TAG, "onPlayerStateChanged: STATE_ENDED  ");
                         break;
                 }
 
@@ -687,15 +700,17 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlaybackSuppressionReasonChanged(int playbackSuppressionReason) {
+                Log.i(TAG, "onPlaybackSuppressionReasonChanged: " );
 
             }
 
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
+                Log.i(TAG, "onIsPlayingChanged: " );
 
                 if (isPlaying) {
 
-
+                    Log.i(TAG, "onIsPlayingChanged: if " );
 //                    logoImage.setVisibility(View.VISIBLE);
 //                    menuImage.setVisibility(View.GONE);
 
@@ -713,6 +728,7 @@ public class PlayerActivity extends FragmentActivity {
                     };
                     handler.postDelayed(runnable, delay);
                 } else {
+                    Log.i(TAG, "onIsPlayingChanged: ");
 //                    logoImage.setVisibility(View.GONE);
 //                    menuImage.setVisibility(View.VISIBLE);
 
@@ -722,17 +738,18 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onRepeatModeChanged(int repeatMode) {
-
+                Log.i(TAG, "onRepeatModeChanged: else " );
             }
 
             @Override
             public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+                Log.i(TAG, "onShuffleModeEnabledChanged: " );
 
             }
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Log.e(TAG, "error_msg" + error.toString());
+                Log.i(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
                 mFirebaseAnalytics.logEvent("player_error", params);
@@ -742,22 +759,26 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPositionDiscontinuity(int reason) {
+                Log.i(TAG, "onPositionDiscontinuity: " );
 
             }
 
             @Override
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                Log.i(TAG, "onPlaybackParametersChanged: " );
 
             }
 
             @Override
             public void onSeekProcessed() {
+                Log.i(TAG, "onSeekProcessed: " );
 
             }
         });
 
         player.setPlayWhenReady(true);
         postRecentViewChannel(channel_id);
+
 
     }
 
