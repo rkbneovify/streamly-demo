@@ -567,9 +567,9 @@ details[open] > summary::before {
 
  @foreach ($plankey as $plank) 
  @if ($loop->first)  
- <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$plank}}</a>
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{Str::title($plank)}}</a>
  @else
- <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$plank}}</a>
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{Str::title($plank)}}</a>
  @endif
  @endforeach
                     
