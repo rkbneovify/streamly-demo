@@ -556,7 +556,7 @@ details[open] > summary::before {
 }</style>
 
 	<!-- Select Plan-->
-<section class="page-section bg-light genre">
+<section class="page-section ">
     <div class="container">
         <div class="text-center">
 
@@ -576,10 +576,10 @@ details[open] > summary::before {
                 </div>
             </div>
         </div>
-   <div class="row " id="accordion">
-        @foreach($plansdetails as $key => $singlePlansDetails)
+   <div class=" " id="accordion">
+        @foreach($plansdetails as $keyp => $singlePlansDetails)
         @if ($loop->first)  
-        <div id="{{$key}}" class=" collapse  text-center show" data-parent="#accordion">
+        <div id="{{$keyp}}" class=" collapse  text-center show" data-parent="#accordion">
         <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
            @foreach ($singlePlansDetails as $singlePlansDetail)
             
@@ -591,7 +591,7 @@ details[open] > summary::before {
    
     @else
 
-    <div id="{{$key}}" class=" collapse  text-center " data-parent="#accordion">
+    <div id="{{$keyp}}" class=" collapse  text-center " data-parent="#accordion">
         <div class="row text-center justify-content-center align-items-center h-100 select-card-parent" style="padding-top: 40px;">
            @foreach ($singlePlansDetails as $singlePlansDetail)
             
@@ -664,39 +664,45 @@ details[open] > summary::before {
         <div class="text-center">
 
             <h2 class="section-heading">Available Channels</h2>
-           
-            <div class="row">
-                <div class="col-centered" id="tab-buttons">
+            </div>
+      
+<div class="row ">
+<div class="col-centered"><ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 
- @foreach ($Genrekey as $genre) 
+@foreach ($Genrekey as $genre) 
  @if ($loop->first)  
- <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{$genre}}</a>
+
+ <li class="nav-item">
+    <a class="btn btn-sm btn-default active" id="pills-{{$genre}}-tab" data-toggle="pill" href="#pills-{{$genre}}" role="tab" aria-controls="pills-{{$genre}}" aria-selected="true">{{$genre}}</a>
+  </li>
  @else
- <a href="#{{$genre}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{$genre}}</a>
+ <li class="nav-item">
+    <a class="btn btn-sm btn-default" id="pills-{{$genre}}-tab" data-toggle="pill" href="#pills-{{$genre}}" role="tab" aria-controls="pills-{{$genre}}" aria-selected="false">{{$genre}}</a>
+  </li>
  @endif
  @endforeach
-                    
-                </div>
-            </div>
-        </div>
-   <div class="row col-centered " id="accordion">
-        @foreach($pagechannel as $key => $user)
+</ul></div>
+</div>
+<div class="tab-content row col-centered " id="pills-tabContent">
+
+@foreach($pagechannel as $key => $user)
         @if ($loop->first)  
-        <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
-            <div class=""> <div class="grid-container">@foreach ($user as $channeldet2)
+        <div class="tab-pane fade show active col-sm-12 no-gutters" id="pills-{{$key}}" role="tabpanel" aria-labelledby="pills-{{$key}}-tab"><div class="h"> <div class="grid-container">@foreach ($user as $channeldet2)
             <div class="item1"> 
                 <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
-            </div>  @endforeach</div></div>
-        </div> 
+            </div>  @endforeach</div></div></div>
+        <!-- <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
+            
+        </div>  -->
    
     @else
-
-    <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
-        <div class=""><div class="grid-container">@foreach ($user as $channeldet2)
+    <div class="tab-pane fade col-sm-12 no-gutters" id="pills-{{$key}}" role="tabpanel" aria-labelledby="pills-{{$key}}-tab"><div class="h"><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
             <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
-        </div>  @endforeach</div></div>
-    </div> 
+        </div>  @endforeach</div></div></div>
+    <!-- <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
+        
+    </div>  -->
 @endif
     @endforeach
 </div>
@@ -746,4 +752,43 @@ alt="image of tv guide"
               </svg></div> </div>
     </div>
     </section>
+<!--     
+<section class="page-section " >
+<div class="container"><div class="accordion" id="accordion1">
+
+@foreach($Genrekey as $keyer =>$genrewe)
+<?php 
+?>
+@component('components.card.card', ['cardHeadingId' => 'heading'.$keyer, 'cardCollapseId' => 'collapse'.$keyer, 'parentId' => 'accordion1','index'=>$keyer])
+  @slot('cardTitle')
+  my card title #{{$keyer}}
+  @endslot
+  
+  @slot('cardBody')
+    <strong> this the content of my card{{$keyer}} body</strong> 
+  @endslot
+  
+@endcomponent
+@endforeach
+</div></div>
+</section> -->
+<style>
+ #pills-tab>.nav-item>a{
+  position:relative;
+  box-shadow:0 0 10px rgba(0,0,0,0.5);
+  font:400 15px 'pt sans',sans-serif;
+  color:#666;
+  padding:0 15px;
+  background-color:#fff;
+  line-height:40px !important;
+  border: 2px solid #FF712F;
+}
+#pills-tab>.nav-item>a.active { display:block;
+  float:left;
+  cursor:pointer;
+  color:#fff;
+  background:#FF712F;
+  border: 2px solid #FF712F;}
+ 
+    </style>
 @endsection
