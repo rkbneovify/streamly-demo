@@ -60,186 +60,189 @@
 33-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:24:9-40
 34        android:usesCleartextTraffic="true" >
 34-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:25:9-44
-35        <activity android:name="com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity" />
-35-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:28:9-78
-35-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:28:19-66
-36        <activity android:name="com.streamly.TVApp.streamly.QRCode.QRCodeActivity" />
-36-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:29:9-59
-36-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:29:19-56
-37        <activity android:name="com.streamly.TVApp.streamly.search_channels.SearchActivity" />
-37-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:30:9-68
-37-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:30:19-65
-38        <activity android:name="com.streamly.TVApp.streamly.playervideo.PlayerActivity" />
-38-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:31:9-64
-38-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:31:19-61
-39        <!--
-40        <activity
-41            android:name=".MainActivity"
-42            android:banner="@mipmap/streamly_logo"
-43            android:icon="@mipmap/streamly_logo"
-44            android:label="@string/app_name"
-45            android:logo="@drawable/tv_app_icon"
-46            android:screenOrientation="landscape">
-47            <intent-filter>
-48                <action android:name="android.intent.action.MAIN" />
-49
-50                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-51            </intent-filter>
-52        </activity>
-53        -->
-54        <activity
-54-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:47:9-49:64
-55            android:name="com.streamly.TVApp.streamly.settings.SettingsActivity"
-55-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:48:13-54
-56            android:windowSoftInputMode="stateAlwaysVisible" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
-56-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:49:13-61
-57        <!--  -->
-58        <!-- </activity> -->
-59        <activity android:name="com.streamly.TVApp.streamly.log_in.LogInActivity" />
-59-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:52:9-58
-59-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:52:19-55
-60        <activity
-60-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:53:9-63:20
-61            android:name="com.streamly.TVApp.streamly.splash.SplashActivity"
-61-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:54:13-50
-62            android:banner="@drawable/app_icon_tv"
-62-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:55:13-51
-63            android:icon="@drawable/app_icon_tv"
-63-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:56:13-49
-64            android:logo="@drawable/app_icon_tv" >
+35        <activity android:name="com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity" />
+35-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:28:9-92
+35-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:28:19-80
+36        <activity android:name="com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity" />
+36-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:29:9-69
+36-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:29:19-66
+37        <activity android:name="com.streamly.TVApp.streamly.QRCode.QRCodeActivity" />
+37-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:30:9-59
+37-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:30:19-56
+38        <activity android:name="com.streamly.TVApp.streamly.search_channels.SearchActivity" />
+38-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:31:9-68
+38-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:31:19-65
+39        <activity android:name="com.streamly.TVApp.streamly.playervideo.PlayerActivity" />
+39-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:32:9-64
+39-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:32:19-61
+40        <!--
+41        <activity
+42            android:name=".MainActivity"
+43            android:banner="@mipmap/streamly_logo"
+44            android:icon="@mipmap/streamly_logo"
+45            android:label="@string/app_name"
+46            android:logo="@drawable/tv_app_icon"
+47            android:screenOrientation="landscape">
+48            <intent-filter>
+49                <action android:name="android.intent.action.MAIN" />
+50
+51                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+52            </intent-filter>
+53        </activity>
+54        -->
+55        <activity
+55-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:48:9-50:64
+56            android:name="com.streamly.TVApp.streamly.settings.SettingsActivity"
+56-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:49:13-54
+57            android:windowSoftInputMode="stateAlwaysVisible" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
+57-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:50:13-61
+58        <!--  -->
+59        <!-- </activity> -->
+60        <activity android:name="com.streamly.TVApp.streamly.log_in.LogInActivity" />
+60-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:53:9-58
+60-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:53:19-55
+61        <activity
+61-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:54:9-63:20
+62            android:name="com.streamly.TVApp.streamly.splash.SplashActivity"
+62-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:55:13-50
+63            android:banner="@drawable/app_icon_tv"
+63-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:56:13-51
+64            android:icon="@drawable/app_icon_tv"
 64-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:57:13-49
-65            <intent-filter>
-65-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:58:13-62:29
-66                <action android:name="android.intent.action.MAIN" />
-66-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:59:17-69
-66-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:59:25-66
-67
-68                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
-68-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:61:17-86
-68-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:61:27-83
-69            </intent-filter>
-70        </activity>
-71        <activity android:name="com.streamly.TVApp.streamly.MainActivity" />
-71-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:64:9-50
-71-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:64:19-47
-72
-73        <service
-73-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:13:9-19:19
-74            android:name="com.google.firebase.components.ComponentDiscoveryService"
-74-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:14:13-84
-75            android:directBootAware="true"
-75-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:35:13-43
-76            android:exported="false" >
-76-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:15:13-37
-77            <meta-data
-77-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:16:13-18:85
-78                android:name="com.google.firebase.components:com.google.firebase.crashlytics.CrashlyticsRegistrar"
-78-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:17:17-115
-79                android:value="com.google.firebase.components.ComponentRegistrar" />
-79-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:18:17-82
-80            <meta-data
-80-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:30:13-32:85
-81                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
-81-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:31:17-139
-82                android:value="com.google.firebase.components.ComponentRegistrar" />
-82-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:32:17-82
-83            <meta-data
-83-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:17:13-19:85
-84                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
-84-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:18:17-127
-85                android:value="com.google.firebase.components.ComponentRegistrar" />
-85-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:19:17-82
-86        </service>
-87
-88        <receiver
-88-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:29:9-33:20
-89            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
-89-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:30:13-85
-90            android:enabled="true"
-90-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:31:13-35
-91            android:exported="false" >
-91-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:32:13-37
-92        </receiver>
-93
-94        <service
-94-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:35:9-38:40
-95            android:name="com.google.android.gms.measurement.AppMeasurementService"
-95-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:36:13-84
-96            android:enabled="true"
-96-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:37:13-35
-97            android:exported="false" />
-97-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:38:13-37
-98        <service
-98-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:39:9-43:72
-99            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
-99-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:40:13-87
-100            android:enabled="true"
-100-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:41:13-35
-101            android:exported="false"
-101-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:42:13-37
-102            android:permission="android.permission.BIND_JOB_SERVICE" />
-102-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:43:13-69
-103
-104        <provider
-104-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:26:9-31:39
-105            android:name="com.google.firebase.provider.FirebaseInitProvider"
-105-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:27:13-77
-106            android:authorities="com.streamly.TVApp.streamly.firebaseinitprovider"
-106-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:28:13-72
-107            android:directBootAware="true"
-107-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:29:13-43
-108            android:exported="false"
-108-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:30:13-37
-109            android:initOrder="100" />
-109-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:31:13-36
-110
-111        <meta-data
-111-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
-112            android:name="com.google.android.gms.version"
-112-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
-113            android:value="@integer/google_play_services_version" />
-113-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
-114
-115        <service
-115-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:29:9-35:19
-116            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
-116-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:30:13-103
-117            android:exported="false" >
-117-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:31:13-37
-118            <meta-data
-118-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:32:13-34:39
-119                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
-119-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:33:17-94
-120                android:value="cct" />
-120-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:34:17-36
-121        </service>
+65            android:logo="@drawable/app_icon_tv" >
+65-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:58:13-49
+66            <intent-filter>
+66-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:59:13-62:29
+67                <action android:name="android.intent.action.MAIN" />
+67-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:60:17-69
+67-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:60:25-66
+68
+69                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+69-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:61:17-86
+69-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:61:27-83
+70            </intent-filter>
+71        </activity>
+72        <activity android:name="com.streamly.TVApp.streamly.MainActivity" />
+72-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:64:9-50
+72-->/mnt/sdb2/OodlesProject/StreamlyGit/streamly/app/src/main/AndroidManifest.xml:64:19-47
+73
+74        <service
+74-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:13:9-19:19
+75            android:name="com.google.firebase.components.ComponentDiscoveryService"
+75-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:14:13-84
+76            android:directBootAware="true"
+76-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:35:13-43
+77            android:exported="false" >
+77-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:15:13-37
+78            <meta-data
+78-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:16:13-18:85
+79                android:name="com.google.firebase.components:com.google.firebase.crashlytics.CrashlyticsRegistrar"
+79-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:17:17-115
+80                android:value="com.google.firebase.components.ComponentRegistrar" />
+80-->[com.google.firebase:firebase-crashlytics:17.2.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/c8d85ce5fd9d9e87384000167b333213/jetified-firebase-crashlytics-17.2.1/AndroidManifest.xml:18:17-82
+81            <meta-data
+81-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:30:13-32:85
+82                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+82-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:31:17-139
+83                android:value="com.google.firebase.components.ComponentRegistrar" />
+83-->[com.google.android.gms:play-services-measurement-api:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/9966ca3d3edef2b400037fa6f4cbc63d/jetified-play-services-measurement-api-17.5.0/AndroidManifest.xml:32:17-82
+84            <meta-data
+84-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:17:13-19:85
+85                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+85-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:18:17-127
+86                android:value="com.google.firebase.components.ComponentRegistrar" />
+86-->[com.google.firebase:firebase-installations:16.3.3] /home/vikash/.gradle/caches/transforms-2/files-2.1/cfa71ac692e8c14c392084a5d9239127/jetified-firebase-installations-16.3.3/AndroidManifest.xml:19:17-82
+87        </service>
+88
+89        <receiver
+89-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:29:9-33:20
+90            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+90-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:30:13-85
+91            android:enabled="true"
+91-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:31:13-35
+92            android:exported="false" >
+92-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:32:13-37
+93        </receiver>
+94
+95        <service
+95-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:35:9-38:40
+96            android:name="com.google.android.gms.measurement.AppMeasurementService"
+96-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:36:13-84
+97            android:enabled="true"
+97-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:37:13-35
+98            android:exported="false" />
+98-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:38:13-37
+99        <service
+99-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:39:9-43:72
+100            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+100-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:40:13-87
+101            android:enabled="true"
+101-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:41:13-35
+102            android:exported="false"
+102-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:42:13-37
+103            android:permission="android.permission.BIND_JOB_SERVICE" />
+103-->[com.google.android.gms:play-services-measurement:17.5.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/0a3f78069ec10717f5445ec3c380ccd3/jetified-play-services-measurement-17.5.0/AndroidManifest.xml:43:13-69
+104
+105        <provider
+105-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:26:9-31:39
+106            android:name="com.google.firebase.provider.FirebaseInitProvider"
+106-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:27:13-77
+107            android:authorities="com.streamly.TVApp.streamly.firebaseinitprovider"
+107-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:28:13-72
+108            android:directBootAware="true"
+108-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:29:13-43
+109            android:exported="false"
+109-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:30:13-37
+110            android:initOrder="100" />
+110-->[com.google.firebase:firebase-common:19.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/b4a168957080754cce906b97106a8cbc/jetified-firebase-common-19.3.1/AndroidManifest.xml:31:13-36
+111
+112        <meta-data
+112-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+113            android:name="com.google.android.gms.version"
+113-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+114            android:value="@integer/google_play_services_version" />
+114-->[com.google.android.gms:play-services-basement:17.0.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/8191c928441fa139f7138541eb991bd5/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+115
+116        <provider
+116-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
+117            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+117-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
+118            android:authorities="com.streamly.TVApp.streamly.lifecycle-process"
+118-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
+119            android:exported="false"
+119-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
+120            android:multiprocess="true" />
+120-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
+121
 122        <service
-122-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:26:9-30:19
-123            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
-123-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:27:13-117
-124            android:exported="false"
-124-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:28:13-37
-125            android:permission="android.permission.BIND_JOB_SERVICE" >
-125-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:29:13-69
-126        </service>
-127
-128        <receiver
-128-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:32:9-34:40
-129            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
-129-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:33:13-132
-130            android:exported="false" />
-130-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:34:13-37
-131
-132        <provider
-132-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
-133            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-133-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
-134            android:authorities="com.streamly.TVApp.streamly.lifecycle-process"
-134-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
-135            android:exported="false"
-135-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
-136            android:multiprocess="true" />
-136-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/vikash/.gradle/caches/transforms-2/files-2.1/7aaf59e3a01659a62c29b3b5d1a19d68/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
-137    </application>
-138
-139</manifest>
+122-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:29:9-35:19
+123            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+123-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:30:13-103
+124            android:exported="false" >
+124-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:31:13-37
+125            <meta-data
+125-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:32:13-34:39
+126                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+126-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:33:17-94
+127                android:value="cct" />
+127-->[com.google.android.datatransport:transport-backend-cct:2.3.1] /home/vikash/.gradle/caches/transforms-2/files-2.1/f7fbe352ff466d1193b7ee22f53f60e6/jetified-transport-backend-cct-2.3.1/AndroidManifest.xml:34:17-36
+128        </service>
+129        <service
+129-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:26:9-30:19
+130            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+130-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:27:13-117
+131            android:exported="false"
+131-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:28:13-37
+132            android:permission="android.permission.BIND_JOB_SERVICE" >
+132-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:29:13-69
+133        </service>
+134
+135        <receiver
+135-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:32:9-34:40
+136            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+136-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:33:13-132
+137            android:exported="false" />
+137-->[com.google.android.datatransport:transport-runtime:2.2.4] /home/vikash/.gradle/caches/transforms-2/files-2.1/401db12f79fad8fc6dcff41bdf609279/jetified-transport-runtime-2.2.4/AndroidManifest.xml:34:13-37
+138    </application>
+139
+140</manifest>

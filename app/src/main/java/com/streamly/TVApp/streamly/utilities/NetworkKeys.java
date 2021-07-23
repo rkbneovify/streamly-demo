@@ -10,6 +10,7 @@ public class NetworkKeys {
     public static final String KEY_AUTH="Authorization";
     public static final String KEY_ACCEPT="Accept";
     public static final String KEY_EMAIL="email";
+    public static final String KEY_PASSCODE="passcode";
     public static final String KEY_CHANNELIDS="channelids";
     public static final String KEY_PASS ="password";
     public static final String KEY_DEVICE_ID="deviceid";

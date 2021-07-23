@@ -16,6 +16,7 @@ import com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.settings.support.SupportDialog;
@@ -33,7 +34,7 @@ public class LogInActivity extends FragmentActivity {
     private  String uniqueId;
     private EditText edUserName,edPassword;
     private TextView txtNeedHelp;
-    private Button btnSignIn,btnRegisterView,btnTermsUses,btnHotelLogin;
+    private Button btnSignIn,btnRegisterView,btnTermsUses,btnHotelLogin, btnLoginUsingPasscode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +99,17 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
+        btnLoginUsingPasscode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(LogInActivity.this, LoginUsingPasscodeActivity.class));
+finish();
+                /*Toast.makeText(LogInActivity.this, "Please go to "+ ApiConfig.BASE_URL
+                        +" for creating new account", Toast.LENGTH_SHORT).show();*/
+            }
+        });
+
 
         btnTermsUses.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +137,7 @@ public class LogInActivity extends FragmentActivity {
         btnHotelLogin=findViewById(R.id.btn_hotel_sign_in);
         btnRegisterView=findViewById(R.id.btn_register_view);
         btnTermsUses=findViewById(R.id.btn_terms_uses);
+        btnLoginUsingPasscode=findViewById(R.id.btn_login_using_passcode_uses);
     }
 
     private void signInCall() {

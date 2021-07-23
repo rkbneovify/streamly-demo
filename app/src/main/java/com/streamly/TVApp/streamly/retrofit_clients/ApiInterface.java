@@ -34,6 +34,11 @@ public interface ApiInterface {
     @POST("/api/auth/login")
     Call<LogInModel> postLogInCall(@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASS) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
 
+
+    @Headers("Accept: application/json")
+    @POST("/api/auth/login-with-passcode")
+    Call<LogInModel> postLoginUsingPasscode(@Query(NetworkKeys.KEY_PASSCODE) String passcode,  @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @POST("/api/auth/logout")
     Call<LogInModel> postLogOutCall(@Header(NetworkKeys.KEY_AUTH) String authorization_token);

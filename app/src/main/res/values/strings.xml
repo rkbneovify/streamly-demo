@@ -4,10 +4,12 @@
     <string name="signIn">Sign in</string>
     <string name="hotelSignIn">Hotel Sign in</string>
     <string name="username">Username</string>
+    <string name="enter_your_passcode">Enter Your Passcode</string>
     <string name="password">Password</string>
     <string name="register_account">Don\'t have an account?</string>
     <string name="remember">Remember me</string>
     <string name="register_now">Register Now</string>
+    <string name="login_using_passcode">Login Using Passcode</string>
     <string name="need_help">Need Help?</string>
 
 

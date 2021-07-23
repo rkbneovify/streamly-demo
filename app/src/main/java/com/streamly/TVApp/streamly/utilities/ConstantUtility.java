@@ -27,6 +27,7 @@ public class ConstantUtility {
     public final static String INCORRECT_CREDENTIALS ="Incorrect Username or Password";
     public static final String SERVER_ISSUE ="Server issue, try after sometime";
     public static final String FILL_EMAIL = "Fill Email ID";
+    public static final String FILL_PASSCODE = "Fill Passcode";
     public static final String FILL_PASSW ="Fill Password";
     public static final String WRONG_EMAIL = "Wrong email, Please check your email Id";
     public static final String SESSION_EXPIRED ="Session expired, Please re-login";

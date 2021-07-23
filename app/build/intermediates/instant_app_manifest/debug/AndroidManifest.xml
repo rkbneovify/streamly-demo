@@ -33,6 +33,7 @@
         android:testOnly="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true" >
+        <activity android:name="com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity" />
         <activity android:name="com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity" />
         <activity android:name="com.streamly.TVApp.streamly.QRCode.QRCodeActivity" />
         <activity android:name="com.streamly.TVApp.streamly.search_channels.SearchActivity" />
@@ -113,6 +114,12 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <provider
+            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+            android:authorities="com.streamly.TVApp.streamly.lifecycle-process"
+            android:exported="false"
+            android:multiprocess="true" />
+
         <service
             android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
             android:exported="false" >
@@ -129,12 +136,6 @@
         <receiver
             android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
             android:exported="false" />
-
-        <provider
-            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-            android:authorities="com.streamly.TVApp.streamly.lifecycle-process"
-            android:exported="false"
-            android:multiprocess="true" />
     </application>
 
 </manifest>
