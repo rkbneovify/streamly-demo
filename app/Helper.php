@@ -305,7 +305,7 @@ $Apple_TV = (stripos($ua,"Apple TV") !== false);
 }
 
 function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
-  $userInfo = JWTAuth::user();
+  $userInfo = JWTAuth::setToken($token)->toUser();
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
  } else {$termAndCondition=false;}
