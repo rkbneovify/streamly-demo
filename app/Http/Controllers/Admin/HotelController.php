@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\User;
 use App\HotelRoomTable;
+use App\SessionTable;
 class HotelController extends Controller
 {
     /**
@@ -30,6 +31,52 @@ class HotelController extends Controller
         return view('admin.hotels.hotelrooms');
     }
 
+    public function syncSessionWithHotelRoom(){
+        $request = request();
+        $token = $request->bearerToken();//get token from header
+        $acctoken = SessionTable::where([
+            ['status', '=', '1'],
+            ['access_token', '=', $token],
+             ])->get()->toArray();
+             $user=JWTAuth::user();
+             $uid=  $user['id'];
+     if ((count($acctoken)==0)){ 
+                $response = [
+                    'success' => false,
+                    'data' => 'Empty',
+                    'message' => 'access token not found.',
+                    'response_code'=>404,
+                ];
+                return response()->json($response, 404);
+     } 
+    $sessionid=$acctoken[0]['id'];
+     $roomid=$request->input('roomid');
+     try {
+     HotelRoomTable::where('id', $roomid)->where([
+        ['id', '=', $roomid],
+        ['user_id', '=', $uid],
+         ])->update([
+        'sessionid' => $sessionid
+        ]);
+    
+        $response = [
+            'success' => true,
+            'data' => 'Room id '.$roomid.' added' ,
+            'message' => 'Successfully added to room/slot','response_code'=>200,
+        ];
+        return response()->json($response, 200);
+    
+    } catch (Exception $exception) {
+        
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error'=>$exception->getMessage(),
+                'response_code'=>500,
+                
+            ], 500);
+        }
+    }
     public function activeSession(){
         // $user = JWTAuth::user();//all the user info
         $uid= 6;

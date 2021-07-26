@@ -316,6 +316,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       ['status', '=', '1'],
       ['users_id', '=', $user_id],
        ])->get()->count();
+       $rooms=getActiveHotelRooms($user_id);
     return response()->json([
   
       'success' => true,
@@ -327,7 +328,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
         'expires_in' => JWTAuth::factory()->getTTL() * 60,
         'device_info'=>$deviceDetails,
         'user'=>$userInfo,
-        'termandcondition'=>$termAndCondition
+        'termandcondition'=>$termAndCondition,
+        'rooms'=>$rooms
         
       
       
@@ -829,4 +831,18 @@ function UnHashUserID($hasid)
  
   
 }
+function getActiveHotelRooms($userid){
+ return HotelRoomTable::where([
+    ['user_id', '=', $userid],
+     ])
+     ->whereNull('session_id')
+  ->orderBy("id", "DESC")
+  ->get();
+}
+/**
+ -user bought tiered plan of 10 devices || 10 htoel rooms were created
+-user cancels the tiered plan
+-user boughts tiered plan 6 devices || 6 hotel rooms should be present 
+*/
+
 ?>
