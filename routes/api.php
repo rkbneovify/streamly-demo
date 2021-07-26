@@ -79,6 +79,9 @@ Route::post('addtorecent', 'APIController@addToRecent');
 Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify']);
 Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify']);
 Route::post('/ga/playererror', 'GoogleAnalyticsController@playererror')->middleware(['jwt.verify']);
+
+
+Route::post('/sync-session-with-room', 'Admin\HotelController@syncSessionWithHotelRoom')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes
