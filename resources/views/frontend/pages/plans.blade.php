@@ -126,7 +126,7 @@ $login= Auth::check()?true:false;
                 </div>
             </div>
         </div>
-   <div class="row " id="accordion">
+   <div class=" " id="accordion">
         @foreach($plansdetails as $key => $singlePlansDetails)
         @if ($loop->first)  
         <div id="{{$key}}" class=" collapse  text-center show" data-parent="#accordion">
