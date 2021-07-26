@@ -1,5 +1,7 @@
 <?php 
-use Laravel\Cashier\Cashier;?>
+use Laravel\Cashier\Cashier;
+$login= Auth::check()?true:false;
+?>
 <div class="col-sm-4 select-plan-card">
 				<div style="background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 4px;">
 					<p>{{ $singlePlansDetail->nickname }}</p> @if (!empty($singlePlansDetail->tiers))
@@ -68,7 +70,12 @@ use Laravel\Cashier\Cashier;?>
 					<?php
 
                         if ( isset($login) && $login ) {
-                            $selectPLanLink = 'href=/payment';
+
+							if(!empty($singlePlansDetail->tiers)){
+								$selectPLanLink = 'href=/tierpayment/'.$singlePlansDetail->id;
+							}else{
+								$selectPLanLink = 'href=/payment/'.$singlePlansDetail->id;
+							}
                         } else {
                             $selectPLanLink = 'onclick=openNavReg() href=javascript:void(0);';
                         }
