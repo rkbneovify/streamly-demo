@@ -106,7 +106,7 @@ class AuthController extends Controller
             return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
         }
        $userRole= $user->roles->pluck('name');
-       if($userRole[0]=='user'){
+       if($userRole[0]=='user'||'tieruser'){
         $uid=  $user['id'];
         checkLoginLimit($uid,$token,$deviceDetails);
         exit;
@@ -143,7 +143,7 @@ class AuthController extends Controller
         }
        $userRole= $user->roles->pluck('name');
        //todo hotel check
-       if($userRole[0]=='user'){
+       if($userRole[0]=='user'||'tieruser'){
         
         checkLoginLimit($uid,$token,$deviceDetails);
         exit;
@@ -339,7 +339,7 @@ class AuthController extends Controller
         $token = $request->bearerToken();//get token from header
         $user=JWTAuth::user();
         $userRole= $user->roles->pluck('name');//check users role
-           if($userRole[0]=='user'){
+           if($userRole[0]=='user'||'tieruser'){
                //check if token exist in table
             $acctoken = SessionTable::where([
                 ['status', '=', '1'],
@@ -386,7 +386,7 @@ public function multilogout()
     $token = $request->bearerToken();//get token from header
     $user=JWTAuth::user();
     $userRole= $user->roles->pluck('name');//check users role
-       if($userRole[0]=='user'){
+       if($userRole[0]=='user'||'tieruser'){
            //check if token exist in table
         $acctoken = SessionTable::where([
             ['status', '=', '1'],

@@ -42,7 +42,7 @@ class LoginSuccessful
         $token = JWTAuth::fromUser($user);
 
         $deviceDetails=getDeviceIdforWeb();
-        if($userRole[0]=='user'){
+        if($userRole[0]=='user'||'tieruser'){
             $uid=  $user['id'];
             $this->checkLoginLimit($uid,$token,$deviceDetails);    
         }
