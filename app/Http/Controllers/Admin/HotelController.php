@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\User;
 use App\HotelRoomTable;
 use App\SessionTable;
+use JWTAuth;
 class HotelController extends Controller
 {
     /**
@@ -34,11 +35,13 @@ class HotelController extends Controller
     public function syncSessionWithHotelRoom(){
         $request = request();
         $token = $request->bearerToken();//get token from header
+        $user=JWTAuth::user();
+        // dd($user);
         $acctoken = SessionTable::where([
             ['status', '=', '1'],
             ['access_token', '=', $token],
              ])->get()->toArray();
-             $user=JWTAuth::user();
+             
              $uid=  $user['id'];
      if ((count($acctoken)==0)){ 
                 $response = [
@@ -51,12 +54,13 @@ class HotelController extends Controller
      } 
     $sessionid=$acctoken[0]['id'];
      $roomid=$request->input('roomid');
+// dd($roomid);
      try {
-     HotelRoomTable::where('id', $roomid)->where([
+     HotelRoomTable::where([
         ['id', '=', $roomid],
         ['user_id', '=', $uid],
          ])->update([
-        'sessionid' => $sessionid
+        'session_id' => $sessionid
         ]);
     
         $response = [
