@@ -40,4 +40,68 @@ class SessionTable extends Model
     {
         return $this->belongsTo(User::class,'users_id');
     }
+    /**
+    protected static function boot()
+    {
+        static::creating(function ($model) {
+            print('creating session triggered');
+            // print_r(var_dump($model));
+        });
+        static::saving(function ($model) {
+            print('saving session triggered');
+            print_r(var_dump($model->getKey()));
+        });
+        static::saved(function ($model) {
+            print('saved session triggered');
+            print_r(var_dump($model->getKey()));
+        });
+
+        static::updating(function ($model) {
+            dump("hello");
+            \Log::info('updating session triggered');
+            print_r(var_dump($model));
+            if($model->status==0){
+                \Log::info($model);
+                
+                $hotelroom = HotelRoomTable::where('session_id', '=', $model->id)->first();
+                if ($hotelroom !== null) {
+
+                \Log::info('$hotelroom !== null');
+                    $user = $hotelroom->update([
+                        'session_id' => null
+                    ]);
+                  }
+            }
+        });
+
+        static::deleting(function ($model) {
+            // bluh bluh
+        });
+        static::updated(function ($model) {
+            // bluh bluh
+
+            print('updated session triggered');
+            print_r(var_dump($model->getKey()));
+            print_r(var_dump($model->status));
+            if($model->status==0){
+                \Log::info($model);
+                
+                $hotelroom = HotelRoomTable::where('session_id', '=', $model->getKey())->first();
+                if ($hotelroom !== null) {
+
+                \Log::info('$hotelroom !== null');
+                    $user = $hotelroom->update([
+                        'session_id' => null
+                    ]);
+                  }
+            }
+        });
+        
+        parent::boot();
+    }
+    */
+    public function getId()
+    {
+        return $this->getKey();
+    }
 }
