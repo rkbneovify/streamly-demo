@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FrontendText;
 
+use App\Models\Role;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 class Payment extends Controller
 {   
@@ -129,7 +130,8 @@ class Payment extends Controller
                     ->create($request->payment_method, ['email' => $user->email]);}
         }}
         if($request->tier=='tiered'){
-            
+            $tieruserrole=Role::where('name','tieruser')->first();
+            $user->attachRole($tieruserrole); 
             CheckPreviousHotelRooms($quantity,$user->id);
         }
         } catch(\Stripe\Exception\CardException $e) {

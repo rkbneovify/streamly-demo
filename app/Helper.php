@@ -149,7 +149,12 @@ function LogoutandDecrementDevice($user_id){
      
      $decremen=count($myarr);// number of id we will use this number to decrement the last value
      $updatedExpireConcrenteUser=App\SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
-     
+     $hotelroomcount = HotelRoomTable::whereIn('session_id', $myarr)->count();
+                if ($hotelroomcount>0) {
+                  HotelRoomTable::whereIn('session_id', $myarr)->update([
+                        'session_id' => null
+                    ]);
+                  }
      
  //if logout happens minus one from all the active device of user
  //UPDATE `session_table` SET `connected_devices` = `connected_devices` - 1 WHERE `status` = 1 AND `connected_devices`<> 1
