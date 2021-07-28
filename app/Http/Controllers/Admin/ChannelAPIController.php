@@ -9,6 +9,7 @@ use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
 
+use Illuminate\Support\Facades\Cache;
 use Jenssegers\Agent\Agent;
 class ChannelAPIController extends Controller
 {
@@ -175,25 +176,28 @@ class ChannelAPIController extends Controller
         $isDevice=isDeviceAppleRokuOthers($ua);
         if($isDevice=='roku'){
             
-$type='smooth_url';
-$record = $this->channeljsonFunc($type);
+
+$record= Cache::rememberForever('channelslistsmooth', function () {
+    $type='smooth_url';
+    return $this->channeljsonFunc($type)->get();});
            
         }else if($isDevice=='apple')  {
-
-$type='url';
-$record = $this->channeljsonFunc($type);
+$record= Cache::rememberForever('channelslistapple', function () {
+    $type='url';
+    return $this->channeljsonFunc($type)->get();});
             
             }else{
 
-$type='dash_url';
-$record = $this->channeljsonFunc($type);
+$record= Cache::rememberForever('channelslistdash', function () {
+    $type='dash_url';
+    return $this->channeljsonFunc($type)->get();});
    
    }
        
     //JSON_ARRAY
     // $pagechannel=$record->get();
     
-       $pagechannel=$record->get()->map(function ($message, $key) {
+       $pagechannel=$record->map(function ($message, $key) {
         
             $message->genrename = json_decode($message->genrename, true);
         
@@ -331,14 +335,20 @@ SELECT CallSign,JSON_ARRAYAGG( JSON_OBJECT( 'title', sub.EventTitle, 'start', su
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
 
-if($isDevice=='roku'){ $type='smooth_url';
-    $record = $this->channelDaysScheduleFunc($type);
+if($isDevice=='roku'){ 
+    $reco= Cache::remember('channelscheduleroku',60*60*24, function () {
+        $type='smooth_url';
+    return $this->channelDaysScheduleFunc($type)->get();});
 }else if($isDevice=='apple')  {
-$type='url';
-$record = $this->channelDaysScheduleFunc($type);
+
+$reco = Cache::remember('channelscheduleapple',60*60*24, function () {
+    $type='url';
+    return $this->channelDaysScheduleFunc($type)->get();});
 } else {
-$type='dash_url';
-$record = $this->channelDaysScheduleFunc($type);
+
+$reco= Cache::remember('channelscheduleothers',60*60*24, function () {
+    $type='dash_url';
+    return $this->channelDaysScheduleFunc($type)->get();});
     }
     
 
@@ -353,7 +363,8 @@ $record = $this->channelDaysScheduleFunc($type);
 // ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
   
 // $reco=$record->toSql(); echo $reco;exit; 
-$reco=$record->get(); //echo $reco;exit; 
+
+// $reco=$record->get(); //echo $reco;exit; 
    if ($reco->isEmpty()) {
       $response = [
           'success' => false,

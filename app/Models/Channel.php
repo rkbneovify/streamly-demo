@@ -4,6 +4,7 @@ use App\Models\FavouriteChannel;
 use App\Models\Genre;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 /**
    @property varchar $name name
 @property varchar $url url
@@ -83,7 +84,32 @@ public function favorited()
 // }
 
 
+protected static function boot()
+    {
+        static::creating(function ($model) {
+        });
+        static::saving(function ($model) {
+        });
+        static::saved(function ($model) {
+            Cache::forget('channelslistsmooth');
+            Cache::forget('channelslistapple');
+            Cache::forget('channelslistdash');
+        });
 
+        static::updating(function ($model) {
+           //blah
+        });
+
+        static::deleting(function ($model) {
+            // bluh bluh
+        });
+        static::updated(function ($model) {
+            // bluh bluh
+
+        });
+        
+        parent::boot();
+    }
 
 
     
