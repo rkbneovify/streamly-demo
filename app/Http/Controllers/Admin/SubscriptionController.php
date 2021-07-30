@@ -39,9 +39,12 @@ class SubscriptionController extends Controller
     public function index()
     {    
         $subscriptions = Subscription::with('user')->get();
+        // dd($subscriptions);
         $plans = \Stripe\Plan::all();
+        // dd($plans);
          $plans->data;//Customers::with('country')->paginate(20);
         return view('admin.subscriptions.index', compact('subscriptions','plans'));
+        // return view('admin.subscriptions.tierindex', compact('subscriptions','plans'));
         
     }   
     public function showAllcustomer()

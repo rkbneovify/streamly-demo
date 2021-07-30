@@ -146,69 +146,17 @@ input[type=number] {
 							<details open>
 								<summary>
 									<h3>Tiers {{$plandetails->interval_count}} {{$plandetails->interval}}</h3></summary>
-								<table class="table table-bordered">
-									<thead style="background-color:#FFFFFF;">
-										<tr>
-											<td>
-												<div style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Quantity</strong></span> </div>
-											</td>
-											<td>
-												<div style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Price per unit</strong></span> </div>
-											</td>
-											<td>
-												<div style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Flat amount</strong></span> </div>
-											</td>
-										</tr>
-									</thead>
-									<tbody> @foreach($plandetails->tiers as $id => $tier) @if($loop->first)
-										<tr>
-											<td class="">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the first <strong>{{$id+1}} to {{ $tier->up_to }}</strong></span></span>
-												</div>
-											</td>
-											<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span>{{Cashier::formatAmount($tier->amount??'0', $plandetails->currency??'USD')}}</span></div>
-											</td>
-											<td class="Table-cel">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plandetails->currency??'USD')}}</span></div>
-											</td>
-										</tr> @endif @if(!($id==0) && !($id == array_key_last($plandetails->tiers)))
-										<tr>
-											<td class="">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the next <strong>{{$plandetails->tiers[$id-1]->up_to + 1}}   to {{$tier->up_to}}</strong></span></span>
-												</div>
-											</td>
-											<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span>{{Cashier::formatAmount($tier->amount??'0', $plandetails->currency??'USD')}}</span></div>
-											</td>
-											<td class="Table-cel">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plandetails->currency??'USD')}}</span></div>
-											</td>
-										</tr> @endif @if($loop->last)
-										<tr>
-											<td class="">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau"><span>For the rest {{ $tier->up_to }}</span></span>
-												</div>
-											</td>
-											<td class="" style="max-width: 150px; min-width: 150px; width: 150px;">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span>{{Cashier::formatAmount($tier->amount??'0', $plandetails->currency??'USD')}}</span></div>
-											</td>
-											<td class="Table-cel">
-												<div class="" style="align-items: flex-start; justify-content: flex-start;"><span class="Text-color--defau">{{Cashier::formatAmount($tier->flat_amount??'-', $plandetails->currency??'USD')}}</span></div>
-											</td>
-										</tr> @endif @endforeach </tbody>
-								</table>
-								<div class="flex justify-center mt-2">
+								
+                            @component('components.tiertable',['singlePlansDetail' => $plandetails,'type'=>'tiered'])
+                            @endcomponent
+	</details>							<div class="flex justify-center mt-2">
 									<button class="increment-btn text-white increment-subtract bg-pasha py-2 px-4 rounded-lg" disabled> - </button>
 									<input type="number" class="quantity-input w-8 appearance-none text-center" id="quantity-input-premium" min="1" value="1" />
 									<button class="increment-btn text-white increment-add bg-pasha py-2 px-4 rounded-lg"> + </button>
 								</div>
-								<div class="flex justify-center mt-6">
-									<button id="submit-premium" class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg plan-select btn btn-lg submit-btn" type="submit" data-plan="premium">
-										<div id="submit-premium-button-text" class="w-auto -mx-2 md:mx-0"> Select </div>
-									</button>
-								</div>
-							</details> @elseif (!empty($plandetails->amount))
+								                          <div class="flex justify-center mt-6">
+                                    <button id="submit-premium" class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg plan-select btn btn-lg submit-btn" type="submit" data-plan="premium">Select</button>
+</div> @elseif (!empty($plandetails->amount))
 							<h3> {{Cashier::formatAmount($plandetails->amount??'0', $plandetails->currency??'USD')}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</h3> @else
 							<h3>unknown</h3> @endif
 							<table class="table table-sm table-borderless" style="margin-top: 1rem;">
@@ -582,9 +530,12 @@ function addQuantityListeners() {
 }
 
 function selectDeviceFunc(evt) {
+	evt.preventDefault();
 	console.log('clickeddddd');
-	var btntext = document.querySelector('#submit-premium-button-text');
-	if(btntext.innerHTML === "Select") {
+	var btntext = document.getElementById('submit-premium');
+  // console.log('btntext',btntext);
+   //console.log('btntextinnerHTML',btntext.innerHTML);
+	if(btntext.innerHTML == "Select") {
 		btntext.innerText = 'Selected';
 		var quantity = parseInt(document.getElementById('quantity-input-premium').value);
 		console.log("Selected input", quantity);

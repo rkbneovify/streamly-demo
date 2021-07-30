@@ -84,7 +84,7 @@
                 <label for="">billing_scheme:</label>
                 <select name="billing_scheme" id="billing_scheme">
                     <option value="per_unit">per_unit</option>
-                    <option value="tiered" id="custom_tiered">tiered</option>
+                    <!--<option value="tiered" id="custom_tiered">tiered</option>-->
                     <option value="volume" id="custom_volume">volume</option>
                    </select>
                     <div class="tiered" style="display: none">
@@ -110,18 +110,18 @@
           <th scope="row"><span class="tiertext">FOR THE FIRST</span></th>
             <td><span class="sn">1</span>.</td>
             <td><span class="firstunit">0</span></td>
-            <td><input class="up_to" name="rows[1][up_to]" type="number" min="1" max="1000" value="1" /></td>
-            <td><input class="unit_amount" name="rows[1][unit_amount]" type="number" min="1" value="1" step="any" required /></td>
-            <td><input class="flat_amount" name="rows[1][flat_amount]" type="number" min="0" value="0" step="any" required  /></td>
+            <td><input class="up_to" name="rows[0][up_to]" type="number" min="1" max="1000" value="1" /></td>
+            <td><input class="unit_amount" name="rows[0][unit_amount]" type="number" min="1" value="1" step="any" required /></td>
+            <td><input class="flat_amount" name="rows[0][flat_amount]" type="number" min="0" value="0" step="any" required  /></td>
             <td></td>
           </tr>
           <tr id="rec-2">
           <th scope="row"><span class="tiertext">FOR THE NEXT</span></th>
             <td><span class="sn">2</span>.</td>
             <td><span class="firstunit">2</span></td>
-            <td><input class="up_to" name="rows[2][up_to]" type="number" value="1000" max="1000"   /></td>
-            <td><input class="unit_amount" name="rows[2][unit_amount]" type="number" min="1" value="1" step="any" required  /></td>
-            <td><input class="flat_amount" name="rows[2][flat_amount]" type="number" min="0"  value="0" step="any" required  /></td>
+            <td><input class="up_to" name="rows[1][up_to]" type="number" value="1000" max="1000"   /></td>
+            <td><input class="unit_amount" name="rows[1][unit_amount]" type="number" min="1" value="1" step="any" required  /></td>
+            <td><input class="flat_amount" name="rows[1][flat_amount]" type="number" min="0"  value="0" step="any" required  /></td>
             <td></td>
           </tr>
           
@@ -347,7 +347,7 @@ jQuery(document).delegate('a.add-record', 'click', function(e) {
 // var lastmaxvalue=Math.max(...arr);
      e.preventDefault();    
      var content = jQuery('#sample_table tr'),
-     size = jQuery('#tbl_posts >tbody >tr').length + 1,
+     size = jQuery('#tbl_posts >tbody >tr').length ,
      element = null,    
      element = content.clone();
      element.attr('id', 'rec-'+size);
