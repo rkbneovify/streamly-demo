@@ -32,7 +32,7 @@ class SubscriptionPackController extends Controller
         // $subscriptionpack = SubscriptionPack::all();
         $plan = \Stripe\Plan::all(['expand' => ['data.tiers']]);
         $product = \Stripe\Product::all();
-        // dd($plan->data);
+          // dd($plan->data);
        // return view('pages.subscription_pack.index', ['records' => SubscriptionPack::paginate(10)]);
        return view('admin.subscriptionpack.index', compact('plan','product'));
     }    /**
@@ -145,18 +145,20 @@ return $plans->data;
             case 'tiered':
                 $billing_scheme = 'tiered';
                 $tiers= $this->ProcessTiers($request->rows);
+                // dd($tiers);
                 $tierDetails= array("tiers" => $tiers, 
                 "billing_scheme" => "tiered", 
-                "tiers_mode" => $request->billing_scheme);
-                $planParams = array_merge($planparam, $tierDetails);
+                "tiers_mode" => 'volume');
+                $planParams = array_merge($planParams, $tierDetails);
                     
                 break;
             case 'volume':
+            //todo graduated plan
                 $billing_scheme = 'volume';
                 $tiers= $this->ProcessTiers($request->rows);
                 $tierDetails= array("tiers" => $tiers, 
                 "billing_scheme" => "tiered", 
-                "tiers_mode" => $request->billing_scheme);
+                "tiers_mode" => 'volume');
                 $planParams = array_merge($planParams, $tierDetails);
                 break;
             case 'per_unit':
@@ -174,7 +176,7 @@ return $plans->data;
                     $planParams = array_merge($planParams, $amountDetails);
                 break;
         }
-       
+      //  dd($planParams);
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
         try {
            
