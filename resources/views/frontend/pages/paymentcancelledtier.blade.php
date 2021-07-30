@@ -546,12 +546,12 @@ function selectDeviceFunc(evt) {
 		var price;
 		if(seconLastTier.up_to < quantity) {
 			const LastTier = tiers[tiers.length - 1];
-			price = LastTier.amount / 100;
+			price = parseInt(LastTier.unit_amount_decimal) / 100;
 			totalPrice = quantity * price;
 		} else {
 			const t = ShowUserthePrice(quantity);
-			//   console.log(t);
-			price = t.amount / 100;
+			   console.log("t",t);
+			price = parseInt(t.unit_amount_decimal) / 100;
 			totalPrice = quantity * price;
 		}
 		document.getElementById("totalprice").textContent = totalPrice;
