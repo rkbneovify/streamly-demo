@@ -131,9 +131,17 @@ class Payment extends Controller
         }}
         if($request->tier=='tiered'){
             $tieruserrole=Role::where('name','tieruser')->first();
-            $user->attachRole($tieruserrole); 
-            CheckPreviousHotelRooms($quantity,$user->id);
+            
+        $userRole=  $user->roles->first()->display_name;
+        
+        if( $userRole!== 'admin'||'superadmin') {
+        
+            $user->roles()->sync([$tieruserrole->id]);
         }
+             
+            
+        }
+        CheckPreviousHotelRooms($quantity,$user->id);
         } catch(\Stripe\Exception\CardException $e) {
             // Since it's a decline, \Stripe\Exception\CardException will be caught
             echo 'Status is:' . $e->getHttpStatus() . '\n';
