@@ -238,7 +238,7 @@ class HotelController extends Controller
         foreach($records as $record){
            $id = $record->id;
            $email = $record->email;
-           $name = $record->name;
+           $name = $record->name; 
            $status = $record->is_active;
         //    $role = $record->roles->first()->display_name;
            $role = $record->roles;
