@@ -29,26 +29,264 @@
           
           <div class="card-body">
             <h4>Plans</h4>
+            
             <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
-              <li class="nav-item">
+              {{-- <li class="nav-item">
                 <a class="nav-link active" id="custom-content-below-home-tab" data-toggle="pill" href="#custom-content-below-home" role="tab" aria-controls="custom-content-below-home" aria-selected="true">Per Unit</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="custom-content-below-profile-tab" data-toggle="pill" href="#custom-content-below-profile" role="tab" aria-controls="custom-content-below-profile" aria-selected="false">Tiered</a>
+              </li> --}}
+
+
+ @foreach ($plankey as $plank) 
+ @if ($loop->first)  
+ <li class="nav-item">
+                <a class="nav-link active" id="{{$plank}}-tab" data-toggle="pill" href="#{{$plank}}" role="tab" aria-controls="{{$plank}}" aria-selected="true">{{$plank}}</a>
               </li>
+ @else
+ <li class="nav-item">
+                <a class="nav-link" id="{{$plank}}-tab" data-toggle="pill" href="#{{$plank}}" role="tab" aria-controls="{{$plank}}" aria-selected="false">{{$plank}}</a>
+              </li>
+ @endif
+ @endforeach
+
+
             </ul>
             <div class="tab-content" id="custom-content-below-tabContent">
-              <div class="tab-pane fade show active" id="custom-content-below-home" role="tabpanel" aria-labelledby="custom-content-below-home-tab">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada lacus ullamcorper dui molestie, sit amet congue quam finibus. Etiam ultricies nunc non magna feugiat commodo. Etiam odio magna, mollis auctor felis vitae, ullamcorper ornare ligula. Proin pellentesque tincidunt nisi, vitae ullamcorper felis aliquam id. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin id orci eu lectus blandit suscipit. Phasellus porta, ante et varius ornare, sem enim sollicitudin eros, at commodo leo est vitae lacus. Etiam ut porta sem. Proin porttitor porta nisl, id tempor risus rhoncus quis. In in quam a nibh cursus pulvinar non consequat neque. Mauris lacus elit, condimentum ac condimentum at, semper vitae lectus. Cras lacinia erat eget sapien porta consectetur. 
+            @foreach($plansdetails as $key => $singlePlansDetails)
+        @if ($loop->first)  
+         
+   <div class="tab-pane fade show active" id="{{$key}}" role="tabpanel" aria-labelledby="{{$key}}-tab">
+   
+   <?php 
+        $theids=$singlePlansDetails->pluck('id');
+
+         ?>
+          <table class="table table-striped projects">
+              <thead>
+                  <tr>
+                      <th style="width: 1%">
+                          #
+                      </th>
+                      <th style="width: 20%">
+                          User Name
+                      </th>
+                      <th style="width: 20%">
+                          Email
+                      </th>
+                      <th style="width: 20%">
+                          Subscription
+                      </th>
+                      <th style="width: 20%">
+                          Quantity
+                      </th>
+                      <th style="width: 20%">
+                          Start Date
+                      </th><th style="width: 20%">
+                          Expiry Date
+                      </th>
+                      
+                      <th style="width: 10%" >
+                          Status
+                      </th>
+                      <th style="width: 20%">
+                      Action
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+              @forelse ($subscriptions->whereIn('stripe_plan',$theids) as $subscription)
+              <tr>
+              <td>#</td>
+              
+    <td>
+      
+      
+                       {{ $subscription->user->name??'' }} 
+                       
+              
+    </td>
+    <td>{{ $subscription->user->email??'' }} </td>
+    {{-- <select name="product" id="product" class="form-control" disabled>
+                  
+      @foreach($plans as $id => $pack)
+      @if($subscription->stripe_plan==$pack->id)
+      <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
+      @else
+      <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
+      @endif 
+      @endforeach
+    </select> --}}
+    {{-- <td>{{ $subscription->stripe_plan }}</td> --}}
+    
+    
+    
+    <td>
+
+     {{ $subscription->stripe_plan }}
+    @if($key=='tiered')
+      
+     
+       <span class="badge badge-success">Tiers Plan</span>
+      
+      @endif 
+        
+      
+    </td>
+    <td>{{ $subscription->quantity }}</td>
+    <td>{{ $subscription->created_at ??'' }}</td>
+    <td>{{ $subscription->renews_at ??'' }}</td>
+    <td >
+                            {{$subscription->stripe_status??''}}
+    </td>
+    <td>
+                                
+                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $subscription->id) }}">
+                                        {{ trans('view') }}
+                                    </a>
+
+                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptions/edit', $subscription->id) }}">
+                                        {{ trans('edit') }}
+                                    </a>
+
+                                    <form action="{{ url('admin/subscriptiondestroy', $subscription->user_id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="submit" class="btn btn-xs btn-danger" value="Cancel">
+                                    </form>
+                          
+                                
+                            </td></tr>
+@empty
+    <p>No Subscription</p>
+@endforelse
+                  
+                </tbody>
+          </table>
+      
               </div>
-              <div class="tab-pane fade" id="custom-content-below-profile" role="tabpanel" aria-labelledby="custom-content-below-profile-tab">
-                 Mauris tincidunt mi at erat gravida, eget tristique urna bibendum. Mauris pharetra purus ut ligula tempor, et vulputate metus facilisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas sollicitudin, nisi a luctus interdum, nisl ligula placerat mi, quis posuere purus ligula eu lectus. Donec nunc tellus, elementum sit amet ultricies at, posuere nec nunc. Nunc euismod pellentesque diam. 
-              </div>
+    @else
+
+        <div class="tab-pane fade" id="{{$key}}" role="tabpanel" aria-labelledby="{{$key}}-tab">
+        
+        <?php 
+        $theids=$singlePlansDetails->pluck('id');
+
+         ?>
+         
+         <table class="table table-striped projects">
+              <thead>
+                  <tr>
+                      <th style="width: 1%">
+                          #
+                      </th>
+                      <th style="width: 20%">
+                          User Name
+                      </th>
+                      <th style="width: 20%">
+                          Email
+                      </th>
+                      <th style="width: 20%">
+                          Subscription
+                      </th>
+                      <th style="width: 20%">
+                          Quantity
+                      </th>
+                      <th style="width: 20%">
+                          Start Date
+                      </th><th style="width: 20%">
+                          Expiry Date
+                      </th>
+                      
+                      <th style="width: 10%" >
+                          Status
+                      </th>
+                      <th style="width: 20%">
+                      Action
+                      </th>
+                  </tr>
+              </thead>
+              <tbody>
+              @forelse ($subscriptions->whereIn('stripe_plan',$theids) as $subscription)
+              <tr>
+              <td>#</td>
+              
+    <td>
+      
+      
+                       {{ $subscription->user->name??'' }} 
+                       
+              
+    </td>
+    <td>{{ $subscription->user->email??'' }} </td>
+    {{-- <select name="product" id="product" class="form-control" disabled>
+                  
+      @foreach($plans as $id => $pack)
+      @if($subscription->stripe_plan==$pack->id)
+      <option value="{{ $pack->id }}" selected="true">{{ $pack->nickname }}</option>
+      @else
+      <option value="{{ $pack->id }}">{{ "Value not found" }}</option>
+      @endif 
+      @endforeach
+    </select> --}}
+    {{-- <td>{{ $subscription->stripe_plan }}</td> --}}
+    
+    
+    
+    <td>
+
+     {{ $subscription->stripe_plan }}
+    @if($key=='tiered')
+      
+     
+       <span class="badge badge-success">Tiers Plan</span>
+      
+      @endif 
+        
+      
+    </td>
+    <td>{{ $subscription->quantity }}</td>
+    <td>{{ $subscription->created_at ??'' }}</td>
+    <td>{{ $subscription->renews_at ??'' }}</td>
+    <td >
+                            {{$subscription->stripe_status??''}}
+    </td>
+    <td>
+                                
+                                    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/view', $subscription->id) }}">
+                                        {{ trans('view') }}
+                                    </a>
+
+                                    <a class="btn btn-xs btn-info" href="{{ url('admin/subscriptions/edit', $subscription->id) }}">
+                                        {{ trans('edit') }}
+                                    </a>
+
+                                    <form action="{{ url('admin/subscriptiondestroy', $subscription->user_id) }}" method="POST" onsubmit="return confirm('{{ trans('are You Sure') }}');" style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="submit" class="btn btn-xs btn-danger" value="Cancel">
+                                    </form>
+                          
+                                
+                            </td></tr>
+@empty
+    <p>No Subscription</p>
+@endforelse
+                  
+                </tbody>
+          </table>
+      
+        </div>
               
             </div>
-            <div class="tab-custom-content">
-              <p class="lead mb-0">Custom Content goes here</p>
-            </div>
+@endif
+    @endforeach
+              
+              
+            {{-- <div class="tab-custom-content">
+              <p class="lead mb-0">{{$key}}</p>
+            </div> --}}
            
             
 
