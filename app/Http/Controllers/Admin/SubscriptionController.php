@@ -39,23 +39,12 @@ class SubscriptionController extends Controller
     public function index()
     {    
         $subscriptions = Subscription::with('user')->get();
-         $availablePlanidinDB=$subscriptions->pluck('stripe_plan')->unique();
+        // dd($subscriptions);
         $plans = \Stripe\Plan::all();
         // dd($plans);
          $plans->data;//Customers::with('country')->paginate(20);
-
-      $d=collect($plans->data)->whereIn('id',$availablePlanidinDB)
-      
-      ->groupBy('billing_scheme');
-    //   ->where('billing_scheme', 'per_unit')
-      
-      $plansdetails=$d->all();
-      $plankey=$d->keys();
-      dump($d);
-      dump($availablePlanidinDB->values());
-    //   dd($plankey);
-        // return view('admin.subscriptions.index', compact('subscriptions','plans'));
-        return view('admin.subscriptions.tierindex', compact('subscriptions','plans','plansdetails','plankey'));
+        return view('admin.subscriptions.index', compact('subscriptions','plans'));
+        // return view('admin.subscriptions.tierindex', compact('subscriptions','plans'));
         
     }   
     public function showAllcustomer()
