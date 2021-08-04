@@ -343,16 +343,18 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
 }
 
 function duplicateDeviceId($user_id,$deviceDetails){
-  if (App\SessionTable::where([
+  $checkDeviceDetails=App\SessionTable::where([
     ['status', '=', '1'],
     ['users_id', '=', $user_id],
     ['mac_address', '=', $deviceDetails],
-     ])->exists()) {
+  ]);
+  if ($checkDeviceDetails->exists()) {
       $explodedstring= explode("#~",$deviceDetails);
        return response()->json([
         'success' => false,
         'response_code'=>429,
-        'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web!',
+        'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web or Use the data key given below to logout session!',
+        'data'=>HashUserID($checkDeviceDetails->get('id')[0]->id)
         //'loggedindeviceinfointheseId'=>$myarr,
       ],429)->send();
     // exists
