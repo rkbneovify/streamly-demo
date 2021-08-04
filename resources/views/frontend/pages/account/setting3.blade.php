@@ -210,16 +210,6 @@ use Laravel\Cashier\Cashier; ?>
 		<div class="container">
 				<h2 class="section-heading text-center">Account Settings</h2>
 				
-				<div class="">
-				<th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
-    
-					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
-					@component('components.device',['allSession' => $allSession])
-		
-		@endcomponent
-                        
-                     </div>
-                         </div>
 				
 
 
