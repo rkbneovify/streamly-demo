@@ -170,12 +170,12 @@ use Laravel\Cashier\Cashier;
                             @endcomponent
                             </details> 
                                                       <div class="flex justify-center mt-2">
-                                    <button class="increment-btn text-white increment-subtract bg-pasha py-2 px-4 rounded-lg" disabled> - </button>
+                                    <button class="increment-btn text-white light bg-dark increment-subtract bg-pasha py-2 px-4 rounded-lg" disabled> - </button>
                                     <input type="number" class="quantity-input w-8 appearance-none text-center" id="quantity-input-premium" min="1" value="1" />
-                                    <button class="increment-btn text-white increment-add bg-pasha py-2 px-4 rounded-lg"> + </button>
+                                    <button class="increment-btn text-white light bg-dark increment-add bg-pasha py-2 px-4 rounded-lg"> + </button>
                                 </div>
                                 <div class="flex justify-center mt-6">
-                                    <button id="submit-premium" class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg plan-select btn btn-lg submit-btn" type="submit" data-plan="premium">Select</button>
+                                    <button id="submit-premium" class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg plan-select btn btn-lg submit-btn" type="submit" data-plan="premium">Click Me</button>
 </div>@elseif (!empty($plandetails->amount))
                             <h3> {{Cashier::formatAmount($plandetails->amount??'0', $plandetails->currency??'USD')}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</h3> @else
                             <h3>unknown</h3> @endif
@@ -544,7 +544,7 @@ function selectDeviceFunc(evt) {
 	var btntext = document.getElementById('submit-premium');
    //console.log('btntext',btntext);
    //console.log('btntextinnerHTML',btntext.innerHTML);
-	if(btntext.innerHTML == "Select") {
+	if(btntext.innerHTML == "Click Me") {
 		btntext.innerText = 'Selected';
 		var quantity = parseInt(document.getElementById('quantity-input-premium').value);
 		console.log("Selected input", quantity);
@@ -568,7 +568,7 @@ function selectDeviceFunc(evt) {
 		document.getElementById("quantity").value = quantity;
 		console.log("totalPrice", totalPrice)
 	} else {
-		btntext.innerText = 'Select';
+		btntext.innerText = 'Click Me';
 	}
 }
 const selectDeviceBtn = document.getElementById('submit-premium');
