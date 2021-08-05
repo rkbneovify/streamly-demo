@@ -30,7 +30,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid']]);
     }
 
     public function index()
@@ -156,6 +156,18 @@ public function login(Request $request)
 
 
    
+}
+public function unhashid($id){
+    
+    $User= UnHashUserID($id);;  
+    if($User){
+        $response = array('status' => true,'message'=>"id unhashed retrieved.",'data'=>$User);
+        return response()->json($response, 200);
+    }else{
+        $meta = array('status' => false,'message'=>'Id unhashed found.');
+        $messages = array('data' => array(),'meta'=>$meta);
+        return response()->json($messages, 404);
+    }
 }
 
     /**
