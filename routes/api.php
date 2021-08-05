@@ -18,6 +18,7 @@ Route::get('/', function (Request $request) {
 });
 // For api Registration, confirmations and verification
 Route::get('/front', 'APIController@index')->name('front');
+Route::get('/unhash/{id}', 'APIController@unhashid')->name('unhashid');
 Route::post('/frontlogin', 'APIController@login')->name('frontlogin');
 Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 
