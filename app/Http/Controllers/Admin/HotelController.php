@@ -56,19 +56,37 @@ class HotelController extends Controller
      $roomid=$request->input('roomid');
 // dd($roomid);
      try {
-     HotelRoomTable::where([
+     $hotelRoomtab=HotelRoomTable::where([
         ['id', '=', $roomid],
         ['user_id', '=', $uid],
+     ]);
+     $count=$hotelRoomtab->whereNotNull('session_id')->count();
+    //  echo $count.'count'; exit;
+     if(!$count>0){
+        HotelRoomTable::where([
+            ['id', '=', $roomid],
+            ['user_id', '=', $uid],
          ])->update([
-        'session_id' => $sessionid
-        ]);
-    
+            'session_id' => $sessionid
+            ]);
+
         $response = [
             'success' => true,
             'data' => 'Room id '.$roomid.' added' ,
             'message' => 'Successfully added to room/slot','response_code'=>200,
         ];
         return response()->json($response, 200);
+     } else{
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Conflict occured,room/slot:'.$roomid.' already occupied. Remove the session from web',
+            
+            'response_code'=>409,
+            
+        ], 409);
+     }
+    
     
     } catch (Exception $exception) {
         
