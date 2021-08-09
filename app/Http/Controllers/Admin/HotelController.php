@@ -146,6 +146,36 @@ class HotelController extends Controller
     {
         //
     }
+    public function getHotelRooms()
+    {
+        $request = request();
+        $token = $request->bearerToken();//get token from header
+        $user=JWTAuth::user();
+        
+        
+        if($user->hasRole('tieruser')){
+            $uid=  $user['id'];
+            $rooms=getActiveHotelRooms($uid);
+
+            return response()->json([
+      
+                'success' => true,
+                'message'=>'Available Hotel rooms for User:'.$user->name,
+                'response_code'=>200,
+                  'data'=>$rooms,
+                  
+                
+                
+              ],200);
+        }
+        return response()->json([
+            'success' => false,
+            'message' => 'Unauthorized,only tiered user can access this api',
+            
+            'response_code'=>403,
+            
+        ], 403);
+    }
 
     /**
      * Store a newly created resource in storage.

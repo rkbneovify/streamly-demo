@@ -84,6 +84,7 @@ Route::post('/ga/playererror', 'GoogleAnalyticsController@playererror')->middlew
 
 
 Route::post('/sync-session-with-room', 'Admin\HotelController@syncSessionWithHotelRoom')->middleware(['jwt.verify']);
+Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes
