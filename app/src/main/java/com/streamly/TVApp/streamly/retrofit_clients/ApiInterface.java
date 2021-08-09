@@ -3,15 +3,18 @@ package com.streamly.TVApp.streamly.retrofit_clients;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel;
+import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
 import com.streamly.TVApp.streamly.playervideo.geofence.GeofenceModel;
 import com.streamly.TVApp.streamly.playervideo.ip.IpModel;
 import com.streamly.TVApp.streamly.playervideo.zipcode.OutstationLocationModel;
+import com.streamly.TVApp.streamly.settings.device_signout.DeviceSignOutResponse;
 import com.streamly.TVApp.streamly.settings.privacy.PrivacyPolicyModel;
 import com.streamly.TVApp.streamly.settings.profile.profilemodel.ProfileModel;
 import com.streamly.TVApp.streamly.settings.registerdevice.ConnectedDeviceModel;
 import com.streamly.TVApp.streamly.settings.support.SupportModel;
 import com.streamly.TVApp.streamly.termsofuses.TermsModel;
+import com.streamly.TVApp.streamly.user_room.select_room_response.SelectedHotelRoomResponse;
 import com.streamly.TVApp.streamly.utilities.NetworkKeys;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
 
@@ -37,11 +40,20 @@ public interface ApiInterface {
 
     @Headers("Accept: application/json")
     @POST("/api/auth/login-with-passcode")
-    Call<LogInModel> postLoginUsingPasscode(@Query(NetworkKeys.KEY_PASSCODE) String passcode,  @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+    Call<NewLogInModel> postLoginUsingPasscode(@Query(NetworkKeys.KEY_PASSCODE) String passcode, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+
+
+    @Headers("Accept: application/json")
+    @POST("/api/auth/sync-session-with-room")
+    Call<SelectedHotelRoomResponse> postHotelRoom(@Query(NetworkKeys.KEY_AUTH) String authorization_token, @Query(NetworkKeys.ROOM_ID) Integer roomId);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @POST("/api/auth/logout")
     Call<LogInModel> postLogOutCall(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    @Headers(NetworkKeys.KEY_CONTENT_TYPE)
+    @POST("/api/auth/same-device-id-logout")
+    Call<DeviceSignOutResponse> postDeviceLogOutCall(@Query(NetworkKeys.KEY_ID) String deviceid);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/profile")

@@ -14,6 +14,8 @@ public class NetworkKeys {
     public static final String KEY_CHANNELIDS="channelids";
     public static final String KEY_PASS ="password";
     public static final String KEY_DEVICE_ID="deviceid";
+    public static final String KEY_ID="id";
+    public static final String ROOM_ID="roomid";
     public static final String KEY_BEARER="Bearer ";
     public static final String KEY_APP_JSON="application/json";
     public static final String KEY_SUPPORT="/api/auth/support";

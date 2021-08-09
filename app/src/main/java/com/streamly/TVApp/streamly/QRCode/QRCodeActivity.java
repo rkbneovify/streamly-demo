@@ -55,8 +55,11 @@ public class QRCodeActivity extends FragmentActivity {
             try {
 
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.i(TAG, "onResponse: 1 "+response.body().getMessage());
                     String registerLink=response.body().getMessage();
                     String qrImage=response.body().getData();
+                    Log.i(TAG, "onResponse: 2 "+qrImage);
+                    Log.i(TAG, "onResponse: 3 "+registerLink);
                     setQRImage(registerLink,qrImage);
 
                 } else if (response.code() == 401) {

@@ -36,6 +36,7 @@
     <string name="privacy_right">Privacy &amp; Policies</string>
     <string name="policy">Policies</string>
     <string name="sure_signout">Are you sure you want to logout from this device?</string>
+    <string name="sure_device_signout">Do you want to remove the old Session?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="continuee">Continue</string>
@@ -94,6 +95,7 @@
     <string name="no_data_found">No Data Found....!</string>
     <string name="activate_account">Activate your Streamly Account on your TV</string>
     <string name="hotel_account">Hotel Login Streamly on your TV</string>
+    <string name="hotel_account_select_room">Hotel Login Streamly on your TV select room</string>
     <string name="stay_text">Stay on this while you sign in on your phone or computer</string>
     <string name="stay_text1">Stay on this while you sign in on your phone</string>
     <string name="scan_qr">Scan this QR code</string>

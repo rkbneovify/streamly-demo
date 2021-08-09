@@ -11,12 +11,14 @@ import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 
 
 public class SplashActivity extends FragmentActivity {
 
     String auth_token;
+    String auth_token_passcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,17 @@ public class SplashActivity extends FragmentActivity {
         Log.e("uniqueId", "uniqueId "+ Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
         auth_token = TokenStorage.readSharedToken(SplashActivity.this, ConstantUtility.AUTH_TOKEN, null);
+        auth_token_passcode = TokenStorage.readSharedTokenPasscode(SplashActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (auth_token != null) {
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
+                    finish();
+                }
+                else if (auth_token_passcode != null) {
+                    startActivity(new Intent(SplashActivity.this, UserRoomActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
                 }else {

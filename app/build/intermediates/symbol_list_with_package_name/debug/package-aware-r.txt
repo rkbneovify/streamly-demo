@@ -3536,12 +3536,14 @@ id btn_continue
 id btn_hotel_sign_in
 id btn_login_using_passcode_uses
 id btn_no
+id btn_no_signout
 id btn_ok
 id btn_register_view
 id btn_sign_in
 id btn_sign_in_using_passcode
 id btn_terms_uses
 id btn_yes
+id btn_yes_signout
 id button
 id buttonPanel
 id button_start
@@ -3945,6 +3947,9 @@ id reverseSawtooth
 id right
 id right_icon
 id right_side
+id room_layout
+id room_logo
+id room_name
 id rounded
 id row
 id row_content
@@ -3952,6 +3957,7 @@ id row_header
 id row_header_description
 id row_index_key
 id rv_device_model
+id rv_room
 id rv_search
 id rv_support
 id save_non_transition_alpha
@@ -4221,6 +4227,7 @@ layout activity_q_r_code
 layout activity_search
 layout activity_settings
 layout activity_splash
+layout activity_user_room
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
@@ -4237,6 +4244,7 @@ layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
+layout dialog_device_signout
 layout dialog_privacy
 layout dialog_profile
 layout dialog_profile_new
@@ -4387,6 +4395,7 @@ layout text_view_with_theme_line_height
 layout text_view_without_line_height
 layout video_surface_fragment
 layout view_register_device
+layout view_room
 layout view_search
 layout view_support
 mipmap ic_launcher
@@ -4503,6 +4512,7 @@ string hello_blank_fragment
 string hide_bottom_view_on_scroll_behavior
 string hotelSignIn
 string hotel_account
+string hotel_account_select_room
 string icon_content_description
 string item_view_role_description
 string lb_control_display_fast_forward_multiplier
@@ -4633,6 +4643,7 @@ string stay_text
 string stay_text1
 string support
 string support_text
+string sure_device_signout
 string sure_signout
 string terms
 string termsofuses
