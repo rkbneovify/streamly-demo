@@ -49,6 +49,12 @@
                       <th style="width: 20%">
                           Device Name
                       </th>
+                      
+							  
+                            
+                      <th style="width: 20%">
+                          Hotel room
+                      </th>
                       <th style="width: 20%">
                       User agent
                       </th>
@@ -83,6 +89,10 @@
                             <td>
                                 {{ $user->device_name ?? '' }}
                             </td>
+                           
+                         <td>   @isset($user->hotel)
+							  {{$user->hotel->hotel_room??''}}
+                              @endisset</td>
                             <td>
                                 {{ $user->useragent ?? '' }}
                             </td>
