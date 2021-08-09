@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\HotelRoomTable;
 class SessionTable extends Model
 {
     /**
@@ -39,6 +40,11 @@ class SessionTable extends Model
     public function user()
     {
         return $this->belongsTo(User::class,'users_id');
+    }
+
+    public function hotel()
+    {
+        return $this->hasOne(HotelRoomTable::class,'session_id');
     }
     /**
     protected static function boot()
