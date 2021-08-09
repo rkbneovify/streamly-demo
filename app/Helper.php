@@ -334,7 +334,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
         'device_info'=>$deviceDetails,
         'user'=>$userInfo,
         'termandcondition'=>$termAndCondition,
-        'rooms'=>$rooms
+        'rooms'=>$rooms,
+        'userrole'=>$userInfo->roles->pluck('name')[0]
         
       
       
