@@ -19,7 +19,7 @@ use Illuminate\Support\Arr;
 use Mail;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
-
+use App\HotelRoomTable;
 use Jenssegers\Agent\Agent;
 class Setting extends Controller
 {   public function __construct()
@@ -172,7 +172,17 @@ class Setting extends Controller
         ['status', '=', '1'],
         ['users_id', '=', $id],
          ])->orderBy('connected_devices', 'asc')->get();
-        
+         $userRole=  $userinfo->roles->first()->name;
+        //  dd($userRole);
+         if($userRole=='tieruser'){
+            $allSession=SessionTable::with('hotel')->where([
+                ['status', '=', '1'],
+                ['users_id', '=', $id],
+                 ])->orderBy('connected_devices', 'asc')->get();
+                
+             
+         }
+         
          
          
     	return view('frontend.pages.account.devicemanagement', compact('login','allSession','userinfo','hasid'));
