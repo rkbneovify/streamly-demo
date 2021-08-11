@@ -14,6 +14,13 @@
             <h1>Subscription</h1> {{ session()->get( 'info' ) }}
           </div>
           <div class="col-sm-6">
+          <div class="card-tools">
+            
+    <a class="btn btn-xs btn-primary" href="{{  url('admin/subscriptions/create') }} ">
+      Add new subscription
+  </a>
+  <a  class=" btn btn-xs btn-warning" href="{{ url('stripesync') }}">Stripe Expiry Date Sync</a>
+          </div>
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Subscription</li>
