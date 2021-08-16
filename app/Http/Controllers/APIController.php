@@ -409,6 +409,8 @@ return $second;
             $myFavorites->map(function ($address)  {
 
               unset($address['dash_url']);
+              unset($address['smooth_url']);
+              unset($address['pivot']);
                 return $address;
             
             });
@@ -416,9 +418,12 @@ return $second;
         
         $myFavorites->map(function ($address)  {
 
-                 
+            unset($address['url']);
             $address['url'] = $address['dash_url'];
           unset($address['dash_url']);
+
+          unset($address['smooth_url']);
+          unset($address['pivot']);
             return $address;
         
         });
