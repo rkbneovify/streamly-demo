@@ -133,7 +133,9 @@ class Setting extends Controller
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
          $subscription=Auth::user()->subscriptions()->first();
-         
+        //  dd($subscription);
+        //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
+        //  dd($status);
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {

@@ -535,7 +535,7 @@ return response($data)->withHeaders([
   public function channelDaysScheduleFunc($type){
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
-    $record  = Gracenote::select("sub.callSign as CallSign","id","StationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+    $record  = Gracenote::select("sub.callSign as callSign","id","StationName as stationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
     ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
     ->fromSub(function ($query) use ($type) {
       $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),

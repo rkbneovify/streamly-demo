@@ -102,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function favorites()
 {
-    return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->where('status','1')->withTimeStamps();
+    return $this->belongsToMany(Channel::class, 'favourite_channel', 'user_id', 'channels_id')->select('channels.id','name',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'),'url','smooth_url','dash_url')->where('status','1')->withTimeStamps();
 }
 
 public function recentschannel()
