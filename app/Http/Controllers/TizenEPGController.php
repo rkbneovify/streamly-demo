@@ -97,6 +97,69 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
   //  return  response()->json([
   //     'clients' => $this->transformClientCollection($api)
   //  ], 200);
+  }     
+//channel with 7 day of schdule
+public function channelDaysScheduleV2(Request $request){
+
+$type='dash_url';
+$record = $this->channelDaysScheduleFuncV2($type);
+  
+// $reco=$record->toSql(); echo $reco;exit; 
+$reco=$record->get(); //echo $reco;exit; 
+   if ($reco->isEmpty()) {
+      $response = [
+          'success' => false,
+          'data' => 'Empty',
+          'message' => 'Channel not found.',
+          'response_code'=>404,
+      ];
+      return response()->json($response, 404);
+  }  
+      // return response()->json($record->toSql());
+      // return json_encode($api);
+$a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels' => $reco];
+      $response = [
+          
+        //   'count' => $reco->count(),
+        
+          'ProgramGuide' => $a,
+        //   'Channels' => $reco,
+         
+      ];
+      // return response()->json($reco);
+     
+  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+  //  return  response()->json([
+  //     'clients' => $this->transformClientCollection($api)
+  //  ], 200);
+  }
+
+  public function channelDaysScheduleFuncV2($type){
+    $imagePath=url("/uploads/channellogo/");
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+    $record  = Gracenote::select("sub.callSign as CallSign","sub.genre_name as genre_name",DB::raw('concat(id,"") ChanId') ,DB::raw('concat(id,"") ChanNum'),"StationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) IconURL"))
+    ->selectRaw(" concat( '[', group_concat(json_object( 'Title', EventTitle,'Description', EventDescription,'CatType', CatType,'Category', Category,'StartTime', DATE_FORMAT(StartDateTime, '%Y-%m-%dT%TZ'),'EndTime', DATE_FORMAT(EndDateTime, '%Y-%m-%dT%TZ') ) Order By StartDateTime ), ']') Programs")
+    
+    ->fromSub(function ($query) use ($type) {
+      $query->select(DB::raw('IFNULL(genre.name,"Others") genre_name'),DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),
+      DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw("'series' as Category"),DB::raw("'series' as CatType"),DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+      ->from('gracenote')
+      ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    
+   ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+     ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+       ->orderBy('gracenote.StartDateTime', 'asc');
+        }, 'sub')
+        ->where('sub.status','=','1')
+    ->orderBy('sub.callSign', 'asc')
+    ->groupBy('sub.callSign','StationName','image',$type,'id','sub.genre_name');
+
+
+    return $record;
   }
 
     public function channelDaysScheduleFunc($type){
