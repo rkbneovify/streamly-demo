@@ -140,6 +140,16 @@ class Payment extends Controller
         }
              
             
+        }else{
+            $tieruserrole=Role::where('name','user')->first();
+            
+            $userRole=  $user->roles->first()->display_name;
+            
+            if( $userRole!== 'admin'||'superadmin') {
+            
+                $user->roles()->sync([$tieruserrole->id]);
+            }
+
         }
         CheckPreviousHotelRooms($quantity,$user->id);
         } catch(\Stripe\Exception\CardException $e) {
