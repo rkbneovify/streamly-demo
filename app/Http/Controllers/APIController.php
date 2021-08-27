@@ -262,13 +262,21 @@ public function unhashid($id){
         $user = JWTAuth::user();//all the user info
         $uid=  $user['id'];
         //and get the number of last connected device
-        $prevConnectDevicecount = SessionTable::selectRaw(" connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
          ])->orderBy('connected_devices', 'asc');
-        $s='';$numofdevice='';
-    $s=$prevConnectDevicecount->get();
+        $s='';
+        $numofdevice='';
+    $s=$prevConnectDevicecount->get()
+    ->map(function ($address)  {
+        
+        $address['session_id'] = HashUserID($address['session_id']);
+    
+          return $address;
+                    
+                    });
     
     $numofdevice=$prevConnectDevicecount->count();
    
