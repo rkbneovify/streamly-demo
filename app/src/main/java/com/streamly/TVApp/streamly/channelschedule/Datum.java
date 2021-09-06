@@ -7,11 +7,13 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("unused")
 public class Datum {
 
-    @SerializedName("CallSign")
+//    @SerializedName("CallSign")
+    @SerializedName("callSign")
     private String mCallSign;
     @SerializedName("programs")
     private List<Program> mPrograms;
-    @SerializedName("StationName")
+//    @SerializedName("StationName")
+    @SerializedName("stationName")
     private String mStationName;
 
     @SerializedName("id")

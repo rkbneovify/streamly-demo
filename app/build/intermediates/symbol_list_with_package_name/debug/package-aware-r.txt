@@ -3537,6 +3537,7 @@ id btn_hotel_sign_in
 id btn_login_using_passcode_uses
 id btn_no
 id btn_no_signout
+id btn_no_signout_with_passcode
 id btn_ok
 id btn_register_view
 id btn_sign_in
@@ -3544,6 +3545,7 @@ id btn_sign_in_using_passcode
 id btn_terms_uses
 id btn_yes
 id btn_yes_signout
+id btn_yes_signout_with_passcode
 id button
 id buttonPanel
 id button_start
@@ -4245,6 +4247,7 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout dialog_device_signout
+layout dialog_device_signout_with_passcode
 layout dialog_privacy
 layout dialog_profile
 layout dialog_profile_new

@@ -214,7 +214,11 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
 //                })
         Log.e(TAG,"kids fragment data list 0 "+list)
         list.forEach {
-             channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
+            if(it.callSign ==null)
+            {
+                it.callSign="";
+            }
+             channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign.toString()),it.logo,it.url))
 
         }
 
@@ -224,7 +228,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
         var dayss: Long ?= 1
-        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+        val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
         apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                    .subscribe(
                            {
@@ -278,6 +282,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
                                            channel_showName_list.add(it.data[i].getmId())
                                            verticallist.add(verticalBean)
                                        }
+
                                    }
 
 

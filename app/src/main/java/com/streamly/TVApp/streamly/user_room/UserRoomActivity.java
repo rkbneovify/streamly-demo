@@ -21,8 +21,12 @@ import com.google.gson.reflect.TypeToken;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
+import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.new_log_in.Room;
 import com.streamly.TVApp.streamly.receivers.NetworkStateReceiver;
+import com.streamly.TVApp.streamly.roomModel.RoomErrorResponse;
+import com.streamly.TVApp.streamly.roomModel.roomResponse.RoomRefreshResponse;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 
@@ -139,7 +143,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
 //    }
 //    );
 
-            AndroidNetworking.post(BASE_URL_TESTING+"/api/auth/sync-session-with-room")
+            AndroidNetworking.post(BASE_URL_TESTING + "/api/auth/sync-session-with-room")
                     .addHeaders("Authorization", "Bearer " + authToken)
                     .addBodyParameter("roomid", item.toString())
                     .setPriority(Priority.HIGH)
@@ -154,6 +158,9 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                     TokenStorage.savedSharedToken(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN, authToken);
                                     startActivity(new Intent(UserRoomActivity.this, MainActivity.class));
                                     finish();
+                                } else if (response.getInt("response_code") == 409) {
+                                    Log.i(TAG, "onResponse: response_code 409 ");
+//                                    refreshHotelRooms();
                                 } else {
                                     Log.i(TAG, "onResponse: roomListData 7 ");
                                     CommonUtility.showToast(UserRoomActivity.this, response.getString("message").toString());
@@ -163,6 +170,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                             } catch (Exception e) {
                                 Log.e(TAG, "failure: catch " + " " + e.getLocalizedMessage());
                                 Log.e(TAG, "failure: catch " + " " + e.getMessage());
+
                                 progressBar.setVisibility(View.INVISIBLE);
                             }
                             // do anything with response
@@ -171,7 +179,16 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                         @Override
                         public void onError(ANError error) {
                             Log.e(TAG, "failure: onError 1 " + " " + error.getLocalizedMessage());
-                            Log.e(TAG, "failure: onError 2 " + " " + error.getMessage());
+                            Log.e(TAG, "failure: onError 2 " + " " + error.getErrorBody());
+                            if(error.getErrorBody() !=null ) {
+                                RoomErrorResponse roomErrorResponse = new Gson().fromJson(error.getErrorBody().toString(), RoomErrorResponse.class);
+                            if(roomErrorResponse.getResponseCode() == 409)
+                            {
+                                Log.e(TAG, "failure: onError 3 " + " " + roomErrorResponse.getResponseCode());
+                                Log.e(TAG, "failure: onError 4 " + " " + roomErrorResponse.getMessage());
+                                refreshHotelRooms();
+                            }
+                            }
                             // handle error
                             progressBar.setVisibility(View.INVISIBLE);
                         }
@@ -179,6 +196,106 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         }));
 
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void refreshHotelRooms() {
+        progressBar.setVisibility(View.VISIBLE);
+//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+//        Call<NewHotelRoomResponse> call = apiInterface.postNewHotelRoom("Bearer " + authToken);
+//        call.enqueue(new Callback<NewHotelRoomResponse>() {
+//                         @Override
+//                         public void onResponse(Call<NewHotelRoomResponse> call, Response<NewHotelRoomResponse> response) {
+//
+//                             try {
+//                                 Log.i(TAG, "onResponse: refreshHotelRooms  1 "+response.code());
+//                                 Log.i(TAG, "onResponse: refreshHotelRooms  2 "+response.message());
+//                                 Log.i(TAG, "onResponse: refreshHotelRooms  3 "+response.errorBody());
+//                                 if (response.isSuccessful() && response.code() == 200) {
+//                                     Log.i(TAG, "onResponse: roomListData 6 ");
+//                                     Gson gson = new Gson();
+//                                     String json=response.body().getData().toString();
+//                                     Type type = new TypeToken<ArrayList<Room>>() {
+//                                     }.getType();
+//                                     roomList = gson.fromJson(json, type);
+//
+//                                 } else {
+//                                     CommonUtility.showToast(UserRoomActivity.this, response.body().getData().toString());
+//                                 }
+//                                 progressBar.setVisibility(View.INVISIBLE);
+//                             } catch (Exception e) {
+//                                 Log.e(TAG, "failure: " + call + " " + e.getLocalizedMessage());
+//                                 Log.e(TAG, "failure: " + call + " " + e.getMessage());
+//                                 progressBar.setVisibility(View.INVISIBLE);
+//
+//                             }
+//
+//                         }
+//
+//                         @Override
+//                         public void onFailure(Call<NewHotelRoomResponse> call, Throwable t) {
+//                             Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+//                             progressBar.setVisibility(View.INVISIBLE);
+//                         }
+//                     }
+//        );
+//
+
+        AndroidNetworking.post(BASE_URL_TESTING + "/api/auth/get-hotelrooms")
+                .addHeaders("Authorization", "Bearer " + authToken)
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+
+                           if(response !=null)
+                           {
+                               RoomRefreshResponse roomRefreshResponse=new Gson().fromJson(response.toString(),RoomRefreshResponse.class);
+                               if (roomRefreshResponse.getResponseCode()== 200) {
+
+
+
+                                   Gson gson = new Gson();
+                                   String json = gson.toJson(roomRefreshResponse.getData());
+
+                                   TokenStorage.savedRoomList(UserRoomActivity.this, ConstantUtility.ROOM_LIST,json);
+                                   CommonUtility.showToast(UserRoomActivity.this,roomRefreshResponse.getMessage());
+//                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+//                        finish();
+                                   startActivity(new Intent(UserRoomActivity.this, UserRoomActivity.class));
+                                   finish();
+
+                               } else if (roomRefreshResponse.getResponseCode() == 409) {
+                                   Log.i(TAG, "onResponse: response_code 409 ");
+//                                    refreshHotelRooms();
+                               } else {
+                                   Log.i(TAG, "onResponse: roomListData 7 ");
+                                   CommonUtility.showToast(UserRoomActivity.this, roomRefreshResponse.getMessage().toString());
+                               }
+                           }
+
+                            progressBar.setVisibility(View.INVISIBLE);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "failure: catch " + " " + e.getLocalizedMessage());
+                            Log.e(TAG, "failure: catch " + " " + e.getMessage());
+
+                            progressBar.setVisibility(View.INVISIBLE);
+                        }
+                        // do anything with response
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        Log.e(TAG, "failure: onError 1 " + " " + error.getLocalizedMessage());
+                        Log.e(TAG, "failure: onError 2 " + " " + error.getErrorBody());
+
+                        // handle error
+                        progressBar.setVisibility(View.INVISIBLE);
+
+                    }
+                });
     }
 
     @Override

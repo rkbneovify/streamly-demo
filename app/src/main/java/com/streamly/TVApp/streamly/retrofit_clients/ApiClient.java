@@ -13,6 +13,7 @@ import static com.streamly.TVApp.streamly.utilities.ApiConfig.BASE_URL_TESTING;
 public class ApiClient {
 
     private static final String BASE_URL = ApiConfig.BASE_URL;
+    private static final String BASE_URL2 = ApiConfig.BASE_URL_TESTING2;
     private static final String IP_URL = ApiConfig.IP_URL;
     public static Retrofit retrofit = null;
     private static Retrofit ipRetrofit = null;
@@ -22,6 +23,19 @@ public class ApiClient {
     }
 
     public static Retrofit getClient() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        return retrofit;
+    }
+    public static Retrofit getClient3() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();

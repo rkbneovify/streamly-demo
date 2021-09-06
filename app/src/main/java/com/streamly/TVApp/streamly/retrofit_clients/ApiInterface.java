@@ -4,6 +4,7 @@ import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
+import com.streamly.TVApp.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
 import com.streamly.TVApp.streamly.playervideo.geofence.GeofenceModel;
 import com.streamly.TVApp.streamly.playervideo.ip.IpModel;
@@ -35,7 +36,7 @@ public interface ApiInterface {
 
     @Headers("Accept: application/json")
     @POST("/api/auth/login")
-    Call<LogInModel> postLogInCall(@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASS) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+    Call<NewLogInModel> postLogInCall(@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASS) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
 
 
     @Headers("Accept: application/json")
@@ -46,6 +47,11 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @POST("/api/auth/sync-session-with-room")
     Call<SelectedHotelRoomResponse> postHotelRoom(@Query(NetworkKeys.KEY_AUTH) String authorization_token, @Query(NetworkKeys.ROOM_ID) Integer roomId);
+
+
+    @Headers("Accept: application/json")
+    @POST("/api/auth/get-hotelrooms")
+    Call<NewHotelRoomResponse> postNewHotelRoom(@Query(NetworkKeys.KEY_AUTH) String authorization_token);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @POST("/api/auth/logout")

@@ -47,6 +47,8 @@ com/streamly/TVApp/streamly/search_channels/SearchAdapter.java
  com.streamly.TVApp.streamly.search_channels.SearchAdapter$MyViewHolder
 com/streamly/TVApp/streamly/retrofit_clients/ApiClient.java
  com.streamly.TVApp.streamly.retrofit_clients.ApiClient
+com/streamly/TVApp/streamly/new_log_in/new_hotel_response/NewHotelRoomResponse.java
+ com.streamly.TVApp.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse
 com/streamly/TVApp/streamly/epg/channelgenre/Comedy.java
  com.streamly.TVApp.streamly.epg.channelgenre.Comedy
 com/streamly/TVApp/streamly/MainActivity.java
@@ -112,6 +114,8 @@ com/streamly/TVApp/streamly/search_channels/SearchActivity.java
  com.streamly.TVApp.streamly.search_channels.SearchActivity$2
 com/streamly/TVApp/streamly/epg/channelgenre/Sport.java
  com.streamly.TVApp.streamly.epg.channelgenre.Sport
+com/streamly/TVApp/streamly/roomModel/RoomErrorResponse.java
+ com.streamly.TVApp.streamly.roomModel.RoomErrorResponse
 com/streamly/TVApp/streamly/log_in/Pivot.java
  com.streamly.TVApp.streamly.log_in.Pivot
 com/streamly/TVApp/streamly/settings/privacy/PrivacyPolicyModel.java
@@ -135,6 +139,8 @@ com/streamly/TVApp/streamly/playervideo/drm/DrmKeyModel.java
 com/streamly/TVApp/streamly/playervideo/geofence/GeofenceViewModel.java
  com.streamly.TVApp.streamly.playervideo.geofence.GeofenceViewModel
  com.streamly.TVApp.streamly.playervideo.geofence.GeofenceViewModel$1
+com/streamly/TVApp/streamly/roomModel/roomResponse/Datum.java
+ com.streamly.TVApp.streamly.roomModel.roomResponse.Datum
 com/streamly/TVApp/streamly/channelschedule/Program.java
  com.streamly.TVApp.streamly.channelschedule.Program
 com/streamly/TVApp/streamly/utilities/NetworkUtils.java
@@ -168,6 +174,8 @@ com/streamly/TVApp/streamly/playervideo/geofence/GeofenceRepo.java
  com.streamly.TVApp.streamly.playervideo.geofence.GeofenceRepo$1
 com/streamly/TVApp/streamly/epg/channelgenre/ChannelGenreModel.java
  com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel
+com/streamly/TVApp/streamly/roomModel/roomResponse/RoomRefreshResponse.java
+ com.streamly.TVApp.streamly.roomModel.roomResponse.RoomRefreshResponse
 com/streamly/TVApp/streamly/BuildConfig.java
  com.streamly.TVApp.streamly.BuildConfig
 com/streamly/TVApp/streamly/settings/support/SupportModel.java
@@ -178,6 +186,14 @@ com/streamly/TVApp/streamly/log_in/User.java
  com.streamly.TVApp.streamly.log_in.User
 com/streamly/TVApp/streamly/epg/SimpleProgram.java
  com.streamly.TVApp.streamly.epg.SimpleProgram
+com/streamly/TVApp/streamly/settings/device_signout/SignOutDeviceWithPasscodeDialog.java
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog$1
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog$2
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog$3
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog$4
+com/streamly/TVApp/streamly/new_log_in/new_hotel_response/Room.java
+ com.streamly.TVApp.streamly.new_log_in.new_hotel_response.Room
 com/streamly/TVApp/streamly/epg/channelgenre/Data.java
  com.streamly.TVApp.streamly.epg.channelgenre.Data
 com/streamly/TVApp/streamly/channelschedule/Datum.java
@@ -193,6 +209,7 @@ com/streamly/TVApp/streamly/settings/device_signout/SignOutDeviceDialog.java
  com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog$1
  com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog$2
  com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog$3
+ com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog$4
 com/streamly/TVApp/streamly/user_room/UserRoomAdapter.java
  com.streamly.TVApp.streamly.user_room.UserRoomAdapter
  com.streamly.TVApp.streamly.user_room.UserRoomAdapter$1
@@ -206,6 +223,7 @@ com/streamly/TVApp/streamly/user_room/UserRoomActivity.java
  com.streamly.TVApp.streamly.user_room.UserRoomActivity
  com.streamly.TVApp.streamly.user_room.UserRoomActivity$1
  com.streamly.TVApp.streamly.user_room.UserRoomActivity$2
+ com.streamly.TVApp.streamly.user_room.UserRoomActivity$3
 com/streamly/TVApp/streamly/QRCode/QrModel.java
  com.streamly.TVApp.streamly.QRCode.QrModel
 com/streamly/TVApp/streamly/epg/GenereAdapter.java

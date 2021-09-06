@@ -269,7 +269,7 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
         var dayss: Long ?= 1
-        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+        val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
         apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     //success

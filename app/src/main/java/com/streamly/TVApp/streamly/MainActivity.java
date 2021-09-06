@@ -168,6 +168,7 @@ private TextView settingText,goBackText;
 
                         dataList.put("All" , datumList);
                         dataList.put("Recent" , recentList);
+                        Log.e(TAG, "onResponse: all recentList "+recentList);
                         for(String s : generList){
                             Log.e("doneok" , s);
 

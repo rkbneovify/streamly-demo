@@ -25,6 +25,7 @@ import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
+import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog;
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
@@ -118,16 +119,20 @@ Button btn_sign_in_using_passcode;
 //                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
 //                        CommonUtility.showToast(LoginUsingPasscodeActivity.this,ConstantUtility.MAX_USER_LOGIN);
 
-                        NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
-                        if(logInModel.getData() !=null && logInModel.getData().toString()!="")
-                        {
+                       if(response.errorBody() !=null )
+                       {
+                           NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
+                           if(logInModel.getData() !=null && logInModel.getData().toString()!="")
+                           {
 
-                            Log.i(TAG, "onResponse:429  "+response.body());
-                            Log.i(TAG, "onResponse:429  "+logInModel.getData().toString());
-                            SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LoginUsingPasscodeActivity.this,logInModel.getData().toString());
-                            signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            signOutDeviceDialog.show();
-                        }
+                               Log.i(TAG, "onResponse:429  "+response.body());
+                               Log.i(TAG, "onResponse:429  "+logInModel.getData().toString());
+                               SignOutDeviceWithPasscodeDialog signOutDeviceWithPasscodeDialog = new SignOutDeviceWithPasscodeDialog(LoginUsingPasscodeActivity.this,logInModel.getData().toString(),et_passcode.getText().toString(),uniqueId);
+                               signOutDeviceWithPasscodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                               signOutDeviceWithPasscodeDialog.show();
+                           }
+
+                       }
 
 
                     }

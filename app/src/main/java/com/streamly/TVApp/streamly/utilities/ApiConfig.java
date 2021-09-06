@@ -11,6 +11,7 @@ public class ApiConfig {
     public static final String BASE_URL="https://streamlytv.com";
 //    public static final String BASE_URL_TESTING="http://d2a4089e1253.ngrok.io";
     public static final String BASE_URL_TESTING="https://streamlytv.com";
+    public static final String BASE_URL_TESTING2="http://b6226c1d9190.ngrok.io";
 
     public static final String IP_URL="http://ip-api.com";
 

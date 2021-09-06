@@ -17,10 +17,14 @@ import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
+import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
+import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
+import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
 import com.streamly.TVApp.streamly.settings.support.SupportDialog;
 import com.streamly.TVApp.streamly.termsofuses.TermsOfUses;
+import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 import com.streamly.TVApp.streamly.R;
@@ -143,32 +147,68 @@ finish();
     private void signInCall() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<LogInModel> call=apiInterface.postLogInCall(edUserName.getText().toString(),
+        Call<NewLogInModel> call=apiInterface.postLogInCall(edUserName.getText().toString(),
                                                         edPassword.getText().toString(),uniqueId);
-        call.enqueue(new Callback<LogInModel>() {
+        call.enqueue(new Callback<NewLogInModel>() {
             @Override
-            public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {
+            public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
                     Log.e(TAG, "resCode "+response.code());
-                if (response.isSuccessful() && response.body()!=null){
+                if (response.isSuccessful() && response.body()!=null && response.code()!=429){
+//                    String access_token=response.body().getAccessToken();
+//                    Long userId=response.body().getUser().getId();
+//
+//                    TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID,userId.toString());
+//                    TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN,access_token);
+//                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+//                    startActivity(new Intent(LogInActivity.this, MainActivity.class));
+//                    finish();
+
+//                    edUserName.setText("");
+//                    edPassword.setText("");
+
                     String access_token=response.body().getAccessToken();
                     Long userId=response.body().getUser().getId();
+                    Log.i(TAG, "onResponse: LoginUsingPasscode 1 "+access_token);
+                    Log.i(TAG, "onResponse: LoginUsingPasscode 2 "+userId);
+//                        ArrayList<Room> set = new ArrayList<>();
+//                        set.addAll(response.body().getRooms());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body().getRooms());
 
+                    TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST,json);
                     TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID,userId.toString());
-                    TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN,access_token);
+                    TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
                     CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
-                    startActivity(new Intent(LogInActivity.this, MainActivity.class));
+//                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+//                        finish();
+                    startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
                     finish();
 
                     edUserName.setText("");
                     edPassword.setText("");
 
-                }else if (response.code()==401){
+                }
+                else if (response.code()==401){
                     LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
                     CommonUtility.showToast(LogInActivity.this,logInModel.getMessage());
                 } else if (response.code()==429){
 //                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
-                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.MAX_USER_LOGIN);
+                    if(response.errorBody() !=null )
+                    {
+                        NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
+                        if(logInModel.getData() !=null && logInModel.getData().toString()!="")
+                        {
+
+                            Log.i(TAG, "onResponse:429  "+response.body());
+                            Log.i(TAG, "onResponse:429  "+logInModel.getData().toString());
+                            SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this,logInModel.getData().toString(),edUserName.getText().toString(),
+                                    edPassword.getText().toString(),uniqueId);
+                            signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            signOutDeviceDialog.show();
+                        }
+
+                    }
                 }
                 else if (response.code()==500){
                     CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
@@ -181,7 +221,7 @@ finish();
                 Log.e(TAG,"ResponCode "+response.code()+"");
             }
             @Override
-            public void onFailure(Call<LogInModel> call, Throwable t) {
+            public void onFailure(Call<NewLogInModel> call, Throwable t) {
                 Log.e(TAG,"failure: "+t.getMessage());
                 Log.e(TAG,"failRequest: "+call.request());
                 CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
