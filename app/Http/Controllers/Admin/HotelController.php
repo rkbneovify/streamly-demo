@@ -9,6 +9,7 @@ use App\User;
 use App\HotelRoomTable;
 use App\SessionTable;
 use JWTAuth;
+use Illuminate\Support\Facades\Validator;
 class HotelController extends Controller
 {
     /**
@@ -34,15 +35,26 @@ class HotelController extends Controller
 
     public function syncSessionWithHotelRoom(){
         $request = request();
-        $token = $request->bearerToken();//get token from header
+        $roomid=request('roomid');
+        // 'required|exists:users,email,is_active,1'
         $user=JWTAuth::user();
+        $uid=  $user['id'];
+        // dd($uid);
+        $validator = Validator::make($request->all(), [
+            'roomid' => ['required', 'numeric','exists:hotel_rooms,id,user_id,'.$uid.''],
+         ]);
+         if($validator->fails()){
+            return response()->json(['success'=>false,'response_code'=>400,'message' => $validator->messages()->get('roomid')[0]], 400);
+         }
+        // exit;
+        $token = $request->bearerToken();//get token from header
+        
         // dd($user);
         $acctoken = SessionTable::where([
             ['status', '=', '1'],
             ['access_token', '=', $token],
              ])->get()->toArray();
              
-             $uid=  $user['id'];
      if ((count($acctoken)==0)){ 
                 $response = [
                     'success' => false,
@@ -53,7 +65,6 @@ class HotelController extends Controller
                 return response()->json($response, 404);
      } 
     $sessionid=$acctoken[0]['id'];
-     $roomid=$request->input('roomid');
 // dd($roomid);
      try {
      $hotelRoomtab=HotelRoomTable::where([
