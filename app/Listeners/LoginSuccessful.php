@@ -53,7 +53,7 @@ class LoginSuccessful
     }
 
     public function checkLoginLimit($user_id,$token,$deviceDetails){
-        $login_limit = 5;
+        $login_limit = GetLimitForUser($user_id);
     //find all by user_id and and status=active
     $active_session = SessionTable::where([
     ['status', '=', '1'],
