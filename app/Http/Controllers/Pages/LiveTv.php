@@ -60,7 +60,7 @@ class LiveTv extends Controller
             $login = false;
             return redirect()->route('home');
         }
-        $login_limit = 5;$user_id = Auth::user()->id;
+        $login_limit =GetLimitForUser(Auth::user()->id);$user_id = Auth::user()->id;
 
 //find all by user_id and and status=active
 $active_session = SessionTable::where([
@@ -156,7 +156,7 @@ if (count($active_session) >= $login_limit) {
             $login = false;
             return redirect()->route('home');
         }
-        $login_limit = 5; $user_id = Auth::user()->id;
+        $login_limit =GetLimitForUser(Auth::user()->id); $user_id = Auth::user()->id;
         $encoded_auth_xml = getKeyOSAuthToken();
 
  $activeNowsession = SessionTable::where([
