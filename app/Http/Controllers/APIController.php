@@ -265,7 +265,7 @@ public function unhashid($id){
         $userRole=  $user->roles->first()->name;
         if($userRole=='tieruser'){
         $prevConnectDevicecount = SessionTable::with('hotel:id,hotel_room,session_id')
-        ->selectRaw("id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
@@ -284,6 +284,7 @@ public function unhashid($id){
     
         }
         unset($address['hotel']);
+        unset($address['id']);
        
           return $address;
                     
