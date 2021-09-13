@@ -262,7 +262,34 @@ public function unhashid($id){
         $user = JWTAuth::user();//all the user info
         $uid=  $user['id'];
         //and get the number of last connected device
-        $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        $userRole=  $user->roles->first()->name;
+        if($userRole=='tieruser'){
+        $prevConnectDevicecount = SessionTable::with('hotel:id,hotel_room,session_id')
+        ->selectRaw("id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        ->where([
+        ['status', '=', '1'],
+        ['users_id', '=', $uid],
+         ])->orderBy('connected_devices', 'asc');
+        $s='';
+        $numofdevice='';
+    $s=$prevConnectDevicecount->get()
+    ->map(function ($address)  {
+        
+        $address['session_id'] = HashUserID($address['id']);
+        if(is_null($address->hotel)){
+            $address['hotel_room'] = null;
+    
+        }else{
+            $address['hotel_room'] = $address->hotel->hotel_room;
+    
+        }
+        unset($address['hotel']);
+       
+          return $address;
+                    
+                    });
+                }else{
+                    $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
@@ -278,6 +305,7 @@ public function unhashid($id){
                     
                     });
     
+                }
     $numofdevice=$prevConnectDevicecount->count();
    
      
