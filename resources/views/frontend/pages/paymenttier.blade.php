@@ -148,9 +148,11 @@ use Laravel\Cashier\Cashier;
 			<div class="my-auto" style="width: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
                        
 			<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
-                            <p class="font-bold mb-2">Thanks for being a customer!</p>
-                            <p>You Are Subscribed to the {{$plandetails->nickname}}.</p>
-                            <p>To explore the channels <a href="/livetv">Click here</a> or you can use the search bar above</p>
+                            <p class="font-bold mb-2">Thanks for Subscribing!</p>
+                            <p>Your subscription is now active.</p>
+                            <p>Start watching StreamlyTV right here by visiting the link to the Channel Guide above, 
+
+or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
                         </div></div>
 			@endif
             @if(!auth()->user()->subscribed('main'))
