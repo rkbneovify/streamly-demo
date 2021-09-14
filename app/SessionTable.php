@@ -16,6 +16,7 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
+   protected $appends = ['device_img']; 
     protected $fillable=[
         'users_id',
         'access_token',
@@ -110,4 +111,28 @@ class SessionTable extends Model
     {
         return $this->getKey();
     }
+
+    public function getDeviceImgAttribute($size=null)
+    { 
+    //     if ($this->device['device']=='desktop') {
+    //     $imagePath="send desktop imgee";
+    //     return $imagePath;
+    // } else {
+    //     $imagePath=$this->device['device'];
+    //     return $imagePath;
+    // }
+    return [
+        'desktop'=>asset("/uploads/devicelogo/").'/tv/normaltv.png',
+        'device-rokutv'=>asset("/uploads/devicelogo/").'/tv/roku.png',
+        'device-appletv'=>asset("/uploads/devicelogo/").'/tv/appletv.png',
+        'device-firetv'=>asset("/uploads/devicelogo/").'/tv/firetv.png',
+        'device-smarttv'=>asset("/uploads/devicelogo/").'/tv/smarttv.png',
+        'device-mobile'=>asset("/uploads/devicelogo/").'/mobile/mobile.png',
+        'device-tablet'=>asset("/uploads/devicelogo/").'/mobile/tablet.png',
+        'device-ipad'=>asset("/uploads/devicelogo/").'/mobile/ipad.png',
+        'device-iphone'=>asset("/uploads/devicelogo/").'/mobile/iphone.png'
+    ][$this->device['device']]??asset("/uploads/devicelogo/").'/tv/normaltv.png';
+       
+    }
+    
 }
