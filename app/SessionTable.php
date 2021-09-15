@@ -131,7 +131,7 @@ class SessionTable extends Model
         'device-tablet'=>asset("/uploads/devicelogo/").'/mobile/tablet.png',
         'device-ipad'=>asset("/uploads/devicelogo/").'/mobile/ipad.png',
         'device-iphone'=>asset("/uploads/devicelogo/").'/mobile/iphone.png'
-    ][$this->device['device']]??asset("/uploads/devicelogo/").'/tv/normaltv.png';
+    ][$this->device['device']?? null] ?? asset("/uploads/devicelogo/").'/tv/normaltv.png';
        
     }
     
