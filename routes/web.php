@@ -237,6 +237,7 @@ Route::get('/fair', 'Admin\BuyDRMController@fairPlayer');
 Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
+Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('/vue', 'EpgController@staticepg');
