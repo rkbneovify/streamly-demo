@@ -35,6 +35,10 @@ class DashboardController extends Controller
         $encoded_auth_xml = getKeyOSAuthToken();
         return view('frontend.drm.playlist', compact('encoded_auth_xml','channels'));
     }
+    public function qrtesting() {
+        
+        return view('frontend.drm.qrtesting');
+    }
 
     public function debugmpd(){
         try {

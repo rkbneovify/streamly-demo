@@ -1,0 +1,27 @@
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9003 (through xdebug.client_host/xdebug.client_port) :-(
+
+   Symfony\Component\Debug\Exception\FatalThrowableError  : Class "App\Console\Commands\IoServer" not found
+
+  at /home/sahil/Desktop/oodles/steamly9sept/streamly/app/Console/Commands/WebSocketServer.php:40
+    36|      * @return mixed
+    37|      */
+    38|     public function handle()
+    39|     {
+  > 40|         $server = IoServer::factory(
+    41|             new HttpServer(
+    42|                 new WsServer(
+    43|                     new WebSocketController()
+    44|                 )
+
+  Exception trace:
+
+  1   App\Console\Commands\WebSocketServer::handle()
+      /home/sahil/Desktop/oodles/steamly9sept/streamly/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php:36
+
+  2   Illuminate\Container\BoundMethod::Illuminate\Container\{closure}()
+      /home/sahil/Desktop/oodles/steamly9sept/streamly/vendor/laravel/framework/src/Illuminate/Container/Util.php:37
+
+  Please use the argument -v to see more details.
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9003 (through xdebug.client_host/xdebug.client_port) :-(
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9003 (through xdebug.client_host/xdebug.client_port) :-(
+Xdebug: [Step Debug] Could not connect to debugging client. Tried: localhost:9003 (through xdebug.client_host/xdebug.client_port) :-(
