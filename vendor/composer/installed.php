@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '3e3b3f51192ac4b42902864974662f5a54b20acd',
+    'reference' => 'bc375b52cfbdc4cc1837a1c30972dc68f4ab8642',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -91,6 +91,15 @@
       array (
       ),
       'reference' => '7399fd2994ee4c6c14c0a69268269e81fd2cd7f6',
+    ),
+    'cboden/ratchet' => 
+    array (
+      'pretty_version' => 'v0.4.3',
+      'version' => '0.4.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '466a0ecc83209c75b76645eb823401b5c52e5f21',
     ),
     'cordoval/hamcrest-php' => 
     array (
@@ -577,7 +586,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '3e3b3f51192ac4b42902864974662f5a54b20acd',
+      'reference' => 'bc375b52cfbdc4cc1837a1c30972dc68f4ab8642',
     ),
     'laravel/socialite' => 
     array (
@@ -1045,6 +1054,15 @@
       array (
       ),
       'reference' => '7e1633a6964b48589b142d60542f9ed31bd37a92',
+    ),
+    'ratchet/rfc6455' => 
+    array (
+      'pretty_version' => 'v0.3',
+      'version' => '0.3.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'c8651c7938651c2d55f5d8c2422ac5e57a183341',
     ),
     'react/cache' => 
     array (
