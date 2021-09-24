@@ -8,6 +8,7 @@ use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 class TizenEPGController extends Controller
 {
     //channel search
@@ -101,20 +102,20 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
 //channel with 7 day of schdule
 public function channelDaysScheduleV2(Request $request){
 
-$type='dash_url';
-$record = $this->channelDaysScheduleFuncV2($type);
+$reco= Cache::remember('channelscheduleothers',60*60*24, function () {
+  $type='dash_url';
+  return $this->channelDaysScheduleFuncV2($type)->get();});
   
 // $reco=$record->toSql(); echo $reco;exit; 
-$reco=$record->get(); //echo $reco;exit; 
-   if ($reco->isEmpty()) {
-      $response = [
-          'success' => false,
-          'data' => 'Empty',
-          'message' => 'Channel not found.',
-          'response_code'=>404,
-      ];
-      return response()->json($response, 404);
-  }  
+if ($reco->isEmpty()) {
+  $response = [
+      'success' => false,
+      'data' => 'Empty',
+      'message' => 'Channel not found.',
+      'response_code'=>404,
+  ];
+  return response()->json($response, 404);
+}  
       // return response()->json($record->toSql());
       // return json_encode($api);
 $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels' => $reco];
@@ -128,7 +129,16 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
       ];
       // return response()->json($reco);
      
-  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+    $responsejson=json_encode($response);
+    $data=gzencode($responsejson,9);
+    return response($data)->withHeaders([
+      'Access-Control-Allow-Origin' => '*',
+      'Access-Control-Allow-Methods'=> 'GET',            
+      'Content-type' => 'application/json; charset=utf-8',
+      'Content-Length'=> strlen($data),
+      'Content-Encoding' => 'gzip'
+  ]);
+  // return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
   //  return  response()->json([
   //     'clients' => $this->transformClientCollection($api)
   //  ], 200);
