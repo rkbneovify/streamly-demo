@@ -102,7 +102,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
 //channel with 7 day of schdule
 public function channelDaysScheduleV2(Request $request){
 
-$reco= Cache::remember('channelscheduleothers',60*60*24, function () {
+$reco= Cache::remember('channelscheduletizen',60*60*24, function () {
   $type='dash_url';
   return $this->channelDaysScheduleFuncV2($type)->get();});
   
