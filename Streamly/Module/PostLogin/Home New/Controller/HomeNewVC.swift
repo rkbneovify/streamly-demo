@@ -728,8 +728,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
                 present(videoPlaybackViewController, animated: true) {
                     self.videoPlaybackViewController.channelObject = item
                     self.videoPlaybackViewController.isAllowedZipCode = flag
+                    self.videoPlaybackViewController.delegatee = self
                     self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
                     self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
+                    self.videoPlaybackViewController.isfromRcent = self.selectedCategories == 1 ? true : false
+                    self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
                     self.videoPlaybackViewController.filterData = self.filteredList
                     self.videoPlaybackViewController.loadAndPlay()
                 }
@@ -759,7 +762,7 @@ extension HomeNewVC:HandleError
 {
     func handleError(_ message: String) {
         self.removeSpinner()
-        self.showSimpleAlertWithMessage("Something went wrong!")
+        self.showSimpleAlertWithMessage(message)
     }
     
 }

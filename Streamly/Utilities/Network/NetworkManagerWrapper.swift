@@ -38,6 +38,10 @@ class NetworkManagerWrapper: NSObject {
         failure(error, dataResponse.value, nil)
       }
       else if dataResponse.response?.statusCode == 200 || dataResponse.response?.statusCode == 201 {
+        if requestParamter.url.contains("auth/channelgenre")
+        {
+            print("")
+        }
         success(dataResponse.value)
 
       } else {

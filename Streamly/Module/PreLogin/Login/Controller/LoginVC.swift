@@ -19,6 +19,8 @@ class LoginVC: UIViewController {
     @IBOutlet weak var signBtn:         GradientBUtton!
     @IBOutlet weak var terms:           UIButton!
 
+    @IBOutlet weak var loginWithPasscode: GradientBUtton!
+
     //MARK: Properties
     var remeberMeFlag:Bool?
     {
@@ -76,6 +78,11 @@ class LoginVC: UIViewController {
         self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
         self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
 
+
+        self.loginWithPasscode.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
+        self.loginWithPasscode.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+        self.loginWithPasscode.setTitleColor(UIColor.white, for: .focused)
+        self.loginWithPasscode.setTitleColor(UIColor.white, for: .highlighted)
 
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
@@ -199,6 +206,14 @@ class LoginVC: UIViewController {
             self.openTermsPopUp()
 
         }
+
+        else if sender.tag == 7
+        {
+            // navigate to login with passcode
+            let vc = LoginPasscodeVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+            self.navigationController?.pushViewController(vc, animated: true)
+
+        }
     }
 }
 
@@ -295,7 +310,13 @@ extension LoginVC {
         }
         else {
             coordinator.addCoordinatedAnimations({ () -> Void in
-                self.terms.layer.borderColor = UIColor.clear.cgColor
+                if self.terms.isFocused {
+                    self.terms.layer.borderColor = UIColor.clear.cgColor
+                }
+                else {
+                    self.terms.layer.borderColor = UIColor.gray.cgColor
+                }
+
                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor

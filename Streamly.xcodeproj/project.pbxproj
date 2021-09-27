@@ -30,6 +30,7 @@
 		AA49AC9D24DD96D70013A65E /* GeoFenceFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA49AC9C24DD96D70013A65E /* GeoFenceFlag.swift */; };
 		AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4B5E4024A514E80031AB15 /* ChannelList.swift */; };
 		AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DD07424D0971D00FC4D0A /* RecentData.swift */; };
+		AA4FD8C126C1577B00BC0EA3 /* LoginPasscodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */; };
 		AA523CC42574D31600DC5CB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA523CC32574D31600DC5CB3 /* GoogleService-Info.plist */; };
 		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
 		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
@@ -158,8 +159,8 @@
 		AA105C98249767EC00CF075B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SupportView.strings; sourceTree = "<group>"; };
 		AA105C9A249767EF00CF075B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SupportView.strings"; sourceTree = "<group>"; };
 		AA19D0F624AF9B77005B488D /* HomeNewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNewVC.swift; sourceTree = "<group>"; };
-		AA24C2342600C10900B15739 /* PosterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PosterCell.swift; path = Streamly/Module/PostLogin/Player/PosterCell.swift; sourceTree = SOURCE_ROOT; };
-		AA24C2352600C10900B15739 /* PosterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PosterCell.xib; path = Streamly/Module/PostLogin/Player/PosterCell.xib; sourceTree = SOURCE_ROOT; };
+		AA24C2342600C10900B15739 /* PosterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PosterCell.swift; path = Streamly/Module/PostLogin/Player/View/PosterCell.swift; sourceTree = SOURCE_ROOT; };
+		AA24C2352600C10900B15739 /* PosterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PosterCell.xib; path = Streamly/Module/PostLogin/Player/View/PosterCell.xib; sourceTree = SOURCE_ROOT; };
 		AA352CB024813B00009ACD55 /* DataItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
 		AA352CB124813B00009ACD55 /* DataItemCellComposer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataItemCellComposer.swift; sourceTree = "<group>"; };
 		AA352CB224813B00009ACD55 /* DataItem+ImageName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataItem+ImageName.swift"; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		AA49AC9C24DD96D70013A65E /* GeoFenceFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoFenceFlag.swift; sourceTree = "<group>"; };
 		AA4B5E4024A514E80031AB15 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		AA4DD07424D0971D00FC4D0A /* RecentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentData.swift; sourceTree = "<group>"; };
+		AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPasscodeVC.swift; sourceTree = "<group>"; };
 		AA523CC32574D31600DC5CB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
@@ -339,6 +341,23 @@
 			path = CustomAlert;
 			sourceTree = "<group>";
 		};
+		AA4FD8BB26C12E7500BC0EA3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AA24C2342600C10900B15739 /* PosterCell.swift */,
+				AA24C2352600C10900B15739 /* PosterCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */ = {
+			isa = PBXGroup;
+			children = (
+				AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */,
+			);
+			path = "Login+Passcode";
+			sourceTree = "<group>";
+		};
 		AA53DE552486386500FA6821 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -489,6 +508,7 @@
 		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
 			isa = PBXGroup;
 			children = (
+				AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */,
 				AAA27B99254FEC1B00E44328 /* QRView */,
 				AA741F0E246ABC620090A0F7 /* Login */,
 			);
@@ -518,9 +538,9 @@
 		AA84F124247E2F0000E4F709 /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				AA4FD8BB26C12E7500BC0EA3 /* View */,
 				AA7139A525FF90D1007D0DFC /* CustomInteractiveVideoOverlay.xib */,
 				AA71398F25FF80BF007D0DFC /* CustomInteractiveVideoOverlayViewController.swift */,
-				AA84F128247E7AED00E4F709 /* View */,
 				AA84F125247E2F1800E4F709 /* Controller */,
 			);
 			path = Player;
@@ -533,15 +553,6 @@
 				AA84F126247E304A00E4F709 /* PlayerVC.swift */,
 			);
 			path = Controller;
-			sourceTree = "<group>";
-		};
-		AA84F128247E7AED00E4F709 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				AA24C2342600C10900B15739 /* PosterCell.swift */,
-				AA24C2352600C10900B15739 /* PosterCell.xib */,
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		AA94D622248A0D6C00EBF947 /* Popup's */ = {
@@ -1144,6 +1155,7 @@
 				AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */,
 				AA19D0F724AF9B77005B488D /* HomeNewVC.swift in Sources */,
 				AA49AC9D24DD96D70013A65E /* GeoFenceFlag.swift in Sources */,
+				AA4FD8C126C1577B00BC0EA3 /* LoginPasscodeVC.swift in Sources */,
 				AA5F5A582542A7E800FA8FB6 /* TimeComparable.swift in Sources */,
 				AAA27BA12550224C00E44328 /* QR+Model.swift in Sources */,
 				AA5ADDD0248E4D0F005936CE /* LogOUTView.swift in Sources */,
@@ -1425,7 +1437,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1451,7 +1463,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "Apple Distribution: Neovix, Inc. (A4QY9BUDRA)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

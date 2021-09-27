@@ -8,13 +8,15 @@
 
 import Foundation
 import UIKit
-
+import os
 
 //MARK:- Validation Constants
 let passwordMinLimit = 6
 let passwordMaxLimit = 10
 let mobileMaxLimit = 15
 let mobileMinLimit = 8
+let os = ProcessInfo().operatingSystemVersion
+let userAgent = "(Apple TV; CPU TV OS \(os.majorVersion) like Mac OS X)"
 
 //Header count EPG 4 * 48 + 1(Header date)
 let daysData = 193

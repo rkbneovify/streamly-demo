@@ -183,6 +183,8 @@ extension SearchVC:UICollectionViewDelegate
             self.videoPlaybackViewController.channelObject = item
             self.videoPlaybackViewController.isAllowedZipCode = flag
             self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
+            self.videoPlaybackViewController.isfromRcent = false
+            self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
             self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
             self.videoPlaybackViewController.filterData = self.filtterdChannelList
             self.videoPlaybackViewController.loadAndPlay()

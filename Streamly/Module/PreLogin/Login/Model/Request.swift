@@ -17,7 +17,7 @@ class LoginRequest: NSObject {
     
     func userLogin(complition: @escaping (LoginResponse?, String?) -> Swift.Void) {
         let parameter:[String:String] = ["email": self.email ?? "", "password": self.password ?? "","deviceid":deviceID ?? ""]
-        let headers:HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded"]
+        let headers:HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","User-Agent": userAgent]
         AF.request(Constant.baseURL + API.login.rawValue, method: .post, parameters: parameter, encoding: URLEncoding.default, headers: headers).responseJSON{ (response) in
             //debugPrint(response)
             guard let data = response.data else {return}
