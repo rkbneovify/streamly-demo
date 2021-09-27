@@ -121,6 +121,15 @@ Route::post('/ga2', 'GoogleAnalyticsController@index3');
 
 Route::get('/category', 'EpgController@category');
 
+// Route::post('/qrauth', 'Admin\DashboardController@qrauth');
+Route::post('/qrauth', 'WebSocketController@qrauth');
+// Route::post('/login/create/qrcode', 'QRLoginController@CreateQrcodeAction');
+Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR
+Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction');//gets scaned by phone
+Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction');
+Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction');
+Route::post('/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');
+
 // Route::fallback(function(){
 //     return response()->json([
 //         'response_code'=>404,

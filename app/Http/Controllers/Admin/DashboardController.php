@@ -40,6 +40,11 @@ class DashboardController extends Controller
         return view('frontend.drm.qrtesting');
     }
 
+    public function qr() {
+        
+        return view('frontend.drm.qr');
+    }
+
     public function debugmpd(){
         try {
             $encoded_auth_xml = getKeyOSAuthToken();
