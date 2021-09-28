@@ -57,9 +57,9 @@ class QRLoginTwoController extends Controller
      * Check whether the code has been scanned, this checked by polling, 
      * it looks for the key, the filename, 
      */ 
-    public  function isScanQrcodeAction(){
+    public  function isScanQrcodeAction(Request $request){
 
-      $key = $_SESSION['key'];
+      $key = $request['key'];
        $mem = new \Memcache();
        $mem->connect('127.0.0.1',11211 );
        $data = json_decode($mem->get($key),true);
@@ -130,7 +130,7 @@ class QRLoginTwoController extends Controller
       } else {
            if ($login){ // Mobile phone scan code webpage login, save the user name in memcache
 
-              $data['login'] = $login ;
+              $data['jwt'] = $login ;
                $res = json_encode($data);
                $mem->set($key,$res,0,180);
                $return = array('status'=>1,'msg' =>'Login successful' );
@@ -144,14 +144,31 @@ class QRLoginTwoController extends Controller
       }
 
   }
-  public function loginEntry(Type $var = null)
+  public function loginEntry(Request $request)
   {
-    $key=$_GET['key'];
     
+     $key=$request['key'];
+     if (empty($key)){
+
+     $return = array ('status'=>2,'msg'=>'key not provided' );
+     return response()->json($return, 200);
+     }
     $mem = new \Memcache();
     $mem->connect('127.0.0.1',11211);
     $data = json_decode($mem->get($key),true); 
-    $passcode=$data['login'];
+//     $passcode=$data['login'];
+    if (empty($data)){
+     $return = array ('status'=>2,'msg'=>'expired' );
+     return response()->json($return, 200);
+ } else {
+     if (isset($data['jwt'])){
+         $return = array ('status'=>1,'msg'=>'success','jwt'=>$data['jwt'] );
+         return response()->json($return, 200);
+    } else {
+         $return = array ('status'=>0,'msg'=>'','data'=>$data );
+         return response()->json($return, 400);
+    }
+}
     // Use passcode to login and return the object in reposne or jWT
     // extract memcache and the login var jwt/passcode 
     //use passcode to login and return the jwt
