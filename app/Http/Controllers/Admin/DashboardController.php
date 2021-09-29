@@ -9,6 +9,8 @@ use App\Models\Gracenote;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
+
+use Illuminate\Support\Facades\Auth;
 /**
  * Description of DashboardController
  *
@@ -36,13 +38,40 @@ class DashboardController extends Controller
         return view('frontend.drm.playlist', compact('encoded_auth_xml','channels'));
     }
     public function qrtesting() {
-        
+      
         return view('frontend.drm.qrtesting');
+        
     }
 
     public function qr() {
         
+    	if(Auth::check()){
+            $login = true;
+            
+            $userRole= Auth::user()->roles->pluck('name');
+            if($userRole[0]=='user'||'tieruser'){
+                // dd("you loged in");
+                return "you are already logged in, open it in incognito mode";
+            // if (!Auth::user()->subscribed('main')) {
+            //     return redirect('/selectplan');
+            // }
+        }
+        } else {
+            $login = false;
+
         return view('frontend.drm.qr');
+        }
+    }
+    public function qrscanner() {
+        if(Auth::check()){
+            $login = true;
+            
+            // $userRole= Auth::user()->roles->pluck('name');
+         
+        
+            return view('frontend.drm.qrscanner');
+        }
+        return redirect()->route('home');
     }
 
     public function debugmpd(){

@@ -41,6 +41,7 @@ function is_loginfun(){
 
                 $('.qrcode-img').attr('src','');
                 alert("login successfull",uid);
+                  $('#thelogindata').text(uid)
 
             } else  if (data.status==2 ){
                   // Cancel timed tasks and clear cookies  
@@ -141,6 +142,7 @@ function is_sacn_qrcode(){
         <button class="scanqrcode">Login with QR</button>
         <div align="center">
             <div id="qrcode">
+            <p id="thelogindata"></p>
               <img class="qrcode-img" src="" />
               <input type="hidden" id="key">
              <input type="text" id="timing" value="timing">
