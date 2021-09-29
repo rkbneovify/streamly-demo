@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Memcache;
+use Illuminate\Support\Facades\Auth;
 class QRLoginTwoController extends Controller
 {
     public  function CreateQrcodeAction(){
@@ -170,7 +171,11 @@ class QRLoginTwoController extends Controller
      return response()->json($return, 200);
  } else {
      if (isset($data['jwt'])){
-         $return = array ('status'=>1,'msg'=>'success','jwt'=>$data['jwt'] );
+      $userid=UnHashUserID($data['jwt']);
+      $user = Auth::loginUsingId($userid, true);
+
+
+         $return = array ('status'=>1,'msg'=>'success','jwt'=>$data['jwt'],'user'=>$user );
          return response()->json($return, 200);
     } else {
          $return = array ('status'=>0,'msg'=>'','data'=>$data );
