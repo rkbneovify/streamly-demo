@@ -69,7 +69,7 @@ class DashboardController extends Controller
             // $userRole= Auth::user()->roles->pluck('name');
          
         
-            return view('frontend.drm.qrscanner');
+            return view('frontend.drm.qrscanner',compact('login'));
         }
         return redirect()->route('home');
     }
