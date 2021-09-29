@@ -16,7 +16,7 @@ class QRLoginTwoController extends Controller
   
         $url ='http://'. $_SERVER ['HTTP_HOST']; // Get the current url 
         // dd($url);
-       $http = $url .'/login/mobile/scan/qrcode'; // Verify the url method of scanning code 
+       $http = $url .'/api/login/mobile/scan/qrcode'; // Verify the url method of scanning code 
        $key = Str::random(30);//$this->getRandom(30); // The key value stored in memcache, a random 32-bit string 
        $random = mt_rand(1000000000, 9999999999);//random integer
        $_SESSION['qrcode_name'] = $key ; // Save the key as the name of the picture in the session 
@@ -123,25 +123,33 @@ class QRLoginTwoController extends Controller
        $mem = new \Memcache();
        $mem->connect('127.0.0.1',11211);
        $data = json_decode($mem->get($key),true); // Remove the value of memcache 
-      if ( $data['sign']!= $sign ){ // Verify delivery Sign 
-          $return = array('status'=>0,'msg'=>'Verification Error' );
-          //  return  $this ->createJsonResponse( $return );
-           return response()->json($return, 403);
-      } else {
-           if ($login){ // Mobile phone scan code webpage login, save the user name in memcache
-
-              $data['jwt'] = $login ;
-               $res = json_encode($data);
-               $mem->set($key,$res,0,180);
-               $return = array('status'=>1,'msg' =>'Login successful' );
-              //  return  $this ->createJsonResponse( $return );
-               return response()->json($return, 200);
-          } else {
-               $return = array ('status'=>0,'msg'=>'Please pass the correct user information' );
-              //  return  $this ->createJsonResponse( $return );
-               return response()->json($return, 401);
-          }
+       if (empty($data)){
+        $return = array ('status'=>2,'msg'=>'expired' );
+        return response()->json($return, 200);
+    } else {
+      if (!isset($data['sign'])){
+        $return = array('status'=>0,'msg'=>'Sign notset' );
       }
+      if ($data['sign']!= $sign ){ // Verify delivery Sign 
+        $return = array('status'=>0,'msg'=>'Verification Error' );
+        //  return  $this ->createJsonResponse( $return );
+         return response()->json($return, 403);
+    } else {
+         if ($login){ // Mobile phone scan code webpage login, save the user name in memcache
+
+            $data['jwt'] = $login ;
+             $res = json_encode($data);
+             $mem->set($key,$res,0,180);
+             $return = array('status'=>1,'msg' =>'Login successful' );
+            //  return  $this ->createJsonResponse( $return );
+             return response()->json($return, 200);
+        } else {
+             $return = array ('status'=>0,'msg'=>'Please pass the correct user information' );
+            //  return  $this ->createJsonResponse( $return );
+             return response()->json($return, 401);
+        }
+    }
+    }
 
   }
   public function loginEntry(Request $request)
@@ -174,3 +182,10 @@ class QRLoginTwoController extends Controller
     //use passcode to login and return the jwt
   }
 }
+// Click button to geerate qr code for 3 minutes
+// Waits for scan code,poll wether qr is scanned or not
+// Scan the code via mobile,visit the scan link
+// php function saves the scanned code identification
+// returns scan code status  to ajax poll method,
+// saying code is scanned succesfully, a ajax poll goes whether login is confirmed
+// when triggering login send jwt and generate a new one and send it to frontend
