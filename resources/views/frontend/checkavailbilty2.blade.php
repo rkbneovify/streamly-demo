@@ -381,6 +381,9 @@ background-size: 76px;
 background-repeat: no-repeat;
 background-position: center;
     }
+	.ui-helper-hidden-accessible {
+            display: none;
+        }
 	</style>
 
 
