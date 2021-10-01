@@ -10,6 +10,12 @@
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
+		A84958512706D62E00B2FE73 /* LoginPassocodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */; };
+		A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958532706EB4D00B2FE73 /* RoomViewController.swift */; };
+		A84958572706EBAF00B2FE73 /* RoomViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958562706EBAF00B2FE73 /* RoomViewModel.swift */; };
+		A849585A2707098100B2FE73 /* RoomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958592707098100B2FE73 /* RoomModel.swift */; };
+		A849585E270724BF00B2FE73 /* RoomViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A849585C270724BF00B2FE73 /* RoomViewCell.swift */; };
+		A849585F270724BF00B2FE73 /* RoomViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A849585D270724BF00B2FE73 /* RoomViewCell.xib */; };
 		AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07E87A24A2087100D37ABF /* EPGViewModel.swift */; };
 		AA07E87D24A209CB00D37ABF /* EpgModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA07E87C24A209CB00D37ABF /* EpgModel.swift */; };
 		AA0C255825F10C4300BC03B9 /* AllGenrsListingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0C255725F10C4300BC03B9 /* AllGenrsListingCell.swift */; };
@@ -135,6 +141,12 @@
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPassocodeViewModel.swift; sourceTree = "<group>"; };
+		A84958532706EB4D00B2FE73 /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
+		A84958562706EBAF00B2FE73 /* RoomViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewModel.swift; sourceTree = "<group>"; };
+		A84958592707098100B2FE73 /* RoomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomModel.swift; sourceTree = "<group>"; };
+		A849585C270724BF00B2FE73 /* RoomViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewCell.swift; sourceTree = "<group>"; };
+		A849585D270724BF00B2FE73 /* RoomViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RoomViewCell.xib; sourceTree = "<group>"; };
 		AA07E87A24A2087100D37ABF /* EPGViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPGViewModel.swift; sourceTree = "<group>"; };
 		AA07E87C24A209CB00D37ABF /* EpgModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpgModel.swift; sourceTree = "<group>"; };
 		AA0C255725F10C4300BC03B9 /* AllGenrsListingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllGenrsListingCell.swift; sourceTree = "<group>"; };
@@ -286,6 +298,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A849584F2706D61E00B2FE73 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A84958522706EB2B00B2FE73 /* RoomVC */ = {
+			isa = PBXGroup;
+			children = (
+				A849585B2707249C00B2FE73 /* Views */,
+				A84958582707096A00B2FE73 /* Models */,
+				A84958552706EB9D00B2FE73 /* ViewModel */,
+				A84958532706EB4D00B2FE73 /* RoomViewController.swift */,
+			);
+			path = RoomVC;
+			sourceTree = "<group>";
+		};
+		A84958552706EB9D00B2FE73 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				A84958562706EBAF00B2FE73 /* RoomViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A84958582707096A00B2FE73 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A84958592707098100B2FE73 /* RoomModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A849585B2707249C00B2FE73 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A849585C270724BF00B2FE73 /* RoomViewCell.swift */,
+				A849585D270724BF00B2FE73 /* RoomViewCell.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AA19D0F324AF98E4005B488D /* Home New */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,6 +409,7 @@
 		AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */ = {
 			isa = PBXGroup;
 			children = (
+				A849584F2706D61E00B2FE73 /* ViewModel */,
 				AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */,
 			);
 			path = "Login+Passcode";
@@ -508,6 +565,7 @@
 		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
 			isa = PBXGroup;
 			children = (
+				A84958522706EB2B00B2FE73 /* RoomVC */,
 				AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */,
 				AAA27B99254FEC1B00E44328 /* QRView */,
 				AA741F0E246ABC620090A0F7 /* Login */,
@@ -946,6 +1004,7 @@
 				AA105C94249767E700CF075B /* SupportView.xib in Resources */,
 				AA105C86249767C100CF075B /* TimeCollectionViewCell.xib in Resources */,
 				AA105C6A249766A500CF075B /* Main+Extended.storyboard in Resources */,
+				A849585F270724BF00B2FE73 /* RoomViewCell.xib in Resources */,
 				AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */,
 				AA5E20F424C61758000B648F /* Lato-SemiboldItalic.ttf in Resources */,
 				AA5E20FD24C61758000B648F /* Lato-Light.ttf in Resources */,
@@ -1141,6 +1200,8 @@
 				AA94D637248A7A1000EBF947 /* RegistredDeviceModel.swift in Sources */,
 				AA94D63A248A7A4800EBF947 /* RegistredDeviceViewModel.swift in Sources */,
 				AA5F5A4E2542A7E800FA8FB6 /* Switcher.swift in Sources */,
+				A849585A2707098100B2FE73 /* RoomModel.swift in Sources */,
+				A849585E270724BF00B2FE73 /* RoomViewCell.swift in Sources */,
 				AA352CB424813B01009ACD55 /* DataItem.swift in Sources */,
 				AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */,
 				AA352CB624813B01009ACD55 /* DataItem+ImageName.swift in Sources */,
@@ -1160,6 +1221,7 @@
 				AAA27BA12550224C00E44328 /* QR+Model.swift in Sources */,
 				AA5ADDD0248E4D0F005936CE /* LogOUTView.swift in Sources */,
 				AA72AF842473F40C00906796 /* ChannelCollectionViewCell.swift in Sources */,
+				A84958572706EBAF00B2FE73 /* RoomViewModel.swift in Sources */,
 				AAD59545247250EC00BC5E6C /* LoginResponse.swift in Sources */,
 				AA5F5A502542A7E800FA8FB6 /* Enums.swift in Sources */,
 				AA5F5A542542A7E800FA8FB6 /* RequestParameter.swift in Sources */,
@@ -1169,6 +1231,7 @@
 				AA5F5A532542A7E800FA8FB6 /* ResponseObject.swift in Sources */,
 				AA5F5A522542A7E800FA8FB6 /* ApiCall.swift in Sources */,
 				AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */,
+				A84958512706D62E00B2FE73 /* LoginPassocodeViewModel.swift in Sources */,
 				AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */,
 				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
 				AA5F5A512542A7E800FA8FB6 /* NetworkManagerWrapper.swift in Sources */,
@@ -1187,6 +1250,7 @@
 				AA94D62B248A14D200EBF947 /* ListingProfileCell.swift in Sources */,
 				AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */,
 				AA5F5A572542A7E800FA8FB6 /* GEVersionMonitor.swift in Sources */,
+				A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */,
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,
 				AA5F5A5A2542A7E800FA8FB6 /* Gradient.swift in Sources */,
 				AA5F5A4C2542A7E800FA8FB6 /* Constant.swift in Sources */,

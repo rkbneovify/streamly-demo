@@ -15,7 +15,7 @@ class SearchDataViewModel: NSObject {
     weak var delegate:HandleError?
 
     func getSearchData() {
-        ApiCall.getSearchData(success: { data
+        ApiCall.getSearchData(success: { data, _
             in
             if let contactModel = SearchDataParser.parseContactData(data!) {
                 self.searchData!((contactModel))

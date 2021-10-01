@@ -254,7 +254,7 @@ extension LoginVC
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)
-                    Utility.setStringObject(value: response?.user?.created_at ?? "", key: Constant.UserDefault.createdAt)
+                    Utility.setStringObject(value: response?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
                     selfStrong.removeSpinner()
                     if !(true) {
                         //                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {

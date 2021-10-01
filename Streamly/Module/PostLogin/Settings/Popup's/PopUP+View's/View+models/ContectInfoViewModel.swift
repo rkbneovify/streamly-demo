@@ -17,7 +17,7 @@ class ContactDataViewModel: NSObject {
    
 
     func getContactData() {
-        ApiCall.getContactInfoData(success: { data
+        ApiCall.getContactInfoData(success: { data, _
             in
             if let contactModel = DataParserContact.parseContactData(data!) {
                 self.contactData!((contactModel))
@@ -35,7 +35,7 @@ class ContactDataViewModel: NSObject {
     }
 
     func logOUT() {
-        ApiCall.logOut(success: { data
+        ApiCall.logOut(success: { data, _
             in
             if let logoutModel = DataParserLogOut.parseContactData(data!) {
                 self.logoutdata!((logoutModel))
@@ -53,7 +53,7 @@ class ContactDataViewModel: NSObject {
     }
 
     func getPrivacy() {
-           ApiCall.getPrivacyData(success: { data
+           ApiCall.getPrivacyData(success: { data, _
                in
                if let privacyModel = DataParserPrivacy.parseContactData(data!) {
                    self.privacyResponseData!((privacyModel))
@@ -71,7 +71,7 @@ class ContactDataViewModel: NSObject {
        }
 
     func getTerms() {
-              ApiCall.getTermsData(success: { data
+              ApiCall.getTermsData(success: { data, _
                   in
                   if let privacyModel = DataParserPrivacy.parseContactData(data!) {
                       self.privacyResponseData!((privacyModel))

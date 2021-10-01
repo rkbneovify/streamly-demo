@@ -18,7 +18,7 @@ class EPGViewModel: NSObject {
     weak var delegate:HandleError?
     
     func getEPGData() {
-        ApiCall.getEPGData(success: { data
+        ApiCall.getEPGData(success: { data, _
             in
             if let epgModel = EPGDataParser.parseContactData(data!) {
                 self.epgData!((epgModel))
@@ -36,7 +36,7 @@ class EPGViewModel: NSObject {
     }
     
     func getChannelList() {
-        ApiCall.getChannelList(success: { data
+        ApiCall.getChannelList(success: { data, _
             in
             if let epgModel = EPGDataParser.parseChannelData(data!) {
                 self.channelData!((epgModel))
@@ -52,7 +52,7 @@ class EPGViewModel: NSObject {
     }
     
     func getRecentData() {
-        ApiCall.getRecentData(success: { data
+        ApiCall.getRecentData(success: { data, _
             in
             if let recentModel = EPGDataParser.parserecentData(data!) {
                 self.recentData!((recentModel))
@@ -67,7 +67,7 @@ class EPGViewModel: NSObject {
     }
     
     func postRecentData(_ ids:String) {
-        ApiCall.postRecentData(ids,success: { data
+        ApiCall.postRecentData(ids,success: { data, _
             in
             if let recentModel = EPGDataParser.parserecentData(data!) {
                 self.recentData!((recentModel))
@@ -82,7 +82,7 @@ class EPGViewModel: NSObject {
     }
     
     func postAddressData() {
-        ApiCall.postAddress(success: { data
+        ApiCall.postAddress(success: { data, _
             in
             if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
                 self.geoData!((geoModel))
@@ -106,7 +106,7 @@ class EPGViewModel: NSObject {
     
     func postOutsideAddress()
     {
-        ApiCall.postOutsideAddress(success: { data
+        ApiCall.postOutsideAddress(success: { data, _
             in
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 // self.geoData!((geoModel))
@@ -122,7 +122,7 @@ class EPGViewModel: NSObject {
     
     func getDrmKeys()
     {
-        ApiCall.getDrmKey(success: { data
+        ApiCall.getDrmKey(success: { data, _
             in
             if let drmData = EPGDataParser.parseDrmKeyData(data!) {
                 self.drmData!(drmData)
@@ -138,7 +138,7 @@ class EPGViewModel: NSObject {
     
     func postCallSign(_ callSign:String, _ outSideGeoFence:Bool)
     {
-        ApiCall.setCallSign(callSign, outSideGeoFence,success: { data
+        ApiCall.setCallSign(callSign, outSideGeoFence,success: { data, _
             in
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 debugPrint("")
@@ -155,7 +155,7 @@ class EPGViewModel: NSObject {
     
     func postgaError(_ callSign:String, _ outSideGeoFence:Bool, _ errorMsg:String,_ errorCode:String)
     {
-        ApiCall.setGAError(errorMsg , errorCode , callSign, outSideGeoFence,success: { data
+        ApiCall.setGAError(errorMsg , errorCode , callSign, outSideGeoFence,success: { data, _
             in
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 debugPrint("")
@@ -173,7 +173,7 @@ class EPGViewModel: NSObject {
     
     func setPlayTimer(_ callSign:String, _ outSideGeoFence:Bool)
     {
-        ApiCall.setPlayTimer(callSign, outSideGeoFence,success: { data
+        ApiCall.setPlayTimer(callSign, outSideGeoFence,success: { data, _
             in
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 debugPrint("")

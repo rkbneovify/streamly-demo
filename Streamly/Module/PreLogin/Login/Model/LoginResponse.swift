@@ -19,6 +19,9 @@ struct LoginResponse : Codable {
     let termandcondition    :Bool?
     let token_type          :String?
     let user                :User?
+    let rooms                : [Room]?
+    let userrole : String?
+    let expires_in: Int?
     
     enum CodingKeys : String, CodingKey {
         
@@ -32,6 +35,9 @@ struct LoginResponse : Codable {
         case token_type = "token_type"
         case user = "user"
         case termandcondition = "termandcondition"
+        case rooms
+        case userrole
+        case expires_in = "expires_in"
     }
     
     init(from decoder: Decoder) throws {
@@ -46,30 +52,126 @@ struct LoginResponse : Codable {
         response_code = try values.decodeIfPresent(Int.self, forKey: .response_code)
         user = try values.decodeIfPresent(User.self, forKey: .user)
         termandcondition  = try values.decodeIfPresent(Bool.self, forKey: .termandcondition)
+        rooms = try values.decodeIfPresent([Room].self, forKey: .rooms)
+        userrole = try values.decodeIfPresent(String.self, forKey: .userrole)
+        expires_in = try values.decodeIfPresent(Int.self, forKey: .expires_in)
     }
     
 }
 
-struct User:Codable {
+// MARK: - UserLogin
+struct User: Codable {
+    var id: Int?
+ //   var providerName, providerID: JSONNull?
+    var name, email: String?
+ //   var contact, gender, dob: JSONNull?
+    var zipcode: String?
+   // var address: JSONNull?
+    var country: String?
+   // var googleID, lastLogin: JSONNull?
+    var emailVerifiedAt: String?
+    var isActive: Int?
+    var createdAt, updatedAt, stripeID, cardBrand: String?
+    var cardLastFour: String?
+ //   var trialEndsAt, avatar: JSONNull?
+    var roles: [Role]?
 
-    let name        :   String?
-    let created_at    : String?
-    let email         : String?
-    let zipcode       : String?
+    enum CodingKeys: String, CodingKey {
+        case id
+       // case providerName = "provider_name"
+        // case providerID = "provider_id"
+        case name, email, zipcode,  country//contact, gender, dob, address,
+        // case googleID = "google_id"
+        // case lastLogin = "last_login"
+        case emailVerifiedAt = "email_verified_at"
+        case isActive = "is_active"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case stripeID = "stripe_id"
+        case cardBrand = "card_brand"
+        case cardLastFour = "card_last_four"
+        // case trialEndsAt = "trial_ends_at"
+        case  roles //avatar,
+    }
+}
 
+// MARK: - Role
+struct Role: Codable {
+    var id: Int?
+    var name, displayName, roleDescription: String?
+  //  var createdAt, updatedAt: JSONNull?
+    var pivot: Pivot?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name
+        case displayName = "display_name"
+        case roleDescription = "description"
+        // case createdAt = "created_at"
+        // case updatedAt = "updated_at"
+        case pivot
+    }
+}
+
+// MARK: - Pivot
+struct Pivot: Codable {
+    var userID, roleID: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case roleID = "role_id"
+    }
+}
+
+struct Room: Codable {
+    
+    let id        :   Int?
+    let user_id    : Int?
+    let hotel_room         : String?
+   // let session_id       : String?
+    let created_on: String?
+    let modified_on: String?
+    
     enum CodingKeys : String, CodingKey {
 
-        case name = "name"
-        case created_at = "created_at"
-        case email = "email"
-        case zipcode = "zipcode"
+        case id
+        case user_id
+        case hotel_room
+       // case session_id
+        case created_on
+        case modified_on
     }
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        name = try values.decodeIfPresent(String.self, forKey: .name)
-        zipcode = try values.decodeIfPresent(String.self, forKey: .zipcode)
-        email = try values.decodeIfPresent(String.self, forKey: .email)
-        created_at = try values.decodeIfPresent(String.self, forKey: .created_at)
+        id = try values.decodeIfPresent(Int.self, forKey: .id)
+        user_id = try values.decodeIfPresent(Int.self, forKey: .user_id)
+        hotel_room = try values.decodeIfPresent(String.self, forKey: .hotel_room)
+        //session_id = try values.decodeIfPresent(String.self, forKey: .session_id)
+        created_on = try values.decodeIfPresent(String.self, forKey: .created_on)
+        modified_on = try values.decodeIfPresent(String.self, forKey: .modified_on)
+    }
+}
+
+struct FailedResponse: Codable {
+    var success: Bool?
+    var response_code: Int?
+    var message: String?
+    var data: String?
+    
+    enum CodingKeys : String, CodingKey {
+
+        case success
+        case response_code
+        case message
+        case data
+    }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        response_code = try values.decodeIfPresent(Int.self, forKey: .response_code)
+        success = try values.decodeIfPresent(Bool.self, forKey: .success)
+        message = try values.decodeIfPresent(String.self, forKey: .message)
+        data = try values.decodeIfPresent(String.self, forKey: .data)
+       
     }
 }

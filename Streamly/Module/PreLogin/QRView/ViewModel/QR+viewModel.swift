@@ -13,7 +13,7 @@ class QRViewModel: NSObject {
     weak var delegate:HandleError?
 
     func getQrData() {
-        ApiCall.getQRData(success: { data
+        ApiCall.getQRData(success: { data, _
             in
             if let qrModel = QRDataParser.parseContactData(data!) {
                 self.qrData!((qrModel))

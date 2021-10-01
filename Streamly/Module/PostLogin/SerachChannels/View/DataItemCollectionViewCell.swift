@@ -39,6 +39,11 @@ class DataItemCollectionViewCell: UICollectionViewCell {
 
     }
     
+    func setData(_ room: Room) {
+        channelNameLbl.text = room.hotel_room
+        channelID.text = "\(room.id ?? 0)"
+    }
+    
     // MARK: UICollectionReusableView
     
     override func prepareForReuse() {
@@ -59,9 +64,11 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
                 self.content.borderWidth = 4.0
+                self.content.layer.backgroundColor = UIColor.white.cgColor
             }
             else {
                 self.content.borderWidth = 0.0
+                self.content.layer.backgroundColor = UIColor.clear.cgColor
             }
         }, completion: nil)
     }

@@ -24,6 +24,14 @@ class DataItemCellComposer {
 
     // MARK: Implementation
     
+    func composeRoomCell(_ cell: RoomViewCell, withDataItem dataItem: Room) {
+        cell.channelNameLbl.text = dataItem.hotel_room ?? ""
+        cell.imageView.alpha = 1.0
+       // cell.imageView.image =  UIImage(named: "hbo")
+       //cell.imageView.sd_setImage(with: URL(string: dataItem.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
+        guard cell.imageView.image == nil else { return }
+    }
+    
     func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelDetails) {
         // Cancel any queued operations to process images for the cell.
 //        let queue = operationQueue(forCell: cell)

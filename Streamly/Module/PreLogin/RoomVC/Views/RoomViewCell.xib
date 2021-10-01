@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="18122" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <deployment identifier="tvOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="RoomViewCell" id="Rz2-K0-ksD" customClass="RoomViewCell" customModule="StreamlyTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="324" height="265"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="324" height="265"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JYe-rU-Xuf">
+                        <rect key="frame" x="0.0" y="0.0" width="324" height="265"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RKS-Kw-X3U">
+                                <rect key="frame" x="0.0" y="0.0" width="324" height="165"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1fd-OS-Lo6">
+                                <rect key="frame" x="0.0" y="165" width="324" height="100"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s25-AZ-jLI">
+                                        <rect key="frame" x="20" y="10" width="284" height="31"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.029999999999999999" alpha="0.47999999999999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="s25-AZ-jLI" firstAttribute="top" secondItem="1fd-OS-Lo6" secondAttribute="top" constant="10" id="K5u-Sq-F8d"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="s25-AZ-jLI" secondAttribute="bottom" constant="19" id="Mkm-4i-UW4"/>
+                                    <constraint firstItem="s25-AZ-jLI" firstAttribute="leading" secondItem="1fd-OS-Lo6" secondAttribute="leading" constant="20" id="TOt-LI-3u6"/>
+                                    <constraint firstAttribute="trailing" secondItem="s25-AZ-jLI" secondAttribute="trailing" constant="20" id="fg7-UU-9TH"/>
+                                    <constraint firstAttribute="height" constant="100" id="wJ3-cn-QEm"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="1fd-OS-Lo6" firstAttribute="leading" secondItem="JYe-rU-Xuf" secondAttribute="leading" id="0P5-kQ-XHy"/>
+                            <constraint firstItem="RKS-Kw-X3U" firstAttribute="leading" secondItem="JYe-rU-Xuf" secondAttribute="leading" id="5ja-CZ-18F"/>
+                            <constraint firstAttribute="trailing" secondItem="RKS-Kw-X3U" secondAttribute="trailing" id="NX8-9d-x2w"/>
+                            <constraint firstItem="1fd-OS-Lo6" firstAttribute="top" secondItem="RKS-Kw-X3U" secondAttribute="bottom" id="YuC-FG-MJO"/>
+                            <constraint firstAttribute="trailing" secondItem="1fd-OS-Lo6" secondAttribute="trailing" id="r2b-dr-VC9"/>
+                            <constraint firstItem="RKS-Kw-X3U" firstAttribute="top" secondItem="JYe-rU-Xuf" secondAttribute="top" id="rHa-xf-bHc"/>
+                            <constraint firstAttribute="bottom" secondItem="1fd-OS-Lo6" secondAttribute="bottom" id="xt1-VF-FB2"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="JYe-rU-Xuf" secondAttribute="trailing" id="Y17-zZ-AOt"/>
+                <constraint firstItem="JYe-rU-Xuf" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" id="cU5-JK-mWM"/>
+                <constraint firstAttribute="bottom" secondItem="JYe-rU-Xuf" secondAttribute="bottom" id="eYY-xh-Jxc"/>
+                <constraint firstItem="JYe-rU-Xuf" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" id="ehl-tU-MMk"/>
+            </constraints>
+            <size key="customSize" width="324" height="265"/>
+            <connections>
+                <outlet property="channelNameLbl" destination="s25-AZ-jLI" id="a2l-gI-f7S"/>
+                <outlet property="content" destination="JYe-rU-Xuf" id="dOI-nF-Rvz"/>
+                <outlet property="imageView" destination="RKS-Kw-X3U" id="6TC-TO-oUX"/>
+            </connections>
+            <point key="canvasLocation" x="156" y="90.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

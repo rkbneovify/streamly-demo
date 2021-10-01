@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-public typealias SuccessClosure = (_ data: Data?) -> (Void)
+public typealias SuccessClosure = (_ data: Data?,_ status: Int?) -> (Void)
 public typealias FailureClosure = (_ error: Error?, _ data: Data?, _ statusCode: Int?) -> (Void)
 
 
@@ -42,7 +42,7 @@ class NetworkManagerWrapper: NSObject {
         {
             print("")
         }
-        success(dataResponse.value)
+        success(dataResponse.value, dataResponse.response?.statusCode)
 
       } else {
         // if status code is not 200 (success)

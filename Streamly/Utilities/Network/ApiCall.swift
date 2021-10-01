@@ -10,10 +10,8 @@
 import Alamofire
 
 //streamlytv.com/api/
-
 open class ApiCall {
     
-
     @discardableResult
     public static func getRegistredDeviceData(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
@@ -164,5 +162,37 @@ open class ApiCall {
           let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getdrmkey.rawValue, method: .get, headers: headers, parameters: nil)
           return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
       }
+    
+    @discardableResult
+    public static func loginWithPasscode(param: [String: String], success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.loginWithPasscode.rawValue, method: .post, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func sameDeviceIdLogout(id: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let param = ["id": id]
+        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.sameDeviceIdLogout.rawValue, method: .post, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func syncSessionWithRoom(id: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let param = ["roomid": id]
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.syncSessionWithRoom.rawValue, method: .post, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func getSessionRoom(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getHotelRooms.rawValue, method: .post, headers: headers)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
 }
 

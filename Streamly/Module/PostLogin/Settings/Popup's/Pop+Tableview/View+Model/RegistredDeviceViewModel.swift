@@ -14,7 +14,7 @@ class RegistredDeviceViewModel: NSObject {
     weak var delegate:HandleError?
 
     func getRegistredDeviceData() {
-        ApiCall.getRegistredDeviceData(success: { data
+        ApiCall.getRegistredDeviceData(success: { data, _
             in
             if let contactModel = DataParser.parseContactData(data!) {
                 self.registredDevice!((contactModel))
@@ -45,6 +45,43 @@ class DataParser {
         }
         return nil
     }
+    
+    static func parseLoginResponse(_ data: Data) -> LoginResponse? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(LoginResponse.self, from: data)
+
+
+            return contactModelElement
+        } catch (let error){
+            debugPrint(error.localizedDescription)
+        }
+        return nil
+    }
+    
+    static func parseReponseToModel<T: Decodable>(_ data: Data) -> T? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(T.self, from: data)
+
+
+            return contactModelElement
+        } catch (let error){
+            debugPrint(error.localizedDescription)
+        }
+        return nil
+    }
+    
+    static func parseFailLoginResponse(_ data: Data) -> FailedResponse? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(FailedResponse.self, from: data)
+
+
+            return contactModelElement
+        } catch (let error){
+            debugPrint(error.localizedDescription)
+        }
+        return nil
+    }
 }
+
 
 
