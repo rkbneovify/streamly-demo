@@ -125,11 +125,11 @@ Route::get('/category', 'EpgController@category');
 // Route::post('/qrauth', 'Admin\DashboardController@qrauth');
 Route::post('/qrauth', 'WebSocketController@qrauth');
 // Route::post('/login/create/qrcode', 'QRLoginController@CreateQrcodeAction');
-Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR
-Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction');//gets scaned by phone
-Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction');
-Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction');
-Route::post('/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');
+Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR and save it as png 
+Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction');//gets scaned by phone with key passed in header
+Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
+Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned 
+Route::post('/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
 
 // Route::fallback(function(){
 //     return response()->json([
