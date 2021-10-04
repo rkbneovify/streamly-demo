@@ -42,11 +42,7 @@ extension LoginPasscodeVC {
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.signBtn.setTitleColor(UIColor.white, for: .focused)
         self.signBtn.setTitleColor(UIColor.white, for: .highlighted)
-        
     }
-
-    
-
 }
 
 extension LoginPasscodeVC {
@@ -93,6 +89,8 @@ extension LoginPasscodeVC: APIResponseDelegate {
     func apiSucess() {
         self.removeSpinner()
         if let room = viewModel.responseData?.rooms {
+            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
             openSearchVC(room: room)
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
             Switcher.updateRootVC()
@@ -104,7 +102,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
         if !viewModel.removeIdKey.isEmpty {
             openAlertForRemoveId()
         } else {
-            showSimpleAlertWithMessage(message)
+            showToast(message: message, completion: {})
         }
     }
     

@@ -28,6 +28,14 @@ class RoomViewController: UIViewController {
         viewModel.getRooms()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is RoomViewController {
+            return
+        } else if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist) && !Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected) {
+            Switcher.updateRootVC()
+        }
+    }
     
     private func initialSetup() {
         viewModel.filtterdRoomList = viewModel.listOfRoom
@@ -37,7 +45,6 @@ class RoomViewController: UIViewController {
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()
-        
     }
     
 }
@@ -98,12 +105,18 @@ extension RoomViewController: UICollectionViewDelegate {
 // MARK: - RoomViewModelDelegate
 extension RoomViewController: RoomViewModelDelegate {
     func apiSuccess() {
-        Switcher.updateRootVC()
+        self.removeSpinner()
+        showToast(message: "Successfully added to room/slot", completion: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                Switcher.updateRootVC()
+            }
+        })
+       
     }
     
     func apiFailure(_ message: String) {
         self.removeSpinner()
-        showSimpleAlertWithMessage(message)
+        showToast(message: message, completion: {})
     }
     
     func reloadDataChange() {

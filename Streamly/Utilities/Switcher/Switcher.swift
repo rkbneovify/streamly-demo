@@ -19,7 +19,13 @@ class Switcher {
         if reachability == true{
             if (status == true) {
                 //logedIn
-                Constant.navigateToRootHome()
+                 let isRoomExist = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist)
+                 let roomSelected = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected)
+                 if isRoomExist && !roomSelected {
+                    Constant.navigateToHotelRoomHome()
+                 } else {
+                    Constant.navigateToRootHome()
+                 }
             }
             else {
                 // Not login

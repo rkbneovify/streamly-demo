@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="15705" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="18122" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <deployment identifier="tvOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,7 +20,7 @@
                         <rect key="frame" x="0.0" y="5" width="297" height="110"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HDQ-7M-CTr">
-                                <rect key="frame" x="29" y="26" width="86" height="58"/>
+                                <rect key="frame" x="105.5" y="26" width="86" height="58"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -27,8 +28,8 @@
                                     <constraint firstAttribute="height" constant="58" id="xbY-X6-d6k"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="05" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DoC-wm-cdg">
-                                <rect key="frame" x="137" y="26" width="23" height="23"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="05" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DoC-wm-cdg">
+                                <rect key="frame" x="10" y="10" width="23" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="23" id="U7v-Wo-peY"/>
                                     <constraint firstAttribute="height" constant="23" id="myJ-hm-Hdd"/>
@@ -37,8 +38,8 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MTV-USA" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUy-Oc-pYt">
-                                <rect key="frame" x="137" y="51" width="117" height="31"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MTV-USA" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nUy-Oc-pYt">
+                                <rect key="frame" x="170" y="35" width="117" height="31"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="ssc-ZQ-rFq"/>
                                 </constraints>
@@ -49,13 +50,13 @@
                         </subviews>
                         <color key="backgroundColor" red="0.34901960784313724" green="0.38039215686274508" blue="0.39215686274509803" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="DoC-wm-cdg" firstAttribute="top" secondItem="HDQ-7M-CTr" secondAttribute="top" id="A5K-3E-itD"/>
-                            <constraint firstItem="nUy-Oc-pYt" firstAttribute="leading" secondItem="DoC-wm-cdg" secondAttribute="leading" id="XVF-1H-XDu"/>
-                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nUy-Oc-pYt" secondAttribute="trailing" constant="10" id="ZUh-cU-6Tt"/>
+                            <constraint firstItem="DoC-wm-cdg" firstAttribute="leading" secondItem="fMH-IC-QOz" secondAttribute="leading" constant="10" id="NVB-Dc-KLY"/>
+                            <constraint firstAttribute="trailing" secondItem="nUy-Oc-pYt" secondAttribute="trailing" constant="10" id="ZUh-cU-6Tt"/>
                             <constraint firstItem="HDQ-7M-CTr" firstAttribute="centerY" secondItem="fMH-IC-QOz" secondAttribute="centerY" id="aGD-Fp-ba6"/>
-                            <constraint firstItem="HDQ-7M-CTr" firstAttribute="leading" secondItem="fMH-IC-QOz" secondAttribute="leading" constant="29" id="ajB-zZ-aZO"/>
+                            <constraint firstItem="HDQ-7M-CTr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fMH-IC-QOz" secondAttribute="leading" constant="29" id="ajB-zZ-aZO"/>
                             <constraint firstItem="nUy-Oc-pYt" firstAttribute="top" secondItem="DoC-wm-cdg" secondAttribute="bottom" constant="2" id="lEz-3X-83T"/>
-                            <constraint firstItem="DoC-wm-cdg" firstAttribute="leading" secondItem="HDQ-7M-CTr" secondAttribute="trailing" constant="22" id="nRD-z2-cT2"/>
+                            <constraint firstItem="DoC-wm-cdg" firstAttribute="top" secondItem="fMH-IC-QOz" secondAttribute="top" constant="10" id="mFc-SO-JNw"/>
+                            <constraint firstItem="HDQ-7M-CTr" firstAttribute="centerX" secondItem="fMH-IC-QOz" secondAttribute="centerX" id="uAU-my-WId"/>
                         </constraints>
                     </view>
                 </subviews>

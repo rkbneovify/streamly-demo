@@ -79,6 +79,11 @@ class PopUPTvVC: UIViewController {
         }
        // self.tableview.delegate =  self
         self.tableview.dataSource  = self
+        if !(isProfile ?? false) {
+            self.tableview.rowHeight = 250
+        }
+        self.tableview.register(UINib(nibName: DeviceRegisterCell.identifier, bundle: nil), forCellReuseIdentifier: DeviceRegisterCell.identifier)
+        self.tableview.reloadData()
         
     }
     
@@ -117,19 +122,20 @@ extension PopUPTvVC:UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell =  tableView.dequeueReusableCell(withIdentifier: ListingProfileCell.reuseIdentifier, for: indexPath) as? ListingProfileCell else {return UITableViewCell()}
-        cell.backgroundColor = UIColor.clear
-        cell.contentView.backgroundColor = UIColor.clear
-        if isProfile ?? false{
+        if isProfile ?? false {
+            guard let cell =  tableView.dequeueReusableCell(withIdentifier: ListingProfileCell.reuseIdentifier, for: indexPath) as? ListingProfileCell else {return UITableViewCell()}
+            cell.backgroundColor = UIColor.clear
+            cell.contentView.backgroundColor = UIColor.clear
             cell.configureCell(profileItemArr?[indexPath.item].heading ?? "N/A", profileItemArr?[indexPath.item].data ?? "N/A",flag: true,item:indexPath.row)
+            return cell
+        } else {
+            guard let cell = tableview.dequeueReusableCell(withIdentifier: DeviceRegisterCell.identifier, for: indexPath) as? DeviceRegisterCell else { return UITableViewCell() }
+            cell.backgroundColor = UIColor.clear
+            cell.contentView.backgroundColor = UIColor.clear
+            cell.setupData(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",image: deviceList?[indexPath.item].device_img ?? "N/A")
+            return cell
         }
-        else {
-            cell.configureCell(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",flag: false,item:indexPath.row)
-        }
-        return cell
     }
-    
-    
 }
 
 extension PopUPTvVC:HandleError
@@ -138,5 +144,4 @@ extension PopUPTvVC:HandleError
         self.removeSpinner()
         self.showSimpleAlertWithMessage("Something went wrong!")
     }
-
 }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
+		938A0874270AFCEB00647394 /* DeviceRegisterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */; };
+		938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
 		A84958512706D62E00B2FE73 /* LoginPassocodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */; };
 		A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958532706EB4D00B2FE73 /* RoomViewController.swift */; };
@@ -140,6 +142,8 @@
 		3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.release.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.release.xcconfig"; sourceTree = "<group>"; };
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegisterCell.swift; sourceTree = "<group>"; };
+		938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceRegisterCell.xib; sourceTree = "<group>"; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPassocodeViewModel.swift; sourceTree = "<group>"; };
 		A84958532706EB4D00B2FE73 /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
@@ -298,6 +302,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		938A0871270AFCAA00647394 /* DeviceCell */ = {
+			isa = PBXGroup;
+			children = (
+				938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */,
+				938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */,
+			);
+			path = DeviceCell;
+			sourceTree = "<group>";
+		};
 		A849584F2706D61E00B2FE73 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -644,6 +657,7 @@
 		AA94D627248A137400EBF947 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				938A0871270AFCAA00647394 /* DeviceCell */,
 				AA94D62A248A14D200EBF947 /* ListingProfileCell.swift */,
 			);
 			path = View;
@@ -1028,6 +1042,7 @@
 				AA5E20FE24C61758000B648F /* Lato-Medium.ttf in Resources */,
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
 				AA5E20EE24C61758000B648F /* Lato-HeavyItalic.ttf in Resources */,
+				938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */,
 				AA105C7F249767AE00CF075B /* ProgramCollectionViewCell.xib in Resources */,
 				AA24C2372600C10900B15739 /* PosterCell.xib in Resources */,
 				AA5E20F624C61758000B648F /* Lato-Regular.ttf in Resources */,
@@ -1258,6 +1273,7 @@
 				AA5F5A4F2542A7E800FA8FB6 /* NoInternetVC.swift in Sources */,
 				AA5F5A552542A7E800FA8FB6 /* NibView.swift in Sources */,
 				AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */,
+				938A0874270AFCEB00647394 /* DeviceRegisterCell.swift in Sources */,
 				AA94D626248A0F0D00EBF947 /* PopUPTvVC.swift in Sources */,
 				AA72AF8C2473F5E600906796 /* TimeCollectionViewCell.swift in Sources */,
 				AA0C255825F10C4300BC03B9 /* AllGenrsListingCell.swift in Sources */,

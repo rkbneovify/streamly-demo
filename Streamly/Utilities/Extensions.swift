@@ -69,6 +69,20 @@ var vSpinner : UIView?
 
 extension UIViewController
 {
+    
+    func showToast(message : String, completion: @escaping (() -> Void)) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
+            self.present(alert, animated: true, completion: nil)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                alert.dismiss(animated: true, completion: nil)
+                completion()
+            }
+        }
+       
+    }
+    
     func showSimpleAlertWithMessage(_ message: String) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)

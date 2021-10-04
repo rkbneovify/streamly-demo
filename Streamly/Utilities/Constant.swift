@@ -61,6 +61,19 @@ class Constant: NSObject
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
     }
+    
+    class func navigateToHotelRoomHome()
+    {
+        guard let app = appDelegate else {return}
+        let homeVC = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let rootViewController = appDelegate?.window?.rootViewController as? UINavigationController
+        rootViewController?.setViewControllers([homeVC], animated: false)
+        rootViewController?.isNavigationBarHidden = true
+        app.window?.rootViewController!.removeFromParent()
+        app.window?.rootViewController!.view.removeFromSuperview()
+        app.window?.rootViewController = nil
+        app.window?.rootViewController = rootViewController
+    }
 
     class func navigateToNoNetwork()
     {
@@ -79,6 +92,7 @@ class Constant: NSObject
     class func logOut()
     {
         Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+        Utility.logOut()
         Switcher.updateRootVC()
     }
 
@@ -97,6 +111,8 @@ class Constant: NSObject
         static let password = "password"
         static let userField = "userField"
         static let zipCode = "zipCode"
+        static let isRoomExist = "isRoomExist"
+        static let isRoomSelected = "isRoomSelected"
 
     }
 

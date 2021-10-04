@@ -58,6 +58,7 @@ class RoomViewModel: NSObject {
     func selectRoomToLogin(_ id: String) {
         ApiCall.syncSessionWithRoom(id: id) { [weak self] data, status in
             guard let weak = self else { return }
+            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomSelected)
             weak.delegate?.apiSuccess()
         } failure: {[weak self] error, data, status in
             guard let weak = self else { return }

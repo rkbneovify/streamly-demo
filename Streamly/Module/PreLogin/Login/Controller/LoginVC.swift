@@ -243,18 +243,18 @@ extension LoginVC
             if response != nil && errorMessage == nil{
                 guard let selfStrong = self else {return}
                 selfStrong.removeSpinner()
-                if response?.success == true {
-                    Utility.setStringObject(value: response?.access_token ?? "", key: Constant.UserDefault.token)
-                    Utility.setStringObject(value: response?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
+                if response.success?.success == true {
+                    Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
+                    Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                     if self?.remeberMeFlag ?? false {
                         Utility.setStringObject(value: self?.passwordField.text ?? "", key: Constant.UserDefault.password)
                         Utility.setStringObject(value: self?.userIDField.text ?? "", key: Constant.UserDefault.userField)
                     }
 
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
-                    Utility.setStringObject(value: response?.user?.name ?? "", key: Constant.UserDefault.userName)
-                    Utility.setStringObject(value: response?.user?.email ?? "", key: Constant.UserDefault.email)
-                    Utility.setStringObject(value: response?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
+                    Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
+                    Utility.setStringObject(value: response.success?.user?.email ?? "", key: Constant.UserDefault.email)
+                    Utility.setStringObject(value: response.success?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
                     selfStrong.removeSpinner()
                     if !(true) {
                         //                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
@@ -262,14 +262,19 @@ extension LoginVC
                         //                        })
                     }
                     else {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                        if let room = response.success?.rooms {
+                            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+                            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+                            selfStrong.openSearchVC(room: room)
+                        } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                             Switcher.updateRootVC()
-                        })
+                        }
                     }
 
-                }
-                else {
-                    guard let error = response?.message else{return}
+                } else if let failureResponse = response.failure {
+                    selfStrong.openAlertForRemoveId(id: failureResponse.data ?? "")
+                } else {
+                    guard let error = errorMessage else{return}
                     selfStrong.showSimpleAlertWithMessage(error)
                     
                 }
@@ -279,6 +284,44 @@ extension LoginVC
                 self?.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
             }
         }
+    }
+    
+    func sameDeviceLogOut(id: String) {
+        ApiCall.sameDeviceIdLogout(id: id) { [weak self] data, status in
+            guard let weak = self else { return }
+            if let data = DataParser.parseFailLoginResponse(data!) {
+                weak.showSimpleAlertWithMessage(data.message ?? "")
+            }
+        } failure: { [weak self] error, data, status in
+            guard let weak = self else { return }
+            if let data = DataParser.parseFailLoginResponse(data!) {
+                print(data.message ?? "")
+                weak.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
+            }
+            debugPrint(error?.localizedDescription ?? "")
+           
+        }
+    }
+}
+
+// MARK: - UI Logics
+extension LoginVC {
+    private func openAlertForRemoveId(id: String) {
+        let alertAction = UIAlertController(title: "", message: "Do you want to remove the old session(with this device)", preferredStyle: .alert)
+        alertAction.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned self] _ in
+            self.sameDeviceLogOut(id: id)
+        }))
+        alertAction.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+        present(alertAction, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Other Controllers.
+extension LoginVC {
+    fileprivate func openSearchVC(room: [Room]) {
+        let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        vc.viewModel.listOfRoom = room
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
