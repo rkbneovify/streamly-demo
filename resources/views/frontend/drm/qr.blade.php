@@ -116,13 +116,7 @@ function is_sacn_qrcode(){
 
 
         
-           // Click the scan code pop-up box   
     $('.scanqrcode').click(function(){
-       // $( '.login-section').hide(); // Hide the login box   
-        //$('.qrcode').show(); // pop-up window   
-        //$('.timeout' ).hide();
-        //$( '.barcode-container.scanned .status.scanned, .barcode-container.scanned .mask' ).hide();
-        //$( '.login_op').show(); // Show mask layer 
         // Request QR code 
         $.ajax({
             type: "POST" ,
