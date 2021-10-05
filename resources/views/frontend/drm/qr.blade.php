@@ -31,10 +31,13 @@ function is_loginfun(){
     $.ajax({
         type: "POST" ,
         dataType: "json" ,
-        url: "api/login/entry/login" ,
+        url: "web/login/entry/login" ,
         data:{
-            key:key
+            key:key ,
+              "_token":"{{ csrf_token() }}"
         },
+          
+            headers: {'x-csrf-token': '{{ csrf_token() }}'}, 
         success:function(data) {
               if (data.status==1 ){
                   var uid = data.jwt;
@@ -49,17 +52,13 @@ function is_loginfun(){
                   //  
                // Confirmed pop-up $('.confirmed,.mask' ).show();
                   // Confirm login at a time of 1 second  
-                setTimeout( function (){
-                      // Confirm login  
-                    $('#login_username' ).val (data.user);
-                    $( '#login_password' ).val(data.sign);
-                    $( '#login-form' ).submit();
-                }, 1000 );
+               
                 console.log("login successfull",uid);
 
                 $('.qrcode-img').attr('src','');
                 alert("login successfull",uid);
                   $('#thelogindata').text(uid)
+                  window.location.href = '/';
 
             } else  if (data.status==2 ){
                   // Cancel timed tasks and clear cookies  

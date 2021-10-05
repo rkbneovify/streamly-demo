@@ -263,3 +263,4 @@ Route::get('/stripesync', function (Request $request) {
 //  Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
 Route::match(['get', 'post'], '/botman', 'BotManController@handle');
 Route::post('admin/multisessiondestroy', 'Admin\UsersController@multisessiondestroy')->name('multisessiondestroy')->middleware(['auth']);
+Route::post('web/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
