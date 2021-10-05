@@ -129,7 +129,6 @@ Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeActi
 Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction');//gets scaned by phone with key passed in header
 Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
 Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned 
-Route::post('/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
 
 // Route::fallback(function(){
 //     return response()->json([
