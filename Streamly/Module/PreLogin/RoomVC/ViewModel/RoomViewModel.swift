@@ -10,7 +10,7 @@ import Foundation
 
 protocol RoomViewModelDelegate: AnyObject {
     func apiSuccess()
-    func apiFailure(_ message: String)
+    func apiFailure(_ message: String,_ status: Int)
     func reloadDataChange()
 }
 
@@ -49,7 +49,7 @@ class RoomViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
-                weak.delegate?.apiFailure(data.message ?? "")
+                weak.delegate?.apiFailure(data.message ?? "", data.responseCode ?? 0)
             }
         }
         
@@ -63,7 +63,7 @@ class RoomViewModel: NSObject {
         } failure: {[weak self] error, data, status in
             guard let weak = self else { return }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
-                weak.delegate?.apiFailure(data.message ?? "")
+                weak.delegate?.apiFailure(data.message ?? "",data.responseCode ?? 0)
             }
         }
 

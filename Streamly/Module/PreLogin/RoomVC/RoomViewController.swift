@@ -26,15 +26,16 @@ class RoomViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.delegate = self
         viewModel.getRooms()
+        if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist) && !Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected) {
+            let menuPressRecognizer = UITapGestureRecognizer()
+            menuPressRecognizer.addTarget(self, action: #selector(RoomViewController.menuButtonAction(recognizer:)))
+            menuPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
+            self.view.addGestureRecognizer(menuPressRecognizer)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is RoomViewController {
-            return
-        } else if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist) && !Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected) {
-            Switcher.updateRootVC()
-        }
     }
     
     private func initialSetup() {
@@ -47,6 +48,10 @@ class RoomViewController: UIViewController {
         self.collectionView.layoutSubviews()
     }
     
+    
+    @objc func menuButtonAction(recognizer:UITapGestureRecognizer) {
+        Switcher.updateRootVC()
+    }
 }
 // MARK: UICollectionViewDataSource
 
@@ -111,12 +116,18 @@ extension RoomViewController: RoomViewModelDelegate {
                 Switcher.updateRootVC()
             }
         })
-       
+        
     }
     
-    func apiFailure(_ message: String) {
+    func apiFailure(_ message: String,_ status: Int) {
         self.removeSpinner()
-        showToast(message: message, completion: {})
+        if status == 409 {
+            showToast(message: message, completion: {
+                self.viewModel.getRooms()
+            })
+            return
+        }
+        showSimpleAlertWithMessage(message)
     }
     
     func reloadDataChange() {
