@@ -15,7 +15,7 @@ class QRLoginTwoController extends Controller
       //   ob_start ();
         // echo url()->current();
   
-        $url ='http://'. $_SERVER ['HTTP_HOST']; // Get the current url 
+        $url = url(''); // Get the current url 
         // dd($url);
        $http = $url .'/api/login/mobile/scan/qrcode'; // Verify the url method of scanning code 
        $key = Str::random(30);//$this->getRandom(30); // The key value stored in memcache, a random 32-bit string 
@@ -81,7 +81,7 @@ class QRLoginTwoController extends Controller
   // Mobile device scan code 
   public function mobileScanQrcodeAction(Request $request ){
    $key = $_GET['key'];
-   $url ='http://'.$_SERVER ['HTTP_HOST'];
+   $url =url('');
    $agent = $_SERVER ["HTTP_USER_AGENT"];
    $headerpasscode = $request->header('userpasscode');
   //  if (!(strpos($agent,'MicroMessenger') === false )) {
