@@ -142,7 +142,7 @@
 <p>Email: {{Auth::user()->email}}</p>
 </li>
                         <li class="text-center">
-    <div id="qr-reader" ></div>
+    <div id="qr-reader" class="col-md-8"></div>
    
      <p id="login_mobile_scan_qrcode"></p>
      <p id="qrcodedoLogin"></p></li>
@@ -261,7 +261,7 @@ qrcodedoLogin(qrcodeloginurl);
         }
 
         var html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 300 });
+            "qr-reader", { fps: 10, qrbox: 250 });
         html5QrcodeScanner.render(onScanSuccess);
     });
 </script>
