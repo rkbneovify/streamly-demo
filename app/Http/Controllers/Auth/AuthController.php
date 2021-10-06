@@ -18,6 +18,7 @@ use Validator;
 use Illuminate\Support\Arr;
 use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Memcache;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','loginWithPasscode','samedevicelogout']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','loginWithPasscode','samedevicelogout','loginEntry']]);
     }
 
     public function register(Request $request){
@@ -532,5 +533,43 @@ public function multilogout()
             $jwtToken->desktop = 1;
             $jwtToken->save();
         } 
+    }
+
+    public function loginEntry(Request $request)
+    {
+      
+       $key=$request['key'];
+       if (empty($key)){
+  
+       $return = array ('status'=>2,'msg'=>'key not provided' );
+       return response()->json($return, 200);
+       }
+      $mem = new \Memcache();
+      $mem->connect('127.0.0.1',11211);
+      $data = json_decode($mem->get($key),true); 
+  //     $passcode=$data['login'];
+      if (empty($data)){
+       $return = array ('status'=>2,'msg'=>'expired' );
+       return response()->json($return, 200);
+   } else {
+       if (isset($data['jwt'])){
+        // $userid=UnHashUserID($data['jwt']);s
+        $request->merge(["passcode"=>$data['jwt']]);
+
+        $this->loginWithPasscode($request);
+        exit;
+        // $user = Auth::loginUsingId($userid, true);
+  
+  
+        //    $return = array ('status'=>1,'msg'=>'success','jwt'=>$data['jwt'],'user'=>$user );
+        //    return response()->json($return, 200);
+      } else {
+           $return = array ('status'=>0,'msg'=>'','data'=>$data );
+           return response()->json($return, 400);
+      }
+  }
+      // Use passcode to login and return the object in reposne or jWT
+      // extract memcache and the login var jwt/passcode 
+      //use passcode to login and return the jwt
     }
 }
