@@ -254,9 +254,10 @@ qrcodedoLogin(qrcodeloginurl);
                 console.log(`Scan result ${decodedText}`, decodedResult);
 				 resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;
             
-            // Optional: To close the QR code scannign after the result is found
-           // html5QrcodeScanner.clear();
+           
                 login_mobile_scan_qrcode(decodedText);
+				 // Optional: To close the QR code scannign after the result is found
+            html5QrcodeScanner.clear();
             }
         }
 
