@@ -143,11 +143,11 @@
 </li>
                         <li class="text-center">
     <div id="qr-reader" ></div>
-    <div id="qr-reader-results"></div>
+   
      <p id="login_mobile_scan_qrcode"></p>
      <p id="qrcodedoLogin"></p></li>
                         </ul>
-							
+						 <div id="qr-reader-results"></div>	
 					</div>
 				</div>
 				
@@ -252,12 +252,16 @@ qrcodedoLogin(qrcodeloginurl);
                 lastResult = decodedText;
                 // Handle on success condition with the decoded message.
                 console.log(`Scan result ${decodedText}`, decodedResult);
+				 resultContainer.innerHTML += `<div>[${countResults}] - ${decodedText}</div>`;
+            
+            // Optional: To close the QR code scannign after the result is found
+           // html5QrcodeScanner.clear();
                 login_mobile_scan_qrcode(decodedText);
             }
         }
 
         var html5QrcodeScanner = new Html5QrcodeScanner(
-            "qr-reader", { fps: 10, qrbox: 250 });
+            "qr-reader", { fps: 10, qrbox: 300 });
         html5QrcodeScanner.render(onScanSuccess);
     });
 </script>
