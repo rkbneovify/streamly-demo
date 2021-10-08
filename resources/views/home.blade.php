@@ -88,8 +88,10 @@
   <!-- ./col -->
 <a href="https://datastudio.google.com/reporting/46eda86a-4e98-43dd-8553-fc72bff273e3/page/hAFBC">Reports</a>
 <br>
-<iframe width="600" height="450" src="https://datastudio.google.com/embed/reporting/46eda86a-4e98-43dd-8553-fc72bff273e3/page/ebVBC" frameborder="0" style="border:0" allowfullscreen></iframe>
-  
+
+<div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="https://datastudio.google.com/embed/reporting/46eda86a-4e98-43dd-8553-fc72bff273e3/page/ebVBC" allowfullscreen></iframe>
+</div>
 </div>
 <!-- /.row -->
       </div><!-- /.container-fluid -->
