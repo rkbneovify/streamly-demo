@@ -64,6 +64,9 @@ enum API:String {
     case sameDeviceIdLogout = "auth/same-device-id-logout"
     case syncSessionWithRoom = "auth/sync-session-with-room"
     case getHotelRooms = "auth/get-hotelrooms"
+    case generateQrForLogin = "login/create/qrcode"
+    case entryLogin         = "login/entry/login"
+    case mobileDeviceScanCode = "login/scan/qrcode"
 }
 
 /// for settings childView

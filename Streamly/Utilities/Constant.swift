@@ -113,7 +113,7 @@ class Constant: NSObject
         static let zipCode = "zipCode"
         static let isRoomExist = "isRoomExist"
         static let isRoomSelected = "isRoomSelected"
-
+        static let getQrCodeKey = "getQrCodeKey"
     }
 
     //MARK:-: Constant Url & Keys
@@ -123,6 +123,6 @@ class Constant: NSObject
     static let drmRequestURL = "https://fp-keyos.licensekeyserver.com/getkey"
     static let drmCertificateURL = "https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der"
     static let baseURL = "https://streamlytv.com/api/"
-
+    static let qrBaseUrl = "https://streamlytest.streamlytv.com/api/"
   
 }

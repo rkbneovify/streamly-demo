@@ -20,7 +20,8 @@ class LoginVC: UIViewController {
     @IBOutlet weak var terms:           UIButton!
 
     @IBOutlet weak var loginWithPasscode: GradientBUtton!
-
+    @IBOutlet weak var loginWithQRButton: UIButton!
+    
     //MARK: Properties
     var remeberMeFlag:Bool?
     {
@@ -213,6 +214,10 @@ class LoginVC: UIViewController {
             let vc = LoginPasscodeVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
             self.navigationController?.pushViewController(vc, animated: true)
 
+        } else if sender.tag == 8 {
+            // Navigate to login with QR.
+            let vc = LoginWithQRViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
