@@ -18,7 +18,7 @@ class NetworkManagerWrapper: NSObject {
   static func makeRequest(_ requestParamter: RequestParameter, encoding: ParameterEncoding = URLEncoding.default, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
 
     let request = AF.request(requestParamter.url, method: requestParamter.method, parameters: requestParamter.parameters, encoding: encoding, headers: HTTPHeaders(requestParamter.headers ?? ["":""]))
-    
+    print(request.convertible)
     request.responseData { (dataResponse) in
       
       #if DEBUG

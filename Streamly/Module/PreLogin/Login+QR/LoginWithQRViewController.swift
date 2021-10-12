@@ -28,7 +28,7 @@ class LoginWithQRViewController: UIViewController {
     private func intialSetup() {
         viewModel.delegate = self
         viewModel.pollingInAPI()
-        self.timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { [weak self] _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { [weak self] _ in
             guard let weak = self else { return }
             weak.viewModel.pollingInAPI()
         })
@@ -59,6 +59,8 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                     openSearchVC(room: room)
                 } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                     Switcher.updateRootVC()
+                } else {
+                    Switcher.updateRootVC()
                 }
             }
         } else if let data = data as? FailedResponse { // handle Login failed Response
@@ -67,7 +69,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     }
     
     func apiFailed(_ message: String) {
-        showSimpleAlertWithMessage(message)
+        //showSimpleAlertWithMessage(message)
     }
     
     
