@@ -28,7 +28,7 @@ class LoginWithQRViewController: UIViewController {
     private func intialSetup() {
         viewModel.delegate = self
         viewModel.pollingInAPI()
-        self.timer = Timer.scheduledTimer(withTimeInterval: 20, repeats: true, block: { [weak self] _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { [weak self] _ in
             guard let weak = self else { return }
             weak.viewModel.pollingInAPI()
         })

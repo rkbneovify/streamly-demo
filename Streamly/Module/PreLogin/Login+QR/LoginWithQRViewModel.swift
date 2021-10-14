@@ -57,11 +57,11 @@ class LoginWithQRViewModel: NSObject {
             }
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
-            if let data:QRModel = DataParser.parseReponseToModel(data!) {
-                if data.status == 2 { // Qr is Expired
+            if let data = data, let response:QRModel = DataParser.parseReponseToModel(data) {
+                if response.status == 2 { // Qr is Expired
                     weak.currentAPIPolling = .isGetQR
                 } else {
-                    weak.delegate?.apiFailed(data.msg ?? "")
+                    weak.delegate?.apiFailed(response.msg ?? "")
                 }
                 return
             }

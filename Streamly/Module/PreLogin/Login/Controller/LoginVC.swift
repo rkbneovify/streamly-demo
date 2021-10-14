@@ -85,6 +85,11 @@ class LoginVC: UIViewController {
         self.loginWithPasscode.setTitleColor(UIColor.white, for: .focused)
         self.loginWithPasscode.setTitleColor(UIColor.white, for: .highlighted)
 
+        self.loginWithQRButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
+        self.loginWithQRButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+        self.loginWithQRButton.setTitleColor(UIColor.white, for: .focused)
+        self.loginWithQRButton.setTitleColor(UIColor.white, for: .highlighted)
+
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.signBtn.setTitleColor(UIColor.white, for: .focused)
@@ -335,6 +340,7 @@ extension LoginVC {
         if userIDField.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.terms.layer.borderColor = UIColor.gray.cgColor
+                self.loginWithQRButton.layer.borderColor = UIColor.clear.cgColor
                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.userIDField.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
@@ -343,6 +349,7 @@ extension LoginVC {
         } else if passwordField.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.terms.layer.borderColor = UIColor.gray.cgColor
+                self.loginWithQRButton.layer.borderColor = UIColor.clear.cgColor
                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.passwordField.layer.borderColor = UIColor.clear.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
@@ -352,6 +359,14 @@ extension LoginVC {
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.terms.layer.borderColor = UIColor.gray.cgColor
                 self.registerNowBtn.layer.borderColor = UIColor.clear.cgColor
+                self.loginWithQRButton.layer.borderColor = UIColor.clear.cgColor
+                self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
+                self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
+            }, completion: nil)
+        } else if loginWithQRButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.terms.layer.borderColor = UIColor.gray.cgColor
+                self.loginWithQRButton.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
@@ -364,7 +379,7 @@ extension LoginVC {
                 else {
                     self.terms.layer.borderColor = UIColor.gray.cgColor
                 }
-
+                self.loginWithQRButton.layer.borderColor = UIColor.gray.cgColor
                 self.registerNowBtn.layer.borderColor = UIColor.gray.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor

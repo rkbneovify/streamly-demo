@@ -26,7 +26,11 @@ class RoomViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.delegate = self
         viewModel.getRooms()
+        
         if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist) && !Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected) {
+            if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is RoomViewController {
+                return
+            }
             let menuPressRecognizer = UITapGestureRecognizer()
             menuPressRecognizer.addTarget(self, action: #selector(RoomViewController.menuButtonAction(recognizer:)))
             menuPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
@@ -50,6 +54,9 @@ class RoomViewController: UIViewController {
     
     
     @objc func menuButtonAction(recognizer:UITapGestureRecognizer) {
+        if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is RoomViewController {
+            return
+        }
         Switcher.updateRootVC()
     }
 }
