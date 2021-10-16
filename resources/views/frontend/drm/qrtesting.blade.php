@@ -4,7 +4,7 @@
 <head>
 
 	
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="{{ asset('frontend/qr/jquery.qrcode-0.11.0.min.js') }}" ></script>
     <script type="text/javascript">
         $(document).ready(function() {
@@ -17,38 +17,40 @@
                 // var ws = new WebSocket('ws://localhost:9990/chat');
                 var ws = new WebSocket('ws://localhost:8090');
                 ws.onopen = function() {
-                    var hello = {
-                        op: 'hello'
-                    };
-                    ws.send(JSON.stringify(hello));
+                   ws.send(JSON.stringify({ type: "server", code: 0, step: 0 }));
 
                 };
                 ws.onmessage = function(evt) {
-					$("#qrcode").html("");                
-					
-                    var obj = JSON.parse(evt.data);
-                    console.log("Receivied:" + JSON.stringify(obj));
-
-                    if (obj.op == 'hello') 
-                    {
-                        console.log("### Got hello token " + obj.token);
-
-
-                        //Generate QR Code and show to user.
+                   const data = JSON.parse(event.data);
+                   //console.log("datafromservver",data);
+                   const step = data.data && data.data.step;
+                           if (step === 0) {
+          /**  const anchor = document.createElement("a");
+            anchor.href = data.data.url;
+            anchor.setAttribute("target", "_blank");
+            anchor.setAttribute("rel", "noopener noreferrer");
+            anchor.textContent = "link";
+            anchor.style = "margin-left: 8px;";
+            messageEl.appendChild(anchor);*/
+ //Generate QR Code and show to user.
                         $("#qrcode").qrcode({
                             "width": 100,
                             "height": 100,
-                            "text": obj.token
+                            "text": data.data.url
                         });
-                    } else if (obj.op == 'authdone') 
-                    {
-                        console.log("### Got auth token " + obj.accessToken);
-                        ws.close();
-                        $("#qrcode").hide();
+                          console.log("QR code generated successfully");
+          
+        }  else if (step === 2) {
+            const { username, token } = data.data;
+            localStorage.setItem(TOKEN_KEY, token);
 
-                        $("#profile").html("<img src='iconLoading.gif' />");
-                        getProfileData(obj.accessToken);
-                    }
+           $("#qrcode").html("");
+            ws.close();
+alert(username);
+           // fetchUser();
+        }
+					//$("#qrcode").html("");                
+					
 
 
                 };
