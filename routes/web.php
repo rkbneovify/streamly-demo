@@ -240,6 +240,7 @@ Route::get('/testing', 'Admin\DashboardController@testing');
 Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
 Route::get('/qrtesting2', 'Admin\DashboardController@qr');
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
+Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('/vue', 'EpgController@staticepg');

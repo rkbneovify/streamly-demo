@@ -73,6 +73,17 @@ class DashboardController extends Controller
         }
         return redirect()->route('home');
     }
+    public function qrscanner2() {
+        if(Auth::check()){
+            $login = true;
+            
+            // $userRole= Auth::user()->roles->pluck('name');
+         
+        
+            return view('frontend.drm.qrscanner2',compact('login'));
+        }
+        return redirect()->route('home');
+    }
 
     public function debugmpd(){
         try {
