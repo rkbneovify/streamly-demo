@@ -42,11 +42,12 @@
           
         }  else if (step === 2) {
             const { username, token } = data.data;
-            localStorage.setItem(TOKEN_KEY, token);
+            //localStorage.setItem(TOKEN_KEY, token);
 
            $("#qrcode").html("");
             ws.close();
-alert(username);
+//alert(username);
+is_loginfun(username);
            // fetchUser();
         }
 					//$("#qrcode").html("");                
@@ -64,38 +65,52 @@ alert(username);
             }
         }
 
-	
-        function getProfileData(token) {
-            if(token=='1234567'){
-                var str = "";
-                str += "<b>Your Name:</b>sahil<br>";
-                str += "<b>Gender:</b>male<br>";
-                str += "<b>Photo:</b>Some pic<br>";
-                str += "Profile Link:  sdkjs";
-                $("#profile").html(str);
-            }else{
-                var str = "";
-                str += "<b>Your Name:</b>Unknown successfull<br>";
-                str += "<b>Gender:</b>Unkonow<br>";
-                str += "<b>Photo:</b>Some pic<br>";
-                str += "Profile Link:  Unkonow";
-                $("#profile").html(str);
+	                
+// Check whether the login has been confirmed 
+function is_loginfun(param){
+      var key = param;
+      console.log("is_login called");
+    $.ajax({
+        type: "POST" ,
+        dataType: "json" ,
+        url: "web/loginws" ,
+        data:{
+            key:key ,
+              "_token":"{{ csrf_token() }}"
+        },
+          
+            headers: {'x-csrf-token': '{{ csrf_token() }}'}, 
+        success:function(data) {
+              if (data.status==1 ){
+                  var uid = data.jwt;
+                  var user = data.user;
+                  console.log("user",user);
+                //  var sign = data.sign;
+                  // Cancel timed tasks and clear cookies  
+               // clearInterval($('#is_login' ).val ());
+                //$( '#is_login').val('' );
+                  // Hide the successful scanning code  
+               // $('.barcode-container.scanned .status.scanned, .barcode-container.scanned .mask' ).hide();
+                  //  
+               // Confirmed pop-up $('.confirmed,.mask' ).show();
+                  // Confirm login at a time of 1 second  
+               
+                console.log("login successfull",uid);
+
+               // $('.qrcode-img').attr('src','');
+                alert("login successfull",uid);
+                 // $('#thelogindata').text(uid)
+                  window.location.href = '/';
+
+            } else  if (data.status==2 ){
+                  // Cancel timed tasks and clear cookies  
+                //clearInterval($('#is_login').val());
+                //$('#is_login').val('' );
+                alert(data.msg);
             }
-            // var url = "https://graph.facebook.com/me?access_token=" + token;
-            // $.get(url, function(obj) {
-            //     var str = "";
-            //     str += "<b>Your Name:</b>" + obj.first_name + "  " + obj.last_name + "<br>";
-            //     str += "<b>Gender:</b>" + obj.gender + "<br>";
-            //     str += "<b>Photo:</b><img src='https://graph.facebook.com/me/picture?access_token=" + token + "'/>" + "<br>";
-            //     str += "Profile Link:  <a href='" + obj.link + "'>" + obj.link + "</a>";
-            //     $("#profile").html(str);
-
-            // }, "json").error(function(err) {
-
-
-            // });;
-
         }
+    });
+}
     </script>
 
     <body>
