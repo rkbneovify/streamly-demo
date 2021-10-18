@@ -41,6 +41,14 @@ class WebSocketController extends Controller implements MessageComponentInterfac
      * @throws \Exception
      */
     function onClose(ConnectionInterface $conn){
+        unset($this->cache[$conn->resourceId]);
+        // echo "\n";
+        // echo "onClose";
+// print_r($from);
+// print_r(array_keys($this->cache));
+// echo "count:";
+// print_r(count(array_keys($this->cache)));
+        $this->clients->detach($conn);
         echo "Connection {$conn->resourceId} has disconnected\n";
         $this->clients->detach($conn);
     }
@@ -68,9 +76,13 @@ class WebSocketController extends Controller implements MessageComponentInterfac
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
             $obj = json_decode($msg);
-print_r($obj);
-echo "\n";
+// print_r($obj);
+// echo "\n";
+// echo "onMessage";
 // print_r($from);
+// print_r(array_keys($this->cache));
+// echo "count:";
+// print_r(count(array_keys($this->cache)));
 $type = $obj->type;
 if($type=='client'){
     switch ($obj->step) {
