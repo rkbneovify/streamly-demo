@@ -97,7 +97,7 @@ if($type=='client'){
             $tokenexist=array_key_exists($theuuid, $this->cache);
             // $tokenexist= isset($this->cache[$theuuid]);
             if($tokenexist){
-                echo "token existyu";
+                echo "\n token exist ya \n";
                 $ee=$this->cache[$theuuid]; 
                 // print_r($ee);
                 if($ee['status']=='0'){
