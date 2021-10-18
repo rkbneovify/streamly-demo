@@ -186,6 +186,36 @@ class QRLoginTwoController extends Controller
     // extract memcache and the login var jwt/passcode 
     //use passcode to login and return the jwt
   }
+
+
+  public function loginWS(Request $request){
+    $key=$request['key'];
+    if (empty($key)){
+
+    $return = array ('status'=>2,'msg'=>'key not provided' );
+    return response()->json($return, 200);
+    }
+
+    $userid=UnHashUserID($key);
+    try {
+      $user = Auth::loginUsingId($userid, true);
+      $return = array ('status'=>1,'msg'=>'success','jwt'=>1,'user'=>$user );
+      return response()->json($return, 200);
+    } catch (Exception $exception) {
+        
+      return response()->json([
+        'status'=>2,
+          'success' => false,
+          'message' => 'Some Error occured',
+          'error'=>$exception->getMessage(),
+          'response_code'=>200,
+          
+      ], 200);
+  }
+    
+
+
+  }
 }
 // Click button to geerate qr code for 3 minutes
 // Waits for scan code,poll wether qr is scanned or not
