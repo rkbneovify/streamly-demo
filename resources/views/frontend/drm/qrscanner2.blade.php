@@ -207,7 +207,8 @@ function qrcodedoLogin(param){
 function login_mobile_scan_qrcode(param){
       var url = param;
 	  if ("WebSocket" in window) {
-		var ws = new WebSocket('ws://localhost:8090');
+		  var base = window.location.hostname;
+		var ws = new WebSocket('ws://'+base+':8090');
                 ws.onopen = function() {
             console.log("on WS open we sent the token to server");
 			let params = (new URL(url)).searchParams;
