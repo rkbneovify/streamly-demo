@@ -10,6 +10,7 @@ use Ratchet\WebSocket\WsServer;
 use App\Http\Controllers\WebSocketController;
 use React\EventLoop\Factory;
 use React\Socket\SecureServer;
+use React\Socket\Server;
 class WebSocketServer extends Command
 {
     /**
