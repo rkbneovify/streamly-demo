@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
+		93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */; };
+		93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */; };
+		93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C69270ED6F7006DA962 /* QRModel.swift */; };
 		938A0874270AFCEB00647394 /* DeviceRegisterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */; };
 		938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
@@ -142,6 +145,9 @@
 		3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.release.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.release.xcconfig"; sourceTree = "<group>"; };
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewController.swift; sourceTree = "<group>"; };
+		93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewModel.swift; sourceTree = "<group>"; };
+		93662C69270ED6F7006DA962 /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
 		938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegisterCell.swift; sourceTree = "<group>"; };
 		938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceRegisterCell.xib; sourceTree = "<group>"; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -302,6 +308,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		93662C64270ECF25006DA962 /* Login+QR */ = {
+			isa = PBXGroup;
+			children = (
+				93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */,
+				93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */,
+				93662C69270ED6F7006DA962 /* QRModel.swift */,
+			);
+			path = "Login+QR";
+			sourceTree = "<group>";
+		};
 		938A0871270AFCAA00647394 /* DeviceCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -578,6 +594,7 @@
 		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
 			isa = PBXGroup;
 			children = (
+				93662C64270ECF25006DA962 /* Login+QR */,
 				A84958522706EB2B00B2FE73 /* RoomVC */,
 				AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */,
 				AAA27B99254FEC1B00E44328 /* QRView */,
@@ -1227,6 +1244,7 @@
 				AA441CFD2587C5CD001AD30F /* CoustomAlertVC.swift in Sources */,
 				AA71399325FF8271007D0DFC /* VideoPlaybackViewController.swift in Sources */,
 				AA5ADDCD248E4A94005936CE /* PopUPViewsVC.swift in Sources */,
+				93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */,
 				AA72AF882473F4C000906796 /* ProgramCollectionViewCell.swift in Sources */,
 				AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */,
 				AA19D0F724AF9B77005B488D /* HomeNewVC.swift in Sources */,
@@ -1264,6 +1282,8 @@
 				AA72AF7C2473F0E100906796 /* EPGCollectionViewLayout.swift in Sources */,
 				AA94D62B248A14D200EBF947 /* ListingProfileCell.swift in Sources */,
 				AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */,
+				93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */,
+				93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */,
 				AA5F5A572542A7E800FA8FB6 /* GEVersionMonitor.swift in Sources */,
 				A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */,
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,

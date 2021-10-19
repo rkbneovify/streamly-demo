@@ -129,6 +129,28 @@ open class ApiCall {
     }
 
     @discardableResult
+    public static func getQRDataForLogin(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        //let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.generateQrForLogin.rawValue, method: .post, headers: nil, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func entryLogin(key: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let param = ["key": key, "deviceid": deviceId ?? ""]
+//        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.entryLogin.rawValue, method: .post, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func mobileScanQRCode(key: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let param = ["key": key]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.mobileDeviceScanCode.rawValue, method: .post, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, encoding: URLEncoding.httpBody, success: success, failure: failure)
+    }
+    
+    @discardableResult
     public static func setCallSign(_ callSign:String, _ insideGeoFence:Bool,success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
