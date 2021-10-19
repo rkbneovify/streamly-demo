@@ -102,7 +102,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
         if !viewModel.removeIdKey.isEmpty {
             openAlertForRemoveId()
         } else {
-            showToast(message: message, completion: {})
+            showSimpleAlertWithMessage(message)
         }
     }
     
