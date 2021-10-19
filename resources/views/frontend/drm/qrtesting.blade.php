@@ -16,8 +16,10 @@
             if ("WebSocket" in window) {
                 var base = window.location.hostname;
                 //alert(base);
-                // var ws = new WebSocket('ws://localhost:9990/chat');
-                var ws = new WebSocket('ws://'+base+':8090');
+                //var ws = new WebSocket('ws://localhost:9990/chat');
+                //var ws = new WebSocket('wss://streamlytest.streamlytv.com:8090');
+                var ws = new WebSocket('wss://'+base+':8090');
+                console.log(ws);
                 ws.onopen = function() {
                    ws.send(JSON.stringify({ type: "server", code: 0, step: 0 }));
 
