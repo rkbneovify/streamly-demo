@@ -689,7 +689,7 @@ details[open] > summary::before {
         @if ($loop->first)  
         <div class="tab-pane fade show active col-sm-12 no-gutters" id="pills-{{$key}}" role="tabpanel" aria-labelledby="pills-{{$key}}-tab"><div class="h"> <div class="grid-container">@foreach ($user as $channeldet2)
             <div class="item1"> 
-                <img  class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+                <img  class="lazy" src="../uploads/channellogo/notfound.png" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
             </div>  @endforeach</div></div></div>
         <!-- <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
             
@@ -698,7 +698,7 @@ details[open] > summary::before {
     @else
     <div class="tab-pane fade col-sm-12 no-gutters" id="pills-{{$key}}" role="tabpanel" aria-labelledby="pills-{{$key}}-tab"><div class="h"><div class="grid-container">@foreach ($user as $channeldet2)
         <div class="item1"> 
-            <img class="lazy" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
+            <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="../uploads/channellogo/{{  $channeldet2->image}}" loading="lazy" alt="Logo of {{$channeldet2->CallSign}}">
         </div>  @endforeach</div></div></div>
     <!-- <div id="{{$key}}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
         
