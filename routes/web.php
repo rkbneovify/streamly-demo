@@ -238,7 +238,7 @@ Route::get('/fairnotoken', 'Admin\BuyDRMController@fairPlayernotoken');
 Route::get('/fair2', 'Admin\BuyDRMController@fairPlayer2');
 Route::get('/testing', 'Admin\DashboardController@testing');
 Route::get('/qrtesting', 'Admin\DashboardController@qrtesting');
-Route::get('/qrtesting2', 'Admin\DashboardController@qr');
+Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
