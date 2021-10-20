@@ -18,7 +18,7 @@ use Validator;
 use Illuminate\Support\Arr;
 use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Memcache;
+use Memcached;
 
 class AuthController extends Controller
 {
@@ -544,8 +544,8 @@ public function multilogout()
        $return = array ('status'=>2,'msg'=>'key not provided' );
        return response()->json($return, 200);
        }
-      $mem = new \Memcache();
-      $mem->connect('127.0.0.1',11211);
+      $mem = new \Memcached();
+      $mem->addServer('127.0.0.1',11211);
       $data = json_decode($mem->get($key),true); 
   //     $passcode=$data['login'];
       if (empty($data)){
