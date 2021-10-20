@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Memcache;
+use Memcached;
 use Illuminate\Support\Facades\Auth;
 class QRLoginTwoController extends Controller
 {
@@ -18,7 +18,7 @@ class QRLoginTwoController extends Controller
         $url = url(''); // Get the current url 
         // dd($url);
        $http = $url .'/api/login/mobile/scan/qrcode'; // Verify the url method of scanning code 
-       $key = Str::random(30);//$this->getRandom(30); // The key value stored in memcache, a random 32-bit string 
+       $key = Str::random(30);//$this->getRandom(30); // The key value stored in Memcached, a random 32-bit string 
        $random = mt_rand(1000000000, 9999999999);//random integer
        $_SESSION['qrcode_name'] = $key ; // Save the key as the name of the picture in the session 
        $forhash=substr( $random,0,2);
@@ -44,11 +44,11 @@ class QRLoginTwoController extends Controller
      }
      $qr = asset('assets/img/qrcodeimg/'. $key .'.png');
      
-      $mem = new \Memcache();
-      $mem->connect('127.0.0.1',11211 );
+      $mem = new \Memcached();
+      $mem->addServer('127.0.0.1',11211 );
       $res=json_encode(array('sign'=> $sgin ,'type'=>0 ));
-      // store in memcache, expiration time is three minutes 
-     $mem->set($key,$res ,0,180);// 180 
+      // store in Memcached, expiration time is three minutes 
+     $mem->set($key,$res ,180);// 180 
      $return = array('status'=>1,'msg'=> $qr,'key'=>$key);
        return response()->json($return, 200); 
       //  return  $this ->createJsonResponse( $return );
@@ -61,8 +61,8 @@ class QRLoginTwoController extends Controller
     public  function isScanQrcodeAction(Request $request){
 
       $key = $request['key'];
-       $mem = new \Memcache();
-       $mem->connect('127.0.0.1',11211 );
+       $mem = new \Memcached();
+       $mem->addServer('127.0.0.1',11211 );
        $data = json_decode($mem->get($key),true);
        if (empty($data)){
            $return = array ('status'=>2,'msg'=>'expired' );
@@ -92,8 +92,8 @@ class QRLoginTwoController extends Controller
   //     return  $this ->redirect( $app_url );
   // }
   $http = $url .'/api/login/qrcodedoLogin'; // Return to confirm the login link 
-  $mem = new \Memcache();
-   $mem->connect('127.0.0.1',11211);
+  $mem = new \Memcached();
+   $mem->addServer('127.0.0.1',11211);
    $data = json_decode($mem->get($key), true);
    
    if (empty($data)){
@@ -102,7 +102,7 @@ class QRLoginTwoController extends Controller
 } 
    $data['type']=1; // Increase the type value to determine whether the code has been scanned 
   $res = json_encode($data);
-   $mem->set($key,$res,0,180);
+   $mem->set($key,$res,180);
    $http = $http .'?key='.$key.'&type=scan&login='.$headerpasscode.'&sign='.$data['sign'];
    $return = array ('status'=>1,'msg'=> $http );
   //  return  $this ->createJsonResponse( $return );
@@ -111,7 +111,7 @@ class QRLoginTwoController extends Controller
 
 /* *
      * Log in after the client scans the code
-     * $sign passes the identification when the client scans the code, and compares it with the memcache
+     * $sign passes the identification when the client scans the code, and compares it with the Memcached
      * $key is the key passed in the QR code on the web page
      * $uid The user id sent by scanning the code after the client logs in
      * @return void
@@ -121,9 +121,9 @@ class QRLoginTwoController extends Controller
       $login=$_GET['login'];//jwt or passcode
        $key = $_GET['key'];
        $sign = $_GET['sign'];
-       $mem = new \Memcache();
-       $mem->connect('127.0.0.1',11211);
-       $data = json_decode($mem->get($key),true); // Remove the value of memcache 
+       $mem = new \Memcached();
+       $mem->addServer('127.0.0.1',11211);
+       $data = json_decode($mem->get($key),true); // Remove the value of Memcached 
        if (empty($data)){
         $return = array ('status'=>2,'msg'=>'expired' );
         return response()->json($return, 200);
@@ -136,11 +136,11 @@ class QRLoginTwoController extends Controller
         //  return  $this ->createJsonResponse( $return );
          return response()->json($return, 403);
     } else {
-         if ($login){ // Mobile phone scan code webpage login, save the user name in memcache
+         if ($login){ // Mobile phone scan code webpage login, save the user name in Memcached
 
             $data['jwt'] = $login ;
              $res = json_encode($data);
-             $mem->set($key,$res,0,180);
+             $mem->set($key,$res,180);
              $return = array('status'=>1,'msg' =>'Login successful' );
             //  return  $this ->createJsonResponse( $return );
              return response()->json($return, 200);
@@ -162,8 +162,8 @@ class QRLoginTwoController extends Controller
      $return = array ('status'=>2,'msg'=>'key not provided' );
      return response()->json($return, 200);
      }
-    $mem = new \Memcache();
-    $mem->connect('127.0.0.1',11211);
+    $mem = new \Memcached();
+    $mem->addServer('127.0.0.1',11211);
     $data = json_decode($mem->get($key),true); 
 //     $passcode=$data['login'];
     if (empty($data)){
@@ -183,7 +183,7 @@ class QRLoginTwoController extends Controller
     }
 }
     // Use passcode to login and return the object in reposne or jWT
-    // extract memcache and the login var jwt/passcode 
+    // extract Memcached and the login var jwt/passcode 
     //use passcode to login and return the jwt
   }
 
