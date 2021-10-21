@@ -165,7 +165,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
        ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
         ->where('sub.status','=','1')
-    ->orderBy('sub.callSign', 'asc')
+    ->orderBy('StationName', 'asc')
     ->groupBy('sub.callSign','StationName','image',$type,'id','sub.genre_name');
 
 
