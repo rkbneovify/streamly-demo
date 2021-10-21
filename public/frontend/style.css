@@ -10739,7 +10739,10 @@ a#navbarDropdownMenuLink:after {
   border-radius: 27px;
   color: #FFFFFF;
 }
-
+.twitter-typeahead {
+  width: 100%;
+  display:block !important;
+}
 .navbar-shrink #search-btn-header{
   background: #1c619e 0% 0% no-repeat padding-box !important;
   border: 1px solid #707070;
