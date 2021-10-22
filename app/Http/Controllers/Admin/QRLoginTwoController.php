@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Memcached;
 use Illuminate\Support\Facades\Auth;
+use JWTAuth;
 class QRLoginTwoController extends Controller
 {
     public  function CreateQrcodeAction(){
@@ -83,7 +84,10 @@ class QRLoginTwoController extends Controller
    $key = $_GET['key'];
    $url =url('');
    $agent = $_SERVER ["HTTP_USER_AGENT"];
-   $headerpasscode = $request->header('userpasscode');
+   $uId=JWTAuth::user()->id;
+  $headerpasscode= HashUserID($uId);
+  //  dd($uId);
+  //  $headerpasscode = $request->header('userpasscode');
   //  if (!(strpos($agent,'MicroMessenger') === false )) {
   //      // Get the version number
   //     //preg_match('/.*?(MicroMessenger\/([0-9.]+))\s*/', $agent, $matches); 
