@@ -177,7 +177,7 @@ width: 100px;
 						 } 
 						 $genr=$options? $options:'Others'; ?>
 						 
-			<div class="col-md-2">
+			<div class="col-md-2 pb-2">
 				
 				<div class="live-news-item">
 					
@@ -186,7 +186,7 @@ width: 100px;
 							@else
 									<a href="{{url('livetv/'.$channeldet->name.'/'.$genr)}}">
 									@endif
-									<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+									<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain' src="../uploads/channellogo/notfound.png"  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
 					<p style=" max-width: 20ch;
 					overflow: hidden;
