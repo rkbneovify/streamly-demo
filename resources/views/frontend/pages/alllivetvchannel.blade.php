@@ -169,7 +169,7 @@ width: 100px;
 			@foreach($pagechannel->chunk(6) as $chunk)
     <div class="row">
         @foreach($chunk as $channeldet)
-				<div class="col-md-2">
+				<div class="col-md-2 pb-2">
 				
 					<div class="live-news-item">
 					
