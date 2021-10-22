@@ -211,7 +211,8 @@ function login_mobile_scan_qrcode(param){
         type: "POST" ,
         dataType: "json" ,
         url: url ,
-        headers: { 'userpasscode': '{{$hashedid}}' },
+        headers: { 'userpasscode': '{{$hashedid}}',
+		'Authorization': "Bearer {{session()->get('jwttoken')}}" },
         data:{
             //key:key
         },
@@ -222,7 +223,7 @@ function login_mobile_scan_qrcode(param){
                 console.log("qrcodeloginurl",qrcodeloginurl);
                 
                   $('#login_mobile_scan_qrcode').text("QR scanned successfully");
-qrcodedoLogin(qrcodeloginurl);
+                     qrcodedoLogin(qrcodeloginurl);
 
             } else  if(data.status==2 ){
                 // error found
