@@ -489,7 +489,7 @@ width: 100px;
 					@foreach ($relatedchannel as $channeldet)
 
 						<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
-						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
+						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'src="../uploads/channellogo/notfound.png"  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 	
 										<p  style=" max-width: 20ch;
 						overflow: hidden;

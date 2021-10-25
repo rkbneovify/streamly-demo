@@ -175,7 +175,7 @@
 							</div>
 
 							<div class="form-group mt-4 text-center">
-									<a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+									<a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
 									<br>
                       <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span>LOG IN WITH QR<span></a>
                       
