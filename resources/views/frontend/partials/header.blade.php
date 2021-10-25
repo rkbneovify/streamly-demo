@@ -34,8 +34,8 @@
                         <a style="background: " class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <span class="dropdown-menu-arrow"></span>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            {{-- <span class="dropdown-menu-arrow"></span> --}}
                             <a class="dropdown-item" href="/account/settings">{{ Auth::user()->name }}</a>
                             <a class="dropdown-item" href="/account/settings">Account Settings</a>
                             <a class="dropdown-item" href="/qrscanner">QR Scanner</a>
