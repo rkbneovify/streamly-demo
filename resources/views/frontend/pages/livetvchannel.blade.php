@@ -510,7 +510,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 		height: 150px;
 		border: 2px solid #FFFFFF;
 		
-	border-radius: 10px;   "><img style=' height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
+	border-radius: 10px;   "><img style=' height: 80%;width: 80%; object-fit: contain' src="../uploads/channellogo/notfound.png" class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
 		{{-- {{$channel->StationName}} --}}
 	</li></a>
 	@endforeach
@@ -564,7 +564,7 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 					@foreach ($relatedchannel as $channeldet)
 
 						<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
-						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
+						<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain' src="../uploads/channellogo/notfound.png"  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 	
 										<p  style=" max-width: 20ch;
 						overflow: hidden;

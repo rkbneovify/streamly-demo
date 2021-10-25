@@ -786,7 +786,7 @@ html.compatible-devices .vibrant-divider {
 					<div class="one-half column">
 							<h4 class="fancy-header" data-i18n="hdtvs-device-title">BUILT-IN CONNECTION</h4>
 							<p data-i18n="hdtvs-device-description">Smart TVs have Streamly already on them—ready for you to watch. There’s no need to add another device.</p>
-							<div class="nrtv-callout-wrapper"> <img class="lazy" data-src="./images/nrtv.png" class="language-invisible-ja" /> <img class="lazy" data-src="./images/nrtv-ja.png" class="language-visible-ja" />
+							<div class="nrtv-callout-wrapper"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="./images/nrtv.png" class="language-invisible-ja" /> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="./images/nrtv-ja.png" class="language-visible-ja" />
 									<p data-i18n="devices-nrtv-callout-text"> Want a smart TV that’s built for a great Streamly experience? Look for smart TVs with the Streamly Recommended TV logo. </p>
 									<p><a href="/en/recommendedtv/2020/" class="button" data-i18n="devices-nrtv-callout-cta" data-cms-original-href="/recommendedtv/2020/">LEARN MORE ▸</a></p>
 							</div>
@@ -876,8 +876,8 @@ html.compatible-devices .vibrant-divider {
 					</div>
 			</div>
 			<div class="device-logos grid-2 country-visible-se"> 
-                <a href="http://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/pc.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-                <a href="http://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/laptop.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+                <a href="https://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/pc.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+                <a href="https://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/laptop.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
                	
 			</div>
 	</div>
