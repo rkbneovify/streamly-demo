@@ -270,7 +270,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
      {   
         $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),'channels.status',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.url","channels.dash_url","channels.smooth_url")
            
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        ->selectRaw(" CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') genrename")
            
            ->leftJoin('gracenotechannels', 'channels.callSign', '=', 'gracenotechannels.CallSign')
            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
