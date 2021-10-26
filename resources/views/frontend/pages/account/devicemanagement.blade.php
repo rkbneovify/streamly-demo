@@ -201,31 +201,48 @@ use Laravel\Cashier\Cashier; ?>
                          </div>
 				
 
+					
 
-				<div class="row setting-cards mt-5">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>Profile Management</li>
-							<li>
-								Email:
-							<span class="pull-right">{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
-							</li>
-							<li>
-								Password:
-								<span class="pull-right">
-									<a href="javascript:void(0)" class="change-password">Change password</a>
-								</span>
-							</li>
+
+						<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
+      <th scope="col" colspan="2" class="text-left pl-4">Profile Management</th>
+      
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+    <tr>
+      <td class="text-left text-md-center">Email:</td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Password:</td>
+      <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
+    </tr>
 							@if ( Auth::user()->subscribed('main'))
-								<li><details>
+				 <tr>
+      <td class="text-left text-md-center text-wrap" colspan="2">
+      <details>
     <summary>Get PassCode for logging in TV</summary>
     {{$hasid}}
-</details></li>
+</details></td>
+    </tr>
 @endif
-						</ul>
-					</div>
-				</div>
-					
+   
+  </tbody>
+</table></ul></div></div>
+
 		</div>
 		
 	</section>
