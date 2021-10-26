@@ -1,5 +1,7 @@
 <?php
-use Laravel\Cashier\Cashier; ?>
+use Laravel\Cashier\Cashier; 
+//dd($plan);
+?>
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
@@ -213,29 +215,46 @@ use Laravel\Cashier\Cashier; ?>
 				
 
 
-				<div class="row setting-cards mt-5">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>Profile Management</li>
-							<li>
-								Email:
-							<span class="pull-right">{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
-							</li>
-							<li>
-								Password:
-								<span class="pull-right">
-									<a href="javascript:void(0)" class="change-password">Change password</a>
-								</span>
-							</li>
+						<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
+      <th scope="col" colspan="2" class="text-left pl-4">Profile Management</th>
+      
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+    <tr>
+      <td class="text-left text-md-center">Email:</td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Password:</td>
+      <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
+    </tr>
 							@if ( Auth::user()->subscribed('main'))
-								<li><details>
+				 <tr>
+      <td class="text-left text-md-center text-wrap" colspan="2">
+      <details>
     <summary>Get PassCode for logging in TV</summary>
     {{$hasid}}
-</details></li>
+</details></td>
+    </tr>
 @endif
-						</ul>
-					</div>
-				</div>
+   
+  </tbody>
+</table></ul></div></div>
+
+
 				@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->cancelled())
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">
@@ -256,39 +275,66 @@ use Laravel\Cashier\Cashier; ?>
 				</div>
 				
 				@elseif (Auth::user()->subscribed('main')) 
-				<div class="row setting-cards mt-5">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>
-								Current Pack
-								<b><span class="pull-right">		{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</span></b>
-							</li>
-							<li>
-								{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}
-								<b><span class="pull-right">{{$subscription->created_at ?? ''}}</span></b>
-							</li>
-							<li>
-								Payment method 
-								{{-- {{$subscription}} --}}
-								<b><span class="pull-right">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></span></b>
-								
-							</li>
-							<li>
-								<a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="row setting-cards mt-5">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>
-								Invoice
-								<b><span class="pull-right">Download</span></b>
-							</li>
-							@foreach ($invoices as $invoice)
-							<li>
-								<?php if ($invoice->date)
+
+
+<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
+      <th scope="col" class="text-left pl-4 text-md-center">Current Pack</th>
+      <th scope="col" class="text-md-center">{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</th>
+      
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+    <tr>
+      <td class="text-left text-md-center">{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
+      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Payment method:</td>
+      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+					
+				 <tr class=" text-md-center text-wrap">
+      <td>
+        <a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a></td>
+    </tr>
+
+   
+  </tbody>
+</table></ul></div></div>
+
+<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
+      <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
+      <th scope="col" class="text-left text-md-center">Download</th>
+      
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+  @foreach ($invoices as $invoice)
+  							<?php if ($invoice->date)
 {
     $invoicedate = date('M d, Y', $invoice->date);
 }
@@ -296,41 +342,21 @@ else
 {
     $invoicedate = '';
 } ?>
-								{{-- {{$invoice}} --}}
-								{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}
-								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
-								{{-- {{$subscription}} --}}
-								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a> 
-									{{-- <a href="/user/invoice/{{ $invoice->id }}">Download se</a> --}}
-								</span></b>
-								
-							</li>
-							@endforeach
-						</ul>
-					</div>
-				</div>
-				@else
-				<div class="row setting-cards mt-5">
-					<div class="col-centered col-md-8">
-						<ul class="setting-card">
-							<li>
-								Current Pack
-								<b><span class="pull-right">		No Plan Selected</span></b>
-							</li>
-							
-							<li>
-								Select Plan
-								{{-- {{$subscription}} --}}
-								<b><span class="pull-right"><a  href="/selectplan">Select plan</a></span></b>
-								
-							</li>
-						</ul>
-					</div>
-				</div>
+  <tr>
+      <td class="text-left text-md-center">{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}</td>
+      <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a></td>
+    </tr>
+  @endforeach
+    
+   
+  </tbody>
+</table></ul></div></div>
+
         @endif
 				
 		</div>
 		
 	</section>
+	<section></section>
 	
 @endsection
