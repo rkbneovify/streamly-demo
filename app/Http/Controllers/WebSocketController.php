@@ -101,12 +101,6 @@ if($type=='client'){
                 $ee=$this->cache[$theuuid]; 
                 // print_r($ee);
                 if($ee['status']=='0'){
-                    // &$this->cache[$uuid] = [ 'status'=> 0, 'parent'=> $from ];
-                    // $this->cache[$theuuid] = [ ...$ee,'status'=> 1, 'child'=> $from ];
-                    // array_merge($ee,[,'status'=> 1, 'child'=> $from ]);
-                    // unset($this->cache[$theuuid]);
-                    
-                    // $this->cache[$theuuid] = [ $ee,'status'=> 1, 'child'=> $from];
                     $this->cache[$theuuid]['status'] = 1;
                     $this->cache[$theuuid] += ['child' => $from];
                     $myArray2[] = (object) ['step' => 1];
@@ -181,23 +175,6 @@ if($type=='client'){
             
     }
 }
-// if($obj->op=='hello'){
-//     // $uuidToken=uniqid();
-//     $uuidToken=$from->resourceId;
-//     // $uuidToken=hash('md5', $from->resourceId);
-//     $hello = new \SplObjectStorage();
-//     $hello->op='hello';
-//     $hello->token=$uuidToken;
-//     $from->send(json_encode($hello));
-//     // hash('md5', 'Welcome to Tutorialspoint');    
-
-// }
-        // foreach ($this->clients as $client) {
-        //     if ($from !== $client) {
-        //         // The sender is not the receiver, send to each client connected
-        //         $client->send($msg);
-        //     }
-        // }
     }
 
     public function qrauth() {
