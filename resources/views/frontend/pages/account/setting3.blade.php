@@ -1,6 +1,6 @@
 <?php
 use Laravel\Cashier\Cashier; 
-//dd($plan);
+//dd($invoices->data[0]);
 ?>
 @extends('frontend/partials/master')
 
@@ -275,7 +275,53 @@ use Laravel\Cashier\Cashier;
 				</div>
 				
 				@elseif (Auth::user()->subscribed('main')) 
+@if (!empty($plan->tiers))
 
+<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
+      <th scope="col" class="text-left pl-4 text-md-center">Current Pack</th>
+      <th scope="col" class="text-md-center"><details>
+						<summary>
+							<h3>Tiers {{$plan->interval_count}} {{$plan->interval}}</h3></summary>
+       @component('components.tiertable',['singlePlansDetail' => $plan,'type'=>'tiered'])
+		
+		@endcomponent</th>
+      
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+    <tr>
+      <td class="text-left text-md-center">{{$plan->nickname ?? ''}}
+ {{"with ".$subscription->quantity ." quantity" ?? ''}} {{Cashier::formatAmount($invoices->data[0]->total??'0', $invoices->data[0]->currency??'USD') }}
+	per {{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</td>
+      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Payment method:</td>
+      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+    </tr>
+					
+				 <tr class=" text-md-center text-wrap">
+      <td>
+        <a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a></td>
+    </tr>
+
+   
+  </tbody>
+</table></ul></div></div>
+
+@else
 
 <div class="row setting-cards mt-5">
 				<div class="col-centered col-md-8 ">
@@ -313,6 +359,9 @@ use Laravel\Cashier\Cashier;
    
   </tbody>
 </table></ul></div></div>
+
+
+@endif
 
 <div class="row setting-cards mt-5">
 				<div class="col-centered col-md-8 ">
