@@ -18,10 +18,15 @@
 
 	
 <style>
+
     nav#mainNav {
         background-color: #004E92;
     }
-
+*,
+*::before,
+*::after {
+   box-sizing: content-box !important; 
+}
     
 </style>
 
