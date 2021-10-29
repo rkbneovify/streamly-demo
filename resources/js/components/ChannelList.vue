@@ -465,7 +465,7 @@ export default {
     }
     .channel__list__section .channel__header {
         flex-direction: column;
-        height: 40px;
+        height: 40px !important;
     }
     .channel__list__section>div {
         flex-direction: column
