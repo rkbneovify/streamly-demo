@@ -10868,7 +10868,7 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
   font: Regular 14px/70px Poppins;
   letter-spacing: 0.17px;
   color: #CCCCCC;
-  text-align: right;
+  /* text-align: right; */
 }
 
 .has-search .form-control {
