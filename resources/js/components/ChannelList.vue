@@ -42,10 +42,10 @@
 							text-overflow: ellipsis;">{{channel.channelTitle}}</div>
                         <div v-bind:index="index" style="font-size:0.8em;font-weight:bold;color: #4085ce;">{{channel.channelStbNumber}}</div>
                     </div>
-                    <div v-bind:index="index" v-bind:key="channel.CallSign+'fav'" class="favourite" @click.stop="onFavouriteClick(channel)">
-                        <span v-show="favouriteListComputed.indexOf(channel.channelId) != -1">♥</span>
-                        <span v-show="favouriteListComputed.indexOf(channel.channelId) == -1">♡</span>
-                    </div>
+                    <div class="favourite"></div>
+                    <div class="Aligner-item Aligner-item--top" v-bind:index="index" v-bind:key="channel.CallSign+'fav'" @click.stop="onFavouriteClick(channel)"> 
+                    <span v-show="favouriteListComputed.indexOf(channel.channelId) != -1">♥</span>
+                        <span v-show="favouriteListComputed.indexOf(channel.channelId) == -1">♡</span></div>
                 </div>
             </div>
 
@@ -301,6 +301,8 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+     position: relative;
 }
 
 .channel__list__section .favourite {
@@ -316,6 +318,16 @@ export default {
     font-size: 0.8em;
     background-color: #333;
     color: #4085ce;
+}
+
+
+.Aligner-item--top {
+  align-self: flex-start;
+  right: 0; /* new */
+  top: 0; /* new */
+  position: absolute; /* new */
+  font-size: 1.5em;
+    color: rgb(231, 9, 98);
 }
 
 .channel__header .active {
@@ -474,6 +486,11 @@ export default {
         display: block;
         text-align: center
     }
+       .channel__list__section .favourite {
+    font-size: 1.0em !important;
+    color: rgb(231, 9, 98);
+    text-align: center;
+}
     /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/
     .programme__header .header__time {
         flex: 0 0 180px;
