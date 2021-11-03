@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Pages\Account;
-
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -191,42 +191,15 @@ class Setting extends Controller
     }
 
     public function sessiondestroy($id,Request $request)
-    {   $input=$request->only('access_token');
+     {   $input=$request->only('access_token');
         $tokenString=$input['access_token'];
-        $myarr=[];
-        array_push($myarr,$id );  
-       // print_r($myarr);
-        $user= SessionTable::whereIn('id', $myarr)->update(['status' => 0,'modified_on' => Carbon::now()]);
-        SessionTable::where([
-        ['status', '=', '1'],
-        ['connected_devices', '!=', '1'],
-         ])
-->update([
-    'connected_devices' => DB::raw('`connected_devices` - 1 ')
-]);
-//print_r($user); exit;
-config([
-  'jwt.blacklist_enabled' => true
-]);
-// JWTAuth::parseToken()->invalidate();
-try {
-JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceForever = false);
-}catch (Exception $e) {
-    return redirect()->back()->with('message','Exception occured '.$e->getMessage().'');
-}catch (JWTException $e){
-    return redirect()->back()->with('message',''.$e->getMessage().'');
-}
 
-        
-         if($user){
+    $request->headers->set('Authorization', 'Bearer '.$tokenString);
+        $dataresponse_code=LogoutandDecrementDevice($id);
+        if($dataresponse_code){
             return redirect()->back()->with('message','Device Session Deleted Successfully');
-                      
-        
-        }else{
-            return redirect()->back()->with('message','Device Session Not found');
-            
         }
-
+        return redirect()->back()->with('message','Device Session Not found');
         
     }
 
