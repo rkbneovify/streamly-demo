@@ -38,7 +38,11 @@ class LoginPassocodeViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
-                if let removeKeyAvailAble = data.data {
+                if data.response_code == 401 {
+                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                    Utility.logOut()
+                    return
+                } else if let removeKeyAvailAble = data.data {
                     weak.removeIdKey = removeKeyAvailAble
                 }
                 print(data.message ?? "")

@@ -130,8 +130,8 @@ open class ApiCall {
 
     @discardableResult
     public static func getQRDataForLogin(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
-        //let headers = ["Accept": "application/json","User-Agent": userAgent]
-        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.generateQrForLogin.rawValue, method: .post, headers: nil, parameters: nil)
+        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.generateQrForLogin.rawValue, method: .post, headers: headers, parameters: nil)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
     

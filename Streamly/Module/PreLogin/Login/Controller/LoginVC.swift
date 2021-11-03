@@ -281,8 +281,18 @@ extension LoginVC
                         }
                     }
 
+                } else if response.success?.success == false {
+                    selfStrong.showSimpleAlertWithMessage(response.success?.message ?? "")
                 } else if let failureResponse = response.failure {
-                    selfStrong.openAlertForRemoveId(id: failureResponse.data ?? "")
+                    if failureResponse.response_code == 401 { // token expired
+                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                        Utility.logOut()
+                        return
+                    } else if let data = failureResponse.data { // check session exist.
+                        selfStrong.openAlertForRemoveId(id: data)
+                    } else {
+                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
+                    }
                 } else {
                     guard let error = errorMessage else{return}
                     selfStrong.showSimpleAlertWithMessage(error)

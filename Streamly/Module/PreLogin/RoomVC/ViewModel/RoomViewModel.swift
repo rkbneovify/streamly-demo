@@ -48,6 +48,12 @@ class RoomViewModel: NSObject {
             weak.delegate?.reloadDataChange()
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) , failedData.response_code == 401 {
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+                Switcher.updateRootVC()
+                return
+            }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
                 weak.delegate?.apiFailure(data.message ?? "", data.responseCode ?? 0)
             }
@@ -62,6 +68,12 @@ class RoomViewModel: NSObject {
             weak.delegate?.apiSuccess()
         } failure: {[weak self] error, data, status in
             guard let weak = self else { return }
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) , failedData.response_code == 401 {
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+                Switcher.updateRootVC()
+                return
+            }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
                 weak.delegate?.apiFailure(data.message ?? "",data.responseCode ?? 0)
             }
