@@ -82,6 +82,19 @@ extension UIViewController
         }
        
     }
+
+  func showAlert(withMessage message: String, setTwoButton: Bool? = false , setFirstButtonTitle: String? = "Ok" , setSecondButtonTitle: String? = "No" , handler: ((UIAlertAction) -> Void)?) {
+
+        let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
+
+        if (setTwoButton == true) {
+            alert.addAction(UIAlertAction(title: setSecondButtonTitle, style: .default, handler:nil))
+        }
+        alert.addAction(UIAlertAction(title: setFirstButtonTitle, style: .default, handler:{ (action) in
+            handler!(action)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     func showSimpleAlertWithMessage(_ message: String) {
         DispatchQueue.main.async {
@@ -91,6 +104,7 @@ extension UIViewController
             self.present(alert, animated: true, completion: nil)
         }
     }
+
     class var storyboardID : String {
         return "\(self)"
     }

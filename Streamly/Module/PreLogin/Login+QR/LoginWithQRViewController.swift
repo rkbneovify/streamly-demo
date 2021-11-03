@@ -53,13 +53,17 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
-                if let room = data.rooms {
+                if  data.userrole == "tieruser"{
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                    openSearchVC(room: room)
-                } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-                    Switcher.updateRootVC()
-                } else {
+                    if let room = data.rooms {
+                        openSearchVC(room: room)
+                    }
+                    else {
+                        Switcher.updateRootVC()
+                    }
+                }
+                else {
                     Switcher.updateRootVC()
                 }
             }
@@ -69,7 +73,10 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     }
     
     func apiFailed(_ message: String) {
-        //showSimpleAlertWithMessage(message)
+        self.timer.invalidate()
+        self.showAlert(withMessage: message, handler: {_ in 
+            self.navigationController?.popViewController(animated: true)
+        })
     }
     
     
