@@ -93,7 +93,6 @@ class Constant: NSObject
     {
         Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
         Utility.logOut()
-        Switcher.updateRootVC()
     }
 
     class func fetchPixel() -> String
@@ -122,7 +121,7 @@ class Constant: NSObject
 
     static let drmRequestURL = "https://fp-keyos.licensekeyserver.com/getkey"
     static let drmCertificateURL = "https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der"
-    //static let baseURL = "https://streamlytv.com/api/"
-    static let baseURL = "https://streamlytest.streamlytv.com/api/"
+    static let baseURL = "https://streamlytv.com/api/"
+//    static let baseURL = "https://streamlytest.streamlytv.com/api/"
   
 }

@@ -272,7 +272,7 @@ extension LoginVC
                         //                        })
                     }
                     else {
-                        if let room = response.success?.rooms {
+                        if let room = response.success?.rooms, response.success?.userrole != "user" {
                             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
                             selfStrong.openSearchVC(room: room)
@@ -281,8 +281,24 @@ extension LoginVC
                         }
                     }
 
+                } else if response.success?.success == false {
+                    if let data = response.success?.data { // check session exist.
+                        selfStrong.openAlertForRemoveId(id: data)
+                    } else {
+                        selfStrong.showSimpleAlertWithMessage(response.success?.message ?? "")
+                    }
                 } else if let failureResponse = response.failure {
-                    selfStrong.openAlertForRemoveId(id: failureResponse.data ?? "")
+                    if failureResponse.response_code == 401 { // token expired
+                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                        Utility.logOut()
+                        return
+                    } else if failureResponse.response_code == 402 {
+                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
+                    } else if let data = failureResponse.data { // check session exist.
+                        selfStrong.openAlertForRemoveId(id: data)
+                    } else {
+                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
+                    }
                 } else {
                     guard let error = errorMessage else{return}
                     selfStrong.showSimpleAlertWithMessage(error)

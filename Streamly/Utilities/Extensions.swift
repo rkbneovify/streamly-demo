@@ -156,7 +156,6 @@ extension UIViewController
             return ""
         }
     }
-
 }
 //MARK:- String extension
 extension String

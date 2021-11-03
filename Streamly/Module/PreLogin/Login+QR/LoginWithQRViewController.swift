@@ -36,11 +36,12 @@ class LoginWithQRViewController: UIViewController {
 }
 
 // MARK: - LoginWithQRDelegate
+// MARK: - LoginWithQRDelegate
 extension LoginWithQRViewController: LoginWithQRDelegate {
     func apiSuccess() {
-        
+
     }
-    
+
     func apiSuccessWithData<T>(data: T) {
         if let data = data as? QRModel { // Get QR Image Response
             self.qrImageView.sd_setImage(with: URL(string: data.msg ?? ""), placeholderImage: UIImage(named: "dummyQR"))
@@ -53,17 +54,15 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
-                if  data.userrole == "tieruser"{
+                if let removIdKey = data.data {
+                    self.openAlertForRemoveId(id: removIdKey)
+                } else if let room = data.rooms, data.userrole != "user" {
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                    if let room = data.rooms {
-                        openSearchVC(room: room)
-                    }
-                    else {
-                        Switcher.updateRootVC()
-                    }
-                }
-                else {
+                    openSearchVC(room: room)
+                } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
+                    Switcher.updateRootVC()
+                } else {
                     Switcher.updateRootVC()
                 }
             }
@@ -71,15 +70,12 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
             self.openAlertForRemoveId(id: data.data ?? "")
         }
     }
-    
+
     func apiFailed(_ message: String) {
-        self.timer.invalidate()
-        self.showAlert(withMessage: message, handler: {_ in 
-            self.navigationController?.popViewController(animated: true)
-        })
+        //showSimpleAlertWithMessage(message)
     }
-    
-    
+
+
 }
 
 // MARK: - UI Logics
