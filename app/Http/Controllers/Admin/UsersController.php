@@ -17,6 +17,7 @@ use JWTAuth;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Yajra\DataTables\DataTables;
+use App\HotelRoomTable;
 
 class UsersController extends Controller
 {     
@@ -320,6 +321,12 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
              ->update([
                'connected_devices' => DB::raw('`connected_devices` - 1 ')
                ]);
+               $hotelroomcount = HotelRoomTable::whereIn('session_id', $ids)->count();
+                if ($hotelroomcount>0) {
+                  HotelRoomTable::whereIn('session_id', $ids)->update([
+                        'session_id' => null
+                    ]);
+                  }
             if($sessionRemove){
                 if(!$q){
              return response()->json(['message'=>"User Session Deleted Successfully.".$q,'jwterror'=>$r],200);
