@@ -169,12 +169,15 @@ function LogoutandDecrementDevice($user_id){
       'jwt.blacklist_enabled' => true
   ]);
     JWTAuth::parseToken()->invalidate();
+    if(request()->wantsJson()){
       return response()->json([
         'response_code'=>200,
         'success' => true,
         'message'=>'logged out successful',
         
       ],200)->send();
+    }else{ return true;}
+      
     
      
 }
