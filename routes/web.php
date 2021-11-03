@@ -19,18 +19,18 @@ Auth::routes();
 Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/homecache', 'HomeController@indexCache');
-Route::get('/checkzip', 'HomeController@checkzipView');
+Route::get('/checkzip', 'HomeTwoController@checkzipView');
 Route::get('/tags', function() {
     return view('frontend.mydata2');
 });
-Route::get('/tags/find', 'HomeController@find');
+Route::get('/tags/find', 'HomeTwoController@find');
 
-Route::get('search', 'HomeController@search')->name('search');
-Route::get('mydata', 'HomeController@mydata')->name('mydata');//infinite scroll
-Route::get('search2', 'HomeController@search2')->name('search2');
-Route::get('dataforselect2', 'HomeController@getdataforselect22')->name('dataforselect2');
-Route::get('dataforselectuser', 'HomeController@getdataforselectUser')->name('dataforselectuser');
-Route::get('autocomplete', 'HomeController@autocomplete')->name('autocomplete');
+Route::get('search', 'HomeTwoController@search')->name('search');
+Route::get('mydata', 'HomeTwoController@mydata')->name('mydata');//infinite scroll
+Route::get('search2', 'HomeTwoController@search2')->name('search2');
+Route::get('dataforselect2', 'HomeTwoController@getdataforselect22')->name('dataforselect2');
+Route::get('dataforselectuser', 'HomeTwoController@getdataforselectUser')->name('dataforselectuser');
+Route::get('autocomplete', 'HomeTwoController@autocomplete')->name('autocomplete');
 
 
 
@@ -150,20 +150,20 @@ Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 
 });
 
-Route::get('add-to-log', 'HomeController@myTestAddToLog');
+Route::get('add-to-log', 'HomeTwoController@myTestAddToLog');
 
-Route::get('logActivity', 'HomeController@logActivity');
-
-
+Route::get('logActivity', 'HomeTwoController@logActivity');
 
 
-Route::get('/logout', 'HomeController@logout')->name('logout');
-Route::get('/login/google', 'HomeController@rediretToGoogleLogin')->name('google.login');
 
-Route::get('/google/login', 'HomeController@handleGoogleCallback');
-Route::post('/user/register', 'HomeController@createUser');
-Route::post('/user/contactformsend', 'HomeController@contactformsend');
-Route::post('/user/checkzipafterlogin', 'HomeController@checkzipAfterGoogleLogin');
+
+Route::get('/logout', 'HomeTwoController@logout')->name('logout');
+Route::get('/login/google', 'HomeTwoController@rediretToGoogleLogin')->name('google.login');
+
+Route::get('/google/login', 'HomeTwoController@handleGoogleCallback');
+Route::post('/user/register', 'HomeTwoController@createUser');
+Route::post('/user/contactformsend', 'HomeTwoController@contactformsend');
+Route::post('/user/checkzipafterlogin', 'HomeTwoController@checkzipAfterGoogleLogin');
 
 Route::post('/forgotpassword', 'Auth\ForgotPasswordController@webgetResetToken');
 Route::get('/invoice', 'Pages\Account\Setting@invoice');
