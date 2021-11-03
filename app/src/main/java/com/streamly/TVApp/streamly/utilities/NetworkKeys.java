@@ -8,8 +8,10 @@ public class NetworkKeys {
     public static final String KEY_CONTENT_TYPE ="Accept: application/json";
     public static final String KEY_STATUS ="Status";
     public static final String KEY_AUTH="Authorization";
+    public static final String KEY_USER_AGENT="User-Agent";
     public static final String KEY_ACCEPT="Accept";
     public static final String KEY_EMAIL="email";
+    public static final String KEY="key";
     public static final String KEY_PASSCODE="passcode";
     public static final String KEY_CHANNELIDS="channelids";
     public static final String KEY_PASS ="password";

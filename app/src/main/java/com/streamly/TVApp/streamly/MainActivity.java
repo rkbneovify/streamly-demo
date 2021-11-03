@@ -1,5 +1,6 @@
 package com.streamly.TVApp.streamly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
 import com.streamly.TVApp.streamly.epg.channel.ChannelFragment;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
+import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.search_channels.SearchActivity;
@@ -63,6 +68,7 @@ private TextView settingText,goBackText;
         authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
          Log.e(TAG,"authToken "+authToken);
+         Log.i(TAG,"authToken "+authToken);
 
         FirebaseCrashlytics.getInstance().log("Test Crash in the Main Activity");
         // Obtain the FirebaseAnalytics instance.
@@ -80,6 +86,7 @@ private TextView settingText,goBackText;
 
 
 
+
     }
 
     private void getRecentList() {
@@ -90,7 +97,7 @@ private TextView settingText,goBackText;
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
                         recentList = response.body().getData();
                         Log.e(TAG, "onResponse: recent list "+response.body().getData() );
@@ -100,7 +107,15 @@ private TextView settingText,goBackText;
 
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(MainActivity.this, response.body().getMessage());
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                            CommonUtility.showToast(MainActivity.this, errorResponseModel.getMessage());
+                            finish();
+
+
+                        }
 
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(MainActivity.this);
@@ -109,6 +124,11 @@ private TextView settingText,goBackText;
 
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+
+                    }
+                    else if(response.code() == 402){
+
+                            CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
 
                     }
                 } catch (Exception ex) {
@@ -143,7 +163,7 @@ private TextView settingText,goBackText;
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401)  {
 
                         List<Datum> datumList = response.body().getData();
                         Log.e(TAG, "onResponse: all "+response.body().getData() );
@@ -198,8 +218,19 @@ private TextView settingText,goBackText;
 
 
 
-                    } else if (response.code() == 401) {
-                        CommonUtility.showToast(MainActivity.this, response.body().getMessage());
+                    }
+                    else if (response.code() == 401) {
+
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(MainActivity.this);
+                            startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                            CommonUtility.showToast(MainActivity.this, errorResponseModel.getMessage());
+                            finish();
+
+
+                        }
+
 
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(MainActivity.this);
@@ -208,6 +239,11 @@ private TextView settingText,goBackText;
 
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+
+                    }
+                    else if(response.code() == 402){
+
+                        CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
 
                     }
                 } catch (Exception ex) {
@@ -336,7 +372,6 @@ private TextView settingText,goBackText;
 
             case R.id.setting_text:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                finish();
                 break;
 
             case R.id.go_back_text:

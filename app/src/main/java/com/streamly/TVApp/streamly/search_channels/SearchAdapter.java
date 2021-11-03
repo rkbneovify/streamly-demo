@@ -101,7 +101,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 //                            searchActivity.hideEmptyView();
                         } else {
                             Log.e("SearchAdapter", "::>>>no data found...");
-                            CommonUtility.showToast(context, context.getString(R.string.no_data_found));
+//                            CommonUtility.showToast(context, context.getString(R.string.no_data_found));
                         }
                     }
                 } catch (Exception e) {

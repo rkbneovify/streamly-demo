@@ -81,7 +81,7 @@ public class SignOutDialog extends Dialog {
             public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {
                 try{
 
-                    if (response.isSuccessful() && response.body()!=null){
+                    if (response.isSuccessful() && response.body()!=null && response.code()!=401){
                         CommonUtility.showToast(context,response.body().getMessage());
                         TokenStorage.clearSharedToken(context);
                         context.startActivity(new Intent(context, LogInActivity.class));

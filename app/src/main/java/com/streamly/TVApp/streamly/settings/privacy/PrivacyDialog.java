@@ -11,9 +11,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
@@ -67,15 +70,20 @@ public class PrivacyDialog extends Dialog {
             @Override
             public void onResponse(Call<PrivacyPolicyModel> call, Response<PrivacyPolicyModel> response) {
                 try {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
                         String policyData= response.body().getData();
                         tvPrivacy.setText(policyData);
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(context, response.body().getMessage());
-                        TokenStorage.clearSharedToken(context);
-                        context.startActivity(new Intent(context, LogInActivity.class));
-                        ((Activity) context).finish();
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(context);
+                            context.startActivity(new Intent(context, LogInActivity.class));
+                            CommonUtility.showToast(context, errorResponseModel.getMessage());
+                            ((Activity) context).finish();
+
+
+                        }
                     }else if (response.code()==404){
 
                         TokenStorage.clearSharedToken(context);

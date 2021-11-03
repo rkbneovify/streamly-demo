@@ -147,20 +147,45 @@
 
             <Button
                 android:id="@+id/btn_login_using_passcode_uses"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginLeft="@dimen/_3sdp"
-                android:background="@drawable/register_background"
-                android:fontFamily="@font/helvetica_neue_medium"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:fontFamily="@font/helvetica_neue_bold"
                 android:padding="@dimen/_2sdp"
                 android:text="@string/login_using_passcode"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@drawable/register_background"
+                android:textColor="@color/color_white"
+                android:background="@drawable/signin_focused"
                 android:textSize="@dimen/_6ssp" />
 
 
 
+
+
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/btn_hotel_sign_in"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:background="@drawable/signin_focused"
+                android:fontFamily="@font/helvetica_neue_bold"
+                android:padding="@dimen/_2sdp"
+                android:text="@string/hotelSignIn"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/_7ssp"
+                android:visibility="visible" />
 
 
 
@@ -217,20 +242,7 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_hotel_sign_in"
-            android:layout_width="@dimen/_160sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@drawable/signin_focused"
-            android:fontFamily="@font/helvetica_neue_bold"
-            android:padding="@dimen/_2sdp"
-            android:text="@string/hotelSignIn"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/_7ssp"
-            android:visibility="gone" />
+
 
     </LinearLayout>
 </LinearLayout>

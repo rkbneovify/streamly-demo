@@ -1,8 +1,11 @@
 package com.streamly.TVApp.streamly.retrofit_clients;
 
+import com.streamly.TVApp.streamly.QRCode.HotelQRModel;
+import com.streamly.TVApp.streamly.QRCode.QRScanStatusModel;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel;
+import com.streamly.TVApp.streamly.model.CheckDeviceType;
 import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
@@ -36,12 +39,12 @@ public interface ApiInterface {
 
     @Headers("Accept: application/json")
     @POST("/api/auth/login")
-    Call<NewLogInModel> postLogInCall(@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASS) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+    Call<NewLogInModel> postLogInCall(@Header(NetworkKeys.KEY_USER_AGENT) String userAgent,@Query(NetworkKeys.KEY_EMAIL) String user_email, @Query(NetworkKeys.KEY_PASS) String user_password, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
 
 
     @Headers("Accept: application/json")
     @POST("/api/auth/login-with-passcode")
-    Call<NewLogInModel> postLoginUsingPasscode(@Query(NetworkKeys.KEY_PASSCODE) String passcode, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
+    Call<NewLogInModel> postLoginUsingPasscode(@Header(NetworkKeys.KEY_USER_AGENT) String userAgeny,@Query(NetworkKeys.KEY_PASSCODE) String passcode, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceid);
 
 
     @Headers("Accept: application/json")
@@ -68,6 +71,11 @@ public interface ApiInterface {
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/connecteddevice")
     Call<ConnectedDeviceModel> getConnectedDevice(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    @Headers(NetworkKeys.KEY_CONTENT_TYPE)
+    @GET("/api/auth/check")
+    Call<CheckDeviceType> getDeviceType(@Header(NetworkKeys.KEY_USER_AGENT) String userAgent);
+
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET(NetworkKeys.KEY_SUPPORT)
@@ -101,7 +109,7 @@ public interface ApiInterface {
 
 //    @Headers("User-Agent: iphone")
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
-    Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+    Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     /*@Headers("Accept: application/json")
     @GET("channeldayschdeule")//api/auth/channeldayschdeule
@@ -129,6 +137,18 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @GET("/api/qrcode")
     Call<QrModel> getQrCode();
+
+    @Headers("Accept: application/json")
+    @POST("/api/login/create/qrcode")
+    Call<HotelQRModel> getHotelQrCode();
+
+    @Headers("Accept: application/json")
+    @POST("/api/login/scan/qrcode")
+    Call<QRScanStatusModel> getQrCodeScanStatus(@Query(NetworkKeys.KEY) String key);
+
+    @Headers("Accept: application/json")
+    @POST("/api/login/entry/login")
+    Call<NewLogInModel> getHotelLogin(@Header(NetworkKeys.KEY_USER_AGENT) String userAgent,@Query(NetworkKeys.KEY) String key, @Query(NetworkKeys.KEY_DEVICE_ID) String deviceID);
 
 //    http://ip-api.com/json/23.119.88.145
 //    http://ip-api.com/json/['your ip']

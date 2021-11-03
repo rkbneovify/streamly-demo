@@ -13,6 +13,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
@@ -36,7 +37,7 @@ public class SignOutDeviceWithPasscodeDialog extends Dialog {
     private Button btnNo,btnYes;
     private ProgressDialog dialog;
     String deviceId="";
-
+    String userAgent;
     String passcode="";
     String newDeviceId="";
 
@@ -56,6 +57,7 @@ public class SignOutDeviceWithPasscodeDialog extends Dialog {
         setContentView(R.layout.dialog_device_signout_with_passcode);
         CommonUtility.checkInternetConnection(context);
         dialog= CommonUtility.custom_loader(context);
+        userAgent = System.getProperty("http.agent");
 
         initViews();
 
@@ -132,7 +134,7 @@ public class SignOutDeviceWithPasscodeDialog extends Dialog {
     private void loginAgainWithPasscode() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClientTesting().create(ApiInterface.class);
-        Call<NewLogInModel> call=apiInterface.postLoginUsingPasscode(passcode,newDeviceId);
+        Call<NewLogInModel> call=apiInterface.postLoginUsingPasscode(userAgent,passcode,newDeviceId);
         call.enqueue(new Callback<NewLogInModel>() {
             @Override
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
@@ -140,7 +142,11 @@ public class SignOutDeviceWithPasscodeDialog extends Dialog {
                     Log.e(TAG, "resCode "+response.code());
                     Log.e(TAG, "resCode "+response.code());
                     if (response.isSuccessful() && response.body()!=null && response.code()!=429){
+
+
                         String access_token=response.body().getAccessToken();
+                        if(response.body().getUserRole().equals("tieruser"))
+                        {
                         Long userId=response.body().getUser().getId();
                         Log.i(TAG, "onResponse: LoginUsingPasscode 1 "+access_token);
                         Log.i(TAG, "onResponse: LoginUsingPasscode 2 "+userId);
@@ -159,7 +165,13 @@ public class SignOutDeviceWithPasscodeDialog extends Dialog {
                         ((Activity)context).finish();
 
 
-
+                    }
+                    else if(response.body().getUserRole().equals("user")) {
+                        CommonUtility.showToast(context,response.body().getMessage());
+                        TokenStorage.savedSharedToken(context, ConstantUtility.AUTH_TOKEN, access_token);
+                        context.startActivity(new Intent(context, MainActivity.class));
+                        ((Activity)context).finish();
+                    }
 
                     }
                     else if (response.code()==401){

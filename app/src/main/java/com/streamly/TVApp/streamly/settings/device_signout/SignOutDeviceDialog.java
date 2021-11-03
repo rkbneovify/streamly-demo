@@ -13,6 +13,7 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
@@ -39,6 +40,7 @@ public class SignOutDeviceDialog extends Dialog {
     String userName="";
     String userPassword="";
     String newDeviceId="";
+    String userAgent;
 
     public SignOutDeviceDialog(@NonNull Context context, String deviceId,String userName, String userPassword,String newDeviceId) {
         super(context);
@@ -57,7 +59,7 @@ public class SignOutDeviceDialog extends Dialog {
         setContentView(R.layout.dialog_device_signout);
         CommonUtility.checkInternetConnection(context);
         dialog= CommonUtility.custom_loader(context);
-
+        userAgent = System.getProperty("http.agent");
         initViews();
 
 
@@ -133,7 +135,7 @@ public class SignOutDeviceDialog extends Dialog {
     private void loginAgain() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<NewLogInModel> call=apiInterface.postLogInCall(userName,
+        Call<NewLogInModel> call=apiInterface.postLogInCall(userAgent,userName,
                 userPassword,newDeviceId);
         call.enqueue(new Callback<NewLogInModel>() {
             @Override
@@ -154,22 +156,34 @@ public class SignOutDeviceDialog extends Dialog {
 //                    edPassword.setText("");
 
                         String access_token=response.body().getAccessToken();
-                        Long userId=response.body().getUser().getId();
-                        Log.i(TAG, "onResponse: LoginUsingPasscode 1 "+access_token);
-                        Log.i(TAG, "onResponse: LoginUsingPasscode 2 "+userId);
+
+
+                        if(response.body().getUserRole().equals("tieruser"))
+                        {
+                            Long userId=response.body().getUser().getId();
+                            Log.i(TAG, "onResponse: LoginUsingPasscode 1 "+access_token);
+                            Log.i(TAG, "onResponse: LoginUsingPasscode 2 "+userId);
 //                        ArrayList<Room> set = new ArrayList<>();
 //                        set.addAll(response.body().getRooms());
-                        Gson gson = new Gson();
-                        String json = gson.toJson(response.body().getRooms());
+                            Gson gson = new Gson();
+                            String json = gson.toJson(response.body().getRooms());
 
-                        TokenStorage.savedRoomList(context, ConstantUtility.ROOM_LIST,json);
-                        TokenStorage.savedSharedToken(context, ConstantUtility.USER_ID,userId.toString());
-                        TokenStorage.savedSharedTokenPassCode(context, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                        CommonUtility.showToast(context,response.body().getMessage());
+                            TokenStorage.savedRoomList(context, ConstantUtility.ROOM_LIST,json);
+                            TokenStorage.savedSharedToken(context, ConstantUtility.USER_ID,userId.toString());
+                            TokenStorage.savedSharedTokenPassCode(context, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
+                            CommonUtility.showToast(context,response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                        context.startActivity(new Intent(context, UserRoomActivity.class));
-                        ((Activity)context).finish();
+                            context.startActivity(new Intent(context, UserRoomActivity.class));
+                            ((Activity)context).finish();
+                        }
+                        else if(response.body().getUserRole().equals("user")) {
+                            CommonUtility.showToast(context,response.body().getMessage());
+                            TokenStorage.savedSharedToken(context, ConstantUtility.AUTH_TOKEN, access_token);
+                            context.startActivity(new Intent(context, MainActivity.class));
+                            ((Activity)context).finish();
+                        }
+
 
 
 

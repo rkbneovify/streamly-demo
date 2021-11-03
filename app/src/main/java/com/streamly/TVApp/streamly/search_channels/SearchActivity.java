@@ -1,5 +1,6 @@
 package com.streamly.TVApp.streamly.search_channels;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -21,11 +22,13 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.receivers.NetworkStateReceiver;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
@@ -65,7 +68,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         authToken = TokenStorage.readSharedToken(SearchActivity.this, ConstantUtility.AUTH_TOKEN, null);
-
+        Log.i(TAG, "onCreate: search Activity "+authToken);
         voiceSearch();
 
         edSearch.addTextChangedListener(new TextWatcher() {
@@ -83,7 +86,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
             public void afterTextChanged(Editable s) {
                 try {
                     imgVoiceSearch.setEnabled(false);
-                    searchAdapter.getFilter().filter(edSearch.getText().toString());
+                    searchAdapter.getFilter().filter(edSearch.getText().toString().replace(" ",""));
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -103,6 +106,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
     }
 
     private void voiceSearch() {
+        Log.e(TAG, "voiceSearch: " );
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (activities.size() == 0) {
@@ -118,14 +122,25 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
      * Fire an intent to start the voice recognition activity.
      */
     private void startVoiceRecognitionActivity() {
+        Log.e(TAG, "startVoiceRecognitionActivity: " );
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
-        startActivityForResult(intent, REQUEST_CODE);
+        if(intent.resolveActivity(getPackageManager())!=null)
+        {
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+        else{
+            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        Log.e(TAG, "onActivityResult: 1 "+requestCode );
+//        Log.e(TAG, "onActivityResult: 2 "+resultCode );
+//        Log.e(TAG, "onActivityResult: 3 "+data );
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             Log.e(TAG, "onActivityResult: "+requestCode );
             Log.e(TAG, "onActivityResult: "+resultCode );
@@ -135,7 +150,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (!matches.isEmpty()) {
                 String Query = matches.get(0);
-                edSearch.setText(Query);
+                edSearch.setText(Query.replace(" ",""));
                 imgVoiceSearch.setEnabled(false);
             }
         }
@@ -153,7 +168,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
                         List<Datum> datumList = response.body().getData();
 
@@ -163,7 +178,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
                             String channelLogo = datumList.get(i).getLogo();
                             String videoUrl = datumList.get(i).getUrl();
 
-                            searchList.add(new SearchModel(channelTitle, channelLogo));
+                            searchList.add(new SearchModel(channelTitle, channelLogo,videoUrl));
                         }
                         searchAdapter = new SearchAdapter(SearchActivity.this, searchList, SearchActivity.this);
                         rvSearch.setLayoutManager(new GridLayoutManager(SearchActivity.this, 4));
@@ -172,8 +187,17 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
                         edSearch.setEnabled(true);
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(SearchActivity.this, response.body().getMessage());
-                        edSearch.setEnabled(false);
+                        if(response.errorBody()!=null){
+                            edSearch.setEnabled(false);
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(SearchActivity.this);
+                            startActivity(new Intent(SearchActivity.this, LogInActivity.class));
+                            CommonUtility.showToast(SearchActivity.this, errorResponseModel.getMessage());
+                            finish();
+
+
+                        }
+
 
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(SearchActivity.this);

@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
+import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
@@ -44,10 +45,12 @@ EditText et_passcode;
 Button btn_sign_in_using_passcode;
     private ProgressDialog dialog;
     private  String uniqueId;
+    private  String userAgent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_using_passcode);
+        userAgent = System.getProperty("http.agent");
         et_passcode=findViewById(R.id.et_passcode);
         btn_sign_in_using_passcode=findViewById(R.id.btn_sign_in_using_passcode);
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -81,33 +84,33 @@ Button btn_sign_in_using_passcode;
     private void signInCall() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClientTesting().create(ApiInterface.class);
-        Call<NewLogInModel> call=apiInterface.postLoginUsingPasscode(et_passcode.getText().toString(),uniqueId);
+        Call<NewLogInModel> call=apiInterface.postLoginUsingPasscode(userAgent,et_passcode.getText().toString(),uniqueId);
         call.enqueue(new Callback<NewLogInModel>() {
             @Override
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
-                    Log.e(TAG, "resCode "+response.code());
-                    Log.e(TAG, "resCode "+response.code());
                     if (response.isSuccessful() && response.body()!=null && response.code()!=429){
                         String access_token=response.body().getAccessToken();
-                        Long userId=response.body().getUser().getId();
-                        Log.i(TAG, "onResponse: LoginUsingPasscode 1 "+access_token);
-                        Log.i(TAG, "onResponse: LoginUsingPasscode 2 "+userId);
-//                        ArrayList<Room> set = new ArrayList<>();
-//                        set.addAll(response.body().getRooms());
-                        Gson gson = new Gson();
-                        String json = gson.toJson(response.body().getRooms());
 
-                        TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST,json);
-                        TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID,userId.toString());
-                        TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                        CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
-//                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
-//                        finish();
-                        startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
-                        finish();
+                        if(response.body().getUserRole().equals("tieruser")){
+                            Long userId=response.body().getUser().getId();
+                            Gson gson = new Gson();
+                            String json = gson.toJson(response.body().getRooms());
+                            TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST,json);
+                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID,userId.toString());
+                            TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
+                            CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
+                            startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
+                            finish();
+                            et_passcode.setText("");
+                        }
+                        else if(response.body().getUserRole().equals("user")) {
+                            CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
+                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+                            finish();
+                        }
 
-                        et_passcode.setText("");
 
 
                     }
@@ -116,9 +119,6 @@ Button btn_sign_in_using_passcode;
                         CommonUtility.showToast(LoginUsingPasscodeActivity.this,logInModel.getMessage());
                     }
                     else if (response.code()==429){
-//                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
-//                        CommonUtility.showToast(LoginUsingPasscodeActivity.this,ConstantUtility.MAX_USER_LOGIN);
-
                        if(response.errorBody() !=null )
                        {
                            NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
@@ -131,6 +131,11 @@ Button btn_sign_in_using_passcode;
                                signOutDeviceWithPasscodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                                signOutDeviceWithPasscodeDialog.show();
                            }
+                           if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("")){
+                               if(logInModel.getMessage().contains("Your account is in use on")) {
+                                   CommonUtility.showToast(LoginUsingPasscodeActivity.this, logInModel.getMessage().toString());
+                               }
+                           }
 
                        }
 
@@ -138,6 +143,9 @@ Button btn_sign_in_using_passcode;
                     }
                     else if (response.code()==500){
                         CommonUtility.showToast(LoginUsingPasscodeActivity.this,ConstantUtility.SERVER_ISSUE);
+                    }
+                    else if(response.code() == 404){
+                        CommonUtility.showToast(LoginUsingPasscodeActivity.this,"Wrong Passcode");
                     }
 
                 }catch (Exception e){

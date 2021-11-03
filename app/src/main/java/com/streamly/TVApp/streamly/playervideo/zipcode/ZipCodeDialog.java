@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.playervideo.PlayerActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
@@ -71,6 +72,7 @@ public class ZipCodeDialog extends Dialog {
 
                 outStationLocationPlayCall();
                 cancel();
+                ((PlayerActivity)context).getDrmKey();
             }
         });
 

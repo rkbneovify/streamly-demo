@@ -30,11 +30,11 @@
 
         <ImageView
             android:id="@+id/player_channel_image"
-            android:padding="@dimen/_5sdp"
             android:layout_width="130dp"
+            android:layout_height="70dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_height="70dp"/>
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/ic_launcher_background" />
     </RelativeLayout>
 
 </LinearLayout>

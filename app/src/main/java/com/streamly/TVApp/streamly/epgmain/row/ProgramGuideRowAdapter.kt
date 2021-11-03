@@ -100,12 +100,12 @@ internal class ProgramRowViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         private val container: ViewGroup = itemView as ViewGroup
         private val rowGridView: ProgramGuideRowGridView
 
-        private val channelNameView: TextView
+        private val channelIdView: TextView
         private val channelLogoView: ImageView
 
         init {
             rowGridView = container.findViewById(R.id.row)
-            channelNameView = container.findViewById(R.id.programguide_channel_name)
+            channelIdView = container.findViewById(R.id.programguide_channel_id)
             channelLogoView = container.findViewById(R.id.programguide_channel_logo)
             val channelContainer:ViewGroup = container.findViewById<ViewGroup>(R.id.programguide_channel_container)
             channelContainer.viewTreeObserver.addOnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -129,9 +129,9 @@ internal class ProgramRowViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
         private fun onBindChannel(channel: ProgramGuideChannel?) {
             if (channel == null) {
-                channelNameView.visibility = View.GONE
+                channelIdView.visibility = View.GONE
                 channelLogoView.visibility = View.GONE
-                channelNameView
+                channelIdView
                 return
             }
             val imageUrl = channel.imageUrl
@@ -144,8 +144,8 @@ internal class ProgramRowViewHolder(itemView: View) : RecyclerView.ViewHolder(it
                     .into(channelLogoView)
                 channelLogoView.visibility = View.VISIBLE
             }
-            channelNameView.text = channel.name
-            channelNameView.visibility = View.VISIBLE
+            channelIdView.text = channel.id
+            channelIdView.visibility = View.VISIBLE
         }
     }
 }

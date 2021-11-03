@@ -3195,6 +3195,7 @@ drawable button_states
 drawable channel_grey_background
 drawable channel_white_border
 drawable close
+drawable conected_device_state
 drawable design_bottom_navigation_item_background
 drawable design_fab_background
 drawable design_ic_visibility
@@ -3338,6 +3339,7 @@ drawable mtrl_popupmenu_background_dark
 drawable mtrl_tabs_default_indicator
 drawable mtv
 drawable navigation_empty_icon
+drawable normaltv
 drawable notification_action_background
 drawable notification_bg
 drawable notification_bg_low
@@ -3373,6 +3375,7 @@ drawable programguide_icon_placeholder
 drawable programguide_item_program_background
 drawable programguide_tile_placeholder
 drawable qr_code_rectangle
+drawable recatangle_shape
 drawable rectangle_focus
 drawable rectangle_states
 drawable register_background
@@ -3399,6 +3402,7 @@ drawable white_border
 drawable white_transparent
 drawable white_transparent2
 drawable white_transparent3
+drawable white_transparent4
 font helvetica_neue_bold
 font helvetica_neue_light
 font helvetica_neue_medium
@@ -3621,7 +3625,9 @@ id details_overview_right_panel
 id details_root
 id details_rows_dock
 id device_id
-id device_model
+id device_id_text
+id device_model_name
+id device_name
 id dialog_button
 id dimensions
 id direct
@@ -3762,6 +3768,7 @@ id initial
 id invisible
 id italic
 id item_touch_helper_previous_elevation
+id iv_device_pic
 id jumpToEnd
 id jumpToStart
 id label
@@ -3916,6 +3923,7 @@ id position
 id postLayout
 id privacy
 id programguide_channel_container
+id programguide_channel_id
 id programguide_channel_logo
 id programguide_channel_name
 id programguide_constraint_root

@@ -55,4 +55,15 @@ public class TokenStorage {
         editor.apply();
 
     }
+
+    public static void savedHotelKey(Context context,String key ,String keyVale){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString(key,keyVale);
+        editor.apply();
+    }
+    public static String readHotelKey(Context context, String key, String keyVale){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key,keyVale);
+    }
 }

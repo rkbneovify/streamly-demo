@@ -1,5 +1,6 @@
 package com.streamly.TVApp.streamly.settings;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +19,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.settings.privacy.PrivacyDialog;
@@ -180,16 +184,22 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
                         userName.setText(response.body().getData().getName());
                         userEmail.setText(response.body().getData().getEmail());
                         buildDate.setText(response.body().getData().getUpdatedAt());
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(SettingsActivity.this, response.body().getMessage());
-                        TokenStorage.clearSharedToken(SettingsActivity.this);
-                        SettingsActivity.this.startActivity(new Intent(SettingsActivity.this, LogInActivity.class));
-                        SettingsActivity.this.finish();
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(SettingsActivity.this);
+                            startActivity(new Intent(SettingsActivity.this, LogInActivity.class));
+                            CommonUtility.showToast(SettingsActivity.this, errorResponseModel.getMessage());
+                            finish();
+
+
+                        }
+
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(SettingsActivity.this);
                         CommonUtility.showToast(SettingsActivity.this, ConstantUtility.SESSION_EXPIRED);

@@ -1,6 +1,7 @@
 package com.streamly.TVApp.streamly.epg.channel
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
@@ -11,15 +12,20 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.gson.Gson
 import com.streamly.TVApp.streamly.*
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.epg.Datum
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
+import com.streamly.TVApp.streamly.log_in.LogInActivity
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
+import com.streamly.TVApp.streamly.utilities.CommonUtility
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
+import com.streamly.TVApp.streamly.utilities.NetworkKeys
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
@@ -76,7 +82,8 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
             val id: String,
             val description: String,
             val metadata: String,
-            val playUrl: String
+            val playUrl: String,
+            val imageUrl: String
     )
 
 
@@ -145,8 +152,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
         if (programGuideSchedule != null) {
             Glide.with(imageView)
-                    .load("https://picsum.photos/462/240?random=" + programGuideSchedule.displayTitle.hashCode())
-                    .centerCrop()
+                    .load( programGuideSchedule.program?.imageUrl.toString())
                     .error(R.drawable.programguide_icon_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transition(DrawableTransitionOptions.withCrossFade())
@@ -229,140 +235,164 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
     private fun getSecondApi(authToken: String) {
         var dayss: Long ?= 1
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                    .subscribe(
                            {
                                //success
-                               Log.e(TAG,"GET SECHEDULELIST "+it.message);
-                               val showNames = ArrayList<String>()
+    Log.e(TAG,"GET SECHEDULELIST "+it.message);
+    val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                               Log.e("### episodeData", it.data.size.toString())
+    Log.e("### episodeData", it.data.size.toString())
 
-                               //#neovifyissueresolved28sep
-                               val p: Pattern = Pattern.compile("\\d+")
-                               val m: Matcher = p.matcher(it.message)
-                               while (m.find()) {
-                                   Log.e(TAG, "::>>>digit: " + m.group())
-                                   dayss = (m.group()).toLong()
-                               }
+    //#neovifyissueresolved28sep
+    val p: Pattern = Pattern.compile("\\d+")
+    val m: Matcher = p.matcher(it.message)
+    while (m.find()) {
+        Log.e(TAG, "::>>>digit: " + m.group())
+        dayss = (m.group()).toLong()
+    }
 
-                               //#neovifyissueresolved28sep
-                               for (i in 0 until it.data.size) {
+    //#neovifyissueresolved28sep
+    for (i in 0 until it.data.size) {
 
-                                   for (j in 0 until channels.size)
-                                   {
-                                       if (it.data[i].callSign.toString() == channels[j].name.toString())
-                                       {
+        for (j in 0 until channels.size)
+        {
+            if (it.data[i].callSign.toString() == channels[j].name.toString())
+            {
 
-                                           verticalBean = VerticalHomeBean()
+                verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                                           verticalBean.headerTitle = it.data[i].callSign
-                                           Log.e(TAG,"call sign 1 "+it.data[i].callSign)
+                verticalBean.headerTitle = it.data[i].callSign
+                Log.e(TAG,"call sign 1 "+it.data[i].callSign)
 
-                                           homelist = ArrayList()
+                homelist = ArrayList()
 
-                                           it.data[i].programs.forEach {
-                                               homeBean = HomeBean()
+                it.data[i].programs.forEach {
+                    homeBean = HomeBean()
 
-                                               showNames.add(it.title)
-                                               showName_list.add(it.title)
+                    showNames.add(it.title)
+                    showName_list.add(it.title)
 
-                                               val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
-                                               val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
+                    val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
+                    val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
 
-                                               homeBean.title = it.title
-                                               homeBean.description = it.description
-                                               homeBean.start_time = st
-                                               homeBean.end_time = et
-                                               homelist.add(homeBean)
-                                           }
+                    homeBean.title = it.title
+                    homeBean.description = it.description
+                    homeBean.start_time = st
+                    homeBean.end_time = et
+                    homelist.add(homeBean)
+                }
 
-                                           verticalBean.allItemsInSection = homelist
-                                           channel_showName_list.add(it.data[i].getmId())
-                                           verticallist.add(verticalBean)
-                                       }
+                verticalBean.allItemsInSection = homelist
+                channel_showName_list.add(it.data[i].getmId())
+                verticallist.add(verticalBean)
+            }
 
-                                   }
-
-
-                               }
+        }
 
 
-                               val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+    }
 
-                               var k = 0
-                               Log.e("### verticalList ", "$k <ss>" + channels.size)
 
-                               verticallist.forEach first@{ channel ->
+    val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+
+    var k = 0
+    Log.e("### verticalList ", "$k <ss>" + channels.size)
+
+    verticallist.forEach first@{ channel ->
 //                           Log.e("###${TAG}", "outSideIT " + channel)
 
-                                   if (k < channels.size) {
+        if (k < channels.size) {
 
-                                       val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
-                                       var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
+            val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
+            var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 
 //                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-                                       while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
-                                           Log.e("### allItemsInSection1 ", "" + verticallist[k].allItemsInSection.size)
-                                           for (p in 0 until verticallist[k].allItemsInSection!!.size) {
+            while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
+                Log.e("### allItemsInSection1 ", "" + verticallist[k].allItemsInSection.size)
+                for (p in 0 until verticallist[k].allItemsInSection!!.size) {
 
 
-                                               val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
+                    val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
 
 
-                                               val schedule = createSchedule(
-                                                       channels.get(k),
-                                                       verticallist[k].allItemsInSection!![p].title!!,
+                    val schedule = createSchedule(
+                        channels.get(k),
+                        verticallist[k].allItemsInSection!![p].title!!,
 //                                           nextTime,
 //                                           endTime,
-                                                       verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                                                       verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                                                       verticallist[k].allItemsInSection!![p].description!!,
-                                                       channels.get(k).videoUrl.toString())
-                                               Log.e(TAG, "getSecondApi: "+channels.get(k).id )
-                                               Log.e(TAG, "getSecondApi 2 : "+channels.get(k).name )
+                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
+                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
+                        verticallist[k].allItemsInSection!![p].description!!,
+                        channels.get(k).videoUrl.toString(),
+                        channels.get(k).imageUrl.toString())
+                    Log.e(TAG, "getSecondApi: "+channels.get(k).id )
+                    Log.e(TAG, "getSecondApi 2 : "+channels.get(k).name )
 
-                                               scheduleList.add(schedule)
-                                               nextTime = endTime
+                    scheduleList.add(schedule)
+                    nextTime = endTime
 
 //                                }
 
-                                               val endTimee =
-                                                       if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
-                                                       else MAX_CHANNEL_END_TIME
+                    val endTimee =
+                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
+                        else MAX_CHANNEL_END_TIME
 
-                                               val finalSchedule = createSchedule(
-                                                       channels.get(k),
-                                                       verticallist[k].allItemsInSection!![p].title!!,
+                    val finalSchedule = createSchedule(
+                        channels.get(k),
+                        verticallist[k].allItemsInSection!![p].title!!,
 //                                           nextTime,
 //                                           endTime,
-                                                       verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                                                       verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                                                       verticallist[k].allItemsInSection!![p].description!!,
-                                                       channels.get(k).videoUrl.toString())
-                                               channelMap.put(channels.get(k).id, scheduleList)
+                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
+                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
+                        verticallist[k].allItemsInSection!![p].description!!,
+                        channels.get(k).videoUrl.toString(),
+                        channels.get(k).imageUrl.toString())
+                    channelMap.put(channels.get(k).id, scheduleList)
 
-                                           }
+                }
 
-                                       }
+            }
 
-                                   } else {
-                                       Log.e("### $TAG else ", "$k <ss>" + channels.size)
-                                       return@first
-                                   }
+        } else {
+            Log.e("### $TAG else ", "$k <ss>" + channels.size)
+            return@first
+        }
 
-                                   k += 1
-                               }
-                               val pair = Pair(channels, channelMap)
-                               setData(pair.first, pair.second, localDate, dayss!!)
-                               setState(State.Content)
+        k += 1
+    }
+    val pair = Pair(channels, channelMap)
+    setData(pair.first, pair.second, localDate, dayss!!)
+    setState(State.Content)
+
+     if(it.responseCode.toInt() == 401){
+//        val errorResponseModel: ErrorResponseModel = Gson().fromJson<ErrorResponseModel>(
+//            response.errorBody().string(),
+//            ErrorResponseModel::class.java
+//        )
+        TokenStorage.clearSharedToken(eContext)
+        eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
+        CommonUtility.showToast(eContext, "Token is Invalid")
+        (eContext as Activity).finish()
+}
 
                            },
                            {
                                //error
                                Log.e("###$TAG", "error " + it.message)
                                Log.e("###$TAG", "error " + it.localizedMessage)
+                               if(it.message.toString().contains("401")){
+                                   TokenStorage.clearSharedToken(eContext)
+                                   eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
+                                   CommonUtility.showToast(eContext, "Token is Invalid")
+                                   (eContext as Activity).finish()
+                               }
+                               else if(it.message.toString().contains("402")){
+                                   CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
+
+                               }
+
                            })
     }
 
@@ -376,7 +406,8 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
 //            startTime: ZonedDateTime,
 //            endTime: ZonedDateTime,
             description: String,
-            playUrl: String
+            playUrl: String,
+            imageUrl:String
     ): ProgramGuideSchedule<SimpleProgram> {
         val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
@@ -385,7 +416,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,
                 SimpleProgram(id.toString(), description,
                         metadata+"",
-                        playUrl))
+                        playUrl,imageUrl))
 
     }
 

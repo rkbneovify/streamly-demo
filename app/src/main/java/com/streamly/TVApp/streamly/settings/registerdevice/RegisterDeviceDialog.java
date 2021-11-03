@@ -12,9 +12,13 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
@@ -73,12 +77,16 @@ public class RegisterDeviceDialog extends Dialog {
             public void onResponse(Call<ConnectedDeviceModel> call, Response<ConnectedDeviceModel> response) {
 
                 try {
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
                        List<Datum> datalist= response.body().getData();
+                        Log.i(TAG, "onResponse: connectedDevice "+response.body().getData().toString());
+                        String userAgent = System.getProperty("http.agent");
+                        Log.i(TAG, "onResponse: user agent "+userAgent);
+
 
                        for (int i=0;i<datalist.size();i++){
-                           list.add(new RegisterDeviceType(i+1+". "+datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId()));
+                           list.add(new RegisterDeviceType( datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId(),datalist.get(i).getDeviceImg()));
                        }
                         RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,list);
                         rvDeviceModel.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
@@ -86,11 +94,17 @@ public class RegisterDeviceDialog extends Dialog {
 
 
 
-                    } else if (response.code() == 401) {
-                        CommonUtility.showToast(context, response.body().getMessage());
-                        TokenStorage.clearSharedToken(context);
-                        context.startActivity(new Intent(context, LogInActivity.class));
-                        ((Activity) context).finish();
+                    }
+                    else if (response.code() == 401) {
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(context);
+                            context.startActivity(new Intent(context, LogInActivity.class));
+                            CommonUtility.showToast(context, errorResponseModel.getMessage());
+                            ((Activity) context).finish();
+
+
+                        }
                     }else if (response.code()==404){
                         TokenStorage.clearSharedToken(context);
                         CommonUtility.showToast(context,ConstantUtility.SESSION_EXPIRED);

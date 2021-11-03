@@ -40,6 +40,10 @@ public class NewLogInModel {
     @SerializedName("user")
     @Expose
     private User user;
+    @SerializedName("userrole")
+    @Expose
+    private String userRole;
+
     @SerializedName("termandcondition")
     @Expose
     private Boolean termandcondition;
@@ -133,6 +137,14 @@ public class NewLogInModel {
 
     public void setTermandcondition(Boolean termandcondition) {
         this.termandcondition = termandcondition;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     public List<Room> getRooms() {

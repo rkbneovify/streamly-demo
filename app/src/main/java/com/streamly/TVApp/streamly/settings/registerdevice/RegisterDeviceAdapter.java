@@ -4,9 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.streamly.TVApp.streamly.R;
 import java.util.List;
 
@@ -17,7 +20,7 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
     private View view;
 
 
-    public RegisterDeviceAdapter(Context context, List<RegisterDeviceType> list) {
+    public  RegisterDeviceAdapter(Context context, List<RegisterDeviceType> list) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
@@ -25,6 +28,7 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
 
     @NonNull
     @Override
+
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         view=inflater.inflate(R.layout.view_register_device,parent,false);
         RegisterDeviceAdapter.MyViewHolder myViewHolder=new RegisterDeviceAdapter.MyViewHolder(view);
@@ -36,6 +40,12 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
 
         holder.deviceModelNo.setText(list.get(position).getDeviceModel());
         holder.deviceId.setText(list.get(position).getDeviceId());
+        Glide.with(context)
+                .load( list.get(position).getDeviceImageUrl())
+//                    .error(R.drawable.programguide_icon_placeholder)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(holder.deviceImage);
 
     }
 
@@ -50,11 +60,13 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView deviceModelNo,deviceId;
+        ImageView deviceImage;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            deviceModelNo=itemView.findViewById(R.id.device_model);
+            deviceModelNo=itemView.findViewById(R.id.device_model_name);
             deviceId=itemView.findViewById(R.id.device_id);
+            deviceImage=itemView.findViewById(R.id.iv_device_pic);
 
         }
     }

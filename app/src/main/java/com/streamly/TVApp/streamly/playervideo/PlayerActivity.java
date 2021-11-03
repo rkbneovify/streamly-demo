@@ -1,5 +1,6 @@
 package com.streamly.TVApp.streamly.playervideo;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -52,6 +53,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
@@ -60,6 +62,7 @@ import com.streamly.TVApp.streamly.epg.GenereAdapter;
 import com.streamly.TVApp.streamly.epg.SimpleChannel;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmViewModel;
@@ -90,6 +93,7 @@ public class PlayerActivity extends FragmentActivity {
     String authToken, uniqueId, userId;
     SimpleExoPlayer player;
     PlayerView playerView;
+    boolean checkStreamingPlying;
     private FirebaseAnalytics mFirebaseAnalytics;
     Bundle params;
     Handler handler = new Handler();
@@ -173,10 +177,11 @@ public class PlayerActivity extends FragmentActivity {
 
 
     public void playNext(String channelN, String videoUrl, String channelId) {
-        Log.e(TAG, "playNext: " + channelId);
-        Log.e(TAG, "playNext: " + videoUrl);
-        Log.e(TAG, "playNext: " + channelN);
+        Log.e(TAG, "playNext: 1 " + channelId);
+        Log.e(TAG, "playNext: 2 " + videoUrl);
+        Log.e(TAG, "playNext: 3 " + channelN);
         rvItemClick = "1";
+        checkStreamingPlying=true;
 //        Intent i = new Intent(this , PlayerActivity.class);
 //        i.putExtra("from", videoUrl);
 //        i.putExtra("channel_name", channelN);
@@ -195,6 +200,7 @@ public class PlayerActivity extends FragmentActivity {
 
         menuImage.setVisibility(View.VISIBLE);
         drawerLayout.setVisibility(View.GONE);
+
         getDrmKey2(videoUrl, channelId, channelN);
 
 //        initializePlayer2("",videoUrl,channelN,channelId);
@@ -277,7 +283,7 @@ public class PlayerActivity extends FragmentActivity {
                             ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken);
                             zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             zipCodeDialog.show();
-                            getDrmKey();
+//                            getDrmKey();
                         }
                         break;
                     default:
@@ -288,7 +294,7 @@ public class PlayerActivity extends FragmentActivity {
 
     }
 
-    private void getDrmKey() {
+    public void getDrmKey() {
         DrmViewModel viewModel = new ViewModelProvider(this).get(DrmViewModel.class);
         viewModel.getData(PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
@@ -339,7 +345,12 @@ public class PlayerActivity extends FragmentActivity {
 //                        getChannelList(drmKey,wvUrl);
                         Log.e(TAG, "onChanged: getDrmKey2 " + wvUrl);
                         Log.e(TAG, "onChanged: getDrmKey2 " + drmKey);
-                        initializePlayer2(drmKey, wvUrl, channelN, channelId, videoUrl);
+                        if(checkStreamingPlying)
+                        {
+                            checkStreamingPlying=false;
+                            initializePlayer2(drmKey, wvUrl, channelN, channelId, videoUrl);
+                        }
+
                         break;
                     case 401:
                         TokenStorage.clearSharedToken(PlayerActivity.this);
@@ -559,8 +570,9 @@ public class PlayerActivity extends FragmentActivity {
             }
         });
 
+
         player.setPlayWhenReady(true);
-        player.setRepeatMode(Player.REPEAT_MODE_ALL);
+//        player.setRepeatMode(Player.REPEAT_MODE_ALL);
         postRecentViewChannel(channel_id);
 
     }
@@ -808,7 +820,7 @@ public class PlayerActivity extends FragmentActivity {
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null) {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
                         channelList = response.body().getData();
                         Log.e("channelList-------", channelList.get(0).getUrl());
@@ -837,7 +849,15 @@ public class PlayerActivity extends FragmentActivity {
 
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(PlayerActivity.this, response.body().getMessage());
+                        if(response.errorBody()!=null){
+                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
+                            TokenStorage.clearSharedToken(PlayerActivity.this);
+                            startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
+                            CommonUtility.showToast(PlayerActivity.this, errorResponseModel.getMessage());
+                            finish();
+
+
+                        }
 
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(PlayerActivity.this);

@@ -20,6 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_marginLeft="13dp"
     android:layout_height="match_parent">
 <!--    android:background="@drawable/person_singing"-->
 
@@ -70,6 +71,8 @@
         android:id="@+id/programguide_detail_image"
         style="@style/ProgramGuide.Image.Detail"
         android:layout_marginLeft="@dimen/programguide_page_left_padding"
+        android:scaleType="fitCenter"
+        android:padding="@dimen/_2sdp"
         android:background="@drawable/programguide_tile_placeholder"
         android:src="@drawable/programguide_icon_placeholder"
         app:layout_constraintBottom_toBottomOf="@id/bottom_detail"

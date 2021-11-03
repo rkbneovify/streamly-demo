@@ -23,6 +23,7 @@ import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
 import com.streamly.TVApp.streamly.utilities.CommonUtility
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
+import com.streamly.TVApp.streamly.utilities.NetworkKeys
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
@@ -270,7 +271,7 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
     private fun getSecondApi(authToken: String) {
         var dayss: Long ?= 1
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleList("Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     //success
 
@@ -417,6 +418,17 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
                     //error
 //                    Log.e("###$TAG", "Error...")
 //                    Log.e("###$TAG", it.message!!)
+                    Log.e(TAG, "getSecondApi: epg "+it.message )
+                    if(it.message.toString().contains("401")){
+                        TokenStorage.clearSharedToken(eContext)
+                        eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
+                        CommonUtility.showToast(eContext, "Token is Invalid")
+                        (eContext as Activity).finish()
+                    }
+                    else if(it.message.toString().contains("402")){
+                    CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
+
+                }
                 })
     }
 

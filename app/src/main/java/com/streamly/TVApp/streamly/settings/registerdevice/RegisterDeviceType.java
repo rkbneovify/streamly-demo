@@ -4,16 +4,25 @@ public class RegisterDeviceType {
 
     private String deviceModel;
     private String deviceId;
+    private String deviceImageUrl;
 
 
     public RegisterDeviceType() {
     }
 
-    public RegisterDeviceType(String deviceModel, String deviceId) {
+    public RegisterDeviceType(String deviceModel, String deviceId,String deviceImageUrl) {
         this.deviceModel = deviceModel;
         this.deviceId = deviceId;
+        this.deviceImageUrl = deviceImageUrl;
     }
 
+    public String getDeviceImageUrl() {
+        return deviceImageUrl;
+    }
+
+    public void setDeviceImageUrl(String deviceImageUrl) {
+        this.deviceImageUrl = deviceImageUrl;
+    }
 
     public String getDeviceModel() {
         return deviceModel;
