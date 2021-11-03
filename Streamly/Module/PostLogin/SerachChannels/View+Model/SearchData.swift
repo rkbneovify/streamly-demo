@@ -24,10 +24,14 @@ class SearchDataViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
 
-            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) , failedData.response_code == 401 {
-                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                Utility.logOut()
-                return
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                if failedData.response_code == 401 {
+                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                    Utility.logOut()
+                    return
+                } else if failedData.response_code == 402 {
+                    self.delegate?.handleError(failedData.message ?? "")
+                }
             }
             //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "")

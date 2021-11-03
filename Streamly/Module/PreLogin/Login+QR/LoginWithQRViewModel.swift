@@ -78,7 +78,9 @@ class LoginWithQRViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data:FailedResponse = DataParser.parseReponseToModel(data!) {
-                if data.response_code == 401 {
+                if data.response_code == 402 {
+                    weak.delegate?.apiFailed(data.message ?? "")
+                } else if data.response_code == 401 {
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                     Utility.logOut()
                     Switcher.updateRootVC()

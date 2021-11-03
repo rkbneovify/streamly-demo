@@ -88,7 +88,13 @@ extension LoginPasscodeVC {
 extension LoginPasscodeVC: APIResponseDelegate {
     func apiSucess() {
         self.removeSpinner()
-        if let room = viewModel.responseData?.rooms {
+        if let data = viewModel.responseData?.data { // check session exist.
+            viewModel.removeIdKey = data
+            self.openAlertForRemoveId()
+        } else {
+            self.showSimpleAlertWithMessage(viewModel.responseData?.message ?? "")
+        }
+        if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
             openSearchVC(room: room)

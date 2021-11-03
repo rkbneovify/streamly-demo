@@ -42,6 +42,8 @@ class LoginPassocodeViewModel: NSObject {
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                     Utility.logOut()
                     return
+                } else if data.response_code == 402 {
+                    weak.delegate?.apiFailure(data.message ?? "")
                 } else if let removeKeyAvailAble = data.data {
                     weak.removeIdKey = removeKeyAvailAble
                 }

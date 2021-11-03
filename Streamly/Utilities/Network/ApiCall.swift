@@ -138,15 +138,16 @@ open class ApiCall {
     @discardableResult
     public static func entryLogin(key: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let param = ["key": key, "deviceid": deviceId ?? ""]
-//        let headers = ["Accept": "application/json","User-Agent": userAgent]
-        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.entryLogin.rawValue, method: .post, parameters: param)
+        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.entryLogin.rawValue, method: .post,headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
     
     @discardableResult
     public static func mobileScanQRCode(key: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
-        let param = ["key": key]
-        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.mobileDeviceScanCode.rawValue, method: .post, parameters: param)
+        let param = ["key": key, "type": "1"]
+        let headers = ["Accept": "application/json"]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.mobileDeviceScanCode.rawValue, method: .post, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, encoding: URLEncoding.httpBody, success: success, failure: failure)
     }
     

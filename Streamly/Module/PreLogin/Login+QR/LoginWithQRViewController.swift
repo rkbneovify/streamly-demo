@@ -53,7 +53,9 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
-                if let room = data.rooms {
+                if let removIdKey = data.data {
+                    self.openAlertForRemoveId(id: removIdKey)
+                } else if let room = data.rooms, data.userrole != "user" {
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
                     openSearchVC(room: room)

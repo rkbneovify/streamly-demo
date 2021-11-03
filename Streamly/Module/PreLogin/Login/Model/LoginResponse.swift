@@ -22,6 +22,7 @@ struct LoginResponse : Codable {
     let rooms                : [Room]?
     let userrole : String?
     let expires_in: Int?
+    var data: String?
     
     enum CodingKeys : String, CodingKey {
         
@@ -38,6 +39,7 @@ struct LoginResponse : Codable {
         case rooms
         case userrole
         case expires_in = "expires_in"
+        case data
     }
     
     init(from decoder: Decoder) throws {
@@ -55,6 +57,7 @@ struct LoginResponse : Codable {
         rooms = try values.decodeIfPresent([Room].self, forKey: .rooms)
         userrole = try values.decodeIfPresent(String.self, forKey: .userrole)
         expires_in = try values.decodeIfPresent(Int.self, forKey: .expires_in)
+        data = try values.decodeIfPresent(String.self, forKey: .data)
     }
     
 }
