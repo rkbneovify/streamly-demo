@@ -165,21 +165,52 @@ function LogoutandDecrementDevice($user_id){
     ->update([
         'connected_devices' => DB::raw('`connected_devices` - 1 ')
     ]);
-    config([
-      'jwt.blacklist_enabled' => true
-  ]);
-    JWTAuth::parseToken()->invalidate();
+    $error=invalidateToken();
+    $res=$error?[
+      'response_code'=>200,
+      'success' => true,
+      'message'=>'logged out successful',
+      
+    ]:['response_code'=>200,
+    'success' => true,
+    'message'=>'logged out successful',
+  'error'=>$error];
     if(request()->wantsJson()){
-      return response()->json([
-        'response_code'=>200,
-        'success' => true,
-        'message'=>'logged out successful',
-        
-      ],200)->send();
+      return response()->json($res,200)->send();
     }else{ return true;}
       
     
      
+}
+
+function invalidateToken(){
+  $errors=[];
+  try{
+    config([
+      'jwt.blacklist_enabled' => true
+  ]);
+
+  JWTAuth::parseToken()->invalidate();
+  } catch (Exception $e) {
+              if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+                  $value['error']=$e->getMessage();
+                  array_push($errors, $value);
+                  
+              }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+                  $value['error']=$e->getMessage();
+                  array_push($errors, $value);
+                  
+              }else{
+                  $value['error']=$e->getMessage();
+                  array_push($errors, $value);
+                  
+              }
+          }
+          if(!empty($errors)){
+            return $errors;}else{
+                return false;
+            }
+ 
 }
 
 
@@ -600,7 +631,6 @@ function getBodyClass()
 {
     $agent = new Agent();
     $browser_css_classes = array();
-    $unsupported = [];
     if ($mobile = $agent->isMobile()) {
         $browser_css_classes['device'] = 'device-mobile';
         $browser_css_classes['classes'] = "data-form-factor='2' data-os='4'";
@@ -618,79 +648,7 @@ function getBodyClass()
         $browser_css_classes['device'] = 'device-iphone';
         $browser_css_classes['classes'] = "data-form-factor='2' data-os='5'";
     }
-    $other_browser = $agent->browser();
-    if ($agent->browser() == "Safari") {
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-safari';
-        $browser_css_classes['browserclass'] = "data-browser='3'";
-        $browser_css_classes['browserversion'] = 'browser-safari-' . (int) $agent->version('Safari');
-        if ($agent->version('Safari') < 5) {
-            $unsupported['browser'] = 'Safari';
-        }
-    }
-    if ($agent->browser() == "Chrome") {
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-chrome';
-        $browser_css_classes['browserversion'] = 'browser-chrome-' . (int) $agent->version('Chrome');
-
-        $browser_css_classes['browserclass'] = "data-browser='1'";
-        if ($agent->version('Chrome') < 30) {
-            $unsupported['browser'] = 'Chrome';
-        }
-    }
-    if ($agent->browser() == "Firefox") {
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-firefox';
-        $browser_css_classes['browserversion'] = 'browser-firefox-' . (int) $agent->version('Firefox');
-
-        $browser_css_classes['browserclass'] = "data-browser='2'";
-        if ($agent->version('Firefox') < 25) {
-            $unsupported['browser'] = 'Firefox';
-        }
-    }
-    if ($agent->browser() == "Edge") {
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-edge';
-        $browser_css_classes['browserversion'] = 'browser-edge-' . (int) $agent->version('Edge');
-
-        $browser_css_classes['browserclass'] = "data-browser='6'";
-        if ($agent->version('Edge') < 25) {
-            $unsupported['browser'] = 'Edge';
-        }
-    }
-    if ($agent->browser() == "Opera"||$agent->browser() == "Opera Mini") {
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-opera';
-        $browser_css_classes['browserversion'] = 'browser-opera-' . (int) $agent->version('Opera')||$agent->version('Opera Mini');
-
-        $browser_css_classes['browserclass'] = "data-browser='5'";
-        if ($agent->version('Opera') < 25) {
-            $unsupported['browser'] = 'Opera';
-        }
-    }
-    if ($browser = $agent->browser() == "IE") {
-        $version = $agent->version("IE");
-        $version = str_replace('.0', '', $version);
-        $other_browser = false;
-        $browser_css_classes['browser'] = 'browser-ie';
-        $browser_css_classes['browser'] = 'browser-ie-' . (int) $version;
-
-        $browser_css_classes['browserclass'] = "data-browser='4'";
-        if ((int) $version < 10) {
-            $browser_css_classes['browserversion'] = 'browser-lt-ie10';
-        }
-        if ((int) $version < 9) {
-            $unsupported['browser'] = 'Internet Explorer';
-        }
-        $browser_css_classes['browserversion'] = 'browser-ie' . $version;
-    }
-    if ($other_browser) {
-        $browser_css_classes['browser'] = 'browser-' . strtolower($other_browser);
-
-        $browser_css_classes['browserclass'] = "data-browser='7'";
-        $version = (int) $agent->version($other_browser);
-        $browser_css_classes['browserversion'] = 'browser-' . strtolower($other_browser) . '-' . $version;
-    }
+    $browser_css_classes=getBrowser($agent,$browser_css_classes);
     $windows=$agent->is('Windows');
     if ($windows) {
         $browser_css_classes['platform'] = 'os-windows';
@@ -724,7 +682,84 @@ function getBodyClass()
     return $browser_css_classes;
 }
 
+function getBrowser($agent,$browser_css_classes){
+  $unsupported = [];
+  $other_browser = $agent->browser();
+  if ($agent->browser() == "Safari") {
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-safari';
+      $browser_css_classes['browserclass'] = "data-browser='3'";
+      $browser_css_classes['browserversion'] = 'browser-safari-' . (int) $agent->version('Safari');
+      if ($agent->version('Safari') < 5) {
+          $unsupported['browser'] = 'Safari';
+      }
+  }
+  if ($agent->browser() == "Chrome") {
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-chrome';
+      $browser_css_classes['browserversion'] = 'browser-chrome-' . (int) $agent->version('Chrome');
 
+      $browser_css_classes['browserclass'] = "data-browser='1'";
+      if ($agent->version('Chrome') < 30) {
+          $unsupported['browser'] = 'Chrome';
+      }
+  }
+  if ($agent->browser() == "Firefox") {
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-firefox';
+      $browser_css_classes['browserversion'] = 'browser-firefox-' . (int) $agent->version('Firefox');
+
+      $browser_css_classes['browserclass'] = "data-browser='2'";
+      if ($agent->version('Firefox') < 25) {
+          $unsupported['browser'] = 'Firefox';
+      }
+  }
+  if ($agent->browser() == "Edge") {
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-edge';
+      $browser_css_classes['browserversion'] = 'browser-edge-' . (int) $agent->version('Edge');
+
+      $browser_css_classes['browserclass'] = "data-browser='6'";
+      if ($agent->version('Edge') < 25) {
+          $unsupported['browser'] = 'Edge';
+      }
+  }
+  if ($agent->browser() == "Opera"||$agent->browser() == "Opera Mini") {
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-opera';
+      $browser_css_classes['browserversion'] = 'browser-opera-' . (int) $agent->version('Opera')||$agent->version('Opera Mini');
+
+      $browser_css_classes['browserclass'] = "data-browser='5'";
+      if ($agent->version('Opera') < 25) {
+          $unsupported['browser'] = 'Opera';
+      }
+  }
+  if ($browser = $agent->browser() == "IE") {
+      $version = $agent->version("IE");
+      $version = str_replace('.0', '', $version);
+      $other_browser = false;
+      $browser_css_classes['browser'] = 'browser-ie';
+      $browser_css_classes['browser'] = 'browser-ie-' . (int) $version;
+
+      $browser_css_classes['browserclass'] = "data-browser='4'";
+      if ((int) $version < 10) {
+          $browser_css_classes['browserversion'] = 'browser-lt-ie10';
+      }
+      if ((int) $version < 9) {
+          $unsupported['browser'] = 'Internet Explorer';
+      }
+      $browser_css_classes['browserversion'] = 'browser-ie' . $version;
+  }
+  if ($other_browser) {
+      $browser_css_classes['browser'] = 'browser-' . strtolower($other_browser);
+
+      $browser_css_classes['browserclass'] = "data-browser='7'";
+      $version = (int) $agent->version($other_browser);
+      $browser_css_classes['browserversion'] = 'browser-' . strtolower($other_browser) . '-' . $version;
+  }
+
+  return $browser_css_classes;
+}
 function isTV($device)
 {  
   $tv=['roku','appletv','firetv','smarttv'];
