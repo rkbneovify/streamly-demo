@@ -631,25 +631,17 @@ function getBodyClass()
 {
     $agent = new Agent();
     $browser_css_classes = array();
-    if ($mobile = $agent->isMobile()) {
-        $browser_css_classes['device'] = 'device-mobile';
-        $browser_css_classes['classes'] = "data-form-factor='2' data-os='4'";
-    }
-    if ($tablet = $agent->isTablet()) {
-        $browser_css_classes['device'] = 'device-tablet';
-        $browser_css_classes['classes'] = "data-form-factor='3' data-os='1'";
-    }
-
-    if ($ipad = $agent->is('iPad')) {
-      $browser_css_classes['device'] = 'device-ipad';
-      $browser_css_classes['classes'] = "data-form-factor='3' data-os='5'";
-  }
-    if ($iphone = $agent->is('iPhone')) {
-        $browser_css_classes['device'] = 'device-iphone';
-        $browser_css_classes['classes'] = "data-form-factor='2' data-os='5'";
-    }
+    
+    $browser_css_classes=isMobileiPadisTablet($agent,$browser_css_classes);
     $browser_css_classes=getBrowser($agent,$browser_css_classes);
-    $windows=$agent->is('Windows');
+    $browser_css_classes=isPlatform($agent,$browser_css_classes);
+    
+    $browser_css_classes['useragent']= request()->header('User-Agent');
+    return $browser_css_classes;
+}
+
+function isPlatform($agent,$browser_css_classes){
+  $windows=$agent->is('Windows');
     if ($windows) {
         $browser_css_classes['platform'] = 'os-windows';
     }
@@ -678,10 +670,28 @@ function getBodyClass()
           $browser_css_classes['classes'] = "data-form-factor='1' data-os='1'";
         }
     }
-    $browser_css_classes['useragent']= request()->header('User-Agent');
     return $browser_css_classes;
 }
+function isMobileiPadisTablet($agent,$browser_css_classes){
+  if ($mobile = $agent->isMobile()) {
+    $browser_css_classes['device'] = 'device-mobile';
+    $browser_css_classes['classes'] = "data-form-factor='2' data-os='4'";
+}
+if ($tablet = $agent->isTablet()) {
+    $browser_css_classes['device'] = 'device-tablet';
+    $browser_css_classes['classes'] = "data-form-factor='3' data-os='1'";
+}
 
+if ($ipad = $agent->is('iPad')) {
+  $browser_css_classes['device'] = 'device-ipad';
+  $browser_css_classes['classes'] = "data-form-factor='3' data-os='5'";
+}
+if ($iphone = $agent->is('iPhone')) {
+    $browser_css_classes['device'] = 'device-iphone';
+    $browser_css_classes['classes'] = "data-form-factor='2' data-os='5'";
+}
+return $browser_css_classes;
+}
 function getBrowser($agent,$browser_css_classes){
   $unsupported = [];
   $other_browser = $agent->browser();
