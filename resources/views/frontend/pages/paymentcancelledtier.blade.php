@@ -1,7 +1,7 @@
 <?php 
 use Laravel\Cashier\Cashier;
-$invoiceFirst=Auth::user()->invoices()[0]; 
-// dump($invoiceFirst->total);
+$plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal']; 
+ //dump($plandetailsFirst);
  ?>
 @extends('frontend/partials/master')
 
@@ -150,13 +150,11 @@ input[type=number] {
                             @component('components.tiertable',['singlePlansDetail' => $plandetails,'type'=>'tiered'])
                             @endcomponent
 	</details>							<div class="flex justify-center mt-2">
-									<button class="increment-btn text-white increment-subtract light bg-dark bg-pasha py-2 px-4 rounded-lg" disabled> - </button>
+									<button class="increment-btn text-white increment-subtract light bg-dark bg-pasha py-2 px-4 rounded-lg submit-premium-class" disabled> - </button>
 									<input type="number" class="quantity-input w-8 appearance-none text-center" id="quantity-input-premium" min="1" value="1" />
-									<button class="increment-btn text-white increment-add light bg-dark bg-pasha py-2 px-4 rounded-lg"> + </button>
+									<button class="increment-btn text-white increment-add light bg-dark bg-pasha py-2 px-4 rounded-lg submit-premium-class"> + </button>
 								</div>
-								                          <div class="flex justify-center mt-6">
-                                    <button id="submit-premium" class="bg-pasha hover:bg-white outline-none hover:text-pasha hover:border hover:border-black text-white focus:bg-white focus:text-pasha font-light py-2 px-4 rounded-lg plan-select btn btn-lg submit-btn" type="submit" data-plan="premium">Click Me</button>
-</div> @elseif (!empty($plandetails->amount))
+	 @elseif (!empty($plandetails->amount))
 							<h3> {{Cashier::formatAmount($plandetails->amount??'0', $plandetails->currency??'USD')}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</h3> @else
 							<h3>unknown</h3> @endif
 							<table class="table table-sm table-borderless" style="margin-top: 1rem;">
@@ -179,7 +177,7 @@ input[type=number] {
 							<div class="container padding-L-rem">
 								<div class="row text-left">
 									<div class="col-md-6 padding-L-rem"> Total </div>
-									<div class="col-md-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;"> </div>
+									<div class="col-md-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}} </div>
 								</div>
 							</div>
 						</div>
@@ -191,7 +189,7 @@ input[type=number] {
 						<div class="container">
 							<div class="row" style="padding-top: 2rem;margin-left: 2rem;margin-right: 2rem;">
 								<div class="col-md-4" style="padding: 2rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;"> <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> <span style="display: block;">Credit Card</span> </div>
-								<div class="col-md-8" style="padding: 2rem;"> {{-- <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> --}} <span><strong>Final amount</strong> </span> <span style="display: block;" id="totalprice2">{{Cashier::formatAmount($invoiceFirst->total??'0', $plandetails->currency??'USD')}}</span> </div> {{--
+								<div class="col-md-8" style="padding: 2rem;"> {{-- <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> --}}  </div> {{--
 								<div class="col-md-4" style="padding: 2rem;"> <img src="{{ asset('frontend/img/paypal.svg') }}"> <span style="display: block;">Paypal</span> </div> --}} </div> {{-- {{dd(auth()->user())}} --}}
 							<!-- If user is not subscribed to a plan, show them the payment form -->@if (auth()->user()->subscription('main')->cancelled()) @if(session('error_message'))
 						
@@ -277,6 +275,7 @@ input[type=number] {
 								<!-- Stripe Elements Placeholder -->
 								<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 								<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
+								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span id='devicequantity'>1</span> device</div>
 						</div> @if (empty($frontendjson['billingdetailspage'])) <span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 												</span> @else <span class="remove-p-a-r">
@@ -502,6 +501,28 @@ function updateQuantity(evt) {
 	var quantity = evt ? isAdding ? currentQuantity + 1 : currentQuantity - 1 : currentQuantity;
 	// Update number input with new value.
 	inputEl.value = quantity;
+	//console.log('qyantity',quantity);
+	 
+	document.getElementById("devicequantity").textContent=quantity;
+	let tiers = @json($plandetails->tiers);
+		const seconLastTier = tiers[tiers.length - 2];
+		//  console.log('Tiers',tiers);
+		//  console.log('secondLastTier',seconLastTier);
+		var price;
+		if(seconLastTier.up_to < quantity) {
+			const LastTier = tiers[tiers.length - 1];
+			price = parseInt(LastTier.unit_amount_decimal) / 100;
+			totalPrice = quantity * price;
+		} else {
+			const t = ShowUserthePrice(quantity);
+			   //console.log("t",t);
+			price = parseInt(t.unit_amount_decimal) / 100;
+			totalPrice = quantity * price;
+		}
+		document.getElementById("totalprice").textContent = totalPrice;
+		document.getElementById("totalprice2").textContent = totalPrice;
+		document.getElementById("quantity").value = quantity;
+		//console.log("totalPrice", totalPrice)
 	// Disable the button if the customers hits the max or min
 	if(quantity === MIN_SUBS) {
 		containingDiv.getElementsByClassName('increment-subtract')[0].disabled = true;
@@ -531,41 +552,6 @@ function addQuantityListeners() {
 		});
 }
 
-function selectDeviceFunc(evt) {
-	evt.preventDefault();
-	console.log('clickeddddd');
-	var btntext = document.getElementById('submit-premium');
-  // console.log('btntext',btntext);
-   //console.log('btntextinnerHTML',btntext.innerHTML);
-	if(btntext.innerHTML == "Click Me") {
-		btntext.innerText = 'Selected';
-		var quantity = parseInt(document.getElementById('quantity-input-premium').value);
-		console.log("Selected input", quantity);
-		let tiers = @json($plandetails->tiers);
-		const seconLastTier = tiers[tiers.length - 2];
-		//  console.log('Tiers',tiers);
-		//  console.log('secondLastTier',seconLastTier);
-		var price;
-		if(seconLastTier.up_to < quantity) {
-			const LastTier = tiers[tiers.length - 1];
-			price = parseInt(LastTier.unit_amount_decimal) / 100;
-			totalPrice = quantity * price;
-		} else {
-			const t = ShowUserthePrice(quantity);
-			   console.log("t",t);
-			price = parseInt(t.unit_amount_decimal) / 100;
-			totalPrice = quantity * price;
-		}
-		document.getElementById("totalprice").textContent = totalPrice;
-		document.getElementById("totalprice2").textContent = totalPrice;
-		document.getElementById("quantity").value = quantity;
-		console.log("totalPrice", totalPrice)
-	} else {
-		btntext.innerText = 'Click Me';
-	}
-}
-const selectDeviceBtn = document.getElementById('submit-premium');
-selectDeviceBtn.addEventListener('click', selectDeviceFunc);
 
 function ShowUserthePrice(userIn) {
 	let tiers = @json($plandetails->tiers);
