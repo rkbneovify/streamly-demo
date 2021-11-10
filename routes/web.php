@@ -177,6 +177,7 @@ Route::get('/livetv/list', 'Pages\LiveTv@showAllPage');
 Route::get('/livetv/recent', 'Pages\LiveTv@showRecent');
 Route::get('/livetv2/{channel}/{genre}', 'Pages\LiveTv@showChannel');
 Route::get('/livetv/{channel}/{genre}', 'Pages\LiveTv@showChannel2');
+Route::get('/livetv/{genre}', 'Pages\LiveTv@genrePage');
 Route::get('/videojs', 'Pages\LiveTv@videojs');
 Route::get('/videojs2', 'Pages\LiveTv@videojs2');
 Route::get('/faq', 'Pages\Faq@showPage');
