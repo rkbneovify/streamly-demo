@@ -198,7 +198,7 @@ public function unhashid($id){
                     'message' => 'the user cannot be logged out because reqired token is not provided',
                     'response_code'=>401,
                    
-                ]);
+                ],401);
             } else   if ((count($acctoken)==0)){ 
                 $response = [
                     'success' => false,
