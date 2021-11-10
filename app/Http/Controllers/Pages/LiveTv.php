@@ -139,6 +139,25 @@ if (count($active_session) >= $login_limit) {
 
     //for video.js
 
+    public function genrePage($genre){
+        if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+        $pagechannel=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+        DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+               
+               ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+               ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+               ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+    ->where('channels.status','=','1')
+    ->orderBy('channels.StationName', 'asc')->get()->where('genrenae','=',$genre);
+    
+    return view('frontend.pages.genrechannel', compact('login','pagechannel','genre'));
+    }
     public function showChannel2($callSign,$genre){
      
         try {

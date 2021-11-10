@@ -15,11 +15,13 @@
 				<div class="col-sm-2 mx-auto">
 					<h6>OUR CHANNELS</h6>
 					<ul>
-						<li><a href="livetv" style="color:#C5C5C5">Complete List</a></li>
-						<li><a href="livetv" style="color:#C5C5C5">News</a></li>
-						<li><a href="livetv" style="color:#C5C5C5">Sports</a></li>
-						<li><a href="livetv" style="color:#C5C5C5">Movies</a></li>
-						<li><a href="livetv" style="color:#C5C5C5">Kids</a></li>
+					
+						<li><a href="/livetv" style="color:#C5C5C5">Complete List</a></li>
+						@foreach($genres as $genre)
+						<li><a href="/livetv/{{$genre}}" style="color:#C5C5C5">{{$genre}}</a></li>
+						@endforeach
+						<li><a href="/livetv/Others" style="color:#C5C5C5">Others</a></li>
+						
 					</ul>	
 				</div>
 				

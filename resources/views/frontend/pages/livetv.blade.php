@@ -212,7 +212,7 @@ $.ajax({
 			
 		@foreach($pagechannel as $key => $user)
 		<div class="container">
-				<h4 class="section-heading">{{$key}}</h4>
+				<h4 class="section-heading">{{$key}} <a style="font-size:15px" href="/livetv/{{$key}}">show all</a></h4> 
 				<div class="row">
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
