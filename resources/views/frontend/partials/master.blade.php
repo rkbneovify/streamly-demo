@@ -1,3 +1,6 @@
+<?php use App\Models\Genre;
+$genres = Genre::pluck('name', 'id');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,7 +62,7 @@
 
 @yield('content')
 
-@include('frontend.partials.footer')
+@include('frontend.partials.footer',['genres'=>$genres])
 <script  src="{{ asset('frontend/jquery-3.5.1.min.js') }}" ></script> 
 {{-- <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script> --}}
 {{-- <script defer src="{{ asset('frontend/jquery-ui.min.js') }}" ></script>  --}}
