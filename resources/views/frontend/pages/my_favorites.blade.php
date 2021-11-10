@@ -70,7 +70,7 @@ width: 100px;
 			margin-top: 2rem;
 		}
 
-		.live-news-item:after {
+		/*.live-news-item:after {
 		    content: 'live';
 		    position: absolute;
 		    right: 12px;
@@ -80,7 +80,7 @@ width: 100px;
 		    border-radius: 4px 0px 0px 4px;
 		    padding: 0px 5px;
 		    line-height: 1;
-		}
+		}*/
 	</style>
 		<script>
 		
