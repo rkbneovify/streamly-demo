@@ -247,7 +247,9 @@ use Laravel\Cashier\Cashier;?>
 							<li>Profile Management</li>
 							<li>
 								Email:
-							<span class="pull-right">{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
+							<span class="pull-right">{{Auth::user()->email}}
+							{{-- <i class="fa fa-edit light-brown" aria-hidden="true"></i> --}}
+							</span>
 							</li>
 							<li>
 								Password:
@@ -293,7 +295,9 @@ use Laravel\Cashier\Cashier;?>
 							<li>
 								Payment method 
 								{{-- {{$subscription}} --}}
-								<b><span class="pull-right">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></span></b>
+								<b><span class="pull-right">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  
+								{{-- <i class="fa fa-edit light-brown" aria-hidden="true"></i> --}}
+								</span></b>
 								
 							</li>
 							<li>
