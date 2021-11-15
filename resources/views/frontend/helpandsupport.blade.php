@@ -165,7 +165,9 @@ $("#my_form").submit(function(event){
 									<li>For help and support contact on email below</li>
 									<li>
 										Email:
-									<span class="pull-right">contact@streamlytv.com<i class="fa fa-edit light-brown" aria-hidden="true"></i></span>
+									<span class="pull-right">contact@streamlytv.com
+									{{-- <i class="fa fa-edit light-brown" aria-hidden="true"> --}}
+									</i></span>
 									</li>
 								</ul>
 							</div>
