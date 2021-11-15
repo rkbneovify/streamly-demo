@@ -1183,25 +1183,40 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-Y9-63K">
-                                <rect key="frame" x="567" y="348" width="786" height="384"/>
+                                <rect key="frame" x="352" y="348" width="1216" height="384"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan this QR code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e3Y-LT-tz2">
-                                        <rect key="frame" x="50" y="80" width="268" height="37"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="37" id="qoy-Fz-smx"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="31"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You need to be logged in your phone to follow these steps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e3Y-LT-tz2">
+                                        <rect key="frame" x="50" y="50" width="1116" height="36"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="35"/>
                                         <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try using a phone camera or a QR code scanner" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qx7-4i-5qi">
-                                        <rect key="frame" x="50" y="223" width="453" height="82"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
-                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="NSu-ep-Eq6">
+                                        <rect key="frame" x="50" y="106" width="841" height="258"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1. Open Streamly on web browser/app on your phone" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qx7-4i-5qi">
+                                                <rect key="frame" x="0.0" y="0.0" width="841" height="72.5"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2. Tap navbar and select &quot;QR scanner&quot;" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tcp-Xu-TS4">
+                                                <rect key="frame" x="0.0" y="92.5" width="841" height="73"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3. Point your phone to this screen to capture the code" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lrw-9d-XpO">
+                                                <rect key="frame" x="0.0" y="185.5" width="841" height="72.5"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
+                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u0c-43-gIK">
-                                        <rect key="frame" x="511" y="80" width="225" height="225"/>
+                                        <rect key="frame" x="941" y="106" width="225" height="225"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="225" id="Cnz-yj-JuO"/>
@@ -1211,17 +1226,17 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="u0c-43-gIK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="e3Y-LT-tz2" secondAttribute="trailing" symbolic="YES" id="0LL-oT-p8E"/>
-                                    <constraint firstItem="Qx7-4i-5qi" firstAttribute="leading" secondItem="e3Y-LT-tz2" secondAttribute="leading" id="L99-WZ-etr"/>
-                                    <constraint firstAttribute="bottom" secondItem="u0c-43-gIK" secondAttribute="bottom" constant="79" id="Seh-oM-nuX"/>
+                                    <constraint firstItem="NSu-ep-Eq6" firstAttribute="leading" secondItem="Shv-Y9-63K" secondAttribute="leading" constant="50" id="BBc-z2-INL"/>
+                                    <constraint firstAttribute="bottom" secondItem="NSu-ep-Eq6" secondAttribute="bottom" constant="20" id="CI4-dw-4Vo"/>
+                                    <constraint firstAttribute="trailing" secondItem="e3Y-LT-tz2" secondAttribute="trailing" constant="50" id="NP6-ai-fJO"/>
+                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="u0c-43-gIK" secondAttribute="bottom" constant="50" id="Seh-oM-nuX"/>
                                     <constraint firstItem="e3Y-LT-tz2" firstAttribute="leading" secondItem="Shv-Y9-63K" secondAttribute="leading" constant="50" id="WGc-EA-jzy"/>
-                                    <constraint firstAttribute="bottom" secondItem="Qx7-4i-5qi" secondAttribute="bottom" constant="79" id="X0N-9Z-k2c"/>
-                                    <constraint firstItem="u0c-43-gIK" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" constant="80" id="cLD-2b-013"/>
+                                    <constraint firstItem="u0c-43-gIK" firstAttribute="top" secondItem="NSu-ep-Eq6" secondAttribute="top" id="asX-Xc-b8e"/>
                                     <constraint firstAttribute="trailing" secondItem="u0c-43-gIK" secondAttribute="trailing" constant="50" id="fLe-49-afM"/>
-                                    <constraint firstItem="e3Y-LT-tz2" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" constant="80" id="kSc-5f-Gen"/>
-                                    <constraint firstAttribute="width" constant="786" id="mol-p6-Ute"/>
+                                    <constraint firstItem="NSu-ep-Eq6" firstAttribute="top" secondItem="e3Y-LT-tz2" secondAttribute="bottom" constant="20" id="hx4-NV-wyo"/>
+                                    <constraint firstItem="u0c-43-gIK" firstAttribute="leading" secondItem="NSu-ep-Eq6" secondAttribute="trailing" constant="50" id="iG3-h8-h7E"/>
+                                    <constraint firstItem="e3Y-LT-tz2" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" constant="50" id="kSc-5f-Gen"/>
                                     <constraint firstAttribute="height" constant="384" id="ngs-LX-ACb"/>
-                                    <constraint firstItem="u0c-43-gIK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Qx7-4i-5qi" secondAttribute="trailing" symbolic="YES" id="osi-e7-ebe"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
