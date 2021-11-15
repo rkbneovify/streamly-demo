@@ -135,9 +135,10 @@ return $second=Gracenotechannel::select('StationName',DB::raw("'channel' as type
         // SELECT EventTitle,EventDescription,StartDateTime,CallSign FROM `gracenote` WHERE 
         // `gracenote`.`CallSign` ='COMEDYP' AND `gracenote`.`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)
         $records  = Gracenote::select("EventTitle","EventDescription","StartDateTime")
-        ->whereRaw("CallSign= '$callSign' AND EventTitle= '$EventTitle' AND `StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)")->orderBy('StartDateTime', 'asc')->paginate(10);
+        ->whereRaw("CallSign= '$callSign' AND EventTitle= '$EventTitle'")->orderBy('StartDateTime', 'asc')
+        ->paginate(10);
         
-    //    dd($record->toSql());
+    //    dd($records->toSql());
        return view('frontend.upcomingevent',compact('records','login'));
         }
 
