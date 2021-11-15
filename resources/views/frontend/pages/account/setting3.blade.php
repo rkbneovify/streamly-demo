@@ -376,7 +376,7 @@ use Laravel\Cashier\Cashier;
     color: #FFFFFF;">
 
     <tr>
-      <th scope="col" class="text-left pl-4 text-md-center">View Receipt</th>
+      <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
       <th scope="col" class="text-left text-md-center">Download</th>
       
     </tr>
@@ -393,7 +393,7 @@ else
 } ?>
   <tr>
       <td class="text-left text-md-center">{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}</td>
-      <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a></td>
+      <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
     </tr>
   @endforeach
     
