@@ -310,7 +310,7 @@ use Laravel\Cashier\Cashier;?>
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>
-								View Receipt
+								Invoice
 								<b><span class="pull-right">Download</span></b>
 							</li>
 							@foreach ($invoices as $invoice)
@@ -321,7 +321,7 @@ use Laravel\Cashier\Cashier;?>
 								{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}
 								{{-- {{ $invoice->date()->toFormattedDateString() }} {{ $invoice->total() }} --}}
 								{{-- {{$subscription}} --}}
-								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">Download</a> 
+								<b><span class="pull-right"><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a> 
 									{{-- <a href="/user/invoice/{{ $invoice->id }}">Download se</a> --}}
 								</span></b>
 								
