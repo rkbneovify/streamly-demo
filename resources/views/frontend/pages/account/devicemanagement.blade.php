@@ -224,7 +224,7 @@ use Laravel\Cashier\Cashier; ?>
   <tbody style="color:#5E5E5E;">
     <tr>
       <td class="text-left text-md-center">Email:</td>
-      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Password:</td>

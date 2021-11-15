@@ -235,7 +235,7 @@ use Laravel\Cashier\Cashier;
   <tbody style="color:#5E5E5E;">
     <tr>
       <td class="text-left text-md-center">Email:</td>
-      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Password:</td>
@@ -305,11 +305,11 @@ use Laravel\Cashier\Cashier;
       <td class="text-left text-md-center">{{$plan->nickname ?? ''}}
  {{"with ".$subscription->quantity ." quantity" ?? ''}} {{Cashier::formatAmount($invoices->data[0]->total??'0', $invoices->data[0]->currency??'USD') }}
 	per {{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</td>
-      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Payment method:</td>
-      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  </td>
     </tr>
 					
 				 <tr class=" text-md-center text-wrap">
@@ -344,11 +344,11 @@ use Laravel\Cashier\Cashier;
   <tbody style="color:#5E5E5E;">
     <tr>
       <td class="text-left text-md-center">{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
-      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}<i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Payment method:</td>
-      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  <i class="fa fa-edit light-brown" aria-hidden="true"></i></td>
+      <td class="text-left text-md-center text-wrap">{{$userinfo->card_brand ?? ''}} {{$userinfo->card_last_four ?? ''}}  </td>
     </tr>
 					
 				 <tr class=" text-md-center text-wrap">
