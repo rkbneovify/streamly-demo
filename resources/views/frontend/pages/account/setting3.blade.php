@@ -376,7 +376,7 @@ use Laravel\Cashier\Cashier;
     color: #FFFFFF;">
 
     <tr>
-      <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
+      <th scope="col" class="text-left pl-4 text-md-center">View Receipt</th>
       <th scope="col" class="text-left text-md-center">Download</th>
       
     </tr>

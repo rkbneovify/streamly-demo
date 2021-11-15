@@ -306,7 +306,7 @@ use Laravel\Cashier\Cashier;?>
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
 							<li>
-								Invoice
+								View Receipt
 								<b><span class="pull-right">Download</span></b>
 							</li>
 							@foreach ($invoices as $invoice)
