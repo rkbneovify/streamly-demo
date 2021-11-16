@@ -265,14 +265,14 @@ public function unhashid($id){
         $userRole=  $user->roles->first()->name;
         if($userRole=='tieruser'){
         $prevConnectDevicecount = SessionTable::with('hotel:id,hotel_room,session_id')
-        ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+        ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()
+    $s=$prevConnectDevicecount->get()->makeHidden('device')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['id']);
@@ -290,14 +290,14 @@ public function unhashid($id){
                     
                     });
                 }else{
-                    $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name")
+                    $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
         ->where([
         ['status', '=', '1'],
         ['users_id', '=', $uid],
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()
+    $s=$prevConnectDevicecount->get()->makeHidden('device')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['session_id']);
@@ -309,7 +309,7 @@ public function unhashid($id){
                 }
     $numofdevice=$prevConnectDevicecount->count();
    
-     
+    //  dd($s);
          $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
          return response()->json($response, 200);
          
