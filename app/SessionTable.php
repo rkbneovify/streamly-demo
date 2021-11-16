@@ -121,6 +121,7 @@ class SessionTable extends Model
     //     $imagePath=$this->device['device'];
     //     return $imagePath;
     // }
+    // return $this->attributes;
     return [
         'desktop'=>asset("/uploads/devicelogo/").'/tv/normaltv.png',
         'device-rokutv'=>asset("/uploads/devicelogo/").'/tv/roku.png',
