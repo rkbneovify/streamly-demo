@@ -16,7 +16,8 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
-   protected $appends = ['device_img']; 
+   protected $appends = ['device_img','device_detail']; 
+   protected $hidden = ['device_detail'];//device detail from json
     protected $fillable=[
         'users_id',
         'access_token',
@@ -112,6 +113,9 @@ class SessionTable extends Model
         return $this->getKey();
     }
 
+    public function getDeviceDetailAttribute($size=null){
+    return $this->device['device'];
+    }
     public function getDeviceImgAttribute($size=null)
     { 
     //     if ($this->device['device']=='desktop') {
