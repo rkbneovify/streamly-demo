@@ -26,6 +26,8 @@
 <script src="{{ asset('frontend/dueljs/duel.min.js') }}" ></script>
 
 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 	(function () {
 function getLocation2() {
@@ -188,7 +190,42 @@ fetch(url, requestOptions)
 			        }
 			    }
 			});
-		
+	
+  var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+//var dateTime2 = date+' '+time;
+//console.log('dateTime',dateTime);
+//$('#gracenote_data').select2('open');
+//var dateTime=new Date().toISOString().slice(0, 19).replace('T', ' ');
+  $("#gracenote_data").select2({
+    placeholder: 'gracenote_data...',
+    // width: '350px',
+    allowClear: true,
+     closeOnSelect: false,
+    ajax: {
+        url: '/epgdata',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term || '',
+                page: params.page || 1,
+                starttime:time,
+                callsign: window.location.pathname.split('/')[2],
+            }
+        },
+        cache: true
+    }, escapeMarkup: function (markup) { return markup; },
+    templateResult: function (data) {
+       // console.log('templateResult',data);
+        return '<span>'+data.StartDateTime+ ' '+ data.text + '</span>';
+    }
+
+});
+//.select2('open');
+
+
 	});
 
 function Addrecent(){
@@ -555,6 +592,9 @@ border: 1px solid rgba( 255, 255, 255, 0.18 );
 		</div>
 
 		<div class="container" style="margin-top: 4%;">
+		<select id='gracenote_data' style="width: 100%; display:block;">
+        <option value='0'>- The schedule -</option>
+     </select>
 			<h4 class="section-heading">Similar Channels</h4>
 			
 			<div class="row">

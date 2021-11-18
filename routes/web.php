@@ -29,6 +29,7 @@ Route::get('search', 'HomeTwoController@search')->name('search');
 Route::get('mydata', 'HomeTwoController@mydata')->name('mydata');//infinite scroll
 Route::get('search2', 'HomeTwoController@search2')->name('search2');
 Route::get('dataforselect2', 'HomeTwoController@getdataforselect22')->name('dataforselect2');
+Route::get('epgdata', 'HomeTwoController@getepg')->name('epgdata');
 Route::get('dataforselectuser', 'HomeTwoController@getdataforselectUser')->name('dataforselectuser');
 Route::get('autocomplete', 'HomeTwoController@autocomplete')->name('autocomplete');
 
