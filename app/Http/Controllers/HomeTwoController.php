@@ -375,6 +375,40 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
             return \Response::json($results);
         }
     }
+    public function getepg(Request $request){
+        
+        $starttime = strip_tags($request->input('starttime'));
+        $callsign = strip_tags($request->input('callsign'));
+        // die;
+// $callSign='COMEDYP';
+        if ($request->ajax()) {
+
+            $term = trim($request->term);
+            $posts = DB::table('gracenote')->select('id','EventTitle as text','StartDateTime')
+                ->where('EventTitle', 'LIKE',  '%' . $term. '%')
+                ->whereRaw("CallSign= '$callsign'")
+->whereRaw('gracenote.`EndDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " '.$starttime.'"), "%Y-%m-%d %H:%i:%s")
+AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
+ ->orderBy('gracenote.StartDateTime', 'asc')
+ ->simplePaginate(10);
+        //    echo $posts;
+        //    die;
+            $morePages=true;
+           $pagination_obj= json_encode($posts);
+        //    return $pagination_obj;
+           if (empty($posts->nextPageUrl())){
+            $morePages=false;
+           }
+            $results = array(
+              "results" => $posts->items(),
+              "pagination" => array(
+                "more" => $morePages
+              )
+            );
+        
+            return \Response::json($results);
+        }
+    }
     public function getdataforselectUser(Request $request){
         
         if ($request->ajax()) {
