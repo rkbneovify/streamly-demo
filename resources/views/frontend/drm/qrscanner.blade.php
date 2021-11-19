@@ -114,6 +114,12 @@
 			letter-spacing: 0.24px;
 			color: #5E5E5E;
 		}
+		#qr-reader__dashboard_section_csr >div >button{
+			background: transparent linear-gradient(113deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box;   color: #fff;
+// font-size: 0.9rem;
+//font-family: 'Poppins', sans-serif !important;
+
+		}
 	</style>
 
 
@@ -137,15 +143,47 @@
                         <li class="text-center">
                         
 <?php $hashedid= HashUserID(Auth::user()->id); ?>
-<p>passcode: {{$hashedid}}</p>
+
 <p>Name: {{Auth::user()->name}}</p>
 <p>Email: {{Auth::user()->email}}</p>
+<p>passcode: {{$hashedid}}</p>
 </li>
                         <li class="text-center">
-    <div id="qr-reader" class="col-md-8"></div>
+    <div id="qr-reader" class="col-md-6 mx-auto"></div>
    
      <p id="login_mobile_scan_qrcode"></p>
      <p id="qrcodedoLogin"></p></li>
+	 {{-- <li>
+	 		<table class="table table-borderless" style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;" >
+  <thead >
+
+    <tr>
+      <th scope="col" class="text-left pl-4 text-md-center"> Name</th>
+      <th scope="col" class="text-md-center"> {{Auth::user()->name}}</th>
+      
+    </tr>
+  </thead>
+  <tbody >
+    <tr>
+      <td class="text-left text-md-center">Email</td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Passcode</td>
+      <td class="text-left text-md-center text-wrap">{{$hashedid}} </td>
+    </tr>
+					
+				 <tr class=" text-md-center text-wrap">
+      <td></td>
+    </tr>
+
+   
+  </tbody>
+</table></li> --}}
                         </ul>
 						 <div id="qr-reader-results"></div>	
 					</div>
