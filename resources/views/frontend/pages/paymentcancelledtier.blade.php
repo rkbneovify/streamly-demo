@@ -1,7 +1,14 @@
 <?php 
 use Laravel\Cashier\Cashier;
+use Carbon\Carbon;
 $plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal']; 
- //dump($plandetailsFirst);
+ //dump($plandetails);
+  $interval = $plandetails->interval;
+  $interval_count = $plandetails->interval_count;
+//echo "\n";
+       //echo $newDateTime = Carbon::now()->add($interval_count, $interval);
+      // echo $newDateTime = Carbon::now()->add(1, 'year');
+	  // die(); 
  ?>
 @extends('frontend/partials/master')
 
@@ -128,6 +135,13 @@ input[type=number] {
 		    width: 100%;
 		    color: #fff !important;
 		}
+
+		table>thead{font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;
+	}
 	</style>
 
 @endsection
@@ -136,48 +150,92 @@ input[type=number] {
 <section class="page-section">
 	<div class="container">
 		<div class="text-center">
-			<h2 class="section-heading">Add Your Billing Details</h2>
+			<h2 class="section-heading">Add Your Billing Detailsf</h2>
 			@if(!auth()->user()->subscribed('main'))
 			<div class="row  text-center">
-				<div class="col-md-4 text-left">
-					<div class="row subscription-box">
-						<div class="subscription-box-head">
-							<h4>Your Subscription:</h4> @if (!empty($plandetails->tiers))
+				<div class="col-md-4 h-100">
+					<div class="my-auto" style="margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
+						<div class="container">
+							{{-- <h4>Your Subscription:</h4> --}}
+							
+							 @if (!empty($plandetails->tiers))
+								<div class="row">
+									<p>Your Bill summary</p>
+									
+									<div class="col-8">
+									<span  class="totalprice3">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}
+									</span>  per device/ per month</div>
+								<div class="col-4"><button class="increment-btn  increment-subtract     " disabled> - </button>
+									<input type="number" class="quantity-input  text-center" style="width:30%;" id="quantity-input-premium" min="1" value="1" />
+									<button class="increment-btn  increment-add     "> + </button>
+									</div>
+								<hr>
+								</div>
+								<div class="row">
+								<div class="col-12">
+												<div class="text-right" style="padding-right: 1rem;" id="couponoff">$ 0</div>
+                         
+								</div>
+								<div class="col-6">
+
+								<span class='devicequantity'>1</span> X device(s) 
+								
+										<div class='form-group cvc required'>
+											{{-- <label class='control-label'>Coupon Code</label> --}}
+											{{-- <input autocomplete='off' class='form-control' placeholder='Coupon code' name="coupon" type='text'> <small class="help-block" style="display:none;"></small>  --}}
+											</div>
+									</div>
+									<div class="col-6 text-right">
+									 <span  class="totalprice3">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span>
+									</div></div>
+								
+                    <form>
+                        
+						   <div class="input-group"> <input type="text" class="form-control" name="couponfield" placeholder="Coupon code"> <span class="input-group-append"> <button class="btn bg-primary" id="couponbtn">Apply</button> </span> </div>
+                        
+                    </form>
+						<div class="col-md-6">
+										<div class='form-group cvc required'>
+											<label class='control-label'>Coupon Code</label> <small class="help-block" style="display:none;"></small> </div>
+									</div>
 							<details open>
 								<summary>
 									<h3>Tiers {{$plandetails->interval_count}} {{$plandetails->interval}}</h3></summary>
 								
                             @component('components.tiertable',['singlePlansDetail' => $plandetails,'type'=>'tiered'])
                             @endcomponent
-	</details>							<div class="flex justify-center mt-2">
-									<button class="increment-btn text-white increment-subtract light bg-dark bg-pasha py-2 px-4 rounded-lg submit-premium-class" disabled> - </button>
-									<input type="number" class="quantity-input w-8 appearance-none text-center" id="quantity-input-premium" min="1" value="1" />
-									<button class="increment-btn text-white increment-add light bg-dark bg-pasha py-2 px-4 rounded-lg submit-premium-class"> + </button>
-								</div>
+	</details>
+	Your plan will end on {{$ApproxEndDateOfSubscription->format('M d Y')}} We are charging you for the total number of devices.						
 	 @elseif (!empty($plandetails->amount))
 							<h3> {{Cashier::formatAmount($plandetails->amount??'0', $plandetails->currency??'USD')}}/ {{$plandetails->interval_count}} {{$plandetails->interval}}</h3> @else
 							<h3>unknown</h3> @endif
-							<table class="table table-sm table-borderless" style="margin-top: 1rem;">
+							{{-- <table class="table table-sm table-borderless" style="margin-top: 1rem;">
 								<tbody>
-									<tr>
+									 <tr>
 										<td>Trial</td>
 										<th class="text-right" style="padding-right: 1rem;">{{$plandetails->trial_period_days??'no trials'}} days</th>
-									</tr>
-									<tr>
+									</tr> 
+									 <tr>
 										<td>Tax</td>
 										<th class="text-right" style="padding-right: 1rem;">$ 0</th>
-									</tr>
-									<tr id="couponrow ">
+									</tr> 
+									 <tr id="couponrow ">
 										<td>Coupon</td>
 										<th class="text-right" style="padding-right: 1rem;" id="couponoff">$ 0</th>
-									</tr>
+									</tr> 
 								</tbody>
-							</table>
-							<hr/>
+							</table> --}}
+							{{-- <hr/> --}}
 							<div class="container padding-L-rem">
+							<br>
 								<div class="row text-left">
-									<div class="col-md-6 padding-L-rem"> Total </div>
-									<div class="col-md-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}} </div>
+									<div class="col-6 padding-L-rem"> Total </div>
+									<div class="col-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}} </div>
+								</div>
+								<hr/>
+									<div class="row text-left">
+									<div class="col-6 padding-L-rem"> Excludes Tax </div>
+									<div class="col-6 padding-L-rem text-right" id="totalprice" style="font-weight: bold;"> </div>
 								</div>
 							</div>
 						</div>
@@ -185,12 +243,8 @@ input[type=number] {
 				</div>
 				@endif
 				<div class="col-md-8 h-100">
-					<div class="my-auto" style="width: 80%;height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
-						<div class="container">
-							<div class="row" style="padding-top: 2rem;margin-left: 2rem;margin-right: 2rem;">
-								<div class="col-md-4" style="padding: 2rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;"> <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> <span style="display: block;">Credit Card</span> </div>
-								<div class="col-md-8" style="padding: 2rem;"> {{-- <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> --}}  </div> {{--
-								<div class="col-md-4" style="padding: 2rem;"> <img src="{{ asset('frontend/img/paypal.svg') }}"> <span style="display: block;">Paypal</span> </div> --}} </div> {{-- {{dd(auth()->user())}} --}}
+					<div class="my-auto" style="height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
+						<div class="container"> {{-- {{dd(auth()->user())}} --}}
 							<!-- If user is not subscribed to a plan, show them the payment form -->@if (auth()->user()->subscription('main')->cancelled()) @if(session('error_message'))
 						
  <div class="alert alert-danger alert-dismissible ">
@@ -231,15 +285,13 @@ input[type=number] {
 																<p style="color:red">{{ $errors->first('name') }}</p></div>
 														</span> @endif </div>
 								<div class="form-row">
-									<div class="col-md-6">
-										<div class='form-group cvc required'>
-											<label class='control-label'>Coupon Code</label>
-											<input autocomplete='off' class='form-control' placeholder='Coupon code' name="coupon" type='text'> <small class="help-block" style="display:none;"></small> </div>
-									</div>
+									
 									<div class="col-md-6">
 										<div class='form-group zip required'>
 											<label class='control-label'>Credit card zip</label>
-											<input id="zipcode" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" autocomplete='off' class='form-control' name="zip" type='number'> <small id="ziphelp"></small> </div> @if ($errors->has('zip')) <span class="help-block">
+											<input id="zipcode" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" autocomplete='off' class='form-control' name="zip" type='number'> 
+											<input autocomplete='off' class='form-control' placeholder='Coupon code' name="coupon" type='hidden'> 
+														<small id="ziphelp"></small> </div> @if ($errors->has('zip')) <span class="help-block">
 															<div class="alert alert-danger alert-dismissible ">
 																	<button type="button" class="close" data-dismiss="alert">&times;</button>
 																	<p style="color:red">{{ $errors->first('zip') }}</p></div>
@@ -275,7 +327,7 @@ input[type=number] {
 								<!-- Stripe Elements Placeholder -->
 								<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 								<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
-								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span id='devicequantity'>1</span> device</div>
+								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span class='devicequantity'>1</span> device</div>
 						</div> @if (empty($frontendjson['billingdetailspage'])) <span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 												</span> @else <span class="remove-p-a-r">
@@ -309,12 +361,15 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 	var totalPrice;
 	addQuantityListeners();
 	var bt = document.getElementById('card-button');
-	$('body').on('blur', '[name="coupon"]', function() {
-		$coupon = $(this);
-		if($coupon.val().length > 0) { // check if user typed anything
+	$('body').on('click', '#couponbtn', function(event) {
+		  event.preventDefault(); 
+		$coupon = $('[name="couponfield"]');
+		 $('[name="coupon"]').val($coupon.val());
+       if($coupon.val().length > 0) { // check if user typed anything
 			// $coupon.val($coupon.val().toUpperCase()); // I make all my coupons uppercase
-			var text = document.getElementById("totalprice").textContent;
-			// console.log('inner text',text);
+			//var text = document.getElementById("totalprice").textContent;
+			var text=$(".totalprice3:first").text().replace(/[^\d\.]/g, '');
+			 console.log('inner text',text);
 			$.ajax({
 				url: "{{ route('ajax-check') }}",
 				type: "GET",
@@ -329,16 +384,16 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 					if(data.amountoff != null) {
 						// console.log("totalPrice",totalPrice);
 						var totprice = text - data.amountoff;
-						document.getElementById("totalprice").textContent = '$ ' + totprice.toFixed(2);
-						document.getElementById("totalprice2").textContent = '$ ' + totprice.toFixed(2);
+						document.getElementById("totalprice").textContent = formatter.format(totprice);
+						document.getElementById("totalprice2").textContent = formatter.format(totprice);
 						document.getElementById("couponoff").textContent = '$ ' + data.amountoff + ' off';
 					};
 					if(data.percentoff != null) {
 						console.log('percenttoff', data.percentoff);
 						//Calculate the percent.
 						var totalValue = text * ((100 - data.percentoff) / 100)
-						document.getElementById("totalprice").textContent = '$ ' + totalValue.toFixed(2);
-						document.getElementById("totalprice2").textContent = '$ ' + totalValue.toFixed(2);
+						document.getElementById("totalprice").textContent = formatter.format(totalValue);
+						document.getElementById("totalprice2").textContent =  formatter.format(totalValue);
 						document.getElementById("couponoff").textContent = data.percentoff + '% off';
 					};
 				},
@@ -483,7 +538,11 @@ form.addEventListener('submit', async(e) => {
 //Constants used for quantity setters
 var MIN_SUBS = 1;
 var MAX_SUBS = 100;
-
+const formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2
+});
 function updateQuantity(evt) {
 	if(evt && evt.type === 'keypress' && evt.keyCode !== 13) {
 		return;
@@ -502,8 +561,10 @@ function updateQuantity(evt) {
 	// Update number input with new value.
 	inputEl.value = quantity;
 	//console.log('qyantity',quantity);
-	 
-	document.getElementById("devicequantity").textContent=quantity;
+	 	const devicequantityAll=document.querySelectorAll(".devicequantity") ;
+		devicequantityAll.forEach(function(devicequantity) {
+  devicequantity.textContent= quantity;
+});
 	let tiers = @json($plandetails->tiers);
 		const seconLastTier = tiers[tiers.length - 2];
 		//  console.log('Tiers',tiers);
@@ -519,8 +580,12 @@ function updateQuantity(evt) {
 			price = parseInt(t.unit_amount_decimal) / 100;
 			totalPrice = quantity * price;
 		}
-		document.getElementById("totalprice").textContent = totalPrice;
-		document.getElementById("totalprice2").textContent = totalPrice;
+		document.getElementById("totalprice").textContent = formatter.format(totalPrice);
+		document.getElementById("totalprice2").textContent = formatter.format(totalPrice);
+		const totalprice3=document.querySelectorAll(".totalprice3") ;
+		totalprice3.forEach(function(userItem) {
+  userItem.textContent= formatter.format(totalPrice);
+});
 		document.getElementById("quantity").value = quantity;
 		//console.log("totalPrice", totalPrice)
 	// Disable the button if the customers hits the max or min
