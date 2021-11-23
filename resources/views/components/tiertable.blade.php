@@ -2,7 +2,7 @@
 use Laravel\Cashier\Cashier;
 ?>
 <table class="table table-bordered">
-							<thead style="background-color:#FFFFFF;">
+							<thead>
 								<tr>
 									<td>
 										<div style="align-items: center; justify-content: flex-start;"><span class="Text-color--dark Text-fontSize--13 Text-fontWeight--medium Text-lineHeight--20 Text-numericSpacing--proportional Text-typeface--upper Text-wrap--noWrap Text-display--inline"><strong>Quantity</strong></span> </div>
