@@ -1183,64 +1183,60 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Shv-Y9-63K">
-                                <rect key="frame" x="352" y="348" width="1216" height="384"/>
+                                <rect key="frame" x="130" y="329" width="1188" height="422"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You need to be logged in your phone to follow these steps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e3Y-LT-tz2">
-                                        <rect key="frame" x="50" y="50" width="1116" height="36"/>
+                                        <rect key="frame" x="50" y="82" width="1088" height="42"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="35"/>
-                                        <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="NSu-ep-Eq6">
-                                        <rect key="frame" x="50" y="106" width="841" height="258"/>
+                                        <rect key="frame" x="50" y="144" width="841" height="258"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1. Open Streamly on web browser/app on your phone" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qx7-4i-5qi">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• Open Streamly on web browser/app on your phone" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qx7-4i-5qi">
                                                 <rect key="frame" x="0.0" y="0.0" width="841" height="72.5"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
-                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2. Tap navbar and select &quot;QR scanner&quot;" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tcp-Xu-TS4">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• Tap navbar and select &quot;QR scanner&quot;" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tcp-Xu-TS4">
                                                 <rect key="frame" x="0.0" y="92.5" width="841" height="73"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
-                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3. Point your phone to this screen to capture the code" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lrw-9d-XpO">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="• Point your phone to this screen to capture the code" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lrw-9d-XpO">
                                                 <rect key="frame" x="0.0" y="185.5" width="841" height="72.5"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
-                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u0c-43-gIK">
-                                        <rect key="frame" x="941" y="106" width="225" height="225"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="225" id="Cnz-yj-JuO"/>
-                                            <constraint firstAttribute="width" secondItem="u0c-43-gIK" secondAttribute="height" multiplier="1:1" id="dLu-vv-8LJ"/>
-                                        </constraints>
-                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QR Login" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HFg-wH-CBa">
+                                        <rect key="frame" x="50" y="20" width="1088" height="42"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="35"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" red="0.18823529780000001" green="0.29803922770000002" blue="0.48627454040000001" alpha="0.26719281462585032" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
+                                    <constraint firstItem="HFg-wH-CBa" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" constant="20" id="5jb-3V-yIm"/>
                                     <constraint firstItem="NSu-ep-Eq6" firstAttribute="leading" secondItem="Shv-Y9-63K" secondAttribute="leading" constant="50" id="BBc-z2-INL"/>
                                     <constraint firstAttribute="bottom" secondItem="NSu-ep-Eq6" secondAttribute="bottom" constant="20" id="CI4-dw-4Vo"/>
+                                    <constraint firstItem="e3Y-LT-tz2" firstAttribute="top" secondItem="HFg-wH-CBa" secondAttribute="bottom" constant="20" id="LxM-V5-529"/>
                                     <constraint firstAttribute="trailing" secondItem="e3Y-LT-tz2" secondAttribute="trailing" constant="50" id="NP6-ai-fJO"/>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="u0c-43-gIK" secondAttribute="bottom" constant="50" id="Seh-oM-nuX"/>
                                     <constraint firstItem="e3Y-LT-tz2" firstAttribute="leading" secondItem="Shv-Y9-63K" secondAttribute="leading" constant="50" id="WGc-EA-jzy"/>
-                                    <constraint firstItem="u0c-43-gIK" firstAttribute="top" secondItem="NSu-ep-Eq6" secondAttribute="top" id="asX-Xc-b8e"/>
-                                    <constraint firstAttribute="trailing" secondItem="u0c-43-gIK" secondAttribute="trailing" constant="50" id="fLe-49-afM"/>
+                                    <constraint firstItem="HFg-wH-CBa" firstAttribute="trailing" secondItem="e3Y-LT-tz2" secondAttribute="trailing" id="cQb-2R-ksy"/>
                                     <constraint firstItem="NSu-ep-Eq6" firstAttribute="top" secondItem="e3Y-LT-tz2" secondAttribute="bottom" constant="20" id="hx4-NV-wyo"/>
-                                    <constraint firstItem="u0c-43-gIK" firstAttribute="leading" secondItem="NSu-ep-Eq6" secondAttribute="trailing" constant="50" id="iG3-h8-h7E"/>
-                                    <constraint firstItem="e3Y-LT-tz2" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" constant="50" id="kSc-5f-Gen"/>
-                                    <constraint firstAttribute="height" constant="384" id="ngs-LX-ACb"/>
+                                    <constraint firstItem="HFg-wH-CBa" firstAttribute="leading" secondItem="e3Y-LT-tz2" secondAttribute="leading" id="yOE-fA-kky"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="33"/>
+                                        <real key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
@@ -1261,17 +1257,56 @@
                                     <constraint firstAttribute="height" constant="78" id="gKG-0i-jv7"/>
                                 </constraints>
                             </imageView>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0R-yy-P43">
+                                <rect key="frame" x="1368" y="329" width="422" height="422"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dnC-E9-TkA">
+                                        <rect key="frame" x="50" y="50" width="322" height="322"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="dummyQR" translatesAutoresizingMaskIntoConstraints="NO" id="u0c-43-gIK">
+                                                <rect key="frame" x="10" y="10" width="302" height="302"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="u0c-43-gIK" firstAttribute="leading" secondItem="dnC-E9-TkA" secondAttribute="leading" constant="10" id="9uI-KA-5qj"/>
+                                            <constraint firstAttribute="bottom" secondItem="u0c-43-gIK" secondAttribute="bottom" constant="10" id="FHP-r4-BF6"/>
+                                            <constraint firstAttribute="trailing" secondItem="u0c-43-gIK" secondAttribute="trailing" constant="10" id="a8X-Zy-T4g"/>
+                                            <constraint firstItem="u0c-43-gIK" firstAttribute="top" secondItem="dnC-E9-TkA" secondAttribute="top" constant="10" id="lRu-bU-jFz"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.18823529780000001" green="0.29803922770000002" blue="0.48627454040000001" alpha="0.27000000000000002" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstItem="dnC-E9-TkA" firstAttribute="leading" secondItem="a0R-yy-P43" secondAttribute="leading" constant="50" id="12I-16-mrI"/>
+                                    <constraint firstAttribute="bottom" secondItem="dnC-E9-TkA" secondAttribute="bottom" constant="50" id="MWd-gQ-6P6"/>
+                                    <constraint firstAttribute="trailing" secondItem="dnC-E9-TkA" secondAttribute="trailing" constant="50" id="NVD-ZN-X35"/>
+                                    <constraint firstItem="dnC-E9-TkA" firstAttribute="top" secondItem="a0R-yy-P43" secondAttribute="top" constant="50" id="n7E-X3-gAW"/>
+                                    <constraint firstAttribute="width" constant="422" id="rVc-V0-YUt"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Cjx-Pz-Obc"/>
                         <constraints>
+                            <constraint firstItem="a0R-yy-P43" firstAttribute="bottom" secondItem="Shv-Y9-63K" secondAttribute="bottom" id="2bq-Wq-ABH"/>
                             <constraint firstItem="Shv-Y9-63K" firstAttribute="centerY" secondItem="Cjx-Pz-Obc" secondAttribute="centerY" id="E2X-b1-qYt"/>
                             <constraint firstItem="qVR-l3-jJv" firstAttribute="top" secondItem="Kju-4u-sdZ" secondAttribute="top" constant="44" id="EoU-YZ-xEh"/>
-                            <constraint firstItem="Shv-Y9-63K" firstAttribute="centerX" secondItem="Cjx-Pz-Obc" secondAttribute="centerX" id="QDE-cd-j8O"/>
+                            <constraint firstItem="a0R-yy-P43" firstAttribute="centerY" secondItem="Cjx-Pz-Obc" secondAttribute="centerY" id="IjA-cr-Eev"/>
+                            <constraint firstItem="a0R-yy-P43" firstAttribute="top" secondItem="Shv-Y9-63K" secondAttribute="top" id="Iuu-bQ-10P"/>
                             <constraint firstItem="gHZ-X8-nJM" firstAttribute="centerX" secondItem="qVR-l3-jJv" secondAttribute="centerX" id="STz-Kw-w2i"/>
                             <constraint firstAttribute="bottom" secondItem="4Gc-Bp-BKg" secondAttribute="bottom" constant="44" id="TTC-GC-fvO"/>
                             <constraint firstItem="qVR-l3-jJv" firstAttribute="centerX" secondItem="Cjx-Pz-Obc" secondAttribute="centerX" id="VK8-81-tA6"/>
-                            <constraint firstItem="4Gc-Bp-BKg" firstAttribute="centerX" secondItem="Shv-Y9-63K" secondAttribute="centerX" id="aIx-nr-wh2"/>
                             <constraint firstItem="gHZ-X8-nJM" firstAttribute="top" secondItem="qVR-l3-jJv" secondAttribute="bottom" constant="100" id="bIm-ai-gcu"/>
+                            <constraint firstItem="Shv-Y9-63K" firstAttribute="leading" secondItem="Cjx-Pz-Obc" secondAttribute="leading" constant="50" id="bSx-Wu-SyY"/>
+                            <constraint firstItem="Cjx-Pz-Obc" firstAttribute="trailing" secondItem="a0R-yy-P43" secondAttribute="trailing" constant="50" id="cXq-yq-o5o"/>
+                            <constraint firstItem="a0R-yy-P43" firstAttribute="leading" secondItem="Shv-Y9-63K" secondAttribute="trailing" constant="50" id="mm7-VC-GlB"/>
+                            <constraint firstItem="4Gc-Bp-BKg" firstAttribute="centerX" secondItem="Cjx-Pz-Obc" secondAttribute="centerX" id="nQv-9I-6mx"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="firstColor">

@@ -1535,9 +1535,9 @@
 			baseConfigurationReference = 0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 35;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1550,7 +1550,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
 				PRODUCT_NAME = StreamlyTV;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = Streamly_Distribution;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -1561,9 +1561,9 @@
 			baseConfigurationReference = 51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
-				CODE_SIGN_IDENTITY = "Apple Distribution: Neovix, Inc. (A4QY9BUDRA)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 37;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -23,7 +23,7 @@ class QRViewModel: NSObject {
         }) { (error, data, code)  in
 
             //debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             if code == 401 {
                 //  Constant.logOut()
             }

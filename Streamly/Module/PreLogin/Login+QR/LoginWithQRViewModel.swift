@@ -36,7 +36,7 @@ class LoginWithQRViewModel: NSObject {
             }
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
-            if let data:QRModel = DataParser.parseReponseToModel(data!) {
+            if let `data` = data, let data:QRModel = DataParser.parseReponseToModel(data) {
                 weak.delegate?.apiFailed(data.msg ?? "")
                 return
             }

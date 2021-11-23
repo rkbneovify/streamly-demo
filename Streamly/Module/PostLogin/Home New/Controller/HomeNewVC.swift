@@ -724,6 +724,13 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
             if indexPath.section != 0
             {
                 let flag = self.geoData?.success ?? false
+                if self.geoData?.response_code == 402 {
+                    showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
+                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                        Utility.logOut()
+                    }
+                    return
+                }
                 guard let item = filteredList?[(indexPath.section - 1)] else {return}
                 present(videoPlaybackViewController, animated: true) {
                     self.videoPlaybackViewController.channelObject = item
@@ -760,7 +767,15 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
 
 extension HomeNewVC:HandleError
 {
-    func handleError(_ message: String) {
+    
+    func handleError(_ message: String, _ statusCode: Int) {
+        if statusCode == 402 {
+            showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
+        }
         self.removeSpinner()
         self.showSimpleAlertWithMessage(message)
     }

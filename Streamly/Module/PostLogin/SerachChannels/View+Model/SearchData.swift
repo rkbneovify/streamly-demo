@@ -29,12 +29,10 @@ class SearchDataViewModel: NSObject {
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                     Utility.logOut()
                     return
-                } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
                 }
             }
             //debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             if code == 401 {
                 Constant.logOut()
             }

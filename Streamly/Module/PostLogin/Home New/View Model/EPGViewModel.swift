@@ -32,10 +32,10 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             } else {
-                self.delegate?.handleError(error?.localizedDescription ?? "")
+                self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             }
             //debugPrint("failure")
            
@@ -61,7 +61,7 @@ class EPGViewModel: NSObject {
                 Utility.logOut()
                 return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", code ?? 0)
                 }
             }
             debugPrint("failure")
@@ -85,7 +85,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", code ?? 0)
                 }
             }
             //debugPrint("failure")
@@ -108,7 +108,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             //debugPrint("failure")
@@ -133,8 +133,9 @@ class EPGViewModel: NSObject {
                         Utility.logOut()
                         return
                     } else if failedData.response_code == 402 {
-                        self.delegate?.handleError(failedData.message ?? "")
+                        self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                     }
+                    return
                 }
                 if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
                     self.geoData!((geoModel))
@@ -164,7 +165,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             //            debugPrint("failure")
@@ -187,7 +188,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             //            debugPrint("failure")
@@ -213,7 +214,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             debugPrint("failure")
@@ -261,7 +262,7 @@ class EPGViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             debugPrint("failure")

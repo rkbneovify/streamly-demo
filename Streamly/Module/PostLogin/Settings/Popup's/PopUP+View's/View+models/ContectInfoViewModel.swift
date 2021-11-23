@@ -31,11 +31,11 @@ class ContactDataViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             //debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+            self.delegate?.handleError(error?.localizedDescription ?? "",code ?? 0)
             if code == 401 {
                 Constant.logOut()
             }
@@ -57,11 +57,11 @@ class ContactDataViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
             //debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "")
+            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             if code == 401 {
                 Constant.logOut()
             }
@@ -83,11 +83,11 @@ class ContactDataViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 }
             }
                //debugPrint("failure")
-               self.delegate?.handleError(error?.localizedDescription ?? "")
+            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             if code == 401 {
                 Constant.logOut()
             }
@@ -109,11 +109,12 @@ class ContactDataViewModel: NSObject {
                         Utility.logOut()
                         return
                     } else if failedData.response_code == 402 {
-                        self.delegate?.handleError(failedData.message ?? "")
+                        self.delegate?.handleError(failedData.message ?? "",failedData.response_code ?? 0)
                     }
+                    return
                 }
                   //debugPrint("failure")
-                  self.delegate?.handleError(error?.localizedDescription ?? "")
+                  self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
                 if code == 401 {
                     Constant.logOut()
                 }

@@ -28,8 +28,8 @@ class RegistredDeviceViewModel: NSObject {
                     Utility.logOut()
                     return
                 } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "")
-                }
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                } 
             }
             //debugPrint("failure")
             //self.delegate?.handleError(error?.localizedDescription ?? "")

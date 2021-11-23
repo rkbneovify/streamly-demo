@@ -106,7 +106,14 @@ class QRViewVC: UIViewController {
 
 extension QRViewVC:HandleError
 {
-    func handleError(_ message: String) {
+    func handleError(_ message: String, _ statusCode: Int) {
+        if statusCode == 402 {
+            showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
+        }
         self.removeSpinner()
         self.showSimpleAlertWithMessage("Something went wrong!, Please try again")
     }
