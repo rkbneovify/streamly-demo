@@ -150,7 +150,7 @@ input[type=number] {
 <section class="page-section">
 	<div class="container">
 		<div class="text-center">
-			<h2 class="section-heading">Add Your Billing Detailsf</h2>
+			<h2 class="section-heading">Add Your Billing Details</h2>
 			@if(!auth()->user()->subscribed('main'))
 			<div class="row  text-center">
 				<div class="col-md-4 h-100">
