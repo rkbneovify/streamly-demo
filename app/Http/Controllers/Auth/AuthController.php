@@ -61,12 +61,23 @@ class AuthController extends Controller
         $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
 
         $html='<html>
-            Hi, '.$User->name.'<br><br>
+        Hi, '.$request['name'].'<br><br>
 
-            Thank you for registering on '.env('APP_NAME').'.
-
-            Here is your account verification link. Click on below link to verify you account. <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a>
-        </html>';
+        Thank you for registering for '.env('APP_NAME').'.<br><br>
+        Please click the following link to verify your account.
+        <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+        width: 115px;
+        height: 25px;
+        background: #004E92 0% 0% no-repeat padding-box;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        line-height: 25px;">Verify</a><br><br>
+        Thank you!<br>
+        The '.env('APP_NAME').' Team!
+    </html>';
 
         Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
             $message->to($request->email, $User->name)

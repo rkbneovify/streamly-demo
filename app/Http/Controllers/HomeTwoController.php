@@ -87,7 +87,16 @@ if($responseCaptcha->success == true){
 
         Thank you for registering for '.env('APP_NAME').'.<br><br>
         Please click the following link to verify your account.
-        <br><br><a href="'.$account_verification_link.'" target=_blank >'.$account_verification_link.'</a><br><br>
+        <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+        width: 115px;
+        height: 25px;
+        background: #004E92 0% 0% no-repeat padding-box;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        line-height: 25px;">Verify</a><br><br>
         Thank you!<br>
         The '.env('APP_NAME').' Team!
     </html>';
