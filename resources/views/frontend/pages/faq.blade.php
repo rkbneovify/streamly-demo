@@ -115,7 +115,7 @@
 			padding: 1rem;
 		    text-align: left;
 		    letter-spacing: 0.26px;
-		    color: #989898;
+		    color: #5E5E5E;
 		}
 
 		#pp {
@@ -125,7 +125,7 @@
 			padding: 1rem;
 		    text-align: left;
 		    letter-spacing: 0.26px;
-		    color: #989898;
+		    color: #5E5E5E;
 		}
 
 		#pp h5{
@@ -134,6 +134,12 @@
 
 		a.card-link {
 		    color: #5E5E5E;
+		}
+		p{
+			color:#5E5E5E
+		}
+		h2{
+			color:#5E5E5E
 		}
 
 	</style>
@@ -395,7 +401,7 @@
 				</div>
 
 				<div id="tou" class="col-sm-12 collapse" data-parent="#accordion">
-					<p><h2>Streamly Terms of Use
+					<h2>Streamly Terms of Use
 						Effective June 1, 2020</h2>
 						
 						 
@@ -425,7 +431,7 @@
 						Section 12: MISCELLANEOUS<br>
 						Privacy Policy: Click here.
 						End-User License Agreement: Click here.</p>
-						 
+						<p>
 						Section 1: Acceptance of Terms of Use
 						1. Acceptance.   Acceptance. Our Services are not intended to be used by children without involvement and approval of a parent or other legal guardian. If you are under the age of 13, then you are not permitted to register with us or provide your personal information to us. If you are between the ages of 13 and 18, you may register with us only if your parent or legal guardian has read and agreed to these Terms of Use and you have the consent of your parent or legal guardian. These Terms of Use govern your use of all of our Services and your relationship with us. By accessing, visiting, downloading or using any of our Services (e.g., if you download any of our Apps onto any device) you confirm that you have read and agreed to these Terms of Use. If you do not agree to these Terms of Use, then do not access or use any of our Services. If you are an existing user and do not wish to accept any revised Terms of Use, then you must immediately stop using all of our Services (including, for clarity, permanently removing all Apps from your devices), except as set forth in Section 11 below. Certain of our Services may be made available without any requirement to pay a fee, and you hereby acknowledge and agree that any such access to or use are also governed by these Terms of Use.
 						<br>
