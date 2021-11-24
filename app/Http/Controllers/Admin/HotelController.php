@@ -167,7 +167,19 @@ class HotelController extends Controller
         if($user->hasRole('tieruser')){
             $uid=  $user['id'];
             $rooms=getActiveHotelRooms($uid);
-
+            if($rooms->isEmpty()){
+                return response()->json([
+      
+                    'success' => true,
+                    'message'=>'No rooms available, remove other session from web and refresh this screen',
+                    'response_code'=>200,
+                      'data'=>$rooms,
+                      
+                    
+                    
+                  ],200);
+            }
+            
             return response()->json([
       
                 'success' => true,
