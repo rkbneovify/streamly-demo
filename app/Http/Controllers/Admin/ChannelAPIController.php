@@ -630,13 +630,13 @@ return response($data)->withHeaders([
     ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
     ->fromSub(function ($query) use ($type) {
       $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(),interval -1 day), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
-      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
       ->from('gracenote')
       ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     
-      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(date_add(CURDATE(),interval -1 day), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
-      AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
        ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
         ->where('sub.status','=','1')
