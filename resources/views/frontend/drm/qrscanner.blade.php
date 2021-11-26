@@ -250,7 +250,7 @@ function login_mobile_scan_qrcode(param){
         dataType: "json" ,
         url: url ,
         headers: { 'userpasscode': '{{$hashedid}}',
-		'Authorization': "Bearer {{session()->get('jwttoken')}}" },
+		'Authorization': "Bearer {{$token}}" },
         data:{
             //key:key
         },
