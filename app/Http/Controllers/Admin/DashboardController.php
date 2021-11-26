@@ -95,11 +95,29 @@ class DashboardController extends Controller
     public function qrscanner2() {
         if(Auth::check()){
             $login = true;
+            $user_id = Auth::user()->id;
+            $activeNowsession = SessionTable::where([
+                ['status', '=', '1'],
+                ['users_id', '=', $user_id],
+                ['access_token', '=', session()->get('jwttoken')],
+                 ])->get()->count();   
             
-            // $userRole= Auth::user()->roles->pluck('name');
-         
+                  if($activeNowsession!=0){
+
+                    return view('frontend.drm.qrscanner2',compact('login'));
+                  }
+                  $active_session = SessionTable::where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $user_id],
+                     ])->get()->toArray();
+                     $login_limit =GetLimitForUser(Auth::user()->id);
+                  if (count($active_session) >= $login_limit) {
+                    $login = true;
+                    return view('frontend.deviceLimitReached',compact('login','login_limit'));
+                }
+            return view('frontend.RefreshVideoPlayToken',compact('login'));
         
-            return view('frontend.drm.qrscanner2',compact('login'));
+        
         }
         return redirect()->route('home');
     }
