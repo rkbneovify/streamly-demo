@@ -9,7 +9,7 @@ use App\Models\Gracenote;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
-
+use JWTAuth;
 use App\SessionTable;
 use Illuminate\Support\Facades\Auth;
 /**
@@ -66,27 +66,25 @@ class DashboardController extends Controller
     public function qrscanner() {
         if(Auth::check()){
             $login = true;
-            $user_id = Auth::user()->id;
-            $activeNowsession = SessionTable::where([
-                ['status', '=', '1'],
-                ['users_id', '=', $user_id],
-                ['access_token', '=', session()->get('jwttoken')],
-                 ])->get()->count();   
-            
-                  if($activeNowsession!=0){
-
-                    return view('frontend.drm.qrscanner',compact('login'));
-                  }
+            $user= Auth::user();
+        $user_id=  $user['id'];
+                  
                   $active_session = SessionTable::where([
                     ['status', '=', '1'],
                     ['users_id', '=', $user_id],
                      ])->get()->toArray();
-                     $login_limit =GetLimitForUser(Auth::user()->id);
+                     $login_limit =GetLimitForUser($user_id);
                   if (count($active_session) >= $login_limit) {
                     $login = true;
                     return view('frontend.deviceLimitReached',compact('login','login_limit'));
                 }
-            return view('frontend.RefreshVideoPlayToken',compact('login'));
+
+        $expirationInMinutes = 60;//one month in minutes
+        JWTAuth::factory()->setTTL($expirationInMinutes);
+        $token = JWTAuth::fromUser($user);
+            
+
+                    return view('frontend.drm.qrscanner',compact('login','token'));
         
         
         }
@@ -95,27 +93,25 @@ class DashboardController extends Controller
     public function qrscanner2() {
         if(Auth::check()){
             $login = true;
-            $user_id = Auth::user()->id;
-            $activeNowsession = SessionTable::where([
-                ['status', '=', '1'],
-                ['users_id', '=', $user_id],
-                ['access_token', '=', session()->get('jwttoken')],
-                 ])->get()->count();   
-            
-                  if($activeNowsession!=0){
-
-                    return view('frontend.drm.qrscanner2',compact('login'));
-                  }
+            $user= Auth::user();
+        $user_id=  $user['id'];
+                  
                   $active_session = SessionTable::where([
                     ['status', '=', '1'],
                     ['users_id', '=', $user_id],
                      ])->get()->toArray();
-                     $login_limit =GetLimitForUser(Auth::user()->id);
+                     $login_limit =GetLimitForUser($user_id);
                   if (count($active_session) >= $login_limit) {
                     $login = true;
                     return view('frontend.deviceLimitReached',compact('login','login_limit'));
                 }
-            return view('frontend.RefreshVideoPlayToken',compact('login'));
+
+        $expirationInMinutes = 60;//one month in minutes
+        JWTAuth::factory()->setTTL($expirationInMinutes);
+        $token = JWTAuth::fromUser($user);
+            
+
+                    return view('frontend.drm.qrscanner2',compact('login','token'));
         
         
         }
