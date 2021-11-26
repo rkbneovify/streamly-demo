@@ -158,7 +158,7 @@ $("#my_form").submit(function(event){
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
-							<li>"Your account is in use on 5 devices. Please stop playing on other devices to continue"</li>
+							<li>"Your account is in use on {{$login_limit}} devices. Please stop playing on other devices to continue"</li>
 							
 								@if($errors->has('email'))
 								 <div class="alert alert-danger alert-dismissible ">
@@ -166,7 +166,7 @@ $("#my_form").submit(function(event){
 										<strong>Error!</strong> {{$errors->first()}}
 								</div>
 						@endif 
-						<li class="text-center"><strong>Check your 5 devices : </strong><a  href="/account/settings">Account Settings</a></li>
+						<li class="text-center"><strong>Check your {{$login_limit}} devices : </strong><a  href="/account/devices">Manage Connected device</a></li>
 									{{-- <form  id="my_form" class="login-form mt-3">
 										@csrf
 											
