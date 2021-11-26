@@ -126,7 +126,7 @@ if (count($active_session) >= $login_limit) {
     $login = true;
     //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
     //  $login = false; 
-        return view('frontend.deviceLimitReached',compact('login'));
+        return view('frontend.deviceLimitReached',compact('login','login_limit'));
     }
 
        
@@ -253,7 +253,7 @@ $relatedchannel=$record->get()->where('genrenae',$genre);
         $login = true;
         //  return "Your account is in use on 5 devices. Please stop playing on other devices to continue";
         //  $login = false; 
-            return view('frontend.deviceLimitReached',compact('login'));
+            return view('frontend.deviceLimitReached',compact('login','login_limit'));
         }
  }catch(Exception $e) {
             
