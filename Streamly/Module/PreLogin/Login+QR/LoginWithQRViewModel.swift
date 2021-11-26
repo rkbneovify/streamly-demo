@@ -11,7 +11,7 @@ import UIKit
 protocol LoginWithQRDelegate: AnyObject {
     func apiSuccess()
     func apiSuccessWithData<T>(data: T)
-    func apiFailed(_ message: String)
+    func apiFailed(_ message: String,_ statusCode: Int)
 }
 class LoginWithQRViewModel: NSObject {
 
@@ -37,10 +37,10 @@ class LoginWithQRViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let `data` = data, let data:QRModel = DataParser.parseReponseToModel(data) {
-                weak.delegate?.apiFailed(data.msg ?? "")
+                weak.delegate?.apiFailed(data.msg ?? "", data.status ?? 0)
                 return
             }
-            weak.delegate?.apiFailed(error?.localizedDescription ?? "")
+            weak.delegate?.apiFailed(error?.localizedDescription ?? "", status ?? 0)
         }
     }
     
@@ -61,11 +61,11 @@ class LoginWithQRViewModel: NSObject {
                 if response.status == 2 { // Qr is Expired
                     weak.currentAPIPolling = .isGetQR
                 } else {
-                    weak.delegate?.apiFailed(response.msg ?? "")
+                    weak.delegate?.apiFailed(response.msg ?? "", response.status ?? 0)
                 }
                 return
             }
-            weak.delegate?.apiFailed(error?.localizedDescription ?? "")
+            weak.delegate?.apiFailed(error?.localizedDescription ?? "", status ?? 0)
         }
     }
     
@@ -78,18 +78,10 @@ class LoginWithQRViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data:FailedResponse = DataParser.parseReponseToModel(data!) {
-                if data.response_code == 402 {
-                    weak.delegate?.apiFailed(data.message ?? "")
-                } else if data.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    Switcher.updateRootVC()
-                } else {
-                    weak.delegate?.apiFailed(data.message ?? "")
-                }
+                    weak.delegate?.apiFailed(data.message ?? "", data.response_code ?? 0)
                 return
             }
-            weak.delegate?.apiFailed(error?.localizedDescription ?? "")
+            weak.delegate?.apiFailed(error?.localizedDescription ?? "", status ?? 0)
         }
     }
     
@@ -103,7 +95,7 @@ class LoginWithQRViewModel: NSObject {
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
                 print(data.message ?? "")
-                weak.delegate?.apiFailed(data.message ?? "")
+                weak.delegate?.apiFailed(data.message ?? "", data.response_code ?? 0)
             }
             debugPrint(error?.localizedDescription ?? "")
            

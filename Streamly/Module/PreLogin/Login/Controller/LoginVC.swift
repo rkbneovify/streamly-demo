@@ -289,8 +289,10 @@ extension LoginVC
                     }
                 } else if let failureResponse = response.failure {
                     if failureResponse.response_code == 401 { // token expired
-                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                        Utility.logOut()
+                        selfStrong.showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                            Utility.logOut()
+                        }
                         return
                     } else if failureResponse.response_code == 402 {
                         selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")

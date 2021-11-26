@@ -11,40 +11,34 @@ import Foundation
 
 class SearchDataViewModel: NSObject {
 
-    var searchData:((ChannelResponse)->())?
+    var searchData:((ChannelData)->())?
     weak var delegate:HandleError?
 
-    func getSearchData() {
-        ApiCall.getSearchData(success: { data, _
+    func getSearchData(search: String = "") {
+        ApiCall.getSearchData(search: search,success: { data, _
             in
             if let contactModel = SearchDataParser.parseContactData(data!) {
-                self.searchData!((contactModel))
+                self.searchData?((contactModel))
                 //debugPrint(contactModel)
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
 
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                }
+                self.delegate?.handleError(error?.localizedDescription ?? "", failedData.response_code ?? 0)
+                return
             }
             //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
-            if code == 401 {
-                Constant.logOut()
-            }
         }
     }
 }
 
 class SearchDataParser {
 
-    static func parseContactData(_ data: Data) -> ChannelResponse? {
+    static func parseContactData(_ data: Data) -> ChannelData? {
         do {
-            let contactModelElement = try JSONDecoder().decode(ChannelResponse.self, from: data)
+            let contactModelElement = try JSONDecoder().decode(ChannelData.self, from: data)
 
 
             return contactModelElement

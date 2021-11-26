@@ -41,11 +41,11 @@ struct ChannelDetails : Codable {
 
     enum CodingKeys: String, CodingKey {
 
-        case StationName = "StationName"
+        case StationName = "stationName"
         case url = "url"
         case logo = "logo"
         case programs = "programs"
-        case CallSign = "CallSign"
+        case CallSign = "callSign"
         case id = "id"
 
 

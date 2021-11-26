@@ -24,9 +24,8 @@ class SearchVC: UIViewController {
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
                 filtterdChannelList = self.channelList?.data
-            }
-            else {
-                filtterdChannelList = self.channelList?.data?.filter { ($0.StationName?.localizedStandardContains(filterString) ?? false) }
+            } else {
+                filtterdChannelList = self.channelList?.data?.filter({($0.StationName?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
             }
 
             // Reload the collection view to reflect the changes.
@@ -206,7 +205,12 @@ extension SearchVC:UISearchResultsUpdating
 extension SearchVC:HandleError
 {
     func handleError(_ message: String, _ statusCode: Int) {
-        if statusCode == 402 {
+        if statusCode == 401 {
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        } else if statusCode == 402 {
             showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.logOut()

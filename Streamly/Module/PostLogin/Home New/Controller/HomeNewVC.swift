@@ -442,7 +442,6 @@ class HomeNewVC: UIViewController {
     private func makeApiCallChannelList(){
         group.enter()
         viewModel.getChannelList()
-        
     }
     
     private func initVMList() {
@@ -517,7 +516,7 @@ class HomeNewVC: UIViewController {
         viewVC.channelList = self.channelList
         viewVC.geoData = self.geoData
         // searchController.view.backgroundColor = UIColor.li
-        rootViewController.present(searchController, animated: true, completion: nil)
+        present(searchContainer, animated: true, completion: nil)
     }
     
     @IBAction func settingsAction(_ sender:UIButton){
@@ -769,7 +768,12 @@ extension HomeNewVC:HandleError
 {
     
     func handleError(_ message: String, _ statusCode: Int) {
-        if statusCode == 402 {
+        if statusCode == 401 { // Session Expired
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        } else if statusCode == 402 {
             showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.logOut()

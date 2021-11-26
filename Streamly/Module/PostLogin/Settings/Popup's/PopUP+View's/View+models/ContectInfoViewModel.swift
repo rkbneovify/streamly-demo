@@ -9,13 +9,13 @@
 import Foundation
 
 class ContactDataViewModel: NSObject {
-
+    
     var privacyResponseData:((PrivacyResponseData)->())?
     var contactData:((ContactResponse)->())?
     var logoutdata:((LogoutResponseData)->())?
     weak var delegate:HandleError?
-   
-
+    
+    
     func getContactData() {
         ApiCall.getContactInfoData(success: { data, _
             in
@@ -26,22 +26,14 @@ class ContactDataViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
             //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "",code ?? 0)
-            if code == 401 {
-                Constant.logOut()
-            }
         }
     }
-
+    
     func logOUT() {
         ApiCall.logOut(success: { data, _
             in
@@ -52,83 +44,58 @@ class ContactDataViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
             //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
-            if code == 401 {
-                Constant.logOut()
-            }
         }
     }
-
+    
     func getPrivacy() {
-           ApiCall.getPrivacyData(success: { data, _
-               in
-               if let privacyModel = DataParserPrivacy.parseContactData(data!) {
-                   self.privacyResponseData!((privacyModel))
-                   //print(privacyModel)
-               }
-               //debugPrint("Success")
-           }) { (error, data, code)  in
+        ApiCall.getPrivacyData(success: { data, _
+            in
+            if let privacyModel = DataParserPrivacy.parseContactData(data!) {
+                self.privacyResponseData!((privacyModel))
+                //print(privacyModel)
+            }
+            //debugPrint("Success")
+        }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
-                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
-               //debugPrint("failure")
+            //debugPrint("failure")
             self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
-            if code == 401 {
-                Constant.logOut()
-            }
-           }
-       }
-
+        }
+    }
+    
     func getTerms() {
-              ApiCall.getTermsData(success: { data, _
-                  in
-                  if let privacyModel = DataParserPrivacy.parseContactData(data!) {
-                      self.privacyResponseData!((privacyModel))
-                      //print(privacyModel)
-                  }
-                  //debugPrint("Success")
-              }) { (error, data, code)  in
-                if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                    if failedData.response_code == 401 {
-                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                        Utility.logOut()
-                        return
-                    } else if failedData.response_code == 402 {
-                        self.delegate?.handleError(failedData.message ?? "",failedData.response_code ?? 0)
-                    }
-                    return
-                }
-                  //debugPrint("failure")
-                  self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
-                if code == 401 {
-                    Constant.logOut()
-                }
-              }
-          }
+        ApiCall.getTermsData(success: { data, _
+            in
+            if let privacyModel = DataParserPrivacy.parseContactData(data!) {
+                self.privacyResponseData!((privacyModel))
+                //print(privacyModel)
+            }
+            //debugPrint("Success")
+        }) { (error, data, code)  in
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                self.delegate?.handleError(failedData.message ?? "",failedData.response_code ?? 0)
+                return
+            }
+            //debugPrint("failure")
+            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+        }
+    }
 }
 
 class DataParserContact {
-
+    
     static func parseContactData(_ data: Data) -> ContactResponse? {
         do {
             let contactModelElement = try JSONDecoder().decode(ContactResponse.self, from: data)
-
-
+            
+            
             return contactModelElement
         } catch {
             //debugPrint(error)
@@ -138,12 +105,12 @@ class DataParserContact {
 }
 
 class DataParserLogOut {
-
+    
     static func parseContactData(_ data: Data) -> LogoutResponseData? {
         do {
             let contactModelElement = try JSONDecoder().decode(LogoutResponseData.self, from: data)
-
-
+            
+            
             return contactModelElement
         } catch {
             //debugPrint(error)
@@ -153,12 +120,12 @@ class DataParserLogOut {
 }
 
 class DataParserPrivacy {
-
+    
     static func parseContactData(_ data: Data) -> PrivacyResponseData? {
         do {
             let contactModelElement = try JSONDecoder().decode(PrivacyResponseData.self, from: data)
-
-
+            
+            
             return contactModelElement
         } catch {
             //debugPrint(error)
@@ -166,7 +133,3 @@ class DataParserPrivacy {
         return nil
     }
 }
-
-
-
-

@@ -141,7 +141,12 @@ extension PopUPTvVC:UITableViewDataSource
 extension PopUPTvVC:HandleError
 {
     func handleError(_ message: String, _ statusCode: Int) {
-        if statusCode == 402 {
+        if statusCode == 401 {
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        } else if statusCode == 402 {
             showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.logOut()

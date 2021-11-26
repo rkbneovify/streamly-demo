@@ -71,7 +71,13 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
         }
     }
 
-    func apiFailed(_ message: String) {
+    func apiFailed(_ message: String,_ status: Int) {
+        if status == 401 {
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        }
         //showSimpleAlertWithMessage(message)
     }
 

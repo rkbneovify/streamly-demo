@@ -71,7 +71,7 @@ extension RoomViewController: UICollectionViewDataSource
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if viewModel.filtterdRoomList.count == 0 {
-            self.collectionView.setEmptyMessage("No record's found")
+            self.collectionView.setEmptyMessage("No Room Available. Please remove from web.")
         } else {
             self.collectionView.restore()
         }
@@ -128,6 +128,13 @@ extension RoomViewController: RoomViewModelDelegate {
     
     func apiFailure(_ message: String,_ status: Int) {
         self.removeSpinner()
+        if status == 401 {
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
+        }
         if status == 409 {
             showToast(message: message, completion: {
                 self.viewModel.getRooms()

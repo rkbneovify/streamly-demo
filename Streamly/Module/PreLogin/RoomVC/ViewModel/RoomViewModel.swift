@@ -49,13 +49,7 @@ class RoomViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                Utility.logOut()
-                return
-                } else if failedData.response_code == 402 {
-                    weak.delegate?.apiFailure(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                weak.delegate?.apiFailure(failedData.message ?? "", failedData.response_code ?? 0)
             }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
                 weak.delegate?.apiFailure(data.message ?? "", data.responseCode ?? 0)
@@ -72,13 +66,8 @@ class RoomViewModel: NSObject {
         } failure: {[weak self] error, data, status in
             guard let weak = self else { return }
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     weak.delegate?.apiFailure(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                    return
             }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
                 weak.delegate?.apiFailure(data.message ?? "",data.responseCode ?? 0)

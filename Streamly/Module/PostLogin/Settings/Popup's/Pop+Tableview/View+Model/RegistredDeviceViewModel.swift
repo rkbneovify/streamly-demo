@@ -23,19 +23,9 @@ class RegistredDeviceViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                } 
             }
             //debugPrint("failure")
-            //self.delegate?.handleError(error?.localizedDescription ?? "")
-            if code == 401 {
-                Constant.logOut()
-            }
         }
     }
 }

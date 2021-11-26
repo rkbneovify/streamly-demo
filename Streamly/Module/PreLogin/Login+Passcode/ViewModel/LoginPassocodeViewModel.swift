@@ -10,7 +10,7 @@ import UIKit
 
 protocol APIResponseDelegate: AnyObject {
     func apiSucess()
-    func apiFailure(_ message: String)
+    func apiFailure(_ message: String,_ status: Int)
 }
 class LoginPassocodeViewModel: NSObject {
 
@@ -38,17 +38,11 @@ class LoginPassocodeViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
-                if data.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if data.response_code == 402 {
-                    weak.delegate?.apiFailure(data.message ?? "")
-                } else if let removeKeyAvailAble = data.data {
+                if let removeKeyAvailAble = data.data {
                     weak.removeIdKey = removeKeyAvailAble
                 }
                 print(data.message ?? "")
-                weak.delegate?.apiFailure(data.message ?? "")
+                weak.delegate?.apiFailure(data.message ?? "", data.response_code ?? 0)
             }
             debugPrint(error?.localizedDescription ?? "")
            
@@ -65,7 +59,7 @@ class LoginPassocodeViewModel: NSObject {
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
                 print(data.message ?? "")
-                weak.delegate?.apiFailure(data.message ?? "")
+                weak.delegate?.apiFailure(data.message ?? "", data.response_code ?? 0)
             }
             debugPrint(error?.localizedDescription ?? "")
            

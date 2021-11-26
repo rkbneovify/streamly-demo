@@ -27,13 +27,8 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
+                return
             } else {
                 self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             }
@@ -56,16 +51,9 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                Utility.logOut()
-                return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", code ?? 0)
                 }
-            }
             debugPrint("failure")
-            
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
@@ -80,14 +68,8 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", code ?? 0)
                 }
-            }
             //debugPrint("failure")
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -103,13 +85,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
             }
             //debugPrint("failure")
             // self.delegate?.handleError(error?.localizedDescription ?? "")
@@ -128,14 +104,8 @@ class EPGViewModel: NSObject {
             
             if error == nil {
                 if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                    if failedData.response_code == 401 {
-                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                        Utility.logOut()
+                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                         return
-                    } else if failedData.response_code == 402 {
-                        self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                    }
-                    return
                 }
                 if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
                     self.geoData!((geoModel))
@@ -160,13 +130,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
             }
             //            debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
@@ -183,13 +147,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
             }
             //            debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
@@ -209,13 +167,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
             }
             debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
@@ -234,9 +186,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) , failedData.response_code == 401 {
-                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                Utility.logOut()
-                Switcher.updateRootVC()
+                self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 return
             }
             debugPrint("failure")
@@ -257,13 +207,7 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.response_code == 401 {
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                    Utility.logOut()
-                    return
-                } else if failedData.response_code == 402 {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
             }
             debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")

@@ -103,7 +103,14 @@ extension LoginPasscodeVC: APIResponseDelegate {
         }
     }
     
-    func apiFailure(_ message: String) {
+    func apiFailure(_ message: String,_ status: Int) {
+        if status == 401 {
+            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
+        }
         self.removeSpinner()
         if !viewModel.removeIdKey.isEmpty {
             openAlertForRemoveId()
