@@ -412,6 +412,79 @@ return response($data)->withHeaders([
   //  return  response()->json([
   //     'clients' => $this->transformClientCollection($api)
   //  ], 200);
+  }   
+//channel with 7 day of schdule
+public function channelDaysSchedulePaginate(Request $request){
+$ua = $request->server('HTTP_USER_AGENT');
+$isDevice=isDeviceAppleRokuOthers($ua);
+
+if($isDevice=='roku'){ 
+    $reco= Cache::remember('paginatechannelscheduleroku',60*60*24, function () {
+        $type='smooth_url';
+    return $this->channelDaysScheduleFunc($type)->paginate(10);});
+}else if($isDevice=='apple')  {
+
+$reco = Cache::remember('paginatechannelscheduleapple',60*60*24, function () {
+    $type='url';
+    return $this->channelDaysScheduleFunc($type)->paginate(10);});
+} else {
+
+$reco= Cache::remember('paginatechannelscheduleothers',60*60*24, function () {
+    $type='dash_url';
+    return $this->channelDaysScheduleFunc($type)->paginate(10);});
+    }
+    
+
+// $reco=$record->toSql(); echo $reco;exit; 
+
+// $reco=$record->get(); //echo $reco;exit; 
+   if ($reco->isEmpty()) {
+      $response = [
+          'success' => false,
+          'data' => 'Empty',
+          'message' => 'Channel not found.',
+          'response_code'=>404,
+      ];
+      return response()->json($response, 404);
+  }  
+      // return response()->json($record->toSql());
+      // return json_encode($api);
+//       $record= DB::table('gracenote');
+// $reco=$record->get();
+// dd($reco);
+      $response = [
+        'success' => true,
+        'date'=>date("Y-m-d"),
+      //   'count' => $reco->count(),
+        'data' => $reco,
+       
+        'message' => 'Schedule data for 3 days found',
+        'response_code'=>200,
+    ];
+    $responsejson=json_encode($response);
+$data=gzencode($responsejson,9);
+// $response = [
+//     'success' => true,
+//     'date'=>date("Y-m-d"),
+//   //   'count' => $reco->count(),
+//     'data' => $data,
+   
+//     'message' => 'Schedule data for 3 days found',
+//     'response_code'=>200,
+// ];
+return response($data)->withHeaders([
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Allow-Methods'=> 'GET',            
+    'Content-type' => 'application/json; charset=utf-8',
+    'Content-Length'=> strlen($data),
+    'Content-Encoding' => 'gzip'
+]);
+      
+     
+  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+  //  return  response()->json([
+  //     'clients' => $this->transformClientCollection($api)
+  //  ], 200);
   }
 
 
