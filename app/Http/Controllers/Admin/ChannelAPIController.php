@@ -417,19 +417,19 @@ return response($data)->withHeaders([
 public function channelDaysSchedulePaginate(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
-
+$currentPage = $request->get('page',1);
 if($isDevice=='roku'){ 
-    $reco= Cache::remember('paginatechannelscheduleroku',60*60*24, function () {
+    $reco= Cache::remember('paginatechannelscheduleroku-'.$currentPage,60*60*24, function () {
         $type='smooth_url';
     return $this->channelDaysScheduleFunc($type)->paginate(10);});
 }else if($isDevice=='apple')  {
 
-$reco = Cache::remember('paginatechannelscheduleapple',60*60*24, function () {
+$reco = Cache::remember('paginatechannelscheduleapple-'.$currentPage,60*60*24, function () {
     $type='url';
     return $this->channelDaysScheduleFunc($type)->paginate(10);});
 } else {
 
-$reco= Cache::remember('paginatechannelscheduleothers',60*60*24, function () {
+$reco= Cache::remember('paginatechannelscheduleothers-'.$currentPage,60*60*24, function () {
     $type='dash_url';
     return $this->channelDaysScheduleFunc($type)->paginate(10);});
     }
