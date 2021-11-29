@@ -85,98 +85,104 @@ class WebSocketController extends Controller implements MessageComponentInterfac
 // print_r(count(array_keys($this->cache)));
 $type = $obj->type;
 if($type=='client'){
-    switch ($obj->step) {
-        case 0:
-            // echo "\n inside client,step0 \n";
-            $token = $obj->token;
-            $theuuid = UnHashUserID($token);
-            // echo "theuuid".$theuuid;
-            // echo "\n";
-            // print_r($this->cache);
-            //todo add jwt with 2minutes of token
-            $tokenexist=array_key_exists($theuuid, $this->cache);
-            // $tokenexist= isset($this->cache[$theuuid]);
-            if($tokenexist){
-                echo "\n token exist ya \n";
-                $ee=$this->cache[$theuuid]; 
-                // print_r($ee);
-                if($ee['status']=='0'){
-                    $this->cache[$theuuid]['status'] = 1;
-                    $this->cache[$theuuid] += ['child' => $from];
-                    $myArray2[] = (object) ['step' => 1];
-                    $Scan = new \SplObjectStorage();
-            $Scan->code=0;
-            $Scan->data=$myArray2[0];
-            $Scan->msg="Scan code successfully";
-            $this->cache[$theuuid]['parent']->send(json_encode($Scan));
-
-            $ready2 = new \SplObjectStorage();
-            $ready2->code=0;
-            $ready2->data=$myArray2[0];
-            $ready2->msg="Ready";
-            $from->send(json_encode($ready2));
-            // client.send(JSON.stringify({ code: 0, data: { step: 1 }, msg: "Ready" }));
-                };
-                // = [ 'status'=> 0, 'parent'=> 'client' ];
-                
-                // $itemCache=$this->cache[$theuuid];
-                // echo "itemCached".$itemCache;
-            }else{
-
-                echo "token doesn't exsit";
-                // cache.set(decoded.uuid, -1);
-            }
-            break;
-            case 1:
-                $myArray3[] = (object) ['step' => 2];
-                $myArray4[] = (object) ['step' => 2,'username'=>$obj->username];
-                foreach ($this->cache as $v) {
-                    if($v['child']==$from){
-                        // $token updateSessionToken;
-
-            $ready3 = new \SplObjectStorage();
-            $ready3->code=0;
-            $ready3->data=$myArray4[0];
-            $ready3->msg="Already logged in";
-            if(array_key_exists("parent", $v)){}
-                    $v['parent']->send(json_encode($ready3));
-                    }
-                }
-
-            $ready = new \SplObjectStorage();
-            $ready->code=0;
-            $ready->data=$myArray3[0];
-            $ready->msg="Login successful";
-            $from->send(json_encode($ready));
-    }
+    $this->whenTypeIsClient($obj,$from);
 }else if($type=='server'){
     // echo "hello inside server";
     //to get the QR logo
-    switch ($obj->step) {
-        case 0:
-            $uuid = $from->resourceId;//Str::random(30);
-             echo $uuid;
-            $token = HashUserID($uuid);
-            // echo $token;
-            $this->cache[$uuid] = [ 'status'=> 0, 'parent'=> $from ];
-            $url = url(''); // Get the current url 
-            // dd($url);
-           $http = $url .'?t='.$token; // Verify the url method of scanning code 
-           
-            $myArray[] = (object) ['step' => 0,'url' => $http];
-            $ready = new \SplObjectStorage();
-            $ready->code=0;
-            $ready->data=$myArray[0];
-            $ready->msg="Ready";
-            $from->send(json_encode($ready));
-            
-            break;
-            
-            
-    }
+    $this->whenTypeIsServer($obj,$from);
 }
     }
 
+    public function whenTypeIsServer($obj,$from) {
+        switch ($obj->step) {
+            case 0:
+                $uuid = $from->resourceId;//Str::random(30);
+                 echo $uuid;
+                $token = HashUserID($uuid);
+                // echo $token;
+                $this->cache[$uuid] = [ 'status'=> 0, 'parent'=> $from ];
+                $url = url(''); // Get the current url 
+                // dd($url);
+               $http = $url .'?t='.$token; // Verify the url method of scanning code 
+               
+                $myArray[] = (object) ['step' => 0,'url' => $http];
+                $ready = new \SplObjectStorage();
+                $ready->code=0;
+                $ready->data=$myArray[0];
+                $ready->msg="Ready";
+                $from->send(json_encode($ready));
+                
+                break;
+                
+                
+        }
+    }
+    public function whenTypeIsClient($obj,$from) {
+        switch ($obj->step) {
+            case 0:
+                // echo "\n inside client,step0 \n";
+                $token = $obj->token;
+                $theuuid = UnHashUserID($token);
+                // echo "theuuid".$theuuid;
+                // echo "\n";
+                // print_r($this->cache);
+                //todo add jwt with 2minutes of token
+                $tokenexist=array_key_exists($theuuid, $this->cache);
+                // $tokenexist= isset($this->cache[$theuuid]);
+                if($tokenexist){
+                    echo "\n token exist ya \n";
+                    $ee=$this->cache[$theuuid]; 
+                    // print_r($ee);
+                    if($ee['status']=='0'){
+                        $this->cache[$theuuid]['status'] = 1;
+                        $this->cache[$theuuid] += ['child' => $from];
+                        $myArray2[] = (object) ['step' => 1];
+                        $Scan = new \SplObjectStorage();
+                $Scan->code=0;
+                $Scan->data=$myArray2[0];
+                $Scan->msg="Scan code successfully";
+                $this->cache[$theuuid]['parent']->send(json_encode($Scan));
+    
+                $ready2 = new \SplObjectStorage();
+                $ready2->code=0;
+                $ready2->data=$myArray2[0];
+                $ready2->msg="Ready";
+                $from->send(json_encode($ready2));
+                // client.send(JSON.stringify({ code: 0, data: { step: 1 }, msg: "Ready" }));
+                    };
+                    // = [ 'status'=> 0, 'parent'=> 'client' ];
+                    
+                    // $itemCache=$this->cache[$theuuid];
+                    // echo "itemCached".$itemCache;
+                }else{
+    
+                    echo "token doesn't exsit";
+                    // cache.set(decoded.uuid, -1);
+                }
+                break;
+                case 1:
+                    $myArray3[] = (object) ['step' => 2];
+                    $myArray4[] = (object) ['step' => 2,'username'=>$obj->username];
+                    foreach ($this->cache as $v) {
+                        if($v['child']==$from){
+                            // $token updateSessionToken;
+    
+                $ready3 = new \SplObjectStorage();
+                $ready3->code=0;
+                $ready3->data=$myArray4[0];
+                $ready3->msg="Already logged in";
+                if(array_key_exists("parent", $v)){}
+                        $v['parent']->send(json_encode($ready3));
+                        }
+                    }
+    
+                $ready = new \SplObjectStorage();
+                $ready->code=0;
+                $ready->data=$myArray3[0];
+                $ready->msg="Login successful";
+                $from->send(json_encode($ready));
+        }
+    }
     public function qrauth() {
         $request = request();
         $uuid=request('uuid');
