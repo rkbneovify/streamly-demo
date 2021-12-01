@@ -9,6 +9,8 @@ use App\Models\FrontendText;
 use Carbon\Carbon;
 use App\Models\Role;
 use Laravel\Cashier\Exceptions\IncompletePayment;
+use App\Models\Channel;
+use Illuminate\Support\Facades\DB;
 class Payment extends Controller
 {   
     public function __construct()
@@ -64,19 +66,43 @@ class Payment extends Controller
         
     }
     public function showPlan(){
-        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
     
         if (Auth::user()->subscribed('main')) {
             
             return redirect()->route('payment',[Auth::user()->subscription('main')->stripe_plan]);
         } 
-        $d=collect($plans->data)
-      ->groupBy('billing_scheme');
-    //   ->where('billing_scheme', 'per_unit')
-      
-      $plansdetails=$d->all();
-      $plankey=$d->keys();
-    	return view('frontend.pages.plans', compact('plans','plansdetails','plankey'));
+        
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+        $imagePath=asset("/uploads/channellogo/notfound.png");
+   
+$second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
+       
+       ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+       ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+       ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+->where('channels.status','=','1')
+->orderBy('channels.StationName', 'asc');
+
+
+
+$pagechannel=$second->get()
+->reject(function($element) use($imagePath) {
+    
+    return $element->image === null;
+})->groupBy('genrenae');
+
+$Genrekey=$pagechannel->keys();
+
+    //   dump($plans->data);
+    $d=collect($plans->data)
+    ->groupBy('billing_scheme');
+  //   ->where('billing_scheme', 'per_unit')
+    
+    $plansdetails=$d->all();
+    $plankey=$d->keys();
+    	return view('frontend.pages.plans', compact('plans','pagechannel','Genrekey','plansdetails','plankey'));
         
     }
 
