@@ -172,7 +172,7 @@ input[type=number] {
 						</div>
 					</div>
 					<div class="col-md-8 h-100">
-						<div class="my-auto" style="width: 80%;height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
+						<div class="my-auto" style="height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
 							<div class="container">
 								<div class="row" style="padding-top: 2rem;margin-left: 2rem;margin-right: 2rem;">
 									<div class="col-md-4" style="padding: 2rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;">
