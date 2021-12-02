@@ -19,21 +19,21 @@ class Subscribed
      */
     public function handle($request, Closure $next)
     {   $token = $request->bearerToken();//get token from header
+        if(empty($token)) { 
+            $user=Auth::user();
+        }else{
+        $user=JWTAuth::setToken($token)->toUser();}
         
-        $user=JWTAuth::setToken($token)->toUser();
-        // dump($token);
-        // dump($user);
-        // dump($user->subscribed('main'));
-        // dd(Auth::user());
-        if ($user && ! $user->subscribed('main')){
+        $userRole= $user->roles->pluck('name');
+        // dump(in_array($userRole[0], array("user","tieruser")));
+        // dd($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin")));
+        if ($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin"))){
         if($request->wantsJson()){
             $response = array('success' =>false ,'response_code'=>402,'message'=>'Payment Required. Kindly buy subscription');
-            return response()->json($response, 402);} 
-            else { 
+            return response()->json($response, 402);
+        }else { 
                 return redirect('/selectplan');
              }}
-        // if ($request->user() && ! $request->user()->subscribed('main')){
-        // return "not subscribedhgg";}
 
     return $next($request);
     }
