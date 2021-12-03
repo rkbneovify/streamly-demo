@@ -158,24 +158,64 @@ if (count($active_session) >= $login_limit) {
     
     return view('frontend.pages.genrechannel', compact('login','pagechannel','genre'));
     }
+    public function dashPlayer($callSign,$genre,$encoded_auth_xml){
+     $login=true;    
+    //  dump("hello");
+$type='dash_url';
+$record = $this->showChannelFunc($type);
+$allchannel=$record->get()->unique();
+
+$channelData= Gracenote::where('CallSign', $callSign)->get();
+
+$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$url=$Channel->get('dash_url as url');
+$channelId=$Channel->get('id');
+$relatedchannel=$record->get()->where('genrenae',$genre);
+$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId];
+return $data;
+// return view('frontend.pages.livetvchannel', );
+   
+    }
+    
+    public function hlsPlayer($callSign,$genre,$encoded_auth_xml){
+     $login=true;    
+     $type='url';
+     $record = $this->showChannelFunc($type);
+     $allchannel=$record->get()->unique();
+     $channelData= Gracenote::where('CallSign', $callSign)->get();
+     
+     $Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+     $url=$Channel->get('url');
+     $channelId=$Channel->get('id');
+     
+     $relatedchannel=$record->get()->where('genrenae',$genre);
+     
+$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId];
+return $data;
+// return view('frontend.pages.livetvchannel', );
+   
+    }
     public function showChannel2($callSign,$genre){
      
         try {
     
          
-    	if( Auth::check()){
-            $login = true;
+    	// if( Auth::check()){
+        //     $login = true;
             
-            $userRole= Auth::user()->roles->pluck('name');
-            if($userRole[0]=='user'||'tieruser'){
-            if (!Auth::user()->subscribed('main')) {
-                return redirect('/selectplan');
-            }}
-        } else {
-            $login = false;
-            return redirect()->route('home');
-        }
-        $login_limit =GetLimitForUser(Auth::user()->id); $user_id = Auth::user()->id;
+        //     $userRole= Auth::user()->roles->pluck('name');
+        //     if($userRole[0]=='user'||'tieruser'){
+        //     if (!Auth::user()->subscribed('main')) {
+        //         return redirect('/selectplan');
+        //     }}
+        // } else {
+        //     $login = false;
+        //     return redirect()->route('home');
+        // }
+        $login = true;
+        // $userRole= Auth::user()->roles->pluck('name');
+        $login_limit =GetLimitForUser(Auth::user()->id); 
+        $user_id = Auth::user()->id;
         $encoded_auth_xml = getKeyOSAuthToken();
 
  $activeNowsession = SessionTable::where([
@@ -195,55 +235,25 @@ $active_session = SessionTable::where([
     $isDevice=isDeviceAppleRokuOthers($ua);
     if($isDevice=='chrome'){
         
-    
-$type='dash_url';
-$record = $this->showChannelFunc($type);
-$allchannel=$record->get()->unique();
-
-$channelData= Gracenote::where('CallSign', $callSign)->get();
-
-$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
-$url=$Channel->get('dash_url as url');
-$channelId=$Channel->get('id');
-$relatedchannel=$record->get()->where('genrenae',$genre);
-return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
-   
+        $d= $this->dashPlayer($callSign,$genre,$encoded_auth_xml);
+//    dump("bye");
+return view('frontend.pages.livetvchannel',$d );
     }
 if($isDevice=='apple')  { //for apple serve m3u8
 // echo "apple device";
-$type='url';
-$record = $this->showChannelFunc($type);
-$allchannel=$record->get()->unique();
-$channelData= Gracenote::where('CallSign', $callSign)->get();
-
-$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
-$url=$Channel->get('url');
-$channelId=$Channel->get('id');
-
-$relatedchannel=$record->get()->where('genrenae',$genre);
-
-return view('frontend.pages.forapplelivetvchannel', compact('allchannel','login','relatedchannel','genre','channelData','url','encoded_auth_xml','channelId'));
-}else{ 
+$d= $this->hlsPlayer($callSign,$genre,$encoded_auth_xml);
+return view('frontend.pages.forapplelivetvchannel', $d);
+}
 // echo " non apple device";
 //for non apple "dash_url as url"
-$type='dash_url';
-$record = $this->showChannelFunc($type);
-$allchannel=$record->get()->unique();
 
-$channelData= Gracenote::where('CallSign', $callSign)->get();
-
-$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
-$url=$Channel->get('dash_url as url');
-$channelId=$Channel->get('id');
-$relatedchannel=$record->get()->where('genrenae',$genre);
+$d= $this->dashPlayer($callSign,$genre,$encoded_auth_xml);
+//    dump("bye");
+return view('frontend.pages.livetvchannel',$d );
 
 
-}
 
-   
-  
-    return view('frontend.pages.livetvchannel', compact('allchannel','login','relatedchannel','channelData','url','encoded_auth_xml','channelId'));
-   
+
      }else{
         if (count($active_session) <$login_limit) 
         return view('frontend.RefreshVideoPlayToken',compact('login'));
