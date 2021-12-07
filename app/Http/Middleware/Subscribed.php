@@ -34,6 +34,15 @@ class Subscribed
         }else { 
                 return redirect('/selectplan');
              }}
+             if ($user->subscription('main') && $user->subscription('main')->cancelled() ){
+                if($request->wantsJson()){
+                    $response = array('success' =>false ,'response_code'=>402,'message'=>'Payment Required. Kindly buy subscription');
+                    return response()->json($response, 402);
+                }else { 
+                        return redirect('/selectplan');
+                     }
+             }
+
 
     return $next($request);
     }
