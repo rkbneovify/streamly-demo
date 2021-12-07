@@ -19,7 +19,6 @@ use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
 use App\Models\Gracenote;
-use ctwillie\Usps\Address;
 use App\Models\FrontendText;
 use App\Models\AddressesCheckAvailability;
 // use GuzzleHttp\Client;

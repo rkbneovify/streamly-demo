@@ -7,9 +7,12 @@ use FFMpeg\Format\FormatInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\ForwardsCalls;
 use ProtoneMedia\LaravelFFMpeg\Drivers\PHPFFMpeg;
+use ProtoneMedia\LaravelFFMpeg\FFMpeg\NullFormat;
+use ProtoneMedia\LaravelFFMpeg\FFMpeg\StdListener;
 use ProtoneMedia\LaravelFFMpeg\Filesystem\Disk;
 use ProtoneMedia\LaravelFFMpeg\Filesystem\Media;
 use ProtoneMedia\LaravelFFMpeg\MediaOpener;
+use ProtoneMedia\LaravelFFMpeg\Support\ProcessOutput;
 
 /**
  * @mixin \ProtoneMedia\LaravelFFMpeg\Drivers\PHPFFMpeg
@@ -82,13 +85,28 @@ class MediaExporter
         return $this;
     }
 
+    /**
+     * Returns the final command, useful for debugging purposes.
+     *
+     * @param string $path
+     * @return mixed
+     */
     public function getCommand(string $path = null)
     {
         $media = $this->prepareSaving($path);
 
-        return $this->driver->getFinalCommand($this->format, optional($media)->getLocalPath());
+        return $this->driver->getFinalCommand(
+            $this->format ?: new NullFormat,
+            optional($media)->getLocalPath() ?: '/dev/null'
+        );
     }
 
+    /**
+     * Dump the final command and end the script.
+     *
+     * @param string $path
+     * @return void
+     */
     public function dd(string $path = null)
     {
         dd($this->getCommand($path));
@@ -125,6 +143,8 @@ class MediaExporter
     {
         $outputMedia = $this->prepareSaving($path);
 
+        $this->driver->applyBeforeSavingCallbacks();
+
         if ($this->maps->isNotEmpty()) {
             return $this->saveWithMappings();
         }
@@ -143,20 +163,34 @@ class MediaExporter
                     return $data;
                 }
             } else {
-                $this->driver->save($this->format, $outputMedia->getLocalPath());
+                $this->driver->save(
+                    $this->format ?: new NullFormat,
+                    optional($outputMedia)->getLocalPath() ?: '/dev/null'
+                );
             }
         } catch (RuntimeException $exception) {
             throw EncodingException::decorate($exception);
         }
 
-        $outputMedia->copyAllFromTemporaryDirectory($this->visibility);
-        $outputMedia->setVisibility($this->visibility);
+        if ($outputMedia) {
+            $outputMedia->copyAllFromTemporaryDirectory($this->visibility);
+            $outputMedia->setVisibility($this->visibility);
+        }
 
         if ($this->onProgressCallback) {
             call_user_func($this->onProgressCallback, 100, 0, 0);
         }
 
         return $this->getMediaOpener();
+    }
+
+    public function getProcessOutput(): ProcessOutput
+    {
+        return tap(new StdListener, function (StdListener $listener) {
+            $this->addListener($listener)->save();
+            $listener->removeAllListeners();
+            $this->removeListener($listener);
+        })->get();
     }
 
     private function saveWithMappings(): MediaOpener

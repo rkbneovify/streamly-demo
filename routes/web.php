@@ -249,7 +249,7 @@ Route::get('/vue', 'EpgController@staticepg');
 Route::get('/vuehtml', 'EpgController@vuehtml');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
 
-Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
+// Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
 
 Route::view('/search4', 'frontend.search4');
 Route::get('/debug', 'Admin\DashboardController@debugmpd');

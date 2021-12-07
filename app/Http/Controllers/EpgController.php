@@ -48,7 +48,7 @@ return response()->json($response, 200);
     $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
     // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
            
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
            
            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
@@ -59,6 +59,54 @@ return response()->json($response, 200);
     return $second;
     }
     public function programelist(Request $request) {
+/**
+ * SELECT Concat(ifnull(gracenote.id,'1'), "")            eventID,
+       `channels`.`id`                     AS `channelId`,
+       Concat(channels.id, "")             channelStbNumber,
+       'false'                             AS channelHD,
+       ifnull(`gracenote`.`stationname`,channels.name)           AS `channelTitle`,
+       'null'                              AS epgEventImage,
+       gracenote.rating                    AS certification,
+       `startdatetime`                     AS `displayDateTimeUtc`,
+       `startdatetime`                     AS `displayDateTime`,
+       Timediff(enddatetime, startdatetime)AS displayDuration,
+       '1:964:41911209'                    AS siTrafficKey,
+       `eventtitle`                        AS `programmeTitle`,
+       `gracenote`.`eventid`               AS `programmeId`,
+       Concat(gracenote.eventid, "p")      programmeId,
+       Concat(gracenote.eventid, "e")      episodeId,
+       `eventdescription`                  AS `shortSynopsis`,
+       'null'                              AS longSynopsis,
+       ''                                  AS actors,
+       ''                                  AS directors,
+       ''                                  AS producers,
+       gracenote.eventtype                 AS genre,
+       ''                                  AS subGenre,
+       false                               AS live,
+       false                               AS premier,
+       false                               AS ottBlackout,
+       NULL                                AS highlight,
+       'false'                             AS contentId,
+       'false'                             AS contentImage,
+       'null'                              AS groupKey,
+       NULL                                AS vernacularData
+FROM   `gracenote`
+       RIGHT JOIN `channels`
+               ON `gracenote`.`callsign` = `channels`.`callsign`
+WHERE  channels.status = '1'
+       AND `channels`.`id` IN ( '116' ) AND
+       (CASE WHEN `gracenote`.`callsign` = `channels`.`callsign` 
+                                   THEN `gracenote`.`startdatetime` BETWEEN
+           '2021-10-06 18:00' AND '2021-10-06 23:59'
+                                   ELSE 1
+                               END)
+        
+ORDER  BY `programmetitle` ASC
+ */
+
+
+
+
          $grace= Gracenote::toBase()->select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
          'channels.id as channelId','EventTitle as programmeTitle','StartDateTime as displayDateTime','EventDescription as shortSynopsis')
          ->addSelect(DB::raw("'fakeValue' as fakeColumn"),DB::raw("'fakeValue2' as fakeColumn2"),
@@ -130,13 +178,70 @@ return response()->json($response, 200);
             // $ids = $str_arr;
             // dump($ids);
             // dd($str_arr);
-            $users = Gracenote::toBase()->select(DB::raw('concat(gracenote.id,"") eventID'),'channels.id as channelId',
-            DB::raw('concat(channels.id,"") channelStbNumber'),DB::raw("'false' as channelHD"),'gracenote.StationName as channelTitle',
+
+/*** 
+ * SELECT Concat(ifnull(gracenote.id,'1'), "")            eventID,
+       `channels`.`id`                     AS `channelId`,
+       Concat(channels.id, "")             channelStbNumber,
+       'false'                             AS channelHD,
+       ifnull(`gracenote`.`stationname`,channels.name)           AS `channelTitle`,
+       'null'                              AS epgEventImage,
+       gracenote.rating                    AS certification,
+       ifnull(`startdatetime`,'2021-10-06 18:00')                     AS `displayDateTimeUtc`,
+       ifnull(`startdatetime`,'2021-10-06 18:00')                    AS `displayDateTime`,
+       Timediff(ifnull(enddatetime,'2021-10-06 23:59'), ifnull(startdatetime,'2021-10-06 18:00'))AS displayDuration,
+       '1:964:41911209'                    AS siTrafficKey,
+       ifnull(`eventtitle`,channels.name)                         AS `programmeTitle`,
+       ifnull(`gracenote`.`eventid`,'1')               AS `programmeId`,
+       Concat(gracenote.eventid, "p")      programmeId,
+       Concat(gracenote.eventid, "e")      episodeId,
+       ifnull(`eventdescription`,'description')                  AS `shortSynopsis`,
+       'null'                              AS longSynopsis,
+       ''                                  AS actors,
+       ''                                  AS directors,
+       ''                                  AS producers,
+       ifnull(gracenote.eventtype ,'ep')                AS genre,
+       ''                                  AS subGenre,
+       false                               AS live,
+       false                               AS premier,
+       false                               AS ottBlackout,
+       NULL                                AS highlight,
+       'false'                             AS contentId,
+       'false'                             AS contentImage,
+       'null'                              AS groupKey,
+       NULL                                AS vernacularData
+FROM   `gracenote`
+       RIGHT JOIN `channels`
+               ON `gracenote`.`callsign` = `channels`.`callsign`
+WHERE  channels.status = '1'
+       AND `channels`.`id` IN ( '116' ) AND
+       (CASE WHEN `gracenote`.`callsign` = `channels`.`callsign` 
+                                   THEN `gracenote`.`startdatetime` BETWEEN
+           '2021-10-06 18:00' AND '2021-10-06 23:59'
+                                   ELSE 1
+                               END)
+        
+ORDER  BY `programmetitle` ASC*/ 
+
+
+
+
+
+
+// DB::raw('IFNULL(gracenote.EventTitle,channels.name) programmeTitle')
+// DB::raw('IFNULL(gracenote.EventDescription,channels.name) shortSynopsis')
+// DB::raw('IFNULL(gracenote.StationName,name) channelTitle')
+// DB::raw('IFNULL(gracenote.Rating,"TV14") certification')
+// DB::raw('IFNULL(gracenote.EventID,"1") programmeId')
+// ifnull(`startdatetime`,'2021-10-06 18:00')                     AS `displayDateTimeUtc`,
+
+            $users = Gracenote::toBase()->select(DB::raw('concat(ifnull(gracenote.id,"1"),"") eventID'),'channels.id as channelId',
+            DB::raw('concat(channels.id,"") channelStbNumber'),DB::raw("'false' as channelHD"),DB::raw('IFNULL(gracenote.StationName,channels.name) channelTitle'),
             DB::raw("'null' as epgEventImage"),
-            DB::raw("gracenote.Rating as certification"),'StartDateTime as displayDateTimeUtc','StartDateTime as displayDateTime',
-            DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),DB::raw("'1:964:41911209' as siTrafficKey"),
-            'EventTitle as programmeTitle','gracenote.EventID as programmeId',DB::raw('concat(gracenote.EventID,"p") programmeId'),
-            DB::raw('concat(gracenote.EventID,"e") episodeId'),'EventDescription as shortSynopsis')
+            DB::raw('IFNULL(gracenote.Rating,"TV14") certification'),DB::raw('IFNULL(gracenote.StartDateTime,"'.$query['periodStart'].'") displayDateTimeUtc'),DB::raw('IFNULL(gracenote.StartDateTime,"'.$query['periodStart'].'") displayDateTime'),
+            DB::raw("TIMEDIFF(IFNULL(EndDateTime,'".$query['periodEnd']."'),IFNULL(StartDateTime,'".$query['periodStart']."'))AS displayDuration"),DB::raw("'1:964:41911209' as siTrafficKey"),
+            DB::raw('IFNULL(gracenote.EventTitle,channels.name) programmeTitle'),DB::raw('IFNULL(gracenote.EventID,"1") programmeId'),DB::raw('concat(IFNULL(gracenote.EventID,"1"),"p") programmeId'),
+            DB::raw('concat(IFNULL(gracenote.EventID,"1"),"e") episodeId'),DB::raw('IFNULL(gracenote.EventDescription,channels.name) shortSynopsis'))
             ->addSelect(DB::raw("'null' as longSynopsis"),DB::raw("'' as actors"),DB::raw("'' as directors"),
             DB::raw("'' as producers"),DB::raw("gracenote.EventType as genre"),DB::raw("'' as subGenre"),DB::raw("false as live"),
             DB::raw("false as premier"),DB::raw("false as ottBlackout"),DB::raw("null as highlight"),
@@ -146,7 +251,13 @@ return response()->json($response, 200);
             // Channel::select('gracenote.')
             ->whereRaw('channels.status = ?','1')
             ->wherein('channels.id',$str_arr)
-            ->whereBetween('gracenote.StartDateTime', [$query['periodStart'], $query['periodEnd']])
+            
+            ->whereRaw("(CASE WHEN `gracenote`.`callsign` = `channels`.`callsign` 
+                                   THEN `gracenote`.`startdatetime` BETWEEN
+           '".$query['periodStart']."' AND '".$query['periodEnd']."'
+                                   ELSE 1
+                               END)")
+            // ->whereBetween('gracenote.StartDateTime', [$query['periodStart'], $query['periodEnd']])
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
             ->get();
             // SELECT * FROM `gracenote` WHERE StartDateTime BETWEEN '2021-02-01 15:00' AND'2021-02-01 23:59'

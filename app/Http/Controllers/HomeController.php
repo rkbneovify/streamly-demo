@@ -19,7 +19,7 @@ use App\Helpers\LogActivity;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
 use App\Models\Gracenote;
-use ctwillie\Usps\Address;
+// use ctwillie\Usps\Address;
 use App\Models\FrontendText;
 use App\Models\AddressesCheckAvailability;
 // use GuzzleHttp\Client;
@@ -350,12 +350,12 @@ $geojson = array(
     public function checkAvailabilty()
     {
         
-$address = new Address([
-    'Address2' => '2932 Nutwood',
-    'City' => 'Fullerton',
-    'State' => 'CA',
-    'Zip5' => 92831
-]);
+// $address = new Address([
+//     'Address2' => '2932 Nutwood',
+//     'City' => 'Fullerton',
+//     'State' => 'CA',
+//     'Zip5' => 92831
+// ]);
 $message='';
 $response = $address->validate();
 
@@ -407,12 +407,12 @@ if(Auth::check()){
             
             try {
              
-$address = new Address([
-    'Address2' => $request->input('Address2'),
-    'City' => $request->input('City'),
-    'State' => $request->input('State'),
-    'Zip5' => $request->input('zip')
-]);
+// $address = new Address([
+//     'Address2' => $request->input('Address2'),
+//     'City' => $request->input('City'),
+//     'State' => $request->input('State'),
+//     'Zip5' => $request->input('zip')
+// ]);
 $message='';
 $response = $address->validate();
 if(isset($response['Address']['Error'])){$message=$response['Address']['Error']['Description'];

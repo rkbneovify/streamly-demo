@@ -2,11 +2,11 @@
 
 namespace ProtoneMedia\LaravelFFMpeg\Exporters;
 
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use ProtoneMedia\LaravelFFMpeg\Drivers\PHPFFMpeg;
 use ProtoneMedia\LaravelFFMpeg\Filesystem\Media;
+use ProtoneMedia\LaravelFFMpeg\Http\DynamicHLSPlaylist;
 use ProtoneMedia\LaravelFFMpeg\MediaOpener;
 
 class HLSPlaylistGenerator implements PlaylistGenerator
@@ -14,33 +14,13 @@ class HLSPlaylistGenerator implements PlaylistGenerator
     const PLAYLIST_START = '#EXTM3U';
     const PLAYLIST_END   = '#EXT-X-ENDLIST';
 
-    private function getPathOfFirstSegment(Media $playlistMedia): string
-    {
-        $playlistContent = file_get_contents($playlistMedia->getLocalPath());
-
-        $lines = preg_split('/\n|\r\n?/', $playlistContent);
-
-        return Collection::make($lines)->first(function ($line) {
-            return !Str::startsWith($line, '#') && Str::endsWith($line, '.ts');
-        });
-    }
-
-    private function getBandwidth(MediaOpener $media)
-    {
-        return $media->getFormat()->get('bit_rate');
-    }
-
-    private function getResolution(MediaOpener $media)
-    {
-        try {
-            $dimensions = optional($media->getVideoStream())->getDimensions();
-        } catch (Exception $exception) {
-            return null;
-        }
-
-        return "{$dimensions->getWidth()}x{$dimensions->getHeight()}";
-    }
-
+    /**
+     * Extracts the framerate from the given media and formats it in a
+     * suitable format.
+     *
+     * @param \ProtoneMedia\LaravelFFMpeg\MediaOpener $media
+     * @return mixed
+     */
     private function getFrameRate(MediaOpener $media)
     {
         $mediaStream = $media->getVideoStream();
@@ -51,26 +31,55 @@ class HLSPlaylistGenerator implements PlaylistGenerator
             return null;
         }
 
+        if (Str::contains($frameRate, '/')) {
+            [$numerator, $denominator] = explode('/', $frameRate);
+
+            $frameRate = $numerator / $denominator;
+        }
+
         return $frameRate ? number_format($frameRate, 3, '.', '') : null;
     }
 
-    public function get(array $playlistMedia, PHPFFMpeg $driver): string
+    /**
+     * Return the line from the master playlist that references the given segment playlist.
+     *
+     * @param \ProtoneMedia\LaravelFFMpeg\Filesystem\Media $playlistMedia
+     * @param string $key
+     * @return string
+     */
+    private function getStreamInfoLine(Media $segmentPlaylistMedia, string $key): string
     {
-        return Collection::make($playlistMedia)->map(function (Media $playlistMedia) use ($driver) {
-            $media = (new MediaOpener($playlistMedia->getDisk(), $driver))->open(
-                $playlistMedia->getDirectory() . $this->getPathOfFirstSegment($playlistMedia)
-            );
+        $segmentPlaylist = $segmentPlaylistMedia->getDisk()->get(
+            $segmentPlaylistMedia->getDirectory() . HLSExporter::generateTemporarySegmentPlaylistFilename($key)
+        );
 
-            $streamInfo = [
-                "#EXT-X-STREAM-INF:BANDWIDTH={$this->getBandwidth($media)}",
-                "RESOLUTION={$this->getResolution($media)}",
-            ];
+        $lines = DynamicHLSPlaylist::parseLines($segmentPlaylist)->filter();
+
+        return $lines->get($lines->search($segmentPlaylistMedia->getFilename()) - 1);
+    }
+
+    /**
+     * Loops through all segment playlists and generates a main playlist. It finds
+     * the relative paths to the segment playlists and adds the framerate when
+     * to each playlist.
+     *
+     * @param array $segmentPlaylists
+     * @param \ProtoneMedia\LaravelFFMpeg\Drivers\PHPFFMpeg $driver
+     * @return string
+     */
+    public function get(array $segmentPlaylists, PHPFFMpeg $driver): string
+    {
+        return Collection::make($segmentPlaylists)->map(function (Media $segmentPlaylist, $key) use ($driver) {
+            $streamInfoLine = $this->getStreamInfoLine($segmentPlaylist, $key);
+
+            $media = (new MediaOpener($segmentPlaylist->getDisk(), $driver))
+                ->openWithInputOptions($segmentPlaylist->getPath(), ['-allowed_extensions', 'ALL']);
 
             if ($frameRate = $this->getFrameRate($media)) {
-                $streamInfo[] = "FRAME-RATE={$frameRate}";
+                $streamInfoLine .= ",FRAME-RATE={$frameRate}";
             }
 
-            return [implode(',', $streamInfo), $playlistMedia->getFilename()];
+            return [$streamInfoLine, $segmentPlaylist->getFilename()];
         })->collapse()
             ->prepend(static::PLAYLIST_START)
             ->push(static::PLAYLIST_END)

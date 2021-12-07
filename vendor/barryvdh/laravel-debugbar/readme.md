@@ -78,6 +78,16 @@ You can also only display the js or css vendors, by setting it to 'js' or 'css'.
 php artisan vendor:publish --provider="Barryvdh\Debugbar\ServiceProvider"
 ```
 
+### Laravel with Octane:
+
+Make sure to add LaravelDebugbar to your flush list in `config/octane.php`.
+
+```php
+    'flush' => [
+        \Barryvdh\Debugbar\LaravelDebugbar::class,
+    ],
+```
+
 ### Lumen:
 
 For Lumen, register a different Provider in `bootstrap/app.php`:
@@ -131,6 +141,9 @@ There are also helper functions available for the most common calls:
 ```php
 // All arguments will be dumped as a debug message
 debug($var1, $someString, $intValue, $object);
+
+// `$collection->debug()` will return the collection and dump it as a debug message. Like `$collection->dump()`
+collect([$var1, $someString])->debug();
 
 start_measure('render','Time for rendering');
 stop_measure('render');

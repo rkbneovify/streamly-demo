@@ -2,7 +2,152 @@
 
 All Notable changes to `pbmedia/laravel-ffmpeg` will be documented in this file
 
-## 7.3.0 - 2020-10-??
+## 7.5.12 - 2021-07-05
+
+### Added
+
+-   Fix for passing additional parameters to a format when using HLS exports
+
+## 7.5.11 - 2021-04-25
+
+### Added
+
+-   Added `CopyVideoFormat` format class
+
+## 7.5.10 - 2021-03-31
+
+### Added
+
+-   Add ability to disable -b:v (thanks @marbocub)
+
+## 7.5.9 - 2021-03-19
+
+### Fixed
+
+-   Prevent duplicate encryption key listeners
+
+## 7.5.8 - 2021-03-17
+
+### Fixed
+
+-   Bugfix for creating temporary directories on Windows
+-   Bugfix for HLS exports with custom framerate
+
+## 7.5.7 - 2021-03-08
+
+### Fixed
+
+-   Prevent HLS key rotation on non-rotating exports (thanks @marbocub)
+
+## 7.5.6 - 2021-03-03
+
+### Fixed
+
+-   Bugfix for HLS exports to S3 disks (thanks @chistel)
+-   Prevent duplicate progress handler when using loops
+
+## 7.5.5 - 2021-01-18
+
+### Added
+
+-   Added `beforeSaving` method to add callbacks
+
+## 7.5.4 - 2021-01-07
+
+### Added
+
+-   Added fourth optional argument to the resize method whether or not to force the use of standards ratios
+-   Improved docs
+-   Small refactor
+
+## 7.5.3 - 2021-01-02
+
+### Added
+
+-   Support for custom encryption filename when using non-rotating keys
+
+## 7.5.2 - 2021-01-02
+
+### Added
+
+-   Support for setting a custom path for temporary directories
+-   GitHub Actions now runs on Windows in addition to Ubuntu
+
+### Fixed
+
+-   HLS Encryption I/O improvements
+-   Path normalization on Windows, which solves common problems with HLS and watermarks
+-   Some refactors and documentation improvements
+
+## 7.5.1 - 2020-12-24
+
+### Added
+
+-   Support for codec in HLS playlist
+-   Fixed bitrate bug in HLS playlist
+
+## 7.5.0 - 2020-12-22
+
+### Added
+
+-   Support for PHP 8.0.
+-   Encrypted HLS.
+-   New `getProcessOutput` method to analyze media.
+-   Support for dynamic HLS playlists.
+
+### Deprecated
+
+-   Nothing
+
+### Fixed
+
+-   Nothing
+
+### Removed
+
+-   Support for PHP 7.2
+
+## 7.4.1 - 2020-10-26
+
+### Added
+
+-   Better exceptions
+-   dd() improvements
+
+### Deprecated
+
+-   Nothing
+
+### Fixed
+
+-   Nothing
+
+### Removed
+
+-   Nothing
+
+## 7.4.0 - 2020-10-25
+
+### Added
+
+-   Watermark manipulations
+-   Dump and die
+-   Resize filter shortcut
+-   HLS export with multiple filters per format
+
+### Deprecated
+
+-   Nothing
+
+### Fixed
+
+-   Nothing
+
+### Removed
+
+-   Nothing
+
+## 7.3.0 - 2020-10-16
 
 ### Added
 

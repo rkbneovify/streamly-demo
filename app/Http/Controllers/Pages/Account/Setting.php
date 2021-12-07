@@ -21,6 +21,7 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\HotelRoomTable;
 use Jenssegers\Agent\Agent;
+use DateTimeInterface;
 class Setting extends Controller
 {   public function __construct()
     {
@@ -121,6 +122,7 @@ class Setting extends Controller
             $login = false;
             return redirect()->route('home');
         }
+               
        $id= Auth::user()->id;
       
        $hasid = HashUserID($id);
@@ -132,10 +134,44 @@ class Setting extends Controller
         ['users_id', '=', $id],
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
+         $sub = Auth::user()->subscribed('main');
+         $canceled=Auth::user()->subscription('main')->cancelled();
+         $ended=Auth::user()->subscription('main')->ended();
+        //  $cancel=Auth::user()->subscription('main')->cancel();
+         dump($ended);
+        //  dd($canceled);
+         $active=Auth::user()->subscriptions()->active()->first();
+         echo "active";
+         dump($active);
+         echo "cancrlled";
+         dump($canceled);
+        echo"sub";
+        // dd($sub);
          $subscription=Auth::user()->subscriptions()->first();
+        //  Carbon::create(unix timestamp)->toDateTimeString();
+
+
+
         //  dd($subscription);
-        //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
+         $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
+        // $da= Carbon::createFromTimestamp(
+        //     $status->canceled_at
+        // );
+        echo "sahil";
+        // dd($da);
+        //  dump($status->created->getTimestamp());
+        dump($status);
+         $date=date("Y-m-d h:i:sa", date($status->created));
+        //  $canceled_at=date("Y-m-d h:i:sa", date($status->canceled_at));
+         dump($date);
+        //  $c=Carbon::createFromTimestamp($status->canceled_at);
+         echo "Carbon::createFromTimestamp<br>";
+        //  dump($c);
+        //  dd($canceled_at);
+        //  $cancelled=date("m-d-y", $status->created);
+        //  dump($cancelled);
         //  dd($status);
+        optional($userinfo->subscription('main'))->syncStripeStatus();
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
