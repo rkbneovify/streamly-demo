@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\WebSocketServer::class
+        Commands\WebSocketServer::class,
+        Commands\DemoCron::class,
         //
     ];
 
@@ -26,9 +27,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function () {
-            // Do Something Here
-        })->everyMinute();
+        // $schedule->call(function () {
+        //     // Do Something Here
+        // })->everyMinute();
+        $schedule->command('demo:cron')
+        ->everyMinute();
     }
 
     /**
