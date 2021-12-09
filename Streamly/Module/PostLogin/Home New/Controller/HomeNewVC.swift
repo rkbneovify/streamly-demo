@@ -384,7 +384,12 @@ class HomeNewVC: UIViewController {
         case CategoriesSelect.all.rawValue:
             guard  self.selectedCategories != sender else {return}
             self.filteredList?.removeAll()
-            self.filteredList = self.channelList?.data
+            if (filteredList?.count ?? 0) > 0 {
+                self.filteredList?.append(contentsOf: self.channelList?.data ?? [])
+            } else {
+                self.filteredList = self.channelList?.data ?? []
+            }
+            
             self.selectedCategories = sender
         case  CategoriesSelect.recent.rawValue:
             guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
@@ -588,9 +593,15 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
                 {
                     self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
                     programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.row)
+                } else {
+                    /*if (indexPath.row == (filteredList?.count ?? 0) + 1 ) && selectedCategories == 0 { //it's your last cell
+                        //Load more data & reload your collection view
+                        viewModel.getEPGData()
+                    }*/
                 }
             }
-
+            
+            
         }
         // }
     }
@@ -654,13 +665,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
                 self.discriptionThumbNail.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
                 self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""
                 self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "hh:mm a") ?? "")"
-
             }
             //print(indexPath)
 
             return true
-        }
-        else {
+        } else {
             return true
         }
     }
@@ -716,6 +725,15 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
         }
 
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if let indexPath = context.nextFocusedIndexPath,
+            let _ = collectionView.cellForItem(at: indexPath) {
+            self.collectionView.scrollToItem(at: indexPath, at:
+             .centeredVertically, animated: true)
+        }
+    }
+    
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.collectionView == collectionView
@@ -779,6 +797,11 @@ extension HomeNewVC:HandleError
                 Utility.logOut()
             }
             return
+        } else if statusCode == 403 {
+            showAlert(withMessage: "You are away from your home zip code \n click here to continue viewing.", setFirstButtonTitle: "Continue", handler: {
+                _ in
+            })
+           
         }
         self.removeSpinner()
         self.showSimpleAlertWithMessage(message)
@@ -921,7 +944,14 @@ extension HomeNewVC{
             //            }, completion: nil)
             //        }
 
-        else {
+       else if collectionView.isFocused {
+            if let nextCell = context.nextFocusedView as? ProgramCollectionViewCell {
+                let index = Int(nextCell.accessibilityHint!)!
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // 2
+                    self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredVertically, animated: true)
+                }
+            }
+        } else {
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.configureButtons()
             }, completion: nil)
