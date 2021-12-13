@@ -25,7 +25,7 @@
                        
                         <div class="form-group has-search">
                             <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/>
-                            <input type="text" style="" id="search-typehead" class="search-click typeahead" placeholder="Search">
+                            <input type="text" style="background: none;" id="search-typehead" class="search-click typeahead" placeholder="Search">
                             {{-- <input type="text" name="search" class="form-control typeahead" id="search-btn-header" placeholder="Search channels or shows"> --}}
                             <div id="search_list"></div>  
                         </div>
