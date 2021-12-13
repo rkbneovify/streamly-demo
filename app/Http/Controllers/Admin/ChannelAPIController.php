@@ -417,21 +417,23 @@ return response($data)->withHeaders([
 public function channelDaysSchedulePaginate(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
+// return $this->channelDaysScheduleFunc('dash_url')
+// ->get();
+// ->toSql();
+// ->paginate(10);
 $currentPage = $request->get('page',1);
 if($isDevice=='roku'){ 
-    $reco= Cache::remember('paginatechannelscheduleroku-'.$currentPage,60*60*24, function () {
+   
         $type='smooth_url';
-    return $this->channelDaysScheduleFunc($type)->paginate(10);});
+        $reco=  $this->channelDaysScheduleFunc($type)->paginate(10);
 }else if($isDevice=='apple')  {
 
-$reco = Cache::remember('paginatechannelscheduleapple-'.$currentPage,60*60*24, function () {
-    $type='url';
-    return $this->channelDaysScheduleFunc($type)->paginate(10);});
-} else {
 
-$reco= Cache::remember('paginatechannelscheduleothers-'.$currentPage,60*60*24, function () {
+    $type='url';
+    $reco =  $this->channelDaysScheduleFunc($type)->paginate(10);
+} else {
     $type='dash_url';
-    return $this->channelDaysScheduleFunc($type)->paginate(10);});
+    $reco= $this->channelDaysScheduleFunc($type)->paginate(10);
     }
     
 
@@ -462,7 +464,8 @@ $reco= Cache::remember('paginatechannelscheduleothers-'.$currentPage,60*60*24, f
         'response_code'=>200,
     ];
     $responsejson=json_encode($response);
-$data=gzencode($responsejson,9);
+// $data=gzencode($responsejson,9);
+$data=$responsejson;
 // $response = [
 //     'success' => true,
 //     'date'=>date("Y-m-d"),
@@ -476,8 +479,8 @@ return response($data)->withHeaders([
     'Access-Control-Allow-Origin' => '*',
     'Access-Control-Allow-Methods'=> 'GET',            
     'Content-type' => 'application/json; charset=utf-8',
-    'Content-Length'=> strlen($data),
-    'Content-Encoding' => 'gzip'
+    // 'Content-Length'=> strlen($data),
+    // 'Content-Encoding' => 'gzip'
 ]);
       
      
