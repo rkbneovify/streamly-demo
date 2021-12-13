@@ -24,8 +24,8 @@
                     <li class="nav-item">
                        
                         <div class="form-group has-search">
-                            <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" />
-                            <input type="text" id="search-typehead" class="form-control typeahead" placeholder="Search networks or shows">
+                            <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/>
+                            <input type="text" style="" id="search-typehead" class="search-click typeahead" placeholder="Search">
                             {{-- <input type="text" name="search" class="form-control typeahead" id="search-btn-header" placeholder="Search channels or shows"> --}}
                             <div id="search_list"></div>  
                         </div>
@@ -82,3 +82,34 @@
         </div>
     </div>
 </div>
+<style>
+.search-click {
+  border: 1px solid #ccc;
+  outline: none;
+  background-size: 22px;
+  background-position: 13px;
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  padding: 25px;
+  transition: all 0.5s;
+}
+.search-click:focus {
+  width: 300px;
+  padding-left: 50px;
+}
+.search-click {
+  position: relative;
+  overflow: hidden;
+  height: 50px;
+}
+.search-click input {
+  background: transparent;
+  border: 1px solid #ccc;
+  outline: none;
+  position: absolute;
+  width: 300px;
+  height: 50px;
+  left: 0%;
+  padding: 10px;
+}</style>
