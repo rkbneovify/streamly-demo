@@ -106,9 +106,14 @@ class QRViewVC: UIViewController {
 
 extension QRViewVC:HandleError
 {
+    func successAPI() {
+        self.removeSpinner()
+    }
+    
     func handleError(_ message: String, _ statusCode: Int) {
+        self.removeSpinner()
         if statusCode == 401 {
-            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+            showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.logOut()
             }
@@ -118,8 +123,13 @@ extension QRViewVC:HandleError
                 Utility.logOut()
             }
             return
+        } else if statusCode == 404 {
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
         }
-        self.removeSpinner()
         self.showSimpleAlertWithMessage("Something went wrong!, Please try again")
     }
 

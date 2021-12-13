@@ -241,7 +241,13 @@ class HomeNewVC: UIViewController {
     private func intialSetup()
     {
 
-        
+        // Layout for categories
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: cateGiriesCollectionView.frame.width/6, height: cateGiriesCollectionView.frame.height)
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 10
+        self.cateGiriesCollectionView.collectionViewLayout = layout
         self.collectionView.isScrollEnabled = false
         self.discriptionView.isHidden = true
         formatter.dateFormat = "hh:mm a"
@@ -408,9 +414,9 @@ class HomeNewVC: UIViewController {
             self.selectedCategories = sender
         }
         self.cateGiriesCollectionView.reloadData()
-        var offset = self.cateGiriesCollectionView.contentOffset
-        offset.x = CGFloat(130 * sender)
-        self.cateGiriesCollectionView.setContentOffset(offset, animated: true)
+//        var offset = self.cateGiriesCollectionView.contentOffset
+//        offset.x = CGFloat(130 * sender)
+//        self.cateGiriesCollectionView.setContentOffset(offset, animated: true)
 
     }
     
@@ -439,6 +445,7 @@ class HomeNewVC: UIViewController {
     private func initVM() {
         viewModel.epgData = { epgModel in
             self.group.leave()
+            self.removeSpinner()
             self.channelList = epgModel
             
         }
@@ -782,12 +789,16 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-extension HomeNewVC:HandleError
-{
+extension HomeNewVC:HandleError {
+    func successAPI() {
+        self.removeSpinner()
+    }
+    
     
     func handleError(_ message: String, _ statusCode: Int) {
+        self.removeSpinner()
         if statusCode == 401 { // Session Expired
-            showAlert(withMessage: "Session Expired",setFirstButtonTitle: "Logout") { _ in
+            showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.logOut()
             }
@@ -798,12 +809,17 @@ extension HomeNewVC:HandleError
             }
             return
         } else if statusCode == 403 {
-            showAlert(withMessage: "You are away from your home zip code \n click here to continue viewing.", setFirstButtonTitle: "Continue", handler: {
+            showAlert(withMessage: message, setFirstButtonTitle: "OK", handler: {
                 _ in
             })
-           
+           return
+        } else if statusCode == 404 {
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+            return
         }
-        self.removeSpinner()
         self.showSimpleAlertWithMessage(message)
     }
     

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="17506" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="18122" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <deployment identifier="tvOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -659,10 +659,10 @@
                                 </connections>
                             </button>
                             <stackView hidden="YES" opaque="NO" contentMode="scaleAspectFit" distribution="fillProportionally" spacing="20" baselineRelativeArrangement="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fnz-5i-nxU">
-                                <rect key="frame" x="135" y="40" width="1198" height="70"/>
+                                <rect key="frame" x="135" y="40" width="1523" height="70"/>
                                 <subviews>
                                     <button opaque="NO" tag="11" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y3R-ZS-Kv1">
-                                        <rect key="frame" x="0.0" y="0.0" width="116" height="70"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="147.5" height="70"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -677,7 +677,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="12" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H0o-Yq-cc0">
-                                        <rect key="frame" x="136" y="0.0" width="159" height="70"/>
+                                        <rect key="frame" x="167.5" y="0.0" width="202" height="70"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -692,7 +692,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="13" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NKZ-70-gmn">
-                                        <rect key="frame" x="315" y="0.0" width="223" height="70"/>
+                                        <rect key="frame" x="389.5" y="0.0" width="283.5" height="70"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -707,7 +707,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="14" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zw9-jI-w5U">
-                                        <rect key="frame" x="558" y="0.0" width="159" height="70"/>
+                                        <rect key="frame" x="693" y="0.0" width="202" height="70"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -722,7 +722,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="15" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ND-ri-Uex">
-                                        <rect key="frame" x="737" y="0.0" width="139" height="70"/>
+                                        <rect key="frame" x="915" y="0.0" width="177" height="70"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -737,7 +737,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="16" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLO-kz-qie">
-                                        <rect key="frame" x="896" y="0.0" width="156" height="70"/>
+                                        <rect key="frame" x="1112" y="0.0" width="198.5" height="70"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -752,7 +752,7 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" tag="17" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zmj-0g-1sp">
-                                        <rect key="frame" x="1072" y="0.0" width="126" height="70"/>
+                                        <rect key="frame" x="1330.5" y="0.0" width="192.5" height="70"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="20"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
@@ -772,11 +772,11 @@
                                     <constraint firstAttribute="height" constant="70" id="Pmg-YQ-CuJ"/>
                                 </constraints>
                             </stackView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="n28-zC-q1c">
-                                <rect key="frame" x="135" y="40" width="1198" height="70"/>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="n28-zC-q1c">
+                                <rect key="frame" x="135" y="40" width="1523" height="70"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="20" minimumInteritemSpacing="20" id="7ld-Oh-mAC">
-                                    <size key="itemSize" width="130" height="70"/>
+                                    <size key="itemSize" width="100" height="70"/>
                                     <size key="estimatedItemSize" width="130" height="70"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -885,7 +885,7 @@
                             <constraint firstItem="n28-zC-q1c" firstAttribute="top" secondItem="Fnz-5i-nxU" secondAttribute="top" id="DVk-Nj-RH5"/>
                             <constraint firstItem="ix6-JS-shb" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" id="Ijf-F9-m5A"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
-                            <constraint firstItem="jte-II-w2x" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="67" id="N2N-2b-Wum"/>
+                            <constraint firstItem="jte-II-w2x" firstAttribute="leading" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="10" id="N2N-2b-Wum"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="centerY" secondItem="Zmj-0g-1sp" secondAttribute="centerY" id="NaB-ko-2JC"/>
                             <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="jte-II-w2x" secondAttribute="bottom" constant="134" id="UXP-fi-7fE"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>

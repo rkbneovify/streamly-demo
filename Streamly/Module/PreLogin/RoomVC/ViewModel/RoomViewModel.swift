@@ -43,6 +43,9 @@ class RoomViewModel: NSObject {
             guard let weak = self else { return }
             if let data: RoomAPIReponse = DataParser.parseReponseToModel(data!) {
                 weak.listOfRoom = data.data ?? []
+                if data.data?.count == 0 {
+                    weak.delegate?.apiFailure(data.message ?? "", status ?? 0)
+                }
                 weak.filtterdRoomList = data.data ?? []
             }
             weak.delegate?.reloadDataChange()

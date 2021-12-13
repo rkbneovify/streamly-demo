@@ -20,6 +20,7 @@ protocol Scroll:NSObject {
 
 protocol HandleError:NSObject {
     func handleError(_ message:String,_ statusCode: Int)
+    func successAPI()
 }
 
 protocol AddRecentData:NSObject {

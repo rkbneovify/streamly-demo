@@ -23,6 +23,7 @@ class EPGViewModel: NSObject {
             if let epgModel = EPGDataParser.parseContactData(data!) {
                 self.epgData!((epgModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
@@ -30,7 +31,7 @@ class EPGViewModel: NSObject {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 return
             } else {
-                self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+               // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             }
             //debugPrint("failure")
            
@@ -47,12 +48,15 @@ class EPGViewModel: NSObject {
             if let epgModel = EPGDataParser.parseChannelData(data!) {
                 self.channelData!((epgModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", code ?? 0)
+                return
                 }
+            //self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             debugPrint("failure")
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -64,12 +68,15 @@ class EPGViewModel: NSObject {
             if let recentModel = EPGDataParser.parserecentData(data!) {
                 self.recentData!((recentModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", code ?? 0)
+                    return
                 }
+            //self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             //debugPrint("failure")
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -81,12 +88,15 @@ class EPGViewModel: NSObject {
             if let recentModel = EPGDataParser.parserecentData(data!) {
                 self.recentData!((recentModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
+         //   self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             //debugPrint("failure")
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -98,6 +108,7 @@ class EPGViewModel: NSObject {
             if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
                 self.geoData!((geoModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
@@ -110,7 +121,10 @@ class EPGViewModel: NSObject {
                 if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
                     self.geoData!((geoModel))
                     ////debugPrint(epgModel)
+                    self.delegate?.handleError(geoModel.message ?? "", code ?? 0)
+                    return
                 }
+               // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
                 
             }
             
@@ -126,12 +140,15 @@ class EPGViewModel: NSObject {
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
+           // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             //            debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -143,12 +160,15 @@ class EPGViewModel: NSObject {
             in
             if let drmData = EPGDataParser.parseDrmKeyData(data!) {
                 self.drmData!(drmData)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
+          //  self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             //            debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -163,12 +183,15 @@ class EPGViewModel: NSObject {
                 debugPrint("")
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
+           // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -182,6 +205,7 @@ class EPGViewModel: NSObject {
                 debugPrint("")
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
@@ -189,6 +213,7 @@ class EPGViewModel: NSObject {
                 self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
                 return
             }
+           // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
         }
@@ -201,6 +226,7 @@ class EPGViewModel: NSObject {
             in
             if EPGDataParser.parseGeoFenceData(data!) != nil {
                 debugPrint("")
+                self.delegate?.successAPI()
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
             }
@@ -208,7 +234,9 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                return
             }
+           // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
             debugPrint("failure")
             //            self.delegate?.handleError(error?.localizedDescription ?? "")
         }

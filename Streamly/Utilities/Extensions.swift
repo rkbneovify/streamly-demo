@@ -100,7 +100,7 @@ extension UIViewController
     func showSimpleAlertWithMessage(_ message: String) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alert.addAction(okAction)
             self.present(alert, animated: true, completion: nil)
         }

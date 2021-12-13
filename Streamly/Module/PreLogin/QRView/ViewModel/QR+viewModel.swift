@@ -18,6 +18,7 @@ class QRViewModel: NSObject {
             if let qrModel = QRDataParser.parseContactData(data!) {
                 self.qrData!((qrModel))
                 ////debugPrint(epgModel)
+                self.delegate?.successAPI()
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
