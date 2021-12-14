@@ -138,27 +138,33 @@ $Genrekey=$pagechannel->keys();
             
            // if user has a coupon, create new subscription with coupon applied
            if( $coupon = $request->get('coupon') ) {
-            if(!empty($trial_days)){
-                $user->newSubscription( 'main', $StripeplanId)->quantity($quantity)->trialDays($trial_days)
-                ->withCoupon($coupon)
-                ->create($request->payment_method, ['email' => $user->email]); 
-            }else{ $user->newSubscription( 'main', $StripeplanId)
-                ->quantity($quantity)
-                    ->withCoupon($coupon)
-                    ->create($request->payment_method, ['email' => $user->email]);}
+               $this->withCouponCheckTrialDays($user,$request,$coupon,$StripeplanId,$quantity,$trial_days);
            
 
         } else {
-        //check for trial days
-            // Create subscription
-            if(!empty($trial_days)){
-                $newSubscription = $user->newSubscription('main', $StripeplanId)
-                ->quantity($quantity)
-                ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);}else{
-                    $newSubscription = $user->newSubscription('main', $StripeplanId)
-                    ->quantity($quantity)
-                    ->create($request->payment_method, ['email' => $user->email]);}
+            $this->withoutCouponCheckTrialDays($user,$request,$StripeplanId,$quantity,$trial_days);
         }}
+        $this->updateUserRoleBasedOnSubscription($user,$request);
+        CheckPreviousHotelRooms($quantity,$user->id);
+        } catch(\Stripe\Exception\CardException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (\Stripe\Exception\RateLimitException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (\Stripe\Exception\InvalidRequestException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (\Stripe\Exception\AuthenticationException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (\Stripe\Exception\ApiConnectionException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (\Stripe\Exception\ApiErrorException $e) {
+            $this->theCatchError($e,$previousURL);
+          } catch (Exception $e) {
+            $this->theCatchError($e,$previousURL);
+          }
+
+        return redirect()->back();
+    }
+    public function updateUserRoleBasedOnSubscription($user,$request){
         if($request->tier=='tiered'){
             $tieruserrole=Role::where('name','tieruser')->first();
             
@@ -181,26 +187,40 @@ $Genrekey=$pagechannel->keys();
             }
 
         }
-        CheckPreviousHotelRooms($quantity,$user->id);
-        } catch(\Stripe\Exception\CardException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (\Stripe\Exception\RateLimitException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (\Stripe\Exception\InvalidRequestException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (\Stripe\Exception\AuthenticationException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (\Stripe\Exception\ApiConnectionException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (\Stripe\Exception\ApiErrorException $e) {
-            $this->theCatchError($e,$previousURL);
-          } catch (Exception $e) {
-            $this->theCatchError($e,$previousURL);
-          }
-
-        return redirect()->back();
     }
+    public function withCouponCheckTrialDays($user,$request,$coupon,$StripeplanId,$quantity,$trial_days){
 
+        if(!empty($trial_days)){
+            $user->newSubscription( 'main', $StripeplanId)->quantity($quantity)->trialDays($trial_days)
+            ->withCoupon($coupon)
+            ->create($request->payment_method, ['email' => $user->email]); 
+        }else{ $user->newSubscription( 'main', $StripeplanId)
+            ->quantity($quantity)
+                ->withCoupon($coupon)
+                ->create($request->payment_method, ['email' => $user->email]);}
+
+    }
+     public function withoutCouponCheckTrialDays($user,$request,$StripeplanId,$quantity,$trial_days){
+
+        //check for trial days
+            // Create subscription
+            if(!empty($trial_days)){
+                $newSubscription = $user->newSubscription('main', $StripeplanId)
+                ->quantity($quantity)
+                ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);
+            }else{
+                    $newSubscription = $user->newSubscription('main', $StripeplanId)
+                    ->quantity($quantity)
+                    ->create($request->payment_method, ['email' => $user->email]);}
+
+    }
+    public function persist($user)
+    {
+
+    //   $subscription = $user->newSubscription('default', $this->input('plan'))->create($this->input('token'));
+    
+    //   return $subscription->owner()->subscribed(); //returns true
+    }
     public function theCatchError($e,$previousURL) {
 
             // Since it's a decline, \Stripe\Exception\CardException will be caught
