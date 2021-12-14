@@ -17,9 +17,13 @@ class HomeNewVC: UIViewController {
     var channelList:EPGResponse?
     {
         didSet {
+            viewModel.isPageExist = (channelList?.data?.data?.count ?? 0) > 0
+            viewModel.currentPage += 1
+            showLoading = false
             self.selectCategories(0)
         }
     }
+    var lastIndexPath: IndexPath?
     var genrsList: ChannelListResponse?
     var geoData:GeoFenceAddress?
     var recentData: RecentData?
@@ -38,6 +42,11 @@ class HomeNewVC: UIViewController {
         {
             self.setupEPGLayout()
         }
+    }
+    var showLoading = false
+    var loadingView: LoadingCollectionReusableView?
+    var totalMeetingCount:Int{
+        return self.filteredList?.count ?? 0
     }
     var videoPlaybackViewController: VideoPlaybackViewController
 
@@ -174,12 +183,15 @@ class HomeNewVC: UIViewController {
             collectionView.dataSource = self
             collectionView.delegate = self
             collectionView.isDirectionalLockEnabled = true
+            self.collectionView.alwaysBounceHorizontal = true
+            collectionView.register(UINib(nibName: "LoadingCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LoadingCollectionReusableView")
             collectionView.register(UINib(nibName: "ProgramCollectionViewCell", bundle: nil),
                                     forCellWithReuseIdentifier: "programCell")
             collectionView.register(UINib(nibName: "ChannelCollectionViewCell", bundle: nil),
                                     forCellWithReuseIdentifier: "channelCell")
             collectionView.register(UINib(nibName: "TimeCollectionViewCell", bundle: nil),
                                     forCellWithReuseIdentifier: "timeCell")
+            collectionView.reloadData()
         }
     }
     @IBOutlet weak var cateGiriesCollectionView:UICollectionView!
@@ -383,32 +395,37 @@ class HomeNewVC: UIViewController {
         self.collectionView.setContentOffset(self.getCurrenOffset(), animated: false)
     }
     
-    private func selectCategories(_ sender:Int, key:String? = nil)
+     func selectCategories(_ sender:Int, key:String? = nil)
     {
         invalidateTimer()
         switch sender {
         case CategoriesSelect.all.rawValue:
-            guard  self.selectedCategories != sender else {return}
-            self.filteredList?.removeAll()
-            if (filteredList?.count ?? 0) > 0 {
-                self.filteredList?.append(contentsOf: self.channelList?.data ?? [])
+            // guard  self.selectedCategories != sender else {return}
+            if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
             } else {
-                self.filteredList = self.channelList?.data ?? []
+                self.filteredList?.removeAll()
+                self.filteredList = self.channelList?.data?.data ?? []
             }
-            
+            if viewModel.isPageExist {
+                if let indexPath = self.lastIndexPath {
+                    collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                }
+            }
+            collectionView.reloadData()
             self.selectedCategories = sender
         case  CategoriesSelect.recent.rawValue:
-            guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
-            guard  self.selectedCategories != sender else {return}
+            // guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
+           // guard  self.selectedCategories != sender else {return}
             self.filteredList?.removeAll()
             self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
             self.selectedCategories = sender
         case  CategoriesSelect.myChannels.rawValue:
-            guard  self.selectedCategories != sender else {return}
+            // guard  self.selectedCategories != sender else {return}
             self.selectedCategories = sender
             debugPrint("myChannels")
         default:
-            guard  self.selectedCategories != sender else {return}
+            // guard  self.selectedCategories != sender else {return}
             self.filteredList?.removeAll()
             self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
             self.selectedCategories = sender
@@ -422,14 +439,14 @@ class HomeNewVC: UIViewController {
     
     private func loadData(_ categories:[ChannelList]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
+        let mainArray = self.channelList?.data?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
         return mainArray
         
     }
     
     private func loadRecentData(_ categories:[RecentDetails]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
+        let mainArray = self.channelList?.data?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
         return mainArray
         
     }
@@ -444,7 +461,10 @@ class HomeNewVC: UIViewController {
     
     private func initVM() {
         viewModel.epgData = { epgModel in
-            self.group.leave()
+            self.group.notify(queue: .main) {
+                self.group.leave()
+                self.removeSpinner()
+            }
             self.removeSpinner()
             self.channelList = epgModel
             
@@ -546,249 +566,6 @@ class HomeNewVC: UIViewController {
     
 }
 
-extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int
-    {
-        if self.collectionView == collectionView
-        {
-            guard let channels = filteredList, !channels.isEmpty else { return 0}
-            return (channels.count + 1)
-        }
-        else {
-            return 1
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if self.collectionView == collectionView
-        {
-            guard let data =  filteredList else { return 0}
-            return ((section == 0) ? daysData : ((data[section - 1].programs?.count ?? 0) + 1))
-        }
-        else {
-            guard let data =  self.genrsList?.allGenre else { return fixedCategoriesArray.count}
-            return data.count + fixedCategoriesArray.count
-        }
-    }
-
-
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //        if self.collectionView == collectionView
-        //        {
-        if indexPath.section == 0
-        {
-            let timeCell = cell as? TimeCollectionViewCell
-            timeCell?.configureCell(indexInt: indexPath.row)
-            timeCell?.layer.zPosition = 2000
-            timeCell?.backgroundColor = .clear
-
-        }
-        else {
-
-            if indexPath.row == 0
-            {
-                let channelCell = cell as? ChannelCollectionViewCell
-                if  let  channel = filteredList?[indexPath.section - 1]
-                {
-                    channelCell?.configureWith(channel: channel)
-                }
-            }
-            else {
-                let programCell = cell as? ProgramCollectionViewCell
-
-                if let channel = filteredList?[indexPath.section - 1], let programs = channel.programs
-                {
-                    self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
-                    programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.row)
-                } else {
-                    /*if (indexPath.row == (filteredList?.count ?? 0) + 1 ) && selectedCategories == 0 { //it's your last cell
-                        //Load more data & reload your collection view
-                        viewModel.getEPGData()
-                    }*/
-                }
-            }
-            
-            
-        }
-        // }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if self.collectionView == collectionView
-        {
-            if indexPath.section == 0
-            {
-                guard let timeCell = collectionView.dequeueReusableCell(withReuseIdentifier: "timeCell", for: indexPath) as? TimeCollectionViewCell else {return UICollectionViewCell()}
-                return timeCell
-            }
-            else {
-
-                if indexPath.row == 0
-                {
-                    guard let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as? ChannelCollectionViewCell else {return UICollectionViewCell()}
-
-                    return channelCell
-                }
-                else {
-                    guard let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as? ProgramCollectionViewCell else {return UICollectionViewCell()}
-
-                    return programCell
-                }
-
-            }
-        }
-        else {
-            guard let cateGories = collectionView.dequeueReusableCell(withReuseIdentifier: AllGenrsListingCell.identifier, for: indexPath) as? AllGenrsListingCell else {return UICollectionViewCell()}
-            switch indexPath.row {
-            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
-                cateGories.confiGureData(self.fixedCategoriesArray[indexPath.row], indexPath.row == self.selectedCategories ? true : false)
-
-            default:
-                if let data = genrsList?.allGenre
-                {
-                    cateGories.confiGureData(data[indexPath.row - 3], indexPath.row == self.selectedCategories ? true : false)
-
-                }
-            }
-
-            return cateGories
-
-        }
-        
-    }
-
-
-    override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
-        if self.collectionView == collectionView
-        {
-            guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
-                return true}
-            guard let indexPath: NSIndexPath = self.collectionView.indexPath(for: programCell) as NSIndexPath? else { return true}
-            if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
-            {
-                self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
-                self.discriptionView.isHidden = false
-                self.discriptionHeader.text = programs[indexPath.item - 1].title ?? ""
-                self.discriptionThumbNail.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
-                self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""
-                self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "hh:mm a") ?? "")"
-            }
-            //print(indexPath)
-
-            return true
-        } else {
-            return true
-        }
-    }
-
-    func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
-        if self.collectionView == collectionView
-        {
-            self.collectionView.isScrollEnabled = false
-            if context.nextFocusedIndexPath != nil && !collectionView.isScrollEnabled {
-                if let nextFocusedIndexPath = context.nextFocusedIndexPath {
-                    if nextFocusedIndexPath.section != 0 && nextFocusedIndexPath.row == 0
-                    {
-                        self.collectionView.isScrollEnabled = false
-                        invalidateTimer()
-
-                        collectionView.scrollToItem(
-                            at: nextFocusedIndexPath,
-                            at: .centeredVertically,
-                            animated: true)
-                        return true
-
-                    }
-                    else if nextFocusedIndexPath.section == 0
-                    {
-                        self.collectionView.isScrollEnabled = false
-                        return true
-                    }
-                    else {
-                        self.collectionView.isScrollEnabled = true
-                        return true
-                        //                    invalidateTimer()
-                        //                    collectionView.scrollToItem(
-                        //                        at: nextFocusedIndexPath,
-                        //                        at: .centeredHorizontally,
-                        //                        animated: false)
-                    }
-                }
-            }
-            return true
-        }
-        else {
-            if context.nextFocusedIndexPath != nil && !collectionView.isScrollEnabled {
-                if let nextFocusedIndexPath = context.nextFocusedIndexPath {
-                    collectionView.scrollToItem(
-                        at: nextFocusedIndexPath,
-                        at: .centeredHorizontally,
-                        animated: true)
-
-                }
-
-            }
-            return true
-        }
-
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if let indexPath = context.nextFocusedIndexPath,
-            let _ = collectionView.cellForItem(at: indexPath) {
-            self.collectionView.scrollToItem(at: indexPath, at:
-             .centeredVertically, animated: true)
-        }
-    }
-    
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if self.collectionView == collectionView
-        {
-            if indexPath.section != 0
-            {
-                let flag = self.geoData?.success ?? false
-                if self.geoData?.response_code == 402 {
-                    showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
-                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-                        Utility.logOut()
-                    }
-                    return
-                }
-                guard let item = filteredList?[(indexPath.section - 1)] else {return}
-                present(videoPlaybackViewController, animated: true) {
-                    self.videoPlaybackViewController.channelObject = item
-                    self.videoPlaybackViewController.isAllowedZipCode = flag
-                    self.videoPlaybackViewController.delegatee = self
-                    self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
-                    self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-                    self.videoPlaybackViewController.isfromRcent = self.selectedCategories == 1 ? true : false
-                    self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
-                    self.videoPlaybackViewController.filterData = self.filteredList
-                    self.videoPlaybackViewController.loadAndPlay()
-                }
-                //                let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-//                viewController.channelObject = item
-//                viewController.isAllowedZipCode = flag
-//                viewController.str = geoData?.popupmsg ?? ""
-//                viewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-//                self.present(viewController, animated: true, completion: nil)
-            }
-        }
-        else {
-            switch indexPath.row {
-            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
-                self.selectCategories(indexPath.row, key: nil)
-
-            default:
-                self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
-
-            }
-
-        }
-    }
-}
-
 extension HomeNewVC:HandleError {
     func successAPI() {
         self.removeSpinner()
@@ -820,59 +597,9 @@ extension HomeNewVC:HandleError {
             }
             return
         }
-        self.showSimpleAlertWithMessage(message)
+        //self.showSimpleAlertWithMessage(message)
     }
     
-}
-
-// MARK:  Timer
-
-extension HomeNewVC {
-    func startTimer()
-    {
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
-            self.getCurrentTime()
-        }
-    }
-    
-    func invalidateTimer()
-    {
-        if let _ = timer
-        {
-            timer!.invalidate()
-            timer = nil
-            setLiveBtnView(UIColor.lightGray,tittle: "GO LIVE")
-
-        }
-    }
-
-    private func setLiveBtnView(_ color:UIColor , tittle:String)
-    {
-        self.liveButton.setBackgroundImage(UIImage.imageWithColor(color), for: .normal)
-        self.liveButton.setBackgroundImage(UIImage.imageWithColor(color), for: .focused)
-        self.liveButton.setBackgroundImage(UIImage.imageWithColor(color), for: .highlighted)
-        liveButton.setTitle(tittle, for: .normal)
-    }
-    
-    func getCurrentTime()
-    {
-        let currentTime = formatter.string(from: Date())
-        if currentTimeLabel.text != currentTime
-        {
-            currentTimeLabel.text = currentTime
-            var offset = self.collectionView.contentOffset
-            offset.x += 13.5
-            self.collectionView.reloadData()
-            self.collectionView.layoutIfNeeded()
-
-            DispatchQueue.main.async(execute: {
-                /* Scroll to the previous saved position */
-                self.collectionView.setContentOffset(offset, animated: false)
-            })
-
-        }
-
-    }
 }
 
 extension HomeNewVC{
@@ -1036,4 +763,3 @@ extension HomeNewVC:UIScrollViewDelegate
         }
     }
 }
-

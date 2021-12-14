@@ -23,9 +23,9 @@ class SearchVC: UIViewController {
 
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
-                filtterdChannelList = self.channelList?.data
+                filtterdChannelList = self.channelList?.data?.data ?? []
             } else {
-                filtterdChannelList = self.channelList?.data?.filter({($0.StationName?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
+                filtterdChannelList = self.channelList?.data?.data?.filter({($0.StationName?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
             }
 
             // Reload the collection view to reflect the changes.
@@ -36,7 +36,7 @@ class SearchVC: UIViewController {
       {
           didSet
           {
-            self.filtterdChannelList = channelList?.data
+            self.filtterdChannelList = channelList?.data?.data ?? []
           }
       }
      var geoData:GeoFenceAddress?

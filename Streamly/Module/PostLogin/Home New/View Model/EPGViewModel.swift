@@ -15,15 +15,20 @@ class EPGViewModel: NSObject {
     var drmData:((DrmKey)->())?
     var recentData:((RecentData)->())?
     var channelData:((ChannelListResponse)->())?
+    var currentPage = 1
+    var isPageExist = true
     weak var delegate:HandleError?
     
-    func getEPGData() {
-        ApiCall.getEPGData(success: { data, _
+    func getEPGData(_ page: Int = 1) {
+        guard isPageExist else { return }
+        ApiCall.getEPGData(page, success: { data, _
             in
             if let epgModel = EPGDataParser.parseContactData(data!) {
-                self.epgData!((epgModel))
+                self.epgData?((epgModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
+            } else {
+                print("decode error")
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
@@ -36,9 +41,9 @@ class EPGViewModel: NSObject {
             //debugPrint("failure")
            
             
-            if code == 401 {
-                Constant.logOut()
-            }
+//            if code == 401 {
+//                Constant.logOut()
+//            }
         }
     }
     
@@ -46,7 +51,7 @@ class EPGViewModel: NSObject {
         ApiCall.getChannelList(success: { data, _
             in
             if let epgModel = EPGDataParser.parseChannelData(data!) {
-                self.channelData!((epgModel))
+                self.channelData?((epgModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
             }

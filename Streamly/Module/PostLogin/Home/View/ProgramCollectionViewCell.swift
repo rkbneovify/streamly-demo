@@ -102,6 +102,20 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = "\(Utility.getDateFromTimeStampByFormat(from: program.start ?? 0.0) ?? "") - \(Utility.getDateFromTimeStampByFormat(from: program.end ?? 0.0) ?? "")"
 
     }
+    
+    func emptyCell() {
+        let container: UIView = UIView()
+        container.frame = CGRect(x: 0, y: 0, width: 80, height: 80) // Set X and Y whatever you want
+        container.backgroundColor = .clear
+        
+        let activityView = UIActivityIndicatorView(style: .medium)
+        activityView.center = self.center
+        
+        container.addSubview(activityView)
+        self.addSubview(container)
+        self.bringSubviewToFront(container)
+        activityView.startAnimating()
+    }
 
     // MARK: UIFocusEnvironment
 

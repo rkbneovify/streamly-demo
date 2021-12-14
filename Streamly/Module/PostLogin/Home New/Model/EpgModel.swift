@@ -9,7 +9,7 @@
 import Foundation
 struct EPGResponse : Codable {
 
-    let data :  [ChannelDetails]?//ChannelPagingData?
+    let data : ChannelPagingData?
     let date:String?
     let success:Bool?
     let message: String?
@@ -26,12 +26,12 @@ struct EPGResponse : Codable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-       /* if let getData = try values.decodeIfPresent(ChannelPagingData.self, forKey: .data) {
+        if let getData = try values.decodeIfPresent(ChannelPagingData.self, forKey: .data) {
             data = getData
         } else {
             data = nil
-        }*/
-        data = try values.decodeIfPresent([ChannelDetails].self, forKey: .data)
+        }
+//        data = try values.decodeIfPresent([ChannelDetails].self, forKey: .data)
         responseCode = try values.decodeIfPresent(Int.self, forKey: .responseCode)
         message = try values.decodeIfPresent(String.self, forKey: .message)
         date = try values.decodeIfPresent(String.self, forKey: .date)
@@ -44,13 +44,13 @@ struct ChannelPagingData: Codable {
     let currentPage: Int?
     let data:  [ChannelDetails]?
     let firstPageUrl: String?
-    let from: String?
-    let lastPage: String?
+    let from: Int?
+    let lastPage: Int?
     let lastPageUrl: String?
     let nextPageUrl: String?
     let path: String?
-    let perPage: String?
-    let prevPageUrl: String?
+    let perPage: Int?
+//    let prevPageUrl: String?
     let to: Int?
     let total: Int?
     
@@ -64,20 +64,28 @@ struct ChannelPagingData: Codable {
         case nextPageUrl = "next_page_url"
         case path = "path"
         case perPage = "per_page"
-        case prevPageUrl = "prev_page_url"
+//        case prevPageUrl = "prev_page_url"
         case to = "to"
         case total = "total"
     }
 }
 struct ChannelDetails : Codable {
 
-    let id:Int?
-    let StationName :String?
-    let url :String?
-    let logo :String?
-    let CallSign:String?
-    let programs :[ProgramArray]?
+    var id:Int?
+    var StationName :String?
+    var url :String?
+    var logo :String?
+    var CallSign:String?
+    var programs :[ProgramArray]?
 
+    init(id: Int, stationName: String, url: String, logo: String, callSign: String, programs: [ProgramArray]) {
+        self.id = id
+        self.StationName = stationName
+        self.url = url
+        self.logo = logo
+        self.CallSign = callSign
+        self.programs = programs
+    }
     enum CodingKeys: String, CodingKey {
 
         case StationName = "stationName"
