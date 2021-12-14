@@ -5,6 +5,7 @@ use App\HotelRoomTable;
 use App\Models\Subscription;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
+use App\User;
      function checkLoginLimit($user_id,$token,$deviceDetails){
         $login_limit =  GetLimitForUser($user_id);
     //find all by user_id and and status=active
@@ -890,12 +891,14 @@ function isTV($device)
 
 function GetLimitForUser($user_id){
   $limit =5;
-  $userIdExistInSubScribed = Subscription::select('quantity')->where(function ($query) use ($user_id) {
-    $query->where('user_id', '=', $user_id);
-                                      $query->where('stripe_status', '=', 'active');
-                                  })->value('quantity');
-                                 
- if(!empty($userIdExistInSubScribed)){
+  $user = User::find($user_id);
+  if($user->subscribed()){
+    $userIdExistInSubScribed = Subscription::select('quantity')->where(function ($query) use ($user_id) {
+      $query->where('user_id', '=', $user_id);
+                                        $query->where('stripe_status', '=', 'active');
+                                    })->value('quantity');
+  }
+  if(!empty($userIdExistInSubScribed)){
      
      if($userIdExistInSubScribed>5){
          $limit = $userIdExistInSubScribed;
