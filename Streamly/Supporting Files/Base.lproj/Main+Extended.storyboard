@@ -617,6 +617,12 @@
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VlV-PK-P8U">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <subviews>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel not found." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8Q-0l-NhN">
+                                <rect key="frame" x="802" y="517" width="316" height="46"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="always" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
                                 <rect key="frame" x="36" y="246.5" width="1884" height="833.5"/>
                                 <viewLayoutGuide key="safeArea" id="lcD-0T-ye1"/>
@@ -888,7 +894,9 @@
                             <constraint firstItem="jte-II-w2x" firstAttribute="leading" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="10" id="N2N-2b-Wum"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="centerY" secondItem="Zmj-0g-1sp" secondAttribute="centerY" id="NaB-ko-2JC"/>
                             <constraint firstItem="bvZ-gg-zYn" firstAttribute="top" secondItem="jte-II-w2x" secondAttribute="bottom" constant="134" id="UXP-fi-7fE"/>
+                            <constraint firstItem="i8Q-0l-NhN" firstAttribute="centerX" secondItem="NNg-TT-3ij" secondAttribute="centerX" id="XNR-eq-I5D"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="top" secondItem="kL9-t4-knR" secondAttribute="top" id="Z4A-aZ-Ekn"/>
+                            <constraint firstItem="i8Q-0l-NhN" firstAttribute="centerY" secondItem="NNg-TT-3ij" secondAttribute="centerY" id="awC-NP-JcI"/>
                             <constraint firstAttribute="trailing" secondItem="jte-II-w2x" secondAttribute="trailing" constant="20" id="e1v-cC-9j6"/>
                             <constraint firstAttribute="bottom" secondItem="ix6-JS-shb" secondAttribute="bottom" id="eTn-dn-90H"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="hdv-kY-3FB"/>
@@ -908,6 +916,7 @@
                         <outlet property="discriptionStartTimeLbl" destination="KeX-a7-NNu" id="aCq-uR-Cp5"/>
                         <outlet property="discriptionThumbNail" destination="bNp-Wp-fEa" id="J79-lw-h4S"/>
                         <outlet property="discriptionView" destination="ix6-JS-shb" id="h01-rm-Xlj"/>
+                        <outlet property="emptyChanelLabel" destination="i8Q-0l-NhN" id="oQO-pg-1nr"/>
                         <outlet property="searchButton" destination="kL9-t4-knR" id="IyI-Wf-JEJ"/>
                         <outlet property="settingsButton" destination="jte-II-w2x" id="0H1-b2-SiC"/>
                     </connections>

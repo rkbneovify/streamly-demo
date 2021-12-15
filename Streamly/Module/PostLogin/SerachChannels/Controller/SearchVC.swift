@@ -210,6 +210,7 @@ extension SearchVC:HandleError
     }
     
     func handleError(_ message: String, _ statusCode: Int) {
+        self.removeSpinner()
         if statusCode == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -228,7 +229,7 @@ extension SearchVC:HandleError
             }
             return
         }
-        self.removeSpinner()
+        
         self.showSimpleAlertWithMessage("Something went wrong!")
     }
 }

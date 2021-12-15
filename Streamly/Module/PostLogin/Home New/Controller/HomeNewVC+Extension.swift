@@ -15,7 +15,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
     {
         if self.collectionView == collectionView
         {
-            guard let channels = filteredList, !channels.isEmpty else { return 0}
+            guard let channels = filteredList, !channels.isEmpty else {
+                emptyChanelLabel.isHidden = false
+                return 0
+            }
+            emptyChanelLabel.isHidden = true
             return (channels.count + 1)
         }
         else {
@@ -115,55 +119,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         }
         
     }
-
-    // set the Loading View
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionFooter {
-            if collectionView == self.collectionView {
-                let aFooterView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "LoadingCollectionReusableView", for: indexPath) as? LoadingCollectionReusableView ?? LoadingCollectionReusableView()
-                loadingView = aFooterView
-                loadingView?.backgroundColor = UIColor.clear
-                return aFooterView
-            }
-        }
-        return UICollectionReusableView()
-    }
     
-    // start and stop the activityIndicator
-      func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        if elementKind == UICollectionView.elementKindSectionFooter {
-            if collectionView == self.collectionView {
-            if showLoading {
-                self.loadingView?.activityIndicator.startAnimating()
-            } else {
-                self.loadingView?.activityIndicator.stopAnimating()
-            }
-        }
-      }
-}
-    
-    // size of Loading View
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        if collectionView == self.collectionView {
-            if !showLoading {
-                return CGSize.zero
-            } else {
-                return CGSize(width: collectionView.bounds.size.width, height: 55)
-            }
-        } else {
-            return CGSize.zero
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
-        if elementKind == UICollectionView.elementKindSectionFooter && !showLoading {
-            if collectionView == self.collectionView {
-                self.loadingView?.activityIndicator.stopAnimating()
-            }
-        }
-       }
-
-
     override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
         if self.collectionView == collectionView
         {
@@ -175,9 +131,12 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     (filteredList?.count ?? 0) && viewModel.isPageExist {
                     lastIndexPath = indexPath
                     showLoading = true
-                    collectionView.reloadData()
+//                    collectionView.reloadData()
+                    showSpinner(onView: self.view)
+                    collectionView.reloadSections(IndexSet(integer: lastIndexPath?.section ?? 0))
                     viewModel.getEPGData(viewModel.currentPage)
                 } else {
+                    showLoading = false
                     print("loading not called or pageExist is \(viewModel.isPageExist)")
                 }
             }

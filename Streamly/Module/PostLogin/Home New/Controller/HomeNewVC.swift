@@ -44,10 +44,6 @@ class HomeNewVC: UIViewController {
         }
     }
     var showLoading = false
-    var loadingView: LoadingCollectionReusableView?
-    var totalMeetingCount:Int{
-        return self.filteredList?.count ?? 0
-    }
     var videoPlaybackViewController: VideoPlaybackViewController
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -184,7 +180,6 @@ class HomeNewVC: UIViewController {
             collectionView.delegate = self
             collectionView.isDirectionalLockEnabled = true
             self.collectionView.alwaysBounceHorizontal = true
-            collectionView.register(UINib(nibName: "LoadingCollectionReusableView", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "LoadingCollectionReusableView")
             collectionView.register(UINib(nibName: "ProgramCollectionViewCell", bundle: nil),
                                     forCellWithReuseIdentifier: "programCell")
             collectionView.register(UINib(nibName: "ChannelCollectionViewCell", bundle: nil),
@@ -203,6 +198,7 @@ class HomeNewVC: UIViewController {
     //    @IBOutlet weak var newsButton:            UIButton!
     //    @IBOutlet weak var moviesButton:          UIButton!
     //    @IBOutlet weak var kidsButton:            UIButton!
+    @IBOutlet weak var emptyChanelLabel: UILabel!
     @IBOutlet weak var settingsButton:        UIButton!
     @IBOutlet weak var descriptionLbl:        UILabel!
     
@@ -420,6 +416,7 @@ class HomeNewVC: UIViewController {
             self.filteredList?.removeAll()
             self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
             self.selectedCategories = sender
+            self.collectionView.reloadData()
         case  CategoriesSelect.myChannels.rawValue:
             // guard  self.selectedCategories != sender else {return}
             self.selectedCategories = sender
@@ -429,6 +426,7 @@ class HomeNewVC: UIViewController {
             self.filteredList?.removeAll()
             self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
             self.selectedCategories = sender
+            self.collectionView.reloadData()
         }
         self.cateGiriesCollectionView.reloadData()
 //        var offset = self.cateGiriesCollectionView.contentOffset

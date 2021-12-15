@@ -16,15 +16,18 @@ class EPGViewModel: NSObject {
     var recentData:((RecentData)->())?
     var channelData:((ChannelListResponse)->())?
     var currentPage = 1
+    var lastPage = 10
     var isPageExist = true
     weak var delegate:HandleError?
     
     func getEPGData(_ page: Int = 1) {
+        guard currentPage <= lastPage else { return }
         guard isPageExist else { return }
         ApiCall.getEPGData(page, success: { data, _
             in
             if let epgModel = EPGDataParser.parseContactData(data!) {
                 self.epgData?((epgModel))
+                self.lastPage = epgModel.data?.lastPage ?? 0
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
             } else {

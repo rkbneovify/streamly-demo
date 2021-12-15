@@ -10,8 +10,6 @@
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */; };
-		9304DD852768FA6B00E34F80 /* LoadingCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9304DD832768FA6B00E34F80 /* LoadingCollectionReusableView.swift */; };
-		9304DD862768FA6B00E34F80 /* LoadingCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9304DD842768FA6B00E34F80 /* LoadingCollectionReusableView.xib */; };
 		93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */; };
 		93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */; };
 		93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C69270ED6F7006DA962 /* QRModel.swift */; };
@@ -149,8 +147,6 @@
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeNewVC+Extension.swift"; sourceTree = "<group>"; };
-		9304DD832768FA6B00E34F80 /* LoadingCollectionReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingCollectionReusableView.swift; sourceTree = "<group>"; };
-		9304DD842768FA6B00E34F80 /* LoadingCollectionReusableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingCollectionReusableView.xib; sourceTree = "<group>"; };
 		93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewController.swift; sourceTree = "<group>"; };
 		93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewModel.swift; sourceTree = "<group>"; };
 		93662C69270ED6F7006DA962 /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
@@ -584,8 +580,6 @@
 				AA72AF8A2473F5E600906796 /* TimeCollectionViewCell.swift */,
 				AA105C88249767C100CF075B /* TimeCollectionViewCell.xib */,
 				AA0C255725F10C4300BC03B9 /* AllGenrsListingCell.swift */,
-				9304DD832768FA6B00E34F80 /* LoadingCollectionReusableView.swift */,
-				9304DD842768FA6B00E34F80 /* LoadingCollectionReusableView.xib */,
 			);
 			name = View;
 			path = ../Home/View;
@@ -1065,7 +1059,6 @@
 				AA5E20F024C61758000B648F /* Lato-LightItalic.ttf in Resources */,
 				AA105C8D249767D800CF075B /* LogOUTView.xib in Resources */,
 				AA5E20F924C61758000B648F /* Lato-Semibold.ttf in Resources */,
-				9304DD862768FA6B00E34F80 /* LoadingCollectionReusableView.xib in Resources */,
 				AA5E20FE24C61758000B648F /* Lato-Medium.ttf in Resources */,
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
 				AA5E20EE24C61758000B648F /* Lato-HeavyItalic.ttf in Resources */,
@@ -1276,7 +1269,6 @@
 				AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */,
 				A84958512706D62E00B2FE73 /* LoginPassocodeViewModel.swift in Sources */,
 				AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */,
-				9304DD852768FA6B00E34F80 /* LoadingCollectionReusableView.swift in Sources */,
 				AAC9C8C2246A700200708812 /* Streamly.xcdatamodeld in Sources */,
 				AA5F5A512542A7E800FA8FB6 /* NetworkManagerWrapper.swift in Sources */,
 				AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */,
