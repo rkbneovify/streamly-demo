@@ -418,23 +418,14 @@ public function channelDaysSchedulePaginate(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
 // return $this->channelDaysScheduleFunc('dash_url')
-// ->get();
-// ->toSql();
-// ->paginate(10);
-$currentPage = $request->get('page',1);
-if($isDevice=='roku'){ 
-   
-        $type='smooth_url';
-        $reco=  $this->channelDaysScheduleFunc($type)->paginate(10);
-}else if($isDevice=='apple')  {
+// dd($request);
+if($request->exists('search')) {
 
-
-    $type='url';
-    $reco =  $this->channelDaysScheduleFunc($type)->paginate(10);
-} else {
-    $type='dash_url';
-    $reco= $this->channelDaysScheduleFunc($type)->paginate(10);
-    }
+    $reco=$this->hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice);
+    
+}else{
+    $reco=$this->channelDaysScheduleFuncwithoutSearch($request,$isDevice);
+}
     
 
 // $reco=$record->toSql(); echo $reco;exit; 
@@ -493,6 +484,72 @@ return response($data)->withHeaders([
 
       
 //channel with 7 day of schdule
+public function channelDaysScheduleFuncwithoutSearch($request,$isDevice){
+
+if($isDevice=='roku'){ 
+   
+    $type='smooth_url';
+    $reco=  $this->channelDaysScheduleFunc($type)->paginate(10);
+}else if($isDevice=='apple')  {
+
+
+$type='url';
+$reco =  $this->channelDaysScheduleFunc($type)->paginate(10);
+} else {
+$type='dash_url';
+$reco= $this->channelDaysScheduleFunc($type)->paginate(10);
+}
+return $reco;
+}
+public function hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice){
+    $arr = explode(',', $request->search);
+    if(in_array('Others', $arr)){
+
+        
+        if($isDevice=='roku'){ 
+   
+            $type='smooth_url';
+            $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+    }else if($isDevice=='apple')  {
+    
+    
+        $type='url';
+        $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+    } else {
+        $type='dash_url';
+        $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+        }
+        }else{
+        
+           
+        if($isDevice=='roku'){ 
+   
+            $type='smooth_url';
+            $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+    }else if($isDevice=='apple')  {
+    
+    
+        $type='url';
+        $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+    } else {
+        $type='dash_url';
+        $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
+        // ->toSql();
+        ->paginate(10)->appends(['search' => $request->search]);
+        }
+        }
+        return $reco;
+}
 public function channelDaysScheduletz(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
@@ -699,6 +756,56 @@ return response($data)->withHeaders([
                 return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
              
                 }
+  public function channelDaysScheduleFuncWithGenre($type,$q){
+    // dump("yooooo");  
+    // dd($q);
+//     select CONCAT('[',GROUP_CONCAT(DISTINCT(QUOTE(IFNULL(genre.name,'Others')))),']') genrename ,`sub`.`callSign` as `callSign`, `sub`.`id`, `StationName` as `stationName`, `dash_url` as `url`, CONCAT('http://127.0.0.1:8000/uploads/channellogo/',`image`) logo,  
+//     concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs from (select IFNULL(gracenote.StationName,channels.name) StationName, 
+//     IFNULL(channels.callSign,channels.name) callSign, IFNULL(gracenote.EventTitle,channels.name) EventTitle, IFNULL(gracenote.EventDescription,"EventDescription") EventDescription, IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime, 
+//     IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime, `channels`.`id`, `channels`.`status`, IFNULL(channels.image,"notfound.png") image, `channels`.`dash_url` from `gracenote` right join `channels` on `gracenote`.`CallSign` = `channels`.`callSign` 
+//     where gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+//     AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL order by `gracenote`.`StartDateTime` asc) as `sub` left join `channels_genre` on `sub`.`id` = `channels_genre`.`channels_id` left join `genre` on `channels_genre`.`genre_id` = `genre`.`id`where `sub`.`status` = 1  group by `sub`.`callSign`, `StationName`, `image`, `dash_url`, `id` order by `sub`.`callSign` asc
+//  
+
+// genre.name in ('Sports')
+ $imagePath=url("/uploads/channellogo/");
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+    $record  = Gracenote::select("sub.callSign as callSign","sub.id","StationName as stationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+    // DB::raw("CONCAT('[',GROUP_CONCAT(DISTINCT(QUOTE(IFNULL(genre.name,'Others')))),']') genrename"))
+
+    ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+    // ->selectRaw("CONCAT('[',GROUP_CONCAT(DISTINCT(QUOTE(IFNULL(genre.name,'Others')))),']') genrename")
+       
+    ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs")
+    ->fromSub(function ($query) use ($type) {
+      $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
+      ->from('gracenote')
+      ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+       ->orderBy('gracenote.StartDateTime', 'asc');
+        }, 'sub')
+
+           
+           ->leftJoin('channels_genre', 'sub.id', '=', 'channels_genre.channels_id')
+           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+        ->where('sub.status','=','1');
+        if(!in_array('Others', $q)){
+
+            $record->whereIn('genre.name', $q )
+            ->orderBy('sub.callSign', 'asc')
+            ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+        }else{
+            $record->whereRaw('`channels_genre`.`channels_id` IS NULL')
+            ->orderBy('sub.callSign', 'asc')
+            ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+        }
+    return $record;
+   
+}
   public function channelDaysScheduleFunc($type){
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
@@ -961,3 +1068,39 @@ $reco=$record->get();
   //  ], 200);
   }
 }
+
+
+// select `sub`.`callSign` as `callSign`, `sub`.`id`, `StationName` as `stationName`, `dash_url` as `url`,
+// CONCAT('http://127.0.0.1:8000/uploads/channellogo/',`image`) logo,
+// CONCAT('[',GROUP_CONCAT(DISTINCT(QUOTE(IFNULL(genre.name,'Others')))),']') genrename, concat( '[',
+// group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start',
+// UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs from (select
+// IFNULL(gracenote.StationName,channels.name) StationName, IFNULL(channels.callSign,channels.name) callSign,
+// IFNULL(gracenote.EventTitle,channels.name) EventTitle, IFNULL(gracenote.EventDescription,"EventDescription")
+// EventDescription, IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s"))
+// StartDateTime, IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"))
+// EndDateTime, `channels`.`id`, `channels`.`status`, IFNULL(channels.image,"notfound.png") image, `channels`.`dash_url`
+// from `gracenote` right join `channels` on `gracenote`.`CallSign` = `channels`.`callSign` where gracenote.`StartDateTime`
+// BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")
+// AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL order by
+// `gracenote`.`StartDateTime` asc) as `sub` left join `channels_genre` on `sub`.`id` = `channels_genre`.`channels_id` left
+// join `genre` on `channels_genre`.`genre_id` = `genre`.`id` where `sub`.`status` = 1 and genre.name in ('Sports') group by
+// `sub`.`callSign`, `StationName`, `image`, `dash_url`, `id` order by `sub`.`callSign` asc
+
+// select `sub`.`callSign` as `callSign`, `sub`.`id`, `StationName` as `stationName`, `dash_url` as `url`,
+// CONCAT('http://127.0.0.1:8000/uploads/channellogo/',`image`) logo,
+// CONCAT('[',GROUP_CONCAT(DISTINCT(QUOTE(IFNULL(genre.name,'Others')))),']') genrename, concat( '[',
+// group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start',
+// UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime) ) Order By StartDateTime ), ']') programs from (select
+// IFNULL(gracenote.StationName,channels.name) StationName, IFNULL(channels.callSign,channels.name) callSign,
+// IFNULL(gracenote.EventTitle,channels.name) EventTitle, IFNULL(gracenote.EventDescription,"EventDescription")
+// EventDescription, IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s"))
+// StartDateTime, IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"))
+// EndDateTime, `channels`.`id`, `channels`.`status`, IFNULL(channels.image,"notfound.png") image, `channels`.`dash_url`
+// from `gracenote` right join `channels` on `gracenote`.`CallSign` = `channels`.`callSign` where gracenote.`StartDateTime`
+// BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")
+// AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL order by
+// `gracenote`.`StartDateTime` asc) as `sub` left join `channels_genre` on `sub`.`id` = `channels_genre`.`channels_id` left
+// join `genre` on `channels_genre`.`genre_id` = `genre`.`id` where `sub`.`status` = 1  and `channels_genre`.`channels_id` IS NULL group by
+// `sub`.`callSign`, `StationName`, `image`, `dash_url`, `id`  
+// ORDER BY `genrename` ASC
