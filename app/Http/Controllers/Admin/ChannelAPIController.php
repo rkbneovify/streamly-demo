@@ -419,7 +419,7 @@ $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
 // return $this->channelDaysScheduleFunc('dash_url')
 // dd($request);
-if($request->exists('search')) {
+if($request->exists('genre')) {
 
     $reco=$this->hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice);
     
@@ -502,7 +502,7 @@ $reco= $this->channelDaysScheduleFunc($type)->paginate(10);
 return $reco;
 }
 public function hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice){
-    $arr = explode(',', $request->search);
+    $arr = explode(',', $request->genre);
     if(in_array('Others', $arr)){
 
         
@@ -511,19 +511,19 @@ public function hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
     }else if($isDevice=='apple')  {
     
     
         $type='url';
         $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
     } else {
         $type='dash_url';
         $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
         }
         }else{
         
@@ -533,19 +533,19 @@ public function hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
     }else if($isDevice=='apple')  {
     
     
         $type='url';
         $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
     } else {
         $type='dash_url';
         $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)
         // ->toSql();
-        ->paginate(10)->appends(['search' => $request->search]);
+        ->paginate(10)->appends(['genre' => $request->genre]);
         }
         }
         return $reco;
