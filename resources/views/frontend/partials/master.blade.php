@@ -73,7 +73,7 @@ $genres = Genre::pluck('name', 'id');
 <script defer src="{{ asset('frontend/script.js') }}" ></script>
 
     <!-- Import typeahead.js -->
-    <script src="{{ asset('frontend/autocomplete/typeahead.bundle.min.js')}}"></script>
+    <script defer src="{{ asset('frontend/autocomplete/typeahead.bundle.min.js')}}"></script>
 @yield('stylesheets-bottom')
 
 </body>
