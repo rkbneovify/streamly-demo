@@ -58,9 +58,13 @@ open class ApiCall {
     }
 
     @discardableResult
-    public static func getEPGData(_ page: Int = 1, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+    public static func getEPGData(_ page: Int = 1,_ genere: String = "All", success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
-        let param = ["page": String(page)]
+        var param = [String: String]()
+        param["page"] = String(page)
+        if genere != "All" {
+            param["genre"] = genere
+        }
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getEpgData.rawValue, method: .get, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)

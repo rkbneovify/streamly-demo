@@ -20,10 +20,16 @@ class EPGViewModel: NSObject {
     var isPageExist = true
     weak var delegate:HandleError?
     
-    func getEPGData(_ page: Int = 1) {
-        guard currentPage <= lastPage else { return }
-        guard isPageExist else { return }
-        ApiCall.getEPGData(page, success: { data, _
+    func getEPGData(_ page: Int = 1,_ genere: String = "All") {
+        guard currentPage <= lastPage else {
+            delegate?.successAPI()
+            return
+        }
+        guard isPageExist else {
+            delegate?.successAPI()
+            return
+        }
+        ApiCall.getEPGData(page, genere, success: { data, _
             in
             if let epgModel = EPGDataParser.parseContactData(data!) {
                 self.epgData?((epgModel))

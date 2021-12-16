@@ -20,7 +20,6 @@ class HomeNewVC: UIViewController {
             viewModel.isPageExist = (channelList?.data?.data?.count ?? 0) > 0
             viewModel.currentPage += 1
             showLoading = false
-            self.selectCategories(0)
         }
     }
     var lastIndexPath: IndexPath?
@@ -397,18 +396,26 @@ class HomeNewVC: UIViewController {
         switch sender {
         case CategoriesSelect.all.rawValue:
             // guard  self.selectedCategories != sender else {return}
-            if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
-            } else {
-                self.filteredList?.removeAll()
-                self.filteredList = self.channelList?.data?.data ?? []
-            }
-            if viewModel.isPageExist {
-                if let indexPath = self.lastIndexPath {
-                    collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            if channelList != nil {
+                if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                } else {
+                    self.filteredList?.removeAll()
+                    self.filteredList = self.channelList?.data?.data ?? []
                 }
+                if viewModel.isPageExist {
+                    if let indexPath = self.lastIndexPath {
+                        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                    }
+                }
+            } else {
+                viewModel.isPageExist = true
+                viewModel.lastPage = 10
+                filteredList?.removeAll()
+                self.showSpinner(onView: self.view)
+                viewModel.getEPGData(1)
             }
-            collectionView.reloadData()
+//            collectionView.reloadData()
             self.selectedCategories = sender
         case  CategoriesSelect.recent.rawValue:
             // guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
@@ -422,18 +429,40 @@ class HomeNewVC: UIViewController {
             self.selectedCategories = sender
             debugPrint("myChannels")
         default:
-            // guard  self.selectedCategories != sender else {return}
-            self.filteredList?.removeAll()
-            self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
             self.selectedCategories = sender
-            self.collectionView.reloadData()
+            if channelList != nil {
+                if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                } else {
+                    self.filteredList?.removeAll()
+                    self.filteredList = self.channelList?.data?.data ?? []
+                }
+                if viewModel.isPageExist {
+                    if let indexPath = self.lastIndexPath {
+                        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                    }
+                }
+            } else {
+                viewModel.isPageExist = true
+                viewModel.lastPage = 10
+                filteredList?.removeAll()
+                self.showSpinner(onView: self.view)
+                viewModel.getEPGData(1, key ?? "")
+            }
+            // guard  self.selectedCategories != sender else {return}
+//            self.filteredList?.removeAll()
+//            self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
+//            self.selectedCategories = sender
+//            self.collectionView.reloadData()
         }
+        self.collectionView.reloadData()
         self.cateGiriesCollectionView.reloadData()
 //        var offset = self.cateGiriesCollectionView.contentOffset
 //        offset.x = CGFloat(130 * sender)
 //        self.cateGiriesCollectionView.setContentOffset(offset, animated: true)
 
     }
+    
     
     private func loadData(_ categories:[ChannelList]) -> [ChannelDetails]?
     {
@@ -465,7 +494,11 @@ class HomeNewVC: UIViewController {
             }
             self.removeSpinner()
             self.channelList = epgModel
-            
+            if self.selectedCategories == -1 {
+                self.selectCategories(0)
+            } else {
+                self.selectCategories(self.selectedCategories)
+            }
         }
     }
     

@@ -129,6 +129,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 
                 if indexPath.section ==
                     (filteredList?.count ?? 0) && viewModel.isPageExist {
+                    guard viewModel.currentPage <= viewModel.lastPage  else { return true }
                     lastIndexPath = indexPath
                     showLoading = true
 //                    collectionView.reloadData()
@@ -255,10 +256,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             }
         }
         else {
+            viewModel.currentPage = 1
+            channelList = nil
             switch indexPath.row {
             case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
                 self.selectCategories(indexPath.row, key: nil)
-
             default:
                 self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
 
