@@ -22,13 +22,16 @@
                 @if( isset($login) && $login)
 
                     <li class="nav-item">
-                       
-                        <div class="form-group has-search">
+                        <div class="search-box">
+    <button class="btn-search"><img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/></button>
+    <input type="text" id="search-typehead" class="input-search" placeholder="Search...">
+  </div>
+                        {{-- <div class="form-group has-search">
                             <img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/>
-                            <input type="text" style="background: none;" id="search-typehead" class="search-click typeahead" placeholder="Search">
-                            {{-- <input type="text" name="search" class="form-control typeahead" id="search-btn-header" placeholder="Search channels or shows"> --}}
+                            <input type="text" style="background: none;" id="search-typehead" class=" typeahead" placeholder="Search">
+                            <input type="text" name="search" class="form-control typeahead" id="search-btn-header" placeholder="Search channels or shows">
                             <div id="search_list"></div>  
-                        </div>
+                        </div> --}}
                     </li>
                     <li class="nav-item dropdown">
                         <a style="background: " class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -83,33 +86,57 @@
     </div>
 </div>
 <style>
-.search-click {
-  border: 1px solid #ccc;
+.search-box{
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+}
+.input-search{
+  height: 50px;
+  width: 50px;
+  border-style: none;
+  padding: 10px;
+  font-size: 18px;
+  letter-spacing: 2px;
   outline: none;
-  background-size: 22px;
-  background-position: 13px;
-  border-radius: 10px;
+  border-radius: 25px;
+  transition: all .5s ease-in-out;
+  background-color: #004E92;
+  padding-right: 40px;
+  color:#fff;
+}
+.input-search::placeholder{
+  color:rgba(255,255,255,.5);
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 100;
+}
+.btn-search{
   width: 50px;
   height: 50px;
-  padding: 25px;
-  transition: all 0.5s;
-}
-.search-click:focus {
-  width: 300px;
-  padding-left: 50px;
-}
-.search-click {
-  position: relative;
-  overflow: hidden;
-  height: 50px;
-}
-.search-click input {
-  background: transparent;
-  border: 1px solid #ccc;
+  border-style: none;
+  font-size: 20px;
+  font-weight: bold;
   outline: none;
+  cursor: pointer;
+  border-radius: 50%;
   position: absolute;
+  right: 0px;
+  color:#ffffff ;
+  background-color:transparent;
+  pointer-events: painted;  
+}
+.btn-search:focus ~ .input-search{
   width: 300px;
-  height: 50px;
-  left: 0%;
-  padding: 10px;
+  border-radius: 0px;
+  background-color: transparent;
+  border-bottom:1px solid rgba(255,255,255,.5);
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+}
+.input-search:focus{
+  width: 300px;
+  border-radius: 0px;
+  background-color: transparent;
+  border-bottom:1px solid rgba(255,255,255,.5);
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
 }</style>
