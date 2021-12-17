@@ -104,6 +104,8 @@
   background-color: #004E92;
   padding-right: 40px;
   color:#fff;
+
+  box-sizing: border-box !important; 
 }
 .input-search::placeholder{
   color:rgba(255,255,255,.5);
