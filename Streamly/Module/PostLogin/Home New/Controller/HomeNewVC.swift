@@ -480,7 +480,7 @@ class HomeNewVC: UIViewController {
     
     private func makeApiCall(){
         group.enter()
-        self.showSpinner(onView: self.view)
+//        self.showSpinner(onView: self.view)
         viewModel.delegate = self
         viewModel.getEPGData()
         

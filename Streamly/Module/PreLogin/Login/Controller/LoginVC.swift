@@ -250,6 +250,7 @@ extension LoginVC
         loginrequest.password = password
         loginrequest.deviceID  = deviceId
         loginrequest.userLogin { [weak self] (response, errorMessage) in
+            self?.removeSpinner()
             if response != nil && errorMessage == nil{
                 guard let selfStrong = self else {return}
                 selfStrong.removeSpinner()
