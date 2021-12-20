@@ -2,7 +2,10 @@
 
 namespace Laravel\Cashier;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Laravel\Cashier\Concerns\InteractsWithPaymentBehavior;
 use Laravel\Cashier\Concerns\Prorates;
 use Stripe\SubscriptionItem as StripeSubscriptionItem;
 
@@ -11,6 +14,7 @@ use Stripe\SubscriptionItem as StripeSubscriptionItem;
  */
 class SubscriptionItem extends Model
 {
+    use InteractsWithPaymentBehavior;
     use Prorates;
 
     /**
@@ -36,7 +40,7 @@ class SubscriptionItem extends Model
      */
     public function subscription()
     {
-        return $this->belongsTo(Subscription::class);
+        return $this->belongsTo(Cashier::$subscriptionModel);
     }
 
     /**
@@ -65,9 +69,9 @@ class SubscriptionItem extends Model
      */
     public function incrementAndInvoice($count = 1)
     {
-        $this->incrementQuantity($count);
+        $this->alwaysInvoice();
 
-        $this->subscription->invoice();
+        $this->incrementQuantity($count);
 
         return $this;
     }
@@ -103,6 +107,8 @@ class SubscriptionItem extends Model
 
         $stripeSubscriptionItem->quantity = $quantity;
 
+        $stripeSubscriptionItem->payment_behavior = $this->paymentBehavior();
+
         $stripeSubscriptionItem->proration_behavior = $this->prorateBehavior();
 
         $stripeSubscriptionItem->save();
@@ -136,6 +142,7 @@ class SubscriptionItem extends Model
         $options = array_merge([
             'plan' => $plan,
             'quantity' => $this->quantity,
+            'payment_behavior' => $this->paymentBehavior(),
             'proration_behavior' => $this->prorateBehavior(),
             'tax_rates' => $this->subscription->getPlanTaxRatesForPayload($plan),
         ], $options);
@@ -173,11 +180,40 @@ class SubscriptionItem extends Model
      */
     public function swapAndInvoice($plan, $options = [])
     {
-        $item = $this->swap($plan, $options);
+        $this->alwaysInvoice();
 
-        $this->subscription->invoice();
+        return $this->swap($plan, $options);
+    }
 
-        return $item;
+    /**
+     * Report usage for a metered product.
+     *
+     * @param  int  $quantity
+     * @param  \DateTimeInterface|int|null  $timestamp
+     * @return \Stripe\UsageRecord
+     */
+    public function reportUsage($quantity = 1, $timestamp = null)
+    {
+        $timestamp = $timestamp instanceof DateTimeInterface ? $timestamp->getTimestamp() : $timestamp;
+
+        return StripeSubscriptionItem::createUsageRecord($this->stripe_id, [
+            'quantity' => $quantity,
+            'action' => $timestamp ? 'set' : 'increment',
+            'timestamp' => $timestamp ?? time(),
+        ], $this->subscription->owner->stripeOptions());
+    }
+
+    /**
+     * Get the usage records for a metered product.
+     *
+     * @param  array  $options
+     * @return \Illuminate\Support\Collection
+     */
+    public function usageRecords($options = [])
+    {
+        return new Collection(StripeSubscriptionItem::allUsageRecordSummaries(
+            $this->stripe_id, $options, $this->subscription->owner->stripeOptions()
+        )->data);
     }
 
     /**
@@ -196,12 +232,14 @@ class SubscriptionItem extends Model
     /**
      * Get the subscription as a Stripe subscription item object.
      *
-     * @return StripeSubscriptionItem
+     * @param  array  $expand
+     * @return \Stripe\SubscriptionItem
      */
-    public function asStripeSubscriptionItem()
+    public function asStripeSubscriptionItem(array $expand = [])
     {
         return StripeSubscriptionItem::retrieve(
-            $this->stripe_id, $this->subscription->owner->stripeOptions()
+            ['id' => $this->stripe_id, 'expand' => $expand],
+            $this->subscription->owner->stripeOptions()
         );
     }
 }

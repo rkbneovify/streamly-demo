@@ -1,10 +1,10 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-cashier.svg"></p>
+<p align="center"><img src="/art/logo.svg" role="presentation"></p>
 
 <p align="center">
 <a href="https://github.com/laravel/cashier/actions"><img src="https://github.com/laravel/cashier/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/cashier"><img src="https://poser.pugx.org/laravel/cashier/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/cashier"><img src="https://poser.pugx.org/laravel/cashier/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/cashier"><img src="https://poser.pugx.org/laravel/cashier/license.svg" alt="License"></a>
+<a href="https://packagist.org/packages/laravel/cashier"><img src="https://img.shields.io/packagist/dt/laravel/cashier" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/cashier"><img src="https://img.shields.io/packagist/v/laravel/cashier" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/cashier"><img src="https://img.shields.io/packagist/l/laravel/cashier" alt="License"></a>
 </p>
 
 ## Introduction

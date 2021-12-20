@@ -2,6 +2,7 @@
 
 namespace Laravel\Cashier\Concerns;
 
+use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Subscription;
 use Laravel\Cashier\SubscriptionBuilder;
 
@@ -52,6 +53,21 @@ trait ManagesSubscriptions
     }
 
     /**
+     * Get the ending date of the trial.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Support\Carbon|null
+     */
+    public function trialEndsAt($name = 'default')
+    {
+        if ($subscription = $this->subscription($name)) {
+            return $subscription->trial_ends_at;
+        }
+
+        return $this->trial_ends_at;
+    }
+
+    /**
      * Determine if the Stripe model has a given subscription.
      *
      * @param  string  $name
@@ -77,11 +93,7 @@ trait ManagesSubscriptions
      */
     public function subscription($name = 'default')
     {
-        return $this->subscriptions->sortByDesc(function (Subscription $subscription) {
-            return $subscription->created_at->getTimestamp();
-        })->first(function (Subscription $subscription) use ($name) {
-            return $subscription->name === $name;
-        });
+        return $this->subscriptions->where('name', $name)->first();
     }
 
     /**
@@ -91,7 +103,7 @@ trait ManagesSubscriptions
      */
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class, $this->getForeignKey())->orderBy('created_at', 'desc');
+        return $this->hasMany(Cashier::$subscriptionModel, $this->getForeignKey())->orderBy('created_at', 'desc');
     }
 
     /**
@@ -134,7 +146,7 @@ trait ManagesSubscriptions
     }
 
     /**
-     * Determine if the entity has a valid subscription on the given plan.
+     * Determine if the customer has a valid subscription on the given plan.
      *
      * @param  string  $plan
      * @return bool

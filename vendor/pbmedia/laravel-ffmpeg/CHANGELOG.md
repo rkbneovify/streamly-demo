@@ -2,6 +2,17 @@
 
 All Notable changes to `pbmedia/laravel-ffmpeg` will be documented in this file
 
+## 7.6.0 - 2021-12-20
+
+### Added
+
+-   Support for PHP 8.1
+
+### Removed
+
+-   Support for PHP 7.3
+-   Support for Laravel 6 and 7
+
 ## 7.5.12 - 2021-07-05
 
 ### Added

@@ -8,6 +8,10 @@
 
 This package provides an integration with FFmpeg for Laravel 6.0 and higher. [Laravel's Filesystem](http://laravel.com/docs/7.0/filesystem) handles the storage of the files.
 
+## Launcher 🚀
+
+Hey! We've built a Docker-based deployment tool to launch apps and sites fully containerized. You can find all features and the roadmap on our [website](https://uselauncher.com), and we are on [Twitter](https://twitter.com/uselauncher) as well!
+
 ## Features
 * Super easy wrapper around [PHP-FFMpeg](https://github.com/PHP-FFMpeg/PHP-FFMpeg), including support for filters and other advanced features.
 * Integration with [Laravel's Filesystem](http://laravel.com/docs/7.0/filesystem), [configuration system](https://laravel.com/docs/7.0/configuration) and [logging handling](https://laravel.com/docs/7.0/errors).
@@ -16,7 +20,7 @@ This package provides an integration with FFmpeg for Laravel 6.0 and higher. [La
 * Built-in support for encrypted HLS (AES-128) and rotating keys (optional).
 * Built-in support for concatenation, multiple inputs/outputs, image sequences (timelapse), complex filters (and mapping), frame/thumbnail exports.
 * Built-in support for watermarks (positioning and manipulation).
-* PHP 7.3 and higher.
+* PHP 7.3, 7.4 and 8.0.
 * Lots of integration tests, GitHub Actions with both Ubuntu and Windows.
 
 ## Support
@@ -187,7 +191,9 @@ Since resizing is a common operation, we've added a dedicated method for it:
 ```php
 FFMpeg::open('steve_howe.mp4')
     ->export()
-    ->resize(640, 480);
+    ->inFormat(new \FFMpeg\Format\Video\X264)
+    ->resize(640, 480)
+    ->save('steve_howe_resized.mp4');
 ```
 The first argument is the width, and the second argument the height. The optional third argument is the mode. You can choose between `fit` (default), `inset`, `width` or `height`. The optional fourth argument is a boolean whether or not to force the use of standards ratios. You can find about these modes in the `FFMpeg\Filters\Video\ResizeFilter` class.
 
