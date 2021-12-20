@@ -48,7 +48,7 @@ return response()->json($response, 200);
     $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
     // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
            
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]' ) genrename")
            
            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
