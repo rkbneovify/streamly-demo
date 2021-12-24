@@ -258,6 +258,20 @@ Route::get('/upcomingevent/{callsign}/{EventTitle}', 'SearchController@upcomingE
 // Route::get('/user/find', 'SearchController@searchevents');
 Route::get('/user/find', 'SearchController@searchUsers');
 Route::resource('bugreportings','Admin\BugReportingController');
+Route::get('/dropzone1','RenameController@renameDisplay');
+Route::post('dropzone1/store','RenameController@uploadImages')->name('dropzone.store');
+
+
+Route::post('dropzone1/delete', 'RenameController@deleteImage')->name('dropzone.delete');
+
+Route::get('dropzone', 'DropzoneController@index');
+
+Route::post('dropzone/upload', 'DropzoneController@upload')->name('dropzone.upload');
+
+Route::get('dropzone/fetch', 'DropzoneController@fetch')->name('dropzone.fetch');
+
+Route::get('dropzone/delete', 'DropzoneController@delete')->name('dropzone.delete');
+
 Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     
