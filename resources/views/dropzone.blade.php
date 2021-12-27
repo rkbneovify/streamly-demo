@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
 
-  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+     <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
  </head>
  <body>
   <div class="container-fluid">
@@ -110,7 +110,7 @@ this.on("sending", function (file, xhr, formData) {
       }
     })
   });
-
+/**
   $(".dropzone").sortable({
     items:'.dz-preview',
     cursor: 'grab',
@@ -131,6 +131,29 @@ this.on("sending", function (file, xhr, formData) {
       });
       myDropzone.files = newQueue;
     }
+});
+*/
+new Sortable(document.getElementById('dropzoneForm'), {
+  draggable: '.dz-preview',
+  onSort: function (/**Event*/evt) {
+		// same properties as onEnd
+    //console.log('evt.to',evt.to);    // target list
+		//console.log('evt.from',evt.from);  // previous list
+    //console.log('evt.oldIndex',evt.oldIndex);  // element's old index within old parent
+	//	console.log('evt.newIndex',evt.newIndex);
+    
+      var queue = myDropzone.getAcceptedFiles();
+      newQueue = [];
+      $('#dropzoneForm .dz-preview .dz-filename [data-dz-name]').each(function (count, el) {           
+            var name = el.innerHTML;
+            queue.forEach(function(file) {
+                if (file.name === name) {
+                    newQueue.push(file);
+                }
+            });
+      });
+      myDropzone.files = newQueue;
+	},
 });
 
 </script>
