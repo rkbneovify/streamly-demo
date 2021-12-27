@@ -70,6 +70,12 @@
 
             uploadMultiple:true,
     acceptedFiles : ".png,.jpg,.gif,.bmp,.jpeg",
+    accept: function(file, done) {
+    if (file.size == 0) {
+      done("Empty files will not be uploaded.");
+    }
+    else { done(); }
+  },
 renameFile: function(file) {
   console.log("filerename",file);
             var dt = new Date();
