@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
  </head>
  <body>
   <div class="container-fluid">
@@ -64,7 +66,7 @@ this.on("sendingmultiple", function (file, xhr, formData) {
     console.log("sendingmultiple",file);
 });
 this.on("sending", function (file, xhr, formData) {
-           console.log("file",file);
+           console.log("filename",file.name);
          /**  
             this.options.renameFilename = function(file){
                 //keeping the file extension.
@@ -108,5 +110,27 @@ this.on("sending", function (file, xhr, formData) {
       }
     })
   });
+
+  $(".dropzone").sortable({
+    items:'.dz-preview',
+    cursor: 'grab',
+    opacity: 0.5,
+    containment: '.dropzone',
+    distance: 20,
+    tolerance: 'pointer',
+    stop: function () {
+      var queue = myDropzone.getAcceptedFiles();
+      newQueue = [];
+      $('#dropzoneForm .dz-preview .dz-filename [data-dz-name]').each(function (count, el) {           
+            var name = el.innerHTML;
+            queue.forEach(function(file) {
+                if (file.name === name) {
+                    newQueue.push(file);
+                }
+            });
+      });
+      myDropzone.files = newQueue;
+    }
+});
 
 </script>
