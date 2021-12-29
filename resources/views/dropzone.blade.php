@@ -12,6 +12,23 @@
      <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
  </head>
  <body>
+ <style>
+
+  .draggable1 {
+  background: #000;
+  color: #fff;
+  display: inline-block;
+  margin: 5px;
+  padding: 5px;
+  user-select: none;
+}
+
+  .dropzone2 {
+ border: 1px solid #000;
+  height: 40px;
+  margin: 5px;
+  width: 200px;
+  }</style>
   <div class="container-fluid ">
       <br />
     <h3 align="center">Image Upload in Laravel using Dropzone</h3>
@@ -33,20 +50,14 @@
       <div class="col-md-6">  <p>
           Try to drag and drop items within lists or between lists.
         </p>
-        <ul class="list-group" id="demo1">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
-        <ul class="list-group mt-4" id="demo2">
-          <li class="list-group-item">Cras justo odio</li>
-          <li class="list-group-item">Dapibus ac facilisis in</li>
-          <li class="list-group-item">Morbi leo risus</li>
-          <li class="list-group-item">Porta ac consectetur ac</li>
-          <li class="list-group-item">Vestibulum at eros</li>
-        </ul>
+        <div class="dropzone2">
+    <div class="draggable1" draggable="true" >This div is draggable</div>
+</div>
+<br>
+<div class="dropzone2"><div class="draggable1" draggable="true" >This div is draggable2</div></div>
+<div class="dropzone2"></div>
+<div class="dropzone2"></div>
+
       </div></div>
       <br />
       
@@ -64,6 +75,73 @@
 
 <script type="text/javascript">
 
+document.addEventListener('DOMContentLoaded', () => {
+  var dragged;
+
+  /* events fired on the draggable target */
+  document.addEventListener("drag", function( event ) {
+console.log("drag triggrred");
+  }, false);
+
+  document.addEventListener("dragstart", function( event ) {
+      // store a ref. on the dragged elem
+      dragged = event.target;
+      console.log('dragged',dragged);
+      console.log('draggedvalue',dragged.textContent);
+       // event.dataTransfer.setData("Text", event.target.id);
+         event.dataTransfer.setData("Text", event.target.textContent);
+      // make it half transparent
+      event.target.style.opacity = .5;
+  }, false);
+
+  document.addEventListener("dragend", function( event ) {
+      // reset the transparency
+      event.target.style.opacity = "";
+  }, false);
+
+  /* events fired on the drop targets */
+  document.addEventListener("dragover", function( event ) {
+      // prevent default to allow drop
+      event.preventDefault();
+  }, false);
+
+  document.addEventListener("dragenter", function( event ) {
+      // highlight potential drop target when the draggable element enters it
+      if ( event.target.className == "dropzone2" ) {
+          event.target.style.background = "purple";
+      }
+
+  }, false);
+
+  document.addEventListener("dragleave", function( event ) {
+      // reset background of potential drop target when the draggable element leaves it
+      if ( event.target.className == "dropzone2" ) {
+          event.target.style.background = "red";
+      }
+
+  }, false);
+
+  document.addEventListener("drop", function( event ) {
+      // prevent default action (open as link for some elements)
+      event.preventDefault();
+      // move dragged elem to the selected drop target
+      if ( event.target.className == "dropzone2" ) {
+          event.target.style.background = "";
+let nxtSibling=event.target.nextSibling;
+let divValue=event.target;
+console.log("divValue",divValue.children);
+//	var txt = "Nick";
+   let data = event.dataTransfer.getData("Text");
+//	nxtSibling.value = txt;
+	nxtSibling.value = data;
+          console.log("eventtsrget",nxtSibling);
+          dragged.parentNode.removeChild( dragged );
+          event.target.appendChild( dragged );
+
+      }
+    
+  }, false);
+});
   Dropzone.options.dropzoneForm = {
     autoProcessQueue : false,
     parallelUploads:5,
@@ -92,8 +170,8 @@ renameFile: function(file) {
       this.on(
             "addedfile", function(file) {
               caption = file.caption == undefined ? "" : file.caption;
-              file._captionLabel = Dropzone.createElement("<p>File Info:</p>")
-              file._captionBox = Dropzone.createElement("<input id='"+file.filename+"' type='text' name='caption' value="+caption+" >");
+              file._captionLabel = Dropzone.createElement('<div class="dropzone2"></div>')
+              file._captionBox = Dropzone.createElement("<input id='"+file.filename+"' type='hidden' name='description[]' value="+caption+" >");
               file.previewElement.appendChild(file._captionLabel);
               file.previewElement.appendChild(file._captionBox);
         }),
@@ -102,8 +180,8 @@ this.on("sendingmultiple", function (file, xhr, formData) {
 });
 this.on("sending", function (file, xhr, formData) {
            console.log("filename",file.name);
-               formData.append('description[]',file._captionBox.value);
-               console.log("file._captionBox.value",file._captionBox.value);
+               //formData.append('description[]',file._captionBox.value);
+              // console.log("file._captionBox.value",file._captionBox.value);
          /**  
             this.options.renameFilename = function(file){
                 //keeping the file extension.
@@ -172,6 +250,7 @@ this.on("sending", function (file, xhr, formData) {
 */
 new Sortable(document.getElementById('dropzoneForm'), {
   draggable: '.dz-preview',
+  handle: '.dz-details',
   onSort: function (/**Event*/evt) {
 		// same properties as onEnd
     //console.log('evt.to',evt.to);    // target list
@@ -193,20 +272,6 @@ new Sortable(document.getElementById('dropzoneForm'), {
 	},
 });
 
-Sortable.create(demo1, {
-  animation: 100,
-  group: 'list-1',
-  draggable: '.list-group-item',
-  handle: '.list-group-item',
-  sort: true,
-  filter: '.sortable-disabled',
-  chosenClass: 'active'
-});
-
-Sortable.create(demo2, {
-  group: 'list-1',
-  handle: '.list-group-item'
-});
 
 
 </script>
