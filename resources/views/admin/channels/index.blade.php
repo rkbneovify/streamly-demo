@@ -58,7 +58,7 @@
               <i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="card-body p-0">
+        <div class="table-responsive">
           <div class="form-group">
             <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
               <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
@@ -313,9 +313,11 @@ $(function() {
                 }
              }, "targets": [4]
         },{       
-            "render": function(data, type, row) {
-             return row.dash_url;
-             }, "targets": [6]
+            "render": function ( data, type, row, meta ) {
+      return type === 'display' && data?.trim().length > 15 ?
+        '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
+        data;
+    }, "targets": [6]
         },{       
             "render": function(data, type, row) {
              return '<a href="../uploads/channellogo/'+row.image+'" target="_blank"><img src="../uploads/channellogo/'+row.image+'"" width="50px" height="50px"></a>';
@@ -325,7 +327,7 @@ $(function() {
     "targets": 2,
     "data": "url",
     "render": function ( data, type, row, meta ) {
-      return type === 'display' && data.length > 15 ?
+      return type === 'display' && data?.trim().length > 15 ?
         '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
         data;
     }

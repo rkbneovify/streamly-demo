@@ -42,7 +42,7 @@
             </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </div>
         </div>
-          <div class="card-body p-0">
+          <div class="table-responsive">
             <table id="empTable" class="table table-striped projects">
                 <thead>
                     <tr>
@@ -50,13 +50,13 @@
                             #
                         </th>
                         <th style="width: 20%">
-                        city
+                        Email
                         </th>
                         <th style="width: 20%">
-                        zipcode
+                        Name
                         </th>
                         <th style="width: 20%">
-                        state
+                        Role
                         </th><th style="width: 20%">
                         status
                         </th>
