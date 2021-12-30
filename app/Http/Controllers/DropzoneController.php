@@ -14,13 +14,17 @@ class DropzoneController extends Controller
     function upload(Request $request)
     {
      $images = $request->file('file');
-//     dump($request);
-// dd($image);
-foreach ($images as $image) {
-    # code...
-    $imageName = $image->getClientOriginalName() . '.' . $image->extension();
+//    dump($images);
+   $filenameArr=$request->filenames;
+   $customnameArr=$request->description;
+   
+//    $c = array_combine($filenameArr, $customnameArr);
+//    dd($c);
 
-    $image->move(public_path('images'), $imageName);
+   foreach($images as $key => $fromFilename) {
+    $toFilename = $customnameArr[$key].'.'.$fromFilename->extension();
+    $fromFilename->move(public_path('images'), $toFilename);
+    
 }
  
 
