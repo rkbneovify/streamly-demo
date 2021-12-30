@@ -180,7 +180,7 @@ this.on("sendingmultiple", function (file, xhr, formData) {
 });
 this.on("sending", function (file, xhr, formData) {
            console.log("filename",file.name);
-               //formData.append('description[]',file._captionBox.value);
+               formData.append('filenames[]',file.name);
               // console.log("file._captionBox.value",file._captionBox.value);
          /**  
             this.options.renameFilename = function(file){
