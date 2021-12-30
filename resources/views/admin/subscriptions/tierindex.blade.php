@@ -60,7 +60,7 @@
 
 
             </ul>
-            <div class="tab-content" id="custom-content-below-tabContent">
+            <div class="tab-content table-responsive" id="custom-content-below-tabContent">
             @foreach($plansdetails as $key => $singlePlansDetails)
         @if ($loop->first)  
          
