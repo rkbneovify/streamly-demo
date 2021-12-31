@@ -405,12 +405,15 @@ class HomeNewVC: UIViewController {
                 }
                 if viewModel.isPageExist {
                     if let indexPath = self.lastIndexPath {
-                        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                        }
                     }
                 }
             } else {
                 viewModel.isPageExist = true
                 viewModel.lastPage = 10
+                lastIndexPath = nil
                 filteredList?.removeAll()
                 self.showSpinner(onView: self.view)
                 viewModel.getEPGData(1)
@@ -439,13 +442,17 @@ class HomeNewVC: UIViewController {
                 }
                 if viewModel.isPageExist {
                     if let indexPath = self.lastIndexPath {
-                        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                        }
                     }
                 }
             } else {
                 viewModel.isPageExist = true
                 viewModel.lastPage = 10
+                viewModel.currentPage = 1
                 filteredList?.removeAll()
+                self.lastIndexPath = nil
                 self.showSpinner(onView: self.view)
                 viewModel.getEPGData(1, key ?? "")
             }

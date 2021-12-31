@@ -134,7 +134,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     showLoading = true
 //                    collectionView.reloadData()
                     showSpinner(onView: self.view)
-                    collectionView.reloadSections(IndexSet(integer: lastIndexPath?.section ?? 0))
+                    if let lasIndexPath = lastIndexPath {
+                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                        collectionView.reloadSections(IndexSet(integer: lasIndexPath.section ))
+                        }
+                    }
                     viewModel.getEPGData(viewModel.currentPage)
                 } else {
                     showLoading = false
@@ -216,8 +220,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
     func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let indexPath = context.nextFocusedIndexPath,
             let _ = collectionView.cellForItem(at: indexPath) {
+            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
             self.collectionView.scrollToItem(at: indexPath, at:
              .centeredVertically, animated: true)
+            }
         }
     }
     
