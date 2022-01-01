@@ -10,6 +10,8 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/dropzone.js"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js" integrity="sha512-oQq8uth41D+gIH/NJvSJvVB85MFk1eWpMK6glnkg6I7EdMqC1XVkW7RxLheXwmFdG03qScCM7gKS/Cx3FYt7Tg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
      <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+<link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet">
+<script  type="text/javascript" src="{{ asset('dist/js/select2.full.min.js') }}"></script>   
  </head>
  <body>
  <style>
@@ -50,13 +52,25 @@
       <div class="col-md-6">  <p>
           Try to drag and drop items within lists or between lists.
         </p>
-        <div class="dropzone2">
+
+<label for="genres" class="col-md-4 control-label">genres</label>
+              
+<select name="genres[]" id="genres" class="form-control select2" multiple="multiple">
+{{-- @foreach($genres as $id => $genre)
+                        @if(in_array($id, $arrVal))
+                        <option value="{{ $id }}" selected="true">{{ $genre }}</option>
+                        @else
+                        <option value="{{ $id }}">{{ $genre }}</option>
+                        @endif 
+                    @endforeach --}}
+                </select>
+                <div class="dynamic-fields"><div class="dropzone2">
     <div class="draggable1" draggable="true" >This div is draggable</div>
 </div>
 <br>
 <div class="dropzone2"><div class="draggable1" draggable="true" >This div is draggable2</div></div>
-<div class="dropzone2"></div>
-<div class="dropzone2"></div>
+</div>
+        
 
       </div></div>
       <br />
@@ -75,6 +89,55 @@
 
 <script type="text/javascript">
 
+var data = [
+    {
+        id: 0,
+        text: 'enhancement'
+    },
+    {
+        id: 1,
+        text: 'bug'
+    },
+    {
+        id: 2,
+        text: 'duplicate'
+    },
+    {
+        id: 3,
+        text: 'invalid'
+    },
+    {
+        id: 4,
+        text: 'wontfix'
+    }
+];
+
+$('.select2').select2({data: data, 
+placeholder: 'This is my placeholder',
+  allowClear: true});
+
+$('#genres').on('select2:select', function(e) {
+  var cacheEle = $('.dynamic-fields');
+  var data = e.params.data;
+  console.log(data.id);
+  console.log(data.text);
+   let divtoAdd='<div class="dropzone2" id='+data.id+'><div class="draggable1" draggable="true"  >' + data.text + '</div></div>'
+        
+          cacheEle.append(divtoAdd);
+
+});
+
+
+$('#genres').on('select2:unselect', function(e) {
+  var cacheEle = $('.dynamic-fields');
+  var data = e.params.data;
+  console.log(data.id);
+  console.log(data.text);
+  var removethedropzonediv = cacheEle.find(".dropzone2"+"#" + data.id);
+  console.log("removethedropzonediv",removethedropzonediv);
+  removethedropzonediv.remove();
+  //cacheEle
+});
 document.addEventListener('DOMContentLoaded', () => {
   var dragged;
 
@@ -116,7 +179,7 @@ console.log("drag triggrred");
   document.addEventListener("dragleave", function( event ) {
       // reset background of potential drop target when the draggable element leaves it
       if ( event.target.className == "dropzone2" ) {
-          event.target.style.background = "red";
+          event.target.style.background = "grey";
       }
 
   }, false);
