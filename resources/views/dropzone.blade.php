@@ -53,7 +53,7 @@
           Try to drag and drop items within lists or between lists.
         </p>
 
-<label for="genres" class="col-md-4 control-label">genres</label>
+<label for="genres" class="col-md-4 control-label">Channels</label>
               
 <select name="genres[]" id="genres" class="form-control select2" multiple="multiple">
 {{-- @foreach($genres as $id => $genre)
@@ -112,9 +112,22 @@ var data = [
     }
 ];
 
-$('.select2').select2({data: data, 
+$('.select2').select2({
 placeholder: 'This is my placeholder',
-  allowClear: true});
+  allowClear: true,
+  ajax: {
+        url: '/dataforselect2',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term || '',
+                page: params.page || 1
+            }
+        },
+        cache: true
+    }
+    });
 
 $('#genres').on('select2:select', function(e) {
   var cacheEle = $('.dynamic-fields');
