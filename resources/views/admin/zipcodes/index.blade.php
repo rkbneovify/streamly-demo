@@ -208,7 +208,7 @@ $(function() {
             { data: 'city', name: 'city' },
             { data: 'zipcode', name: 'zipcode' },
             { data: 'state', name: 'state' },
-            { data: 'status', name: 'status' ,orderable:false},
+            { data: 'status', name: 'status' ,orderable:true},
             {data: 'action', name: 'action', orderable: false, searchable: false}
         ],
         columnDefs: [
