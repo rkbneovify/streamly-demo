@@ -254,9 +254,21 @@ class Setting extends Controller
     if($validator->fails()) {
         return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
     }
-        $user=SessionTable::where('id', $id)->update( [
+    $unhashid=UnHashUserID($id);
+        $user=SessionTable::where('id', $unhashid)->update( [
             'device->personaldevicename' => $request->devicename
         ]);
+        if($request->wantsJson()){
+
+        $response = [
+            'success' => true,
+            'data' => ['devicename'=>$request->devicename,'sessionid'=>$id,],
+            'message' => 'Device name Updated Successfully.',
+            'response_code'=>200,
+        ];
+
+        return response()->json($response, 200);
+        }
      return redirect()->back()->with('message','Device name Updated Successfully');
         
         

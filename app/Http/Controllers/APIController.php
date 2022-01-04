@@ -272,18 +272,21 @@ public function unhashid($id){
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()->makeHidden('device')
+    $s=$prevConnectDevicecount->get()//->makeHidden('device')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['id']);
         if(is_null($address->hotel)){
             $address['hotel_room'] = null;
-    
         }else{
             $address['hotel_room'] = $address->hotel->hotel_room;
+
     
         }
+
+        $address['personaldevicename']=$address['device']['personaldevicename']??'empty';
         unset($address['hotel']);
+        unset($address['device']);
         unset($address['id']);
        
           return $address;
@@ -297,11 +300,12 @@ public function unhashid($id){
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()->makeHidden('device')
+    $s=$prevConnectDevicecount->get()//->makeHidden('device')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['session_id']);
     
+        $address['personaldevicename']=$address['device']['personaldevicename']??'empty';
           return $address;
                     
                     });
