@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.gson.Gson
 import com.streamly.TVApp.streamly.*
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.epg.Datum
@@ -82,6 +83,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
             val id: String,
             val description: String,
             val metadata: String,
+            val endTimeMetadata: String,
             val playUrl: String,
             val imageUrl: String
     )
@@ -147,6 +149,8 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
         titleView?.text = programGuideSchedule?.displayTitle
         val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
         metadataView?.text = programGuideSchedule?.program?.metadata
+        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
+        endTimeMetaDataView?.text= programGuideSchedule?.program?.endTimeMetadata
         val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
@@ -367,14 +371,10 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
     setState(State.Content)
 
      if(it.responseCode.toInt() == 401){
-//        val errorResponseModel: ErrorResponseModel = Gson().fromJson<ErrorResponseModel>(
-//            response.errorBody().string(),
-//            ErrorResponseModel::class.java
-//        )
-        TokenStorage.clearSharedToken(eContext)
-        eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
-        CommonUtility.showToast(eContext, "Token is Invalid")
-        (eContext as Activity).finish()
+         val sessionExpiredDialog = SessionExpiredDialog(eContext)
+         sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+         sessionExpiredDialog.setCancelable(false)
+         sessionExpiredDialog.show()
 }
 
                            },
@@ -383,10 +383,11 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
                                Log.e("###$TAG", "error " + it.message)
                                Log.e("###$TAG", "error " + it.localizedMessage)
                                if(it.message.toString().contains("401")){
-                                   TokenStorage.clearSharedToken(eContext)
-                                   eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
-                                   CommonUtility.showToast(eContext, "Token is Invalid")
-                                   (eContext as Activity).finish()
+                                   val sessionExpiredDialog =
+                                       SessionExpiredDialog(eContext)
+                                   sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                                   sessionExpiredDialog.setCancelable(false)
+                                   sessionExpiredDialog.show()
                                }
                                else if(it.message.toString().contains("402")){
                                    CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
@@ -412,10 +413,12 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
         val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
         val metadata = getDate(startTime.toEpochMilli(), "'Starts at' HH:mm")
+        val endTimeMetadata = getDate(endTime.toEpochMilli(), "'Ends  at' HH:mm")
         return ProgramGuideSchedule.createScheduleWithProgram(id, startTime, endTime, true, scheduleName,
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,
                 SimpleProgram(id.toString(), description,
                         metadata+"",
+                    endTimeMetadata+"",
                         playUrl,imageUrl))
 
     }

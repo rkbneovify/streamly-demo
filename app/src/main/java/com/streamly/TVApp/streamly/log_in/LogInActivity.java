@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
+import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
 import com.streamly.TVApp.streamly.model.CheckDeviceType;
@@ -22,6 +24,7 @@ import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
+import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
 import com.streamly.TVApp.streamly.settings.support.SupportDialog;
 import com.streamly.TVApp.streamly.termsofuses.TermsOfUses;
@@ -215,8 +218,10 @@ finish();
 
                 }
                 else if (response.code()==401){
-                    LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
-                    CommonUtility.showToast(LogInActivity.this,logInModel.getMessage());
+                    SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
+                    sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                    sessionExpiredDialog.setCancelable(false);
+                    sessionExpiredDialog.show();
                 }
                 else if (response.code()==429){
 
@@ -236,8 +241,9 @@ finish();
                             signOutDeviceDialog.show();
                         }
                         if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("") ){
-                            if(logInModel.getMessage().contains("Your account is in use on")){
-                                CommonUtility.showToast(LogInActivity.this,logInModel.getMessage().toString());
+                             if(logInModel.getMessage().contains("Your account is in use on")){
+                                 DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(LogInActivity.this,logInModel.getMessage().toString());
+                                 deviceLimitDialog.show();
                             }
 
                         }
@@ -249,7 +255,8 @@ finish();
                     CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
                 }
 
-              }catch (Exception e){
+              }
+                catch (Exception e){
                     e.printStackTrace();
                     Log.e(TAG,"Exception: "+e.toString());
                 } dialog.dismiss();

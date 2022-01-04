@@ -56,6 +56,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
@@ -269,10 +270,10 @@ public class PlayerActivity extends FragmentActivity {
                         getDrmKey();
                         break;
                     case 401:
-                        TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this, geofenceModel.getMessage());
-                        startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
-                        finish();
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                         break;
                     case 403:
                         if (item.equals("1")) {
@@ -311,10 +312,10 @@ public class PlayerActivity extends FragmentActivity {
                         getChannelList(drmKey, wvUrl);
                         break;
                     case 401:
-                        TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this, drmKeyModel.getMessage());
-                        startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
-                        finish();
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                         break;
                     case 404:
                         TokenStorage.clearSharedToken(PlayerActivity.this);
@@ -353,10 +354,10 @@ public class PlayerActivity extends FragmentActivity {
 
                         break;
                     case 401:
-                        TokenStorage.clearSharedToken(PlayerActivity.this);
-                        CommonUtility.showToast(PlayerActivity.this, drmKeyModel.getMessage());
-                        startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
-                        finish();
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                         break;
                     case 404:
                         TokenStorage.clearSharedToken(PlayerActivity.this);
@@ -850,11 +851,10 @@ public class PlayerActivity extends FragmentActivity {
 
                     } else if (response.code() == 401) {
                         if(response.errorBody()!=null){
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(PlayerActivity.this);
-                            startActivity(new Intent(PlayerActivity.this, LogInActivity.class));
-                            CommonUtility.showToast(PlayerActivity.this, errorResponseModel.getMessage());
-                            finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }

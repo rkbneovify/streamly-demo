@@ -1,6 +1,5 @@
 package com.streamly.TVApp.streamly;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +16,8 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
@@ -24,7 +25,6 @@ import com.streamly.TVApp.streamly.epg.channel.ChannelFragment;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
-import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.search_channels.SearchActivity;
@@ -108,11 +108,10 @@ private TextView settingText,goBackText;
 
                     } else if (response.code() == 401) {
                         if(response.errorBody()!=null){
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, LogInActivity.class));
-                            CommonUtility.showToast(MainActivity.this, errorResponseModel.getMessage());
-                            finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }
@@ -127,7 +126,8 @@ private TextView settingText,goBackText;
 
                     }
                     else if(response.code() == 402){
-
+                        settingText.setVisibility(View.GONE);
+                        imageSearch.setVisibility(View.GONE);
                             CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
 
                     }
@@ -222,11 +222,10 @@ private TextView settingText,goBackText;
                     else if (response.code() == 401) {
 
                         if(response.errorBody()!=null){
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(MainActivity.this);
-                            startActivity(new Intent(MainActivity.this, LogInActivity.class));
-                            CommonUtility.showToast(MainActivity.this, errorResponseModel.getMessage());
-                            finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }
@@ -242,8 +241,13 @@ private TextView settingText,goBackText;
 
                     }
                     else if(response.code() == 402){
-
+                        settingText.setVisibility(View.GONE);
+                        imageSearch.setVisibility(View.GONE);
                         CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
+                        NoPlanDialog noPlanDialog = new NoPlanDialog(MainActivity.this);
+                        noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        noPlanDialog.setCancelable(false);
+                        noPlanDialog.show();
 
                     }
                 } catch (Exception ex) {
@@ -372,6 +376,7 @@ private TextView settingText,goBackText;
 
             case R.id.setting_text:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                finish();
                 break;
 
             case R.id.go_back_text:

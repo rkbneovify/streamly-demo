@@ -52,7 +52,7 @@ public interface ApiInterface {
     Call<SelectedHotelRoomResponse> postHotelRoom(@Query(NetworkKeys.KEY_AUTH) String authorization_token, @Query(NetworkKeys.ROOM_ID) Integer roomId);
 
 
-    @Headers("Accept: application/json")
+    @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @POST("/api/auth/get-hotelrooms")
     Call<NewHotelRoomResponse> postNewHotelRoom(@Query(NetworkKeys.KEY_AUTH) String authorization_token);
 
@@ -111,7 +111,7 @@ public interface ApiInterface {
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
-    /*@Headers("Accept: application/json")
+    /*@Headers("Accept: application/json")ai call
     @GET("channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);*/
 

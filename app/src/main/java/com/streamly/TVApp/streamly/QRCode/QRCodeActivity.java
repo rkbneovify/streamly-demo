@@ -11,7 +11,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
@@ -63,9 +65,10 @@ public class QRCodeActivity extends FragmentActivity {
                     setQRImage(registerLink,qrImage);
 
                 } else if (response.code() == 401) {
-                    CommonUtility.showToast(QRCodeActivity.this, response.body().getMessage());
-                    startActivity(new Intent(QRCodeActivity.this, LogInActivity.class));
-                    finish();
+                    SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(QRCodeActivity.this);
+                    sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                    sessionExpiredDialog.setCancelable(false);
+                    sessionExpiredDialog.show();
                 }else if (response.code()==404){
                     CommonUtility.showToast(QRCodeActivity.this,ConstantUtility.SESSION_EXPIRED);
                     startActivity(new Intent(QRCodeActivity.this, LogInActivity.class));

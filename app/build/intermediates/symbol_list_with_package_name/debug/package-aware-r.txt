@@ -1720,6 +1720,8 @@ color tooltip_background_dark
 color tooltip_background_light
 color transparent
 color transparent1
+color transparent_color
+color transparent_color1
 color white_transparent
 dimen _100sdp
 dimen _100ssp
@@ -3539,10 +3541,12 @@ id btn_accept
 id btn_continue
 id btn_hotel_sign_in
 id btn_login_using_passcode_uses
+id btn_logout
 id btn_no
 id btn_no_signout
 id btn_no_signout_with_passcode
 id btn_ok
+id btn_ok_session_expired
 id btn_register_view
 id btn_sign_in
 id btn_sign_in_using_passcode
@@ -3777,6 +3781,7 @@ id largeLabel
 id layout
 id layout_internet
 id layout_name
+id layout_no_room_available
 id layout_search
 id lb_action_button
 id lb_control_closed_captioning
@@ -3933,6 +3938,7 @@ id programguide_current_time_indicator
 id programguide_current_time_indicator_top_offset
 id programguide_day_filter
 id programguide_detail_description
+id programguide_detail_end_time_metadata
 id programguide_detail_image
 id programguide_detail_metadata
 id programguide_detail_title
@@ -4062,12 +4068,15 @@ id textStart
 id textView
 id textView2
 id textView3
+id textView_no_room_available
+id textView_qr_login
 id text_channels
 id text_email
 id text_genere
 id text_input_end_icon
 id text_input_start_icon
 id text_name
+id text_step
 id text_updated_date
 id textinput_counter
 id textinput_error
@@ -4101,8 +4110,11 @@ id transition_transform
 id transport_row
 id triangle
 id tv_bottom_text
+id tv_device_limit
+id tv_first_step
 id tv_link
 id tv_privacy
+id tv_second_step
 id tv_support
 id tv_terms
 id txt_need_help
@@ -4229,6 +4241,7 @@ layout abc_search_view
 layout abc_select_dialog_material
 layout abc_tooltip
 layout activity_hotel_qrcode
+layout activity_hotel_qrcode1
 layout activity_log_in
 layout activity_login_using_passcode
 layout activity_main
@@ -4254,8 +4267,10 @@ layout design_navigation_menu
 layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
+layout dialog_device_limit
 layout dialog_device_signout
 layout dialog_device_signout_with_passcode
+layout dialog_no_plan
 layout dialog_privacy
 layout dialog_profile
 layout dialog_profile_new
@@ -4387,6 +4402,7 @@ layout sdp_example
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
+layout session_expired_dialog
 layout sp_example
 layout ssp_example
 layout support_simple_spinner_dropdown_item
@@ -4566,6 +4582,7 @@ string lb_search_bar_hint_with_title
 string lb_search_bar_hint_with_title_speech
 string log_out
 string login_using_passcode
+string logout
 string material_slider_range_end
 string material_slider_range_start
 string model_name
@@ -4605,14 +4622,17 @@ string mtrl_picker_toggle_to_calendar_input_mode
 string mtrl_picker_toggle_to_day_selection
 string mtrl_picker_toggle_to_text_input_mode
 string mtrl_picker_toggle_to_year_selection
+string need_follow_these_step
 string need_help
 string news
 string no
 string no_data_found
 string no_internet
+string no_room_available
 string number_one
 string number_two
 string ok
+string open_app_your_phone
 string open_link_browser
 string orb_search_action
 string others
@@ -4623,6 +4643,7 @@ string path_password_eye
 string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
+string point_your_phone_to_this_screen_capture
 string policy
 string privacy
 string privacy_right
@@ -4638,6 +4659,7 @@ string programguide_part_of_day_evening
 string programguide_part_of_day_morning
 string programguide_title_no_program
 string project_id
+string qr_login
 string register_account
 string register_device
 string register_now
@@ -4656,6 +4678,7 @@ string support
 string support_text
 string sure_device_signout
 string sure_signout
+string tap_navbar_and_select_qr_scanner
 string terms
 string termsofuses
 string test

@@ -399,7 +399,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         updateCurrentTimeIndicator()
         var i = 0
 
-        programGuideGrid.let { grid ->
+        programGuideGrid?.let { grid ->
             val n = grid.childCount
             while (i < n) {
                 grid.getChildAt(i).findViewById<View>(R.id.row).scrollBy(dx, 0)
@@ -452,8 +452,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (!DISPLAY_SHOW_PROGRESS) {
             return
         }
-        for (i in 0 until programGuideGrid.childCount) {
-            programGuideGrid.getChildAt(i)?.let {
+        for (i in 0 until programGuideGrid?.childCount) {
+            programGuideGrid?.getChildAt(i)?.let {
                 it.findViewById<RecyclerView>(R.id.row)?.let { recycler ->
                     for (j in 0 until recycler.childCount) {
                         val row = recycler.getChildAt(j)
@@ -493,8 +493,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      */
     override fun onDestroyView() {
         programGuideManager.listeners.remove(this)
-        programGuideGrid.scheduleSelectionListener = null
-        programGuideGrid.childFocusListener = null
+        programGuideGrid?.scheduleSelectionListener = null
+        programGuideGrid?.childFocusListener = null
         super.onDestroyView()
     }
 
@@ -521,7 +521,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 timeRow?.scrollTo(scrollOffset, false)
             }
         } else {
-            if (!programGuideGrid.hasFocus()) {
+            if (!programGuideGrid?.hasFocus()) {
                 // We will temporarily catch the focus, so that the program guide does not focus on all the views while it is scrolling.
                 // This is better for performance, and also avoids a bug where the focused view would be out of scope.
                 focusEnabledScrollListener?.let {
@@ -529,12 +529,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 }
                 focusCatcher?.visibility = View.VISIBLE
                 focusCatcher?.requestFocus()
-                programGuideGrid.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                programGuideGrid?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 var willUseScrollListener = false
                 val idleScrollRunnable = Runnable {
-                    programGuideGrid.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                    programGuideGrid?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
                     focusEnabledScrollListener = null
-                    programGuideGrid.requestFocus()
+                    programGuideGrid?.requestFocus()
                     focusCatcher?.visibility = View.GONE
                     updateCurrentTimeIndicator()
 
@@ -630,8 +630,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         timeRow?.let { timelineRow ->
             (timelineRow.adapter as? ProgramGuideTimeListAdapter)?.let { adapter ->
                 adapter.update(timelineStartMillis, timelineAdjustmentPixels)
-                for (i in 0 until programGuideGrid.childCount) {
-                    programGuideGrid.getChildAt(i)?.let { (it.findViewById<RecyclerView>(R.id.row).layoutManager as LinearLayoutManager).scrollToPosition(0) }
+                for (i in 0 until programGuideGrid?.childCount) {
+                    programGuideGrid?.getChildAt(i)?.let { (it.findViewById<RecyclerView>(R.id.row).layoutManager as LinearLayoutManager).scrollToPosition(0) }
                 }
                 timelineRow.resetScroll()
             }
@@ -684,14 +684,14 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 // Selection moves downwards
                 // Adjust scroll offset to be at the bottom of the target row and to expand up. This
                 // will set the scroll target to be one row height up from its current position.
-                programGuideGrid.windowAlignmentOffset = selectionRowOffset + rowHeight
-                programGuideGrid.itemAlignmentOffsetPercent = 100f
+                programGuideGrid?.windowAlignmentOffset = selectionRowOffset + rowHeight
+                programGuideGrid?.itemAlignmentOffsetPercent = 100f
             } else if (oldFocus.top > newFocus.top) {
                 // Selection moves upwards
                 // Adjust scroll offset to be at the top of the target row and to expand down. This
                 // will set the scroll target to be one row height down from its current position.
-                programGuideGrid.windowAlignmentOffset = selectionRowOffset
-                programGuideGrid.itemAlignmentOffsetPercent = 0f
+                programGuideGrid?.windowAlignmentOffset = selectionRowOffset
+                programGuideGrid?.itemAlignmentOffsetPercent = 0f
             }
         }
     }
@@ -715,7 +715,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * Called by the manager if the channels and programs are ready to be displayed.
      */
     override fun onSchedulesUpdated() {
-        (programGuideGrid.adapter as? ProgramGuideRowAdapter)?.update()
+        (programGuideGrid?.adapter as? ProgramGuideRowAdapter)?.update()
         updateTimeline()
 
         progressUpdateHandler.removeCallbacks(progressUpdateRunnable)
@@ -749,7 +749,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             } else {
                 Log.i(TAG, "Scrolling to ${currentProgram.displayTitle}, started at ${currentProgram.startsAtMillis}")
                 if (!programGuideManager.jumpTo(currentProgram.startsAtMillis)) {
-                    programGuideGrid.requestFocus()
+                    programGuideGrid?.requestFocus()
                 }
             }
         } else {
@@ -764,7 +764,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             val scrollToMillis =
                 timelineDate.withHour(scrollToHour).truncatedTo(ChronoUnit.HOURS).toEpochSecond() * 1000
             if (programGuideManager.jumpTo(scrollToMillis)) {
-                programGuideGrid.requestFocus()
+                programGuideGrid?.requestFocus()
             }
         }
     }
@@ -778,7 +778,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     fun scrollToChannelWithId(channelId: String) {
         val index = programGuideManager.getChannelIndex(channelId)
         if (index != null) {
-            programGuideGrid.smoothScrollToPosition(index)
+            programGuideGrid?.smoothScrollToPosition(index)
             autoScrollToBestProgramme(useTimeOfDayFilter = false, specificChannelId = channelId)
         }
     }

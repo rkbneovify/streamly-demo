@@ -23,7 +23,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
@@ -68,7 +70,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         authToken = TokenStorage.readSharedToken(SearchActivity.this, ConstantUtility.AUTH_TOKEN, null);
-        Log.i(TAG, "onCreate: search Activity "+authToken);
         voiceSearch();
 
         edSearch.addTextChangedListener(new TextWatcher() {
@@ -106,7 +107,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
     }
 
     private void voiceSearch() {
-        Log.e(TAG, "voiceSearch: " );
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (activities.size() == 0) {
@@ -122,7 +122,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
      * Fire an intent to start the voice recognition activity.
      */
     private void startVoiceRecognitionActivity() {
-        Log.e(TAG, "startVoiceRecognitionActivity: " );
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
@@ -138,14 +137,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        Log.e(TAG, "onActivityResult: 1 "+requestCode );
-//        Log.e(TAG, "onActivityResult: 2 "+resultCode );
-//        Log.e(TAG, "onActivityResult: 3 "+data );
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            Log.e(TAG, "onActivityResult: "+requestCode );
-            Log.e(TAG, "onActivityResult: "+resultCode );
-            Log.e(TAG, "onActivityResult: "+data.getDataString() );
-            Log.e(TAG, "onActivityResult: "+data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS) );
             // Populate the wordsList with the String values the recognition engine thought it heard
             final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (!matches.isEmpty()) {
@@ -189,11 +181,10 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
                     } else if (response.code() == 401) {
                         if(response.errorBody()!=null){
                             edSearch.setEnabled(false);
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(SearchActivity.this);
-                            startActivity(new Intent(SearchActivity.this, LogInActivity.class));
-                            CommonUtility.showToast(SearchActivity.this, errorResponseModel.getMessage());
-                            finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(SearchActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }
@@ -222,7 +213,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
 
             @Override
             public void onFailure(Call<ChannellistModel> call, Throwable t) {
-                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
                 CommonUtility.showToast(SearchActivity.this, ConstantUtility.SERVER_ISSUE);
                 progressBar.setVisibility(View.INVISIBLE);
                 rvSearch.setVisibility(View.GONE);

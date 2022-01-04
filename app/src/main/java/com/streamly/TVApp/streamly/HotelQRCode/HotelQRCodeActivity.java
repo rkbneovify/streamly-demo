@@ -21,6 +21,8 @@ import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.QRCode.QRScanStatusModel;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
@@ -29,6 +31,7 @@ import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
+import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithQrCodeKeyDialog;
@@ -51,7 +54,7 @@ public class HotelQRCodeActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hotel_qrcode);
+        setContentView(R.layout.activity_hotel_qrcode1);
         CommonUtility.checkInternetConnection(HotelQRCodeActivity.this);
         userAgent = System.getProperty("http.agent");
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -102,8 +105,10 @@ public class HotelQRCodeActivity extends FragmentActivity {
 
                     }
                     else if (response.code()==401){
-                        LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
-                        CommonUtility.showToast(HotelQRCodeActivity.this,logInModel.getMessage());
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(HotelQRCodeActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                     } else if (response.code()==429){
 //                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         if(response.errorBody() !=null )
@@ -118,7 +123,8 @@ public class HotelQRCodeActivity extends FragmentActivity {
 
                             if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("")){
                                 if(logInModel.getMessage().contains("Your account is in use on")) {
-                                    CommonUtility.showToast(HotelQRCodeActivity.this, logInModel.getMessage().toString());
+                                    DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(HotelQRCodeActivity.this,logInModel.getMessage().toString());
+                                    deviceLimitDialog.show();
                                 }
                             }
 

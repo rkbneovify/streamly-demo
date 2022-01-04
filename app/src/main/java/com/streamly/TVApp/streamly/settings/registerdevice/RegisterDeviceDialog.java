@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
@@ -97,11 +98,10 @@ public class RegisterDeviceDialog extends Dialog {
                     }
                     else if (response.code() == 401) {
                         if(response.errorBody()!=null){
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(context);
-                            context.startActivity(new Intent(context, LogInActivity.class));
-                            CommonUtility.showToast(context, errorResponseModel.getMessage());
-                            ((Activity) context).finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }

@@ -43,6 +43,8 @@
     <color name="button_orange">#FBA942</color>
     <color name="md_yellow">#FFA52D</color>
     <color name="transparent">#80FFFFFF</color>
+    <color name="transparent_color">#26000000</color>
+    <color name="transparent_color1">#33FFFFFF</color>
     <color name="white_transparent">#CCFF0000</color>
     <color name="new_color">#FF7A08</color>
     <color name="app_color">#22303D</color>

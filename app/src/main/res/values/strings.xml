@@ -2,7 +2,7 @@
     <string name="app_name">Streamly TV</string>
     <string name="sign_in">Sign In</string>
     <string name="signIn">Sign in</string>
-    <string name="hotelSignIn">Hotel Sign in</string>
+    <string name="hotelSignIn">QR Login</string>
     <string name="username">Username</string>
     <string name="enter_your_passcode">Enter Your Passcode</string>
     <string name="password">Password</string>
@@ -22,6 +22,7 @@
     <string name="privacy"><![CDATA[Privacy & Policy]]></string>
     <string name="sign_out">Sign Out</string>
     <string name="log_out">Log Out</string>
+    <string name="logout">Logout</string>
     <string name="ok">Ok</string>
 
     <!--todo: profile screen strings-->
@@ -85,9 +86,10 @@
     Notice the embedded tabs and extra spaces mixed into the middle of the output.
         It looks pretty rough. We can do better if we start by removing any common whitespace prefix from all of the lines in the sample text.
         This allows us to use docstrings or embedded multi-line strings straight from our Python code while removing the formatting of the code itself.
-        The sample string has an artificial indent level introduced for illustrating this feature.</string>
+        The sample string has an artificial indent le>No Room Available. Please remove from web.vel introduced for illustrating this feature.</string>
     <string name="others">Others</string>
     <string name="no_internet">No Internet found. Check your connection or try again.</string>
+    <string name="no_room_available">No Room Available. Please remove from web.</string>
     <string name="termsofuses">Terms of uses</string>
     <string name="accept">Accept</string>
     <string name="terms"><![CDATA[T & C]]></string>
@@ -95,12 +97,18 @@
     <string name="no_data_found">No Data Found....!</string>
     <string name="activate_account">Activate your Streamly Account on your TV</string>
     <string name="hotel_account">Hotel Login Streamly on your TV</string>
+    <string name="qr_login">QR Login</string>
     <string name="hotel_account_select_room">Hotel Login Streamly on your TV select room</string>
     <string name="stay_text">Stay on this while you sign in on your phone or computer</string>
     <string name="stay_text1">Stay on this while you sign in on your phone</string>
     <string name="scan_qr">Scan this QR code</string>
+    <string name="open_app_your_phone">&#8226; Open Streamly on web browser/app on your phone.</string>
+    <string name="need_follow_these_step">You need to be logged in your phone to follow these steps.</string>
+    <string name="tap_navbar_and_select_qr_scanner">&#8226; Tap navbar and select "QR scanner".</string>
+    <string name="point_your_phone_to_this_screen_capture">&#8226; Point your phone to this screen to capture the code.</string>
     <string name="text_qr_with_phone">Try using a phone camera or a QR code scanner</string>
     <string name="open_link_browser">Open the link in a browser</string>
     <string name="demo_link">streamly.co/tv/562888</string>
+<!--    <string name="no_plan_text">We&apos;re having some trouble with your current subscription. We&apos;ll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.</string>-->
 
 </resources>

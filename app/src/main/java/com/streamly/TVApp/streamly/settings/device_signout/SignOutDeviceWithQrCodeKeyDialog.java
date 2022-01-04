@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
@@ -23,6 +24,7 @@ import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
+import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
@@ -169,8 +171,10 @@ public class SignOutDeviceWithQrCodeKeyDialog extends Dialog {
 
                     }
                     else if (response.code()==401){
-                        LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
-                        CommonUtility.showToast(context,logInModel.getMessage());
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                     } else if (response.code()==429){
 //                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         if(response.errorBody() !=null )

@@ -13,7 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
@@ -92,10 +95,10 @@ public class SupportDialog extends Dialog {
                         btnOk.setVisibility(View.VISIBLE);
 
                     } else if (response.code() == 401) {
-                        CommonUtility.showToast(context, response.body().getMessage());
-                        TokenStorage.clearSharedToken(context);
-                        context.startActivity(new Intent(context, LogInActivity.class));
-                        ((Activity) context).finish();
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                     }else if (response.code()==404){
                         TokenStorage.clearSharedToken(context);
                         CommonUtility.showToast(context,ConstantUtility.SESSION_EXPIRED);

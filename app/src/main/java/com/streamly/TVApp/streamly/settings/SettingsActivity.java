@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
@@ -65,7 +66,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         initListeners();
 
 //        account.clearFocus();
-        account.requestFocus();
+//        account.requestFocus();
     }
 
     private void initViews(){
@@ -113,7 +114,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 break;
 
             case R.id.sign_out:
-                SignOutDialog signOutDialog = new SignOutDialog(this);
+                SignOutDialog signOutDialog = new SignOutDialog(SettingsActivity.this);
                 signOutDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                 signOutDialog.show();
                 break;
@@ -129,11 +130,11 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
     private void viewFocusAccount(View view) {
         try {
             // Check if no view has focus:
-            view = this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+//            view = this.getCurrentFocus();
+//            if (view != null) {
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//            }
             DisplayMetrics metrics = getResources().getDisplayMetrics();
             int screenWidth = (int) (metrics.widthPixels * 0.90);
             pDialog = new Dialog(SettingsActivity.this);
@@ -191,11 +192,10 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 
                     } else if (response.code() == 401) {
                         if(response.errorBody()!=null){
-                            ErrorResponseModel errorResponseModel=new Gson().fromJson(response.errorBody().string(), ErrorResponseModel.class);
-                            TokenStorage.clearSharedToken(SettingsActivity.this);
-                            startActivity(new Intent(SettingsActivity.this, LogInActivity.class));
-                            CommonUtility.showToast(SettingsActivity.this, errorResponseModel.getMessage());
-                            finish();
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(SettingsActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
 
 
                         }
@@ -212,7 +212,6 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                     ex.printStackTrace();
                     Log.e(TAG, "Exception " + ex);
                 }
-                Log.e(TAG, "profileResponCode " + response.code() + "");
                 progressBar.setVisibility(View.INVISIBLE);
             }
             @Override

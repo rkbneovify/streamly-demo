@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_330sdp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:paddingLeft="@dimen/_12sdp"
+    android:paddingRight="@dimen/_12sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    android:background="@color/transparent_color1"
+   >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center">
+
+
+
+    <TextView
+        android:id="@+id/tv_device_limit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/md_white_1000"
+        android:textSize="@dimen/_9ssp"
+        android:fontFamily="@font/helvetica_neue_medium"
+        android:textAlignment="center"
+        android:padding="@dimen/_8sdp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="@dimen/_6sdp"
+       >
+<!--        <requestFocus/>-->
+
+
+
+
+        <Button
+            android:id="@+id/btn_ok"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:elevation="@dimen/_6sdp"
+            android:text="@string/ok"
+            android:textStyle="bold"
+            android:textColor="@color/md_white_1000"
+            android:fontFamily="@font/helvetica_neue_bold"
+            android:textSize="@dimen/_8ssp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:background="@drawable/button_states"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="@dimen/_6sdp"
+        android:minHeight="@dimen/_30sdp"
+        android:minWidth="@dimen/_60sdp"
+        android:visibility="gone"
+        android:indeterminateTint="@color/progress_bar_color" />
+
+</FrameLayout>
+

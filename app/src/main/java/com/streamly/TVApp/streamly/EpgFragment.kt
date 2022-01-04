@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.streamly.TVApp.streamly.channelschedule.Datum
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
@@ -269,167 +270,167 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
     //#neovifyissueresolved28sep
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
-        var dayss: Long ?= 1
-        val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    //success
-
-
-
-                    Log.e("secondapi" , "success");
-                    val showNames = ArrayList<String>()
-//                           for(i in 0..it.data.size-1){
-
-                    val p: Pattern = Pattern.compile("\\d+")
-                    val m: Matcher = p.matcher(it.message)
-                    while (m.find()) {
-//                        Log.e(TAG, "::>>>digit: " + m.group()
-//                                + "<<>>int: " + (m.group()).toInt()
-//                                + "<<>>long: " + ((m.group()).toInt()).toLong())
-                        dayss = (m.group()).toLong()
-                    }
-
-
-                    for (i in 0 until it.data.size) {
-                        verticalBean = VerticalHomeBean()
-
-//                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                        verticalBean.headerTitle = it.data[i].callSign
-                        homelist = ArrayList()
-
-
-                        it.data[i].programs.forEach {
-                            homeBean = HomeBean()
-                            showNames.add(it.title)
-                            showName_list.add(it.title)
-
-                            val st = Instant.ofEpochMilli(((it.start).toString() + "000").toLong())
-                            val et = Instant.ofEpochMilli(((it.end).toString() + "000").toLong())
-
-//                            Log.e(TAG, "st: " + st + "<<>>et: " + et)
-                            homeBean.title = it.title
-                            homeBean.description = it.description
-                            homeBean.start_time = st
-                            homeBean.end_time = et
-                            homelist.add(homeBean)
-
-
-                        }
-
-                        verticalBean.allItemsInSection = homelist
-                        channel_showName_list.add(it.data[i].getmId())
-                        verticallist.add(verticalBean)
-                    }
-
-                    val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
-
-                    var k = 0
-                    verticallist.forEach { channel ->
-//                        Log.e("###${TAG}", "outSideIT " + channel)
-
-
-                        val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
-                        var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
-
-//                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-                        while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
-
-                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-
-       val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
-
-
-                                try{
-
-
-                                    Log.e("channels" ,channel.headerTitle.toString());
-
+//        var dayss: Long ?= 1
+//        val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
+//        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    //success
 //
-                                   val schedule = createSchedule(
-                                           channels.get(k),
-                                           verticallist[k].allItemsInSection!![p].title!!,
-//                                           nextTime,
-//                                           endTime,
-                                           verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                                           verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                                           channels.get(k).videoUrl.toString(),
-                                           verticallist[k].allItemsInSection!![p].description!!,
-                                           channel_showName_list.get(k).toLong(),
-                                           channel.headerTitle
-
-                                   )
-
-                                   scheduleList.add(schedule)
-                                   nextTime = endTime
-
-
-                               }
-                               catch(e : Exception){
-                                   Log.e("Exception : " , e.toString());
-                               }
-
-
-
-
-
-//                                }
-
-                                /*val endTimee =
-                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME))
-                                            randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
-                                        else MAX_CHANNEL_END_TIME
-
-                                val finalSchedule = createSchedule(
-                                        channels.get(k),
-                                        verticallist[k].allItemsInSection!![p].title!!,
-//                                           nextTime,
-//                                           endTime,
-                                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                                        channels.get(k).videoUrl.toString(),
-                                        verticallist[k].allItemsInSection!![p].description!!,
-                                        channel_showName_list.get(k).toLong(),
-                                        channel.getHeaderTitle()
-                                )*/
-
-
-
-                                    channelMap.put(channels.get(k).id, scheduleList)
-
-
-
-                            }
-
-
-
-                        }
-                        k += 1
-
-                    }
-
-                    val pair = Pair(channels, channelMap)
-//                    setData(pair.first, pair.second, localDate, ((m.group().toInt()).toLong()))
-//                    Log.e(TAG, "::>>>>dayss: " + dayss)
-                    setData(pair.first, pair.second, localDate, dayss!!)
-                    setState(State.Content)
-
-                }, {
-                    //error
-//                    Log.e("###$TAG", "Error...")
-//                    Log.e("###$TAG", it.message!!)
-                    Log.e(TAG, "getSecondApi: epg "+it.message )
-                    if(it.message.toString().contains("401")){
-                        TokenStorage.clearSharedToken(eContext)
-                        eContext?.startActivity(Intent(eContext, LogInActivity::class.java))
-                        CommonUtility.showToast(eContext, "Token is Invalid")
-                        (eContext as Activity).finish()
-                    }
-                    else if(it.message.toString().contains("402")){
-                    CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
-
-                }
-                })
+//
+//
+//                    Log.e("secondapi" , "success");
+//                    val showNames = ArrayList<String>()
+////                           for(i in 0..it.data.size-1){
+//
+//                    val p: Pattern = Pattern.compile("\\d+")
+//                    val m: Matcher = p.matcher(it.message)
+//                    while (m.find()) {
+////                        Log.e(TAG, "::>>>digit: " + m.group()
+////                                + "<<>>int: " + (m.group()).toInt()
+////                                + "<<>>long: " + ((m.group()).toInt()).toLong())
+//                        dayss = (m.group()).toLong()
+//                    }
+//
+//
+//                    for (i in 0 until it.data.size) {
+//                        verticalBean = VerticalHomeBean()
+//
+////                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
+//                        verticalBean.headerTitle = it.data[i].callSign
+//                        homelist = ArrayList()
+//
+//
+//                        it.data[i].programs.forEach {
+//                            homeBean = HomeBean()
+//                            showNames.add(it.title)
+//                            showName_list.add(it.title)
+//
+//                            val st = Instant.ofEpochMilli(((it.start).toString() + "000").toLong())
+//                            val et = Instant.ofEpochMilli(((it.end).toString() + "000").toLong())
+//
+////                            Log.e(TAG, "st: " + st + "<<>>et: " + et)
+//                            homeBean.title = it.title
+//                            homeBean.description = it.description
+//                            homeBean.start_time = st
+//                            homeBean.end_time = et
+//                            homelist.add(homeBean)
+//
+//
+//                        }
+//
+//                        verticalBean.allItemsInSection = homelist
+//                        channel_showName_list.add(it.data[i].getmId())
+//                        verticallist.add(verticalBean)
+//                    }
+//
+//                    val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+//
+//                    var k = 0
+//                    verticallist.forEach { channel ->
+////                        Log.e("###${TAG}", "outSideIT " + channel)
+//
+//
+//                        val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
+//                        var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
+//
+////                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
+//                        while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
+//
+//                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
+//
+//       val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
+//
+//
+//                                try{
+//
+//
+//                                    Log.e("channels" ,channel.headerTitle.toString());
+//
+////
+//                                   val schedule = createSchedule(
+//                                           channels.get(k),
+//                                           verticallist[k].allItemsInSection!![p].title!!,
+////                                           nextTime,
+////                                           endTime,
+//                                           verticallist[k].allItemsInSection!![p]!!.start_time!!,
+//                                           verticallist[k].allItemsInSection!![p]!!.end_time!!,
+//                                           channels.get(k).videoUrl.toString(),
+//                                           verticallist[k].allItemsInSection!![p].description!!,
+//                                           channel_showName_list.get(k).toLong(),
+//                                           channel.headerTitle
+//
+//                                   )
+//
+//                                   scheduleList.add(schedule)
+//                                   nextTime = endTime
+//
+//
+//                               }
+//                               catch(e : Exception){
+//                                   Log.e("Exception : " , e.toString());
+//                               }
+//
+//
+//
+//
+//
+////                                }
+//
+//                                /*val endTimee =
+//                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME))
+//                                            randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
+//                                        else MAX_CHANNEL_END_TIME
+//
+//                                val finalSchedule = createSchedule(
+//                                        channels.get(k),
+//                                        verticallist[k].allItemsInSection!![p].title!!,
+////                                           nextTime,
+////                                           endTime,
+//                                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
+//                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
+//                                        channels.get(k).videoUrl.toString(),
+//                                        verticallist[k].allItemsInSection!![p].description!!,
+//                                        channel_showName_list.get(k).toLong(),
+//                                        channel.getHeaderTitle()
+//                                )*/
+//
+//
+//
+//                                    channelMap.put(channels.get(k).id, scheduleList)
+//
+//
+//
+//                            }
+//
+//
+//
+//                        }
+//                        k += 1
+//
+//                    }
+//
+//                    val pair = Pair(channels, channelMap)
+////                    setData(pair.first, pair.second, localDate, ((m.group().toInt()).toLong()))
+////                    Log.e(TAG, "::>>>>dayss: " + dayss)
+//                    setData(pair.first, pair.second, localDate, dayss!!)
+//                    setState(State.Content)
+//
+//                }, {
+//                    //error
+////                    Log.e("###$TAG", "Error...")
+////                    Log.e("###$TAG", it.message!!)
+//                    Log.e(TAG, "getSecondApi: epg "+it.message )
+//                    if(it.message.toString().contains("401")){
+//                        val sessionExpiredDialog = SessionExpiredDialog(eContext)
+//                        sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+//                        sessionExpiredDialog.setCancelable(false)
+//                        sessionExpiredDialog.show()
+//                    }
+//                    else if(it.message.toString().contains("402")){
+//                    CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
+//
+//                }
+//                })
     }
 
 

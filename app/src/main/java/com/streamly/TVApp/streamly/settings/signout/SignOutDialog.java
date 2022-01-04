@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
@@ -60,9 +61,10 @@ public class SignOutDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (ConstantUtility.isNetworkConnected) {
-                    sigOutCall();
                     cancel();
-                }else {
+                    sigOutCall();
+                }
+                else {
                     CommonUtility.showToast(context,ConstantUtility.CHECK_INTERNET_CONNECTION);
                 }
 
@@ -87,10 +89,10 @@ public class SignOutDialog extends Dialog {
                         context.startActivity(new Intent(context, LogInActivity.class));
                         ((Activity)context).finish();
                     }else if (response.code()==401){
-                        TokenStorage.clearSharedToken(context);
-                        context.startActivity(new Intent(context, LogInActivity.class));
-                        CommonUtility.showToast(context,response.body().getMessage());
-                        ((Activity)context).finish();
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                     }
 
                     else if (response.code()==404){

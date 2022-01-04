@@ -18,6 +18,8 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
+import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
 import com.streamly.TVApp.streamly.log_in.LogInModel;
@@ -25,6 +27,7 @@ import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
+import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceWithPasscodeDialog;
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
@@ -115,8 +118,10 @@ Button btn_sign_in_using_passcode;
 
                     }
                     else if (response.code()==401){
-                        LogInModel logInModel=new Gson().fromJson(response.errorBody().string(),LogInModel.class);
-                        CommonUtility.showToast(LoginUsingPasscodeActivity.this,logInModel.getMessage());
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LoginUsingPasscodeActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                     }
                     else if (response.code()==429){
                        if(response.errorBody() !=null )
@@ -133,7 +138,8 @@ Button btn_sign_in_using_passcode;
                            }
                            if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("")){
                                if(logInModel.getMessage().contains("Your account is in use on")) {
-                                   CommonUtility.showToast(LoginUsingPasscodeActivity.this, logInModel.getMessage().toString());
+                                   DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(LoginUsingPasscodeActivity.this,logInModel.getMessage().toString());
+                                   deviceLimitDialog.show();
                                }
                            }
 
