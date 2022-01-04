@@ -289,7 +289,7 @@ $(function() {
             { data: 'url', name: 'url' },
             { data: 'genrename', name: 'genrename' ,searchable: true},
             
-            { data: 'status', name: 'status' ,orderable:false},
+            { data: 'status', name: 'status' ,orderable:true},
             { data: 'image', name: 'logo',orderable: false, searchable: false },
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
