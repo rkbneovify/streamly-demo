@@ -351,7 +351,10 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
  } else {$termAndCondition=false;}
   
 
-  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+ $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+//  $Saved['result'];
+//  $Saved['LastInsertId'];
+  if($Saved['result']){
     $active_sessioncount = App\SessionTable::where([
       ['status', '=', '1'],
       ['users_id', '=', $user_id],
@@ -362,6 +365,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'success' => true,
       'message'=>'logged in successfully ',
       'response_code'=>200,
+      'sessionid'=>HashUserID($Saved['LastInsertId']),
+      // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
         'token_type' => 'bearer',
@@ -428,8 +433,10 @@ function sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices){
  } else {$termAndCondition=false;}
  
 
-
-  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+ $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+//  $Saved['result'];
+//  $Saved['LastInsertId'];
+  if($Saved['result']){
       session(
           [
               'jwttoken' => $token
@@ -459,7 +466,10 @@ $session_tab->logintime = Carbon::now();
 $session_tab->status = 1;
 $session_tab->created_on = $date;
 $session_tab->modified_on = Carbon::now();  
-return $session_tab->save();
+$result=$session_tab->save();
+
+$LastInsertId = $session_tab->id;
+return ['result'=>$result,'LastInsertId'=>$LastInsertId];
 }
 
 function getDeviceIdforWeb(){
