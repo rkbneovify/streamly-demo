@@ -23,7 +23,7 @@ class DropzoneController extends Controller
 
    foreach($images as $key => $fromFilename) {
     $toFilename = $customnameArr[$key].'.'.$fromFilename->extension();
-    $fromFilename->move(public_path('images'), $toFilename);
+    $fromFilename->move(public_path('/uploads/channellogo'), $toFilename);
     
 }
  
@@ -33,14 +33,18 @@ class DropzoneController extends Controller
 
     function fetch()
     {
-     $images = \File::allFiles(public_path('images'));
+        // $destinationPath = public_path('/uploads/channellogo');
+            // $imagePath = $destinationPath. "/".  $name;
+            // $image->move($destinationPath, $name);
+            // $model->image = $name;
+     $images = \File::files(public_path('/uploads/channellogo'));
      $output = '<div class="row">';
      foreach($images as $image)
      {
       $output .= '
       <div class="col-md-2" style="margin-bottom:16px;" align="center">
-                <img src="'.asset('images/' . $image->getFilename()).'" class="img-thumbnail" width="175" height="175" style="height:175px;" />
-                <button type="button" class="btn btn-link remove_image" id="'.$image->getFilename().'">Remove</button>
+                <img src="'.asset('/uploads/channellogo/' . $image->getFilename()).'" class="img-thumbnail" width="175" height="175" style="height:175px;background-color:black;" />
+                <button type="button" class="btn btn-link remove_image" id="'.$image->getFilename().'">Remove '.$image->getFilename().'</button>
             </div>
       ';
      }
@@ -52,7 +56,7 @@ class DropzoneController extends Controller
     {
      if($request->get('name'))
      {
-      \File::delete(public_path('images/' . $request->get('name')));
+      \File::delete(public_path('/uploads/channellogo/' . $request->get('name')));
      }
     }
 }
