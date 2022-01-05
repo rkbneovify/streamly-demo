@@ -265,7 +265,8 @@ this.on("sending", function (file, xhr, formData) {
       success:function(data)
       {
         $('#uploaded_image').html(data);
-      }
+      },
+      cache: false
     })
   }
 
