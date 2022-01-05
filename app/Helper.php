@@ -389,7 +389,8 @@ function duplicateDeviceId($user_id,$deviceDetails){
        return response()->json([
         'success' => false,
         'response_code'=>429,
-        'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web or Use the data key given below to logout session!',
+        // 'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web or Use the data key given below to logout session!',
+        'message'=>'Your device is already in an active session with us. Do you want to logout from that session & start a new session?',
         'data'=>HashUserID($checkDeviceDetails->get('id')[0]->id)
         //'loggedindeviceinfointheseId'=>$myarr,
       ],429)->send();
