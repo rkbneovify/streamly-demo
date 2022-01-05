@@ -112,7 +112,7 @@ $('#genres').on('select2:select', function(e) {
   var data = e.params.data;
   console.log(data.id);
   console.log(data.text);
-   let divtoAdd='<div class="dropzone2" id='+data.id+'><div class="draggable1" draggable="true"  >' + data.text + '</div></div>'
+   let divtoAdd='<div class="dropzone2" id='+data.id+'><div class="draggable1" draggable="true" data-channelid='+data.id+'  >' + data.text + '</div></div>'
         
           cacheEle.append(divtoAdd);
 
@@ -144,6 +144,7 @@ console.log("drag triggrred");
       console.log('draggedvalue',dragged.textContent);
        // event.dataTransfer.setData("Text", event.target.id);
          event.dataTransfer.setData("Text", event.target.textContent);
+         event.dataTransfer.setData("Channelid", event.target.getAttribute("data-channelid"));
       // make it half transparent
       event.target.style.opacity = .5;
   }, false);
@@ -186,9 +187,13 @@ let divValue=event.target;
 console.log("divValue",divValue.children);
 //	var txt = "Nick";
    let data = event.dataTransfer.getData("Text");
+   let channelid = event.dataTransfer.getData("Channelid");
+   console.log('channelid',channelid);
+   console.log('event',event);
 //	nxtSibling.value = txt;
 	nxtSibling.value = data;
           console.log("eventtsrget",nxtSibling);
+          nxtSibling.setAttribute('name', "description["+channelid+"]");
           dragged.parentNode.removeChild( dragged );
           event.target.appendChild( dragged );
 

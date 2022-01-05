@@ -17,19 +17,39 @@ class DropzoneController extends Controller
 //    dump($images);
    $filenameArr=$request->filenames;
    $customnameArr=$request->description;
-   
-//    $c = array_combine($filenameArr, $customnameArr);
-//    dd($c);
-
-   foreach($images as $key => $fromFilename) {
-    $toFilename = $customnameArr[$key].'.'.$fromFilename->extension();
-    $fromFilename->move(public_path('/uploads/channellogo'), $toFilename);
+   $keys = array_keys( $customnameArr );
+   $size = sizeof($images);
+//    dump($customnameArr);
+   $ids = [];
+   $cases = [];
+   $params = [];
+   for($x = 0; $x < $size; $x++ ) {
+    $toFilename = $customnameArr[$keys[$x]].'.'.$images[$x]->extension();
     
+    // echo "<br>";
+    // echo "key: ". $keys[$x] . ", value: ". $customnameArr[$keys[$x]] . "\n";
+    $images[$x]->move(public_path('/uploads/channellogo'), $toFilename);
+    
+    $cases[] = "WHEN {$keys[$x]} then ?";
+    $ids[] = $keys[$x];
+    $params[] = $toFilename;
 }
- 
 
-     return response()->json(['success' => "Images uploaded"]);
-    }
+$ids = implode(',', $ids);
+$cases = implode(' ', $cases);
+
+if (!empty($ids)) {
+
+//     UPDATE db.channels
+// SET image = CASE  
+//               WHEN id = 86 THEN "AETV"
+//               WHEN id = 56 THEN "AHC"
+//            END 
+// WHERE ID IN (86, 56)
+    \DB::update("UPDATE channels SET `image` = CASE `id` {$cases} END WHERE `id` in ({$ids})", $params);
+    return response()->json(['success' => "Images uploaded"]);
+}
+}
 
     function fetch()
     {
