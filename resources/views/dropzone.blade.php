@@ -33,7 +33,7 @@
   }</style>
   <div class="container-fluid ">
       <br />
-    <h3 align="center">Image Upload in Laravel using Dropzone</h3>
+    <h3 align="center">Multi Drag&Drop Files and Drag & drop name</h3>
     <br />
         <div class="row">
       <div class=" col-md-6 panel panel-default">
@@ -49,9 +49,13 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">  <p>
-          Try to drag and drop items within lists or between lists.
-        </p>
+      <div class="col-md-6">  <ol>
+        <li>Select the images you want to upload.</li> 
+        <li>Selct multiple channels from dropdown</li> 
+        <li>Drag and drop divs under the droped images</li> 
+         
+         
+        </ol>
 
 <label for="genres" class="col-md-4 control-label">Channels</label>
               
@@ -64,10 +68,7 @@
                         @endif 
                     @endforeach --}}
                 </select>
-                <div class="dynamic-fields"><div class="dropzone2">
-    <div class="draggable1" draggable="true" >This div is draggable</div>
-</div>
-<br>
+                <div class="dynamic-fields">
 <div class="dropzone2"><div class="draggable1" draggable="true" >This div is draggable2</div></div>
 </div>
         
@@ -88,29 +89,6 @@
 </html>
 
 <script type="text/javascript">
-
-var data = [
-    {
-        id: 0,
-        text: 'enhancement'
-    },
-    {
-        id: 1,
-        text: 'bug'
-    },
-    {
-        id: 2,
-        text: 'duplicate'
-    },
-    {
-        id: 3,
-        text: 'invalid'
-    },
-    {
-        id: 4,
-        text: 'wontfix'
-    }
-];
 
 $('.select2').select2({
 placeholder: 'This is my placeholder',
