@@ -33,7 +33,7 @@
   }</style>
   <div class="container-fluid ">
       <br />
-    <h3 align="center">Image Upload in Laravel using Dropzone</h3>
+    <h3 align="center">Multi Drag&Drop Files and Drag & drop name</h3>
     <br />
         <div class="row">
       <div class=" col-md-6 panel panel-default">
@@ -49,11 +49,15 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">  <p>
-          Try to drag and drop items within lists or between lists.
-        </p>
+      <div class="col-md-6">  <ol>
+        <li>Select the images you want to upload.</li> 
+        <li>Selct multiple channels from dropdown</li> 
+        <li>Drag and drop divs under the droped images</li> 
+         
+         
+        </ol>
 
-<label for="genres" class="col-md-4 control-label">genres</label>
+<label for="genres" class="col-md-4 control-label">Channels</label>
               
 <select name="genres[]" id="genres" class="form-control select2" multiple="multiple">
 {{-- @foreach($genres as $id => $genre)
@@ -64,10 +68,7 @@
                         @endif 
                     @endforeach --}}
                 </select>
-                <div class="dynamic-fields"><div class="dropzone2">
-    <div class="draggable1" draggable="true" >This div is draggable</div>
-</div>
-<br>
+                <div class="dynamic-fields">
 <div class="dropzone2"><div class="draggable1" draggable="true" >This div is draggable2</div></div>
 </div>
         
@@ -89,39 +90,29 @@
 
 <script type="text/javascript">
 
-var data = [
-    {
-        id: 0,
-        text: 'enhancement'
-    },
-    {
-        id: 1,
-        text: 'bug'
-    },
-    {
-        id: 2,
-        text: 'duplicate'
-    },
-    {
-        id: 3,
-        text: 'invalid'
-    },
-    {
-        id: 4,
-        text: 'wontfix'
-    }
-];
-
-$('.select2').select2({data: data, 
+$('.select2').select2({
 placeholder: 'This is my placeholder',
-  allowClear: true});
+  allowClear: true,
+  ajax: {
+        url: '/dataforselect2',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+            return {
+                term: params.term || '',
+                page: params.page || 1
+            }
+        },
+        cache: true
+    }
+    });
 
 $('#genres').on('select2:select', function(e) {
   var cacheEle = $('.dynamic-fields');
   var data = e.params.data;
   console.log(data.id);
   console.log(data.text);
-   let divtoAdd='<div class="dropzone2" id='+data.id+'><div class="draggable1" draggable="true"  >' + data.text + '</div></div>'
+   let divtoAdd='<div class="dropzone2" id='+data.id+'><div class="draggable1" draggable="true" data-channelid='+data.id+'  >' + data.text + '</div></div>'
         
           cacheEle.append(divtoAdd);
 
@@ -153,6 +144,7 @@ console.log("drag triggrred");
       console.log('draggedvalue',dragged.textContent);
        // event.dataTransfer.setData("Text", event.target.id);
          event.dataTransfer.setData("Text", event.target.textContent);
+         event.dataTransfer.setData("Channelid", event.target.getAttribute("data-channelid"));
       // make it half transparent
       event.target.style.opacity = .5;
   }, false);
@@ -195,9 +187,13 @@ let divValue=event.target;
 console.log("divValue",divValue.children);
 //	var txt = "Nick";
    let data = event.dataTransfer.getData("Text");
+   let channelid = event.dataTransfer.getData("Channelid");
+   console.log('channelid',channelid);
+   console.log('event',event);
 //	nxtSibling.value = txt;
 	nxtSibling.value = data;
           console.log("eventtsrget",nxtSibling);
+          nxtSibling.setAttribute('name', "description["+channelid+"]");
           dragged.parentNode.removeChild( dragged );
           event.target.appendChild( dragged );
 
@@ -274,7 +270,8 @@ this.on("sending", function (file, xhr, formData) {
       success:function(data)
       {
         $('#uploaded_image').html(data);
-      }
+      },
+      cache: false
     })
   }
 

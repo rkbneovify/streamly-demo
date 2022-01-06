@@ -288,7 +288,7 @@ $(function() {
             { data: 'url', name: 'url' },
             { data: 'fullName', name: 'fullName' ,searchable: true},
             
-            { data: 'status', name: 'status' ,orderable:false},
+            { data: 'status', name: 'status' ,orderable:true},
             { data: 'photo', name: 'photo',orderable: false, searchable: false },
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
