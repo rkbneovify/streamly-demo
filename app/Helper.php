@@ -351,7 +351,10 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
  } else {$termAndCondition=false;}
   
 
-  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+ $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+//  $Saved['result'];
+//  $Saved['LastInsertId'];
+  if($Saved['result']){
     $active_sessioncount = App\SessionTable::where([
       ['status', '=', '1'],
       ['users_id', '=', $user_id],
@@ -362,6 +365,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'success' => true,
       'message'=>'logged in successfully ',
       'response_code'=>200,
+      'sessionid'=>HashUserID($Saved['LastInsertId']),
+      // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
         'token_type' => 'bearer',
@@ -389,7 +394,8 @@ function duplicateDeviceId($user_id,$deviceDetails){
        return response()->json([
         'success' => false,
         'response_code'=>429,
-        'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web or Use the data key given below to logout session!',
+        // 'message'=>'Same device('.$explodedstring['0'].') ID = '.$explodedstring['1'].' detected,Kindly remove your session first or remove the device from web or Use the data key given below to logout session!',
+        'message'=>'Your device is already in an active session with us. Do you want to logout from that session & start a new session?',
         'data'=>HashUserID($checkDeviceDetails->get('id')[0]->id)
         //'loggedindeviceinfointheseId'=>$myarr,
       ],429)->send();
@@ -427,8 +433,10 @@ function sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices){
  } else {$termAndCondition=false;}
  
 
-
-  if(sessionTableStore($user_id,$token,$deviceDetails,$connected_devices)){
+ $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+//  $Saved['result'];
+//  $Saved['LastInsertId'];
+  if($Saved['result']){
       session(
           [
               'jwttoken' => $token
@@ -458,7 +466,10 @@ $session_tab->logintime = Carbon::now();
 $session_tab->status = 1;
 $session_tab->created_on = $date;
 $session_tab->modified_on = Carbon::now();  
-return $session_tab->save();
+$result=$session_tab->save();
+
+$LastInsertId = $session_tab->id;
+return ['result'=>$result,'LastInsertId'=>$LastInsertId];
 }
 
 function getDeviceIdforWeb(){
@@ -892,7 +903,7 @@ function isTV($device)
 function GetLimitForUser($user_id){
   $limit =5;
   $user = User::find($user_id);
-  if($user->subscribed()){
+  if($user->subscribed('main')){
     $userIdExistInSubScribed = Subscription::select('quantity')->where(function ($query) use ($user_id) {
       $query->where('user_id', '=', $user_id);
                                         $query->where('stripe_status', '=', 'active');
