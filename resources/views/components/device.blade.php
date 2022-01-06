@@ -130,7 +130,7 @@
 					 </span> <span jsslot="" class="dotinnermenuitem" aria-label="Find phone" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="CUoVIc">
-								 <div class="dotinnermenuitemname add-device-name" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
+								 <div class="dotinnermenuitemname add-device-name" data-id="{{ HashUserID($device->id) }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
 							</div>
 					 </span> <span style="display: none;" jsslot="" class="dotinnermenuitem" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
