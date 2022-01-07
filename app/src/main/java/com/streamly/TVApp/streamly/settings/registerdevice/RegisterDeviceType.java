@@ -4,16 +4,18 @@ public class RegisterDeviceType {
 
     private String deviceModel;
     private String deviceId;
+    private String personalDeviceName;
     private String deviceImageUrl;
 
 
     public RegisterDeviceType() {
     }
 
-    public RegisterDeviceType(String deviceModel, String deviceId,String deviceImageUrl) {
+    public RegisterDeviceType(String deviceModel, String deviceId,String deviceImageUrl, String personalDeviceName) {
         this.deviceModel = deviceModel;
         this.deviceId = deviceId;
         this.deviceImageUrl = deviceImageUrl;
+        this.personalDeviceName = personalDeviceName;
     }
 
     public String getDeviceImageUrl() {
@@ -38,5 +40,13 @@ public class RegisterDeviceType {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getPersonalDeviceName() {
+        return personalDeviceName;
+    }
+
+    public void setPersonalDeviceName(String personalDeviceName) {
+        this.personalDeviceName = personalDeviceName;
     }
 }

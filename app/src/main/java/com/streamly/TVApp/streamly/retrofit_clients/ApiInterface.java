@@ -5,6 +5,7 @@ import com.streamly.TVApp.streamly.QRCode.QRScanStatusModel;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel;
+import com.streamly.TVApp.streamly.log_in.PersonalDeviceNameDataModel;
 import com.streamly.TVApp.streamly.model.CheckDeviceType;
 import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
@@ -26,12 +27,14 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -169,6 +172,11 @@ public interface ApiInterface {
     @POST("/api/auth/outsidelocationplay")
     @FormUrlEncoded
     Call<OutstationLocationModel> postOutstationlocationplay(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @FieldMap Map<String,String> params);
+
+    @Headers("Accept: application/json")
+    @PUT("/api/auth/personaldevicename/{session_id}")
+    @FormUrlEncoded
+    Call<PersonalDeviceNameDataModel> setPersonalDeviceName(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Path(value = "session_id", encoded = false) String session_id ,@FieldMap(encoded = false) Map<String,String> params);
 
 
 }

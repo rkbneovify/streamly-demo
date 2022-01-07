@@ -9,12 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
+import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
@@ -24,14 +26,13 @@ import com.streamly.TVApp.streamly.new_log_in.NewLogInModel;
 import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
-import com.streamly.TVApp.streamly.settings.SettingsActivity;
 import com.streamly.TVApp.streamly.settings.device_signout.SignOutDeviceDialog;
 import com.streamly.TVApp.streamly.settings.support.SupportDialog;
 import com.streamly.TVApp.streamly.termsofuses.TermsOfUses;
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
-import com.streamly.TVApp.streamly.R;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,11 +40,11 @@ import retrofit2.Response;
 public class LogInActivity extends FragmentActivity {
     private static final String TAG = LogInActivity.class.getSimpleName();
     private ProgressDialog dialog;
-    private  String uniqueId;
+    private String uniqueId;
     private String userAgent;
-    private EditText edUserName,edPassword;
+    private EditText edUserName, edPassword;
     private TextView txtNeedHelp;
-    private Button btnSignIn,btnRegisterView,btnTermsUses,btnHotelLogin, btnLoginUsingPasscode;
+    private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,49 +54,46 @@ public class LogInActivity extends FragmentActivity {
         initViews();
         userAgent = System.getProperty("http.agent");
 //        getUserAgentType();
-        Log.i(TAG, "onResponse: user agent "+userAgent);
+        Log.i(TAG, "onResponse: user agent " + userAgent);
 
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        Log.i(TAG, "onCreate: tv uniqueId "+uniqueId);
+        Log.i(TAG, "onCreate: tv uniqueId " + uniqueId);
 
-
-        dialog= CommonUtility.custom_loader(LogInActivity.this);
+        dialog = CommonUtility.custom_loader(LogInActivity.this);
         TokenStorage.clearSharedToken(LogInActivity.this);
 
         txtNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SupportDialog supportDialog=new SupportDialog(LogInActivity.this);
+                SupportDialog supportDialog = new SupportDialog(LogInActivity.this);
                 supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                 supportDialog.show();
-
             }
         });
 
         edUserName.setText("vikas.saini1@oodles.io");
 //        edUserName.setText("sahilkashyap64@gmail.com");
         edPassword.setText("123456789");
-       btnSignIn.setOnClickListener(new View.OnClickListener() {
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (ConstantUtility.isNetworkConnected){
-                    if (edUserName.getText().toString().matches("")){
-                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.FILL_EMAIL);
+                if (ConstantUtility.isNetworkConnected) {
+                    if (edUserName.getText().toString().matches("")) {
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_EMAIL);
 
-                    }else if (edUserName.getText().toString().matches(ConstantUtility.EMAIL_REGEX)==false){
-                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.WRONG_EMAIL);
+                    } else if (edUserName.getText().toString().matches(ConstantUtility.EMAIL_REGEX) == false) {
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.WRONG_EMAIL);
 
-                    } else if (edPassword.getText().toString().matches("")){
+                    } else if (edPassword.getText().toString().matches("")) {
                         CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_PASSW);
 
-                    }else {
+                    } else {
                         signInCall();
                     }
 
-                }else {
-                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.CHECK_INTERNET_CONNECTION);
+                } else {
+                    CommonUtility.showToast(LogInActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
                 }
 
             }
@@ -117,7 +115,7 @@ public class LogInActivity extends FragmentActivity {
             public void onClick(View v) {
 
                 startActivity(new Intent(LogInActivity.this, LoginUsingPasscodeActivity.class));
-finish();
+                finish();
                 /*Toast.makeText(LogInActivity.this, "Please go to "+ ApiConfig.BASE_URL
                         +" for creating new account", Toast.LENGTH_SHORT).show();*/
             }
@@ -127,7 +125,7 @@ finish();
         btnTermsUses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TermsOfUses terms=new TermsOfUses(LogInActivity.this);
+                TermsOfUses terms = new TermsOfUses(LogInActivity.this);
                 terms.show();
             }
         });
@@ -143,13 +141,12 @@ finish();
     }
 
     private void getUserAgentType() {
-        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<CheckDeviceType> call=apiInterface.getDeviceType(userAgent);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<CheckDeviceType> call = apiInterface.getDeviceType(userAgent);
         call.enqueue(new Callback<CheckDeviceType>() {
             @Override
             public void onResponse(Call<CheckDeviceType> call, Response<CheckDeviceType> response) {
-                if(response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
 
                 }
             }
@@ -163,111 +160,103 @@ finish();
 
 
     private void initViews() {
-        edUserName=findViewById(R.id.ed_user_name);
-        edPassword=findViewById(R.id.ed_password);
-        txtNeedHelp=findViewById(R.id.txt_need_help);
-        btnSignIn=findViewById(R.id.btn_sign_in);
-        btnHotelLogin=findViewById(R.id.btn_hotel_sign_in);
-        btnRegisterView=findViewById(R.id.btn_register_view);
-        btnTermsUses=findViewById(R.id.btn_terms_uses);
-        btnLoginUsingPasscode=findViewById(R.id.btn_login_using_passcode_uses);
+        edUserName = findViewById(R.id.ed_user_name);
+        edPassword = findViewById(R.id.ed_password);
+        txtNeedHelp = findViewById(R.id.txt_need_help);
+        btnSignIn = findViewById(R.id.btn_sign_in);
+        btnHotelLogin = findViewById(R.id.btn_hotel_sign_in);
+        btnRegisterView = findViewById(R.id.btn_register_view);
+        btnTermsUses = findViewById(R.id.btn_terms_uses);
+        btnLoginUsingPasscode = findViewById(R.id.btn_login_using_passcode_uses);
     }
 
     private void signInCall() {
         dialog.show();
-        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<NewLogInModel> call=apiInterface.postLogInCall(userAgent,edUserName.getText().toString(),
-                                                        edPassword.getText().toString(),uniqueId);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<NewLogInModel> call = apiInterface.postLogInCall(userAgent, edUserName.getText().toString(),
+                edPassword.getText().toString(), uniqueId);
         call.enqueue(new Callback<NewLogInModel>() {
             @Override
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
-                    Log.e(TAG, "resCode "+response.code());
-                if (response.isSuccessful() && response.body()!=null && response.code()!=429){
-
-
-                    String access_token=response.body().getAccessToken();
-
-                    if(response.body().getUserRole().equals("tieruser"))
-                    {
-                        Long userId=response.body().getUser().getId();
+                    Log.e(TAG, "resCode " + response.code());
+                    if (response.isSuccessful() && response.body() != null && response.code() != 429) {
+                        String access_token = response.body().getAccessToken();
+                        String sessionid = response.body().getSessionid();
+                        if (response.body().getUserRole().equals("tieruser")) {
+                            Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
 //                        set.addAll(response.body().getRooms());
-                        Gson gson = new Gson();
-                        String json = gson.toJson(response.body().getRooms());
+                            Gson gson = new Gson();
+                            String json = gson.toJson(response.body().getRooms());
 
-                        TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST,json);
-                        TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID,userId.toString());
-                        TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                        CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                            TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST, json);
+                            TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
+                            TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                            TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                        startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
-                        finish();
+                            startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
+                            finish();
 
-                        edUserName.setText("");
-                        edPassword.setText("");
-                    }
-                    else if(response.body().getUserRole().equals("user")) {
-                        CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
-                        TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
-                        startActivity(new Intent(LogInActivity.this, MainActivity.class));
-                        finish();
-                    }
-
-
-                }
-                else if (response.code()==401){
-                    SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
-                    sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                    sessionExpiredDialog.setCancelable(false);
-                    sessionExpiredDialog.show();
-                }
-                else if (response.code()==429){
-
-                    if(response.errorBody() !=null )
-                    {
-                        NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
-
-                        if(logInModel.getData() !=null && !logInModel.getData().toString().equals(""))
-                        {
-
-
-                            Log.i(TAG, "onResponse:429  "+response.body());
-                            Log.i(TAG, "onResponse:429  "+logInModel.getData().toString());
-                            SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this,logInModel.getData().toString(),edUserName.getText().toString(),
-                                    edPassword.getText().toString(),uniqueId);
-                            signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            signOutDeviceDialog.show();
+                            edUserName.setText("");
+                            edPassword.setText("");
+                        } else if (response.body().getUserRole().equals("user")) {
+                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
+                            TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            startActivity(new Intent(LogInActivity.this, MainActivity.class));
+                            finish();
                         }
-                        if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("") ){
-                             if(logInModel.getMessage().contains("Your account is in use on")){
-                                 DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(LogInActivity.this,logInModel.getMessage().toString());
-                                 deviceLimitDialog.show();
+
+
+                    } else if (response.code() == 401) {
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
+                    } else if (response.code() == 429) {
+
+                        if (response.errorBody() != null) {
+                            NewLoginErrorResponse logInModel = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
+
+                            if (logInModel.getData() != null && !logInModel.getData().toString().equals("")) {
+
+
+                                Log.i(TAG, "onResponse:429  " + response.body());
+                                Log.i(TAG, "onResponse:429  " + logInModel.getData().toString());
+                                SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this, logInModel.getData().toString(), edUserName.getText().toString(),
+                                        edPassword.getText().toString(), uniqueId);
+                                signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                                signOutDeviceDialog.show();
                             }
+                            if (logInModel.getMessage() != null && !logInModel.getMessage().toString().equals("")) {
+                                if (logInModel.getMessage().contains("Your account is in use on")) {
+                                    DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(LogInActivity.this, logInModel.getMessage().toString());
+                                    deviceLimitDialog.show();
+                                }
 
-                        }
+                            }
 //
+                        }
+
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
 
-                }
-                else if (response.code()==500){
-                    CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
-                }
-
-              }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
-                    Log.e(TAG,"Exception: "+e.toString());
-                } dialog.dismiss();
-                Log.e(TAG,"ResponCode "+response.code()+"");
+                    Log.e(TAG, "Exception: " + e.toString());
+                }
+                dialog.dismiss();
+                Log.e(TAG, "ResponCode " + response.code() + "");
             }
 
             @Override
             public void onFailure(Call<NewLogInModel> call, Throwable t) {
-                Log.e(TAG,"failure: "+t.getMessage());
-                Log.e(TAG,"failRequest: "+call.request());
-                CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
+                Log.e(TAG, "failure: " + t.getMessage());
+                Log.e(TAG, "failRequest: " + call.request());
+                CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
                 dialog.dismiss();
             }
         });
@@ -276,7 +265,7 @@ finish();
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Log.e(TAG, "onBackPressed: login activity" );
+        Log.e(TAG, "onBackPressed: login activity");
         LogInActivity.this.finish();
     }
 }

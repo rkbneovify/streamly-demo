@@ -20,7 +20,7 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
     private View view;
 
 
-    public  RegisterDeviceAdapter(Context context, List<RegisterDeviceType> list) {
+    public RegisterDeviceAdapter(Context context, List<RegisterDeviceType> list) {
         this.context = context;
         this.list = list;
         this.inflater = LayoutInflater.from(context);
@@ -40,6 +40,7 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
 
         holder.deviceModelNo.setText(list.get(position).getDeviceModel());
         holder.deviceId.setText(list.get(position).getDeviceId());
+        holder.personalDeviceName.setText(list.get(position).getPersonalDeviceName());
         Glide.with(context)
                 .load( list.get(position).getDeviceImageUrl())
 //                    .error(R.drawable.programguide_icon_placeholder)
@@ -59,14 +60,14 @@ public class RegisterDeviceAdapter extends RecyclerView.Adapter<RegisterDeviceAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        TextView deviceModelNo,deviceId;
+        TextView deviceModelNo,deviceId, personalDeviceName;
         ImageView deviceImage;
-
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             deviceModelNo=itemView.findViewById(R.id.device_model_name);
             deviceId=itemView.findViewById(R.id.device_id);
             deviceImage=itemView.findViewById(R.id.iv_device_pic);
+            personalDeviceName = itemView.findViewById(R.id.personal_device_name);
 
         }
     }

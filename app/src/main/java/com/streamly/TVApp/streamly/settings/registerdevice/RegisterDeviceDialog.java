@@ -87,7 +87,7 @@ public class RegisterDeviceDialog extends Dialog {
 
 
                        for (int i=0;i<datalist.size();i++){
-                           list.add(new RegisterDeviceType( datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId(),datalist.get(i).getDeviceImg()));
+                           list.add(new RegisterDeviceType( datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId(),datalist.get(i).getDeviceImg(), datalist.get(i).getPersonaldevicename()));
                        }
                         RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,list);
                         rvDeviceModel.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));

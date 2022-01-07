@@ -28,6 +28,15 @@ public class NewLogInModel {
     @SerializedName("access_token")
     @Expose
     private String accessToken;
+
+    @SerializedName("sessionid")
+    @Expose
+    private String sessionid;
+
+    @SerializedName("personaldevicename_popup")
+    @Expose
+    private String personaldevicename_popup;
+
     @SerializedName("token_type")
     @Expose
     private String tokenType;
@@ -155,4 +164,11 @@ public class NewLogInModel {
         this.rooms = rooms;
     }
 
+    public String getSessionid() {
+        return sessionid;
+    }
+
+    public void setSessionid(String sessionid) {
+        this.sessionid = sessionid;
+    }
 }

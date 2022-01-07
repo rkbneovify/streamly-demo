@@ -31,12 +31,37 @@ public class TokenStorage {
         return sharedPreferences.getString(access_token,access_token_Value);
     }
 
+    public static void savePersonalDeviceName(Context context,String access_token ,String access_token_Value){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString(access_token,access_token_Value);
+        editor.apply();
+    }
+
+    public static String readPersonalDeviceName(Context context, String access_token, String access_token_Value){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString(access_token,access_token_Value);
+    }
+
     public static void savedSharedTokenPassCode(Context context,String access_token ,String access_token_Value){
         SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString(access_token,access_token_Value);
         editor.apply();
     }
+
+    public static String readSessionId(Context context, String access_token, String access_token_Value){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        return sharedPreferences.getString(access_token,access_token_Value);
+    }
+
+    public static void saveSessionId(Context context,String access_token ,String access_token_Value){
+        SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=sharedPreferences.edit();
+        editor.putString(access_token,access_token_Value);
+        editor.apply();
+    }
+
     public static void savedRoomList(Context context, String roomListKey , String roomListValue){
         SharedPreferences sharedPreferences=context.getSharedPreferences(FILE_NAME,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();

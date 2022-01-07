@@ -25,6 +25,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
+        <activity android:name=".log_in.PersonalDeviceName" />
         <activity android:name=".user_room.UserRoomActivity" />
         <activity android:name=".loginusingpasscode.LoginUsingPasscodeActivity" />
         <activity android:name=".HotelQRCode.HotelQRCodeActivity" />
@@ -46,13 +47,10 @@
             </intent-filter>
         </activity>
         -->
-        <activity
-            android:name=".settings.SettingsActivity"
-            /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
+        <activity android:name=".settings.SettingsActivity" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
         <!--  -->
         <!-- </activity> -->
-        <activity android:name=".log_in.LogInActivity"
-            />
+        <activity android:name=".log_in.LogInActivity" />
         <activity
             android:name=".splash.SplashActivity"
             android:banner="@drawable/app_icon_tv"
@@ -64,8 +62,7 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            />
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

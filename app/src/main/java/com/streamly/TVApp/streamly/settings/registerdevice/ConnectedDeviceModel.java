@@ -17,6 +17,7 @@ public class ConnectedDeviceModel {
     @SerializedName("success")
     private Boolean mSuccess;
 
+
     public List<Datum> getData() {
         return mData;
     }

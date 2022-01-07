@@ -1,191 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:gravity="center"
-android:layout_gravity="center"
-android:background="@drawable/splash_background"
-tools:context=".HotelQRCode.HotelQRCodeActivity">
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_gravity="center"
     android:background="@drawable/splash_background"
-    tools:context=".QRCode.QRCodeActivity">
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".HotelQRCode.HotelQRCodeActivity">
 
-
-    <ImageView
-        android:id="@+id/imageView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="78px"
-        android:textAlignment="center"
-        android:layout_marginTop="40dp"
-        android:src="@mipmap/streamly_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/splash_background"
+        android:orientation="vertical"
+        tools:context=".QRCode.QRCodeActivity">
 
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="600dp"
-        android:layout_height="300dp"
-        android:orientation="horizontal"
-        android:background="@color/transparent_color1"
-        android:elevation="10dp"
-        android:padding="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="78px"
+            android:layout_marginTop="40dp"
+            android:src="@mipmap/streamly_logo"
+            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <TextView
-                android:id="@+id/textView_qr_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/helvetica_neue_medium"
-                android:text="@string/qr_login"
-                android:textAlignment="center"
-                android:textColor="@color/md_white_1000"
-                android:textSize="35px"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-
-            <TextView
-                android:id="@+id/text_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="31px"
-                app:layout_constraintStart_toStartOf="@id/tv_first_step"
-
-                android:fontFamily="@font/helvetica_neue_medium"
-                android:text="@string/need_follow_these_step"
-                android:textColor="@color/md_white_1000"
-                app:layout_constraintTop_toBottomOf="@id/textView_qr_login"
-                android:layout_marginTop="20dp"
-
-                />
-            <TextView
-                android:id="@+id/tv_first_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textAlignment="center"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/helvetica_neue_medium"
-                android:text="@string/open_app_your_phone"
-                android:textColor="@color/md_white_1000"
-                android:textSize="31px"
-                app:layout_constraintTop_toBottomOf="@id/text_step"
-                app:layout_constraintStart_toStartOf="parent"
-
-                />
-
-
-            <TextView
-                android:id="@+id/tv_second_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/helvetica_neue_medium"
-                android:text="@string/tap_navbar_and_select_qr_scanner"
-                android:textColor="@color/md_white_1000"
-                android:textSize="31px"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@id/tv_first_step"
-                app:layout_constraintStart_toStartOf="@id/tv_first_step"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/helvetica_neue_medium"
-                android:text="@string/point_your_phone_to_this_screen_capture"
-                android:textColor="@color/md_white_1000"
-                android:textSize="31px"
-                app:layout_constraintTop_toBottomOf="@id/tv_second_step"
-                app:layout_constraintStart_toStartOf="@id/tv_second_step"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="280dp"
-        android:layout_height="300dp"
-        android:orientation="horizontal"
-        android:elevation="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/transparent_color1"
-        app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        >
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:background="@color/color_white"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <ImageView
-                android:id="@+id/img_hotel_qr_code"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:src="@mipmap/streamly_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="600dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/transparent_color1"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView_qr_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/helvetica_neue_medium"
+                    android:text="@string/qr_login"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="35px"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/text_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/helvetica_neue_medium"
+                    android:text="@string/need_follow_these_step"
+
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="31px"
+                    app:layout_constraintStart_toStartOf="@id/tv_first_step"
+                    app:layout_constraintTop_toBottomOf="@id/textView_qr_login"
+
+                    />
+
+                <TextView
+                    android:id="@+id/tv_first_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/helvetica_neue_medium"
+                    android:text="@string/open_app_your_phone"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="31px"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_step"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/tv_second_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/helvetica_neue_medium"
+                    android:text="@string/tap_navbar_and_select_qr_scanner"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="31px"
+                    app:layout_constraintStart_toStartOf="@id/tv_first_step"
+                    app:layout_constraintTop_toBottomOf="@id/tv_first_step"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/helvetica_neue_medium"
+                    android:text="@string/point_your_phone_to_this_screen_capture"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="31px"
+                    app:layout_constraintStart_toStartOf="@id/tv_second_step"
+                    app:layout_constraintTop_toBottomOf="@id/tv_second_step" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="280dp"
+            android:layout_height="300dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="30dp"
+            android:background="@color/transparent_color1"
+            android:elevation="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_white"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/img_hotel_qr_code"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:src="@mipmap/streamly_logo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
-<ProgressBar
-    android:id="@+id/progress_bar"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:elevation="@dimen/_6sdp"
-    android:minHeight="@dimen/_30sdp"
-    android:minWidth="@dimen/_60sdp"
-    android:visibility="gone"
-    android:indeterminateTint="@color/progress_bar_color" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="@dimen/_6sdp"
+        android:indeterminateTint="@color/progress_bar_color"
+        android:minWidth="@dimen/_60sdp"
+        android:minHeight="@dimen/_30sdp"
+        android:visibility="gone" />
 
 </FrameLayout>
