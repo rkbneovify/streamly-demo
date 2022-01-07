@@ -28,10 +28,10 @@ class UsersController extends Controller
 
     public function index()
     {
-        
+        $roles = Role::all()->pluck('name', 'id');
         
           
-        return view('admin.users.index');
+        return view('admin.users.index',compact('roles'));
     }
 
     public function create()
@@ -353,18 +353,28 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         $columnName = $columnName_arr[$columnIndex]['data']; // Column name
         $columnSortOrder = $order_arr[0]['dir']; // asc or desc
         $searchValue = $search_arr['value']; // Search value
-    
+        
+        // return var_dump($columnName_arr[3]['search']['value']);//role column
+       if ($columnName_arr[3]['search']['value']==''){
+        $searchroleValue='';
+        }else{
+            $searchroleValue=$columnName_arr[3]['search']['value'];
+        }
         // Total records
-        $totalRecords = User::select('count(*) as allcount')->count();
-        $totalRecordswithFilter = User::select('count(*) as allcount')
+        $totalRecords = User::whereHas('roles', function ($query)use ($searchroleValue) {
+            $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
+ })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->count();
+        $totalRecordswithFilter = User::whereHas('roles', function ($query)use ($searchroleValue) {
+            $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
+ })->select('count(*) as allcount')
         ->where('email', 'like', '%' .$searchValue . '%')->count();
     
         // Fetch records
-        $records = User::with('roles')->orderBy($columnName,$columnSortOrder)
-          ->where('email', 'like', '%' .$searchValue . '%')
-          ->orWhere('name', 'like', '%' .$searchValue . '%')
-        //   ->orWhere('zipcodes.state', 'like', '%' .$searchValue . '%')
-          ->select('users.*')
+        $records = User::whereHas('roles', function ($query)use ($searchroleValue) {
+            $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
+ })->where('email', 'like', '%' .$searchValue . '%')
+ ->orderBy($columnName,$columnSortOrder)
+          
           ->skip($start)
           ->take($rowperpage)
           ->get();
@@ -404,7 +414,10 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
            "draw" => intval($draw),
            "iTotalRecords" => $totalRecords,
            "iTotalDisplayRecords" => $totalRecordswithFilter,
-           "aaData" => $data_arr
+           "aaData" => $data_arr,
+           "aaDatacount" => count($data_arr),
+        //   "vardump"=> $searchroleValue
+
         );
     
         echo json_encode($response);

@@ -32,7 +32,18 @@
         <div class="card-header">
           <h3 class="card-title">Users</h3>
           {{-- <button id="btn-delete">Delete First Row</button> --}}
-        
+          <br>
+         <div class="form-group">
+                <label><strong>Filter by Userrole :</strong></label>
+                                 <select name="roles" id="roles" class="form-control">
+                                 <option>choose user role</option>
+                      @foreach($roles as $id => $pack)
+                      <option value="{{ $pack }}">
+                        {{ $pack }}
+                      </option>
+                      @endforeach
+                    </select>
+            </div>
            
           <div class="card-tools">
             {{-- <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -90,7 +101,7 @@
     });
 
       // DataTable
-      $('#empTable').DataTable({
+     var table =  $('#empTable').DataTable({
         pageLength: 100,
          processing: true,
          serverSide: true,
@@ -100,7 +111,7 @@
             { data: 'email' },
             { data: 'name' },
             { data: 'role' },
-            { data: 'status' },
+            { data: 'is_active' },
         { data: 'action',name: 'action', orderable: false, searchable: false },
 
         {data: 'action2', name: 'action2', orderable: false, searchable: false},
@@ -157,7 +168,13 @@
          }
      }); }
  });
-
+ $('#roles').change(function(){
+   table.column( 3 )
+                .search( this.value )
+                .draw();
+   console.log("status changed",this.value);
+       // table.draw();
+    });
 
     // Check all 
     $('#checkall').click(function(){
