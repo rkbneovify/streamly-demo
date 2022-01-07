@@ -80,12 +80,23 @@ extension LoginPasscodeVC {
         vc.viewModel.listOfRoom = room
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    // MARK: - Open Update name Controller
+    fileprivate func openEnterTVNameVC(sessionId: String) {
+        let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        vc.viewModel.sessionID = sessionId
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 
 // MARK - Custom Delegates
 /// APIResponseDelegate
 extension LoginPasscodeVC: APIResponseDelegate {
+    func apiUpdateNameSuccess() {
+        
+    }
+    
     func apiSucess() {
         self.removeSpinner()
         if let data = viewModel.responseData?.data { // check session exist.
@@ -99,7 +110,9 @@ extension LoginPasscodeVC: APIResponseDelegate {
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
             openSearchVC(room: room)
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-            Switcher.updateRootVC()
+            // Open controller
+            openEnterTVNameVC(sessionId: viewModel.sessionID)
+            //Switcher.updateRootVC()
         }
     }
     
@@ -107,6 +120,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
         if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
             return

@@ -80,7 +80,7 @@ class PopUPTvVC: UIViewController {
        // self.tableview.delegate =  self
         self.tableview.dataSource  = self
         if !(isProfile ?? false) {
-            self.tableview.rowHeight = 250
+            self.tableview.rowHeight = 300
         }
         self.tableview.register(UINib(nibName: DeviceRegisterCell.identifier, bundle: nil), forCellReuseIdentifier: DeviceRegisterCell.identifier)
         self.tableview.reloadData()
@@ -132,7 +132,7 @@ extension PopUPTvVC:UITableViewDataSource
             guard let cell = tableview.dequeueReusableCell(withIdentifier: DeviceRegisterCell.identifier, for: indexPath) as? DeviceRegisterCell else { return UITableViewCell() }
             cell.backgroundColor = UIColor.clear
             cell.contentView.backgroundColor = UIColor.clear
-            cell.setupData(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",image: deviceList?[indexPath.item].device_img ?? "N/A")
+            cell.setupData(deviceList?[indexPath.item].device_id ?? "N/A", deviceList?[indexPath.item].device_name ?? "N/A",image: deviceList?[indexPath.item].device_img ?? "N/A",sessionId: deviceList?[indexPath.item].personaldevicename ?? "N/A")
             return cell
         }
     }
@@ -149,17 +149,20 @@ extension PopUPTvVC:HandleError
         if statusCode == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
         } else if statusCode == 402 {
             showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
             return
         } else if statusCode == 404 {
             showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
             return

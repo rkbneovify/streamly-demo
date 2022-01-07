@@ -10,6 +10,7 @@
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */; };
+		9313554D2788282D00944ADA /* UpdateDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */; };
 		93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */; };
 		93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */; };
 		93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C69270ED6F7006DA962 /* QRModel.swift */; };
@@ -147,6 +148,7 @@
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeNewVC+Extension.swift"; sourceTree = "<group>"; };
+		9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDeviceViewController.swift; sourceTree = "<group>"; };
 		93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewController.swift; sourceTree = "<group>"; };
 		93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewModel.swift; sourceTree = "<group>"; };
 		93662C69270ED6F7006DA962 /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 			isa = PBXGroup;
 			children = (
 				AA53DE572486389400FA6821 /* SettingsVC.swift */,
+				9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1273,6 +1276,7 @@
 				AA5F5A512542A7E800FA8FB6 /* NetworkManagerWrapper.swift in Sources */,
 				AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */,
 				AA84F127247E304A00E4F709 /* PlayerVC.swift in Sources */,
+				9313554D2788282D00944ADA /* UpdateDeviceViewController.swift in Sources */,
 				AA24C2362600C10900B15739 /* PosterCell.swift in Sources */,
 				AACA71252490E2A2002318AF /* ContectInfoViewModel.swift in Sources */,
 				AAC9C8BA246A700100708812 /* AppDelegate.swift in Sources */,
@@ -1541,7 +1545,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1567,7 +1571,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = A4QY9BUDRA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -8,7 +8,7 @@
 
 import Foundation
 struct LoginResponse : Codable {
-    
+    let sessionid           :String?
     let access_token        :String?
     let connected_device    :String?
     let device_info         :String?
@@ -25,7 +25,7 @@ struct LoginResponse : Codable {
     var data: String?
     
     enum CodingKeys : String, CodingKey {
-        
+        case sessionid
         case access_token = "access_token"
         case connected_device = "connected_device"
         case device_info = "device_info"
@@ -44,6 +44,7 @@ struct LoginResponse : Codable {
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        sessionid = try values.decodeIfPresent(String.self, forKey: .sessionid)
         success = try values.decodeIfPresent(Bool.self, forKey: .success)
         message = try values.decodeIfPresent(String.self, forKey: .message)
         status = try values.decodeIfPresent(Int.self, forKey: .status)

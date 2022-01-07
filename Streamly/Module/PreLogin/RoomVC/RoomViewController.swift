@@ -59,6 +59,12 @@ class RoomViewController: UIViewController {
         }
         Switcher.updateRootVC()
     }
+    
+    fileprivate func openUpdateDeviceName(session: String) {
+        let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        vc.viewModel.sessionID = session
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 // MARK: UICollectionViewDataSource
 
@@ -120,7 +126,7 @@ extension RoomViewController: RoomViewModelDelegate {
         self.removeSpinner()
         showToast(message: "Successfully added to room/slot", completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                Switcher.updateRootVC()
+                self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mySessionId))
             }
         })
         
@@ -131,6 +137,7 @@ extension RoomViewController: RoomViewModelDelegate {
         if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
             return

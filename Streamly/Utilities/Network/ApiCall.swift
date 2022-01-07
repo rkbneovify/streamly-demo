@@ -112,6 +112,16 @@ open class ApiCall {
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getGeoFenceData.rawValue, method: .post, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
+    
+    @discardableResult
+    public static func updateDeviceName(_ sessionId: String,_ name: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        //debugPrint(token)
+        let param:[String:String] = ["devicename": name]
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.personalDeviceName.rawValue + "/\(sessionId)", method: .put, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
 
     @discardableResult
     public static func postOutsideAddress(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {

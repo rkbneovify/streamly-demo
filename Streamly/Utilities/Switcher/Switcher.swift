@@ -13,6 +13,7 @@ class Switcher {
     //functionToCheckUserLog
     static func updateRootVC() {
         let status = UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin)
+        let isDeviceNameAdded = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
         //debugPrint(status)
         let reachability = Reachability.isConnectedToNetwork()
         //debugPrint(reachability)
@@ -21,7 +22,9 @@ class Switcher {
                 //logedIn
                  let isRoomExist = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomExist)
                  let roomSelected = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isRoomSelected)
-                 if isRoomExist && !roomSelected {
+                if !isDeviceNameAdded {
+                    Constant.navigateToDeviceNameScreen()
+                } else if isRoomExist && !roomSelected {
                     Constant.navigateToHotelRoomHome()
                  } else {
                     Constant.navigateToRootHome()

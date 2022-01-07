@@ -48,9 +48,11 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
         } else if let data = data as? LoginResponse { // Successfully Login response
             if data.success == true {
                 timer.invalidate()
+                Utility.setStringObject(value: data.sessionid ?? "", key: Constant.UserDefault.mySessionId)
                 Utility.setStringObject(value: data.access_token ?? "", key: Constant.UserDefault.token)
                 Utility.setStringObject(value: data.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                 Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
@@ -61,9 +63,11 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
                     openSearchVC(room: room)
                 } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-                    Switcher.updateRootVC()
+                    openUpdateDeviceName(session: data.sessionid ?? "")
+                   // Switcher.updateRootVC()
                 } else {
-                    Switcher.updateRootVC()
+                    openUpdateDeviceName(session: data.sessionid ?? "")
+                   // Switcher.updateRootVC()
                 }
             }
         } else if let data = data as? FailedResponse { // handle Login failed Response
@@ -75,6 +79,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
         if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
         }
@@ -101,6 +106,12 @@ extension LoginWithQRViewController {
     fileprivate func openSearchVC(room: [Room]) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    fileprivate func openUpdateDeviceName(session: String) {
+        let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        vc.viewModel.sessionID = session
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

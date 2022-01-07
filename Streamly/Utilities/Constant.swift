@@ -62,6 +62,20 @@ class Constant: NSObject
         app.window?.rootViewController = rootViewController
     }
     
+    class func navigateToDeviceNameScreen()
+    {
+        guard let app = appDelegate else {return}
+        let homeVC = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        homeVC.viewModel.sessionID = Utility.retriveStringObject(key: Constant.UserDefault.mySessionId)
+        let rootViewController = appDelegate?.window?.rootViewController as? UINavigationController
+        rootViewController?.setViewControllers([homeVC], animated: false)
+        rootViewController?.isNavigationBarHidden = true
+        app.window?.rootViewController!.removeFromParent()
+        app.window?.rootViewController!.view.removeFromSuperview()
+        app.window?.rootViewController = nil
+        app.window?.rootViewController = rootViewController
+    }
+    
     class func navigateToHotelRoomHome()
     {
         guard let app = appDelegate else {return}
@@ -92,6 +106,7 @@ class Constant: NSObject
     class func logOut()
     {
         Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
         Utility.logOut()
     }
 
@@ -113,6 +128,8 @@ class Constant: NSObject
         static let isRoomExist = "isRoomExist"
         static let isRoomSelected = "isRoomSelected"
         static let getQrCodeKey = "getQrCodeKey"
+        static let mySessionId = "MySessionId"
+        static let isDeviceNameAdded = "isDeviceNameAdded"
     }
 
     //MARK:-: Constant Url & Keys

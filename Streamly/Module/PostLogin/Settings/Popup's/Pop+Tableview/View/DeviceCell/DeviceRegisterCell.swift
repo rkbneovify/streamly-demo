@@ -16,6 +16,9 @@ class DeviceRegisterCell: UITableViewCell {
     @IBOutlet weak var deviceNameLabel: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var deviceImage: UIImageView!
+    @IBOutlet weak var sessionIDLabel: UILabel!
+    @IBOutlet weak var sessionIDPHLabel: UILabel!
+    
     
     static let identifier = String(describing: DeviceRegisterCell.self)
     
@@ -35,17 +38,22 @@ class DeviceRegisterCell: UITableViewCell {
         deviceNamePH.text = "Device Name:"
         deviceIdLabel.font =  UIFont.init(name: "HelveticaNeue-Medium", size: 22.0)
         deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 22.0)
+        sessionIDLabel.font =  UIFont.init(name: "HelveticaNeue-Light", size: 22.0)
         devidIdPH.text = "Device id:"
+        sessionIDPHLabel.text = "Personal Name:"
         devidIdPH.font =  UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
         deviceNamePH.font = UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
+        sessionIDPHLabel.font = UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
         bgView.layer.cornerRadius = 10
         bgView.layer.borderWidth = 1.0
         
     }
     
-    func setupData(_ id: String,_ device: String, image: String) {
+    func setupData(_ id: String,_ device: String, image: String, sessionId: String) {
         deviceIdLabel.text = id
         deviceNameLabel.text = device
+        sessionIDLabel.text = sessionId
         deviceImage.sd_setImage(with: URL(string: image), completed: nil)
+        
     }
 }

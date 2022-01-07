@@ -263,9 +263,11 @@ extension LoginVC
                     }
 
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
+                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                     Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response.success?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response.success?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
+                    Utility.setStringObject(value: response.success?.sessionid ?? "", key: Constant.UserDefault.mySessionId)
                     selfStrong.removeSpinner()
                     if !(true) {
                         //                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
@@ -278,7 +280,7 @@ extension LoginVC
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
                             selfStrong.openSearchVC(room: room)
                         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-                            Switcher.updateRootVC()
+                            selfStrong.updateDeviceName(sessionId: response.success?.sessionid ?? "")
                         }
                     }
 
@@ -350,6 +352,12 @@ extension LoginVC {
     fileprivate func openSearchVC(room: [Room]) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    fileprivate func updateDeviceName(sessionId: String) {
+        let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        vc.viewModel.sessionID = sessionId
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
