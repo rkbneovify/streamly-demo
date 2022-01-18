@@ -146,16 +146,16 @@ class SessionTable extends Model
     }
     public function getDeviceTypeAttribute($size=null)
     { 
-    return [
-        "data-browser='1'"=>'web',
-        "data-browser='2'"=>'web',
-        "data-browser='3'"=>'web',
-        "data-browser='4'"=>'web',
-        "data-browser='5'"=>'web',
-        "data-browser='6'"=>'web',
-        "data-browser='7'"=>'web'
-    ][$this->device['browserclass']?? null] ?? "non-web";
-       
+    // return [
+    //     "data-browser='1'"=>'web',
+    //     "data-browser='2'"=>'web',
+    //     "data-browser='3'"=>'web',
+    //     "data-browser='4'"=>'web',
+    //     "data-browser='5'"=>'web',
+    //     "data-browser='6'"=>'web',
+    //     "data-browser='7'"=>'web'
+    // ][$this->device['browserclass']?? null] ?? "non-web";
+       return $this->pdname?'non-web':'web';
     }
     
 }
