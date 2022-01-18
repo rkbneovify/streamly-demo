@@ -101,6 +101,9 @@ class AuthController extends Controller
         if(empty(request('email')) || empty(request('password'))){
             return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
         }
+        if(empty(request('deviceid'))){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'deviceid required'], 401);
+        }
         $expirationInMinutes = 43800;//one month in minutes
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
