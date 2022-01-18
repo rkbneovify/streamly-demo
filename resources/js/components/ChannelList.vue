@@ -36,10 +36,7 @@
                       </div>
                     <div class="channel__name" v-bind:index="index" v-bind:key="channel.CallSign+index">
                       
-                        <div v-bind:index="index" style=" max-width: 12ch;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;">{{channel.channelTitle}}</div>
+                        <div v-bind:index="index" class="overflow">{{channel.channelTitle}}</div>
                         <div v-bind:index="index" style="font-size:0.8em;font-weight:bold;color: #4085ce;">{{channel.channelStbNumber}}</div>
                     </div>
                     <div class="favourite"></div>
@@ -299,7 +296,6 @@ export default {
     display: flex;
     flex: 0 0 40px;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
 
      position: relative;
@@ -309,6 +305,18 @@ export default {
     font-size: 1.5em;
     color: rgb(231, 9, 98);
     text-align: center;
+    padding-right:5%
+}
+.overflow {
+    max-width: 20ch; 
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.overflow:hover {
+  overflow: visible;
 }
 
 .channel__list__section .channel__header {
