@@ -42,6 +42,7 @@
 						<div class="form-group {{ $errors->has('devicename') ? ' has-error' : '' }}">
 							<label for="devicename">Device Name</label>
 							<input type="text" class="form-control" name="devicename" id="devicename" maxlength="20">
+							<input type="hidden" class="form-control" name="devicetype" id="devicetype" value="">
 						</div>
 
 
@@ -58,7 +59,6 @@
 	    </div>
 	</div>
     @foreach($allSession as $key => $device)  
-	
 <div data-item-id="{{$key+1}}" id="{{$device->id}}" class="F4S0Db" role="listitem" style="z-index: 0;position: relative;">
                      <div class="device-box-card device-box-card-classb KC1dQ Usd1Ac AaN0Dd  jpoelc" jscontroller="zN4bWc" jsaction="JIbuQc:Hfqgkf;" data-device-id="A8b4a0279f3be6a6c" {!!$device->device['classes']??''!!}>
                         <div class="device-box-card-inside device-box-card-inside-classb" tabindex="0" jscontroller="tKHFxf" jsaction="click:cOuCgd; mousedown:UX7yZ; mouseup:lbsD7e; mouseenter:tfO1Yc; mouseleave:JywGue; touchstart:p6p2H; touchmove:FwuNnf; touchend:yfqBxc; touchcancel:JMtRjd; focus:AHmuwe; blur:O22p3e; contextmenu:mg9Pef;">
@@ -67,14 +67,15 @@
                            </div>
                            <div class="midline"></div>
                            <div class="device-detail-txt">
-                              <div class="device-name-div">
-                                 <div role="heading" aria-level="3" class="device-name">{{$device->device['platform']??$device->device['device']??''}} @isset($device->hotel) in
-							  <strong>{{$device->hotel->hotel_room}}</strong>
-                              @endisset</div>
-																 @isset($device->device['personaldevicename'])
-																 <div class="personal-device-name">{{$device->device['personaldevicename']}}</div>
-																 @endisset
-                                 
+							<div class="device-name-div">
+								<div role="heading" aria-level="3" class="device-name">{{ $device->device['platform']??$device->device['device']??''}} @isset($device->hotel) in
+								<strong>{{$device->hotel->hotel_room}}</strong>
+								@endisset</div>
+								@if(array_key_exists('browserclass',$device->device))
+									<div class="personal-device-name">{!!$device->device['personaldevicename']??''!!}</div>
+								@else
+									<div class="personal-device-name">{!!$device->pdname->personal_devicename??''!!}</div>
+								@endif
                               </div>
                               <div class="device-location">						  
                                  <div>{{$device->user_ip}}</div>
@@ -125,19 +126,22 @@
 			<div class="dotinnermenubody dotinnermenubody1" style="width: 256px; height: auto; min-width: 256px;"> <span class="dotinnermenuitem" aria-label="Sign out this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="cEoysc">
-								 <div class="dotinnermenuitemname remove-device" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}" >Sign out</div>
+								 <div class="dotinnermenuitemname remove-device" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->personal_devicename }}" data-accesstoken="{{ $device->access_token }}" >Sign out</div>
 							</div>
-					 </span> <span jsslot="" class="dotinnermenuitem" aria-label="Find phone" role="menuitem" tabindex="-1">
+					 </span>
+					 <span jsslot="" class="dotinnermenuitem" aria-label="Find phone" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="CUoVIc">
-								 <div class="dotinnermenuitemname add-device-name" data-id="{{ HashUserID($device->id) }}" data-devicename="{{$device->id}}.{{ $device->device_name }}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
+								 <div class="dotinnermenuitemname add-device-name" data-id="{{ $device->pdname?HashUserID($device->pdname->id):HashUserID($device->id) }}" data-type ="{{$device->device_type}}" data-accesstoken="{{ $device->access_token }}">Add a name</div>
 							</div>
-					 </span> <span style="display: none;" jsslot="" class="dotinnermenuitem" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
+					 </span>
+					 <span style="display: none;" jsslot="" class="dotinnermenuitem" aria-label="I do not recognize this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="nJTW3e">
 								 <div class="dotinnermenuitemname">Don’t recognize this device?</div>
 							</div>
-					 </span> </div>
+					 </span>
+					</div>
 		</div>
 	</div>
 </div>

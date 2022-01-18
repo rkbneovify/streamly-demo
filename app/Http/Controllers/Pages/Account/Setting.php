@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Subscription;
 use App\Models\BugReporting;
+use App\Models\PersonalDevice;
 use Illuminate\Support\Arr;
 use Mail;
 use Exception;
@@ -170,23 +171,44 @@ class Setting extends Controller
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
         $userinfo = User::find($id);
-         $allSession=SessionTable::where([
-        ['status', '=', '1'],
-        ['users_id', '=', $id],
-         ])->orderBy('connected_devices', 'asc')->get();
-         $userRole=  $userinfo->roles->first()->name;
-        //  dd($userRole);
+        $allSession=SessionTable::with(['pdname'=> function($q) use($id) {
+            // Query the name field in status table
+                $q->select('id','personal_devicename','device_id','user_id')
+                ->where('user_id', '=', $id); 
+        }])
+        ->where([
+            ['status', '=', '1'],
+            ['users_id', '=', $id],
+        ])
+        ->orderBy('connected_devices', 'asc')
+        ->get();
+        /* $allSession = DB::table('session_table')
+            ->leftJoin('personal_device', 'session_table.device_id', '=', 'personal_device.device_id')
+            ->where('session_table.users_id', '=', $id)
+            ->where('session_table.status', '=', '1')
+            ->selectRaw("session_table.*, personal_device.personal_devicename as device_name, personal_device.id as pd_id")
+            ->orderBy('session_table.connected_devices', 'asc')
+            ->distinct()
+            ->get();
+        */
+       
+        $userRole=  $userinfo->roles->first()->name;
          if($userRole=='tieruser'){
-            $allSession=SessionTable::with('hotel')->where([
+            /*$allSession=SessionTable::with('hotel')->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
-                 ])->orderBy('connected_devices', 'asc')->get();
-                
-             
-         }
-         
-         
-         
+            ])->orderBy('connected_devices', 'asc')->get();  
+            */
+            $allSession=SessionTable::with(['hotel','pdname'=> function($q) use($id) {
+                // Query the name field in status table
+                $q->select('id','personal_devicename','device_id','user_id')->where('user_id', '=', $id);
+            }])->where([
+                ['status', '=', '1'],
+                ['users_id', '=', $id],
+            ])->orderBy('connected_devices', 'asc')->get();
+        }
+        // dd($allSession);
+        
     	return view('frontend.pages.account.devicemanagement', compact('login','allSession','userinfo','hasid'));
     }
 
@@ -249,15 +271,22 @@ class Setting extends Controller
     }
     public function updatePersonalDeviceName(Request $request, $id)
     {  $validator = Validator::make($request->all(), [
-        'devicename' => 'required|string|max:20'
+        'devicename' => 'required|string|max:20',
+        'devicetype' => 'required|string|max:20'
     ]);
     if($validator->fails()) {
         return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
     }
     $unhashid=UnHashUserID($id);
+    if($request->devicetype == 'non-web'){
+        $user=PersonalDevice::where('id', $unhashid)->update( [
+            'personal_devicename' => $request->devicename
+        ]);
+    }else{
         $user=SessionTable::where('id', $unhashid)->update( [
             'device->personaldevicename' => $request->devicename
         ]);
+    }
         if($request->wantsJson()){
 
         $response = [
