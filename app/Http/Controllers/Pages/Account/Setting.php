@@ -272,13 +272,13 @@ class Setting extends Controller
     public function updatePersonalDeviceName(Request $request, $id)
     {  $validator = Validator::make($request->all(), [
         'devicename' => 'required|string|max:20',
-        'devicetype' => 'required|string|max:20'
+        'device_type' => 'required|string|max:20'
     ]);
     if($validator->fails()) {
         return redirect()->back()->with(['deviceidseesion' => $id])->withErrors($validator);
     }
     $unhashid=UnHashUserID($id);
-    if($request->devicetype == 'non-web'){
+    if($request->device_type == 'non-web'){
         $user=PersonalDevice::where('id', $unhashid)->update( [
             'personal_devicename' => $request->devicename
         ]);
@@ -291,7 +291,7 @@ class Setting extends Controller
 
         $response = [
             'success' => true,
-            'data' => ['devicename'=>$request->devicename,'sessionid'=>$id,],
+            'data' => ['devicename'=>$request->devicename,'personaldeviceid'=>$id],
             'message' => 'Device name Updated Successfully.',
             'response_code'=>200,
         ];
