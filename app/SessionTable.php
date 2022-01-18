@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\HotelRoomTable;
+use App\Models\PersonalDevice;
 class SessionTable extends Model
 {
     /**
@@ -16,7 +17,7 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
-   protected $appends = ['device_img','device_detail']; 
+   protected $appends = ['device_img','device_detail','device_type']; 
    protected $hidden = ['device_detail'];//device detail from json
     protected $fillable=[
         'users_id',
@@ -47,6 +48,10 @@ class SessionTable extends Model
     public function hotel()
     {
         return $this->hasOne(HotelRoomTable::class,'session_id');
+    }
+
+    public function pdname(){
+        return $this->hasOne(PersonalDevice::class, 'device_id','device_id');  
     }
     /**
     protected static function boot()
@@ -137,6 +142,19 @@ class SessionTable extends Model
         'device-ipad'=>asset("/uploads/devicelogo/").'/mobile/ipad.png',
         'device-iphone'=>asset("/uploads/devicelogo/").'/mobile/iphone.png'
     ][$this->device['device']?? null] ?? asset("/uploads/devicelogo/").'/tv/normaltv.png';
+       
+    }
+    public function getDeviceTypeAttribute($size=null)
+    { 
+    return [
+        "data-browser='1'"=>'web',
+        "data-browser='2'"=>'web',
+        "data-browser='3'"=>'web',
+        "data-browser='4'"=>'web',
+        "data-browser='5'"=>'web',
+        "data-browser='6'"=>'web',
+        "data-browser='7'"=>'web'
+    ][$this->device['browserclass']?? null] ?? "non-web";
        
     }
     
