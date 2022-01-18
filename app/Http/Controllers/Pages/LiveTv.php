@@ -237,7 +237,10 @@ $active_session = SessionTable::where([
         
         $d= $this->dashPlayer($callSign,$genre,$encoded_auth_xml);
 //    dump("bye");
-return view('frontend.pages.livetvchannel',$d );
+// return view('frontend.pages.livetvchannel',$d );//dash.js
+return view('frontend.pages.livetvchannelvideoJS',$d );
+
+// return view('frontend.pages.forapplelivetvchannel', $d);
     }
 if($isDevice=='apple')  { //for apple serve m3u8
 // echo "apple device";
