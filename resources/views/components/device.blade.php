@@ -42,7 +42,7 @@
 						<div class="form-group {{ $errors->has('devicename') ? ' has-error' : '' }}">
 							<label for="devicename">Device Name</label>
 							<input type="text" class="form-control" name="devicename" id="devicename" maxlength="20">
-							<input type="hidden" class="form-control" name="devicetype" id="devicetype" value="">
+							<input type="hidden" class="form-control" name="device_type" id="device_type" value="">
 						</div>
 
 
@@ -71,7 +71,7 @@
 								<div role="heading" aria-level="3" class="device-name">{{ $device->device['platform']??$device->device['device']??''}} @isset($device->hotel) in
 								<strong>{{$device->hotel->hotel_room}}</strong>
 								@endisset</div>
-								@if(array_key_exists('browserclass',$device->device))
+								@if($device->device_type=='web')
 									<div class="personal-device-name">{!!$device->device['personaldevicename']??''!!}</div>
 								@else
 									<div class="personal-device-name">{!!$device->pdname->personal_devicename??''!!}</div>
