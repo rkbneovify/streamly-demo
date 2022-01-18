@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use App\SessionTable;
 use App\HotelRoomTable;
 use App\Models\Subscription;
+use App\Models\PersonalDevice;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
 use App\User;
@@ -352,9 +353,10 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
   
 
  $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+ $personal_device_data = personaldeviceTableStore($user_id,$deviceDetails);
 //  $Saved['result'];
 //  $Saved['LastInsertId'];
-  if($Saved['result']){
+  if($Saved['result'] && $personal_device_data['result']){
     $active_sessioncount = App\SessionTable::where([
       ['status', '=', '1'],
       ['users_id', '=', $user_id],
@@ -366,6 +368,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'message'=>'logged in successfully ',
       'response_code'=>200,
       'sessionid'=>HashUserID($Saved['LastInsertId']),
+      'devicetable_id'=>HashUserID($personal_device_data['lastDeviceId']),
+      'personaldevicename_popup'=>$personal_device_data['show_popup'],
       // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
@@ -460,6 +464,7 @@ $session_tab->users_id = $user_id;
 $session_tab->access_token = $token;
 $session_tab->user_ip = getUserIpAddr();
 $session_tab->mac_address = $deviceDetails;
+$session_tab->device_id = explode("#~",$deviceDetails)[1];
 $session_tab->connected_devices = $connected_devices;
 $session_tab->device = $deviceInfoClasses;
 $session_tab->logintime = Carbon::now();
@@ -906,8 +911,8 @@ function GetLimitForUser($user_id){
   if($user->subscribed('main')){
     $userIdExistInSubScribed = Subscription::select('quantity')->where(function ($query) use ($user_id) {
       $query->where('user_id', '=', $user_id);
-                                        $query->where('stripe_status', '=', 'active');
-                                    })->value('quantity');
+      $query->where('stripe_status', '=', 'active');
+    })->value('quantity');
   }
   if(!empty($userIdExistInSubScribed)){
      
@@ -989,6 +994,31 @@ function getActiveHotelRooms($userid){
      ->whereNull('session_id')
   ->orderBy("id", "DESC")
   ->get();
+}
+
+function personaldeviceTableStore($user_id,$deviceDetails){
+  $deviceid = explode("#~",$deviceDetails)[1];
+  $device_count = PersonalDevice::where([
+    ['user_id', '=', $user_id],
+    ['device_id', '=', $deviceid],
+  ])->get();
+  if(count($device_count) == 0){
+    $personalDevice = new PersonalDevice();
+    $personalDevice->user_id = $user_id;
+    $personalDevice->device_id = $deviceid;
+    $result = $personalDevice->save();
+    $LastInsertId = $personalDevice->id;
+    $show_popup = true;
+  }elseif(count($device_count) != 0 && $device_count[0]->personal_devicename == NULL){
+    $result = $device_count;
+    $LastInsertId = $device_count[0]->id;
+    $show_popup = true;
+  }else{
+    $result = $device_count;
+    $LastInsertId = $device_count[0]->id;
+    $show_popup = false;
+  }
+  return([ "result"=>$result, "lastDeviceId"=>$LastInsertId, "show_popup"=>$show_popup ]);
 }
 /**
  -user bought tiered plan of 10 devices || 10 htoel rooms were created
