@@ -48,7 +48,8 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
         } else if let data = data as? LoginResponse { // Successfully Login response
             if data.success == true {
                 timer.invalidate()
-                Utility.setStringObject(value: data.sessionid ?? "", key: Constant.UserDefault.mySessionId)
+                Utility.setStringObject(value: data.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)
+                Utility.setStringObject(value: data.deviceType ?? "", key: Constant.UserDefault.myDeviceType)
                 Utility.setStringObject(value: data.access_token ?? "", key: Constant.UserDefault.token)
                 Utility.setStringObject(value: data.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                 Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
@@ -61,12 +62,20 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 } else if let room = data.rooms, data.userrole != "user" {
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                    openSearchVC(room: room)
+                    openSearchVC(room: room,showDeviceNamePopup: data.personaldevicenamePopup ?? false)
                 } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-                    openUpdateDeviceName(session: data.sessionid ?? "")
+                    if !(data.personaldevicenamePopup ?? false) {
+                        Switcher.updateRootVC()
+                    } else {
+                        openUpdateDeviceName(session: data.personaldeviceid ?? "")
+                    }
                    // Switcher.updateRootVC()
                 } else {
-                    openUpdateDeviceName(session: data.sessionid ?? "")
+                    if !(data.personaldevicenamePopup ?? false) {
+                        Switcher.updateRootVC()
+                    } else {
+                        openUpdateDeviceName(session: data.personaldeviceid ?? "")
+                    }
                    // Switcher.updateRootVC()
                 }
             }
@@ -103,15 +112,16 @@ extension LoginWithQRViewController {
 
 // MARK: - Other Controllers.
 extension LoginWithQRViewController {
-    fileprivate func openSearchVC(room: [Room]) {
+    fileprivate func openSearchVC(room: [Room], showDeviceNamePopup: Bool) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        vc.viewModel.deviceNamePopup = showDeviceNamePopup
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     fileprivate func openUpdateDeviceName(session: String) {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        vc.viewModel.sessionID = session
+        vc.viewModel.personaldeviceid = session
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

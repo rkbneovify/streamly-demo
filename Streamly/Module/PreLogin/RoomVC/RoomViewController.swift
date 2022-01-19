@@ -62,7 +62,7 @@ class RoomViewController: UIViewController {
     
     fileprivate func openUpdateDeviceName(session: String) {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        vc.viewModel.sessionID = session
+        vc.viewModel.personaldeviceid = session
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -126,7 +126,12 @@ extension RoomViewController: RoomViewModelDelegate {
         self.removeSpinner()
         showToast(message: "Successfully added to room/slot", completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mySessionId))
+                if !self.viewModel.deviceNamePopup {
+                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isDeviceNameAdded)
+                    Switcher.updateRootVC()
+                } else {
+                    self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
+                }
             }
         })
         

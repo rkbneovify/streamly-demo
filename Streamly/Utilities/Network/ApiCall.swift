@@ -117,7 +117,7 @@ open class ApiCall {
     public static func updateDeviceName(_ sessionId: String,_ name: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         //debugPrint(token)
-        let param:[String:String] = ["devicename": name]
+        let param:[String:String] = ["devicename": name, "device_type": Utility.retriveStringObject(key: Constant.UserDefault.myDeviceType)]
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.personalDeviceName.rawValue + "/\(sessionId)", method: .put, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)

@@ -18,13 +18,13 @@ class LoginPassocodeViewModel: NSObject {
     var passode = ""
     var responseData: LoginResponse?
     var removeIdKey = ""
-    var sessionID = ""
+    var personaldeviceid = ""
     weak var delegate: APIResponseDelegate?
     
     
     func updateDeviceName(_ name: String) {
-        guard !sessionID.isEmpty else { return }
-        ApiCall.updateDeviceName(sessionID, name) { data, status in
+        guard !personaldeviceid.isEmpty else { return }
+        ApiCall.updateDeviceName(personaldeviceid, name) { data, status in
             self.delegate?.apiUpdateNameSuccess()
         } failure: { error, data, statusCode in
             print(error?.localizedDescription ?? "")
@@ -37,8 +37,9 @@ class LoginPassocodeViewModel: NSObject {
             guard let weak = self else { return }
             if let data = DataParser.parseLoginResponse(data!) {
                 if data.success == true {
-                    weak.sessionID = data.sessionid ?? ""
-                    Utility.setStringObject(value: data.sessionid ?? "", key: Constant.UserDefault.mySessionId)
+                    weak.personaldeviceid = data.personaldeviceid ?? ""
+                    Utility.setStringObject(value: data.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)
+                    Utility.setStringObject(value: data.deviceType ?? "", key: Constant.UserDefault.myDeviceType)
                     Utility.setStringObject(value: data.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: data.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)

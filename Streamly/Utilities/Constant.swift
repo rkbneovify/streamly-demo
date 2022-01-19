@@ -66,7 +66,7 @@ class Constant: NSObject
     {
         guard let app = appDelegate else {return}
         let homeVC = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        homeVC.viewModel.sessionID = Utility.retriveStringObject(key: Constant.UserDefault.mySessionId)
+        homeVC.viewModel.personaldeviceid = Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid)
         let rootViewController = appDelegate?.window?.rootViewController as? UINavigationController
         rootViewController?.setViewControllers([homeVC], animated: false)
         rootViewController?.isNavigationBarHidden = true
@@ -128,8 +128,9 @@ class Constant: NSObject
         static let isRoomExist = "isRoomExist"
         static let isRoomSelected = "isRoomSelected"
         static let getQrCodeKey = "getQrCodeKey"
-        static let mySessionId = "MySessionId"
+        static let mypersonaldeviceid = "Mypersonaldeviceid"
         static let isDeviceNameAdded = "isDeviceNameAdded"
+        static let myDeviceType = "myDeviceType"
     }
 
     //MARK:-: Constant Url & Keys

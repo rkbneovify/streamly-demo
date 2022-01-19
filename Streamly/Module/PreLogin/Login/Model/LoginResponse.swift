@@ -9,6 +9,9 @@
 import Foundation
 struct LoginResponse : Codable {
     let sessionid           :String?
+    let deviceType         :String?
+    let personaldeviceid    :String?
+    let personaldevicenamePopup: Bool?
     let access_token        :String?
     let connected_device    :String?
     let device_info         :String?
@@ -25,6 +28,9 @@ struct LoginResponse : Codable {
     var data: String?
     
     enum CodingKeys : String, CodingKey {
+        case deviceType = "device_type"
+        case personaldevicenamePopup = "personaldevicename_popup"
+        case personaldeviceid
         case sessionid
         case access_token = "access_token"
         case connected_device = "connected_device"
@@ -44,7 +50,10 @@ struct LoginResponse : Codable {
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        deviceType = try values.decodeIfPresent(String.self, forKey: .deviceType)
         sessionid = try values.decodeIfPresent(String.self, forKey: .sessionid)
+        personaldeviceid = try values.decodeIfPresent(String.self, forKey: .personaldeviceid)
+        personaldevicenamePopup = try values.decodeIfPresent(Bool.self, forKey: .personaldevicenamePopup)
         success = try values.decodeIfPresent(Bool.self, forKey: .success)
         message = try values.decodeIfPresent(String.self, forKey: .message)
         status = try values.decodeIfPresent(Int.self, forKey: .status)
@@ -59,6 +68,7 @@ struct LoginResponse : Codable {
         userrole = try values.decodeIfPresent(String.self, forKey: .userrole)
         expires_in = try values.decodeIfPresent(Int.self, forKey: .expires_in)
         data = try values.decodeIfPresent(String.self, forKey: .data)
+        
     }
     
 }

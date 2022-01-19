@@ -75,16 +75,17 @@ extension LoginPasscodeVC {
     }
     
     // MARK: - Open Other Controller
-    fileprivate func openSearchVC(room: [Room]) {
+    fileprivate func openSearchVC(room: [Room], showNamePopup: Bool) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        vc.viewModel.deviceNamePopup = showNamePopup
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     // MARK: - Open Update name Controller
     fileprivate func openEnterTVNameVC(sessionId: String) {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        vc.viewModel.sessionID = sessionId
+        vc.viewModel.personaldeviceid = sessionId
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -108,11 +109,14 @@ extension LoginPasscodeVC: APIResponseDelegate {
         if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-            openSearchVC(room: room)
+            openSearchVC(room: room,showNamePopup: viewModel.responseData?.personaldevicenamePopup ?? false)
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
             // Open controller
-            openEnterTVNameVC(sessionId: viewModel.sessionID)
-            //Switcher.updateRootVC()
+            if !(viewModel.responseData?.personaldevicenamePopup ?? false) {
+                Switcher.updateRootVC()
+            } else {
+                openEnterTVNameVC(sessionId: viewModel.personaldeviceid)
+            }
         }
     }
     

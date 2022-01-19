@@ -18,6 +18,7 @@ class RoomViewModel: NSObject {
     
     var listOfRoom = [Room]()
     var filtterdRoomList = [Room]()
+    var deviceNamePopup = false
     var filterString = "" {
         didSet {
             // Return if the filter string hasn't changed.

@@ -267,7 +267,8 @@ extension LoginVC
                     Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response.success?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response.success?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
-                    Utility.setStringObject(value: response.success?.sessionid ?? "", key: Constant.UserDefault.mySessionId)
+                    Utility.setStringObject(value: response.success?.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)
+                    Utility.setStringObject(value: response.success?.deviceType ?? "", key: Constant.UserDefault.myDeviceType)
                     selfStrong.removeSpinner()
                     if !(true) {
                         //                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
@@ -278,9 +279,14 @@ extension LoginVC
                         if let room = response.success?.rooms, response.success?.userrole != "user" {
                             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                            selfStrong.openSearchVC(room: room)
+                            selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
                         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
-                            selfStrong.updateDeviceName(sessionId: response.success?.sessionid ?? "")
+                            if !(response.success?.personaldevicenamePopup ?? false) {
+                                Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isDeviceNameAdded)
+                                Switcher.updateRootVC()
+                            } else {
+                                selfStrong.updateDeviceName(sessionId: response.success?.sessionid ?? "")
+                            }
                         }
                     }
 
@@ -349,15 +355,16 @@ extension LoginVC {
 
 // MARK: - Other Controllers.
 extension LoginVC {
-    fileprivate func openSearchVC(room: [Room]) {
+    fileprivate func openSearchVC(room: [Room], showDeviceName: Bool) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        vc.viewModel.deviceNamePopup = showDeviceName
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
     fileprivate func updateDeviceName(sessionId: String) {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        vc.viewModel.sessionID = sessionId
+        vc.viewModel.personaldeviceid = sessionId
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

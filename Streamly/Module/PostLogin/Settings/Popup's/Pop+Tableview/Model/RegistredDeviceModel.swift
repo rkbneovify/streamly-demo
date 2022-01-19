@@ -39,6 +39,8 @@ struct RegistredDevice : Codable {
     let device_name : String?
     let device_img: String?
     let personaldevicename: String?
+    let personaldeviceid: String?
+    let deviceType: String?
     
     enum CodingKeys: String, CodingKey {
         case session_id = "session_id"
@@ -46,7 +48,9 @@ struct RegistredDevice : Codable {
         case device_id = "device_id"
         case device_name = "device_name"
         case device_img = "device_img"
+        case deviceType = "device_type"
         case personaldevicename
+        case personaldeviceid
     }
 
     init(from decoder: Decoder) throws {
@@ -57,6 +61,8 @@ struct RegistredDevice : Codable {
         device_name = try values.decodeIfPresent(String.self, forKey: .device_name)
         device_img = try values.decodeIfPresent(String.self, forKey: .device_img)
         personaldevicename = try values.decodeIfPresent(String.self, forKey: .personaldevicename)
+        personaldeviceid = try values.decodeIfPresent(String.self, forKey: .personaldeviceid)
+        deviceType = try values.decodeIfPresent(String.self, forKey: .deviceType)
     }
 
 }
