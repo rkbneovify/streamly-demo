@@ -7,13 +7,15 @@ jQuery('.remove-device').on('click', function(){
 				$('#deleteFormDevice').attr('action', '/user/sessiondestroy/'+ id );
 				jQuery('#removeDevice').modal('show');
 			});
-			jQuery('.add-device-name').on('click', function(){
-				const id = $(this).data('id');
-				const accesstoken = $(this).data('accesstoken');
-				$('#accesstoken').val(accesstoken);
-				$('#DeviceNameUpdate').attr('action', '/user/personaldevicename/'+ id );
-				jQuery('#changeDeviceName').modal('show');
-			});
+jQuery('.add-device-name').on('click', function(){
+  const id = $(this).data('id');
+  const type = $(this).data('type');
+  const accesstoken = $(this).data('accesstoken');
+  $('#accesstoken').val(accesstoken);
+  $('#device_type').val(type);
+  $('#DeviceNameUpdate').attr('action', '/user/personaldevicename/'+ id );
+  jQuery('#changeDeviceName').modal('show');
+});
 @if ($errors->has('devicename'))
 console.log("it has devicename error");
 const id = {{  session()->get( 'deviceidseesion' )}};
