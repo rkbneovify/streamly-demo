@@ -275,7 +275,7 @@ public function unhashid($id){
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()//->makeHidden('device')
+    $s=$prevConnectDevicecount->get()->makeHidden('pdname')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['id']);
@@ -288,10 +288,11 @@ public function unhashid($id){
         }
 
         $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+        $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
         unset($address['hotel']);
         unset($address['device']);
         unset($address['id']);
-        unset($address->pdname);
+        unset($address['pdname']);
        
           return $address;
                     
@@ -310,7 +311,7 @@ public function unhashid($id){
                     ->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-        $s=$prevConnectDevicecount->get()//->makeHidden('device')
+        $s=$prevConnectDevicecount->get()->makeHidden('pdname')
         ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['id']);
@@ -326,7 +327,7 @@ public function unhashid($id){
     
                 }
     $numofdevice=$prevConnectDevicecount->count();
-   
+    
     //  dd($s);
          $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
          return response()->json($response, 200);
