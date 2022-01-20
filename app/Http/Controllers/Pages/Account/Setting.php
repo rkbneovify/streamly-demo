@@ -144,8 +144,9 @@ class Setting extends Controller
          
             $stripe_plan=$subscription->stripe_plan;
          
-            $plan = \Stripe\Plan::retrieve($stripe_plan);
-           // dd($plan);
+            // $plan = \Stripe\Plan::retrieve($stripe_plan);
+            $plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
+        //    dd($plan);
            $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
         //    $invoices = Auth::user()->invoicesIncludingPending();
         //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge

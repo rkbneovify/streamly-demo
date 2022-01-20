@@ -26,7 +26,8 @@ class Payment extends Controller
 
             return redirect()->route('home');
         }
-        $plandetails = \Stripe\Plan::retrieve($stripeplanID,['expand' => ['data.tiers']]);
+        // $plandetails = \Stripe\Plan::retrieve($stripeplanID,['expand' => ['data.tiers']]);
+        $plandetails = \Stripe\Plan::retrieve(['id'=>$stripeplanID, 'expand'=>["tiers"]]);
 
       $interval = $plandetails->interval;
       $interval_count = $plandetails->interval_count;
