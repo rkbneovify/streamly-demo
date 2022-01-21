@@ -147,7 +147,6 @@ com/streamly/TVApp/streamly/playervideo/ip/IpRepo.java
 com/streamly/TVApp/streamly/settings/registerdevice/RegisterDeviceDialog.java
  com.streamly.TVApp.streamly.settings.registerdevice.RegisterDeviceDialog
  com.streamly.TVApp.streamly.settings.registerdevice.RegisterDeviceDialog$1
- com.streamly.TVApp.streamly.settings.registerdevice.RegisterDeviceDialog$2
 com/streamly/TVApp/streamly/new_log_in/Room.java
  com.streamly.TVApp.streamly.new_log_in.Room
 com/streamly/TVApp/streamly/epg/channelgenre/News.java

@@ -48,7 +48,7 @@ public class SplashActivity extends FragmentActivity {
                     startActivity(new Intent(SplashActivity.this, UserRoomActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
-                }else if(personDeviceName == null){
+                }else if(auth_token != null && personDeviceName == null){
                     startActivity(new Intent(SplashActivity.this, PersonalDeviceName.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();

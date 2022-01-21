@@ -114,6 +114,10 @@ public interface ApiInterface {
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
+    //    @Headers("User-Agent: iphone")
+    @GET("/api/auth/channeldayschdeulepaginate")//api/auth/channeldayschdeule
+    Observable<com.streamly.TVApp.streamly.channelsschedulepaginate.ChannelSchedulePaginateModel> getScheduleListPaginate(@Query(NetworkKeys.PAGE)int page_number, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
     /*@Headers("Accept: application/json")ai call
     @GET("channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.tv.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);*/

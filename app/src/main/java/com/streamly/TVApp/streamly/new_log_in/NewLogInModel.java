@@ -33,9 +33,17 @@ public class NewLogInModel {
     @Expose
     private String sessionid;
 
+    @SerializedName("personaldeviceid")
+    @Expose
+    private String personalDeviceId;
+
+    @SerializedName("device_type")
+    @Expose
+    private String deviceType;
+
     @SerializedName("personaldevicename_popup")
     @Expose
-    private String personaldevicename_popup;
+    private boolean personaldevicename_popup;
 
     @SerializedName("token_type")
     @Expose
@@ -170,5 +178,29 @@ public class NewLogInModel {
 
     public void setSessionid(String sessionid) {
         this.sessionid = sessionid;
+    }
+
+    public String getPersonalDeviceId() {
+        return personalDeviceId;
+    }
+
+    public void setPersonalDeviceId(String personalDeviceId) {
+        this.personalDeviceId = personalDeviceId;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public boolean getPersonaldevicename_popup() {
+        return personaldevicename_popup;
+    }
+
+    public void setPersonaldevicename_popup(boolean personaldevicename_popup) {
+        this.personaldevicename_popup = personaldevicename_popup;
     }
 }

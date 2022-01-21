@@ -1,7 +1,6 @@
 package com.streamly.TVApp.streamly.epg.channel
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
@@ -12,15 +11,12 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.google.gson.Gson
 import com.streamly.TVApp.streamly.*
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.epg.Datum
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
-import com.streamly.TVApp.streamly.log_in.LogInActivity
-import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
@@ -42,12 +38,13 @@ import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
+class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
+    ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
 //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 
 
-    val eContext=context
-    val list =dataListm
+    val eContext = context
+    val list = dataListm
     val channels = ArrayList<SimpleChannel>()
     lateinit var MIN_CHANNEL_START_TIME: ZonedDateTime
     lateinit var MAX_CHANNEL_START_TIME: ZonedDateTime
@@ -69,23 +66,21 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
         private val TAG = ChannelFragment::class.java.name
     }
 
-
-
     data class SimpleChannel(
-            override val id: String,
-            override val name: Spanned?,
-            override val imageUrl: String?,
-            val videoUrl: String?
+        override val id: String,
+        override val name: Spanned?,
+        override val imageUrl: String?,
+        val videoUrl: String?
     ) : ProgramGuideChannel
 
     // You can put your own data in the program class
     data class SimpleProgram(
-            val id: String,
-            val description: String,
-            val metadata: String,
-            val endTimeMetadata: String,
-            val playUrl: String,
-            val imageUrl: String
+        val id: String,
+        val description: String,
+        val metadata: String,
+        val endTimeMetadata: String,
+        val playUrl: String,
+        val imageUrl: String
     )
 
 
@@ -98,9 +93,10 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
             return
         }
         if (programGuideSchedule.isCurrentProgram) {
-            Log.e(TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
-                    + "\nid: " + programGuideSchedule.id
-                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+            Log.e(
+                TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
+                        + "\nid: " + programGuideSchedule.id
+                        + "\ndisplaytitle : " + programGuideSchedule.displayTitle
             )
 
             /*for (i in 0 until channel_showName_list.size) {
@@ -129,11 +125,15 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
             intent1.putExtra("from", innerSchedule.playUrl)
             startActivity(intent1)
 
-            Log.e(TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
-                    + "<<>>" + innerSchedule.id)
+            Log.e(
+                TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
+                        + "<<>>" + innerSchedule.id
+            )
         } else {
-            Log.e(TAG, "Open detail page " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
-                    + "<<>>" + innerSchedule.id)
+            Log.e(
+                TAG, "Open detail page " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
+                        + "<<>>" + innerSchedule.id
+            )
 
 
         }
@@ -149,18 +149,19 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
         titleView?.text = programGuideSchedule?.displayTitle
         val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
         metadataView?.text = programGuideSchedule?.program?.metadata
-        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
-        endTimeMetaDataView?.text= programGuideSchedule?.program?.endTimeMetadata
+        val endTimeMetaDataView =
+            view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
+        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
         val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
         if (programGuideSchedule != null) {
             Glide.with(imageView)
-                    .load( programGuideSchedule.program?.imageUrl.toString())
-                    .error(R.drawable.programguide_icon_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(imageView)
+                .load(programGuideSchedule.program?.imageUrl.toString())
+                .error(R.drawable.programguide_icon_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView)
         } else {
             Glide.with(imageView).clear(imageView)
         }
@@ -173,24 +174,32 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
 
     @SuppressLint("CheckResult")
     override fun requestingProgramGuideFor(localDate: LocalDate) {
-        this.localDate=localDate
+        this.localDate = localDate
         // Faking an asynchronous loading here
 
         this.localDate = localDate
         // Faking an asynchronous loading here
         setState(State.Loading)
 
-        MIN_CHANNEL_START_TIME = localDate.atStartOfDay().minusDays(1).withHour(2).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MAX_CHANNEL_START_TIME = localDate.atStartOfDay().minusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MIN_CHANNEL_END_TIME = localDate.atStartOfDay().plusDays(1).withHour(21).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MAX_CHANNEL_END_TIME = localDate.atStartOfDay().plusDays(2).withHour(4).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
+        MIN_CHANNEL_START_TIME =
+            localDate.atStartOfDay().minusDays(1).withHour(2).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MAX_CHANNEL_START_TIME =
+            localDate.atStartOfDay().minusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MIN_CHANNEL_END_TIME =
+            localDate.atStartOfDay().plusDays(1).withHour(21).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MAX_CHANNEL_END_TIME =
+            localDate.atStartOfDay().plusDays(2).withHour(4).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
 
         /* MIN_CHANNEL_START_TIME = localDate.atStartOfDay().withHour(2).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
          MAX_CHANNEL_START_TIME = localDate.atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
          MIN_CHANNEL_END_TIME = localDate.atStartOfDay().withHour(23).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
          MAX_CHANNEL_END_TIME = localDate.plusDays(1).atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)*/
 
-       val authToken = TokenStorage.readSharedToken(eContext, ConstantUtility.AUTH_TOKEN, null)
+        val authToken = TokenStorage.readSharedToken(eContext, ConstantUtility.AUTH_TOKEN, null)
         getFirstApi(authToken)
         getSecondApi(authToken)
 
@@ -222,13 +231,19 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
 //                        (activity as Activity).finish()
 //                    }
 //                })
-        Log.e(TAG,"kids fragment data list 0 "+list)
+        Log.e(TAG, "kids fragment data list 0 " + list)
         list.forEach {
-            if(it.callSign ==null)
-            {
-                it.callSign="";
+            if (it.callSign == null) {
+                it.callSign = "";
             }
-             channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign.toString()),it.logo,it.url))
+            channels.add(
+                SimpleChannel(
+                    it.id.toString(),
+                    SpannedString(it.callSign.toString()),
+                    it.logo,
+                    it.url
+                )
+            )
 
         }
 
@@ -237,189 +252,211 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>): ProgramG
     //#neovifyissueresolved28sep
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
-        var dayss: Long ?= 1
+        var dayss: Long? = 1
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                   .subscribe(
-                           {
-                               //success
-    Log.e(TAG,"GET SECHEDULELIST "+it.message);
-    val showNames = ArrayList<String>()
+        apiInterface.getScheduleListPaginate(1, NetworkKeys.KEY_APP_JSON, "Bearer $authToken")
+            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    //success
+                    Log.e(TAG, "GET SECHEDULELIST " + it.message);
+                    val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-    Log.e("### episodeData", it.data.size.toString())
+                    Log.e("### episodeData", it.data.data.size.toString())
 
-    //#neovifyissueresolved28sep
-    val p: Pattern = Pattern.compile("\\d+")
-    val m: Matcher = p.matcher(it.message)
-    while (m.find()) {
-        Log.e(TAG, "::>>>digit: " + m.group())
-        dayss = (m.group()).toLong()
-    }
+                    //#neovifyissueresolved28sep
+                    val p: Pattern = Pattern.compile("\\d+")
+                    val m: Matcher = p.matcher(it.message)
+                    while (m.find()) {
+                        Log.e(TAG, "::>>>digit: " + m.group())
+                        dayss = (m.group()).toLong()
+                    }
+                    //#neovifyissueresolved28sep
+                    for (i in 0 until it.data.data.size) {
+                        for (j in 0 until channels.size) {
+                            if (it.data.data[i].callSign.toString() == channels[j].name.toString()) {
 
-    //#neovifyissueresolved28sep
-    for (i in 0 until it.data.size) {
-
-        for (j in 0 until channels.size)
-        {
-            if (it.data[i].callSign.toString() == channels[j].name.toString())
-            {
-
-                verticalBean = VerticalHomeBean()
+                                verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                verticalBean.headerTitle = it.data[i].callSign
-                Log.e(TAG,"call sign 1 "+it.data[i].callSign)
+                                verticalBean.headerTitle = it.data.data[i].callSign
+                                Log.e(TAG, "call sign 1 " + it.data.data[i].callSign)
 
-                homelist = ArrayList()
+                                homelist = ArrayList()
 
-                it.data[i].programs.forEach {
-                    homeBean = HomeBean()
+                                it.data.data[i].programs.forEach {
+                                    homeBean = HomeBean()
 
-                    showNames.add(it.title)
-                    showName_list.add(it.title)
+                                    showNames.add(it.title)
+                                    showName_list.add(it.title)
 
-                    val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
-                    val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
+                                    val st =
+                                        Instant.ofEpochMilli((it.start.toString() + "000").toLong())
+                                    val et =
+                                        Instant.ofEpochMilli((it.end.toString() + "000").toLong())
 
-                    homeBean.title = it.title
-                    homeBean.description = it.description
-                    homeBean.start_time = st
-                    homeBean.end_time = et
-                    homelist.add(homeBean)
-                }
+                                    homeBean.title = it.title
+                                    homeBean.description = it.description
+                                    homeBean.start_time = st
+                                    homeBean.end_time = et
+                                    homelist.add(homeBean)
+                                }
 
-                verticalBean.allItemsInSection = homelist
-                channel_showName_list.add(it.data[i].getmId())
-                verticallist.add(verticalBean)
-            }
+                                verticalBean.allItemsInSection = homelist
+                                channel_showName_list.add(it.data.data[i].id.toString())
+                                verticallist.add(verticalBean)
+                            }
 
-        }
-
-
-    }
+                        }
 
 
-    val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+                    }
 
-    var k = 0
-    Log.e("### verticalList ", "$k <ss>" + channels.size)
 
-    verticallist.forEach first@{ channel ->
+                    val channelMap =
+                        mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+
+                    var k = 0
+                    Log.e("### verticalList ", "$k <ss>" + channels.size)
+
+                    verticallist.forEach first@{ channel ->
 //                           Log.e("###${TAG}", "outSideIT " + channel)
 
-        if (k < channels.size) {
+                        if (k < channels.size) {
 
-            val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
-            var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
+                            val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
+                            var nextTime =
+                                randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 
 //                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-            while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
-                Log.e("### allItemsInSection1 ", "" + verticallist[k].allItemsInSection.size)
-                for (p in 0 until verticallist[k].allItemsInSection!!.size) {
+                            while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
+                                Log.e(
+                                    "### allItemsInSection1 ",
+                                    "" + verticallist[k].allItemsInSection.size
+                                )
+                                for (p in 0 until verticallist[k].allItemsInSection!!.size) {
 
 
-                    val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
+                                    val endTime = ZonedDateTime.ofInstant(
+                                        Instant.ofEpochSecond(
+                                            nextTime.toEpochSecond() + Random.nextLong(
+                                                MIN_SHOW_LENGTH_SECONDS,
+                                                MAX_SHOW_LENGTH_SECONDS
+                                            )
+                                        ), ZoneOffset.UTC
+                                    )
 
 
-                    val schedule = createSchedule(
-                        channels.get(k),
-                        verticallist[k].allItemsInSection!![p].title!!,
+                                    val schedule = createSchedule(
+                                        channels.get(k),
+                                        verticallist[k].allItemsInSection!![p].title!!,
 //                                           nextTime,
 //                                           endTime,
-                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                        verticallist[k].allItemsInSection!![p].description!!,
-                        channels.get(k).videoUrl.toString(),
-                        channels.get(k).imageUrl.toString())
-                    Log.e(TAG, "getSecondApi: "+channels.get(k).id )
-                    Log.e(TAG, "getSecondApi 2 : "+channels.get(k).name )
+                                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
+                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
+                                        verticallist[k].allItemsInSection!![p].description!!,
+                                        channels.get(k).videoUrl.toString(),
+                                        channels.get(k).imageUrl.toString()
+                                    )
+                                    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
+                                    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
 
-                    scheduleList.add(schedule)
-                    nextTime = endTime
+                                    scheduleList.add(schedule)
+                                    nextTime = endTime
 
 //                                }
 
-                    val endTimee =
-                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
-                        else MAX_CHANNEL_END_TIME
+                                    val endTimee =
+                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(
+                                            nextTime,
+                                            MAX_CHANNEL_END_TIME
+                                        )
+                                        else MAX_CHANNEL_END_TIME
 
-                    val finalSchedule = createSchedule(
-                        channels.get(k),
-                        verticallist[k].allItemsInSection!![p].title!!,
+                                    val finalSchedule = createSchedule(
+                                        channels.get(k),
+                                        verticallist[k].allItemsInSection!![p].title!!,
 //                                           nextTime,
 //                                           endTime,
-                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
-                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
-                        verticallist[k].allItemsInSection!![p].description!!,
-                        channels.get(k).videoUrl.toString(),
-                        channels.get(k).imageUrl.toString())
-                    channelMap.put(channels.get(k).id, scheduleList)
+                                        verticallist[k].allItemsInSection!![p]!!.start_time!!,
+                                        verticallist[k].allItemsInSection!![p]!!.end_time!!,
+                                        verticallist[k].allItemsInSection!![p].description!!,
+                                        channels.get(k).videoUrl.toString(),
+                                        channels.get(k).imageUrl.toString()
+                                    )
+                                    channelMap.put(channels.get(k).id, scheduleList)
 
-                }
+                                }
 
-            }
+                            }
 
-        } else {
-            Log.e("### $TAG else ", "$k <ss>" + channels.size)
-            return@first
-        }
+                        } else {
+                            Log.e("### $TAG else ", "$k <ss>" + channels.size)
+                            return@first
+                        }
 
-        k += 1
-    }
-    val pair = Pair(channels, channelMap)
-    setData(pair.first, pair.second, localDate, dayss!!)
-    setState(State.Content)
+                        k += 1
+                    }
+                    val pair = Pair(channels, channelMap)
+                    setData(pair.first, pair.second, localDate, dayss!!)
+                    setState(State.Content)
 
-     if(it.responseCode.toInt() == 401){
-         val sessionExpiredDialog = SessionExpiredDialog(eContext)
-         sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
-         sessionExpiredDialog.setCancelable(false)
-         sessionExpiredDialog.show()
-}
+                    if (it.responseCode.toInt() == 401) {
+                        val sessionExpiredDialog = SessionExpiredDialog(eContext)
+                        sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                        sessionExpiredDialog.setCancelable(false)
+                        sessionExpiredDialog.show()
+                    }
 
-                           },
-                           {
-                               //error
-                               Log.e("###$TAG", "error " + it.message)
-                               Log.e("###$TAG", "error " + it.localizedMessage)
-                               if(it.message.toString().contains("401")){
-                                   val sessionExpiredDialog =
-                                       SessionExpiredDialog(eContext)
-                                   sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
-                                   sessionExpiredDialog.setCancelable(false)
-                                   sessionExpiredDialog.show()
-                               }
-                               else if(it.message.toString().contains("402")){
-                                   CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
+                },
+                {
+                    //error
+                    Log.e("###$TAG", "error " + it.message)
+                    Log.e("###$TAG", "error " + it.localizedMessage)
+                    if (it.message.toString().contains("401")) {
+                        val sessionExpiredDialog =
+                            SessionExpiredDialog(eContext)
+                        sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                        sessionExpiredDialog.setCancelable(false)
+                        sessionExpiredDialog.show()
+                    } else if (it.message.toString().contains("402")) {
+                        CommonUtility.showToast(
+                            eContext,
+                            "Payment Required. Kindly buy subscription"
+                        )
 
-                               }
+                    }
 
-                           })
+                })
     }
 
 
     //#neovifyissueresolved28sep
     private fun createSchedule(
-            channel: SimpleChannel,
-            scheduleName: String,
-            startTime: Instant,
-            endTime: Instant,
+        channel: SimpleChannel,
+        scheduleName: String,
+        startTime: Instant,
+        endTime: Instant,
 //            startTime: ZonedDateTime,
 //            endTime: ZonedDateTime,
-            description: String,
-            playUrl: String,
-            imageUrl:String
+        description: String,
+        playUrl: String,
+        imageUrl: String
     ): ProgramGuideSchedule<SimpleProgram> {
         val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
         val metadata = getDate(startTime.toEpochMilli(), "'Starts at' HH:mm")
         val endTimeMetadata = getDate(endTime.toEpochMilli(), "'Ends  at' HH:mm")
-        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime, endTime, true, scheduleName,
+        return ProgramGuideSchedule.createScheduleWithProgram(
+            id, startTime, endTime, true, scheduleName,
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,
-                SimpleProgram(id.toString(), description,
-                        metadata+"",
-                    endTimeMetadata+"",
-                        playUrl,imageUrl))
+            SimpleProgram(
+                id.toString(), description,
+                metadata + "",
+                endTimeMetadata + "",
+                playUrl, imageUrl
+            )
+        )
 
     }
 

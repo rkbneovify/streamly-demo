@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
@@ -23,8 +22,6 @@ import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
 import com.streamly.TVApp.streamly.epg.channel.ChannelFragment;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
-import com.streamly.TVApp.streamly.log_in.LogInActivity;
-import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.search_channels.SearchActivity;
@@ -43,12 +40,12 @@ import retrofit2.Response;
 
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
-    private static final String TAG=MainActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     String authToken;
     private LinearLayout imageSearch;
-//    private TextView textAll,textOthers,textFamily,textComedy,
+    //    private TextView textAll,textOthers,textFamily,textComedy,
 //            textSports,textNews,textMovies,textKids,settingText,goBackText;
-private TextView settingText,goBackText;
+    private TextView settingText, goBackText;
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private RecyclerView recyclerView;
@@ -56,7 +53,7 @@ private TextView settingText,goBackText;
     List<String> generList = new ArrayList<String>();
     List<Datum> recentList;
 
-    Map<String , List<Datum>> dataList = new HashMap<String , List<Datum>>();
+    Map<String, List<Datum>> dataList = new HashMap<String, List<Datum>>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,8 +64,8 @@ private TextView settingText,goBackText;
         initViews();
         authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
-         Log.e(TAG,"authToken "+authToken);
-         Log.i(TAG,"authToken "+authToken);
+        Log.e(TAG, "authToken " + authToken);
+        Log.i(TAG, "authToken " + authToken);
 
         FirebaseCrashlytics.getInstance().log("Test Crash in the Main Activity");
         // Obtain the FirebaseAnalytics instance.
@@ -79,14 +76,8 @@ private TextView settingText,goBackText;
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "EPG Fragment");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EPG Channels");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-
-
         getRecentList();
         getChannelList();
-
-
-
-
     }
 
     private void getRecentList() {
@@ -96,40 +87,25 @@ private TextView settingText,goBackText;
             @Override
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
-
                     if (response.isSuccessful() && response.body() != null && response.code() != 401) {
-
                         recentList = response.body().getData();
-                        Log.e(TAG, "onResponse: recent list "+response.body().getData() );
-
-
-
-
-
+                        Log.e(TAG, "onResponse: recent list " + response.body().getData());
                     } else if (response.code() == 401) {
-                        if(response.errorBody()!=null){
+                        if (response.errorBody() != null) {
                             SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
                             sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             sessionExpiredDialog.setCancelable(false);
                             sessionExpiredDialog.show();
-
-
                         }
-
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(MainActivity.this);
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SESSION_EXPIRED);
-
-
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-
-                    }
-                    else if(response.code() == 402){
+                    } else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
                         imageSearch.setVisibility(View.GONE);
-                            CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
-
+                        CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -145,17 +121,17 @@ private TextView settingText,goBackText;
         });
     }
 
-    public void fragment(String type , List<Datum> dataListm){
+    public void fragment(String type, List<Datum> dataListm) {
 
 
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this , dataListm))
-                    .commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, dataListm))
+                .commit();
 
 
     }
 
     private void getChannelList() {
-        Log.e(TAG, "getChannelList: "+authToken );
+        Log.e(TAG, "getChannelList: " + authToken);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ChannellistModel> call = apiInterface.getChannelList("Bearer " + authToken);
         call.enqueue(new Callback<ChannellistModel>() {
@@ -163,10 +139,10 @@ private TextView settingText,goBackText;
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body() != null && response.code() != 401)  {
+                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
                         List<Datum> datumList = response.body().getData();
-                        Log.e(TAG, "onResponse: all "+response.body().getData() );
+                        Log.e(TAG, "onResponse: all " + response.body().getData());
 
                         for (int i = 0; i < datumList.size(); i++) {
 
@@ -175,53 +151,47 @@ private TextView settingText,goBackText;
 //                            String videoUrl = datumList.get(i).getUrl();
 
 
-                            if(!generList.contains(datumList.get(i).getGenrename().get(0)))
-                            {
+                            if (!generList.contains(datumList.get(i).getGenrename().get(0))) {
                                 generList.add(datumList.get(i).getGenrename().get(0));
                             }
-
 
 
                         }
 
 
-
-                        dataList.put("All" , datumList);
-                        dataList.put("Recent" , recentList);
-                        Log.e(TAG, "onResponse: all recentList "+recentList);
-                        for(String s : generList){
-                            Log.e("doneok" , s);
+                        dataList.put("All", datumList);
+                        dataList.put("Recent", recentList);
+                        Log.e(TAG, "onResponse: all recentList " + recentList);
+                        for (String s : generList) {
+                            Log.e("doneok", s);
 
                             List<Datum> tempList = new ArrayList<Datum>();
-                            for(int i=0 ; i<datumList.size() ; i++){
-                                for(int k=0; k<datumList.get(i).getGenrename().size(); k++)
-                                {
-                                    if(datumList.get(i).getGenrename().get(k).equals(s)){
-                                        Log.e("done" , "here");
+                            for (int i = 0; i < datumList.size(); i++) {
+                                for (int k = 0; k < datumList.get(i).getGenrename().size(); k++) {
+                                    if (datumList.get(i).getGenrename().get(k).equals(s)) {
+                                        Log.e("done", "here");
                                         tempList.add(datumList.get(i));
                                     }
                                 }
 
                             }
-                            dataList.put(s , tempList);
+                            dataList.put(s, tempList);
                         }
 
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
-                        Log.e("TAG","data list  "+datumList);
+                        Log.e("TAG", "data list  " + datumList);
                         GenereAdapter adapter = new GenereAdapter(MainActivity.this, dataList);
                         recyclerView.setAdapter(adapter);
 
 
-                        fragment("all" , datumList);
+                        fragment("all", datumList);
 
 
+                    } else if (response.code() == 401) {
 
-                    }
-                    else if (response.code() == 401) {
-
-                        if(response.errorBody()!=null){
+                        if (response.errorBody() != null) {
                             SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
                             sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             sessionExpiredDialog.setCancelable(false);
@@ -239,8 +209,7 @@ private TextView settingText,goBackText;
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
 
-                    }
-                    else if(response.code() == 402){
+                    } else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
                         imageSearch.setVisibility(View.GONE);
                         CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
@@ -265,9 +234,8 @@ private TextView settingText,goBackText;
     }
 
 
-
     private void initViews() {
-        imageSearch=findViewById(R.id.image_search);
+        imageSearch = findViewById(R.id.image_search);
         recyclerView = findViewById(R.id.main_recycler_view);
 //        textAll=findViewById(R.id.text_all);
 //        textOthers=findViewById(R.id.text_others);
@@ -277,8 +245,8 @@ private TextView settingText,goBackText;
 //        textNews=findViewById(R.id.text_news);
 //        textMovies=findViewById(R.id.text_movies);
 //        textKids=findViewById(R.id.text_kids);
-        settingText=findViewById(R.id.setting_text);
-        goBackText=findViewById(R.id.go_back_text);
+        settingText = findViewById(R.id.setting_text);
+        goBackText = findViewById(R.id.go_back_text);
         imageSearch.setFocusable(true);
         imageSearch.setFocusableInTouchMode(true);
 //        textAll.setFocusable(true);
@@ -320,7 +288,7 @@ private TextView settingText,goBackText;
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.image_search:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 break;
@@ -380,7 +348,7 @@ private TextView settingText,goBackText;
                 break;
 
             case R.id.go_back_text:
-               finish();
+                finish();
                 break;
         }
     }

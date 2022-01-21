@@ -13,6 +13,7 @@ public class NetworkKeys {
     public static final String KEY_ACCEPT="Accept";
     public static final String KEY_EMAIL="email";
     public static final String KEY="key";
+    public static final String PAGE="page";
     public static final String KEY_PASSCODE="passcode";
     public static final String KEY_CHANNELIDS="channelids";
     public static final String KEY_PASS ="password";

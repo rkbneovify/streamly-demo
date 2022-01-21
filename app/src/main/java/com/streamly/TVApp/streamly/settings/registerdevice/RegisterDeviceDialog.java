@@ -9,24 +9,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
-import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 import com.streamly.TVApp.streamly.utilities.NetworkKeys;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +38,7 @@ public class RegisterDeviceDialog extends Dialog {
     private Context context;
     private ProgressBar progressBar;
     private String auth_token;
-    List<RegisterDeviceType> list=new ArrayList<RegisterDeviceType>();
+    List<RegisterDeviceType> list=new ArrayList<>();
 
 
     public RegisterDeviceDialog(@NonNull Context context) {
@@ -60,12 +60,7 @@ public class RegisterDeviceDialog extends Dialog {
             CommonUtility.showToast(context,ConstantUtility.CHECK_INTERNET_CONNECTION);
         }
 
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel();
-            }
-        });
+        btnOK.setOnClickListener(v -> cancel());
 
     }
 
@@ -75,19 +70,19 @@ public class RegisterDeviceDialog extends Dialog {
         Call<ConnectedDeviceModel> call=apiInterface.getConnectedDevice(NetworkKeys.KEY_BEARER +auth_token);
         call.enqueue(new Callback<ConnectedDeviceModel>() {
             @Override
-            public void onResponse(Call<ConnectedDeviceModel> call, Response<ConnectedDeviceModel> response) {
+            public void onResponse(@NonNull Call<ConnectedDeviceModel> call, @NonNull Response<ConnectedDeviceModel> response) {
 
                 try {
                     if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
-                       List<Datum> datalist= response.body().getData();
+                       List<Datum> dataList= response.body().getData();
                         Log.i(TAG, "onResponse: connectedDevice "+response.body().getData().toString());
                         String userAgent = System.getProperty("http.agent");
                         Log.i(TAG, "onResponse: user agent "+userAgent);
 
 
-                       for (int i=0;i<datalist.size();i++){
-                           list.add(new RegisterDeviceType( datalist.get(i).getDeviceName(),datalist.get(i).getDeviceId(),datalist.get(i).getDeviceImg(), datalist.get(i).getPersonaldevicename()));
+                       for (int i=0;i<dataList.size();i++){
+                           list.add(new RegisterDeviceType( dataList.get(i).getDeviceName(),dataList.get(i).getDeviceId(),dataList.get(i).getDeviceImg(), dataList.get(i).getPersonaldevicename()));
                        }
                         RegisterDeviceAdapter deviceAdapter=new RegisterDeviceAdapter(context,list);
                         rvDeviceModel.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
@@ -123,7 +118,7 @@ public class RegisterDeviceDialog extends Dialog {
             }
 
             @Override
-            public void onFailure(Call<ConnectedDeviceModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<ConnectedDeviceModel> call, @NonNull Throwable t) {
                 Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
                 CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);
                 progressBar.setVisibility(View.INVISIBLE);

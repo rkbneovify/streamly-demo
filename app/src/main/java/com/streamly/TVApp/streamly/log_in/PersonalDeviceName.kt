@@ -2,25 +2,23 @@ package com.streamly.TVApp.streamly.log_in
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.provider.Settings
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.FragmentActivity
+import com.streamly.TVApp.streamly.MainActivity
 import com.streamly.TVApp.streamly.R
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
-import com.streamly.TVApp.streamly.new_log_in.NewLogInModel
+import com.streamly.TVApp.streamly.local_storage.TokenStorage.readUserRole
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
 import com.streamly.TVApp.streamly.utilities.NetworkKeys
-import okhttp3.Dispatcher
 import retrofit2.Call
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class PersonalDeviceName : FragmentActivity() {
     private lateinit var personalDeviceName: EditText
@@ -49,21 +47,28 @@ class PersonalDeviceName : FragmentActivity() {
             } else {
 
                 val deviceName = personalDeviceName.text.toString()
-                val session_id = TokenStorage.readSessionId(this@PersonalDeviceName , ConstantUtility.SESSION_ID,null);
+                val session_id = TokenStorage.readSessionId(
+                    this@PersonalDeviceName,
+                    ConstantUtility.SESSION_ID,
+                    null
+                );
                 val authToken = NetworkKeys.KEY_BEARER + TokenStorage.readSharedTokenPasscode(
                     this@PersonalDeviceName,
                     ConstantUtility.AUTH_TOKEN_PASSCODE,
                     null
                 )
+                var deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
 
-
+                val personalDeviceId = TokenStorage.readPersonalDeviceID(this, ConstantUtility.PERSONAL_DEVICE_ID, "")
+                val deviceType = TokenStorage.readDeviceType(this, ConstantUtility.DEVICE_TYPE, "")
                 val apiInterface = ApiClient.getClient().create(
                     ApiInterface::class.java
                 )
                 var data = HashMap<String, String>()
                 data.set("devicename", deviceName);
-                if(session_id !=null){
-                    val call = apiInterface.setPersonalDeviceName(authToken, session_id, data)
+                data.set("device_type", deviceID);
+                if (session_id != null) {
+                    val call = apiInterface.setPersonalDeviceName(authToken, personalDeviceId, data)
                     call.enqueue(object : retrofit2.Callback<PersonalDeviceNameDataModel> {
                         /**
                          * Invoked for a received HTTP response.
@@ -76,21 +81,44 @@ class PersonalDeviceName : FragmentActivity() {
                             response: Response<PersonalDeviceNameDataModel>
                         ) {
                             loadingProgressBar.hide()
-                            if(response.code() == 200){
+                            if (response.code() == 200) {
                                 TokenStorage.savePersonalDeviceName(
                                     this@PersonalDeviceName,
                                     ConstantUtility.PERSONAL_DEVICE_NAME,
-                                    deviceName)
-                                Toast.makeText(this@PersonalDeviceName, response.message(), Toast.LENGTH_SHORT).show()
-                                startActivity(
-                                    Intent(
-                                        this@PersonalDeviceName,
-                                        UserRoomActivity::class.java
-                                    )
+                                    deviceName
                                 )
+                                Toast.makeText(
+                                    this@PersonalDeviceName,
+                                    response.message(),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val userRole = readUserRole(
+                                    this@PersonalDeviceName,
+                                    ConstantUtility.USER_ROLE,
+                                    ""
+                                )
+                                if (userRole != "" && userRole == "user") {
+                                    startActivity(
+                                        Intent(
+                                            this@PersonalDeviceName,
+                                            MainActivity::class.java
+                                        )
+                                    )
+                                } else {
+                                    startActivity(
+                                        Intent(
+                                            this@PersonalDeviceName,
+                                            UserRoomActivity::class.java
+                                        )
+                                    )
+                                }
                                 finish()
-                            }else{
-                                Toast.makeText(this@PersonalDeviceName, response.message(), Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(
+                                    this@PersonalDeviceName,
+                                    response.message(),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
 
@@ -103,7 +131,8 @@ class PersonalDeviceName : FragmentActivity() {
                             t: Throwable
                         ) {
 
-                            Toast.makeText(this@PersonalDeviceName, t.message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PersonalDeviceName, t.message, Toast.LENGTH_SHORT)
+                                .show()
                             loadingProgressBar.hide()
                         }
                     })

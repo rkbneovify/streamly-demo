@@ -25,6 +25,10 @@ public class ConstantUtility {
     public static final String AUTH_TOKEN ="token";
     public static final String AUTH_TOKEN_PASSCODE ="token_passcode";
     public static final String SESSION_ID ="sessionid";
+    public static final String PERSONAL_DEVICE_ID ="personaldeviceid";
+    public static final String DEVICE_TYPE ="device_type";
+    public static final String PERSONAL_DEVICE_POPUP ="personaldevicename_popup";
+    public static final String USER_ROLE ="user_role";
     public static final String PERSONAL_DEVICE_NAME ="personal_device_name";
     public static final String USER_ID ="user_id";
     public static final String KEY ="key";

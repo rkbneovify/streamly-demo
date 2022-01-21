@@ -183,6 +183,10 @@ public class LogInActivity extends FragmentActivity {
                     if (response.isSuccessful() && response.body() != null && response.code() != 429) {
                         String access_token = response.body().getAccessToken();
                         String sessionid = response.body().getSessionid();
+                        String personalDeviceId = response.body().getPersonalDeviceId();
+                        String deviceType = response.body().getDeviceType();
+                        boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
+
                         if (response.body().getUserRole().equals("tieruser")) {
                             Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
@@ -194,10 +198,18 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
                             TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
                             TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
+                            if(personaDeviceNamePopup){
+                                startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
+                            }else{
+                                startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
+                            }
                             finish();
 
                             edUserName.setText("");
@@ -205,7 +217,16 @@ public class LogInActivity extends FragmentActivity {
                         } else if (response.body().getUserRole().equals("user")) {
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
-                            startActivity(new Intent(LogInActivity.this, MainActivity.class));
+                            TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            if(personaDeviceNamePopup){
+                                startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
+                            }else{
+                                startActivity(new Intent(LogInActivity.this, MainActivity.class));
+                            }
                             finish();
                         }
 
