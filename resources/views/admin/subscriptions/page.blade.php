@@ -1,93 +1,63 @@
-<?php
-$variable=[1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,111,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,11];
-?>
 <!DOCTYPE html>
-<html lang="en" >
+<html>
+
 <head>
-  <meta charset="UTF-8">
-  <title>CodePen - Infinite Scroll + Pagination</title>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-
+	<title>Infinite scroll</title>
+	<meta charset="UTF-8" />
+	
+	
 </head>
+
+<body>
+	<div id="app">
+		<div class="whole_wrapper">
+
+		</div>
+	</div>
+
+	<ul class="article-list__pagination article-list__pagination--inactive" id="article-list-pagination"></ul>
+	
+</body>
+
+</html>
 <style>
-
-body {
-  background-color: #f8f8f8;
-  color: #333;
-  counter-reset: page;
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: grayscale;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  text-transform: uppercase;
-}
-
-a {
-  color: #28f;
-  text-decoration: none;
-}
-a:hover, a:focus {
-  color: #0062d5;
-}
-a:active {
-  color: #003f88;
-}
-
-main {
-  margin: 0 auto;
-  max-width: 30em;
-  padding: 1em;
-}
-
-.article-list__page {
-  border-top: 1px solid #ddd;
-  clear: both;
-  counter-increment: page;
-  padding-bottom: 3em;
-  position: relative;
-}
-.article-list__page:before {
-  background-color: #ddd;
-  display: inline-block;
-  content: counter(page);
-  color: #888;
-  padding: 0.25em 0.5em;
-  position: absolute;
-  left: calc(50% - .75em);
-  top: -0.75em;
-  vertical-align: middle;
-  z-index: 1;
-}
-
-.article-list__item {
-  background-color: #eee;
-  float: left;
-  height: 15em;
-  max-width: 50%;
-  opacity: 0.75;
-  transform: scale(0.8);
-  transition: opacity 0.2s, transform 0.2s;
-  width: 15em;
-}
-.article-list__item:hover {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.article-list__item__image {
-  display: block;
-  height: auto;
-  margin: 0;
-  opacity: 1;
-  transition: opacity 0.2s;
+.whole_wrapper {
+  background: rgba(0, 0, 0, .1);
   width: 100%;
+  min-height: 100%;
+  padding:5%;
+}
+.whole_wrapper .each_card {
+  width: 50%;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  padding: 10px;
+  background: white;
+  margin:5% 25%;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+.whole_wrapper .each_card .image_container {
+  text-align: left;
+}
+.whole_wrapper .each_card .image_container img {
+  width: 50%;
+  border-radius: 10px;
+}
+.whole_wrapper .each_card .right_contents_container {
+  display: flex;
+  flex-direction: column;
+}
+.whole_wrapper .each_card .right_contents_container .name_field {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 30px;
+}
+.whole_wrapper .each_card .right_contents_container .email_field {
+  font-size: 22px;
+  line-height: 30px;
 }
 
-.article-list__item__image--loading {
-  opacity: 0;
-}
 
 .article-list__pagination {
   background-color: #222;
@@ -110,6 +80,7 @@ main {
   transform: translateY(100%);
 }
 
+
 .article-list__pagination__item {
   display: inline-block;
   margin: 0 1em;
@@ -125,197 +96,168 @@ main {
   color: #d5d5d5;
 }
 
-.ajax-loader {
-  visibility: hidden;
-  background-color: rgba(255,255,255,0.7);
-  position: absolute;
-  z-index: +100 !important;
-  width: 100%;
-  height:100%;
-}
 
-.ajax-loader img {
+.article-list__page {
+  border-top: 1px solid #ddd;
+  clear: both;
+  counter-increment: page;
+  padding-bottom: 3em;
   position: relative;
-  top:50%;
-  left:50%;
-}</style>
-<body>
-
-<div class="ajax-loader">
-  <img src="{{url('../frontend/img/user.png')}}"  class="img-responsive" />
-</div>
-<main>
-	<h1>Infinite Scroll + Pagination Experiment</h1>
-	
-	<table id="mytable" ><thead>
-        <tr>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Job Title</th>
-          <th>Favorite</th>
-        </tr>
-    </thead>
-    <tbody class="article-list" id="article-list">
-    <tr></tr>
-    </tbody>
-    </table>
-	<ul class="article-list__pagination article-list__pagination--inactive" id="article-list-pagination"></ul>
-</main>
-
-</body>
-</html>
+}
+.article-list__page:before {
+  background-color: #ddd;
+  display: inline-block;
+  content: counter(page);
+  color: #888;
+  padding: 0.25em 0.5em;
+  position: absolute;
+  left: calc(50% - .75em);
+  top: -0.75em;
+  vertical-align: middle;
+  z-index: 1;
+}
+</style>
 <script>
+let page = 1;
+const last_page = 10;
+var gotlastid=null;
+var has_more=true;
+var list=null;
+const articleListPagination = document.getElementById('article-list-pagination');
+const pixel_offset = 200;
+const throttle = (callBack, delay) => {
+  let withinInterval;
+  return function () {
+    const args = arguments;
+    const context = this;
+    if (!withinInterval) {
+      callBack.call(context, args);
+      withinInterval = true;
+      setTimeout(() => withinInterval = false, delay);
+    }
+  };
+};
+
+const httpRequestWrapper = (method, URL) => {
+  if(page!==1){list = gotlastid??null;
+   console.log("lastchild",list);
+  }
+   const params = {
+            lastid: list
+        }
+  return new Promise((resolve, reject) => {
+    const xhr_obj = new XMLHttpRequest();
+    xhr_obj.responseType = "json";
+    xhr_obj.open(method, URL+`?lastid=${gotlastid??''}`);
+    xhr_obj.setRequestHeader('Content-type', 'application/json')
+    xhr_obj.onload = () => {
+      const data = xhr_obj.response;
+      resolve(data);
+    };
+    xhr_obj.onerror = () => {
+      reject("failed");
+    };
+    xhr_obj.send();
+  });
+};
+
+const getData = async (page_no = 1) => {
+  const data = await httpRequestWrapper(
+  "GET",
+  "{{ url('admin/subscriptionsstripe') }}");
+
+
+  const { fulldata,lastid, } = data;
+  const { id } = lastid;
+  gotlastid=id;
+  has_more=data.has_more;
+  console.log("data",data);
+  console.log("has_more",has_more);
+  populateUI(fulldata);
+};
+
+let handleLoad;
+
+let trottleHandler = () => {throttle(handleLoad.call(this), 1000);};
+
+document.addEventListener("DOMContentLoaded", () => {
+  getData(1);
+  window.addEventListener("scroll", trottleHandler);
+});
+
+handleLoad = () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - pixel_offset) {
+    page = page + 1;
+    if (page <= last_page) {
+      window.removeEventListener('scroll', trottleHandler);
+      console.log("page",page);
+      if(has_more){getData(page).
+      then(res => {
+        window.addEventListener('scroll', trottleHandler);
+      });}else{
+        console.log("finished scroll");
+      }
+      
+    }
+  }
+};
+
+
+
+
+
+
+
+const populateUI = data => {
+  console.log("d",data);
+  const container = document.querySelector('.whole_wrapper');
+  const pageElement = document.createElement('div');
+  // pageElement.appendChild(getArticle());
+  data &&
+  data.length &&
+  data.
+  map((each, index) => {
+    const { id, customer, plan } = each;
+    const { email } = customer;
+    const { currency } = plan;
+    pageElement.innerHTML +=
+    `
+    <div class="each_card">
+      <div class="image_container">
+        <div class="currency">${currency}</div>
+      </div>
+      <div class="right_contents_container">
+        <div class="name_field">${id}</div>
+        <div class="email_filed">${email}</div>
+      </div>
+    </div>
+    
+    `;
+  });
+  pageElement.id = getPageId(page);
+  pageElement.className = 'article-list__page';
+	addPaginationPage(page);
+  container.appendChild(pageElement);
+
+};
 
 function getPageId(n) {
-  return 'article-page-' + n;
+	return 'article-page-' + n;
 }
 
-function getDocumentHeight() {
-  const body = document.body;
-  const html = document.documentElement;
 
-  return Math.max(
-  body.scrollHeight, body.offsetHeight,
-  html.clientHeight, html.scrollHeight, html.offsetHeight);
-
-};
-
-function getScrollTop() {
-  return window.pageYOffset !== undefined ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-}
-// create image element
-//<tr><td>96</td></tr>
-		
-function getArticleImage() {
-  const hash = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-  const image = document.createElement('td');
-  image.className = 'article-list__item__image article-list__item__image--loading';
- 
-  image.appendChild(document.createTextNode(hash))
-image.classList.remove('article-list__item__image--loading');
-  /**image.onload = function () {
-   image.classList.remove('article-list__item__image--loading');
-  }; */
-
-  return image;
-}
-// create image and append it article div
-function getArticle(arg,i) {
-  
-
-  var r = document.createElement("TR");
-                r.innerHTML = `
-                                             <tr >
-                                                <td >${arg.id}</td>
-                                                <td>${arg.customer.email}</td>
-                                                <td>${i}</td>
-                                                <td>${page}</td>
-                                            </tr>`;
-                                            return r;
-}
-// article per page 16,big div that contains 16 images
-function getArticlePage(page, articlesPerPage = 30) {
-  
-
-  //const pageElement = document.createElement('div');
- // pageElement.id = getPageId(page);
-  //pageElement.className = 'article-list__page';
-  var avc = document.createElement("TR");
-  //console.log("getArticlePage",page);
-  avc.id = getPageId(page);
-avc.innerHTML=`<tr>
-    <td colspan="4" style="text-align:center;color:#fafafa; background-color: #222;" >${page}</td>
-  </tr>`;
-  $('#mytable tr:last').after(avc);
-  console.log("fulldata.length",fulldata.length);
-  for (let i = 0; i < fulldata.length; i++) {
-  
-    $('#mytable tr:last').after(getArticle(fulldata[i],i));
-}
-  
-
-  //return avc;
-}
-// get page number from url add pagination number in the bottom
 function addPaginationPage(page) {
-  const pageLink = document.createElement('a');
-  pageLink.href = '#' + getPageId(page);
-  pageLink.innerHTML = page;
-
-  const listItem = document.createElement('li');
-  listItem.className = 'article-list__pagination__item';
-  listItem.appendChild(pageLink);
-
-  articleListPagination.appendChild(listItem);
-
-  if (page === 2) {
-    articleListPagination.classList.remove('article-list__pagination--inactive');
-  }
-}
-//fetch page and append 16 page
-function fetchPage(page) {
- 
-if(nextid&&page!==1){callAPI(nextid);}
-  
-  
-
-
-
-}
-var nextid;
-var has_more;
-// addpage ,fetch page and add page number
-function addPage(page) {
-  if(has_more||page==1){
-  fetchPage(page);
-  addPaginationPage(page);}else{
-  console.log("finished scroll");
-}
-}
-
-const articleList = document.getElementById('article-list');
-const articleListPagination = document.getElementById('article-list-pagination');
-let page = 0;
-callAPI();
-
-
-window.onscroll = function () {
-  if (getScrollTop() < getDocumentHeight() - window.innerHeight) return;
-  addPage(++page);
-};
-
-function callAPI(param){
-  console.log("param",param);
-$.ajax({
-							 
-    url:"{{ url('admin/subscriptionsstripe') }}",
-
-    type:"GET",
-    data:{lastid: param,
-    //customer:'cus_JgeZ3afo13HWyx'
-    },
-    dataType: 'json',beforeSend : function(){
-     $('.ajax-loader').css("visibility", "visible");
-  },
-    success: function (data) {
-      console.log(data);
-     nextid=data.lastid.id;
-     fulldata=data.fulldata;
-     has_more=data.has_more;
-     console.log("page",page);
-     if(page==0){getArticlePage(1);}else{getArticlePage(page);}
-     
-    addPage(++page);
-   
-
-    },
-    error:function(xhr, status, error){ 
-     console.log("error",xhr);
-       // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
-    }
-}).done(function() {
-  //  alert( "success" );
-
-    $('.ajax-loader').css("visibility", "hidden");
-  });}
-</script>
+	const pageLink = document.createElement('a');
+	pageLink.href = '#' + getPageId(page);
+	pageLink.innerHTML = page;
+	
+	const listItem = document.createElement('li');
+	listItem.className = 'article-list__pagination__item';
+	listItem.appendChild(pageLink);
+	
+	articleListPagination.appendChild(listItem);
+	
+	if (page === 2) {
+		articleListPagination.classList.remove('article-list__pagination--inactive');
+	}
+}</script>
