@@ -123,8 +123,27 @@ main {
 }
 .article-list__pagination__item a:active {
   color: #d5d5d5;
+}
+
+.ajax-loader {
+  visibility: hidden;
+  background-color: rgba(255,255,255,0.7);
+  position: absolute;
+  z-index: +100 !important;
+  width: 100%;
+  height:100%;
+}
+
+.ajax-loader img {
+  position: relative;
+  top:50%;
+  left:50%;
 }</style>
 <body>
+
+<div class="ajax-loader">
+  <img src="{{url('../frontend/img/user.png')}}"  class="img-responsive" />
+</div>
 <main>
 	<h1>Infinite Scroll + Pagination Experiment</h1>
 	
@@ -202,6 +221,7 @@ function getArticlePage(page, articlesPerPage = 30) {
  // pageElement.id = getPageId(page);
   //pageElement.className = 'article-list__page';
   var avc = document.createElement("TR");
+  //console.log("getArticlePage",page);
   avc.id = getPageId(page);
 avc.innerHTML=`<tr>
     <td colspan="4" style="text-align:center;color:#fafafa; background-color: #222;" >${page}</td>
@@ -271,8 +291,12 @@ $.ajax({
     url:"{{ url('admin/subscriptionsstripe') }}",
 
     type:"GET",
-    data:{lastid: param},
-    dataType: 'json',
+    data:{lastid: param,
+    //customer:'cus_JgeZ3afo13HWyx'
+    },
+    dataType: 'json',beforeSend : function(){
+     $('.ajax-loader').css("visibility", "visible");
+  },
     success: function (data) {
       console.log(data);
      nextid=data.lastid.id;
@@ -290,6 +314,8 @@ $.ajax({
        // coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
     }
 }).done(function() {
-    alert( "success" );
+  //  alert( "success" );
+
+    $('.ajax-loader').css("visibility", "hidden");
   });}
 </script>
