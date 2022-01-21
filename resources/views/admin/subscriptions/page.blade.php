@@ -181,15 +181,15 @@ image.classList.remove('article-list__item__image--loading');
   return image;
 }
 // create image and append it article div
-function getArticle() {
+function getArticle(arg,i) {
   
 
   var r = document.createElement("TR");
                 r.innerHTML = `
                                              <tr >
-                                                <td >${page}</td>
-                                                <td>${page}</td>
-                                                <td>${page}</td>
+                                                <td >${arg.id}</td>
+                                                <td>${arg.customer.email}</td>
+                                                <td>${i}</td>
                                                 <td>${page}</td>
                                             </tr>`;
                                             return r;
@@ -207,10 +207,12 @@ avc.innerHTML=`<tr>
     <td colspan="4" style="text-align:center;color:#fafafa; background-color: #222;" >${page}</td>
   </tr>`;
   $('#mytable tr:last').after(avc);
-  while (articlesPerPage--) {
-    //pageElement.appendChild(getArticle());
-    $('#mytable tr:last').after(getArticle());
-  }
+  console.log("fulldata.length",fulldata.length);
+  for (let i = 0; i < fulldata.length; i++) {
+  
+    $('#mytable tr:last').after(getArticle(fulldata[i],i));
+}
+  
 
   //return avc;
 }
@@ -233,16 +235,9 @@ function addPaginationPage(page) {
 //fetch page and append 16 page
 function fetchPage(page) {
  
-{{-- if(page=1){
-  getStripedata(null);
-getArticlePage(page);
-}else{
-  getStripedata(nextid);
-getArticlePage(page);
-} --}}
-
-  getStripedata(nextid);
-  getArticlePage(page);
+if(nextid&&page!==1){callAPI(nextid);}
+  
+  
 
 
 
@@ -261,15 +256,15 @@ function addPage(page) {
 const articleList = document.getElementById('article-list');
 const articleListPagination = document.getElementById('article-list-pagination');
 let page = 0;
+callAPI();
 
-addPage(++page);
 
 window.onscroll = function () {
   if (getScrollTop() < getDocumentHeight() - window.innerHeight) return;
   addPage(++page);
 };
 
-function getStripedata(param){
+function callAPI(param){
   console.log("param",param);
 $.ajax({
 							 
@@ -283,11 +278,11 @@ $.ajax({
      nextid=data.lastid.id;
      fulldata=data.fulldata;
      has_more=data.has_more;
-    thelist= $("#menu");
-     $.each(fulldata, function(key, value) {
-   // console.log(value.id);
-       thelist.append('<li><a href="#">'+value.id+'</a></li>');
-});
+     console.log("page",page);
+     if(page==0){getArticlePage(1);}else{getArticlePage(page);}
+     
+    addPage(++page);
+   
 
     },
     error:function(xhr, status, error){ 
