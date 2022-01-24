@@ -287,6 +287,7 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
         $increment = 30;
         $customersJSON = \Stripe\Subscription::all(array(
             "customer"=>$customer,
+            // "plan"=>"RgRsO1EbfowJ",//will find it in plan.id
             //"customer"=>"cus_JgeZ3afo13HWyx",
         "limit" => $increment, "starting_after" => $starting_after,'expand' => ['data.plan','data.customer','data.items']));
         return ['fulldata'=>$customersJSON->data,'has_more'=>$customersJSON->has_more, 'lastid' => end($customersJSON->data)];

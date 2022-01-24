@@ -11,10 +11,10 @@
 <body>
 <table id="mytable" ><thead>
         <tr>
-          <th>Name</th>
+          <th>Subscription</th>
           <th>Email</th>
-          <th>Gender</th>
-          <th>Country</th>
+          <th>Status</th>
+          <th>Type</th>
         </tr>
     </thead>
     <tbody class="whole_wrapper" id="article-list">
@@ -261,7 +261,7 @@ function buildTable(contacts) {
   // Add the table content.
   // addLineToHTMLTable(element.fname, element.lname)
   contacts.forEach(function(curr) {
-    addLineToHTMLTable(curr.id, curr.customer.email, curr.status, curr.start_date);
+    addLineToHTMLTable(curr.id, curr.customer.email, curr.status, curr.plan.billing_scheme);
   });
 
 }
