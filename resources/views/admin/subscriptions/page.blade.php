@@ -9,12 +9,19 @@
 </head>
 
 <body>
-	<div id="app">
-		<div class="whole_wrapper">
-
-		</div>
-	</div>
-
+<table id="mytable" ><thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Country</th>
+        </tr>
+    </thead>
+    <tbody class="whole_wrapper" id="article-list">
+    <tr></tr>
+    </tbody>
+    </table>
+	
 	<ul class="article-list__pagination article-list__pagination--inactive" id="article-list-pagination"></ul>
 	
 </body>
@@ -207,37 +214,23 @@ handleLoad = () => {
 
 
 
-
 const populateUI = data => {
-  console.log("d",data);
   const container = document.querySelector('.whole_wrapper');
-  const pageElement = document.createElement('div');
-  // pageElement.appendChild(getArticle());
-  data &&
-  data.length &&
-  data.
-  map((each, index) => {
-    const { id, customer, plan } = each;
-    const { email } = customer;
-    const { currency } = plan;
-    pageElement.innerHTML +=
-    `
-    <div class="each_card">
-      <div class="image_container">
-        <div class="currency">${currency}</div>
-      </div>
-      <div class="right_contents_container">
-        <div class="name_field">${id}</div>
-        <div class="email_filed">${email}</div>
-      </div>
-    </div>
-    
-    `;
-  });
+  const pageElement = document.createElement('tr');
+  
+  console.log("datapopulateUI",data);
+  var trtop;
+  trtop=`<tr >
+    <td id="${getPageId(page)}" colspan="4" style="text-align:center;color:#fafafa; background-color: #222;" >${page}</td>
+  </tr>`;
+
+var newRow = container.insertRow(container.rows.length);
+newRow.innerHTML = trtop;
+ 
   pageElement.id = getPageId(page);
   pageElement.className = 'article-list__page';
 	addPaginationPage(page);
-  container.appendChild(pageElement);
+  buildTable(data);
 
 };
 
@@ -260,4 +253,38 @@ function addPaginationPage(page) {
 	if (page === 2) {
 		articleListPagination.classList.remove('article-list__pagination--inactive');
 	}
-}</script>
+}
+
+function buildTable(contacts) {
+  
+
+  // Add the table content.
+  // addLineToHTMLTable(element.fname, element.lname)
+  contacts.forEach(function(curr) {
+    addLineToHTMLTable(curr.id, curr.customer.email, curr.status, curr.start_date);
+  });
+
+}
+
+// Add a line to the HTML table
+function addLineToHTMLTable(firstName, lastName,gender,country) {
+  // Get the body of the table using the selector API
+  var tableBody = document.querySelector("#article-list");
+
+  // Add a new row at the end of the table
+  var newRow = tableBody.insertRow();
+
+  // add  new cells to the row
+  var firstNameCell = newRow.insertCell();
+  firstNameCell.innerHTML = firstName;
+
+  var lastNameCell = newRow.insertCell();
+  lastNameCell.innerHTML = lastName;
+
+  var genderCell = newRow.insertCell();
+  genderCell.innerHTML = gender;
+
+  var locationCell = newRow.insertCell();
+  locationCell.innerHTML = country;
+}
+</script>
