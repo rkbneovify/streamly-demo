@@ -228,24 +228,31 @@ class Setting extends Controller
 
     public function update(Request $request, $id)
     { 
+        $userinfo = User::find($id);
         $attributeNames = array(
             'old_password'=>'Old Password',
            'password' => 'Password',
         );
-        $validator = Validator::make($request->all(), [
-            'old_password' => [
-                'required', function ($attribute, $value, $fail) {
-                    if (!Hash::check($value, Auth::user()->password)) {
-                        $fail('Old Password didn\'t match');
-                    }
-                },
-            ],
-        ]);
-        $validatedData = $request->validate([
-            'old_password' => 'required',
-            'password' => 'confirmed|string|min:8',
-        ], [], $attributeNames);
-
+        if($userinfo->password != NULL){
+            $validator = Validator::make($request->all(), [
+                'old_password' => [
+                    'required', function ($attribute, $value, $fail) {
+                        if (!Hash::check($value, Auth::user()->password)) {
+                            $fail('Old Password didn\'t match');
+                        }
+                    },
+                ],
+                'password' => 'confirmed|string|min:8',
+            ]);
+            // $validatedData = $request->validate([
+            //     'old_password' => 'required',
+            //     'password' => 'confirmed|string|min:8',
+            // ], [], $attributeNames);
+        }else{
+            $validator = Validator::make($request->all(), [
+                'password' => 'confirmed|string|min:8',
+            ]);
+        }
         if($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
