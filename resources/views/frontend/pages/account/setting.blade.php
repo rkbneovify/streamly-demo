@@ -171,12 +171,13 @@ use Laravel\Cashier\Cashier;?>
 					 <form action="{{ url("/userupdate", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
+						@if($userinfo->provider_name == 'google' && !($userinfo->password))
+						@else
 						<div class="form-group {{ $errors->has('old_password') ? ' has-error' : '' }}">
 							<label for="oldpassword">Old Password</label>
 							<input type="password" class="form-control" name="old_password" id="oldpassword">
 						</div>
-
+						@endif
 						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
 							<label for="newpassword">New Password</label>
 							<input type="text" class="form-control" name="password" id="newpassword">
