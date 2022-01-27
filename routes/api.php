@@ -60,7 +60,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('sort', 'Admin\ChannelAPIController@sortdevice');
     Route::post('channelschdeule', 'Admin\ChannelAPIController@channelschedulejson');
     Route::get('channeldayschdeule', 'Admin\ChannelAPIController@channelDaysSchedule');
-    Route::get('channeldayschdeulepaginate', 'Admin\ChannelAPIController@channelDaysSchedulePaginate');
+    Route::get('channeldayschdeulepaginate', 'Admin\ChannelAPIController@channelDaysSchedulePaginate')->middleware('subscribed');
     Route::get('channeldayschdeuletz', 'Admin\ChannelAPIController@channelDaysScheduletz')->middleware('subscribed');
     Route::get('oldchanneldayschdeule', 'Admin\ChannelAPIController@oldchannelDaysSchedule');
     Route::get('frontendepg', 'Admin\ChannelAPIController@frontEpgchannelDaysSchedule');
