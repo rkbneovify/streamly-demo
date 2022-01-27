@@ -47,6 +47,8 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     
     //subscription 
     Route::resource('subscriptions', 'Admin\SubscriptionController');
+     Route::get('/subscriptionsstripe','Admin\SubscriptionController@subscriptionstripe')->name('ss');
+     Route::get('/pg','Admin\SubscriptionController@paginatewithscroll');
      Route::get('/subscriptions/view/{id}','Admin\SubscriptionController@show');
    Route::get('/subscriptions/edit/{id}','Admin\SubscriptionController@edit');
     Route::get('changeStatus', 'Admin\SubscriptionController@changeStatus');

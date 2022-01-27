@@ -275,6 +275,23 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      * @param  Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
+    public function paginatewithscroll(){
+        return view('admin.subscriptions.page');
+    }
+    public function subscriptionstripe(Request $request)
+    { //dd($request);
+        
+        $starting_after=$request->query('lastid')==1?NULL:$request->query('lastid');
+        $customer=$request->query('customer')??NULL;
+        // dd($starting_after); 
+        $increment = 30;
+        $customersJSON = \Stripe\Subscription::all(array(
+            "customer"=>$customer,
+            // "plan"=>"RgRsO1EbfowJ",//will find it in plan.id
+            //"customer"=>"cus_JgeZ3afo13HWyx",
+        "limit" => $increment, "starting_after" => $starting_after,'expand' => ['data.plan','data.customer','data.items']));
+        return ['fulldata'=>$customersJSON->data,'has_more'=>$customersJSON->has_more, 'lastid' => end($customersJSON->data)];
+    }
     public function show($id)
     {   //$subscription = Subscription::find($id); 
        $user = User::all()->pluck('name', 'id');
