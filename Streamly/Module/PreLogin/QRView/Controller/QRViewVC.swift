@@ -119,7 +119,7 @@ extension QRViewVC:HandleError
                 Utility.logOut()
             }
         } else if statusCode == 402 {
-            showAlert(withMessage: "We're having some trouble with your current subscription. We'll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.",setFirstButtonTitle: "Logout") { _ in
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()

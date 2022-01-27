@@ -304,7 +304,11 @@ extension LoginVC
                         }
                         return
                     } else if failureResponse.response_code == 402 {
-                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
+                        selfStrong.showAlert(withMessage: failureResponse.message ?? "",setFirstButtonTitle: "Logout") { _ in
+                            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                            Utility.logOut()
+                        }
+//                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     } else if let data = failureResponse.data { // check session exist.
                         selfStrong.openAlertForRemoveId(id: data)
                     } else {

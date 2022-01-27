@@ -22,9 +22,13 @@ class QRViewModel: NSObject {
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
-
+            if let data = DataParser.parseFailLoginResponse(data!) {
+                print(data.message ?? "")
+                self.delegate?.handleError(data.message ?? "", data.response_code ?? 0)
+            } else {
             //debugPrint("failure")
-            self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+                self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+            }
         }
     }
 }
