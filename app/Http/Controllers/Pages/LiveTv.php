@@ -171,7 +171,7 @@ $Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign)
 $url=$Channel->get('dash_url as url');
 $channelId=$Channel->get('id');
 $relatedchannel=$record->get()->where('genrenae',$genre);
-$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId];
+$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId,'Channel'=>$Channel->get()];
 return $data;
 // return view('frontend.pages.livetvchannel', );
    
@@ -190,7 +190,7 @@ return $data;
      
      $relatedchannel=$record->get()->where('genrenae',$genre);
      
-$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId];
+$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId,'Channel'=>$Channel->get()];
 return $data;
 // return view('frontend.pages.livetvchannel', );
    

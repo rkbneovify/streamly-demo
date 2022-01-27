@@ -688,6 +688,8 @@ console.log("playr ready");
 			</div>
 
 			<div class="container" style="margin-top: 4%;">
+			
+			{{$Channel[0]->stationName??$Channel[0]->callSign}}
 			<select id='gracenote_data' style="width: 100%; display:block;">
 			<option value='0'>- The schedule -</option>
 		</select>
