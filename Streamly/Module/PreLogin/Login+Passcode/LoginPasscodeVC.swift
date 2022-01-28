@@ -110,10 +110,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
 //                Utility.logOut()
                 return
             }
-        } else {
-            self.showSimpleAlertWithMessage(viewModel.responseData?.message ?? "")
-        }
-        if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
+        } else if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
             openSearchVC(room: room,showNamePopup: viewModel.responseData?.personaldevicenamePopup ?? false)
@@ -124,7 +121,10 @@ extension LoginPasscodeVC: APIResponseDelegate {
             } else {
                 openEnterTVNameVC(sessionId: viewModel.personaldeviceid)
             }
+        } else {
+            self.showSimpleAlertWithMessage(viewModel.responseData?.message ?? "")
         }
+        
     }
     
     func apiFailure(_ message: String,_ status: Int) {
