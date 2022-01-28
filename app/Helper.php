@@ -362,6 +362,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       ['users_id', '=', $user_id],
        ])->get()->count();
        $rooms=getActiveHotelRooms($user_id);
+       $subscriptionStatus =  GetSubscriptionStatusOfUser($user_id);
     return response()->json([
   
       'success' => true,
@@ -380,8 +381,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
         'user'=>$userInfo,
         'termandcondition'=>$termAndCondition,
         'rooms'=>$rooms,
-        'userrole'=>$userInfo->roles->pluck('name')[0]
-        
+        'userrole'=>$userInfo->roles->pluck('name')[0],
+        'subscribed'=>$subscriptionStatus
       
       
     ],200)->send();}
@@ -906,6 +907,13 @@ function isTV($device)
   }
 }
 
+function GetSubscriptionStatusOfUser($user_id){
+  $user = User::find($user_id);
+  $userRole= $user->roles->pluck('name');
+ $s= !($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin")));
+ $d= !($user->subscription('main') && $user->subscription('main')->cancelled());
+  return $d&&$s;
+}
 function GetLimitForUser($user_id){
   $limit =5;
   $user = User::find($user_id);
