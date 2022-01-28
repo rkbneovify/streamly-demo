@@ -28,7 +28,7 @@ struct ChannelResponse : Codable {
 struct ChannelData : Codable {
     
    // let current_page : Int?
-    let data :    [ChannelArray]?
+    let data :   [ChannelArray]?
     let success: Bool?
     
     enum CodingKeys: String, CodingKey {

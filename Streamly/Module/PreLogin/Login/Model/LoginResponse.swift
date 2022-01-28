@@ -8,6 +8,8 @@
 
 import Foundation
 struct LoginResponse : Codable {
+    let subscribed          : Bool?
+    let subscribedmsgis     : String?
     let sessionid           :String?
     let deviceType         :String?
     let personaldeviceid    :String?
@@ -28,6 +30,8 @@ struct LoginResponse : Codable {
     var data: String?
     
     enum CodingKeys : String, CodingKey {
+        case subscribed
+        case subscribedmsgis
         case deviceType = "device_type"
         case personaldevicenamePopup = "personaldevicename_popup"
         case personaldeviceid
@@ -68,7 +72,8 @@ struct LoginResponse : Codable {
         userrole = try values.decodeIfPresent(String.self, forKey: .userrole)
         expires_in = try values.decodeIfPresent(Int.self, forKey: .expires_in)
         data = try values.decodeIfPresent(String.self, forKey: .data)
-        
+        subscribedmsgis = try values.decodeIfPresent(String.self, forKey: .subscribedmsgis)
+        subscribed = try values.decodeIfPresent(Bool.self, forKey: .subscribed)
     }
     
 }

@@ -47,6 +47,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
             self.qrImageView.sd_setImage(with: URL(string: data.msg ?? ""), placeholderImage: UIImage(named: "dummyQR"))
         } else if let data = data as? LoginResponse { // Successfully Login response
             if data.success == true {
+               
                 timer.invalidate()
                 Utility.setStringObject(value: data.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)
                 Utility.setStringObject(value: data.deviceType ?? "", key: Constant.UserDefault.myDeviceType)
@@ -59,6 +60,13 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
                 if let removIdKey = data.data {
                     self.openAlertForRemoveId(id: removIdKey)
+                } else if !(data.subscribed ?? false) {
+                    self.showAlert(withMessage: data.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
+//                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+//                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+//                        Utility.logOut()
+                    }
+                    return
                 } else if let room = data.rooms, data.userrole != "user" {
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                     Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)

@@ -23,27 +23,33 @@ class SearchVC: UIViewController {
 
             // Apply the filter or show all items if the filter string is empty.
             if filterString.isEmpty {
-                filtterdChannelList = self.channelList?.data?.data ?? []
+                filteredChannelListInfo = self.searchInfoList?.data ?? []
             } else {
-                filtterdChannelList = self.channelList?.data?.data?.filter({($0.StationName?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
+                filteredChannelListInfo = self.searchInfoList?.data?.filter({($0.callSign?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
             }
 
             // Reload the collection view to reflect the changes.
             collectionView?.reloadData()
         }
     }
-    var channelList:EPGResponse?
-      {
-          didSet
-          {
-            self.filtterdChannelList = channelList?.data?.data ?? []
-          }
-      }
+    var searchInfoList: ChannelData? {
+        didSet {
+            self.filteredChannelListInfo = searchInfoList?.data ?? []
+        }
+    }
+//    var channelList:EPGResponse?
+//      {
+//          didSet
+//          {
+//            self.filtterdChannelList = channelList?.data?.data ?? []
+//          }
+//      }
      var geoData:GeoFenceAddress?
      lazy var viewModelEpg: EPGViewModel = {
           return EPGViewModel()
       }()
-     var filtterdChannelList:[ChannelDetails]?
+//     var filtterdChannelList:[ChannelDetails]?
+    var filteredChannelListInfo: [ChannelArray]?
      lazy var viewModel: SearchDataViewModel = {
           return SearchDataViewModel()
       }()
@@ -92,8 +98,8 @@ class SearchVC: UIViewController {
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()
-//        self.makeApiCall()
-//        self.initVM()
+        self.makeApiCall()
+        self.initVM()
     }
 
     private func makeApiGeoFencing(){
@@ -113,26 +119,27 @@ class SearchVC: UIViewController {
 
        }
 
-//    private func makeApiCall(){
-//        self.showSpinner(onView: self.view)
-//          viewModel.delegate = self
-//          viewModel.getSearchData()
-//
-//      }
-//
-//      private func initVM() {
-//
-//          viewModel.searchData = { contactModel in
-//            self.channelList = contactModel
-//            self.filtterdChannelList = contactModel.message?.data
-//          //  //debugPrint(self.channelList?.message?.data?[0])
-//
-//              self.removeSpinner()
-//
-//
-//          }
-//
-//      }
+    private func makeApiCall(){
+        self.showSpinner(onView: self.view)
+          viewModel.delegate = self
+          viewModel.getSearchData()
+
+      }
+
+      private func initVM() {
+
+          viewModel.searchData = { contactModel in
+            self.searchInfoList = contactModel
+            self.filteredChannelListInfo = contactModel.data
+              self.filterString = ""
+          //  //debugPrint(self.channelList?.message?.data?[0])
+              self.collectionView.reloadData()
+              self.removeSpinner()
+
+
+          }
+
+      }
 
 }
 
@@ -146,12 +153,12 @@ extension SearchVC:UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (filtterdChannelList?.isEmpty ?? true || filtterdChannelList == nil){
+        if (filteredChannelListInfo?.isEmpty ?? true || filteredChannelListInfo == nil){
             self.collectionView.setEmptyMessage("No record's found")
         } else {
             self.collectionView.restore()
         }
-        return filtterdChannelList?.count ?? 0
+        return filteredChannelListInfo?.count ?? 0
 
     }
     
@@ -168,24 +175,28 @@ extension SearchVC:UICollectionViewDelegate
 {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? DataItemCollectionViewCell else { fatalError("Expected to display a `DataItemCollectionViewCell`.") }
-        guard let item = filtterdChannelList?[(indexPath as NSIndexPath).row] else {return}
+        guard let item = filteredChannelListInfo?[(indexPath as NSIndexPath).row] else {return}
 
         // Configure the cell.
-        cellComposer.compose(cell, withDataItem: item)
+        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.callSign ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
+        cellComposer.compose(cell, withDataItem: chanelInfo)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let flag = self.geoData?.success ?? false
-        guard let item = filtterdChannelList?[(indexPath.item)] else {return}
+        guard let item = filteredChannelListInfo?[(indexPath.item)] else {return}
+        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.name ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
         present(videoPlaybackViewController, animated: true) {
-            self.videoPlaybackViewController.channelObject = item
+            self.videoPlaybackViewController.channelObject = chanelInfo
             self.videoPlaybackViewController.isAllowedZipCode = flag
             self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
             self.videoPlaybackViewController.isfromRcent = false
             self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
             self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-            self.videoPlaybackViewController.filterData = self.filtterdChannelList
+            self.videoPlaybackViewController.filterData = self.filteredChannelListInfo?.map({ obj in
+                return ChannelDetails(id: obj.id ?? 0, stationName: obj.name ?? "", url: obj.url ?? "", logo: obj.logo ?? "", callSign: obj.callSign ?? "", programs: [])
+            })
             self.videoPlaybackViewController.loadAndPlay()
         
     }

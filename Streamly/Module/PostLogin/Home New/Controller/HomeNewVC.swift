@@ -583,7 +583,7 @@ class HomeNewVC: UIViewController {
         searchContainer.title = NSLocalizedString("Search", comment: "")
 
         guard let rootViewController = view.window?.rootViewController else { fatalError("Unable to get root view controller.") }
-        viewVC.channelList = self.channelList
+//        viewVC.channelList = self.channelList
         viewVC.geoData = self.geoData
         // searchController.view.backgroundColor = UIColor.li
         present(searchContainer, animated: true, completion: nil)

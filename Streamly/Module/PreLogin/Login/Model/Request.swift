@@ -19,7 +19,7 @@ class LoginRequest: NSObject {
         let parameter:[String:String] = ["email": self.email ?? "", "password": self.password ?? "","deviceid":deviceID ?? ""]
         let headers:HTTPHeaders = ["Content-Type": "application/x-www-form-urlencoded","User-Agent": userAgent]
         AF.request(Constant.baseURL + API.login.rawValue, method: .post, parameters: parameter, encoding: URLEncoding.default, headers: headers).responseJSON{ (response) in
-            //debugPrint(response)
+            debugPrint(response)
             guard let data = response.data else { return }
             let decoder = JSONDecoder()
             if let loginData = try? decoder.decode(LoginResponse.self, from: data) {

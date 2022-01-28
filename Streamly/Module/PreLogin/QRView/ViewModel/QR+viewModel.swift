@@ -22,7 +22,7 @@ class QRViewModel: NSObject {
             }
             //debugPrint("Success")
         }) { (error, data, code)  in
-            if let data = DataParser.parseFailLoginResponse(data!) {
+            if let errorResponse = data, let data = DataParser.parseFailLoginResponse(errorResponse) {
                 print(data.message ?? "")
                 self.delegate?.handleError(data.message ?? "", data.response_code ?? 0)
             } else {

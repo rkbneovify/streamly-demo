@@ -254,6 +254,7 @@ extension LoginVC
             if response != nil && errorMessage == nil{
                 guard let selfStrong = self else {return}
                 selfStrong.removeSpinner()
+               
                 if response.success?.success == true {
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
@@ -293,6 +294,13 @@ extension LoginVC
                 } else if response.success?.success == false {
                     if let data = response.success?.data { // check session exist.
                         selfStrong.openAlertForRemoveId(id: data)
+                    } else if !(response.success?.subscribed ?? false) {
+                        selfStrong.showAlert(withMessage: response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
+    //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+    //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+    //                        Utility.logOut()
+                            return
+                        }
                     } else {
                         selfStrong.showSimpleAlertWithMessage(response.success?.message ?? "")
                     }
