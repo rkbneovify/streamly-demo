@@ -225,9 +225,9 @@ $record= Cache::rememberForever('channelslistdash', function () {
         // from `channels` left join `channels_genre` on `channels`.`id` = `channels_genre`.`channels_id` 
         // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
         // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
-    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
+    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'channels.image',"channels.$type as url")
            
-        ->selectRaw("CAST( CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') AS JSON ) genrename")
+        ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
            
            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
