@@ -363,6 +363,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
        ])->get()->count();
        $rooms=getActiveHotelRooms($user_id);
        $subscriptionStatus =  GetSubscriptionStatusOfUser($user_id);
+       $kindlysubscribemsg =  $subscriptionStatus?null:KindlySubscribeMsg();
     return response()->json([
   
       'success' => true,
@@ -382,7 +383,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
         'termandcondition'=>$termAndCondition,
         'rooms'=>$rooms,
         'userrole'=>$userInfo->roles->pluck('name')[0],
-        'subscribed'=>$subscriptionStatus
+        'subscribed'=>$subscriptionStatus,
+        'subscribedmsgis'=>$kindlysubscribemsg
       
       
     ],200)->send();}
@@ -907,6 +909,9 @@ function isTV($device)
   }
 }
 
+function KindlySubscribeMsg(){
+  return "We're having some trouble with your current subscription.We'll try again, but in meantime you may want to update your subscription. For more help, please visit https://streamlytv.com or contact at https://streamlytv.com/helpandsupport";
+}
 function GetSubscriptionStatusOfUser($user_id){
   $user = User::find($user_id);
   $userRole= $user->roles->pluck('name');
