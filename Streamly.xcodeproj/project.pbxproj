@@ -16,6 +16,7 @@
 		93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C69270ED6F7006DA962 /* QRModel.swift */; };
 		938A0874270AFCEB00647394 /* DeviceRegisterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */; };
 		938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */; };
+		93A459EC27A7EAE600AF7323 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 93A459EB27A7EAE600AF7323 /* GoogleService-Info.plist */; };
 		9E673ABC3B139040E03068B9 /* Pods_Streamly_StreamlyUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */; };
 		A84958512706D62E00B2FE73 /* LoginPassocodeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */; };
 		A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84958532706EB4D00B2FE73 /* RoomViewController.swift */; };
@@ -44,7 +45,6 @@
 		AA4B5E4124A514E80031AB15 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4B5E4024A514E80031AB15 /* ChannelList.swift */; };
 		AA4DD07524D0971D00FC4D0A /* RecentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4DD07424D0971D00FC4D0A /* RecentData.swift */; };
 		AA4FD8C126C1577B00BC0EA3 /* LoginPasscodeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */; };
-		AA523CC42574D31600DC5CB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AA523CC32574D31600DC5CB3 /* GoogleService-Info.plist */; };
 		AA53DE582486389400FA6821 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE572486389400FA6821 /* SettingsVC.swift */; };
 		AA53DE5D24863B6A00FA6821 /* SettingsGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */; };
 		AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA54082F2491F84F000D5F76 /* LogOutModel.swift */; };
@@ -154,6 +154,7 @@
 		93662C69270ED6F7006DA962 /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
 		938A0872270AFCEB00647394 /* DeviceRegisterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegisterCell.swift; sourceTree = "<group>"; };
 		938A0873270AFCEB00647394 /* DeviceRegisterCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceRegisterCell.xib; sourceTree = "<group>"; };
+		93A459EB27A7EAE600AF7323 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9B00EB48CEDEE294C9B7CC81 /* Pods-StreamlyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.debug.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A84958502706D62E00B2FE73 /* LoginPassocodeViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPassocodeViewModel.swift; sourceTree = "<group>"; };
 		A84958532706EB4D00B2FE73 /* RoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
@@ -196,7 +197,6 @@
 		AA4B5E4024A514E80031AB15 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		AA4DD07424D0971D00FC4D0A /* RecentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentData.swift; sourceTree = "<group>"; };
 		AA4FD8C026C1577B00BC0EA3 /* LoginPasscodeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPasscodeVC.swift; sourceTree = "<group>"; };
-		AA523CC32574D31600DC5CB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AA53DE572486389400FA6821 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		AA53DE5C24863B6A00FA6821 /* SettingsGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGridCell.swift; sourceTree = "<group>"; };
 		AA54082F2491F84F000D5F76 /* LogOutModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutModel.swift; sourceTree = "<group>"; };
@@ -844,7 +844,7 @@
 		AAC9C8EF246A719800708812 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AA523CC32574D31600DC5CB3 /* GoogleService-Info.plist */,
+				93A459EB27A7EAE600AF7323 /* GoogleService-Info.plist */,
 				AAC9C8C8246A700400708812 /* Info.plist */,
 				AAC9C8C0246A700200708812 /* Streamly.xcdatamodeld */,
 				AAC9C8BD246A700200708812 /* Main.storyboard */,
@@ -1052,7 +1052,6 @@
 				AA5E20F224C61758000B648F /* Lato-Bold.ttf in Resources */,
 				AA5E20F724C61758000B648F /* Lato-Hairline.ttf in Resources */,
 				AA5E20FA24C61758000B648F /* Lato-MediumItalic.ttf in Resources */,
-				AA523CC42574D31600DC5CB3 /* GoogleService-Info.plist in Resources */,
 				AA5E20F524C61758000B648F /* Lato-HairlineItalic.ttf in Resources */,
 				AA5E20FF24C61758000B648F /* Lato-ThinItalic.ttf in Resources */,
 				AA5E20F324C61758000B648F /* Lato-Black.ttf in Resources */,
@@ -1063,6 +1062,7 @@
 				AA105C8D249767D800CF075B /* LogOUTView.xib in Resources */,
 				AA5E20F924C61758000B648F /* Lato-Semibold.ttf in Resources */,
 				AA5E20FE24C61758000B648F /* Lato-Medium.ttf in Resources */,
+				93A459EC27A7EAE600AF7323 /* GoogleService-Info.plist in Resources */,
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
 				AA5E20EE24C61758000B648F /* Lato-HeavyItalic.ttf in Resources */,
 				938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */,
@@ -1545,8 +1545,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 43;
-				DEVELOPMENT_TEAM = A4QY9BUDRA;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TSX9GYXGGM;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Streamly/FrameWork/FacebookSDKs-tvOS-4.40.0",
@@ -1556,9 +1556,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adaptivemedia.streamlytv;
 				PRODUCT_NAME = StreamlyTV;
-				PROVISIONING_PROFILE_SPECIFIER = Streamly_Distribution;
+				PROVISIONING_PROFILE_SPECIFIER = Streamly_TVOS_Distribution;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -1571,8 +1572,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 43;
-				DEVELOPMENT_TEAM = A4QY9BUDRA;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TSX9GYXGGM;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Streamly/FrameWork/FacebookSDKs-tvOS-4.40.0",
@@ -1582,9 +1583,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.Streamly;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.adaptivemedia.streamlytv;
 				PRODUCT_NAME = StreamlyTV;
-				PROVISIONING_PROFILE_SPECIFIER = Streamly_Distribution;
+				PROVISIONING_PROFILE_SPECIFIER = Streamly_TVOS_Distribution;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -1596,7 +1598,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StreamlyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1605,6 +1609,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Streamly.app/Streamly";
@@ -1618,7 +1623,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StreamlyTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1627,6 +1634,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Streamly.app/Streamly";
@@ -1639,7 +1647,8 @@
 			baseConfigurationReference = BE003A075C67ACDE55437B82 /* Pods-Streamly-StreamlyUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StreamlyUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1648,6 +1657,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TEST_TARGET_NAME = Streamly;
@@ -1659,7 +1669,8 @@
 			baseConfigurationReference = 3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StreamlyUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1668,6 +1679,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.streamly.TVApp.StreamlyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TEST_TARGET_NAME = Streamly;
