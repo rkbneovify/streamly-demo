@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
-
+use Validator;
 use Illuminate\Support\Facades\Cache;
 use Jenssegers\Agent\Agent;
 class ChannelAPIController extends Controller
@@ -550,6 +550,110 @@ public function hasSearchChannelDaysScheduleFuncWithGenre($request,$isDevice){
         }
         return $reco;
 }
+public function channelDaysScheduleoffsettz(Request $request){
+$ua = $request->server('HTTP_USER_AGENT');
+
+$input = $request->all();
+//regex to validate gmt + and - hours
+        $validator = Validator::make($input, [
+            'hoursoffset' => ['required','regex:/[+-][0-9]{2}:[0-9]{2}\b/']
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'data' => 'Validation Error.',
+                'message' => $validator->errors(),
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }
+        $hoursofset=$request->get('hoursoffset');
+$isDevice=isDeviceAppleRokuOthers($ua);
+
+if($isDevice=='roku'){ 
+    // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
+        $type='smooth_url';
+        $reco= $this->channelDaysScheduleOffsetFunctz($type,$hoursofset)->get();
+// });
+}else if($isDevice=='apple')  {
+
+// $reco = Cache::remember('channelscheduleappletz',60*60*24, function () {
+    $type='url';
+    $reco= $this->channelDaysScheduleOffsetFunctz($type,$hoursofset)->get();
+// });
+} else {
+
+// $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
+    $type='dash_url';
+    $reco= $this->channelDaysScheduleOffsetFunctz($type,$hoursofset)->get();
+// });
+    }
+    
+
+// SELECT CallSign,StationName,
+// GROUP_CONCAT(
+//   JSON_OBJECT('title', EventTitle,
+//                 'start', StartDateTime,'end', EndDateTime 
+//   ) SEPARATOR '|'
+// ) AS programs
+//     FROM gracenote
+//     GROUP BY CallSign,StationName
+// ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
+  
+// $reco=$record->toSql(); echo $reco;exit; 
+
+// $reco=$record->get(); //echo $reco;exit; 
+   if ($reco->isEmpty()) {
+      $response = [
+          'success' => false,
+          'data' => 'Empty',
+          'message' => 'Channel not found.',
+          'response_code'=>404,
+      ];
+      return response()->json($response, 404);
+  }  
+      // return response()->json($record->toSql());
+      // return json_encode($api);
+//       $record= DB::table('gracenote');
+// $reco=$record->get();
+// dd($reco);
+// dd($this->channelDaysScheduleFunctz('dash_url')->toSql());
+      $response = [
+        'success' => true,
+        'date'=>date("Y-m-d"),
+        // 'sql'=>$this->channelDaysScheduleFunctz('dash_url')->toSql(),
+      //   'count' => $reco->count(),
+        'data' => $reco,
+       
+        'message' => 'Schedule data for 3 days found',
+        'response_code'=>200,
+    ];
+    $responsejson=json_encode($response);
+$data=gzencode($responsejson,9);
+// $response = [
+//     'success' => true,
+//     'date'=>date("Y-m-d"),
+//   //   'count' => $reco->count(),
+//     'data' => $data,
+   
+//     'message' => 'Schedule data for 3 days found',
+//     'response_code'=>200,
+// ];
+return response($data)->withHeaders([
+    'Access-Control-Allow-Origin' => '*',
+    'Access-Control-Allow-Methods'=> 'GET',            
+    'Content-type' => 'application/json; charset=utf-8',
+    'Content-Length'=> strlen($data),
+    'Content-Encoding' => 'gzip'
+]);
+      
+     
+  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+  //  return  response()->json([
+  //     'clients' => $this->transformClientCollection($api)
+  //  ], 200);
+  }
+
 public function channelDaysScheduletz(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
 $isDevice=isDeviceAppleRokuOthers($ua);
@@ -851,6 +955,48 @@ return response($data)->withHeaders([
       WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','-07:00')
 
       ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s'),'+00:00','-07:00')
+  end EndDateTimewithTimezon"),
+
+      )
+      ->from('gracenote')
+      ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+    
+      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(date_add(CURDATE(),interval -1 day), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+       ->orderBy('gracenote.StartDateTime', 'asc');
+        }, 'sub')
+        ->where('sub.status','=','1')
+    ->orderBy('sub.callSign', 'asc')
+    ->groupBy('sub.callSign','StationName','image',$type,'id');
+    return $record;
+  }
+
+
+  public function channelDaysScheduleOffsetFunctz($type,$timeoffset){
+      $tz=$timeoffset??'-07:00';
+    $imagePath=url("/uploads/channellogo/");
+    DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+    $record  = Gracenote::select("sub.callSign as callSign","id","StationName as stationName","$type as url",DB::raw("CONCAT('$imagePath/',`image`) logo"))
+    ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', UNIX_TIMESTAMP(StartDateTime),'end', UNIX_TIMESTAMP(EndDateTime),
+    'starttz',(UNIX_TIMESTAMP(StartDateTimewithTimezon)),'endtz',(UNIX_TIMESTAMP(EndDateTimewithTimezon)),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
+    ->fromSub(function ($query) use ($type,$tz) {
+      $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+      DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),
+      DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(),interval -1 day), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+      DB::raw('IFNULL(gracenote.TimeZoneName,"TimeZoneName") TimeZoneName'),
+      DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type",
+      DB::raw(" CASE gracenote.TimeZoneName
+      WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','.$tz.')
+      WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','.$tz.')
+      WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','.$tz.')
+
+      ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'),'+00:00','.$tz.')
+  end StartDateTimewithTimezon"),DB::raw(" CASE gracenote.TimeZoneName
+      WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','.$tz.')
+      WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','.$tz.')
+      WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','.$tz.')
+
+      ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), ' 23:59:59'), '%Y-%m-%d %H:%i:%s'),'+00:00','.$tz.')
   end EndDateTimewithTimezon"),
 
       )
