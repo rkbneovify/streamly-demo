@@ -122,7 +122,7 @@ class SearchVC: UIViewController {
     private func makeApiCall(){
         self.showSpinner(onView: self.view)
           viewModel.delegate = self
-          viewModel.getSearchData()
+          viewModel.getAllChannelListForSearch()
 
       }
 
@@ -186,7 +186,7 @@ extension SearchVC:UICollectionViewDelegate
 
         let flag = self.geoData?.success ?? false
         guard let item = filteredChannelListInfo?[(indexPath.item)] else {return}
-        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.name ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
+        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
         present(videoPlaybackViewController, animated: true) {
             self.videoPlaybackViewController.channelObject = chanelInfo
             self.videoPlaybackViewController.isAllowedZipCode = flag
@@ -195,7 +195,7 @@ extension SearchVC:UICollectionViewDelegate
             self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
             self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
             self.videoPlaybackViewController.filterData = self.filteredChannelListInfo?.map({ obj in
-                return ChannelDetails(id: obj.id ?? 0, stationName: obj.name ?? "", url: obj.url ?? "", logo: obj.logo ?? "", callSign: obj.callSign ?? "", programs: [])
+                return ChannelDetails(id: obj.id ?? 0, stationName: obj.stationName ?? "", url: obj.url ?? "", logo: obj.logo ?? "", callSign: obj.callSign ?? "", programs: [])
             })
             self.videoPlaybackViewController.loadAndPlay()
         

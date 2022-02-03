@@ -50,6 +50,7 @@ enum API:String {
     case getSearchData      = "auth/search"
     case getEpgData         = "auth/channeldayschdeulepaginate"
     case getChannelGenerics = "auth/channelgenre"
+    case getChannelList        = "auth/channellist"
     case getTermsData       = "auth/termofuse"
     case getRecentData      = "auth/my_recents"
     case addToRecent        = "auth/addtorecent"

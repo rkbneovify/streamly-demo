@@ -56,6 +56,17 @@ open class ApiCall {
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getSearchData.rawValue, method: .post, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
+    
+    
+    @discardableResult
+    public static func getAllChannelList(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+//         let param:[String:String] = ["search": search]
+        
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getChannelList.rawValue, method: .get, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
 
     @discardableResult
     public static func getEPGData(_ page: Int = 1,_ genere: String = "All", success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {

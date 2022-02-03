@@ -52,32 +52,33 @@ struct ChannelArray : Codable {
     
     //  let connected_devices : Int?
     let id: Int?
-    let image: String?
-    let name : String?
-    let url : String?
-    let logo:String?
     let callSign: String?
+    let stationName: String?
+    let image: String?
+    let url: String?
+    let genrename: [String]?
+    let logo: String?
     
     enum CodingKeys: String, CodingKey {
-        
-        //   case connected_devices = "connected_devices"
         case id = "id"
-        case image = "image"
         case callSign = "callSign"
-        case name = "name"
+        case stationName = "stationName"
+        case image = "image"
         case url = "url"
+        case genrename = "genrename"
         case logo = "logo"
     }
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         //  connected_devices = try values.decodeIfPresent(Int.self, forKey: .connected_devices)
-        name = try values.decodeIfPresent(String.self, forKey: .name)
+        stationName = try values.decodeIfPresent(String.self, forKey: .stationName)
         url = try values.decodeIfPresent(String.self, forKey: .url)
         logo = try values.decodeIfPresent(String.self, forKey: .logo)
         id = try values.decodeIfPresent(Int.self, forKey: .id)
         image = try values.decodeIfPresent(String.self, forKey: .image)
         callSign = try values.decodeIfPresent(String.self, forKey: .callSign)
+        genrename = try values.decodeIfPresent([String].self, forKey: .genrename)
     }
     
 }
