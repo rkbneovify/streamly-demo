@@ -556,7 +556,7 @@ $ua = $request->server('HTTP_USER_AGENT');
 $input = $request->all();
 //regex to validate gmt + and - hours
         $validator = Validator::make($input, [
-            'hoursoffset' => ['required','regex:/[+-][0-9]{2}:[0-9]{2}\b/']
+            'hoursoffset' => ['required']
         ]);
         if ($validator->fails()) {
             $response = [
