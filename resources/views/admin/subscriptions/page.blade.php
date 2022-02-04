@@ -5,11 +5,27 @@
 	<title>Infinite scroll</title>
 	<meta charset="UTF-8" />
 	
-	
+	<script src=
+"https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 
 <body>
-<table id="mytable" ><thead>
+  <?php // var_dump($planidArr); ?>
+<label for="plan">Choose a plan:</label>
+<select name="plan" id="plan">
+  <option value="">Choose a Plan</option>
+  @foreach($planidArr as $key=>$value)
+    <option value="{{$value}}">{{$key}}</option>
+  @endforeach
+</select>
+<label for="customer">Select a customer:</label>
+<select name="customer" id="customer">
+  <option value="">Select customer</option>
+  @foreach($customerData as $key=>$value)
+    <option value="{{$value}}">{{$key}}</option>
+  @endforeach
+</select>
+<table id="mytable" style="height:900px;"><thead>
         <tr>
           <th>Subscription</th>
           <th>Email</th>
@@ -56,12 +72,12 @@
   flex-direction: column;
 }
 .whole_wrapper .each_card .right_contents_container .name_field {
-  font-size: 22px;
+  font-size: 202px;
   font-weight: 900;
   line-height: 30px;
 }
 .whole_wrapper .each_card .right_contents_container .email_field {
-  font-size: 22px;
+  font-size: 202px;
   line-height: 30px;
 }
 
@@ -128,6 +144,8 @@
 let page = 1;
 const last_page = 10;
 var gotlastid=null;
+var plan = null;
+var customer = null;
 var has_more=true;
 var list=null;
 const articleListPagination = document.getElementById('article-list-pagination');
@@ -152,10 +170,12 @@ const httpRequestWrapper = (method, URL) => {
    const params = {
             lastid: list
         }
+  console.log(gotlastid);
+  console.log(plan);
   return new Promise((resolve, reject) => {
     const xhr_obj = new XMLHttpRequest();
     xhr_obj.responseType = "json";
-    xhr_obj.open(method, URL+`?lastid=${gotlastid??''}`);
+    xhr_obj.open(method, URL+`?lastid=${gotlastid??''}`+`&plan=${plan??''}`+`&customer=${customer??''}`);
     xhr_obj.setRequestHeader('Content-type', 'application/json')
     xhr_obj.onload = () => {
       const data = xhr_obj.response;
@@ -229,6 +249,7 @@ newRow.innerHTML = trtop;
  
   pageElement.id = getPageId(page);
   pageElement.className = 'article-list__page';
+  console.log('populate ui page',page);
 	addPaginationPage(page);
   buildTable(data);
 
@@ -287,4 +308,25 @@ function addLineToHTMLTable(firstName, lastName,gender,country) {
   var locationCell = newRow.insertCell();
   locationCell.innerHTML = country;
 }
+
+$('#plan').on('change',function(){
+  plan = $(this).val();
+  gotlastid = null;
+  page = 1;
+  $('tbody').html('');
+  $('#article-list-pagination').html('');
+  getData(1);
+});
+$('#customer').on('change',function(){
+  customer = $(this).val();
+  gotlastid = null;
+  page = 1;
+  $('tbody').html('');
+  $('#article-list-pagination').html('');
+  getData(1);
+});
+$(document).on('scroll',function(){
+  // getData(1);
+  // throtller();
+});
 </script>
