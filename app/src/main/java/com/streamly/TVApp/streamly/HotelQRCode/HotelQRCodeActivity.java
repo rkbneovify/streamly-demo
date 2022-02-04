@@ -22,6 +22,7 @@ import com.streamly.TVApp.streamly.QRCode.QRScanStatusModel;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
@@ -79,20 +80,29 @@ public class HotelQRCodeActivity extends FragmentActivity {
                         String access_token=response.body().getAccessToken();
 
                         if(response.body().getUserRole().equals("tieruser")){
-                            Long userId=response.body().getUser().getId();
+
+                            if(response.body().getSubscribed()) {
+                                Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
 //                        set.addAll(response.body().getRooms());
-                            Gson gson = new Gson();
-                            String json = gson.toJson(response.body().getRooms());
+                                Gson gson = new Gson();
+                                String json = gson.toJson(response.body().getRooms());
 
-                            TokenStorage.savedRoomList(HotelQRCodeActivity.this, ConstantUtility.ROOM_LIST,json);
-                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.USER_ID,userId.toString());
-                            TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                            CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
+                                TokenStorage.savedRoomList(HotelQRCodeActivity.this, ConstantUtility.ROOM_LIST, json);
+                                TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.USER_ID, userId.toString());
+                                TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                                CommonUtility.showToast(HotelQRCodeActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            startActivity(new Intent(HotelQRCodeActivity.this, UserRoomActivity.class));
-                            finish();
+                                startActivity(new Intent(HotelQRCodeActivity.this, UserRoomActivity.class));
+                                finish();
+                            }
+                            else {
+                                TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                                NoPlanDialog noPlanDialog = new NoPlanDialog(HotelQRCodeActivity.this);
+                                noPlanDialog.setCancelable(false);
+                                noPlanDialog.show();
+                            }
 
                         }
                         else if(response.body().getUserRole().equals("user")) {

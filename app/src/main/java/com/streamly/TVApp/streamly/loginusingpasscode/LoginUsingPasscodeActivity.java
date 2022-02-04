@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
@@ -96,16 +97,25 @@ Button btn_sign_in_using_passcode;
                         String access_token=response.body().getAccessToken();
 
                         if(response.body().getUserRole().equals("tieruser")){
-                            Long userId=response.body().getUser().getId();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(response.body().getRooms());
-                            TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST,json);
-                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID,userId.toString());
-                            TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                            CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
-                            startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
-                            finish();
-                            et_passcode.setText("");
+
+                            if(response.body().getSubscribed()) {
+                                Long userId = response.body().getUser().getId();
+                                Gson gson = new Gson();
+                                String json = gson.toJson(response.body().getRooms());
+                                TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST, json);
+                                TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID, userId.toString());
+                                TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                                CommonUtility.showToast(LoginUsingPasscodeActivity.this, response.body().getMessage());
+                                startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
+                                finish();
+                                et_passcode.setText("");
+                            }
+                            else{
+                                TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                                NoPlanDialog noPlanDialog = new NoPlanDialog(LoginUsingPasscodeActivity.this);
+                                noPlanDialog.setCancelable(false);
+                                noPlanDialog.show();
+                            }
                         }
                         else if(response.body().getUserRole().equals("user")) {
                             CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());

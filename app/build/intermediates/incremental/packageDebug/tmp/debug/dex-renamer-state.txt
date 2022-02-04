@@ -1,9 +1,9 @@
-#Fri Jan 21 15:30:46 IST 2022
-base.2=/home/shashank/StudioProjects/streamly/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+#Fri Feb 04 16:46:33 IST 2022
+base.2=/mnt/sdb2/OodlesProject/StreamlyGitShashank/streamly/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
 path.2=classes2.dex
-base.1=/home/shashank/StudioProjects/streamly/app/build/intermediates/dex/debug/mergeProjectDexDebug/classes.dex
+base.1=/mnt/sdb2/OodlesProject/StreamlyGitShashank/streamly/app/build/intermediates/dex/debug/mergeProjectDexDebug/classes.dex
 path.1=classes.dex
-base.0=/home/shashank/StudioProjects/streamly/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.0=/mnt/sdb2/OodlesProject/StreamlyGitShashank/streamly/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
 renamed.2=classes3.dex
 renamed.1=classes2.dex
 renamed.0=classes.dex

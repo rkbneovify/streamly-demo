@@ -18,6 +18,7 @@ import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.QRCode.QRCodeActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.DeviceLimitDialog;
+import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
@@ -188,32 +189,43 @@ public class LogInActivity extends FragmentActivity {
                         boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
 
                         if (response.body().getUserRole().equals("tieruser")) {
-                            Long userId = response.body().getUser().getId();
+
+                            if(response.body().getSubscribed()){
+                                Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
 //                        set.addAll(response.body().getRooms());
-                            Gson gson = new Gson();
-                            String json = gson.toJson(response.body().getRooms());
+                                Gson gson = new Gson();
+                                String json = gson.toJson(response.body().getRooms());
 
-                            TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST, json);
-                            TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
-                            TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
-                            TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
-                            TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
-                            TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
-                            TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
-                            TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
+                                TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST, json);
+                                TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
+                                TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                                TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                                TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                                TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                                TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                                TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                                CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            if(personaDeviceNamePopup){
-                                startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
-                            }else{
-                                startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
-                            }
-                            finish();
+                                if(personaDeviceNamePopup){
+                                    startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
+                                }else{
+                                    startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
+                                }
+                                finish();
 
-                            edUserName.setText("");
-                            edPassword.setText("");
+                                edUserName.setText("");
+                                edPassword.setText("");
+                            }
+                            else {
+                                TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                                NoPlanDialog noPlanDialog = new NoPlanDialog(LogInActivity.this);
+                                noPlanDialog.setCancelable(false);
+                                noPlanDialog.show();
+
+                            }
+
                         } else if (response.body().getUserRole().equals("user")) {
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);

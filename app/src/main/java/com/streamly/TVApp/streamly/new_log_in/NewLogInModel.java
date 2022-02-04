@@ -61,12 +61,24 @@ public class NewLogInModel {
     @Expose
     private String userRole;
 
+    @SerializedName("subscribed")
+    @Expose
+    private Boolean subscribed;
+
     @SerializedName("termandcondition")
     @Expose
     private Boolean termandcondition;
     @SerializedName("rooms")
     @Expose
     private List<Room> rooms = null;
+
+    public Boolean getSubscribed() {
+        return subscribed;
+    }
+
+    public void setSubscribed(Boolean subscribed) {
+        this.subscribed = subscribed;
+    }
 
     public Boolean getSuccess() {
         return success;
