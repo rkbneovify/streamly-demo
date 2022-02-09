@@ -35,6 +35,13 @@ class Channel extends Model
 'genre_id','status','genres','image','stationName'];
 protected $appends = ['logo'];
 
+protected $casts = [
+    'programs' => 'array',
+    'Programs' => 'array',
+    'Channel' => 'array',
+    'events' => 'array','genrename' => 'array',
+    'genre_name' => 'string',
+];
     /**
     * Date time columns.
     */
