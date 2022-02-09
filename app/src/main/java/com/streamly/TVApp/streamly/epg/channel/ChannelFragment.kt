@@ -252,17 +252,16 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
     //#neovifyissueresolved28sep
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
-        var dayss: Long? = 1
+        var dayss: Long ?= 1
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleListPaginate(1, NetworkKeys.KEY_APP_JSON, "Bearer $authToken")
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON,"Bearer $authToken").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     //success
-                    Log.e(TAG, "GET SECHEDULELIST " + it.message);
+                    Log.e(TAG,"GET SECHEDULELIST "+it.message);
                     val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                    Log.e("### episodeData", it.data.data.size.toString())
+                    Log.e("### episodeData", it.data.size.toString())
 
                     //#neovifyissueresolved28sep
                     val p: Pattern = Pattern.compile("\\d+")
@@ -271,29 +270,31 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                         Log.e(TAG, "::>>>digit: " + m.group())
                         dayss = (m.group()).toLong()
                     }
+
                     //#neovifyissueresolved28sep
-                    for (i in 0 until it.data.data.size) {
-                        for (j in 0 until channels.size) {
-                            if (it.data.data[i].callSign.toString() == channels[j].name.toString()) {
+                    for (i in 0 until it.data.size) {
+
+                        for (j in 0 until channels.size)
+                        {
+                            if (it.data[i].callSign.toString() == channels[j].name.toString())
+                            {
 
                                 verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                                verticalBean.headerTitle = it.data.data[i].callSign
-                                Log.e(TAG, "call sign 1 " + it.data.data[i].callSign)
+                                verticalBean.headerTitle = it.data[i].callSign
+                                Log.e(TAG,"call sign 1 "+it.data[i].callSign)
 
                                 homelist = ArrayList()
 
-                                it.data.data[i].programs.forEach {
+                                it.data[i].programs.forEach {
                                     homeBean = HomeBean()
 
                                     showNames.add(it.title)
                                     showName_list.add(it.title)
 
-                                    val st =
-                                        Instant.ofEpochMilli((it.start.toString() + "000").toLong())
-                                    val et =
-                                        Instant.ofEpochMilli((it.end.toString() + "000").toLong())
+                                    val st = Instant.ofEpochMilli((it.start.toString() + "000").toLong())
+                                    val et = Instant.ofEpochMilli((it.end.toString() + "000").toLong())
 
                                     homeBean.title = it.title
                                     homeBean.description = it.description
@@ -303,7 +304,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                                 }
 
                                 verticalBean.allItemsInSection = homelist
-                                channel_showName_list.add(it.data.data[i].id.toString())
+                                channel_showName_list.add(it.data[i].getmId())
                                 verticallist.add(verticalBean)
                             }
 
@@ -313,8 +314,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                     }
 
 
-                    val channelMap =
-                        mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+                    val channelMap = mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
 
                     var k = 0
                     Log.e("### verticalList ", "$k <ss>" + channels.size)
@@ -325,26 +325,15 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                         if (k < channels.size) {
 
                             val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
-                            var nextTime =
-                                randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
+                            var nextTime = randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
 
 //                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
                             while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
-                                Log.e(
-                                    "### allItemsInSection1 ",
-                                    "" + verticallist[k].allItemsInSection.size
-                                )
+                                Log.e("### allItemsInSection1 ", "" + verticallist[k].allItemsInSection.size)
                                 for (p in 0 until verticallist[k].allItemsInSection!!.size) {
 
 
-                                    val endTime = ZonedDateTime.ofInstant(
-                                        Instant.ofEpochSecond(
-                                            nextTime.toEpochSecond() + Random.nextLong(
-                                                MIN_SHOW_LENGTH_SECONDS,
-                                                MAX_SHOW_LENGTH_SECONDS
-                                            )
-                                        ), ZoneOffset.UTC
-                                    )
+                                    val endTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(nextTime.toEpochSecond() + Random.nextLong(MIN_SHOW_LENGTH_SECONDS, MAX_SHOW_LENGTH_SECONDS)), ZoneOffset.UTC)
 
 
                                     val schedule = createSchedule(
@@ -356,10 +345,9 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         verticallist[k].allItemsInSection!![p].description!!,
                                         channels.get(k).videoUrl.toString(),
-                                        channels.get(k).imageUrl.toString()
-                                    )
-                                    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
-                                    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
+                                        channels.get(k).imageUrl.toString())
+                                    Log.e(TAG, "getSecondApi: "+channels.get(k).id )
+                                    Log.e(TAG, "getSecondApi 2 : "+channels.get(k).name )
 
                                     scheduleList.add(schedule)
                                     nextTime = endTime
@@ -367,10 +355,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
 //                                }
 
                                     val endTimee =
-                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(
-                                            nextTime,
-                                            MAX_CHANNEL_END_TIME
-                                        )
+                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(nextTime, MAX_CHANNEL_END_TIME)
                                         else MAX_CHANNEL_END_TIME
 
                                     val finalSchedule = createSchedule(
@@ -382,8 +367,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         verticallist[k].allItemsInSection!![p].description!!,
                                         channels.get(k).videoUrl.toString(),
-                                        channels.get(k).imageUrl.toString()
-                                    )
+                                        channels.get(k).imageUrl.toString())
                                     channelMap.put(channels.get(k).id, scheduleList)
 
                                 }
@@ -401,7 +385,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                     setData(pair.first, pair.second, localDate, dayss!!)
                     setState(State.Content)
 
-                    if (it.responseCode.toInt() == 401) {
+                    if(it.responseCode.toInt() == 401){
                         val sessionExpiredDialog = SessionExpiredDialog(eContext)
                         sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
                         sessionExpiredDialog.setCancelable(false)
@@ -413,17 +397,15 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                     //error
                     Log.e("###$TAG", "error " + it.message)
                     Log.e("###$TAG", "error " + it.localizedMessage)
-                    if (it.message.toString().contains("401")) {
+                    if(it.message.toString().contains("401")){
                         val sessionExpiredDialog =
                             SessionExpiredDialog(eContext)
                         sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
                         sessionExpiredDialog.setCancelable(false)
                         sessionExpiredDialog.show()
-                    } else if (it.message.toString().contains("402")) {
-                        CommonUtility.showToast(
-                            eContext,
-                            "Payment Required. Kindly buy subscription"
-                        )
+                    }
+                    else if(it.message.toString().contains("402")){
+                        CommonUtility.showToast(eContext, "Payment Required. Kindly buy subscription")
 
                     }
 
