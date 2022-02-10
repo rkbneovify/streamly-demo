@@ -171,46 +171,42 @@ class ChannelAPIController extends Controller
     }
 }
   
-    public function channeljson(Request $request) 
-    {   $ua = $request->server('HTTP_USER_AGENT');
-        $isDevice=isDeviceAppleRokuOthers($ua);
-        if($isDevice=='roku'){
-            
+public function channeljson(Request $request) 
+{   
+    $ua = $request->server('HTTP_USER_AGENT');
+    $isDevice=isDeviceAppleRokuOthers($ua);
+    if($isDevice=='roku'){    
+        $record= Cache::rememberForever('channelslistsmooth', function () {
+        $type='smooth_url';
+        return $this->channeljsonFunc($type)->get();});
+                
+    }else if($isDevice=='apple')  {
+        $record= Cache::rememberForever('channelslistapple', function () {
+        $type='url';
+        return $this->channeljsonFunc($type)->get();});
+                
+    }else{
 
-$record= Cache::rememberForever('channelslistsmooth', function () {
-    $type='smooth_url';
-    return $this->channeljsonFunc($type)->get();});
-           
-        }else if($isDevice=='apple')  {
-$record= Cache::rememberForever('channelslistapple', function () {
-    $type='url';
-    return $this->channeljsonFunc($type)->get();});
-            
-            }else{
-
-$record= Cache::rememberForever('channelslistdash', function () {
-    $type='dash_url';
-    return $this->channeljsonFunc($type)->get();});
-   
-   }
+        $record= Cache::rememberForever('channelslistdash', function () {
+        $type='dash_url';
+        return $this->channeljsonFunc($type)->get();});
+    }
        
     //JSON_ARRAY
     // $pagechannel=$record->get();
-    
+
+    /*
        $pagechannel=$record->map(function ($message, $key) {
-        
             $message->genrename = json_decode($message->genrename, true);
-        
-    
         return $message;
-    });
+    }); */
 
 
     //  return response()->json($record->toSql());
    
     $response = [
         'success' => true,
-        'data'=>$pagechannel,
+        'data'=>$record,
         // 'count'=>$pagechannel->count(), 
         'message' => 'Channel with genre successfully fetched',
         'response_code'=>200,
