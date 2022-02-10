@@ -254,7 +254,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
     private fun getSecondApi(authToken: String) {
         var dayss: Long? = 1
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleListPaginate(1, NetworkKeys.KEY_APP_JSON, "Bearer $authToken")
+        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON, "Bearer $authToken")
             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
@@ -262,7 +262,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                     Log.e(TAG, "GET SECHEDULELIST " + it.message);
                     val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                    Log.e("### episodeData", it.data.data.size.toString())
+                    Log.e("### episodeData", it.data.size.toString())
 
                     //#neovifyissueresolved28sep
                     val p: Pattern = Pattern.compile("\\d+")
@@ -272,19 +272,19 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                         dayss = (m.group()).toLong()
                     }
                     //#neovifyissueresolved28sep
-                    for (i in 0 until it.data.data.size) {
+                    for (i in 0 until it.data.size) {
                         for (j in 0 until channels.size) {
-                            if (it.data.data[i].callSign.toString() == channels[j].name.toString()) {
+                            if (it.data[i].callSign.toString() == channels[j].name.toString()) {
 
                                 verticalBean = VerticalHomeBean()
 
 //                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                                verticalBean.headerTitle = it.data.data[i].callSign
-                                Log.e(TAG, "call sign 1 " + it.data.data[i].callSign)
+                                verticalBean.headerTitle = it.data[i].callSign
+                                Log.e(TAG, "call sign 1 " + it.data[i].callSign)
 
                                 homelist = ArrayList()
 
-                                it.data.data[i].programs.forEach {
+                                it.data[i].programs.forEach {
                                     homeBean = HomeBean()
 
                                     showNames.add(it.title)
@@ -303,7 +303,7 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
                                 }
 
                                 verticalBean.allItemsInSection = homelist
-                                channel_showName_list.add(it.data.data[i].id.toString())
+                                channel_showName_list.add(it.data[i].getmId().toString())
                                 verticallist.add(verticalBean)
                             }
 

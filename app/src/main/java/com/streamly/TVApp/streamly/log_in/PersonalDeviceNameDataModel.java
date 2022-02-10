@@ -37,7 +37,7 @@ public class PersonalDeviceNameDataModel {
         @Expose
         private String devicename;
 
-        @SerializedName("sessionid")
+        @SerializedName("personaldeviceid")
         @Expose
         private String sessionid;
     }
