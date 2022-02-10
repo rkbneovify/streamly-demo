@@ -362,17 +362,18 @@ public function unhashid($id){
         return response()->json($response, 200);
     }
 
-    public function genrename(Request $request )
-    { $ua = $request->server('HTTP_USER_AGENT');
+public function genrename(Request $request ){ 
+    $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
         if($isDevice=='apple')   {
-    $type='url';
-    $record = $this->genrenameFunc($type);
-      $data=$record->get()->groupBy('genrename');} else{
+            $type='url';
+            $record = $this->genrenameFunc($type);
+            $data=$record->get()->groupBy('genre_name');
+    } else{
         $type='dash_url';
         $record = $this->genrenameFunc($type);
-      $data=$record->get()->groupBy('genrename'); 
-      }
+        $data=$record->get()->groupBy('genre_name'); 
+    }
       $a=$data->keys();
       
       $response = [
@@ -388,8 +389,7 @@ public function unhashid($id){
     public function genrenameFunc($type){
     
        $second=Channel::select('channels.id',
-DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('IFNULL(genre.name,"Others") genrename'))
-       
+DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
