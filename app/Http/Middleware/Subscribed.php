@@ -29,14 +29,14 @@ class Subscribed
         // dd($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin")));
         if ($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin"))){
         if($request->wantsJson()){
-            $response = array('success' =>false ,'response_code'=>402,'message'=>"We're having some trouble with your current subscription.We'll try again, but in meantime you may want to update your subscription. For more help, please visit https://streamlytv.com or contact at https://streamlytv.com/helpandsupport");
+            $response = array('success' =>false ,'response_code'=>402,'message'=>KindlySubscribeMsg());
             return response()->json($response, 402);
         }else { 
                 return redirect('/selectplan');
              }}
              if ($user->subscription('main') && $user->subscription('main')->cancelled() ){
                 if($request->wantsJson()){
-                    $response = array('success' =>false ,'response_code'=>402,'message'=>"We're having some trouble with your current subscription.We'll try again, but in meantime you may want to update your subscription. For more help, please visit https://streamlytv.com or contact at https://streamlytv.com/helpandsupport");
+                    $response = array('success' =>false ,'response_code'=>402,'message'=>KindlySubscribeMsg());
                     return response()->json($response, 402);
                 }else { 
                         return redirect('/selectplan');

@@ -60,8 +60,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('sort', 'Admin\ChannelAPIController@sortdevice');
     Route::post('channelschdeule', 'Admin\ChannelAPIController@channelschedulejson');
     Route::get('channeldayschdeule', 'Admin\ChannelAPIController@channelDaysSchedule');
-    Route::get('channeldayschdeulepaginate', 'Admin\ChannelAPIController@channelDaysSchedulePaginate');
+    Route::get('channeldayschdeulepaginate', 'Admin\ChannelAPIController@channelDaysSchedulePaginate')->middleware('subscribed');
     Route::get('channeldayschdeuletz', 'Admin\ChannelAPIController@channelDaysScheduletz')->middleware('subscribed');
+    Route::get('channeldayschdeuletzwithoffset', 'Admin\ChannelAPIController@channelDaysScheduleoffsettz')->middleware('subscribed');
+    Route::get('channeldayschdeulepaginateoffsettz', 'Admin\ChannelAPIController@channelDaysSchedulePaginateoffsettz')->middleware('subscribed');
     Route::get('oldchanneldayschdeule', 'Admin\ChannelAPIController@oldchannelDaysSchedule');
     Route::get('frontendepg', 'Admin\ChannelAPIController@frontEpgchannelDaysSchedule');
     Route::get('frontendepg2', 'Admin\ChannelAPIController@frontEpgchannelDaysSchedule2');
@@ -69,7 +71,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('timezonefrontendepg', 'Admin\ChannelController@timezoneEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
-    Route::put('personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName');
+    Route::match(['put', 'patch','post'],'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
     Route::get('privacypol', 'APIController@privacypol');
     Route::get('termofuse', 'APIController@termofuse');

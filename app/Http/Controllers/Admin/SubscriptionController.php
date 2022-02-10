@@ -11,7 +11,7 @@ use App\User;
 use Carbon\Carbon;
 use Exception;
 use Stripe\Coupon;
-
+use Stripe\Customer;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 
 
@@ -275,6 +275,35 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      * @param  Subscription  $subscription
      * @return \Illuminate\Http\Response
      */
+    public function paginatewithscroll(){
+        $plans = \Stripe\Plan::all(['active'=>true]);
+        $allPlan = $plans->data;
+        $planidArr = collect($allPlan)->pluck('id','nickname');
+        // dd($planidArr);
+        $customers = \Stripe\Customer::all();
+        $customers = $customers->data;
+        $customerData = collect($customers)->pluck('id','email');
+        // dd($customerData);
+        return view('admin.subscriptions.page',compact('planidArr','customerData'));
+    }
+    public function subscriptionstripe(Request $request)
+    { //dd($request);
+        
+        $starting_after=$request->query('lastid')==1?NULL:$request->query('lastid');
+        $customer=$request->query('customer')??NULL;
+        $plan = $request->query('plan')??NULL;
+        // dd($starting_after); 
+        $increment = 3;
+        $customersJSON = \Stripe\Subscription::all(array(
+            "customer"=>$customer,
+            "plan"=>$plan,//will find it in plan.id
+            // "customer"=>"cus_JgeZ3afo13HWyx",
+            "limit" => $increment, 
+            "starting_after" => $starting_after,
+            'expand' => ['data.plan','data.customer','data.items']
+        ));
+        return ['fulldata'=>$customersJSON->data,'has_more'=>$customersJSON->has_more, 'lastid' => end($customersJSON->data)];
+    }
     public function show($id)
     {   //$subscription = Subscription::find($id); 
        $user = User::all()->pluck('name', 'id');

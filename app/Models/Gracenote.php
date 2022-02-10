@@ -60,7 +60,8 @@ protected $casts = [
     'programs' => 'array',
     'Programs' => 'array',
     'Channel' => 'array',
-    'events' => 'array','genrename' => 'array',
+    'events' => 'array',
+    'genrename' => 'array',
     'genre_name' => 'string',
   ];
 public function gracenotechannel()
