@@ -566,10 +566,16 @@ details[open] > summary::before {
                 <div class="col-centered" id="tab-buttons">
 
  @foreach ($plankey as $plank) 
+ <?php
+    if($plank == "per_unit"){
+        $title = "Basic Plan";}
+    else{
+        $title = $plank;}
+?>
  @if ($loop->first)  
- <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{Str::title($plank)}}</a>
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn" data-toggle="collapse">{{Str::title($title)}}</a>
  @else
- <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{Str::title($plank)}}</a>
+ <a href="#{{$plank}}" class="btn btn-sm btn-default  faq-btn collapsed" data-toggle="collapse">{{Str::title($title)}}</a>
  @endif
  @endforeach
                     

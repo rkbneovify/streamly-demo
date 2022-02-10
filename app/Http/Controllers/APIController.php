@@ -264,7 +264,10 @@ public function unhashid($id){
         //and get the number of last connected device
         $userRole=  $user->roles->first()->name;
         if($userRole=='tieruser'){
-        $prevConnectDevicecount = SessionTable::with('hotel:id,hotel_room,session_id')
+        $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id','pdname'=> function($q) use($uid) {
+            // Query the name field in status table
+            $q->select('id','personal_devicename','device_id','user_id')->where('user_id', '=', $uid);
+        }])
         ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
         ->where([
         ['status', '=', '1'],
@@ -272,7 +275,7 @@ public function unhashid($id){
          ])->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()//->makeHidden('device')
+    $s=$prevConnectDevicecount->get()->makeHidden('pdname')
     ->map(function ($address)  {
         
         $address['session_id'] = HashUserID($address['id']);
@@ -284,35 +287,47 @@ public function unhashid($id){
     
         }
 
-        $address['personaldevicename']=$address['device']['personaldevicename']??'empty';
+        $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+        $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
         unset($address['hotel']);
         unset($address['device']);
         unset($address['id']);
+        unset($address['pdname']);
        
           return $address;
                     
                     });
                 }else{
-                    $prevConnectDevicecount = SessionTable::selectRaw("id as session_id,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
-        ->where([
-        ['status', '=', '1'],
-        ['users_id', '=', $uid],
-         ])->orderBy('connected_devices', 'asc');
+                    $prevConnectDevicecount = SessionTable::with(['pdname'=> function($q) use($uid) {
+                        // Query the name field in status table
+                            $q->select('id','personal_devicename','device_id','user_id')
+                            ->where('user_id', '=', $uid); 
+                    }])
+                    ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $uid],
+                    ])
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+                    ->orderBy('connected_devices', 'asc');
         $s='';
         $numofdevice='';
-    $s=$prevConnectDevicecount->get()//->makeHidden('device')
-    ->map(function ($address)  {
+        $s=$prevConnectDevicecount->get()->makeHidden('pdname')
+        ->map(function ($address)  {
         
-        $address['session_id'] = HashUserID($address['session_id']);
+        $address['session_id'] = HashUserID($address['id']);
     
-        $address['personaldevicename']=$address['device']['personaldevicename']??'empty';
+        $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+        $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+        unset($address->pdname);
+        unset($address['device']);
+        unset($address['id']);
           return $address;
                     
                     });
     
                 }
     $numofdevice=$prevConnectDevicecount->count();
-   
+    
     //  dd($s);
          $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
          return response()->json($response, 200);
@@ -347,17 +362,18 @@ public function unhashid($id){
         return response()->json($response, 200);
     }
 
-    public function genrename(Request $request )
-    { $ua = $request->server('HTTP_USER_AGENT');
+public function genrename(Request $request ){ 
+    $ua = $request->server('HTTP_USER_AGENT');
         $isDevice=isDeviceAppleRokuOthers($ua);
         if($isDevice=='apple')   {
-    $type='url';
-    $record = $this->genrenameFunc($type);
-      $data=$record->get()->groupBy('genrename');} else{
+            $type='url';
+            $record = $this->genrenameFunc($type);
+            $data=$record->get()->groupBy('genre_name');
+    } else{
         $type='dash_url';
         $record = $this->genrenameFunc($type);
-      $data=$record->get()->groupBy('genrename'); 
-      }
+        $data=$record->get()->groupBy('genre_name'); 
+    }
       $a=$data->keys();
       
       $response = [
@@ -373,8 +389,7 @@ public function unhashid($id){
     public function genrenameFunc($type){
     
        $second=Channel::select('channels.id',
-DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('IFNULL(genre.name,"Others") genrename'))
-       
+DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
