@@ -333,20 +333,14 @@ $isDevice=isDeviceAppleRokuOthers($ua);
 if($request->exists('genre')){
     $arr = explode(',', $request->genre);
     if($isDevice=='roku'){
-        $reco= Cache::remember('channelscheduleroku',60*60*24, function () {
             $type='smooth_url';
-            return $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
-        });
+            $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
     }else if($isDevice=='apple'){
-        $reco = Cache::remember('channelscheduleapple',60*60*24, function () {
             $type='url';
-            return $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
-    });
+            $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
     } else {
-        $reco= Cache::remember('channelscheduleothers',60*60*24, function () {
             $type='dash_url';
-            return $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
-        });
+            $reco= $this->channelDaysScheduleFuncWithGenre($type,$arr)->get();
     }
 }else{
     if($isDevice=='roku'){
@@ -1027,6 +1021,7 @@ public function channelDaysScheduleFuncWithGenre($type,$q){
             ->orderBy('sub.callSign', 'asc')
             ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
         }
+    // dd($record->toSql());
     return $record;
    
 }
