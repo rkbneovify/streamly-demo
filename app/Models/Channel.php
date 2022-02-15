@@ -33,7 +33,7 @@ class Channel extends Model
 'dash_url',
 'smooth_url',
 'genre_id','status','genres','image','stationName'];
-protected $appends = ['logo'];
+// protected $appends = ['logo'];
 
 protected $casts = [
     'programs' => 'array',
@@ -61,17 +61,16 @@ protected $casts = [
         return $this->belongsToMany(Genre::class, 'channels_genre', 
         'channels_id', 'genre_id');
     }
-    public function getLogoAttribute($size=null)
-{ if ($this->image) {
-    $imagePath=asset("/uploads/channellogo/".$this->image);
-    return $imagePath;
-} else {
-    $imagePath=asset("/uploads/channellogo/notfound.png");
-    return $imagePath;
-}
-
-   
-}
+    // public function getLogoAttribute($value)
+    // {
+    //     if ($this->image) {
+    //         $imagePath=asset("/uploads/channellogo/".$this->image);
+    //         return $imagePath;
+    //     } else {
+    //         $imagePath=asset("/uploads/channellogo/notfound.png");
+    //         return $imagePath;
+    //     }
+    // }
 
 public function favorited()
 {
