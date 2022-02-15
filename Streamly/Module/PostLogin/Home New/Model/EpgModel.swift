@@ -88,7 +88,7 @@ struct ChannelDetails : Codable {
     }
     enum CodingKeys: String, CodingKey {
 
-        case StationName = "stationName"
+        case StationName = "StationName"
         case url = "url"
         case logo = "logo"
         case programs = "programs"
@@ -118,6 +118,9 @@ struct ProgramArray : Codable {
     let start : TimeInterval?
     let title:String?
     let description:String?
+//    let starttz: TimeInterval?
+//    let endtz: TimeInterval?
+//    let TimeZoneName: String?
   //  var schedule: Schedule?
     var startDate: Date {
         return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
@@ -133,7 +136,9 @@ struct ProgramArray : Codable {
 
     enum CodingKeys: String, CodingKey {
 
-
+//        case TimeZoneName
+//        case endtz
+//        case starttz
         case end = "end"
         case start = "start"
         case title = "title"
@@ -146,8 +151,9 @@ struct ProgramArray : Codable {
         start = try values.decodeIfPresent(TimeInterval.self, forKey: .start)
         description = try values.decodeIfPresent(String.self, forKey: .description)
         title = try values.decodeIfPresent(String.self, forKey: .title)
-
-
+//        starttz = try values.decodeIfPresent(TimeInterval.self, forKey: .starttz)
+//        endtz = try values.decodeIfPresent(TimeInterval.self, forKey: .endtz)
+//        TimeZoneName = try values.decodeIfPresent(String.self, forKey: .TimeZoneName)
     }
     
 

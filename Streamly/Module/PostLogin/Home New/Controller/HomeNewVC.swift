@@ -54,78 +54,8 @@ class HomeNewVC: UIViewController {
         videoPlaybackViewController = VideoPlaybackViewController()
         super.init(coder: coder)
     }
+    var myChannelIds:[Int] = []
     var selectedCategories = -1
-    //    {
-    //        didSet {
-    //            switch selectedCategories {
-    //            case CategoriesSelect.all.rawValue:
-    //                self.allButton.backgroundColor = UIColor.firstGradientColor
-    //                self.recentButton.backgroundColor = UIColor.clear
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.clear
-    //                self.newsButton.backgroundColor = UIColor.clear
-    //                self.moviesButton.backgroundColor = UIColor.clear
-    //                self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.recent.rawValue:
-    //                //  guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
-    //                self.allButton.backgroundColor = UIColor.clear
-    //                self.recentButton.backgroundColor = UIColor.firstGradientColor
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.clear
-    //                self.newsButton.backgroundColor = UIColor.clear
-    //                self.moviesButton.backgroundColor = UIColor.clear
-    //                self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.myChannels.rawValue:
-    //                debugPrint("myChannels")
-    //                //                self.allButton.backgroundColor = UIColor.clear
-    //                //                               self.recentButton.backgroundColor = UIColor.firstGradientColor
-    //                //                               self.myChannelButton.backgroundColor = UIColor.clear
-    //                //                               self.sportsButton.backgroundColor = UIColor.clear
-    //                //                               self.newsButton.backgroundColor = UIColor.clear
-    //                //                               self.moviesButton.backgroundColor = UIColor.clear
-    //            //                               self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.sports.rawValue:
-    //                //     guard  self.selectedCategories != CategoriesSelect.sports.rawValue else {return}
-    //                self.allButton.backgroundColor = UIColor.clear
-    //                self.recentButton.backgroundColor = UIColor.clear
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.firstGradientColor
-    //                self.newsButton.backgroundColor = UIColor.clear
-    //                self.moviesButton.backgroundColor = UIColor.clear
-    //                self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.news.rawValue:
-    //                //     guard  self.selectedCategories != CategoriesSelect.news.rawValue else {return}
-    //                self.allButton.backgroundColor = UIColor.clear
-    //                self.recentButton.backgroundColor = UIColor.clear
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.clear
-    //                self.newsButton.backgroundColor = UIColor.firstGradientColor
-    //                self.moviesButton.backgroundColor = UIColor.clear
-    //                self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.movies.rawValue:
-    //                //  guard  self.selectedCategories != CategoriesSelect.movies.rawValue else {return}
-    //                self.allButton.backgroundColor = UIColor.clear
-    //                self.recentButton.backgroundColor = UIColor.clear
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.clear
-    //                self.newsButton.backgroundColor = UIColor.clear
-    //                self.moviesButton.backgroundColor = UIColor.firstGradientColor
-    //                self.kidsButton.backgroundColor = UIColor.clear
-    //            case  CategoriesSelect.kids.rawValue:
-    //                //   guard  self.selectedCategories != CategoriesSelect.kids.rawValue else {return}
-    //                self.allButton.backgroundColor = UIColor.clear
-    //                self.recentButton.backgroundColor = UIColor.clear
-    //                self.myChannelButton.backgroundColor = UIColor.clear
-    //                self.sportsButton.backgroundColor = UIColor.clear
-    //                self.newsButton.backgroundColor = UIColor.clear
-    //                self.moviesButton.backgroundColor = UIColor.clear
-    //                self.kidsButton.backgroundColor = UIColor.firstGradientColor
-    //            default:
-    //                return
-    //
-    //            }
-    //        }
-    //    }
     var recentIDs:[Int] = []
     let fixedCategoriesArray = ["ALL","RECENT","MY CHANNELS"]
     var timer:Timer?
@@ -394,19 +324,68 @@ class HomeNewVC: UIViewController {
     {
         invalidateTimer()
         switch sender {
-        case CategoriesSelect.all.rawValue:
+        case CategoriesSelect.all.rawValue, CategoriesSelect.recent.rawValue, CategoriesSelect.myChannels.rawValue:
             // guard  self.selectedCategories != sender else {return}
             if channelList != nil {
-                if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
-                } else {
-                    self.filteredList?.removeAll()
-                    self.filteredList = self.channelList?.data?.data ?? []
+                if CategoriesSelect.init(rawValue: sender) == .recent {
+                    self.viewModel.getRecentData()
+                    if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                        let tempRecent = self.loadRecentData(self.recentData?.data ?? [])
+                        self.filteredList?.append(contentsOf: tempRecent ?? [])
+                    } else {
+                        self.filteredList?.removeAll()
+                        self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
+                    }
+                    if (filteredList?.count ?? 0) <= self.recentIDs.count { // This works only when data have in favourites and we didn't get all favourite data in once.
+                        group.enter()
+                        self.viewModel.getEPGData(viewModel.currentPage)
+                        viewModel.currentPage += 1
+                        viewModel.isPageExist = true
+                        return
+                    }
+                    if viewModel.isPageExist {
+                        if let indexPath = self.lastIndexPath {
+                            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                            }
+                        }
+                    }
+                } else if CategoriesSelect.init(rawValue: sender) == .myChannels {
+                    self.viewModel.getChannelList()
+                    if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                        let tempRecent = self.loadMyChannelData(self.myChannelIds)
+                        self.filteredList?.append(contentsOf: tempRecent ?? [])
+                    } else {
+                        self.filteredList?.removeAll()
+                        self.filteredList = self.loadMyChannelData(self.myChannelIds)
+                    }
+                    if (filteredList?.count ?? 0) <= myChannelIds.count { // This works only when data have in favourites and we didn't get all favourite data in once.
+//                        viewModel.currentPage += 1
+                        group.enter()
+                        self.viewModel.getEPGData(viewModel.currentPage)
+                        viewModel.isPageExist = true
+                        return
+                    }
+                    if viewModel.isPageExist {
+                        if let indexPath = self.lastIndexPath {
+                            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                            }
+                        }
+                    }
                 }
-                if viewModel.isPageExist {
-                    if let indexPath = self.lastIndexPath {
-                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                    else {
+                    if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                        self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                    } else {
+                        self.filteredList?.removeAll()
+                        self.filteredList = self.channelList?.data?.data ?? []
+                    }
+                    if viewModel.isPageExist {
+                        if let indexPath = self.lastIndexPath {
+                            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                            }
                         }
                     }
                 }
@@ -420,17 +399,17 @@ class HomeNewVC: UIViewController {
             }
 //            collectionView.reloadData()
             self.selectedCategories = sender
-        case  CategoriesSelect.recent.rawValue:
-            // guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
-           // guard  self.selectedCategories != sender else {return}
-            self.filteredList?.removeAll()
-            self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
-            self.selectedCategories = sender
-            self.collectionView.reloadData()
-        case  CategoriesSelect.myChannels.rawValue:
-            // guard  self.selectedCategories != sender else {return}
-            self.selectedCategories = sender
-            debugPrint("myChannels")
+//        case  CategoriesSelect.recent.rawValue:
+//            // guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
+//           // guard  self.selectedCategories != sender else {return}
+//            self.filteredList?.removeAll()
+//
+//            self.selectedCategories = sender
+//            self.collectionView.reloadData()
+//        case  CategoriesSelect.myChannels.rawValue:
+//            // guard  self.selectedCategories != sender else {return}
+//            self.selectedCategories = sender
+//            debugPrint("myChannels")
         default:
             self.selectedCategories = sender
             if channelList != nil {
@@ -478,6 +457,13 @@ class HomeNewVC: UIViewController {
         
     }
     
+    private func loadMyChannelData(_ myChannelIds:[Int]) -> [ChannelDetails]?
+    {
+        let mainArray = self.channelList?.data?.data?.filter { i in (myChannelIds.contains{ i.id == $0} ) }
+        return mainArray
+        
+    }
+    
     private func loadRecentData(_ categories:[RecentDetails]) -> [ChannelDetails]?
     {
         let mainArray = self.channelList?.data?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
@@ -512,6 +498,7 @@ class HomeNewVC: UIViewController {
     private func makeApiCallChannelList(){
         group.enter()
         viewModel.getChannelList()
+        viewModel.getMyChannelList()
     }
     
     private func initVMList() {
@@ -543,6 +530,11 @@ class HomeNewVC: UIViewController {
             self.group.leave()
             self.recentData = recentModel
             self.recentIDs = self.recentData?.data?.map { $0.id ?? 0} ?? []
+        }
+        
+        viewModel.myChannelList = { [weak self] data in
+            guard let weak = self else { return }
+            weak.myChannelIds = data.data?.map({$0.id ?? 0}) ?? []
         }
         
     }

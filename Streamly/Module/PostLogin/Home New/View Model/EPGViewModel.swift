@@ -14,6 +14,7 @@ class EPGViewModel: NSObject {
     var geoData:((GeoFenceAddress)->())?
     var drmData:((DrmKey)->())?
     var recentData:((RecentData)->())?
+    var myChannelList: ((MychannelData) -> ())?
     var channelData:((ChannelListResponse)->())?
     var currentPage = 1
     var lastPage = 10
@@ -53,6 +54,26 @@ class EPGViewModel: NSObject {
 //            if code == 401 {
 //                Constant.logOut()
 //            }
+        }
+    }
+    
+    func getMyChannelList() {
+        ApiCall.getMyChannelList(success: { data, _
+            in
+            if let `data` = data, let model: MychannelData = EPGDataParser.parseData(data) {
+                self.myChannelList?(model)
+                ////debugPrint(epgModel)
+                self.delegate?.successAPI()
+            }
+            //debugPrint("Success")
+        }) { (error, data, code)  in
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                    self.delegate?.handleError(failedData.message ?? "", code ?? 0)
+                    return
+                }
+            //self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+            //debugPrint("failure")
+            // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
     
@@ -262,6 +283,18 @@ class EPGDataParser {
     static func parseContactData(_ data: Data) -> EPGResponse? {
         do {
             let contactModelElement = try JSONDecoder().decode(EPGResponse.self, from: data)
+            
+            
+            return contactModelElement
+        } catch {
+            //debugPrint(error)
+        }
+        return nil
+    }
+    
+    static func parseData<T: Codable>(_ data: Data) -> T? {
+        do {
+            let contactModelElement = try JSONDecoder().decode(T.self, from: data)
             
             
             return contactModelElement

@@ -295,7 +295,7 @@ extension LoginVC
                     if let data = response.success?.data { // check session exist.
                         selfStrong.openAlertForRemoveId(id: data)
                     } else if !(response.success?.subscribed ?? false) {
-                        selfStrong.showAlert(withMessage: response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
+                        selfStrong.showAlert(withMessage: response.success?.response_code == 429 ? response.success?.message ?? "" : response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
     //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
     //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
     //                        Utility.logOut()

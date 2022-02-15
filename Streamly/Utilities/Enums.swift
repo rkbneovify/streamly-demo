@@ -61,6 +61,7 @@ enum API:String {
     case setplayTimer       = "auth/ga/duration"
     case playererror        = "auth/ga/playererror"
     case getdrmkey          = "auth/getdrmkey"
+    case getMyChannel       = "auth/my_favorites"
     case loginWithPasscode  = "auth/login-with-passcode"
     case sameDeviceIdLogout = "auth/same-device-id-logout"
     case syncSessionWithRoom = "auth/sync-session-with-room"

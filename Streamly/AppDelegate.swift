@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         self.setupAudio()
         Address.sharedInstance.cordnates()
+        print(Calendar.current.timeZone.identifier)
         // Navigate to root
         // check login validation
         Switcher.updateRootVC()

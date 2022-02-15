@@ -139,6 +139,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                         collectionView.reloadSections(IndexSet(integer: lasIndexPath.section ))
                         }
                     }
+                    group.enter()
                     viewModel.getEPGData(viewModel.currentPage)
                 } else {
                     showLoading = false

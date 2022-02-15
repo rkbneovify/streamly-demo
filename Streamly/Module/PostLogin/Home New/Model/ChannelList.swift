@@ -83,3 +83,51 @@ struct ChannelList : Codable {
 
 
 
+// MARK: - MychannelData
+struct MychannelData: Codable {
+    let success: Bool?
+    let data: [MyChannel]?
+    let message: String?
+    let responseCode: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case success, data, message
+        case responseCode = "response_code"
+    }
+}
+
+// MARK: - Datum
+struct MyChannel: Codable {
+    let id: Int?
+    let name, callSign: String?
+    let url: String?
+    let genreID: Int?
+    let genres: [String]?
+    let image: String?
+    let status: Int?
+    let createdAt, updatedAt: String?
+    let logo: String?
+    let pivot: PivotCahnnel?
+
+    enum CodingKeys: String, CodingKey {
+        case id, name, callSign, url
+        case genreID = "genre_id"
+        case genres, image, status
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case logo, pivot
+    }
+}
+
+// MARK: - Pivot
+struct PivotCahnnel: Codable {
+    let userID, channelsID: Int?
+    let createdAt, updatedAt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case userID = "user_id"
+        case channelsID = "channels_id"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}

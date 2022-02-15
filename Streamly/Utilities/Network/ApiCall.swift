@@ -76,6 +76,11 @@ open class ApiCall {
         if genere != "All" {
             param["genre"] = genere
         }
+        let seconds = TimeZone.current.secondsFromGMT()
+        let minutes = abs(seconds/60) % 60
+        let hours = seconds/3600
+        let tz = String(format: "%+.2d:%.2d", hours, minutes)
+//        param["hoursoffset"] = tz
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getEpgData.rawValue, method: .get, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
@@ -86,6 +91,14 @@ open class ApiCall {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getChannelGenerics.rawValue, method: .get, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
+    public static func getMyChannelList(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getMyChannel.rawValue, method: .get, headers: headers, parameters: nil)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
 
