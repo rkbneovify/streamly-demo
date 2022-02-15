@@ -1041,6 +1041,11 @@ public function channelDaysScheduleFuncWithGenre($type,$q){
 }
 public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$hoursofset){
     $tz=$timeoffset??'-07:00';
+    if (str_contains($tz, '-')) { 
+    }else
+    {
+        $tz = "+".$tz;
+    }
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
@@ -1249,6 +1254,11 @@ public function channelDaysScheduleFunc($type){
 
 public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
     $tz=$timeoffset??'-07:00';
+    if (str_contains($tz, '-')) { 
+    }else
+    {
+        $tz = "+".$tz;
+    }
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
