@@ -118,27 +118,29 @@ struct ProgramArray : Codable {
     let start : TimeInterval?
     let title:String?
     let description:String?
-//    let starttz: TimeInterval?
-//    let endtz: TimeInterval?
-//    let TimeZoneName: String?
-  //  var schedule: Schedule?
+    let starttz: TimeInterval?
+    let endtz: TimeInterval?
+    let TimeZoneName: String?
+
     var startDate: Date {
-        return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
+        return Date(timeIntervalSince1970: TimeInterval(self.starttz ?? 0))
      }
+    
     var endDate: Date {
-        return Date(timeIntervalSince1970: TimeInterval(self.end ?? 0))
+        return Date(timeIntervalSince1970: TimeInterval(self.endtz ?? 0))
      }
+    
     var duration: TimeInterval {
-        let duration = self.endDate.addingTimeInterval(-(self.start ?? 0)).timeIntervalSince1970
+        let duration = self.endDate.addingTimeInterval(-(self.starttz ?? 0)).timeIntervalSince1970
        return duration
      }
 
 
     enum CodingKeys: String, CodingKey {
 
-//        case TimeZoneName
-//        case endtz
-//        case starttz
+        case TimeZoneName
+        case endtz
+        case starttz
         case end = "end"
         case start = "start"
         case title = "title"
@@ -151,9 +153,9 @@ struct ProgramArray : Codable {
         start = try values.decodeIfPresent(TimeInterval.self, forKey: .start)
         description = try values.decodeIfPresent(String.self, forKey: .description)
         title = try values.decodeIfPresent(String.self, forKey: .title)
-//        starttz = try values.decodeIfPresent(TimeInterval.self, forKey: .starttz)
-//        endtz = try values.decodeIfPresent(TimeInterval.self, forKey: .endtz)
-//        TimeZoneName = try values.decodeIfPresent(String.self, forKey: .TimeZoneName)
+        starttz = try values.decodeIfPresent(TimeInterval.self, forKey: .starttz)
+        endtz = try values.decodeIfPresent(TimeInterval.self, forKey: .endtz)
+        TimeZoneName = try values.decodeIfPresent(String.self, forKey: .TimeZoneName)
     }
     
 

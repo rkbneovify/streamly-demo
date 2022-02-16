@@ -32,7 +32,7 @@ class EPGViewModel: NSObject {
         }
         ApiCall.getEPGData(page, genere, success: { data, _
             in
-            if let epgModel = EPGDataParser.parseContactData(data!) {
+            if let `data` = data, let epgModel = EPGDataParser.parseContactData(data) {
                 self.epgData?((epgModel))
                 self.lastPage = epgModel.data?.lastPage ?? 0
                 ////debugPrint(epgModel)
@@ -80,7 +80,7 @@ class EPGViewModel: NSObject {
     func getChannelList() {
         ApiCall.getChannelList(success: { data, _
             in
-            if let epgModel = EPGDataParser.parseChannelData(data!) {
+            if let `data` = data, let epgModel = EPGDataParser.parseChannelData(data) {
                 self.channelData?((epgModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
@@ -100,7 +100,7 @@ class EPGViewModel: NSObject {
     func getRecentData() {
         ApiCall.getRecentData(success: { data, _
             in
-            if let recentModel = EPGDataParser.parserecentData(data!) {
+            if let `data` = data,let recentModel = EPGDataParser.parserecentData(data) {
                 self.recentData!((recentModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
@@ -120,7 +120,7 @@ class EPGViewModel: NSObject {
     func postRecentData(_ ids:String) {
         ApiCall.postRecentData(ids,success: { data, _
             in
-            if let recentModel = EPGDataParser.parserecentData(data!) {
+            if let `data` = data, let recentModel = EPGDataParser.parserecentData(data) {
                 self.recentData!((recentModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
@@ -140,7 +140,7 @@ class EPGViewModel: NSObject {
     func postAddressData() {
         ApiCall.postAddress(success: { data, _
             in
-            if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
+            if let `data` = data, let geoModel = EPGDataParser.parseGeoFenceData(data) {
                 self.geoData!((geoModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
@@ -172,7 +172,7 @@ class EPGViewModel: NSObject {
     {
         ApiCall.postOutsideAddress(success: { data, _
             in
-            if EPGDataParser.parseGeoFenceData(data!) != nil {
+            if let `data` = data, EPGDataParser.parseGeoFenceData(data) != nil {
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
                 self.delegate?.successAPI()
@@ -193,7 +193,7 @@ class EPGViewModel: NSObject {
     {
         ApiCall.getDrmKey(success: { data, _
             in
-            if let drmData = EPGDataParser.parseDrmKeyData(data!) {
+            if let `data` = data, let drmData = EPGDataParser.parseDrmKeyData(data) {
                 self.drmData!(drmData)
                 self.delegate?.successAPI()
             }
@@ -214,7 +214,7 @@ class EPGViewModel: NSObject {
     {
         ApiCall.setCallSign(callSign, outSideGeoFence,success: { data, _
             in
-            if EPGDataParser.parseGeoFenceData(data!) != nil {
+            if let `data` = data, EPGDataParser.parseGeoFenceData(data) != nil {
                 debugPrint("")
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
@@ -236,7 +236,7 @@ class EPGViewModel: NSObject {
     {
         ApiCall.setGAError(errorMsg , errorCode , callSign, outSideGeoFence,success: { data, _
             in
-            if EPGDataParser.parseGeoFenceData(data!) != nil {
+            if let `data` = data, EPGDataParser.parseGeoFenceData(data) != nil {
                 debugPrint("")
                 // self.geoData!((geoModel))
                 ////debugPrint(epgModel)
@@ -259,7 +259,7 @@ class EPGViewModel: NSObject {
     {
         ApiCall.setPlayTimer(callSign, outSideGeoFence,success: { data, _
             in
-            if EPGDataParser.parseGeoFenceData(data!) != nil {
+            if let `data` = data, EPGDataParser.parseGeoFenceData(data) != nil {
                 debugPrint("")
                 self.delegate?.successAPI()
                 // self.geoData!((geoModel))

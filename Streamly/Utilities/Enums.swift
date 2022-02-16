@@ -48,7 +48,7 @@ enum API:String {
     case login              = "auth/login"
     case privacyData        = "auth/privacypol"
     case getSearchData      = "auth/search"
-    case getEpgData         = "auth/channeldayschdeulepaginate"
+    case getEpgData         = "auth/channeldayschdeulepaginateoffsettz"
     case getChannelGenerics = "auth/channelgenre"
     case getChannelList        = "auth/channellist"
     case getTermsData       = "auth/termofuse"

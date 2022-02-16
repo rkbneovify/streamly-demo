@@ -149,14 +149,34 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
                 return true}
             guard let indexPath: IndexPath = self.collectionView.indexPath(for: programCell) as IndexPath? else { return true}
+            // Call API for pagination when focus on programme also.
+            if indexPath.section ==
+                (filteredList?.count ?? 0) && viewModel.isPageExist {
+                guard viewModel.currentPage <= viewModel.lastPage  else { return true }
+                lastIndexPath = indexPath
+                showLoading = true
+//                    collectionView.reloadData()
+                showSpinner(onView: self.view)
+                if let lasIndexPath = lastIndexPath {
+                    if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                    collectionView.reloadSections(IndexSet(integer: lasIndexPath.section ))
+                    }
+                }
+                group.enter()
+                viewModel.getEPGData(viewModel.currentPage)
+            } else {
+                showLoading = false
+                print("loading not called or pageExist is \(viewModel.isPageExist)")
+            }
+            
             if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
             {
-                self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
+                self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].starttz ?? 0.0, "E, d MMM yyyy")
                 self.discriptionView.isHidden = false
                 self.discriptionHeader.text = programs[indexPath.item - 1].title ?? ""
                 self.discriptionThumbNail.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
                 self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""
-                self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "hh:mm a") ?? "")"
+                self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].starttz ?? 0.0, "hh:mm a") ?? "")"
             }
             //print(indexPath)
            
