@@ -395,6 +395,7 @@ class HomeNewVC: UIViewController {
                 lastIndexPath = nil
                 filteredList?.removeAll()
                 self.showSpinner(onView: self.view)
+                group.enter()
                 viewModel.getEPGData(1)
             }
 //            collectionView.reloadData()
