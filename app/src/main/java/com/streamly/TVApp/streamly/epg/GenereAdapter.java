@@ -1,10 +1,10 @@
 package com.streamly.TVApp.streamly.epg;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,25 +15,17 @@ import com.streamly.TVApp.streamly.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class GenereAdapter extends RecyclerView.Adapter<GenereAdapter.MyViewHolder> {
 
-    private Context ctx;
-    private Map<String , List<Datum>> dataList;
-    private List<String> keyList = new ArrayList<String>();
+    private Context context;
+    private List<String> genreList;
 
 
-    public GenereAdapter(Context ctx, Map<String, List<Datum>> dataList){
-        this.ctx = ctx;
-        this.dataList = dataList;
-
-
-        for ( String key : dataList.keySet() ) {
-            keyList.add(key);
-        }
-
+    public GenereAdapter(Context context, List<String> genreList){
+        this.context = context;
+        this.genreList = genreList;
     }
 
 
@@ -48,14 +40,13 @@ public class GenereAdapter extends RecyclerView.Adapter<GenereAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        holder.textView.setText(keyList.get(position));
+        holder.textView.setText(genreList.get(position));
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (ctx instanceof MainActivity) {
-
-                    ((MainActivity)ctx).fragment(keyList.get(position) , dataList.get(keyList.get(position)));
+                if (context instanceof MainActivity) {
+                    ((MainActivity) context).fragment(genreList.get(position));
                 }
             }
         });
@@ -64,7 +55,7 @@ public class GenereAdapter extends RecyclerView.Adapter<GenereAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return keyList.size();
+        return genreList.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

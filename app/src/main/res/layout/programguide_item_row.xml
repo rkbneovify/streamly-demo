@@ -55,16 +55,16 @@
 
             <TextView
                 android:id="@+id/programguide_channel_id"
-                            style="@style/ProgramGuide.Text.Channel"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:textColor="#ffffff"
-                            android:layout_alignParentStart="true"
-                            android:layout_marginStart="3dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/helvetica_neue_medium"
-                            tools:text="" />
+                style="@style/ProgramGuide.Text.Channel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:textColor="#ffffff"
+                tools:text="" />
 
             <ImageView
                 android:id="@+id/programguide_channel_logo"

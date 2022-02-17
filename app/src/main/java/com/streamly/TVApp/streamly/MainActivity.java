@@ -17,6 +17,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.streamly.TVApp.streamly.dialogs.NoPlanDialog;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
+import com.streamly.TVApp.streamly.epg.ChannelGenre;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
 import com.streamly.TVApp.streamly.epg.GenereAdapter;
@@ -30,9 +31,8 @@ import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,11 +49,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private RecyclerView recyclerView;
-
-    List<String> generList = new ArrayList<String>();
     List<Datum> recentList;
 
-    Map<String, List<Datum>> dataList = new HashMap<String, List<Datum>>();
+    ArrayList<String> genreList = new ArrayList<String>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,10 +119,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
-    public void fragment(String type, List<Datum> dataListm) {
+    public void fragment(String type) {
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, dataListm))
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, type))
                 .commit();
 
 
@@ -133,62 +131,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private void getChannelList() {
         Log.e(TAG, "getChannelList: " + authToken);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<ChannellistModel> call = apiInterface.getChannelList("Bearer " + authToken);
-        call.enqueue(new Callback<ChannellistModel>() {
+        Call<ChannelGenre> call = apiInterface.getChannelGenre("Bearer " + authToken);
+        call.enqueue(new Callback<ChannelGenre>() {
             @Override
-            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
+            public void onResponse(Call<ChannelGenre> call, Response<ChannelGenre> response) {
                 try {
 
                     if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
-                        List<Datum> datumList = response.body().getData();
-                        Log.e(TAG, "onResponse: all " + response.body().getData());
-
-                        for (int i = 0; i < datumList.size(); i++) {
-
-//                            String channelTitle = datumList.get(i).getCallSign();
-//                            String channelLogo = datumList.get(i).getLogo();
-//                            String videoUrl = datumList.get(i).getUrl();
-
-
-                            if (!generList.contains(datumList.get(i).getGenrename().get(0))) {
-                                generList.add(datumList.get(i).getGenrename().get(0));
-                            }
-
-
-                        }
-
-
-                        dataList.put("All", datumList);
-                        dataList.put("Recent", recentList);
-                        Log.e(TAG, "onResponse: all recentList " + recentList);
-                        for (String s : generList) {
-                            Log.e("doneok", s);
-
-                            List<Datum> tempList = new ArrayList<Datum>();
-                            for (int i = 0; i < datumList.size(); i++) {
-                                for (int k = 0; k < datumList.get(i).getGenrename().size(); k++) {
-                                    if (datumList.get(i).getGenrename().get(k).equals(s)) {
-                                        Log.e("done", "here");
-                                        tempList.add(datumList.get(i));
-                                    }
-                                }
-
-                            }
-                            dataList.put(s, tempList);
-                        }
-
-
+                        List<String> datumList = response.body().getGenre();
+                        genreList.add("All");
+                        genreList.add("Recent");
+                        genreList.addAll(datumList);
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
-
-                        Log.e("TAG", "data list  " + datumList);
-                        GenereAdapter adapter = new GenereAdapter(MainActivity.this, dataList);
+                        GenereAdapter adapter = new GenereAdapter(MainActivity.this, genreList);
                         recyclerView.setAdapter(adapter);
-
-
-                        fragment("all", datumList);
-
-
+                        fragment(genreList.get(0));
                     } else if (response.code() == 401) {
 
                         if (response.errorBody() != null) {
@@ -226,7 +184,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             }
 
             @Override
-            public void onFailure(Call<ChannellistModel> call, Throwable t) {
+            public void onFailure(Call<ChannelGenre> call, Throwable t) {
                 Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
                 CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
             }

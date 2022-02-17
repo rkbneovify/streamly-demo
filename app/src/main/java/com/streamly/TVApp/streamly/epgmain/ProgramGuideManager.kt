@@ -71,7 +71,7 @@ class ProgramGuideManager<T> {
     }
 
     //#neovifyissueresolved28sep
-    private fun updateChannelsTimeRange(selectedDate: LocalDate, timeZone: ZoneId, days: Long) {
+    private fun updateChannelsTimeRange(selectedDate: LocalDate, timeZone: ZoneId, days: Int) {
         val viewPortWidth = toUtcMillis - fromUtcMillis
         var newStartMillis: Long? = null
         var newEndMillis: Long? = null
@@ -342,7 +342,7 @@ class ProgramGuideManager<T> {
     @MainThread
     fun setData(newChannels: List<ProgramGuideChannel>, newChannelEntries: Map<String,
             List<ProgramGuideSchedule<T>>>, selectedDate: LocalDate, timeZone: ZoneId,
-                days: Long) {
+                days: Int) {
         channels.clear()
         channelEntriesMap.clear()
 

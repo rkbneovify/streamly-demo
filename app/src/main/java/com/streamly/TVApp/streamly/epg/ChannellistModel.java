@@ -1,20 +1,31 @@
 package com.streamly.TVApp.streamly.epg;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
 @SuppressWarnings("unused")
 public class ChannellistModel {
 
+    @SerializedName("success")
+    @Expose
+    private Boolean mSuccess;
+//    @SerializedName("allGenre")
+//    @Expose
+//    public List<String> genre = null;
+
     @SerializedName("data")
+    @Expose
     private List<Datum> mData;
     @SerializedName("message")
+    @Expose
     private String mMessage;
     @SerializedName("response_code")
+    @Expose
     private Long mResponseCode;
-    @SerializedName("success")
-    private Boolean mSuccess;
 
     public List<Datum> getData() {
         return mData;
@@ -48,4 +59,11 @@ public class ChannellistModel {
         mSuccess = success;
     }
 
+//    public List<String> getGenre() {
+//        return genre;
+//    }
+//
+//    public void setGenre(List genre) {
+//        this.genre = genre;
+//    }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
@@ -15,7 +16,7 @@ import com.streamly.TVApp.streamly.*
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
-import com.streamly.TVApp.streamly.epg.Datum
+import com.streamly.TVApp.streamly.epg.ChannellistModel
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
@@ -30,21 +31,20 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.temporal.ChronoUnit
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 import kotlin.random.Random
 
-class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
+class ChannelFragment(context: Context, val genre: String) :
     ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
-//class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
-
-
+    //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
     val eContext = context
-    val list = dataListm
     val channels = ArrayList<SimpleChannel>()
     lateinit var MIN_CHANNEL_START_TIME: ZonedDateTime
     lateinit var MAX_CHANNEL_START_TIME: ZonedDateTime
@@ -200,158 +200,157 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
          MAX_CHANNEL_END_TIME = localDate.plusDays(1).atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)*/
 
         val authToken = TokenStorage.readSharedToken(eContext, ConstantUtility.AUTH_TOKEN, null)
-        getFirstApi(authToken)
-        getSecondApi(authToken)
-
+        if (genre.equals("recent")) {
+            getRecentList(authToken)
+        } else {
+            getSecondApi(authToken)
+        }
     }
 
-    @SuppressLint("CheckResult")
-    private fun getFirstApi(authToken: String) {
-//        /*for (i in 0 until data.size) {
-//            channels.add(SimpleChannel(data[i].id.toString(),SpannedString(data[i].callSign),data[i].logo,data[i].url))
-//        }*/
-//        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
-//        apiInterface.getChannelGenre2("Bearer $authToken")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe({
-//                    //success
-//
-//                    it.data.kids.forEach {
-//                        channels.add(SimpleChannel(it.id.toString(),SpannedString(it.callSign),it.logo,it.url))
-//                    }
-//
-//                    Log.e("### kidsList",it.data.kids.size.toString())
-//
-//                },{
-//                    //error
-//                    if (it.toString().contains("401")){
-//                        CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
-//                        activity!!.startActivity(Intent(activity, LogInActivity::class.java))
-//                        (activity as Activity).finish()
-//                    }
-//                })
-        Log.e(TAG, "kids fragment data list 0 " + list)
-        list.forEach {
-            if (it.callSign == null) {
-                it.callSign = "";
+    private fun getRecentList(authToken: String) {
+        val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+        val call = apiInterface.getRecentList("Bearer $authToken")
+        call.enqueue(object : Callback<ChannellistModel?> {
+            override fun onResponse(
+                call: Call<ChannellistModel?>,
+                response: Response<ChannellistModel?>
+            ) {
+                try {
+                    if (response.isSuccessful && response.body() != null && response.code() == 200) {
+
+                    } else if (response.code() == 401) {
+                        if (response.errorBody() != null) {
+                            val sessionExpiredDialog = SessionExpiredDialog(requireContext())
+                            sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            sessionExpiredDialog.setCancelable(false)
+                            sessionExpiredDialog.show()
+                        }
+                    } else if (response.code() == 404) {
+                        TokenStorage.clearSharedToken(requireContext())
+                        CommonUtility.showToast(requireContext(), ConstantUtility.SESSION_EXPIRED)
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(requireContext(), ConstantUtility.SERVER_ISSUE)
+                    } else if (response.code() == 402) {
+//                        (requireActivity() as MainActivity).settingText.setVisibility(View.GONE)
+//                        imageSearch.setVisibility(View.GONE)
+                        CommonUtility.showToast(
+                            requireContext(),
+                            "Payment Required. Kindly buy subscription"
+                        )
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                    Log.e(TAG, "Exception $ex")
+                }
             }
-            channels.add(
-                SimpleChannel(
-                    it.id.toString(),
-                    SpannedString(it.callSign.toString()),
-                    it.logo,
-                    it.url
-                )
-            )
 
-        }
-
+            override fun onFailure(call: Call<ChannellistModel?>, t: Throwable) {
+                Log.e(TAG, "failure: " + call + " " + t.localizedMessage)
+                CommonUtility.showToast(requireContext(), ConstantUtility.SERVER_ISSUE)
+            }
+        })
     }
 
     //#neovifyissueresolved28sep
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
-        var dayss: Long? = 1
+        var dayss: Int? = 1
+        val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        apiInterface.getScheduleList(NetworkKeys.KEY_APP_JSON, "Bearer $authToken")
-            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    //success
-                    Log.e(TAG, "GET SECHEDULELIST " + it.message);
-                    val showNames = ArrayList<String>()
+        Log.d("authTocken", "Bearer $authToken")
+        if (genre.lowercase().equals("all")) {
+            apiInterface.getScheduleListWithoutGenre(
+                timeZoneString,
+                NetworkKeys.KEY_APP_JSON,
+                "Bearer $authToken"
+            )
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        //success
+                        Log.e(TAG, "GET SECHEDULELIST " + it.message);
+                        val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                    Log.e("### episodeData", it.data.size.toString())
+                        Log.e("### episodeData", it.data.size.toString())
 
-                    //#neovifyissueresolved28sep
-                    val p: Pattern = Pattern.compile("\\d+")
-                    val m: Matcher = p.matcher(it.message)
-                    while (m.find()) {
-                        Log.e(TAG, "::>>>digit: " + m.group())
-                        dayss = (m.group()).toLong()
-                    }
-                    //#neovifyissueresolved28sep
-                    for (i in 0 until it.data.size) {
-                        for (j in 0 until channels.size) {
-                            if (it.data[i].callSign.toString() == channels[j].name.toString()) {
+                        //#neovifyissueresolved28sep
+                        val p: Pattern = Pattern.compile("\\d+")
+                        val m: Matcher = p.matcher(it.message)
+                        while (m.find()) {
+                            Log.e(TAG, "::>>>digit: " + m.group())
+                            dayss = (m.group()).toInt()
+                        }
+                        for (d in it.data) {
+                            channels.add(
+                                SimpleChannel(
+                                    d.getmId().toString(),
+                                    SpannedString(d.callSign.toString()),
+                                    d.logo,
+                                    d.channelUrl
+                                )
+                            )
+                        }
+                        //#neovifyissueresolved28sep
+                        for (i in 0 until it.data.size) {
+                            verticalBean = VerticalHomeBean()
+                            verticalBean.headerTitle = it.data[i].callSign
+                            verticalBean.channelId = it.data[i].getmId();
+                            verticalBean.logoUrl = it.data[i].logo
+                            verticalBean.baseUrl = it.data[i].channelUrl
+                            Log.e(TAG, "call sign 1 " + it.data[i].callSign)
 
-                                verticalBean = VerticalHomeBean()
+                            homelist = ArrayList()
 
-//                                   Log.e("###$TAG", "insideIT "+it.data[i].callSign.toString())
-                                verticalBean.headerTitle = it.data[i].callSign
-                                Log.e(TAG, "call sign 1 " + it.data[i].callSign)
+                            it.data[i].programs.forEach {
+                                homeBean = HomeBean()
 
-                                homelist = ArrayList()
+                                showNames.add(it.title)
+                                showName_list.add(it.title)
 
-                                it.data[i].programs.forEach {
-                                    homeBean = HomeBean()
+                                val st =
+                                    Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
+                                val et =
+                                    Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
 
-                                    showNames.add(it.title)
-                                    showName_list.add(it.title)
-
-                                    val st =
-                                        Instant.ofEpochMilli((it.start.toString() + "000").toLong())
-                                    val et =
-                                        Instant.ofEpochMilli((it.end.toString() + "000").toLong())
-
-                                    homeBean.title = it.title
-                                    homeBean.description = it.description
-                                    homeBean.start_time = st
-                                    homeBean.end_time = et
-                                    homelist.add(homeBean)
-                                }
-
-                                verticalBean.allItemsInSection = homelist
-                                channel_showName_list.add(it.data[i].getmId().toString())
-                                verticallist.add(verticalBean)
+                                homeBean.title = it.title
+                                homeBean.description = it.description
+                                homeBean.start_time = st
+                                homeBean.end_time = et
+                                homelist.add(homeBean)
                             }
 
+                            verticalBean.allItemsInSection = homelist
+                            channel_showName_list.add(it.data[i].getmId().toString())
+                            verticallist.add(verticalBean)
                         }
+                        val channelMap =
+                            mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
 
+                        var k = 0
+                        Log.e("### verticalList ", "$k <ss>" + channels.size)
 
-                    }
-
-
-                    val channelMap =
-                        mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
-
-                    var k = 0
-                    Log.e("### verticalList ", "$k <ss>" + channels.size)
-
-                    verticallist.forEach first@{ channel ->
-//                           Log.e("###${TAG}", "outSideIT " + channel)
-
-                        if (k < channels.size) {
-
-                            val scheduleList = mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
-                            var nextTime =
-                                randomTimeBetween(MIN_CHANNEL_START_TIME, MAX_CHANNEL_START_TIME)
-
-//                            for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-                            while (nextTime.isBefore(MIN_CHANNEL_END_TIME)) {
-                                Log.e(
-                                    "### allItemsInSection1 ",
-                                    "" + verticallist[k].allItemsInSection.size
+                        verticallist.forEach first@{ channel ->
+                            if (k < channels.size) {
+                                val scheduleList =
+                                    mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
+                                var nextTime = randomTimeBetween(
+                                    MIN_CHANNEL_START_TIME,
+                                    MAX_CHANNEL_START_TIME
                                 )
                                 for (p in 0 until verticallist[k].allItemsInSection!!.size) {
-
-
                                     val endTime = ZonedDateTime.ofInstant(
                                         Instant.ofEpochSecond(
                                             nextTime.toEpochSecond() + Random.nextLong(
                                                 MIN_SHOW_LENGTH_SECONDS,
                                                 MAX_SHOW_LENGTH_SECONDS
                                             )
-                                        ), ZoneOffset.UTC
+                                        ), ZoneOffset.systemDefault()
                                     )
 
 
                                     val schedule = createSchedule(
                                         channels.get(k),
                                         verticallist[k].allItemsInSection!![p].title!!,
-//                                           nextTime,
-//                                           endTime,
                                         verticallist[k].allItemsInSection!![p]!!.start_time!!,
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         verticallist[k].allItemsInSection!![p].description!!,
@@ -363,71 +362,193 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
 
                                     scheduleList.add(schedule)
                                     nextTime = endTime
+                                }
+                                channelMap.put(channel.channelId, scheduleList)
+                            } else {
+                                Log.e("### $TAG else ", "$k <ss>" + channels.size)
+                                return@first
+                            }
 
-//                                }
+                            k += 1
+                        }
+                        val pair = Pair(channels, channelMap)
+                        setData(pair.first, pair.second, localDate, dayss!!)
+                        setState(State.Content)
 
-                                    val endTimee =
-                                        if (nextTime.isBefore(MAX_CHANNEL_END_TIME)) randomTimeBetween(
-                                            nextTime,
-                                            MAX_CHANNEL_END_TIME
-                                        )
-                                        else MAX_CHANNEL_END_TIME
+                        if (it.responseCode.toInt() == 401) {
+                            val sessionExpiredDialog = SessionExpiredDialog(eContext)
+                            sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            sessionExpiredDialog.setCancelable(false)
+                            sessionExpiredDialog.show()
+                        }
 
-                                    val finalSchedule = createSchedule(
+                    },
+                    {
+                        //error
+                        Log.e("###$TAG", "error " + it.message)
+                        Log.e("###$TAG", "error " + it.localizedMessage)
+                        if (it.message.toString().contains("401")) {
+                            val sessionExpiredDialog =
+                                SessionExpiredDialog(eContext)
+                            sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            sessionExpiredDialog.setCancelable(false)
+                            sessionExpiredDialog.show()
+                        } else if (it.message.toString().contains("402")) {
+                            CommonUtility.showToast(
+                                eContext,
+                                "Payment Required. Kindly buy subscription"
+                            )
+
+                        }
+
+                    })
+        } else {
+            apiInterface.getScheduleListWithTimeZone(
+                timeZoneString,
+                genre,
+                NetworkKeys.KEY_APP_JSON,
+                "Bearer $authToken"
+            )
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        //success
+                        Log.e(TAG, "GET SECHEDULELIST " + it.message);
+                        val showNames = ArrayList<String>()
+//                           for(i in 0..it.data.size-1){
+                        Log.e("### episodeData", it.data.size.toString())
+
+                        //#neovifyissueresolved28sep
+                        val p: Pattern = Pattern.compile("\\d+")
+                        val m: Matcher = p.matcher(it.message)
+                        while (m.find()) {
+                            Log.e(TAG, "::>>>digit: " + m.group())
+                            dayss = (m.group()).toInt()
+                        }
+                        for (d in it.data) {
+                            channels.add(
+                                SimpleChannel(
+                                    d.getmId().toString(),
+                                    SpannedString(d.callSign.toString()),
+                                    d.logo,
+                                    d.channelUrl
+                                )
+                            )
+                        }
+                        //#neovifyissueresolved28sep
+                        for (i in 0 until it.data.size) {
+                            verticalBean = VerticalHomeBean()
+                            verticalBean.headerTitle = it.data[i].callSign
+                            verticalBean.channelId = it.data[i].getmId();
+                            verticalBean.logoUrl = it.data[i].logo
+                            verticalBean.baseUrl = it.data[i].channelUrl
+                            Log.e(TAG, "call sign 1 " + it.data[i].callSign)
+
+                            homelist = ArrayList()
+
+                            it.data[i].programs.forEach {
+                                homeBean = HomeBean()
+
+                                showNames.add(it.title)
+                                showName_list.add(it.title)
+
+                                val st =
+                                    Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
+                                val et =
+                                    Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
+
+                                homeBean.title = it.title
+                                homeBean.description = it.description
+                                homeBean.start_time = st
+                                homeBean.end_time = et
+                                homelist.add(homeBean)
+                            }
+
+                            verticalBean.allItemsInSection = homelist
+                            channel_showName_list.add(it.data[i].getmId().toString())
+                            verticallist.add(verticalBean)
+                        }
+                        val channelMap =
+                            mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
+
+                        var k = 0
+                        Log.e("### verticalList ", "$k <ss>" + channels.size)
+
+                        verticallist.forEach first@{ channel ->
+                            if (k < channels.size) {
+                                val scheduleList =
+                                    mutableListOf<ProgramGuideSchedule<SimpleProgram>>()
+                                var nextTime = randomTimeBetween(
+                                    MIN_CHANNEL_START_TIME,
+                                    MAX_CHANNEL_START_TIME
+                                )
+                                for (p in 0 until verticallist[k].allItemsInSection!!.size) {
+                                    val endTime = ZonedDateTime.ofInstant(
+                                        Instant.ofEpochSecond(
+                                            nextTime.toEpochSecond() + Random.nextLong(
+                                                MIN_SHOW_LENGTH_SECONDS,
+                                                MAX_SHOW_LENGTH_SECONDS
+                                            )
+                                        ), ZoneOffset.systemDefault()
+                                    )
+
+
+                                    val schedule = createSchedule(
                                         channels.get(k),
                                         verticallist[k].allItemsInSection!![p].title!!,
-//                                           nextTime,
-//                                           endTime,
                                         verticallist[k].allItemsInSection!![p]!!.start_time!!,
                                         verticallist[k].allItemsInSection!![p]!!.end_time!!,
                                         verticallist[k].allItemsInSection!![p].description!!,
                                         channels.get(k).videoUrl.toString(),
                                         channels.get(k).imageUrl.toString()
                                     )
-                                    channelMap.put(channels.get(k).id, scheduleList)
+                                    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
+                                    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
 
+                                    scheduleList.add(schedule)
+                                    nextTime = endTime
                                 }
-
+                                channelMap.put(channel.channelId, scheduleList)
+                            } else {
+                                Log.e("### $TAG else ", "$k <ss>" + channels.size)
+                                return@first
                             }
 
-                        } else {
-                            Log.e("### $TAG else ", "$k <ss>" + channels.size)
-                            return@first
+                            k += 1
+                        }
+                        val pair = Pair(channels, channelMap)
+                        setData(pair.first, pair.second, localDate, dayss!!)
+                        setState(State.Content)
+
+                        if (it.responseCode.toInt() == 401) {
+                            val sessionExpiredDialog = SessionExpiredDialog(eContext)
+                            sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            sessionExpiredDialog.setCancelable(false)
+                            sessionExpiredDialog.show()
                         }
 
-                        k += 1
-                    }
-                    val pair = Pair(channels, channelMap)
-                    setData(pair.first, pair.second, localDate, dayss!!)
-                    setState(State.Content)
+                    },
+                    {
+                        //error
+                        Log.e("###$TAG", "error " + it.message)
+                        Log.e("###$TAG", "error " + it.localizedMessage)
+                        if (it.message.toString().contains("401")) {
+                            val sessionExpiredDialog =
+                                SessionExpiredDialog(eContext)
+                            sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            sessionExpiredDialog.setCancelable(false)
+                            sessionExpiredDialog.show()
+                        } else if (it.message.toString().contains("402")) {
+                            CommonUtility.showToast(
+                                eContext,
+                                "Payment Required. Kindly buy subscription"
+                            )
 
-                    if (it.responseCode.toInt() == 401) {
-                        val sessionExpiredDialog = SessionExpiredDialog(eContext)
-                        sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
-                        sessionExpiredDialog.setCancelable(false)
-                        sessionExpiredDialog.show()
-                    }
+                        }
 
-                },
-                {
-                    //error
-                    Log.e("###$TAG", "error " + it.message)
-                    Log.e("###$TAG", "error " + it.localizedMessage)
-                    if (it.message.toString().contains("401")) {
-                        val sessionExpiredDialog =
-                            SessionExpiredDialog(eContext)
-                        sessionExpiredDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
-                        sessionExpiredDialog.setCancelable(false)
-                        sessionExpiredDialog.show()
-                    } else if (it.message.toString().contains("402")) {
-                        CommonUtility.showToast(
-                            eContext,
-                            "Payment Required. Kindly buy subscription"
-                        )
+                    })
+        }
 
-                    }
-
-                })
     }
 
 
@@ -477,7 +598,10 @@ class ChannelFragment(context: Context, dataListm: MutableList<Datum>) :
 
     private fun randomTimeBetween(min: ZonedDateTime, max: ZonedDateTime): ZonedDateTime {
         val randomEpoch = Random.nextLong(min.toEpochSecond(), max.toEpochSecond())
-        return ZonedDateTime.ofInstant(Instant.ofEpochSecond(randomEpoch), ZoneOffset.UTC)
+        return ZonedDateTime.ofInstant(
+            Instant.ofEpochSecond(randomEpoch),
+            ZoneOffset.systemDefault()
+        )
     }
 
     override fun requestRefresh() {

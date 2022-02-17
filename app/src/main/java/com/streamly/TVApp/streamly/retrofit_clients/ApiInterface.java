@@ -3,6 +3,9 @@ package com.streamly.TVApp.streamly.retrofit_clients;
 import com.streamly.TVApp.streamly.QRCode.HotelQRModel;
 import com.streamly.TVApp.streamly.QRCode.QRScanStatusModel;
 import com.streamly.TVApp.streamly.QRCode.QrModel;
+import com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel;
+import com.streamly.TVApp.streamly.channelsschedulepaginate.ChannelSchedulePaginateModel;
+import com.streamly.TVApp.streamly.epg.ChannelGenre;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel;
 import com.streamly.TVApp.streamly.log_in.PersonalDeviceNameDataModel;
@@ -93,6 +96,10 @@ public interface ApiInterface {
     Call<ChannellistModel> getChannelList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     @Headers("Accept: application/json")
+    @GET("/api/auth/channelgenre")
+    Call<ChannelGenre> getChannelGenre(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    @Headers("Accept: application/json")
     @GET("/api/auth/my_recents")
     Call<ChannellistModel> getRecentList(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
@@ -114,9 +121,23 @@ public interface ApiInterface {
     @GET("/api/auth/channeldayschdeule")//api/auth/channeldayschdeule
     Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
+    /**
+     * this function will run for genre channels that's why we call channeldayschdeule api with genre
+     * */
+    @Headers("Accept: application/json")
+    @GET("/api/auth/channeldayschdeuletzwithoffset")
+    Observable<com.streamly.TVApp.streamly.channelschedule.ChannelScheduleModel> getScheduleListWithTimeZone(@Query("hoursoffset")String timeZone, @Query("genre")String genre, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
+    /**
+     * this function will run for all channels that's why we call channeldayschdeule api without genre
+     * */
+    @Headers("Accept: application/json")
+    @GET("/api/auth/channeldayschdeuletzwithoffset")
+    Observable<ChannelScheduleModel> getScheduleListWithoutGenre(@Query("hoursoffset")String timeZone, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
+
     //    @Headers("User-Agent: iphone")
     @GET("/api/auth/channeldayschdeulepaginate")//api/auth/channeldayschdeule
-    Observable<com.streamly.TVApp.streamly.channelsschedulepaginate.ChannelSchedulePaginateModel> getScheduleListPaginate(@Query(NetworkKeys.PAGE)int page_number, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson,@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+    Observable<ChannelSchedulePaginateModel> getScheduleListPaginate(@Query(NetworkKeys.PAGE)int page_number, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     /*@Headers("Accept: application/json")ai call
     @GET("channeldayschdeule")//api/auth/channeldayschdeule
@@ -127,9 +148,9 @@ public interface ApiInterface {
     @GET("/api/auth/channelgenre")//api/auth/channeldayschdeule
     Observable<com.streamly.TVApp.streamly.epg.channelgenre.ChannelGenreModel> getChannelGenre2(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
-    @Headers("Accept: application/json")
-    @GET("/api/auth/channelgenre")
-    Call<ChannelGenreModel> getChannelGenre(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+//    @Headers("Accept: application/json")
+//    @GET("/api/auth/channelgenre")
+//    Call<ChannelGenreModel> getChannelGenre(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
 
     @Headers("Accept: application/json")

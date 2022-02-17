@@ -73,7 +73,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
     // Config values, override in subclass if necessary
     protected open val DISPLAY_LOCALE = Locale("en", "US")
-    protected open val DISPLAY_TIMEZONE: ZoneId = ZoneOffset.UTC
+    protected open val DISPLAY_TIMEZONE: ZoneId = ZoneOffset.systemDefault()
     protected open val SELECTABLE_DAYS_IN_PAST = 7
     protected open val SELECTABLE_DAYS_IN_FUTURE = 7
     protected open val USE_HUMAN_DATES = true
@@ -506,7 +506,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             newChannels: List<ProgramGuideChannel>,
             newChannelEntries: Map<String, List<ProgramGuideSchedule<T>>>,
             selectedDate: LocalDate,
-            days: Long
+            days: Int
     ) {
         programGuideManager.setData(newChannels, newChannelEntries, selectedDate, DISPLAY_TIMEZONE, days)
     }

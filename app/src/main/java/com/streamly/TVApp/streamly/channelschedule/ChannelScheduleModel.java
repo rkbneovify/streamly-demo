@@ -2,6 +2,8 @@
 package com.streamly.TVApp.streamly.channelschedule;
 
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /*
@@ -34,14 +36,23 @@ import com.google.gson.annotations.SerializedName;
 public class ChannelScheduleModel {
 
     @SerializedName("data")
+    @Expose
     private List<Datum> mData;
+
     @SerializedName("date")
+    @Expose
     private String mDate;
+
     @SerializedName("message")
+    @Expose
     private String mMessage;
+
     @SerializedName("response_code")
+    @Expose
     private Long mResponseCode;
+
     @SerializedName("success")
+    @Expose
     private Boolean mSuccess;
 
     public List<Datum> getData() {
