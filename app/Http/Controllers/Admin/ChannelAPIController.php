@@ -189,7 +189,8 @@ public function channeljson(Request $request)
 
         $record= Cache::rememberForever('channelslistdash', function () {
         $type='dash_url';
-        return $this->channeljsonFunc($type)->get();});
+        return $this->channeljsonFunc($type)->get();
+    });
     }
        
     //JSON_ARRAY
@@ -221,7 +222,9 @@ public function channeljson(Request $request)
         // from `channels` left join `channels_genre` on `channels`.`id` = `channels_genre`.`channels_id` 
         // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
         // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
-    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'channels.image',"channels.$type as url")
+        $imagePath=url("/uploads/channellogo/");
+    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'channels.image',"channels.$type as url",
+    DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo"))
            
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
            
