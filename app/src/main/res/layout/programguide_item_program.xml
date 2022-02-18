@@ -27,7 +27,7 @@
     tools:parentTag="android.widget.FrameLayout">
 
     <TextView
-        android:id="@+id/titleview"
+        android:id="@+id/time_line"
         style="@style/ProgramGuide.Text.Program.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

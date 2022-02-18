@@ -8,11 +8,11 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("unused")
 public class Program {
 
-    @SerializedName(value = "endtz")
+    @SerializedName("end")
     @Expose
     private long endTz;
 
-    @SerializedName(value = "starttz")
+    @SerializedName("start")
     @Expose
     private long startTz;
 

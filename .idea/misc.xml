@@ -3,24 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="app/src/main/res/drawable/white_transparent.xml" value="0.2675" />
-        <entry key="app/src/main/res/layout/activity_hotel_qrcode1.xml" value="0.33541666666666664" />
-        <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.67" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3346153846153846" />
-        <entry key="app/src/main/res/layout/activity_personal_device_name.xml" value="0.30364583333333334" />
-        <entry key="app/src/main/res/layout/activity_player.xml" value="0.40677083333333336" />
-        <entry key="app/src/main/res/layout/activity_q_r_code.xml" value="0.30364583333333334" />
-        <entry key="app/src/main/res/layout/programguide_fragment.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/programguide_item_filter.xml" value="0.478125" />
-        <entry key="app/src/main/res/layout/programguide_item_program.xml" value="0.5447916666666667" />
-        <entry key="app/src/main/res/layout/programguide_item_row.xml" value="0.18" />
-        <entry key="app/src/main/res/layout/programguide_item_time.xml" value="0.478125" />
-        <entry key="app/src/main/res/layout/programguide_item_time_indicator.xml" value="0.478125" />
+        <entry key="app/src/main/res/drawable/programguide_item_program_background.xml" value="0.2625" />
+        <entry key="app/src/main/res/layout/programguide_item_program.xml" value="0.3703125" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="16" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="16" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

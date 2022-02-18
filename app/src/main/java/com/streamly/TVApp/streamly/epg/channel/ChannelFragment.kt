@@ -6,17 +6,20 @@ import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.streamly.TVApp.streamly.*
+import com.streamly.TVApp.streamly.HomeBean
+import com.streamly.TVApp.streamly.ProgramGuideFragment
+import com.streamly.TVApp.streamly.R
+import com.streamly.TVApp.streamly.VerticalHomeBean
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.epg.ChannellistModel
+import com.streamly.TVApp.streamly.epg.Datum
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
@@ -60,6 +63,7 @@ class ChannelFragment(context: Context, val genre: String) :
     var homeBean = HomeBean()
     var homelist = ArrayList<HomeBean>()
     var verticallist = ArrayList<VerticalHomeBean>()
+    var recentList: List<Datum>? = null
 
 
     companion object {
@@ -200,7 +204,7 @@ class ChannelFragment(context: Context, val genre: String) :
          MAX_CHANNEL_END_TIME = localDate.plusDays(1).atStartOfDay().withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)*/
 
         val authToken = TokenStorage.readSharedToken(eContext, ConstantUtility.AUTH_TOKEN, null)
-        if (genre.equals("recent")) {
+        if (genre.lowercase().equals("recent")) {
             getRecentList(authToken)
         } else {
             getSecondApi(authToken)
@@ -217,7 +221,8 @@ class ChannelFragment(context: Context, val genre: String) :
             ) {
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
-
+                        recentList = response.body()!!.data
+                        getSecondApi(authToken)
                     } else if (response.code() == 401) {
                         if (response.errorBody() != null) {
                             val sessionExpiredDialog = SessionExpiredDialog(requireContext())
@@ -258,7 +263,7 @@ class ChannelFragment(context: Context, val genre: String) :
         val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
         Log.d("authTocken", "Bearer $authToken")
-        if (genre.lowercase().equals("all")) {
+        if (genre.lowercase().equals("all") or genre.lowercase().equals("recent")) {
             apiInterface.getScheduleListWithoutGenre(
                 timeZoneString,
                 NetworkKeys.KEY_APP_JSON,
@@ -280,48 +285,107 @@ class ChannelFragment(context: Context, val genre: String) :
                             Log.e(TAG, "::>>>digit: " + m.group())
                             dayss = (m.group()).toInt()
                         }
-                        for (d in it.data) {
-                            channels.add(
-                                SimpleChannel(
-                                    d.getmId().toString(),
-                                    SpannedString(d.callSign.toString()),
-                                    d.logo,
-                                    d.channelUrl
+//                        checking for gener type is all or recent if recent the add only those channel who are in recent list
+                        if (genre.lowercase().equals("recent")) {
+                            for (d in it.data) {
+                                recentList?.let { recentList ->
+                                    for (recent in recentList) {
+                                        if (recent.id.equals(d.getmId())) {
+                                            channels.add(
+                                                SimpleChannel(
+                                                    d.getmId().toString(),
+                                                    SpannedString(d.callSign.toString()),
+                                                    d.logo,
+                                                    d.channelUrl
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            for (d in it.data) {
+                                channels.add(
+                                    SimpleChannel(
+                                        d.getmId().toString(),
+                                        SpannedString(d.callSign.toString()),
+                                        d.logo,
+                                        d.channelUrl
+                                    )
                                 )
-                            )
+                            }
                         }
+
                         //#neovifyissueresolved28sep
                         for (i in 0 until it.data.size) {
-                            verticalBean = VerticalHomeBean()
-                            verticalBean.headerTitle = it.data[i].callSign
-                            verticalBean.channelId = it.data[i].getmId();
-                            verticalBean.logoUrl = it.data[i].logo
-                            verticalBean.baseUrl = it.data[i].channelUrl
-                            Log.e(TAG, "call sign 1 " + it.data[i].callSign)
+//                            here i am saperate the data by all and recent genre
+                            if (genre.lowercase().equals("recent")) {
+                                for (recent in recentList!!){
+                                    if(recent.id.equals(it.data[i].getmId())){
+                                        verticalBean = VerticalHomeBean()
+                                        verticalBean.headerTitle = it.data[i].callSign
+                                        verticalBean.channelId = it.data[i].getmId();
+                                        verticalBean.logoUrl = it.data[i].logo
+                                        verticalBean.baseUrl = it.data[i].channelUrl
+                                        Log.e(TAG, "call sign 1 " + it.data[i].callSign)
 
-                            homelist = ArrayList()
+                                        homelist = ArrayList()
 
-                            it.data[i].programs.forEach {
-                                homeBean = HomeBean()
+                                        it.data[i].programs.forEach {
+                                            homeBean = HomeBean()
 
-                                showNames.add(it.title)
-                                showName_list.add(it.title)
+                                            showNames.add(it.title)
+                                            showName_list.add(it.title)
 
-                                val st =
-                                    Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
-                                val et =
-                                    Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
+                                            val st =
+                                                Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
+                                            val et =
+                                                Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
 
-                                homeBean.title = it.title
-                                homeBean.description = it.description
-                                homeBean.start_time = st
-                                homeBean.end_time = et
-                                homelist.add(homeBean)
+                                            homeBean.title = it.title
+                                            homeBean.description = it.description
+                                            homeBean.start_time = st
+                                            homeBean.end_time = et
+                                            homelist.add(homeBean)
+                                        }
+
+                                        verticalBean.allItemsInSection = homelist
+                                        channel_showName_list.add(it.data[i].getmId().toString())
+                                        verticallist.add(verticalBean)
+                                    }
+                                }
+                            } else {
+                                verticalBean = VerticalHomeBean()
+                                verticalBean.headerTitle = it.data[i].callSign
+                                verticalBean.channelId = it.data[i].getmId();
+                                verticalBean.logoUrl = it.data[i].logo
+                                verticalBean.baseUrl = it.data[i].channelUrl
+                                Log.e(TAG, "call sign 1 " + it.data[i].callSign)
+
+                                homelist = ArrayList()
+
+                                it.data[i].programs.forEach {
+                                    homeBean = HomeBean()
+
+                                    showNames.add(it.title)
+                                    showName_list.add(it.title)
+
+                                    val st =
+                                        Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
+                                    val et =
+                                        Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
+
+                                    homeBean.title = it.title
+                                    homeBean.description = it.description
+                                    homeBean.start_time = st
+                                    homeBean.end_time = et
+                                    homelist.add(homeBean)
+                                }
+
+                                verticalBean.allItemsInSection = homelist
+                                channel_showName_list.add(it.data[i].getmId().toString())
+                                verticallist.add(verticalBean)
                             }
-
-                            verticalBean.allItemsInSection = homelist
-                            channel_showName_list.add(it.data[i].getmId().toString())
-                            verticallist.add(verticalBean)
                         }
                         val channelMap =
                             mutableMapOf<String, List<ProgramGuideSchedule<SimpleProgram>>>()
@@ -363,7 +427,7 @@ class ChannelFragment(context: Context, val genre: String) :
                                     scheduleList.add(schedule)
                                     nextTime = endTime
                                 }
-                                channelMap.put(channel.channelId, scheduleList)
+                                channelMap.put(channel.channelId.toString(), scheduleList)
                             } else {
                                 Log.e("### $TAG else ", "$k <ss>" + channels.size)
                                 return@first
@@ -508,7 +572,7 @@ class ChannelFragment(context: Context, val genre: String) :
                                     scheduleList.add(schedule)
                                     nextTime = endTime
                                 }
-                                channelMap.put(channel.channelId, scheduleList)
+                                channelMap.put(channel.channelId.toString(), scheduleList)
                             } else {
                                 Log.e("### $TAG else ", "$k <ss>" + channels.size)
                                 return@first

@@ -8,7 +8,7 @@ public class VerticalHomeBean {
 
     @SerializedName("callSign")
     public String headerTitle;
-    public String channelId;
+    public Long channelId;
     public String logoUrl;
     public String baseUrl;
     List<HomeBean> allItemsInSection;

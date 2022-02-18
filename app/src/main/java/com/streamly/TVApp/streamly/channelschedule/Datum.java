@@ -32,13 +32,13 @@ public class Datum {
 
     @SerializedName("id")
     @Expose
-    private String mId;
+    private Long mId;
 
-    public String getmId() {
+    public Long getmId() {
         return mId;
     }
 
-    public void setmId(String mId) {
+    public void setmId(Long mId) {
         this.mId = mId;
     }
 

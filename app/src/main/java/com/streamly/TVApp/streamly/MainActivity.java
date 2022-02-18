@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private FirebaseAnalytics mFirebaseAnalytics;
     private RecyclerView recyclerView;
-    List<Datum> recentList;
+//    List<Datum> recentList;
 
     ArrayList<String> genreList = new ArrayList<String>();
 
@@ -74,50 +74,50 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "EPG Fragment");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EPG Channels");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        getRecentList();
+//        getRecentList();
         getChannelList();
     }
 
-    private void getRecentList() {
-        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<ChannellistModel> call = apiInterface.getRecentList("Bearer " + authToken);
-        call.enqueue(new Callback<ChannellistModel>() {
-            @Override
-            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
-                try {
-                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
-                        recentList = response.body().getData();
-                        Log.e(TAG, "onResponse: recent list " + response.body().getData());
-                    } else if (response.code() == 401) {
-                        if (response.errorBody() != null) {
-                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
-                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            sessionExpiredDialog.setCancelable(false);
-                            sessionExpiredDialog.show();
-                        }
-                    } else if (response.code() == 404) {
-                        TokenStorage.clearSharedToken(MainActivity.this);
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SESSION_EXPIRED);
-                    } else if (response.code() == 500) {
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                    } else if (response.code() == 402) {
-                        settingText.setVisibility(View.GONE);
-                        imageSearch.setVisibility(View.GONE);
-                        CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Log.e(TAG, "Exception " + ex);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ChannellistModel> call, Throwable t) {
-                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
-                CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-            }
-        });
-    }
+//    private void getRecentList() {
+//        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+//        Call<ChannellistModel> call = apiInterface.getRecentList("Bearer " + authToken);
+//        call.enqueue(new Callback<ChannellistModel>() {
+//            @Override
+//            public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
+//                try {
+//                    if (response.isSuccessful() && response.body() != null && response.code() != 401) {
+//                        recentList = response.body().getData();
+//                        Log.e(TAG, "onResponse: recent list " + response.body().getData());
+//                    } else if (response.code() == 401) {
+//                        if (response.errorBody() != null) {
+//                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
+//                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+//                            sessionExpiredDialog.setCancelable(false);
+//                            sessionExpiredDialog.show();
+//                        }
+//                    } else if (response.code() == 404) {
+//                        TokenStorage.clearSharedToken(MainActivity.this);
+//                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SESSION_EXPIRED);
+//                    } else if (response.code() == 500) {
+//                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+//                    } else if (response.code() == 402) {
+//                        settingText.setVisibility(View.GONE);
+//                        imageSearch.setVisibility(View.GONE);
+//                        CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
+//                    }
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                    Log.e(TAG, "Exception " + ex);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ChannellistModel> call, Throwable t) {
+//                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+//                CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+//            }
+//        });
+//    }
 
     public void fragment(String type) {
 

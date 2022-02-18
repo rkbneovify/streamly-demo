@@ -32,14 +32,14 @@ class ProgramGuideItemView<T> : FrameLayout {
 
     //#neovifyissueresolved28sep
     private val titleView: TextView
-    private val titlee1: TextView
+    private val time_line: TextView
     private val progressView: ProgressBar
 
     init {
         View.inflate(context, R.layout.programguide_item_program, this)
 
         titleView = findViewById(R.id.title)
-        titlee1 = findViewById(R.id.titleview)
+        time_line = findViewById(R.id.time_line)
         progressView = findViewById(R.id.progress)
 
     }
@@ -61,13 +61,13 @@ class ProgramGuideItemView<T> : FrameLayout {
 //        Log.e("PGIV", "::>>>id: " + schedule?.id + "<<>>orgtimes: " + schedule?.originalTimes)
 //        Log.e("PGIV", "::>>>starttime: " + schedule?.startsAtMillis + ":::" + schedule?.endsAtMillis)
 
-        val df: DateFormat = SimpleDateFormat("HH:mm", Locale.US)
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        val df: DateFormat = SimpleDateFormat("HH:mm")
+        df.setTimeZone(TimeZone.getTimeZone(TimeZone.getDefault().id));
         val time_start: String = df.format(schedule?.startsAtMillis)
 //        Log.e("PGIV", "::>>>time_start: " + time_start + "<<>>conversion: " )
 
-        val dfend: DateFormat = SimpleDateFormat("HH:mm", Locale.US)
-        dfend.setTimeZone(TimeZone.getTimeZone("GMT"));
+        val dfend: DateFormat = SimpleDateFormat("HH:mm")
+        dfend.setTimeZone(TimeZone.getTimeZone(TimeZone.getDefault().id));
         val time_end: String = dfend.format(schedule?.endsAtMillis)
 
         val schedule_time = time_start + "-" + time_end
@@ -103,7 +103,7 @@ class ProgramGuideItemView<T> : FrameLayout {
     }
 
     private fun updateText(title: String?, id: String?) {
-        titlee1.text = id
+        time_line.text = id
         titleView.text =  title
     }
 
@@ -119,11 +119,11 @@ class ProgramGuideItemView<T> : FrameLayout {
                     visibility = View.GONE
 
                     if (System.currentTimeMillis() <= it.startsAtMillis) {
-                        titlee1.setTextColor(resources.getColor(R.color.md_white_1000))
+                        time_line.setTextColor(resources.getColor(R.color.md_white_1000))
                         titleView.setTextColor(resources.getColor(R.color.md_white_1000))
 
                     } else {
-                        titlee1.setTextColor(resources.getColor(R.color.md_white_60))
+                        time_line.setTextColor(resources.getColor(R.color.md_white_60))
                         titleView.setTextColor(resources.getColor(R.color.md_white_60))
                     }
 

@@ -72,7 +72,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     /////////////////////////////
 
     // Config values, override in subclass if necessary
-    protected open val DISPLAY_LOCALE = Locale("en", "US")
+    protected open val DISPLAY_LOCALE = Locale.getDefault()
     protected open val DISPLAY_TIMEZONE: ZoneId = ZoneOffset.systemDefault()
     protected open val SELECTABLE_DAYS_IN_PAST = 7
     protected open val SELECTABLE_DAYS_IN_FUTURE = 7
