@@ -464,7 +464,7 @@ if($request->exists('genre')) {
         'count' => $reco->count(),
         'data' => $reco,
        
-        'message' => 'Schedule data for 3 days found',
+        'message' => 'Schedule data for 1.5 days found',
         'response_code'=>200,
     ];
     $responsejson=json_encode($response);
