@@ -1057,7 +1057,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$hoursofset){
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
         ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', FLOOR(UNIX_TIMESTAMP(StartDateTime)),'end', FLOOR(UNIX_TIMESTAMP(EndDateTime)),'starttz',(UNIX_TIMESTAMP(StartDateTimewithTimezon)),'endtz',(UNIX_TIMESTAMP(EndDateTimewithTimezon)),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
         ->fromSub(function ($query) use ($type,$tz) {
-            $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),
+            $query->select(DB::raw('DISTINCT IFNULL(gracenote.StationName,channels.name) StationName'),
             DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
             DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
             DB::raw('IFNULL(gracenote.EventDescription,"") EventDescription'),
@@ -1269,7 +1269,7 @@ public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start', FLOOR(UNIX_TIMESTAMP(StartDateTime)),'end', FLOOR(UNIX_TIMESTAMP(EndDateTime)),'starttz',(UNIX_TIMESTAMP(StartDateTimewithTimezon)),'endtz',(UNIX_TIMESTAMP(EndDateTimewithTimezon)),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
         ->fromSub(function ($query) use ($type,$tz) {
-            $query->select(DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),
+            $query->select(DB::raw('DISTINCT IFNULL(gracenote.StationName,channels.name) StationName'),
             DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
             DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
             DB::raw('IFNULL(gracenote.EventDescription,"") EventDescription'),
