@@ -198,7 +198,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
     ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'CatType', CatType,'Category', Category ,'StartTime', (StartDateTime),'EndTime', (EndDateTime), 'starttz',(StartDateTimewithTimezon),'endtz',(EndDateTimewithTimezon),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
 
     ->fromSub(function ($query) use ($type,$tz) {
-      $query->select(DB::raw('IFNULL(genre.name,"Others") genre_name'),
+      $query->select(DB::raw('DISTINCT IFNULL(genre.name,"Others") genre_name'),
       DB::raw('IFNULL(gracenote.StationName,concat("z",channels.name)) StationName'),
       DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
       DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
