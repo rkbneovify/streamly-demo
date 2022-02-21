@@ -79,7 +79,7 @@ open class ApiCall {
         let seconds = TimeZone.current.secondsFromGMT()
         let minutes = abs(seconds/60) % 60
         let hours = seconds/3600
-        let tz = String(format: "%+.2d:%.2d", hours, minutes)
+        let tz = String(format: "%.2d:%.2d", hours, minutes)
         param["hoursoffset"] = tz
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getEpgData.rawValue, method: .get, headers: headers, parameters: param)

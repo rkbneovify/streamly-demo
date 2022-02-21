@@ -286,7 +286,7 @@ extension LoginVC
                                 Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isDeviceNameAdded)
                                 Switcher.updateRootVC()
                             } else {
-                                selfStrong.updateDeviceName(sessionId: response.success?.sessionid ?? "")
+                                selfStrong.updateDeviceName(sessionId: response.success?.personaldeviceid ?? "")
                             }
                         }
                     }
