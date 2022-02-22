@@ -1124,7 +1124,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$hoursofset){
             ->orderBy('callSign', 'asc')
             ->groupBy('callSign','StationName','image',$type,'channels.id');
         }
-        $b->union($record);
+        $b->union($record)->orderBy('id');
     // dd($b->toSql());
     $result = $b;
     return $result;
@@ -1296,7 +1296,7 @@ public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
             ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
             ->where('sub.status','=','1')
-        // ->orderBy('sub.callSign', 'asc')
+        ->orderBy('sub.id', 'asc')
         ->groupBy('sub.callSign','StationName','image',$type,'id');
 
     $distinct_ids = Gracenote::select('channels.id')->distinct()->from('gracenote')
@@ -1312,7 +1312,8 @@ public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
         ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,name), "description", "","start",UNIX_TIMESTAMP(DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s")),"end",UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")),"starttz",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"endtz",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
         ->where('status', '=', 1)
         ->whereNotIn('id', $distinct_ids)
-        ->union($record);
+        ->union($record)
+        ->orderBy('id','asc');
     // dd($b->toSql());
     $result = $b;
     return $result;
