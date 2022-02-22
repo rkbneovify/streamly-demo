@@ -44,8 +44,8 @@ class TimeCollectionViewCell: UICollectionViewCell {
 
             let formatter = DateFormatter()
             formatter.dateFormat = "hh:mm a"
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.timeZone = TimeZone(abbreviation: "UTC")!
+            formatter.locale = Calendar.current.locale//Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = Calendar.current.timeZone
             let date1 = formatter.date(from: startTime)
             self.timeLabel.text = formatter.string(for: date1?.addingTimeInterval(TimeInterval((indexInt - 1)*30*60)))
         }

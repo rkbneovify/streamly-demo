@@ -66,7 +66,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 
                 if let channel = filteredList?[indexPath.section - 1], let programs = channel.programs
                 {
-                    self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
+                    self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].starttz ?? 0.0, "E, d MMM yyyy")
                     programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.row)
                 } else {
                     
@@ -150,7 +150,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 return true}
             guard let indexPath: IndexPath = self.collectionView.indexPath(for: programCell) as IndexPath? else { return true}
             // Call API for pagination when focus on programme also.
-            if indexPath.section ==
+           /* if indexPath.section ==
                 (filteredList?.count ?? 0) && viewModel.isPageExist {
                 guard viewModel.currentPage <= viewModel.lastPage  else { return true }
                 lastIndexPath = indexPath
@@ -167,7 +167,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             } else {
                 showLoading = false
                 print("loading not called or pageExist is \(viewModel.isPageExist)")
-            }
+            }*/
             
             if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
             {

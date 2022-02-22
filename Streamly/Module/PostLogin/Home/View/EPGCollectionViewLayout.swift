@@ -128,12 +128,12 @@ extension CustomCollectionViewLayout {
                 if item == 1 && section != 0
                 {
                     var comp: DateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
-                    comp.timeZone = TimeZone(abbreviation: "UTC")!
+                    comp.timeZone = Calendar.current.timeZone//TimeZone(abbreviation: "UTC")!
 
                     if let d1 = Calendar.current.date(from: comp)?.dayBefore
                     {
 
-                        let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].start ?? 0))
+                        let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].starttz ?? 0))
                         let intervals = d2.timeIntervalSince(d1)
                         let numberOfHours = CGFloat(intervals / 3600)
                         xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 2)
@@ -227,7 +227,10 @@ extension CustomCollectionViewLayout {
         }
         else
         {
-            width = Utility.getProgrammWidth(start: programData?.start ?? 0, end: programData?.end ?? 0)
+            width = Utility.getProgrammWidth(start: programData?.starttz ?? 0, end: programData?.endtz ?? 0)
+            if width < 297 {
+                width = 297
+            }
         }
         return CGSize(width: width, height: height)
     }

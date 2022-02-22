@@ -66,8 +66,8 @@ class Utility {
         let date = NSDate(timeIntervalSince1970: interval)
         let dayTimePeriodFormatter = DateFormatter()
         dayTimePeriodFormatter.dateFormat = format
-        dayTimePeriodFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dayTimePeriodFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dayTimePeriodFormatter.locale = Calendar.current.locale//Locale(identifier: "en_US_POSIX")
+        dayTimePeriodFormatter.timeZone = Calendar.current.timeZone//TimeZone(abbreviation: "UTC")
         return dayTimePeriodFormatter.string(from: date as Date)
     }
 

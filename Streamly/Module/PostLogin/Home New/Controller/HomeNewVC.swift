@@ -26,6 +26,7 @@ class HomeNewVC: UIViewController {
     var genrsList: ChannelListResponse?
     var geoData:GeoFenceAddress?
     var recentData: RecentData?
+    var myChannelListData: MychannelData?
     var filteredList:[ChannelDetails]?
     {
         willSet
@@ -54,9 +55,7 @@ class HomeNewVC: UIViewController {
         videoPlaybackViewController = VideoPlaybackViewController()
         super.init(coder: coder)
     }
-    var myChannelIds:[Int] = []
     var selectedCategories = -1
-    var recentIDs:[Int] = []
     let fixedCategoriesArray = ["ALL","RECENT","MY CHANNELS"]
     var timer:Timer?
     var lastContentOffset: CGPoint = CGPoint.zero
@@ -336,10 +335,9 @@ class HomeNewVC: UIViewController {
                         self.filteredList?.removeAll()
                         self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
                     }
-                    if (filteredList?.count ?? 0) <= self.recentIDs.count { // This works only when data have in favourites and we didn't get all favourite data in once.
+                    if (filteredList?.count ?? 0) <= (self.recentData?.data?.count ?? 0) { // This works only when data have in Recent and we didn't get all Recent data in once.
                         group.enter()
                         self.viewModel.getEPGData(viewModel.currentPage)
-                        viewModel.currentPage += 1
                         viewModel.isPageExist = true
                         return
                     }
@@ -351,16 +349,15 @@ class HomeNewVC: UIViewController {
                         }
                     }
                 } else if CategoriesSelect.init(rawValue: sender) == .myChannels {
-                    self.viewModel.getChannelList()
+                    self.viewModel.getMyChannelList()
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                        let tempRecent = self.loadMyChannelData(self.myChannelIds)
+                        let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? [])
                         self.filteredList?.append(contentsOf: tempRecent ?? [])
                     } else {
                         self.filteredList?.removeAll()
-                        self.filteredList = self.loadMyChannelData(self.myChannelIds)
+                        self.filteredList = self.loadMyChannelData(self.myChannelListData?.data ?? [])
                     }
-                    if (filteredList?.count ?? 0) <= myChannelIds.count { // This works only when data have in favourites and we didn't get all favourite data in once.
-//                        viewModel.currentPage += 1
+                    if (filteredList?.count ?? 0) <= (self.myChannelListData?.data?.count ?? 0) { // This works only when data have in favourites and we didn't get all favourite data in once.
                         group.enter()
                         self.viewModel.getEPGData(viewModel.currentPage)
                         viewModel.isPageExist = true
@@ -396,6 +393,7 @@ class HomeNewVC: UIViewController {
                 filteredList?.removeAll()
                 self.showSpinner(onView: self.view)
                 group.enter()
+                viewModel.currentPage = 1
                 viewModel.getEPGData(1)
             }
 //            collectionView.reloadData()
@@ -458,9 +456,9 @@ class HomeNewVC: UIViewController {
         
     }
     
-    private func loadMyChannelData(_ myChannelIds:[Int]) -> [ChannelDetails]?
+    private func loadMyChannelData(_ myChannelList:[MyChannel]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.data?.filter { i in (myChannelIds.contains{ i.id == $0} ) }
+        let mainArray = self.channelList?.data?.data?.filter { i in (myChannelList.contains{ i.id == $0.id} ) }
         return mainArray
         
     }
@@ -499,7 +497,7 @@ class HomeNewVC: UIViewController {
     private func makeApiCallChannelList(){
         group.enter()
         viewModel.getChannelList()
-        viewModel.getMyChannelList()
+//        viewModel.getMyChannelList()
     }
     
     private func initVMList() {
@@ -530,12 +528,11 @@ class HomeNewVC: UIViewController {
         viewModel.recentData = { recentModel in
             self.group.leave()
             self.recentData = recentModel
-            self.recentIDs = self.recentData?.data?.map { $0.id ?? 0} ?? []
         }
         
         viewModel.myChannelList = { [weak self] data in
             guard let weak = self else { return }
-            weak.myChannelIds = data.data?.map({$0.id ?? 0}) ?? []
+            weak.myChannelListData = data
         }
         
     }
