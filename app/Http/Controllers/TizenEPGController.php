@@ -195,7 +195,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
     $record  = Gracenote::select("sub.callSign as CallSign","sub.genre_name as genre_name",
     DB::raw('concat(id,"") ChanId') ,DB::raw('concat(id,"") ChanNum'),"StationName","$type as url",
     DB::raw("CONCAT('$imagePath/',`image`) IconURL"))
-    ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'CatType', CatType,'Category', Category ,'StartTime', (StartDateTime),'EndTime', (EndDateTime), 'starttz',(StartDateTimewithTimezon),'endtz',(EndDateTimewithTimezon),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
+    ->selectRaw(" concat( '[', group_concat(json_object( 'Title', EventTitle,'Description', EventDescription,'CatType', CatType,'Category', Category ,'StartTime',DATE_FORMAT(StartDateTimewithTimezon, '%Y-%m-%dT%TZ'),'EndTime',DATE_FORMAT(EndDateTimewithTimezon, '%Y-%m-%dT%TZ'),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') Programs")
 
     ->fromSub(function ($query) use ($type,$tz) {
       $query->select(DB::raw('DISTINCT IFNULL(genre.name,"Others") genre_name'),
