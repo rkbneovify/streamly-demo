@@ -15,6 +15,7 @@
 # Gradle files
 .gradle/
 .gradle/buildOutputCleanup
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
 .gradle/buildOutputCleanup/*
 build/
 
