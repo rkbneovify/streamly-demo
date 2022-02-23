@@ -86,7 +86,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/programguide_detail_image"
-        app:layout_constraintTop_toTopOf="@id/programguide_detail_image"
+        app:layout_constraintTop_toTopOf="@id/bottom_detail"
+        app:layout_constraintBottom_toTopOf="@+id/programguide_detail_metadata"
         tools:text="NPO Politiek" />
     <TextView
         android:id="@+id/programguide_detail_metadata"
@@ -95,6 +96,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/programguide_detail_title"
         app:layout_constraintTop_toBottomOf="@id/programguide_detail_title"
+        app:layout_constraintBottom_toTopOf="@+id/programguide_detail_end_time_metadata"
         tools:text="EenVandaag • Wo 30 jan 20:00 • AVROTROS" />
     <TextView
         android:id="@+id/programguide_detail_end_time_metadata"
@@ -103,16 +105,19 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/programguide_detail_title"
         app:layout_constraintTop_toBottomOf="@id/programguide_detail_metadata"
+        app:layout_constraintBottom_toTopOf="@+id/programguide_detail_description"
         tools:text="EenVandaag • Wo 30 jan 20:00 • AVROTROS" />
 
     <TextView
         android:id="@+id/programguide_detail_description"
         style="@style/ProgramGuide.Text.Detail.Description"
         android:layout_width="0dp"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/programguide_detail_title"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/programguide_detail_end_time_metadata"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_detail"
         tools:text="This is the description of the item.\nLine 2\nLine 3\nLine 4\nLine 5\nLine 6" />
 
     <View
@@ -235,7 +240,7 @@
         layout="@layout/programguide_item_time_indicator"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginLeft="@dimen/programguide_channel_column_width"
+        android:layout_marginStart="@dimen/programguide_channel_column_width_new"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/background"
         app:layout_constraintLeft_toLeftOf="parent"

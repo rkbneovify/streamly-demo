@@ -261,6 +261,7 @@ class ChannelFragment(context: Context, val genre: String) :
     private fun getSecondApi(authToken: String) {
         var dayss: Int? = 1
         val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
+//        val timeZoneString = "-08:00"
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
         Log.d("authTocken", "Bearer $authToken")
         if (genre.lowercase().equals("all") or genre.lowercase().equals("recent")) {
