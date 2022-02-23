@@ -233,7 +233,8 @@ public function channeljson(Request $request)
     
     ->where('channels.status','=','1')
     ->groupBy('channels.id')
-    ->orderBy('channels.name', 'asc');
+    ->orderBy('channels.id', 'asc');
+    // ->orderBy('channels.name', 'asc');
     return $second;
     }
 
@@ -1167,7 +1168,8 @@ public function channelDaysScheduleFunc($type){
         ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,name), "description", "EventDescription","start",UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")),"end",UNIX_TIMESTAMP(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"))), "]") programs')
         ->where('status', '=', 1)
         ->whereNotIn('id', $distinct_ids)
-        ->union($record);
+        //->union($record);
+        ->union($record)->orderBy('id');
     // dd($b->toSql());
     $result = $b;
     return $result;
