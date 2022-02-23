@@ -1,3 +1,12 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/androidstudio,android
 # Edit at https://www.toptal.com/developers/gitignore?templates=androidstudio,android
@@ -5,7 +14,16 @@
 ### Android ###
 # Gradle files
 .gradle/
+.gradle/buildOutputCleanup
+.gradle/buildOutputCleanup/*
 build/
+./build/tmp/kotlin-classes/debug/com/streamly/TVApp/streamly/*
+./build/tmp/kotlin-classes/debug/com/streamly/TVApp/streamly/
+build/kotlin/*
+build/kotlin/compileDebugKotlin/*
+build/kotlin/compileDebugKotlin/*
+build/intermediates
+build/intermediates/*
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -23,6 +41,7 @@ output.json
 # IntelliJ
 *.iml
 .idea/
+.idea/*
 
 # Keystore files
 *.jks
