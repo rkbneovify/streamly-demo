@@ -67,7 +67,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 if let channel = filteredList?[indexPath.section - 1], let programs = channel.programs
                 {
                     self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].starttz ?? 0.0, "E, d MMM yyyy")
-                    programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.row)
+                    programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.item)
                 } else {
                     
                 }
@@ -171,6 +171,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             
             if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
             {
+                guard (indexPath.item - 1) <= programs.count else { return true }
                 self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].starttz ?? 0.0, "E, d MMM yyyy")
                 self.discriptionView.isHidden = false
                 self.discriptionHeader.text = programs[indexPath.item - 1].title ?? ""
@@ -344,5 +345,43 @@ extension HomeNewVC {
 
         }
 
+    }
+}
+
+// MARK: - Logic for make programList data.
+extension HomeNewVC {
+    func getUpdatedChannelList(_ channel: [ChannelDetails]) -> [ChannelDetails] {
+        var tmpChannel = [ChannelDetails]()
+        channel.forEach { chDetail in
+            var startTime = "11:00 PM"
+            var newPrograme = [ProgramArray]()
+            print("Channel:\(chDetail.StationName ?? "")")
+            chDetail.programs?.forEach({ proDetail in
+                print("Start: \(Utility.getDateFromTimeStampByFormat(from: proDetail.starttz ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? "")")
+                // chekck if start time is existing on programe or not
+                if startTime == Utility.getDateFromTimeStampByFormat(from: proDetail.starttz ?? 0) ?? "" { // yes
+                    newPrograme.append(proDetail)
+                    startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? ""
+                } else { // Add no broadcast cell with end time
+                    let makeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ: proDetail.starttz ?? 0.0, start: 0, end: 0, title: "No broadcast", timezoneName: "", description: "")
+                    newPrograme.append(makeNoBroadcast)
+                    newPrograme.append(proDetail)
+                    // added latest start time
+                    startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? ""
+                }
+            })
+            let updatedChannel = ChannelDetails(id: chDetail.id ?? 0, stationName: chDetail.StationName ?? "", url: chDetail.url ?? "", logo: chDetail.logo ?? "", callSign: chDetail.CallSign ?? "", programs: newPrograme)
+            tmpChannel.append(updatedChannel)
+            newPrograme.removeAll()
+        }
+        return tmpChannel
+    }
+    
+    func makeNewTime(startTime: String) -> TimeInterval  {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "hh:mm a"
+        formatter.locale = Calendar.current.locale//Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = Calendar.current.timeZone
+        return  formatter.date(from: startTime)?.timeIntervalSince1970 ?? 0
     }
 }

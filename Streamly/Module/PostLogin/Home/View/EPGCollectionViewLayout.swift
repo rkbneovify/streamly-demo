@@ -228,9 +228,9 @@ extension CustomCollectionViewLayout {
         else
         {
             width = Utility.getProgrammWidth(start: programData?.starttz ?? 0, end: programData?.endtz ?? 0)
-            if width < 297 {
-                width = 297
-            }
+//            if width < 297 {
+//                width = 297
+//            }
         }
         return CGSize(width: width, height: height)
     }

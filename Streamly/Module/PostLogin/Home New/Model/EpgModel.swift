@@ -158,5 +158,15 @@ struct ProgramArray : Codable {
         TimeZoneName = try values.decodeIfPresent(String.self, forKey: .TimeZoneName)
     }
     
+    init(startTZ: TimeInterval, endTZ: TimeInterval, start: TimeInterval, end: TimeInterval, title: String, timezoneName: String, description: String) {
+        self.starttz = startTZ
+        self.endtz = endTZ
+        self.start = start
+        self.end = end
+        self.title = title
+        self.description = description
+        self.TimeZoneName = timezoneName
+        
+    }
 
 }

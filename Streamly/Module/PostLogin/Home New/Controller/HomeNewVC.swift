@@ -329,11 +329,13 @@ class HomeNewVC: UIViewController {
                 if CategoriesSelect.init(rawValue: sender) == .recent {
                     self.viewModel.getRecentData()
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                        let tempRecent = self.loadRecentData(self.recentData?.data ?? [])
-                        self.filteredList?.append(contentsOf: tempRecent ?? [])
+                        let tempRecent = self.loadRecentData(self.recentData?.data ?? []) ?? []
+                        let channelData = getUpdatedChannelList(tempRecent)
+                        self.filteredList?.append(contentsOf: tempRecent)
                     } else {
                         self.filteredList?.removeAll()
-                        self.filteredList = self.loadRecentData(self.recentData?.data ?? [])
+                        let tempRecent = self.loadRecentData(self.recentData?.data ?? []) ?? []
+                        self.filteredList = tempRecent//getUpdatedChannelList(tempRecent)
                     }
                     if (filteredList?.count ?? 0) <= (self.recentData?.data?.count ?? 0) { // This works only when data have in Recent and we didn't get all Recent data in once.
                         group.enter()
@@ -351,11 +353,13 @@ class HomeNewVC: UIViewController {
                 } else if CategoriesSelect.init(rawValue: sender) == .myChannels {
                     self.viewModel.getMyChannelList()
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                        let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? [])
-                        self.filteredList?.append(contentsOf: tempRecent ?? [])
+                        let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []
+                        let channelData = getUpdatedChannelList(tempRecent)
+                        self.filteredList?.append(contentsOf: tempRecent)
                     } else {
                         self.filteredList?.removeAll()
-                        self.filteredList = self.loadMyChannelData(self.myChannelListData?.data ?? [])
+                        let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []
+                        self.filteredList = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []//getUpdatedChannelList(tempRecent)
                     }
                     if (filteredList?.count ?? 0) <= (self.myChannelListData?.data?.count ?? 0) { // This works only when data have in favourites and we didn't get all favourite data in once.
                         group.enter()
@@ -370,13 +374,13 @@ class HomeNewVC: UIViewController {
                             }
                         }
                     }
-                }
-                    else {
+                } else {
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                        self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                        let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                        self.filteredList?.append(contentsOf: channelData)
                     } else {
                         self.filteredList?.removeAll()
-                        self.filteredList = self.channelList?.data?.data ?? []
+                        self.filteredList = getUpdatedChannelList(self.channelList?.data?.data ?? [])
                     }
                     if viewModel.isPageExist {
                         if let indexPath = self.lastIndexPath {
@@ -413,10 +417,12 @@ class HomeNewVC: UIViewController {
             self.selectedCategories = sender
             if channelList != nil {
                 if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                    let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                    self.filteredList?.append(contentsOf: channelData)
+//                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
                 } else {
                     self.filteredList?.removeAll()
-                    self.filteredList = self.channelList?.data?.data ?? []
+                    self.filteredList = getUpdatedChannelList(self.channelList?.data?.data ?? [])
                 }
                 if viewModel.isPageExist {
                     if let indexPath = self.lastIndexPath {
