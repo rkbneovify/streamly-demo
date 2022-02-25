@@ -1257,7 +1257,7 @@ public function channelDaysScheduleFunc($type){
     return $record;
   }
 
-public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
+public function channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
     }else
