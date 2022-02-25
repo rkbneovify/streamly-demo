@@ -66,6 +66,9 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 
                 if let channel = filteredList?[indexPath.section - 1], let programs = channel.programs
                 {
+                    if programs[indexPath.item - 1].title?.lowercased() == "no broadcast" {
+                        print(programs[indexPath.item - 1].title ?? "")
+                    }
                     self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: filteredList?[indexPath.section - 1].programs?[indexPath.item - 1].starttz ?? 0.0, "E, d MMM yyyy")
                     programCell?.configureWithModel(program: programs[indexPath.item - 1], row : indexPath.item)
                 } else {
@@ -265,6 +268,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     return
                 }
                 guard let item = filteredList?[(indexPath.section - 1)] else {return}
+//                if item.programs?[indexPath.item - 1].title?.lowercased() == "no broadcast"{
+//                    print("it's not playable.")
+//                    return
+//                }
                 present(videoPlaybackViewController, animated: true) {
                     self.videoPlaybackViewController.channelObject = item
                     self.videoPlaybackViewController.isAllowedZipCode = flag
@@ -353,7 +360,9 @@ extension HomeNewVC {
     func getUpdatedChannelList(_ channel: [ChannelDetails]) -> [ChannelDetails] {
         var tmpChannel = [ChannelDetails]()
         channel.forEach { chDetail in
-            var startTime = "11:00 PM"
+            let yesterDayDate = Date().dayBefore.string(format: "MM/dd/yyyy")
+            let makeDateWithSpTime = "\(yesterDayDate) 10:30 AM"
+            var startTime = "10:30 AM"
             var newPrograme = [ProgramArray]()
             print("Channel:\(chDetail.StationName ?? "")")
             chDetail.programs?.forEach({ proDetail in
@@ -363,8 +372,9 @@ extension HomeNewVC {
                     newPrograme.append(proDetail)
                     startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? ""
                 } else { // Add no broadcast cell with end time
-                    let makeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ: proDetail.starttz ?? 0.0, start: 0, end: 0, title: "No broadcast", timezoneName: "", description: "")
+                    let makeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: makeDateWithSpTime), endTZ: proDetail.starttz ?? 0.0, start: 0, end: 0, title: "No broadcast", timezoneName: "", description: "")
                     newPrograme.append(makeNoBroadcast)
+                    print("makeNoBroadcast start:\(Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.starttz ?? 0) ?? "")- \(Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.endtz ?? 0) ?? "")")
                     newPrograme.append(proDetail)
                     // added latest start time
                     startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? ""
@@ -379,7 +389,7 @@ extension HomeNewVC {
     
     func makeNewTime(startTime: String) -> TimeInterval  {
         let formatter = DateFormatter()
-        formatter.dateFormat = "hh:mm a"
+        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
         formatter.locale = Calendar.current.locale//Locale(identifier: "en_US_POSIX")
         formatter.timeZone = Calendar.current.timeZone
         return  formatter.date(from: startTime)?.timeIntervalSince1970 ?? 0

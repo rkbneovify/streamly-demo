@@ -77,8 +77,8 @@ class CustomCollectionViewLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        guard itemAttributes[indexPath.section].count <= indexPath.item else { return  itemAttributes[indexPath.section][0] }
-        return itemAttributes[indexPath.section][indexPath.item]
+        guard itemAttributes[indexPath.section].count < indexPath.item else { return  itemAttributes[indexPath.section][0] }
+        return itemAttributes[indexPath.section][indexPath.item-1]
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
@@ -136,7 +136,7 @@ extension CustomCollectionViewLayout {
                         let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].starttz ?? 0))
                         let intervals = d2.timeIntervalSince(d1)
                         let numberOfHours = CGFloat(intervals / 3600)
-                        xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 2)
+                        xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 4)
                     }
                 }
 
@@ -209,6 +209,9 @@ extension CustomCollectionViewLayout {
 
     func sizeForItemWithColumnIndex(section: Int,item: Int, programData : ProgramArray? = nil) -> CGSize
     {
+        if programData?.title?.lowercased() == "no broadcast" {
+            print(programData?.title ?? "")
+        }
         var width: CGFloat
         var height = TILE_HEIGHT
         if item == 0 && section == 0

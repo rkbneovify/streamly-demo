@@ -106,7 +106,7 @@ class Utility {
         let d2 = Date.init(timeIntervalSince1970: end)
         let intervals = d2.timeIntervalSince(d1)
         let numberOfHours = CGFloat(intervals / 3600)
-        return CGFloat(numberOfHours) * (408 * 2)
+        return CGFloat(numberOfHours) * (408 * 4)
     }
 
 

@@ -299,7 +299,7 @@ class HomeNewVC: UIViewController {
             let intervals = (d2.timeIntervalSince(d1))
             let numberOfHours = CGFloat(intervals / 3600)
             var offset = self.collectionView.contentOffset
-            offset.x = (((CGFloat(numberOfHours) * (408*2))) - (297 + 36))
+            offset.x = (((CGFloat(numberOfHours) * (408*4))) - (297 + 36))
             return offset
         }
         var offset = self.collectionView.contentOffset
@@ -331,11 +331,11 @@ class HomeNewVC: UIViewController {
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
                         let tempRecent = self.loadRecentData(self.recentData?.data ?? []) ?? []
                         let channelData = getUpdatedChannelList(tempRecent)
-                        self.filteredList?.append(contentsOf: tempRecent)
+                        self.filteredList?.append(contentsOf: channelData)
                     } else {
                         self.filteredList?.removeAll()
                         let tempRecent = self.loadRecentData(self.recentData?.data ?? []) ?? []
-                        self.filteredList = tempRecent//getUpdatedChannelList(tempRecent)
+                        self.filteredList = getUpdatedChannelList(tempRecent)
                     }
                     if (filteredList?.count ?? 0) <= (self.recentData?.data?.count ?? 0) { // This works only when data have in Recent and we didn't get all Recent data in once.
                         group.enter()
@@ -355,11 +355,11 @@ class HomeNewVC: UIViewController {
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
                         let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []
                         let channelData = getUpdatedChannelList(tempRecent)
-                        self.filteredList?.append(contentsOf: tempRecent)
+                        self.filteredList?.append(contentsOf: channelData)
                     } else {
                         self.filteredList?.removeAll()
                         let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []
-                        self.filteredList = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []//getUpdatedChannelList(tempRecent)
+                        self.filteredList = getUpdatedChannelList(tempRecent)
                     }
                     if (filteredList?.count ?? 0) <= (self.myChannelListData?.data?.count ?? 0) { // This works only when data have in favourites and we didn't get all favourite data in once.
                         group.enter()
