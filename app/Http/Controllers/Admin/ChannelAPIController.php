@@ -1043,7 +1043,7 @@ public function channelDaysScheduleFuncWithGenre($type,$q){
     return $record;
    
 }
-public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$hoursofset){
+public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
     }else
@@ -1257,7 +1257,7 @@ public function channelDaysScheduleFunc($type){
     return $record;
   }
 
-public function channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset){
+public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
     }else
