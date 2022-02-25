@@ -1,6 +1,5 @@
 package com.streamly.TVApp.streamly.playervideo;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
@@ -39,7 +37,6 @@ import com.google.android.exoplayer2.drm.MediaDrmCallback;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -53,17 +50,12 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
-import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.epg.ChannellistModel;
 import com.streamly.TVApp.streamly.epg.Datum;
-import com.streamly.TVApp.streamly.epg.GenereAdapter;
-import com.streamly.TVApp.streamly.epg.SimpleChannel;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
 import com.streamly.TVApp.streamly.log_in.LogInActivity;
-import com.streamly.TVApp.streamly.model.error_model.ErrorResponseModel;
 import com.streamly.TVApp.streamly.playervideo.allchannel.AllChannelAdapter;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmKeyModel;
 import com.streamly.TVApp.streamly.playervideo.drm.DrmViewModel;
@@ -78,7 +70,6 @@ import com.streamly.TVApp.streamly.retrofit_clients.ApiResponse;
 import com.streamly.TVApp.streamly.utilities.CommonUtility;
 import com.streamly.TVApp.streamly.utilities.ConstantUtility;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +99,7 @@ public class PlayerActivity extends FragmentActivity {
     String channel_id = "";
     String item = "0";
     String rvItemClick = "0";
+    String channelId;
 
     @Override
     protected void onStart() {
@@ -151,12 +143,13 @@ public class PlayerActivity extends FragmentActivity {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         params = new Bundle();
-        String channelName = getIntent().getStringExtra("channel_name");
+        channelId = getIntent().getStringExtra("id");
+        System.out.println("Channel Name : "+ channelId);
         if (getIntent().getStringExtra("item") != null) {
             item = getIntent().getStringExtra("item");
         }
 
-        params.putString("call_sign", channelName + "_Android");
+        params.putString("call_sign", channelId + "_Android");
         params.putString("inside_geofence", "false");
         mFirebaseAnalytics.setUserId(userId);
 
@@ -306,7 +299,7 @@ public class PlayerActivity extends FragmentActivity {
                     case 200:
                         String drmKey = drmKeyModel.getData();
                         String wvUrl = drmKeyModel.getWidevinelicense();
-                        Log.e(TAG, "onChanged: getDrmKey " + wvUrl);
+                            Log.e(TAG, "onChanged: getDrmKey " + wvUrl);
                         Log.e(TAG, "onChanged: getDrmKey " + drmKey);
                         //call all channel api....
                         getChannelList(drmKey, wvUrl);
@@ -694,21 +687,16 @@ public class PlayerActivity extends FragmentActivity {
                     case ExoPlayer.STATE_IDLE:
                         Log.i(TAG, "onPlayerStateChanged: idle ");
                         break;
-
                     case ExoPlayer.STATE_READY:
                         Log.i(TAG, "onPlayerStateChanged: ready ");
                         break;
-
                     case ExoPlayer.STATE_BUFFERING:
                         Log.i(TAG, "onPlayerStateChanged: buffering ");
                         break;
-
                     case ExoPlayer.STATE_ENDED:
                         Log.i(TAG, "onPlayerStateChanged: STATE_ENDED  ");
                         break;
                 }
-
-
             }
 
             @Override
@@ -828,17 +816,36 @@ public class PlayerActivity extends FragmentActivity {
                         Log.e("channelList-------", channelList.get(0).getId().toString());
                         Log.e("channelList-------", wvUrl);
                         String url = getIntent().getStringExtra("from");
+//                        check for current channel name and store the position of the current channle and auto scroll
+//                        that position.
+                        int position = 0;
                         for (int i = 0; i < channelList.size(); i++) {
                             if (url.equals(channelList.get(i).getUrl())) {
                                 channel_id = channelList.get(i).getId().toString();
                                 Log.e(TAG, "onResponse: channel list id " + channelList.get(i).getId().toString());
                             }
+                            if(channelList.get(i).getId().toString().equals(channelId)){
+                                position = i;
+                            }
                         }
 
 
+
+
                         allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this, LinearLayoutManager.VERTICAL, false));
-                        allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList);
+                        allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList, position);
                         allChannelRecyclerView.setAdapter(allChannelAdapter);
+
+                        int finalPosition = position;
+                        allChannelRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                allChannelRecyclerView.scrollToPosition(finalPosition);
+                                allChannelRecyclerView.setSelected(true);
+                                allChannelRecyclerView.setFocusable(true);
+
+                            }
+                        });
 
                         menuImage.setVisibility(View.VISIBLE);
                         if (rvItemClick.equals("1")) {

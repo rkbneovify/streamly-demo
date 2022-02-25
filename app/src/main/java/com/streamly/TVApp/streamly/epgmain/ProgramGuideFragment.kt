@@ -168,7 +168,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * Called when the user has clicked on a schedule.
      * The schedule parameter contains all the info you need for taking an action.
      */
-    abstract fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<T>)
+    abstract fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<T>, channelId: String)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Overriding the layout ID is also possible, so that if your layout naming follows a specific
@@ -706,9 +706,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     /**
      * This method is called from the ProgramGuideListAdapter, when the OnClickListener is triggered.
      */
-    override fun onScheduleClickedInternal(schedule: ProgramGuideSchedule<T>) {
+    override fun onScheduleClickedInternal(schedule: ProgramGuideSchedule<T>, channelId: String) {
         ProgramGuideUtil.lastClickedSchedule = schedule
-        onScheduleClicked(schedule)
+        onScheduleClicked(schedule, channelId)
     }
 
     /**

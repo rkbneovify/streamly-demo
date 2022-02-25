@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <dimen name="programguide_table_width_per_hour">300dp</dimen>
+    <dimen name="programguide_table_width_per_hour">600dp</dimen>
 
 <!--    <dimen name="programguide_program_row_height">32dp</dimen>-->
 <!--    <dimen name="programguide_program_row_height_with_empty_space">36dp</dimen>-->

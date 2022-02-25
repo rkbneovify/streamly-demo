@@ -2,12 +2,15 @@ package com.streamly.TVApp.streamly.log_in;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -39,7 +42,7 @@ import retrofit2.Response;
 
 public class LogInActivity extends FragmentActivity {
     private static final String TAG = LogInActivity.class.getSimpleName();
-    private ProgressDialog dialog;
+    private ProgressBar dialog;
     private String uniqueId;
     private String userAgent;
     private EditText edUserName, edPassword;
@@ -59,7 +62,7 @@ public class LogInActivity extends FragmentActivity {
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.i(TAG, "onCreate: tv uniqueId " + uniqueId);
 
-        dialog = CommonUtility.custom_loader(LogInActivity.this);
+        dialog = findViewById(R.id.login_progress_bar);
         TokenStorage.clearSharedToken(LogInActivity.this);
 
         txtNeedHelp.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +143,8 @@ public class LogInActivity extends FragmentActivity {
         });
     }
 
+
+
     private void getUserAgentType() {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<CheckDeviceType> call = apiInterface.getDeviceType(userAgent);
@@ -171,7 +176,7 @@ public class LogInActivity extends FragmentActivity {
     }
 
     private void signInCall() {
-        dialog.show();
+        dialog.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<NewLogInModel> call = apiInterface.postLogInCall(userAgent, edUserName.getText().toString(),
                 edPassword.getText().toString(), uniqueId);
@@ -269,7 +274,7 @@ public class LogInActivity extends FragmentActivity {
                     e.printStackTrace();
                     Log.e(TAG, "Exception: " + e.toString());
                 }
-                dialog.dismiss();
+                dialog.setVisibility(View.GONE);
                 Log.e(TAG, "ResponCode " + response.code() + "");
             }
 
@@ -278,7 +283,7 @@ public class LogInActivity extends FragmentActivity {
                 Log.e(TAG, "failure: " + t.getMessage());
                 Log.e(TAG, "failRequest: " + call.request());
                 CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
-                dialog.dismiss();
+                dialog.setVisibility(View.GONE);
             }
         });
     }

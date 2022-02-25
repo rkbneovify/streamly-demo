@@ -89,7 +89,10 @@ class ChannelFragment(context: Context, val genre: String) :
 
 
     //#neovifyissueresolved28sep
-    override fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<SimpleProgram>) {
+    override fun onScheduleClicked(
+        programGuideSchedule: ProgramGuideSchedule<SimpleProgram>,
+        channelId: String
+    ) {
         val innerSchedule = programGuideSchedule.program
         if (innerSchedule == null) {
             // If this happens, then our data source gives partial info
@@ -127,6 +130,7 @@ class ChannelFragment(context: Context, val genre: String) :
 
             val intent1 = Intent(activity, PlayerActivity::class.java)
             intent1.putExtra("from", innerSchedule.playUrl)
+            intent1.putExtra("id", channelId)
             startActivity(intent1)
 
             Log.e(
@@ -153,9 +157,8 @@ class ChannelFragment(context: Context, val genre: String) :
         titleView?.text = programGuideSchedule?.displayTitle
         val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
         metadataView?.text = programGuideSchedule?.program?.metadata
-        val endTimeMetaDataView =
-            view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
-        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
+//        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
+//        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
         val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
@@ -631,8 +634,9 @@ class ChannelFragment(context: Context, val genre: String) :
     ): ProgramGuideSchedule<SimpleProgram> {
         val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
-        val metadata = getDate(startTime.toEpochMilli(), "'Starts at' HH:mm")
-        val endTimeMetadata = getDate(endTime.toEpochMilli(), "'Ends  at' HH:mm")
+        var metadata = getDate(startTime.toEpochMilli(), "HH:mm")
+        val endTimeMetadata = getDate(endTime.toEpochMilli(), "HH:mm")
+        metadata = "$metadata - $endTimeMetadata"
         return ProgramGuideSchedule.createScheduleWithProgram(
             id, startTime, endTime, true, scheduleName,
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,

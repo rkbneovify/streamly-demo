@@ -1,7 +1,6 @@
 package com.streamly.TVApp.streamly
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
@@ -9,24 +8,14 @@ import android.text.SpannedString
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.streamly.TVApp.streamly.channelschedule.Datum
-import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.entity.ProgramGuideChannel
 import com.streamly.TVApp.streamly.entity.ProgramGuideSchedule
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
-import com.streamly.TVApp.streamly.log_in.LogInActivity
 import com.streamly.TVApp.streamly.playervideo.PlayerActivity
-import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
-import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
-import com.streamly.TVApp.streamly.utilities.CommonUtility
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
-import com.streamly.TVApp.streamly.utilities.NetworkKeys
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -35,8 +24,6 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
@@ -88,7 +75,10 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
 
 
     //#neovifyissueresolved28sep
-    override fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<SimpleProgram>) {
+    override fun onScheduleClicked(
+        programGuideSchedule: ProgramGuideSchedule<SimpleProgram>,
+        channelId: String
+    ) {
         val innerSchedule = programGuideSchedule.program
         if (innerSchedule == null) {
             // If this happens, then our data source gives partial info
@@ -132,7 +122,7 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
 
             val intent1 = Intent(activity, PlayerActivity::class.java)
             intent1.putExtra("from", innerSchedule.playUrl)
-            intent1.putExtra("channel_name", innerSchedule.channelId)
+            intent1.putExtra("channel_name", channelId)
 //            intent1.putExtra("callsign", channels[].name)
 //            intent1.putExtra("from", innerSchedule.)
             startActivity(intent1)

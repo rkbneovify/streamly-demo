@@ -51,7 +51,7 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
     override fun onBindViewHolder(holder: ProgramItemViewHolder<T>, position: Int) {
         val programGuideSchedule = programGuideManager.getScheduleForChannelIdAndIndex(channelId, position)
         val gapTitle = noInfoProgramTitle
-        holder.onBind(programGuideSchedule, programGuideFragment, gapTitle)
+        holder.onBind(programGuideSchedule, programGuideFragment, gapTitle,channelId)
     }
 
     override fun onViewRecycled(holder: ProgramItemViewHolder<T>) {
@@ -72,13 +72,13 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
             itemView.clipToOutline = true
         }
 
-        fun onBind(schedule: ProgramGuideSchedule<R>, programGuideHolder: ProgramGuideHolder<R>, gapTitle: String) {
+        fun onBind(schedule: ProgramGuideSchedule<R>, programGuideHolder: ProgramGuideHolder<R>, gapTitle: String, channelId: String) {
             val programManager = programGuideHolder.programGuideManager
             @Suppress("UNCHECKED_CAST")
             programGuideItemView = itemView as ProgramGuideItemView<R>
 
             programGuideItemView?.setOnClickListener {
-                programGuideHolder.onScheduleClickedInternal(schedule)
+                programGuideHolder.onScheduleClickedInternal(schedule, channelId)
             }
             programGuideItemView?.setValues(
                     scheduleItem = schedule,

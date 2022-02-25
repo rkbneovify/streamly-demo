@@ -26,10 +26,12 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
 
     private List<com.streamly.TVApp.streamly.epg.Datum> channelList;
     private Context ctx;
+    int cPosition;
 
-    public AllChannelAdapter(Context ctx, List<com.streamly.TVApp.streamly.epg.Datum> channelList){
+    public AllChannelAdapter(Context ctx, List<com.streamly.TVApp.streamly.epg.Datum> channelList, int cPosition){
         this.ctx = ctx;
         this.channelList = channelList;
+        this.cPosition = cPosition;
     }
 
     @NonNull
@@ -40,8 +42,10 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-
+        if(position == cPosition){
+            holder.card.setSelected(true);
+            holder.card.setFocusable(true);
+        }
         holder.textView.setText(channelList.get(position).getId().toString());
         Glide.with(ctx).load(channelList.get(position).getLogo()).into(holder.imageView);
 

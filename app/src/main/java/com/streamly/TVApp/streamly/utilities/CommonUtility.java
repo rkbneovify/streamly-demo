@@ -2,6 +2,8 @@ package com.streamly.TVApp.streamly.utilities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.widget.Toast;
 
 import com.streamly.TVApp.streamly.R;
@@ -17,7 +19,8 @@ public class CommonUtility {
     public static ProgressDialog custom_loader(Context context) {
         final ProgressDialog dialog = new ProgressDialog(context, R.style.MyProgressDialog);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage(ConstantUtility.LOADING);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.setMessage(ConstantUtility.LOADING);
         return dialog;
     }
 
