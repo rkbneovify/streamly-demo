@@ -46,7 +46,7 @@ class CustomCollectionViewLayout: UICollectionViewLayout {
                     continue
                 }
 
-                let attributes = layoutAttributesForItem(at: IndexPath(item: item, section: section))!
+                guard let attributes = layoutAttributesForItem(at: IndexPath(item: item, section: section)) else { return }
                 if section == 0 {
                     var frame = attributes.frame
                     frame.origin.y = collectionView.contentOffset.y

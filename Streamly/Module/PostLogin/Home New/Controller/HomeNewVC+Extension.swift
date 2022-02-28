@@ -361,8 +361,8 @@ extension HomeNewVC {
         var tmpChannel = [ChannelDetails]()
         channel.forEach { chDetail in
             let yesterDayDate = Date().dayBefore.string(format: "MM/dd/yyyy")
-            let makeDateWithSpTime = "\(yesterDayDate) 10:30 AM"
-            var startTime = "10:30 AM"
+            let makeDateWithSpTime = "\(yesterDayDate) 11:00 PM"
+            var startTime = "11:00 PM"
             var newPrograme = [ProgramArray]()
             print("Channel:\(chDetail.StationName ?? "")")
             chDetail.programs?.forEach({ proDetail in

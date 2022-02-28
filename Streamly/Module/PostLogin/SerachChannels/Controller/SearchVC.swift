@@ -178,7 +178,7 @@ extension SearchVC:UICollectionViewDelegate
         guard let item = filteredChannelListInfo?[(indexPath as NSIndexPath).row] else {return}
 
         // Configure the cell.
-        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.callSign ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
+        let chanelInfo = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
         cellComposer.compose(cell, withDataItem: chanelInfo)
     }
 
