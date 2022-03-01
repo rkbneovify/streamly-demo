@@ -11,9 +11,26 @@ import UIKit
 class RoomViewController: UIViewController {
     
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var logOutButton: GradientBUtton!
     
     var viewModel = RoomViewModel()
-    
+    var filterRoomList = [Room]()
+    var filterString = "" {
+        didSet {
+            // Return if the filter string hasn't changed.
+            guard filterString != oldValue else { return }
+
+            // Apply the filter or show all items if the filter string is empty.
+            if filterString.isEmpty {
+                filterRoomList = viewModel.filtterdRoomList
+            } else {
+                filterRoomList = viewModel.filtterdRoomList.filter({($0.hotel_room?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
+            }
+
+            // Reload the collection view to reflect the changes.
+            collectionView?.reloadData()
+        }
+    }
     private let cellComposer = DataItemCellComposer()
     
     override func viewDidLoad() {
@@ -50,8 +67,25 @@ class RoomViewController: UIViewController {
         self.collectionView.reloadData()
         self.collectionView.layoutIfNeeded()
         self.collectionView.layoutSubviews()
+        
+        self.logOutButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.logOutButton.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
+        self.logOutButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.logOutButton.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
+        self.logOutButton.setTitleColor(UIColor.white, for: .focused)
+        self.logOutButton.setTitleColor(UIColor.white, for: .highlighted)
+        
+        if #available(tvOS 14.0, *) {
+            logOutButton.addAction(UIAction(handler: { _ in
+                self.viewPopups()
+            }), for: .primaryActionTriggered)
+        } else {
+            // Fallback on earlier versions
+            logOutButton.addTarget(self, action: #selector(logOutAction(_:)), for: .primaryActionTriggered)
+        }
     }
     
+    @objc func logOutAction(_ sender: UIButton) {
+        self.viewPopups()
+    }
     
     @objc func menuButtonAction(recognizer:UITapGestureRecognizer) {
         if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is RoomViewController {
@@ -65,6 +99,14 @@ class RoomViewController: UIViewController {
         vc.viewModel.personaldeviceid = session
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    private func viewPopups()
+    {
+        let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        popUPViewsVC.modalPresentationStyle = .overCurrentContext
+        popUPViewsVC.item = 4
+        self.present(popUPViewsVC, animated:true, completion:nil)
+    }
 }
 // MARK: UICollectionViewDataSource
 
@@ -76,12 +118,12 @@ extension RoomViewController: UICollectionViewDataSource
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if viewModel.filtterdRoomList.count == 0 {
+        if filterRoomList.count == 0 {
             self.collectionView.setEmptyMessage("No Room Available. Please remove from web.")
         } else {
             self.collectionView.restore()
         }
-        return viewModel.filtterdRoomList.count
+        return filterRoomList.count
         
     }
     
@@ -96,13 +138,13 @@ extension RoomViewController: UICollectionViewDataSource
 extension RoomViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? RoomViewCell else { fatalError("Expected to display a `RoomViewCell`.") }
-        cell.setData(viewModel.listOfRoom[indexPath.item])
+        cell.setData(filterRoomList[indexPath.item])
         // Configure the cell.
-        cellComposer.composeRoomCell(cell, withDataItem: viewModel.listOfRoom[indexPath.item])
+        cellComposer.composeRoomCell(cell, withDataItem: filterRoomList[indexPath.item])
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let selectedID = viewModel.filtterdRoomList[indexPath.item].id {
+        if let selectedID = filterRoomList[indexPath.item].id {
             viewModel.selectRoomToLogin("\(selectedID)")
         }
         /* let flag = self.geoData?.success ?? false
@@ -126,8 +168,9 @@ extension RoomViewController: RoomViewModelDelegate {
         self.removeSpinner()
         showToast(message: "Successfully added to room/slot", completion: {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                if !self.viewModel.deviceNamePopup {
-                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isDeviceNameAdded)
+                let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
+                if !isShow {
+//                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                     Switcher.updateRootVC()
                 } else {
                     self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
@@ -158,8 +201,28 @@ extension RoomViewController: RoomViewModelDelegate {
     
     func reloadDataChange() {
         self.removeSpinner()
+        self.filterRoomList = viewModel.filtterdRoomList
         collectionView.reloadData()
     }
     
     
+}
+
+// MARK: - UISearchResultsUpdating
+extension RoomViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        filterString = searchController.searchBar.text ?? ""
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if logOutButton.isFocused{
+            coordinator.addCoordinatedAnimations({ () -> Void in
+               
+            }, completion: nil)
+        }else {
+            coordinator.addCoordinatedAnimations({ () -> Void in
+                self.logOutButton.layer.borderColor = UIColor.gray.cgColor
+            }, completion: nil)
+            }
+        }
 }

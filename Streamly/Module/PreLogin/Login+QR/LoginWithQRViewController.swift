@@ -54,7 +54,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.access_token ?? "", key: Constant.UserDefault.token)
                 Utility.setStringObject(value: data.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                 Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
-                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+                Utility.setBoolInUserDefaultData(value: data.personaldevicenamePopup ?? false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
@@ -124,6 +124,11 @@ extension LoginWithQRViewController {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
         vc.viewModel.deviceNamePopup = showDeviceNamePopup
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

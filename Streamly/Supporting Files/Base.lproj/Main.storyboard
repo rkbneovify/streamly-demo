@@ -1124,14 +1124,36 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lnr-bs-oie" customClass="GradientBUtton" customModule="StreamlyTV" customModuleProvider="target">
+                                        <rect key="frame" x="1573" y="47" width="182" height="76"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                        <state key="normal" title="Logout"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                <color key="value" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="btnActions:" destination="aq3-6r-fX2" eventType="primaryActionTriggered" id="XQK-wu-qfl"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="rab-0o-fLw" firstAttribute="leading" secondItem="TLh-if-Y6A" secondAttribute="leading" constant="20" id="0mY-ho-FrZ"/>
                                     <constraint firstAttribute="bottom" secondItem="rab-0o-fLw" secondAttribute="bottom" constant="20" id="Jz7-Pv-V9d"/>
                                     <constraint firstItem="wiD-fR-bxK" firstAttribute="centerX" secondItem="TLh-if-Y6A" secondAttribute="centerX" id="MfF-zf-ACb"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lnr-bs-oie" secondAttribute="trailing" constant="5" id="Yhs-Gv-owW"/>
                                     <constraint firstItem="wiD-fR-bxK" firstAttribute="top" secondItem="TLh-if-Y6A" secondAttribute="top" constant="20" id="ZTj-gX-QWF"/>
                                     <constraint firstAttribute="trailing" secondItem="rab-0o-fLw" secondAttribute="trailing" constant="20" id="bAW-Cg-lZN"/>
+                                    <constraint firstItem="Lnr-bs-oie" firstAttribute="centerY" secondItem="wiD-fR-bxK" secondAttribute="centerY" id="exR-hk-Ohy"/>
                                     <constraint firstItem="rab-0o-fLw" firstAttribute="top" secondItem="wiD-fR-bxK" secondAttribute="bottom" constant="20" id="oHJ-Je-cLU"/>
                                     <constraint firstItem="rab-0o-fLw" firstAttribute="centerX" secondItem="wiD-fR-bxK" secondAttribute="centerX" id="yy0-r8-Jgd"/>
                                 </constraints>
@@ -1158,6 +1180,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="gUl-AS-qe5" id="nRj-Ap-J11"/>
+                        <outlet property="logOutButton" destination="Lnr-bs-oie" id="vUY-MM-Flj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MVx-hg-eQR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1327,6 +1350,9 @@
         </scene>
     </scenes>
     <designables>
+        <designable name="Lnr-bs-oie">
+            <size key="intrinsicContentSize" width="182" height="76"/>
+        </designable>
         <designable name="MJZ-82-KwY">
             <size key="intrinsicContentSize" width="178" height="76"/>
         </designable>

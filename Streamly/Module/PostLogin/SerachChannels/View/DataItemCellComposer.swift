@@ -27,9 +27,9 @@ class DataItemCellComposer {
     func composeRoomCell(_ cell: RoomViewCell, withDataItem dataItem: Room) {
         cell.channelNameLbl.text = dataItem.hotel_room ?? ""
         cell.imageView.alpha = 1.0
-       // cell.imageView.image =  UIImage(named: "hbo")
+        cell.imageView.image =  UIImage(named: "RoomIcon")
        //cell.imageView.sd_setImage(with: URL(string: dataItem.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
-        guard cell.imageView.image == nil else { return }
+//        guard cell.imageView.image == nil else { return }
     }
     
     func compose(_ cell: DataItemCollectionViewCell, withDataItem dataItem: ChannelDetails) {

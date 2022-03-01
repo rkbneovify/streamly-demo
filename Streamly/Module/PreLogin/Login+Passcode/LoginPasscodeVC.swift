@@ -79,6 +79,11 @@ extension LoginPasscodeVC {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
         vc.viewModel.deviceNamePopup = showNamePopup
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

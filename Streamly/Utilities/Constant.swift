@@ -79,9 +79,14 @@ class Constant: NSObject
     class func navigateToHotelRoomHome()
     {
         guard let app = appDelegate else {return}
-        let homeVC = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
         let rootViewController = appDelegate?.window?.rootViewController as? UINavigationController
-        rootViewController?.setViewControllers([homeVC], animated: false)
+        rootViewController?.setViewControllers([searchContainer], animated: false)
         rootViewController?.isNavigationBarHidden = true
         app.window?.rootViewController!.removeFromParent()
         app.window?.rootViewController!.view.removeFromSuperview()

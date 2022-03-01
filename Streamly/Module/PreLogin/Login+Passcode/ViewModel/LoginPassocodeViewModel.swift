@@ -43,7 +43,7 @@ class LoginPassocodeViewModel: NSObject {
                     Utility.setStringObject(value: data.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: data.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+                    Utility.setBoolInUserDefaultData(value: data.personaldevicenamePopup ?? false, key: Constant.UserDefault.isDeviceNameAdded)
                     Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)

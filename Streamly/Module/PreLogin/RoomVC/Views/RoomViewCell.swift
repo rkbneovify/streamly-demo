@@ -32,6 +32,7 @@ class RoomViewCell: UICollectionViewCell {
     
     func setData(_ room: Room) {
         channelNameLbl.text = room.hotel_room
+        imageView.image = UIImage(named: "RoomIcon")
     }
     // MARK: UICollectionReusableView
     

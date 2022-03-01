@@ -264,7 +264,7 @@ extension LoginVC
                     }
 
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+                    Utility.setBoolInUserDefaultData(value: response.success?.personaldevicenamePopup ?? false, key: Constant.UserDefault.isDeviceNameAdded)
                     Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response.success?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response.success?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
@@ -371,7 +371,12 @@ extension LoginVC {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
         vc.viewModel.deviceNamePopup = showDeviceName
-        self.navigationController?.pushViewController(vc, animated: true)
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
+        self.navigationController?.pushViewController(searchContainer, animated: true)
     }
     
     fileprivate func updateDeviceName(sessionId: String) {
