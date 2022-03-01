@@ -4,6 +4,7 @@ public class SearchModel {
     String channelTitle;
     String logoUrl;
     String videoUrl;
+    Long channelId;
 
 
     public SearchModel() {
@@ -19,6 +20,13 @@ public class SearchModel {
         this.channelTitle = channelTitle;
         this.logoUrl = logoUrl;
         this.videoUrl = videoUrl;
+    }
+
+    public SearchModel(long channelId, String channelTitle, String logoUrl, String videoUrl) {
+        this.channelTitle = channelTitle;
+        this.logoUrl = logoUrl;
+        this.videoUrl = videoUrl;
+        this.channelId = channelId;
     }
 
     public String getVideoUrl() {
@@ -43,5 +51,9 @@ public class SearchModel {
 
     public void setLogoUrl(String logoUrl) {
         this.logoUrl = logoUrl;
+    }
+
+    public Long getChannelId() {
+        return channelId;
     }
 }

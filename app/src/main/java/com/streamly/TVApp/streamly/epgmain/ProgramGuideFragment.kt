@@ -103,6 +103,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     private var created = false
 
     override val programGuideGrid get() = view?.findViewById<ProgramGuideGridView<T>>(R.id.programguide_grid)!!
+//    lateinit var programGuideGrids: ProgramGuideFragment<T>
     private val timeRow get() = view?.findViewById<ProgramGuideTimelineRow>(R.id.programguide_time_row)
     private val currentDateView get() = view?.findViewById<TextView>(R.id.programguide_current_date)
     private val jumpToLive get() = view?.findViewById<TextView>(R.id.programguide_jump_to_live)
@@ -333,6 +334,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
             val adapter = ProgramGuideRowAdapter(it.context, this)
             it.adapter = adapter
+            it.post {
+                it.requestFocus()
+            }
         }
         programGuideManager.listeners.add(this)
         currentDateView?.alpha = 0f

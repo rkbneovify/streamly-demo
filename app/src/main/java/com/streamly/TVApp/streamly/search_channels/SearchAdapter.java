@@ -53,7 +53,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         Glide.with(context).load(list.get(position).getLogoUrl()).into(holder.channelLogo);
-        holder.channelName.setText(list.get(position).channelTitle);
+        holder.channelName.setText(list.get(position).getChannelId()+".\n"+list.get(position).channelTitle);
         holder.channelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

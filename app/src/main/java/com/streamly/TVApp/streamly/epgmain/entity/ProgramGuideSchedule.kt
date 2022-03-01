@@ -19,7 +19,8 @@ data class ProgramGuideSchedule<T>(
         val originalTimes: OriginalTimes,
         val isClickable: Boolean,
         val displayTitle: String?,
-        val program: T?) {
+        val program: T?,
+        val channelLogoUrl: String = "") {
 
     /**
      * Used internally. We make some fixes and adjustments to the times in the program manager,
@@ -33,24 +34,25 @@ data class ProgramGuideSchedule<T>(
     companion object {
         private const val GAP_ID = -1L
 
-        fun <T> createGap(from: Long, to: Long): ProgramGuideSchedule<T> {
+        fun <T> createGap(from: Long, to: Long, imageUrlLogo: String): ProgramGuideSchedule<T> {
             return ProgramGuideSchedule(GAP_ID,
                     from,
                     to,
                     OriginalTimes(from, to),
                     false,
                     null,
-                    null)
+                    null,imageUrlLogo)
         }
 
-        fun <T> createScheduleWithProgram(id: Long, startsAt: Instant, endsAt: Instant, isClickable: Boolean, displayTitle: String?, program: T): ProgramGuideSchedule<T> {
+        fun <T> createScheduleWithProgram(id: Long, startsAt: Instant, endsAt: Instant, isClickable: Boolean, displayTitle: String?, program: T, channelLogoUrl:String): ProgramGuideSchedule<T> {
             return ProgramGuideSchedule(id,
                     startsAt.toEpochMilli(),
                     endsAt.toEpochMilli(),
                     OriginalTimes(startsAt.toEpochMilli(), endsAt.toEpochMilli()),
                     isClickable,
                     displayTitle,
-                    program)
+                    program,
+            channelLogoUrl)
         }
     }
 

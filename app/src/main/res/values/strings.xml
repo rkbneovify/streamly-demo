@@ -112,6 +112,7 @@
     <string name="e_m_enter_device_name">Please Enter the Device Name</string>
     <string name="a_name_will_help_identify_your_device_when_naccessing_it_from_other_device_like_your_phone_ntable_or_computer">A name will help identify your device when \naccessing it from other device like your phone,\ntable, or computer</string>
     <string name="choose_a_name_for_your_streamly_ndevice">Choose a name for your Streamly \ndevice</string>
+    <string name="room_selection_msg">Are you sure to select this room?</string>
     <!--    <string name="no_plan_text">We&apos;re having some trouble with your current subscription. We&apos;ll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.</string>-->
 
 </resources>

@@ -165,12 +165,12 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
                         List<Datum> datumList = response.body().getData();
 
                         for (int i = 0; i < datumList.size(); i++) {
-
-                            String channelTitle = datumList.get(i).getCallSign();
+                            Long channelId = datumList.get(i).getId();
+                            String channelTitle = datumList.get(i).getStationName();
                             String channelLogo = datumList.get(i).getLogo();
                             String videoUrl = datumList.get(i).getUrl();
 
-                            searchList.add(new SearchModel(channelTitle, channelLogo,videoUrl));
+                            searchList.add(new SearchModel(channelId, channelTitle, channelLogo,videoUrl));
                         }
                         searchAdapter = new SearchAdapter(SearchActivity.this, searchList, SearchActivity.this);
                         rvSearch.setLayoutManager(new GridLayoutManager(SearchActivity.this, 4));

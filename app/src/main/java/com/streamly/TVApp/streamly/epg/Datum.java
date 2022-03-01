@@ -18,6 +18,8 @@ public class Datum {
     private String mLogo;
     @SerializedName("url")
     private String mUrl;
+    @SerializedName("stationName")
+    private String stationName;
 
     public String getCallSign() {
         return mCallSign;
@@ -67,6 +69,13 @@ public class Datum {
         mUrl = url;
     }
 
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
 
     @Override
     public String toString() {

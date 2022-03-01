@@ -95,9 +95,10 @@ class ProgramGuideGridView<T>(context: Context, attrs: AttributeSet?, defStyle: 
                         scheduleSelectionListener?.onSelectionChanged(newFocus.schedule as ProgramGuideSchedule<T>?)
                     }
                     skipNextFocusedSchedule = false
-                } else {
-                    scheduleSelectionListener?.onSelectionChanged(null)
                 }
+//                else {
+//                    scheduleSelectionListener?.onSelectionChanged(null)
+//                }
             }
 
 

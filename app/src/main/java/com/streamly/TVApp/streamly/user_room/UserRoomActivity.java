@@ -1,16 +1,24 @@
 package com.streamly.TVApp.streamly.user_room;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import static com.streamly.TVApp.streamly.utilities.ApiConfig.BASE_URL_TESTING;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -22,10 +30,9 @@ import com.streamly.TVApp.streamly.MainActivity;
 import com.streamly.TVApp.streamly.R;
 import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog;
 import com.streamly.TVApp.streamly.local_storage.TokenStorage;
-import com.streamly.TVApp.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
-import com.streamly.TVApp.streamly.new_log_in.NewLoginErrorResponse;
+import com.streamly.TVApp.streamly.log_in.LogInActivity;
+import com.streamly.TVApp.streamly.log_in.LogInModel;
 import com.streamly.TVApp.streamly.new_log_in.Room;
-import com.streamly.TVApp.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.streamly.TVApp.streamly.receivers.NetworkStateReceiver;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient;
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface;
@@ -38,8 +45,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import static com.streamly.TVApp.streamly.utilities.ApiConfig.BASE_URL_TESTING;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,12 +56,15 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
 
     private ProgressBar progressBar;
     private RecyclerView rvRoom;
+    private TextView logoutTextView;
+    private EditText searchRoomEd;
     String authToken;
     private static final int REQUEST_CODE = 1234;
+    private Context context;
+    private UserRoomAdapter userRoomAdapter;
 
     ArrayList<Room> roomList = new ArrayList<>();
-    UserRoomAdapter userRoomAdapter;
-    private LinearLayout llNoDataFound, layoutInternet , linearLayoutNoRoom;
+    private LinearLayout llNoDataFound, layoutInternet, linearLayoutNoRoom;
     NetworkStateReceiver networkStateReceiver;
 
     @Override
@@ -63,22 +72,51 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_room);
 
-
+        context = this;
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
+        searchRoomEd = findViewById(R.id.ed_search_room);
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
         authToken = TokenStorage.readSharedTokenPasscode(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
 
         Log.i(TAG, "onCreate: UserRoomActivity " + authToken);
         initViews();
+        searchRoomEd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filter(s.toString());
+            }
+        });
+    }
+
+    void filter(String text) {
+        List<Room> temp = new ArrayList();
+        for (Room d : roomList) {
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if (d.getHotelRoom().contains(text)) {
+                temp.add(d);
+            }
+        }
+        //update recyclerview
+        userRoomAdapter.updateList(temp);
     }
 
     private void initViews() {
         llNoDataFound = findViewById(R.id.llNoDataFound);
         linearLayoutNoRoom = findViewById(R.id.layout_no_room_available);
+        logoutTextView = findViewById(R.id.room_logout_btn);
 
         progressBar = findViewById(R.id.progress_bar);
 
@@ -93,6 +131,37 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
 //        roomList = gson.fromJson(json, type);
 
         latestRoomList();
+
+        logoutTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                String auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null);
+                ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+                Call<LogInModel> call = apiInterface.postLogOutCall("Bearer " + auth_token);
+                call.enqueue(new Callback<LogInModel>() {
+                    @Override
+                    public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {
+                        try {
+                            progressBar.setVisibility(View.GONE);
+                            TokenStorage.clearSharedToken(context);
+                            context.startActivity(new Intent(context, LogInActivity.class));
+                            ((Activity) context).finish();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LogInModel> call, Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+                        CommonUtility.showToast(context, ConstantUtility.SERVER_ISSUE);
+                    }
+                });
+            }
+        });
 
     }
 
@@ -115,7 +184,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                     linearLayoutNoRoom.setVisibility(View.GONE);
 
                                     Gson gson = new Gson();
-                                    if(!roomRefreshResponse.getData().isEmpty() && roomRefreshResponse.getData()!=null){
+                                    if (!roomRefreshResponse.getData().isEmpty() && roomRefreshResponse.getData() != null) {
                                         String json = gson.toJson(roomRefreshResponse.getData());
 
                                         TokenStorage.savedRoomList(UserRoomActivity.this, ConstantUtility.ROOM_LIST, json);
@@ -125,22 +194,17 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                         }.getType();
                                         roomList = gson.fromJson(json, type);
                                         roomListData();
-                                    }
-
-                                    else{
+                                    } else {
                                         linearLayoutNoRoom.setVisibility(View.VISIBLE);
                                     }
 
 
-
-                                }
-                                else if(roomRefreshResponse.getResponseCode() == 401){
+                                } else if (roomRefreshResponse.getResponseCode() == 401) {
                                     SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(UserRoomActivity.this);
                                     sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                                     sessionExpiredDialog.setCancelable(false);
                                     sessionExpiredDialog.show();
-                                }
-                                else {
+                                } else {
                                     Log.i(TAG, "onResponse: response_code 409 ");
 //                                    refreshHotelRooms();
                                     linearLayoutNoRoom.setVisibility(View.VISIBLE);
@@ -189,7 +253,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         rvRoom.setLayoutManager(new GridLayoutManager(UserRoomActivity.this, 4));
 //                        rvRoom.setAdapter(userRoomAdapter);
         if (!roomList.isEmpty() && roomList != null) {
-            rvRoom.setAdapter(new UserRoomAdapter(UserRoomActivity.this, roomList, item -> {
+            userRoomAdapter = new UserRoomAdapter(UserRoomActivity.this, roomList, item -> {
                 Log.i(TAG, "roomListData: 3 " + item);
                 Log.i(TAG, "roomListData: 4 " + authToken);
                 progressBar.setVisibility(View.VISIBLE);
@@ -212,12 +276,12 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                     } else if (response.getInt("response_code") == 409) {
                                         Log.i(TAG, "onResponse: response_code 409 ");
 //                                    refreshHotelRooms();
-                                    } else if(response.getInt("response_code") == 401){
+                                    } else if (response.getInt("response_code") == 401) {
                                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(UserRoomActivity.this);
                                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                                         sessionExpiredDialog.setCancelable(false);
                                         sessionExpiredDialog.show();
-                                    }else {
+                                    } else {
 
 
                                         Log.i(TAG, "onResponse: roomListData 7 ");
@@ -244,8 +308,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                         Log.e(TAG, "failure: onError 3 " + " " + roomErrorResponse.getResponseCode());
                                         Log.e(TAG, "failure: onError 4 " + " " + roomErrorResponse.getMessage());
                                         refreshHotelRooms();
-                                    }
-                                   else if (roomErrorResponse.getResponseCode() == 401) {
+                                    } else if (roomErrorResponse.getResponseCode() == 401) {
                                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(UserRoomActivity.this);
                                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                                         sessionExpiredDialog.setCancelable(false);
@@ -256,7 +319,8 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                 progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
-            }));
+            });
+            rvRoom.setAdapter(userRoomAdapter);
         } else {
             linearLayoutNoRoom.setVisibility(View.VISIBLE);
 //            CommonUtility.showToast(UserRoomActivity.this, "No Room Available. Please remove from web ");

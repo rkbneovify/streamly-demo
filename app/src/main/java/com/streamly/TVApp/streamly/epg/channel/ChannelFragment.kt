@@ -163,12 +163,22 @@ class ChannelFragment(context: Context, val genre: String) :
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
         if (programGuideSchedule != null) {
-            Glide.with(imageView)
-                .load(programGuideSchedule.program?.imageUrl.toString())
-                .error(R.drawable.programguide_icon_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView)
+            if(programGuideSchedule.program == null){
+                Glide.with(imageView)
+                    .load(programGuideSchedule.channelLogoUrl)
+                    .error(R.drawable.programguide_icon_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(imageView)
+            }else{
+                Glide.with(imageView)
+                    .load(programGuideSchedule.program?.imageUrl.toString())
+                    .error(R.drawable.programguide_icon_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(imageView)
+            }
+
         } else {
             Glide.with(imageView).clear(imageView)
         }
@@ -440,6 +450,7 @@ class ChannelFragment(context: Context, val genre: String) :
                             k += 1
                         }
                         val pair = Pair(channels, channelMap)
+                        updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(0))
                         setData(pair.first, pair.second, localDate, dayss!!)
                         setState(State.Content)
 
@@ -470,7 +481,8 @@ class ChannelFragment(context: Context, val genre: String) :
                         }
 
                     })
-        } else {
+        }
+        else {
             apiInterface.getScheduleListWithTimeZone(
                 timeZoneString,
                 genre,
@@ -585,6 +597,7 @@ class ChannelFragment(context: Context, val genre: String) :
                             k += 1
                         }
                         val pair = Pair(channels, channelMap)
+                        updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(0))
                         setData(pair.first, pair.second, localDate, dayss!!)
                         setState(State.Content)
 
@@ -617,6 +630,29 @@ class ChannelFragment(context: Context, val genre: String) :
                     })
         }
 
+//        update view for firt componenet
+    }
+
+    fun updateBottomDiscriptionViewForFirstTime(programGuideSchedule : ProgramGuideSchedule<SimpleProgram>?){
+        val titleView = view?.findViewById<TextView>(R.id.programguide_detail_title)
+        titleView?.text = programGuideSchedule?.displayTitle
+        val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
+        metadataView?.text = programGuideSchedule?.program?.metadata
+//        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
+//        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
+        val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
+        descriptionView?.text = programGuideSchedule?.program?.description
+        val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
+        if (programGuideSchedule != null) {
+            Glide.with(imageView)
+                .load(programGuideSchedule.program?.imageUrl.toString())
+                .error(R.drawable.programguide_icon_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView)
+        } else {
+            Glide.with(imageView).clear(imageView)
+        }
     }
 
 
@@ -636,7 +672,7 @@ class ChannelFragment(context: Context, val genre: String) :
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
         var metadata = getDate(startTime.toEpochMilli(), "HH:mm")
         val endTimeMetadata = getDate(endTime.toEpochMilli(), "HH:mm")
-        metadata = "$metadata - $endTimeMetadata"
+        metadata = "Starts at $metadata - End at $endTimeMetadata"
         return ProgramGuideSchedule.createScheduleWithProgram(
             id, startTime, endTime, true, scheduleName,
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,
@@ -645,7 +681,7 @@ class ChannelFragment(context: Context, val genre: String) :
                 metadata + "",
                 endTimeMetadata + "",
                 playUrl, imageUrl
-            )
+            ), channelLogoUrl = imageUrl
         )
 
     }

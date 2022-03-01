@@ -1,49 +1,59 @@
 package com.streamly.TVApp.streamly.log_in
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.util.Log
+import android.view.View
+import android.widget.*
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.ContentLoadingProgressBar
 import androidx.fragment.app.FragmentActivity
+import com.androidnetworking.model.Progress
 import com.streamly.TVApp.streamly.MainActivity
 import com.streamly.TVApp.streamly.R
+import com.streamly.TVApp.streamly.dialogs.SessionExpiredDialog
 import com.streamly.TVApp.streamly.local_storage.TokenStorage
 import com.streamly.TVApp.streamly.local_storage.TokenStorage.readUserRole
 import com.streamly.TVApp.streamly.retrofit_clients.ApiClient
 import com.streamly.TVApp.streamly.retrofit_clients.ApiInterface
 import com.streamly.TVApp.streamly.user_room.UserRoomActivity
+import com.streamly.TVApp.streamly.utilities.CommonUtility
 import com.streamly.TVApp.streamly.utilities.ConstantUtility
 import com.streamly.TVApp.streamly.utilities.NetworkKeys
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 class PersonalDeviceName : FragmentActivity() {
     private lateinit var personalDeviceName: EditText
-    private lateinit var nextImageButton: ImageButton
-    private lateinit var loadingProgressBar: ContentLoadingProgressBar
+    private lateinit var nextImageButton: AppCompatButton
+    private lateinit var logoutButton: TextView
+    private lateinit var loadingProgressBar: ProgressBar
+    private lateinit var context:Context;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_personal_device_name)
         personalDeviceName = findViewById(R.id.editTextTextPersonName)
         nextImageButton = findViewById(R.id.next_image_button)
+        logoutButton = findViewById(R.id.personal_device_name_logout_btn);
         loadingProgressBar = findViewById(R.id.personal_device_name_progress)
 //        setting the focus on the edit text
         personalDeviceName.requestFocus()
-        loadingProgressBar.hide()
-
+        loadingProgressBar.visibility = View.GONE
+        context = this
         initClickListener()
     }
 
     private fun initClickListener() {
         nextImageButton.setOnClickListener { view ->
-            loadingProgressBar.show()
+            loadingProgressBar.visibility = View.VISIBLE
             if (personalDeviceName.text.toString() == "") {
                 Toast.makeText(this, getString(R.string.e_m_enter_device_name), Toast.LENGTH_SHORT)
                     .show()
-                loadingProgressBar.hide()
+                loadingProgressBar.visibility = View.GONE
             } else {
 
                 val deviceName = personalDeviceName.text.toString()
@@ -80,7 +90,7 @@ class PersonalDeviceName : FragmentActivity() {
                             call: Call<PersonalDeviceNameDataModel>,
                             response: Response<PersonalDeviceNameDataModel>
                         ) {
-                            loadingProgressBar.hide()
+                            loadingProgressBar.visibility = View.GONE
                             if (response.code() == 200) {
                                 TokenStorage.savePersonalDeviceName(
                                     this@PersonalDeviceName,
@@ -133,11 +143,41 @@ class PersonalDeviceName : FragmentActivity() {
 
                             Toast.makeText(this@PersonalDeviceName, t.message, Toast.LENGTH_SHORT)
                                 .show()
-                            loadingProgressBar.hide()
+                            loadingProgressBar.visibility = View.GONE
+
                         }
                     })
                 }
             }
+        }
+        logoutButton.setOnClickListener {
+            loadingProgressBar.visibility = View.VISIBLE
+            val authToken = NetworkKeys.KEY_BEARER + TokenStorage.readSharedTokenPasscode(
+                this@PersonalDeviceName,
+                ConstantUtility.AUTH_TOKEN_PASSCODE,
+                null
+            )
+            val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
+            val call = apiInterface.postLogOutCall("Bearer $authToken")
+            call.enqueue(object : Callback<LogInModel?> {
+                override fun onResponse(call: Call<LogInModel?>, response: Response<LogInModel?>) {
+                    try {
+                        loadingProgressBar.visibility = View.GONE
+
+                        TokenStorage.clearSharedToken(context)
+                        context.startActivity(Intent(context, LogInActivity::class.java))
+                        (context as Activity).finish()
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                    }
+                }
+
+                override fun onFailure(call: Call<LogInModel?>, t: Throwable) {
+                    loadingProgressBar.visibility = View.GONE
+
+                    CommonUtility.showToast(context, ConstantUtility.SERVER_ISSUE)
+                }
+            })
         }
     }
 }

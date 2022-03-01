@@ -95,7 +95,7 @@
         style="@style/ProgramGuide.Text.Detail.Metadata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/helvetica_neue_light"
+        android:fontFamily="@font/helvetica_neue_medium"
         app:layout_constraintLeft_toLeftOf="@id/programguide_detail_title"
         app:layout_constraintTop_toBottomOf="@id/programguide_detail_title"
         app:layout_constraintBottom_toTopOf="@+id/programguide_detail_description"
@@ -115,7 +115,7 @@
         style="@style/ProgramGuide.Text.Detail.Description"
         android:layout_width="0dp"
         android:textStyle="bold"
-        android:fontFamily="@font/helvetica_neue_bold"
+        android:fontFamily="@font/helvetica_neue_medium"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/programguide_detail_title"
         app:layout_constraintRight_toRightOf="parent"
@@ -178,7 +178,9 @@
         <com.streamly.TVApp.streamly.ProgramGuideGridView
             android:id="@+id/programguide_grid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:focusOutEnd="true"
+            app:focusOutFront="true"/>
 
     </ViewAnimator>
 

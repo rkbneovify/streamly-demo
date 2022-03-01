@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/blur_background"
     tools:context=".user_room.UserRoomActivity">
 
@@ -24,32 +24,53 @@
         <!--                android:visibility="gone"-->
 
         <!--            android:background="@drawable/white_border"-->
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="@dimen/_6sdp"
             android:weightSum="1">
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="314px"
-                android:layout_height="78px"
-                android:layout_marginTop="10dp"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
                 android:src="@mipmap/streamly_logo"
-                />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="1067px"
-                android:layout_height="67px"
-                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:text="@string/hotel_account_select_room"
                 android:textAlignment="center"
+                android:textSize="@dimen/_10sdp"
                 android:textColor="@color/md_white_1000"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:padding="5dp"
+                android:background="@drawable/options_states"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:fontFamily="@font/helvetica_neue_bold"
+                android:textSize="@dimen/_10ssp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:id="@+id/room_logout_btn" />
 
             <!--        <EditText-->
             <!--            android:id="@+id/ed_search"-->
@@ -76,16 +97,55 @@
             <!--            android:layout_weight="0.4"-->
             <!--            android:src="@drawable/ic_voice_search" />-->
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal"
+            android:padding="@dimen/_6sdp"
+            android:weightSum="3">
+
+            <EditText
+                android:id="@+id/ed_search_room"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.6"
+                android:layout_margin="0dp"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="10dp"
+                android:hint=" Search Room"
+                android:fontFamily="@font/helvetica_neue_medium"
+                android:inputType="text"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:focusable="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="#B0B4B5"
+                android:textSize="@dimen/_10sdp" />
+            <!--                android:layout_margin="@dimen/_3sdp"-->
+
+            <ImageView
+                android:id="@+id/img_voice_search"
+                android:layout_width="0dp"
+                android:layout_height="33dp"
+                android:layout_weight="0.4"
+                android:focusable="false"
+                android:src="@drawable/ic_voice_search" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="12sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:orientation="vertical">
@@ -94,6 +154,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_room"
+                android:focusable="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/view_room"/>

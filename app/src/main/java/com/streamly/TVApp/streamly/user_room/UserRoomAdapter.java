@@ -1,6 +1,8 @@
 package com.streamly.TVApp.streamly.user_room;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +22,35 @@ public class UserRoomAdapter extends RecyclerView.Adapter<UserRoomAdapter.MyView
     private Context context;
     private List<Room> list;
     private View view;
+    int selectedPosition = -1;
+    AlertDialog.Builder builder;
+    AlertDialog alertDialog;
 
     private  OnItemClickListener listener;
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    listener.onItemClick(list.get(selectedPosition).getId().toString());
+                    alertDialog.dismiss();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    alertDialog.dismiss();
+                    break;
+            }
+        }
+    };
 
     public UserRoomAdapter(Context context, List<Room> list,OnItemClickListener listener) {
         this.context = context;
         this.list = list;
         this.listener=listener;
+        builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.room_selection_msg).setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener);
+        alertDialog = builder.create();
     }
 
     @NonNull
@@ -45,9 +69,9 @@ public class UserRoomAdapter extends RecyclerView.Adapter<UserRoomAdapter.MyView
         holder.roomLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                listener.onItemClick(list.get(position).getId().toString());
-
+                selectedPosition = position;
+//                Todo Show a dialog for Are you sure to select this room? and on yes click send call back else do nothing.
+                alertDialog.show();
             }
         });
 
@@ -82,5 +106,10 @@ public class UserRoomAdapter extends RecyclerView.Adapter<UserRoomAdapter.MyView
             roomLogo = itemView.findViewById(R.id.room_logo);
             roomName = itemView.findViewById(R.id.room_name);
         }
+    }
+
+    public void updateList(List<Room> list){
+        this.list = list;
+        notifyDataSetChanged();
     }
 }

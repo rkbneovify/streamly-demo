@@ -71,7 +71,7 @@ class ProgramGuideManager<T> {
     }
 
     //#neovifyissueresolved28sep
-    private fun updateChannelsTimeRange(selectedDate: LocalDate, timeZone: ZoneId, days: Int) {
+    private fun  updateChannelsTimeRange(selectedDate: LocalDate, timeZone: ZoneId, days: Int) {
         val viewPortWidth = toUtcMillis - fromUtcMillis
         var newStartMillis: Long? = null
         var newEndMillis: Long? = null
@@ -99,10 +99,11 @@ class ProgramGuideManager<T> {
         endUtcMillis = newEndMillis ?: toUtcMillis
         if (endUtcMillis > startUtcMillis) {
             for (channel in channels) {
+                val channelLogUrl:String = if(channel.imageUrl == null) "" else channel.imageUrl!!
                 val channelId = channel.id
                 val entries = (channelEntriesMap[channelId] ?: emptyList()).toMutableList()
                 if (entries.isEmpty()) {
-                    entries.add(ProgramGuideSchedule.createGap(startUtcMillis, endUtcMillis))
+                    entries.add(ProgramGuideSchedule.createGap(startUtcMillis, endUtcMillis, channelLogUrl))
                 } else {
                     // todo <----Changes on 3-december-2020----->
                     val timelineStartsAt = selectedDate.atStartOfDay(timeZone).minusDays(1).withHour(DAY_STARTS_YESTERDAY_AT_HOUR)
@@ -149,20 +150,20 @@ class ProgramGuideManager<T> {
                     if (lastEntry == null || endUtcMillis > lastEntry.endsAtMillis) {
                         // We need to add a gap item to fill the place
                         entries.add(ProgramGuideSchedule.createGap(lastEntry?.endsAtMillis
-                                ?: startUtcMillis, endUtcMillis))
+                                ?: startUtcMillis, endUtcMillis,channelLogUrl))
                     } else if (lastEntry.endsAtMillis == java.lang.Long.MAX_VALUE) {
                         entries.removeAt(entries.size - 1)
-                        entries.add(ProgramGuideSchedule.createGap(lastEntry.startsAtMillis, endUtcMillis))
+                        entries.add(ProgramGuideSchedule.createGap(lastEntry.startsAtMillis, endUtcMillis,channelLogUrl))
                     }
                     // Pad the items on the left
                     val firstEntry = entries.firstOrNull()
                     if (firstEntry == null || startUtcMillis < firstEntry.startsAtMillis) {
                         // We need to add a gap item to fill the place
                         entries.add(0, ProgramGuideSchedule.createGap(startUtcMillis, firstEntry?.startsAtMillis
-                                ?: endUtcMillis))
+                                ?: endUtcMillis,channelLogUrl))
                     } else if (firstEntry.startsAtMillis <= 0) {
                         entries.removeAt(0)
-                        entries.add(0, ProgramGuideSchedule.createGap(startUtcMillis, firstEntry.endsAtMillis))
+                        entries.add(0, ProgramGuideSchedule.createGap(startUtcMillis, firstEntry.endsAtMillis, channelLogUrl))
                     }
                     // Entries in the API not always follow each other. There are empty places which have not been accounted for, which offsets our calculations
                     // At this place, we adjust the ending times to be that of the next item. If the difference here is too big, we will insert a gap manually.
@@ -176,7 +177,7 @@ class ProgramGuideManager<T> {
                             if (timeDifference < MAX_UNACCOUNTED_TIME_BEFORE_GAP) {
                                 listIterator.set(current.copy(endsAtMillis = next.startsAtMillis))
                             } else {
-                                listIterator.add(ProgramGuideSchedule.createGap(current.endsAtMillis, next.startsAtMillis))
+                                listIterator.add(ProgramGuideSchedule.createGap(current.endsAtMillis, next.startsAtMillis, channelLogUrl))
                             }
                         }
                     }

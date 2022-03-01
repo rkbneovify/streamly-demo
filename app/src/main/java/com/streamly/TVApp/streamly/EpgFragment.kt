@@ -452,7 +452,7 @@ class EpgFragment(context: Context, dataListm: MutableList<com.streamly.TVApp.st
                         metadata+"",
                         playUrl,
                         channelId
-                )
+                ), playUrl
         )
     }
 
