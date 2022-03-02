@@ -149,6 +149,11 @@ extension UpdateDeviceViewController {
     fileprivate func openSearchVC(room: [Room]) {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.viewModel.listOfRoom = room
+        if navigationController == nil {
+            let nav = UINavigationController(rootViewController: vc)
+            present(nav, animated: true, completion: nil)
+            return
+        }
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
