@@ -1229,42 +1229,14 @@
                                                     <constraint firstAttribute="height" constant="5" id="V3Y-PB-B2w"/>
                                                 </constraints>
                                             </view>
-                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ep4-Om-7kj" customClass="GradientBUtton" customModule="StreamlyTV" customModuleProvider="target">
-                                                <rect key="frame" x="835" y="930" width="250" height="100"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="100" id="bcj-TR-GjI"/>
-                                                    <constraint firstAttribute="width" constant="250" id="yeY-ns-hW2"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="36"/>
-                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                                <inset key="titleEdgeInsets" minX="-25" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <inset key="imageEdgeInsets" minX="130" minY="10" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Next" image="arrowRight">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
-                                                        <color key="value" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
-                                                        <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </button>
                                             <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFt-qT-Kia" customClass="GradientBUtton" customModule="StreamlyTV" customModuleProvider="target">
-                                                <rect key="frame" x="1620" y="106.5" width="250" height="100"/>
+                                                <rect key="frame" x="1610" y="56.5" width="250" height="100"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="250" id="Eds-tD-6IX"/>
                                                     <constraint firstAttribute="height" constant="100" id="jeB-o0-bbl"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                                 <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                                <state key="normal" title="Logout">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                </state>
+                                                <state key="normal" title="Logout"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
                                                         <color key="value" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -1273,7 +1245,55 @@
                                                         <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <integer key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </button>
+                                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rdc-x4-FOf" customClass="GradientBUtton" customModule="StreamlyTV" customModuleProvider="target">
+                                                <rect key="frame" x="1610" y="930" width="250" height="100"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="250" id="Mb3-CO-R4P"/>
+                                                    <constraint firstAttribute="height" constant="100" id="vXE-rR-qhL"/>
+                                                </constraints>
+                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                <inset key="titleEdgeInsets" minX="-20" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="135" minY="5" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Next" image="arrowRight"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                        <color key="value" red="0.039215686270000001" green="0.039215686270000001" blue="0.039215686270000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                        <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                        <integer key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="saveAction:" destination="tzk-QD-Iqt" eventType="primaryActionTriggered" id="jAW-JS-epV"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y4P-MX-oXy">
+                                                <rect key="frame" x="1580" y="796" width="280" height="84"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="280" id="Xsg-up-veT"/>
+                                                    <constraint firstAttribute="height" constant="84" id="aM5-fo-FUV"/>
+                                                </constraints>
+                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                <inset key="titleEdgeInsets" minX="-20" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="135" minY="5" maxX="0.0" maxY="0.0"/>
+                                                <state key="normal" title="Next" image="arrowRight"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                         <real key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                        <real key="value" value="2"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </button>
@@ -1281,22 +1301,24 @@
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="0.40382922539999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.66666666669999997" alpha="0.4007757482" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
+                                            <constraint firstItem="BFt-qT-Kia" firstAttribute="trailing" secondItem="FQX-5d-QF6" secondAttribute="trailing" id="66U-gy-BIt"/>
+                                            <constraint firstItem="Rdc-x4-FOf" firstAttribute="top" secondItem="y4P-MX-oXy" secondAttribute="bottom" constant="50" id="94u-Dn-r3z"/>
+                                            <constraint firstItem="y4P-MX-oXy" firstAttribute="trailing" secondItem="WtF-O3-29L" secondAttribute="trailing" id="Asu-TW-9pm"/>
+                                            <constraint firstAttribute="bottom" secondItem="Rdc-x4-FOf" secondAttribute="bottom" constant="50" id="B9v-9a-7zM"/>
                                             <constraint firstItem="V2e-sS-smN" firstAttribute="leading" secondItem="0Vh-Gw-1dq" secondAttribute="leading" constant="80" id="C4n-s8-N52"/>
                                             <constraint firstItem="OFK-iF-COB" firstAttribute="top" secondItem="V2e-sS-smN" secondAttribute="bottom" constant="100" id="CyC-Xw-Hhv"/>
                                             <constraint firstItem="WtF-O3-29L" firstAttribute="top" secondItem="FQX-5d-QF6" secondAttribute="bottom" constant="30" id="Eso-fH-0Na"/>
                                             <constraint firstItem="WtF-O3-29L" firstAttribute="leading" secondItem="FQX-5d-QF6" secondAttribute="leading" id="FhN-kW-tw4"/>
                                             <constraint firstItem="FQX-5d-QF6" firstAttribute="leading" secondItem="V2e-sS-smN" secondAttribute="trailing" constant="40" id="GSp-67-bDm"/>
                                             <constraint firstItem="WtF-O3-29L" firstAttribute="trailing" secondItem="FQX-5d-QF6" secondAttribute="trailing" id="JgL-u2-kUL"/>
-                                            <constraint firstItem="FQX-5d-QF6" firstAttribute="top" secondItem="BFt-qT-Kia" secondAttribute="bottom" constant="50" id="QWG-cL-rav"/>
+                                            <constraint firstItem="Rdc-x4-FOf" firstAttribute="trailing" secondItem="WtF-O3-29L" secondAttribute="trailing" id="MdD-1d-xKw"/>
                                             <constraint firstItem="OFK-iF-COB" firstAttribute="trailing" secondItem="V2e-sS-smN" secondAttribute="trailing" id="QWV-MR-AHZ"/>
                                             <constraint firstItem="FQX-5d-QF6" firstAttribute="top" secondItem="V2e-sS-smN" secondAttribute="top" id="R7s-2P-ffR"/>
-                                            <constraint firstItem="Ep4-Om-7kj" firstAttribute="centerX" secondItem="0Vh-Gw-1dq" secondAttribute="centerX" id="eoE-Vq-eyl"/>
+                                            <constraint firstItem="FQX-5d-QF6" firstAttribute="top" secondItem="BFt-qT-Kia" secondAttribute="bottom" constant="100" id="Xna-05-fsO"/>
                                             <constraint firstItem="V2e-sS-smN" firstAttribute="centerY" secondItem="0Vh-Gw-1dq" secondAttribute="centerY" constant="-200" id="h4l-3m-fYz"/>
-                                            <constraint firstAttribute="bottom" secondItem="Ep4-Om-7kj" secondAttribute="bottom" constant="50" id="iEc-9A-9JA"/>
                                             <constraint firstAttribute="trailing" secondItem="FQX-5d-QF6" secondAttribute="trailing" constant="60" id="j6Q-03-xFl"/>
                                             <constraint firstItem="OFK-iF-COB" firstAttribute="leading" secondItem="V2e-sS-smN" secondAttribute="leading" id="jKe-1l-eie"/>
                                             <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="OFK-iF-COB" secondAttribute="bottom" constant="10" id="mMq-mf-wwQ"/>
-                                            <constraint firstAttribute="trailing" secondItem="BFt-qT-Kia" secondAttribute="trailing" constant="50" id="tTE-tG-n5a"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -1340,7 +1362,7 @@
                         <outlet property="bgImageView" destination="vIu-58-JaJ" id="9Xf-Mz-BDs"/>
                         <outlet property="logOutButton" destination="BFt-qT-Kia" id="y71-QD-qQp"/>
                         <outlet property="nameTextField" destination="FQX-5d-QF6" id="jBc-pp-L9N"/>
-                        <outlet property="saveButton" destination="Ep4-Om-7kj" id="50h-1G-NI5"/>
+                        <outlet property="saveButton" destination="Rdc-x4-FOf" id="KdT-e6-PXb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="699-MT-QiW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1353,10 +1375,10 @@
             <size key="intrinsicContentSize" width="178" height="76"/>
         </designable>
         <designable name="BFt-qT-Kia">
-            <size key="intrinsicContentSize" width="182" height="76"/>
+            <size key="intrinsicContentSize" width="198" height="86"/>
         </designable>
-        <designable name="Ep4-Om-7kj">
-            <size key="intrinsicContentSize" width="192" height="83"/>
+        <designable name="Rdc-x4-FOf">
+            <size key="intrinsicContentSize" width="191" height="86"/>
         </designable>
     </designables>
     <resources>

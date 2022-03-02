@@ -144,9 +144,14 @@ extension RoomViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let selectedID = filterRoomList[indexPath.item].id {
-            viewModel.selectRoomToLogin("\(selectedID)")
+        
+        showAlert(withMessage: "Are you sure to select this room?", setTwoButton: true, setFirstButtonTitle: "Yes", setSecondButtonTitle: "No") { [weak self] _ in
+            guard let weak = self else { return }
+            if let selectedID = weak.filterRoomList[indexPath.item].id {
+                weak.viewModel.selectRoomToLogin("\(selectedID)")
+            }
         }
+       
         /* let flag = self.geoData?.success ?? false
          guard let item = filtterdChannelList?[(indexPath.item)] else {return}
          present(videoPlaybackViewController, animated: true) {

@@ -9,17 +9,24 @@
 import UIKit
 
 class UpdateDeviceViewController: UIViewController {
-
+    
     @IBOutlet var nameTextField: UITextField!
     @IBOutlet var saveButton: GradientBUtton!
     @IBOutlet var bgImageView: UIImageView!
     @IBOutlet var logOutButton: GradientBUtton!
     
     var viewModel = LoginPassocodeViewModel()
-
+    
+    override var preferredFocusedView: UIView? {
+        get {
+            return self.nameTextField
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-            setupUI()
+        setupUI()
     }
     
     private func setupUI() {
@@ -67,11 +74,6 @@ class UpdateDeviceViewController: UIViewController {
         }
     }
     
-    override var preferredFocusedView: UIView? {
-        get {
-            return self.nameTextField
-        }
-    }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if nameTextField.isFocused {
@@ -88,9 +90,9 @@ class UpdateDeviceViewController: UIViewController {
                 self.saveButton.layer.borderColor = UIColor.gray.cgColor
             }, completion: nil)
         }  else {
-          //  self.saveButton.setImage(UIImage(named: "arrowRound"), for: .normal)
-//            nameTextField.layer.borderWidth = 3.0
-//            nameTextField.layer.borderColor = UIColor.white.cgColor
+            //  self.saveButton.setImage(UIImage(named: "arrowRound"), for: .normal)
+            //            nameTextField.layer.borderWidth = 3.0
+            //            nameTextField.layer.borderColor = UIColor.white.cgColor
         }
     }
 }
@@ -101,11 +103,11 @@ extension UpdateDeviceViewController {
         if let vc = appDelegate?.window?.rootViewController as? UINavigationController, vc.viewControllers.first is UpdateDeviceViewController {
             return
         }
-//        Switcher.updateRootVC()
+        //        Switcher.updateRootVC()
     }
     
     @objc func logOutAction(_ sender: UIButton) {
-            viewPopups()
+        viewPopups()
     }
     
     @IBAction func saveAction(_ sender: Any) {
@@ -137,8 +139,6 @@ extension UpdateDeviceViewController: APIResponseDelegate {
     func apiFailure(_ message: String, _ status: Int) {
         
     }
-    
-    
 }
 
 
