@@ -1274,36 +1274,11 @@
                                                     <action selector="saveAction:" destination="tzk-QD-Iqt" eventType="primaryActionTriggered" id="jAW-JS-epV"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" tag="22" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y4P-MX-oXy">
-                                                <rect key="frame" x="1580" y="796" width="280" height="84"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="280" id="Xsg-up-veT"/>
-                                                    <constraint firstAttribute="height" constant="84" id="aM5-fo-FUV"/>
-                                                </constraints>
-                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                                <inset key="titleEdgeInsets" minX="-20" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                <inset key="imageEdgeInsets" minX="135" minY="5" maxX="0.0" maxY="0.0"/>
-                                                <state key="normal" title="Next" image="arrowRight"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                        <real key="value" value="10"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                        <real key="value" value="2"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" white="0.67000000000000004" alpha="0.40382922539999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.66666666669999997" alpha="0.4007757482" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstItem="BFt-qT-Kia" firstAttribute="trailing" secondItem="FQX-5d-QF6" secondAttribute="trailing" id="66U-gy-BIt"/>
-                                            <constraint firstItem="Rdc-x4-FOf" firstAttribute="top" secondItem="y4P-MX-oXy" secondAttribute="bottom" constant="50" id="94u-Dn-r3z"/>
-                                            <constraint firstItem="y4P-MX-oXy" firstAttribute="trailing" secondItem="WtF-O3-29L" secondAttribute="trailing" id="Asu-TW-9pm"/>
                                             <constraint firstAttribute="bottom" secondItem="Rdc-x4-FOf" secondAttribute="bottom" constant="50" id="B9v-9a-7zM"/>
                                             <constraint firstItem="V2e-sS-smN" firstAttribute="leading" secondItem="0Vh-Gw-1dq" secondAttribute="leading" constant="80" id="C4n-s8-N52"/>
                                             <constraint firstItem="OFK-iF-COB" firstAttribute="top" secondItem="V2e-sS-smN" secondAttribute="bottom" constant="100" id="CyC-Xw-Hhv"/>
