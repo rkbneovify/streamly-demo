@@ -1260,8 +1260,8 @@ public function channelDaysScheduleFunc($type){
 public function channelDaysScheduleFuncOffsetWithFulldata($type,$timeoffset){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
-        if($tz == '-08:30'){
-          $st = '+05:00';
+        if($tz == '-08:00'){
+          $st = '+05:30';
         }else{
             $st = '+00:00';
         }
