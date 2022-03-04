@@ -87,7 +87,13 @@ public class UserRoomAdapter extends RecyclerView.Adapter<UserRoomAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         int holderWidth = rvWidth/4 - dpToPx(20);
-        holder.roomLayout.getLayoutParams().width = holderWidth;
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.roomLayout.getLayoutParams();
+        layoutParams.width = holderWidth;
+        layoutParams.leftMargin = dpToPx(10);
+        layoutParams.rightMargin = dpToPx(10);
+        layoutParams.bottomMargin = dpToPx(5);
+        layoutParams.topMargin = dpToPx(5);
+        holder.roomLayout.setLayoutParams(layoutParams);
         holder.roomName.setText(list.get(position).getHotelRoom());
         holder.roomLayout.setOnClickListener(new View.OnClickListener() {
             @Override

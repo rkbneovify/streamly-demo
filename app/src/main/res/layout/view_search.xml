@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:layout_margin="@dimen/_3sdp">
+    android:layout_gravity="center">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,17 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_70sdp"
         android:gravity="center"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:background="@drawable/layout_focus">
 
         <TextView
             android:id="@+id/channel_id"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_gravity="left"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:layout_marginStart="5dp"
-            android:padding="5dp"
             android:fontFamily="@font/helvetica_neue_light"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_8ssp"
@@ -53,7 +52,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/helvetica_neue_light"
+            android:fontFamily="@font/helvetica_neue_medium"
             android:textColor="@color/md_white_1000"
             android:background="@drawable/search_text_background"
             android:textSize="@dimen/_8ssp" />

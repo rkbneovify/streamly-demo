@@ -27,9 +27,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70.5px"
-                android:layout_marginStart="40px"
-                android:layout_marginEnd="40px"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
                 android:gravity="center"
                 android:elevation="10dp"
                 android:translationZ="5dp"
@@ -78,12 +79,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="12sp"
-                android:gravity="top|left"
-                android:layout_gravity="top|left"
+                android:layout_margin="10dp"
                 android:orientation="horizontal">
 
                 <requestFocus />

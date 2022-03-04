@@ -9,17 +9,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.Image;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +55,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -62,6 +68,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
     private RecyclerView rvRoom;
     private TextView logoutTextView;
     private EditText searchRoomEd;
+    ImageView mickIconSearch;
     String authToken;
     private static final int REQUEST_CODE = 1234;
     private Context context;
@@ -160,14 +167,55 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                 filter(s.toString());
             }
         });
+
+        mickIconSearch = findViewById(R.id.img_voice_search);
+        mickIconSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startVoiceRecognitionActivity();
+            }
+        });
+
+
+    }
+
+    /**
+     * Fire an intent to start the voice recognition activity.
+     */
+    private void startVoiceRecognitionActivity() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
+        if(intent.resolveActivity(getPackageManager())!=null)
+        {
+            startActivityForResult(intent, REQUEST_CODE);
+        }
+        else{
+            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            if (!matches.isEmpty()) {
+                String Query = matches.get(0);
+                searchRoomEd.setText(Query.replace(" ",""));
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     void filter(String text) {
+        text = text.toLowerCase();
         List<Room> temp = new ArrayList();
         for (Room d : roomList) {
             //or use .equal(text) with you want equal match
             //use .toLowerCase() for better matches
-            if (d.getHotelRoom().contains(text)) {
+            if (d.getHotelRoom().toLowerCase().contains(text)) {
                 temp.add(d);
             }
         }

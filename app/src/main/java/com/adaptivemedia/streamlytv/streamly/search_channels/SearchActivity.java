@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -82,7 +83,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
             @Override
             public void afterTextChanged(Editable s) {
                 try {
-                    imgVoiceSearch.setEnabled(false);
                     searchAdapter.getFilter().filter(edSearch.getText().toString().replace(" ",""));
 
                 } catch (Exception e) {
@@ -106,7 +106,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         PackageManager pm = getPackageManager();
         List<ResolveInfo> activities = pm.queryIntentActivities(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
         if (activities.size() == 0) {
-            imgVoiceSearch.setEnabled(false);
             Toast.makeText(this, "Recognizer not present", Toast.LENGTH_SHORT).show();
 //            speak.setText();
         }
@@ -139,7 +138,6 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
             if (!matches.isEmpty()) {
                 String Query = matches.get(0);
                 edSearch.setText(Query.replace(" ",""));
-                imgVoiceSearch.setEnabled(false);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -168,7 +166,8 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
 
                             searchList.add(new SearchModel(channelId, channelTitle, channelLogo,videoUrl));
                         }
-                        searchAdapter = new SearchAdapter(SearchActivity.this, searchList, SearchActivity.this);
+                        int rvWidth = getScreenWidth() - dpToPx(20);
+                        searchAdapter = new SearchAdapter(SearchActivity.this, rvWidth ,searchList, SearchActivity.this);
                         rvSearch.setLayoutManager(new GridLayoutManager(SearchActivity.this, 4));
                         rvSearch.setAdapter(searchAdapter);
 
@@ -237,5 +236,18 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         layoutSearch.setVisibility(View.INVISIBLE);
         layoutInternet.setVisibility(View.VISIBLE);
 
+    }
+
+    public int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        return width;
+    }
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 }
