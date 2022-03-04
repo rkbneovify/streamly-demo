@@ -1,0 +1,257 @@
+package com.adaptivemedia.streamlytv.streamly.HotelQRCode;
+
+import androidx.fragment.app.FragmentActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.QRCode.HotelQRModel;
+import com.adaptivemedia.streamlytv.streamly.QRCode.QRScanStatusModel;
+import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.dialogs.DeviceLimitDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
+import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
+import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLogInModel;
+import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLoginErrorResponse;
+import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
+import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface;
+import com.adaptivemedia.streamlytv.streamly.settings.device_signout.SignOutDeviceWithQrCodeKeyDialog;
+import com.adaptivemedia.streamlytv.streamly.user_room.UserRoomActivity;
+import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
+import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class HotelQRCodeActivity extends FragmentActivity {
+    private static final String TAG = "HotelQRCodeActivity";
+    private ProgressBar progressBar;
+    private  String uniqueId;
+    private ImageView imgQrCode;
+    private String userAgent;
+    private String key;
+    private Handler mHandler = new Handler();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_hotel_qrcode1);
+        CommonUtility.checkInternetConnection(HotelQRCodeActivity.this);
+        userAgent = System.getProperty("http.agent");
+        uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        initViews();
+        getQRCode();
+
+    }
+
+    private void getHotelLogin() {
+        key = TokenStorage.readHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY, null);
+        progressBar.setVisibility(View.VISIBLE);
+        ApiInterface apiInterface= ApiClient.getClientHotelLogin().create(ApiInterface.class);
+        Call<NewLogInModel> call=apiInterface.getHotelLogin(userAgent,key,uniqueId);
+        call.enqueue(new Callback<NewLogInModel>() {
+            @Override
+            public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
+                try {
+                    Log.e(TAG, "resCode "+response.code());
+                    if (response.isSuccessful() && response.body()!=null && response.code()!=429){
+
+
+                        String access_token=response.body().getAccessToken();
+
+                        if(response.body().getUserRole().equals("tieruser")){
+                            Long userId=response.body().getUser().getId();
+//                        ArrayList<Room> set = new ArrayList<>();
+//                        set.addAll(response.body().getRooms());
+                            Gson gson = new Gson();
+                            String json = gson.toJson(response.body().getRooms());
+
+                            TokenStorage.savedRoomList(HotelQRCodeActivity.this, ConstantUtility.ROOM_LIST,json);
+                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.USER_ID,userId.toString());
+                            TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
+                            CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
+//                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+//                        finish();
+                            startActivity(new Intent(HotelQRCodeActivity.this, UserRoomActivity.class));
+                            finish();
+
+                        }
+                        else if(response.body().getUserRole().equals("user")) {
+                            CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
+                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            startActivity(new Intent(HotelQRCodeActivity.this, MainActivity.class));
+                            finish();
+                        }
+
+
+                    }
+                    else if (response.code()==401){
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(HotelQRCodeActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
+                    } else if (response.code()==429){
+//                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                        if(response.errorBody() !=null )
+                        {
+                            NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
+                            if(logInModel.getData() !=null && logInModel.getData().toString()!="")
+                            {
+                                SignOutDeviceWithQrCodeKeyDialog signOutDeviceWithQrCodeKeyDialog = new SignOutDeviceWithQrCodeKeyDialog(HotelQRCodeActivity.this,logInModel.getData().toString(),key,uniqueId);
+                                signOutDeviceWithQrCodeKeyDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                                signOutDeviceWithQrCodeKeyDialog.show();
+                            }
+
+                            if(logInModel.getMessage() !=null && !logInModel.getMessage().toString().equals("")){
+                                if(logInModel.getMessage().contains("Your account is in use on")) {
+                                    DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(HotelQRCodeActivity.this,logInModel.getMessage().toString());
+                                    deviceLimitDialog.show();
+                                }
+                            }
+
+                        }
+                    }
+                    else if (response.code()==500){
+                        CommonUtility.showToast(HotelQRCodeActivity.this,ConstantUtility.SERVER_ISSUE);
+                    }
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception: "+e.toString());
+                }
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.e(TAG,"ResponCode "+response.code()+"");
+            }
+
+
+            @Override
+            public void onFailure(Call<NewLogInModel> call, Throwable t) {
+                Log.e(TAG,"failure " +t);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            getQRCodeScanStatus();
+            mHandler.postDelayed(this, 5000);
+        }
+    };
+
+    public void startRepeating() {
+        mRunnable.run();
+    }
+
+    public void stopRepeating() {
+        mHandler.removeCallbacks(mRunnable);
+    }
+
+    private void getQRCodeScanStatus() {
+        key = TokenStorage.readHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY, null);
+
+        ApiInterface apiInterface= ApiClient.getClientHotelLogin().create(ApiInterface.class);
+        Call<QRScanStatusModel> call=apiInterface.getQrCodeScanStatus(key);
+        call.enqueue(new Callback<QRScanStatusModel>() {
+            @Override
+            public void onResponse(Call<QRScanStatusModel> call, Response<QRScanStatusModel> response) {
+                try {
+
+                    if (response.isSuccessful() && response.body()!=null && response.body().getStatus() ==1){
+                        stopRepeating();
+                        getHotelLogin();
+
+                    }
+                    else if(response.body().getStatus() ==2) {
+
+                        stopRepeating();
+                        getQRCode();
+                    }
+
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception: "+e.toString());
+                }
+                Log.e(TAG, "resCode  getQRCodeScanStatus "+response.body().getStatus());
+
+
+            }
+
+
+            @Override
+            public void onFailure(Call<QRScanStatusModel> call, Throwable t) {
+                Log.e(TAG,"failure " +t);
+
+            }
+        });
+
+    }
+
+    private void initViews(){
+        progressBar=findViewById(R.id.progress_bar);
+        imgQrCode=findViewById(R.id.img_hotel_qr_code);
+
+    }
+
+    private void getQRCode() {
+        progressBar.setVisibility(View.VISIBLE);
+        ApiInterface apiInterface= ApiClient.getClientHotelLogin().create(ApiInterface.class);
+        Call<HotelQRModel> call=apiInterface.getHotelQrCode();
+        call.enqueue(new Callback<HotelQRModel>() {
+            @Override
+            public void onResponse(Call<HotelQRModel> call, Response<HotelQRModel> response) {
+                try {
+
+                    if (response.isSuccessful() && response.body() != null && response.body().getStatus() == 1) {
+                        String qrImage=response.body().getMsg();
+                        String key=""+response.body().getKey();
+                        Log.e(TAG, "onResponse: image "+qrImage );
+                        setQRImage(qrImage);
+                        TokenStorage.savedHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY,key);
+                        Log.e(TAG,"getQRCode key : "+TokenStorage.readHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY, null));
+                        startRepeating();
+
+
+
+                    } else if (response.body().getStatus()  == 500) {
+                        CommonUtility.showToast(HotelQRCodeActivity.this, ConstantUtility.SERVER_ISSUE);
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.e(TAG,"Exception: "+e.toString());
+                }   progressBar.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onFailure(Call<HotelQRModel> call, Throwable t) {
+                Log.e(TAG,"failure " +t);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void setQRImage(String qrCode_Link) {
+        Glide.with(HotelQRCodeActivity.this).load(qrCode_Link).into(imgQrCode);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        stopRepeating();
+    }
+}

@@ -156,4 +156,15 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+
+    <style name="MyAlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:fontFamily">@font/helvetica_neue_medium</item>
+        <item name="colorPrimary">@color/app_blue_dark</item>
+        <item name="colorPrimaryDark">@color/app_blue_dark</item>
+        <item name="colorAccent">@color/app_blue_dark</item>
+        <item name="android:itemBackground">@color/app_blue_dark</item>
+        <item name="android:textColorSecondary">@color/app_blue_dark</item>
+    </style>
+
 </resources>

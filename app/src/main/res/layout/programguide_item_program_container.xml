@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<com.streamly.TVApp.streamly.item.ProgramGuideItemView
+<com.adaptivemedia.streamlytv.streamly.item.ProgramGuideItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"

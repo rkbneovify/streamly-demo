@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:380909681859:android:143944fd279cc9353bb676",
+        "android_client_info": {
+          "package_name": "com.adaptivemedia.streamlytv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSoGGC265Zrj-ivVigKvm9F9KxkyZx-mo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "380909681859-ql8cqk9njljdimgbqg875ung3i6i8qqt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "380909681859-158duurrps83n3boub11cf7o6j15fpo9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.adaptivemedia.streamlytv"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:380909681859:android:41e05ed8f225127b3bb676",
         "android_client_info": {
           "package_name": "com.streamly.TVApp.streamly"
@@ -32,10 +68,10 @@
               "client_type": 3
             },
             {
-              "client_id": "380909681859-1a18u01v52vavfqalf8ikfdq4vf77jt6.apps.googleusercontent.com",
+              "client_id": "380909681859-158duurrps83n3boub11cf7o6j15fpo9.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.streamly.TVApp.Streamly"
+                "bundle_id": "com.adaptivemedia.streamlytv"
               }
             }
           ]

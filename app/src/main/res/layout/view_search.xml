@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_margin="@dimen/_3sdp">
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/channel_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_70sdp"
@@ -15,6 +15,19 @@
         android:orientation="vertical"
         android:background="@drawable/layout_focus">
 
+        <TextView
+            android:id="@+id/channel_id"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_gravity="left"
+            android:layout_marginStart="5dp"
+            android:padding="5dp"
+            android:fontFamily="@font/helvetica_neue_light"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_8ssp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
             android:id="@+id/channel_logo"
@@ -22,7 +35,12 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_marginTop="@dimen/_6sdp"
             android:src="@drawable/ic_noun_account"
-            android:contentDescription="@string/account"/>
+            android:contentDescription="@string/account"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/channel_name"
+            />
 
         <TextView
             android:id="@+id/channel_name"
@@ -32,10 +50,13 @@
             android:text="@string/account"
             android:gravity="center_vertical|left"
             android:paddingStart="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             android:fontFamily="@font/helvetica_neue_light"
             android:textColor="@color/md_white_1000"
             android:background="@drawable/search_text_background"
             android:textSize="@dimen/_8ssp" />
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
