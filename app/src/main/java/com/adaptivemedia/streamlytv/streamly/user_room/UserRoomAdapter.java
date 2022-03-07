@@ -3,6 +3,7 @@ package com.adaptivemedia.streamlytv.streamly.user_room;
 import android.app.Dialog;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,15 +92,15 @@ public class UserRoomAdapter extends RecyclerView.Adapter<UserRoomAdapter.MyView
         layoutParams.width = holderWidth;
         layoutParams.leftMargin = dpToPx(10);
         layoutParams.rightMargin = dpToPx(10);
-        layoutParams.bottomMargin = dpToPx(5);
-        layoutParams.topMargin = dpToPx(5);
+        layoutParams.bottomMargin = dpToPx(10);
+        layoutParams.topMargin = dpToPx(10);
+        layoutParams.gravity = Gravity.CENTER;
         holder.roomLayout.setLayoutParams(layoutParams);
         holder.roomName.setText(list.get(position).getHotelRoom());
         holder.roomLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectedPosition = position;
-//                Todo Show a dialog for Are you sure to select this room? and on yes click send call back else do nothing.
                 alertDialog.show();
             }
         });

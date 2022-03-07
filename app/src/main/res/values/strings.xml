@@ -114,6 +114,8 @@
     <string name="choose_a_name_for_your_streamly_ndevice">Choose a name for your Streamly \ndevice</string>
     <string name="room_selection_msg">Are you sure to select this room?</string>
     <string name="logout_message">Are you sure you want to logout?</string>
+    <string name="all_channels">All Channels</string>
+    <string name="exit">Exit</string>
     <!--    <string name="no_plan_text">We&apos;re having some trouble with your current subscription. We&apos;ll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport.</string>-->
 
 </resources>

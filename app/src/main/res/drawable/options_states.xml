@@ -4,7 +4,7 @@
             android:drawable="@drawable/option_press" /> <!-- pressed -->
 
     <item android:state_focused="true"
-        android:drawable="@drawable/option_foucs" /> <!-- focused -->
+        android:drawable="@drawable/option_press" /> <!-- focused -->
 
 
     <!--    <item android:state_hovered="true" android:drawable="@drawable/white_transparent" /> &lt;!&ndash; hovered &ndash;&gt;-->

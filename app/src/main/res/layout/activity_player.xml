@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".playervideo.PlayerActivity">
+    tools:context=".streamly.playervideo.PlayerActivity">
 
 
 
@@ -19,15 +19,14 @@
             android:layout_height="match_parent" />
 
 
-
         <ImageView
             android:id="@+id/logo"
 
             android:layout_width="120dp"
             android:layout_height="80dp"
-            android:padding="15dp"
             android:alpha="0.5"
-            android:src="@mipmap/streamly_logo"/>
+            android:padding="15dp"
+            android:src="@mipmap/streamly_logo" />
         <!--        android:alpha="0.6"-->
 
 
@@ -69,16 +68,18 @@
             <TextView
                 android:layout_alignParentStart="true"
                 android:layout_width="wrap_content"
-                android:text="All Channels"
+                android:text="@string/all_channels"
                 android:padding="@dimen/_5sdp"
                 android:textColor="@android:color/white"
-                android:layout_gravity="left"
-                android:textSize="@dimen/_8sdp"
+                android:layout_gravity="start"
+                android:textSize="@dimen/_10sdp"
+                android:fontFamily="@font/helvetica_neue_medium"
                 android:layout_height="wrap_content"/>
 
             <ImageView
                 android:id="@+id/drawer_close"
                 android:layout_gravity="right"
+                android:layout_marginEnd="5dp"
                 android:focusableInTouchMode="true"
                 android:background="@drawable/options_states"
                 android:focusable="true"

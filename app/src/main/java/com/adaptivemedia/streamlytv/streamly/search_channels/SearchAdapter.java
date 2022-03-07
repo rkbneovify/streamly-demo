@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,8 +60,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         layoutParams.width = holderWidth;
         layoutParams.leftMargin = dpToPx(10);
         layoutParams.rightMargin = dpToPx(10);
-        layoutParams.bottomMargin = dpToPx(5);
-        layoutParams.topMargin = dpToPx(5);
+        layoutParams.bottomMargin = dpToPx(10);
+        layoutParams.topMargin = dpToPx(10);
+        layoutParams.gravity = Gravity.CENTER;
         holder.channelLayout.setLayoutParams(layoutParams);
 
         Glide.with(context).load(list.get(position).getLogoUrl()).into(holder.channelLogo);

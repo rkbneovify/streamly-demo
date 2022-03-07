@@ -30,14 +30,15 @@ import retrofit2.Response;
 public class ZipCodeDialog extends Dialog {
     private final String TAG= ZipCodeDialog.class.getSimpleName();
     private Context context;
-    private Button btnContinue;
+    private Button btnContinue, backBtn;
     private ProgressBar progressBar;
     private TextView poptext;
     String popMessage,uniqueId,dbLat,dblon,authToken;
+    DialogCallBack dialogCallBack;
 
 
     public ZipCodeDialog(@NonNull Context context,String popMessage, String uniqueId,
-                         String dbLat, String dblon,String authToken){
+                         String dbLat, String dblon,String authToken, DialogCallBack dialogCallBack){
         super(context);
         this.context=context;
         this.popMessage=popMessage;
@@ -45,6 +46,7 @@ public class ZipCodeDialog extends Dialog {
         this.dbLat=dbLat;
         this.dblon=dblon;
         this.authToken=authToken;
+        this.dialogCallBack = dialogCallBack;
     }
 
 
@@ -66,15 +68,20 @@ public class ZipCodeDialog extends Dialog {
         btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                dialogCallBack.onContinuePress();
                 outStationLocationPlayCall();
                 cancel();
                 ((PlayerActivity)context).getDrmKey();
             }
         });
-
-
-
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogCallBack.onExitPress();
+//                close the dialog.
+                cancel();
+            }
+        });
     }
 
     private void outStationLocationPlayCall() {
@@ -126,7 +133,14 @@ public class ZipCodeDialog extends Dialog {
 
     private void initViews() {
         btnContinue=findViewById(R.id.btn_continue);
+        backBtn = findViewById(R.id.btn_back);
         progressBar=findViewById(R.id.progress_bar);
         poptext=findViewById(R.id.poptext);
+    }
+
+
+    public interface DialogCallBack {
+        void onExitPress();
+        void onContinuePress();
     }
 }

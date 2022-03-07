@@ -32,7 +32,7 @@
                 android:visibility="visible"
                 android:background="@drawable/options_states"
                 android:orientation="horizontal"
-                android:padding="@dimen/_2sdp">
+                android:padding="@dimen/_5sdp">
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -179,10 +179,10 @@
                 android:layout_marginRight="@dimen/_5sdp"
                 android:background="@drawable/options_states"
                 android:fontFamily="@font/helvetica_neue_light"
-                android:padding="@dimen/_2sdp"
+                android:padding="@dimen/_3sdp"
                 android:visibility="visible"
                 android:drawableLeft="@drawable/ic_setting_icon"
-                android:drawablePadding="10dp"
+                android:drawablePadding="5dp"
                 android:text="@string/settings"
                 android:gravity="center_vertical|right"
                 android:textAllCaps="true"

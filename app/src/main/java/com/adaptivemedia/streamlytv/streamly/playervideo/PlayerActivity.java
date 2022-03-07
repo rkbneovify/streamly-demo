@@ -274,7 +274,18 @@ public class PlayerActivity extends FragmentActivity {
                             item = "0";
                         } else {
                             String popMessage = "You are away from your home zip code:  click here to continue viewing.";
-                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken);
+                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
+                                @Override
+                                public void onExitPress() {
+//                                    calling onBackPress
+                                    PlayerActivity.this.onBackPressed();
+                                }
+
+                                @Override
+                                public void onContinuePress() {
+//                                    do Nothing here
+                                }
+                            });
                             zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             zipCodeDialog.show();
 //                            getDrmKey();
