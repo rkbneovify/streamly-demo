@@ -39,7 +39,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_personal_device_name.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_search.xml" value="0.15998412068281065" />
+        <entry key="app/src/main/res/layout/activity_search.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_user_room.xml" value="0.13" />
         <entry key="app/src/main/res/layout/dialog_device_limit.xml" value="0.24869791666666666" />
         <entry key="app/src/main/res/layout/dialog_device_signout.xml" value="0.24869791666666666" />

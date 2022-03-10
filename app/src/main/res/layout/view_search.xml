@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="5dp"
-            android:fontFamily="@font/helvetica_neue_light"
+            android:fontFamily="@font/helvetica_neue_medium"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_8ssp"
             app:layout_constraintTop_toTopOf="parent"
