@@ -25,7 +25,7 @@ class SearchVC: UIViewController {
             if filterString.isEmpty {
                 filteredChannelListInfo = self.searchInfoList?.data ?? []
             } else {
-                filteredChannelListInfo = self.searchInfoList?.data?.filter({($0.callSign?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString))})
+                filteredChannelListInfo = self.searchInfoList?.data?.filter({($0.stationName?.lowercased().contains(filterString.lowercased()) ?? false) || $0.id == (Int(filterString)) || ($0.callSign?.lowercased().contains(filterString.lowercased()) ?? false) })
             }
 
             // Reload the collection view to reflect the changes.

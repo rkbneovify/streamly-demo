@@ -18,8 +18,9 @@ let mobileMinLimit = 8
 let os = ProcessInfo().operatingSystemVersion
 let userAgent = "(Apple TV; CPU TV OS \(os.majorVersion) like Mac OS X)"
 
-//Header count EPG 4 * 48 + 1(Header date)
-let daysData = 193
+//Header count EPG 4 * 48 + 1(Header date) previous
+//Header count EPG 4 * 72 + 1(Header date) new
+let daysData = 289
 
 //MARK:-: Constant Text
 let appName = "Streamly"

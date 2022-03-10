@@ -366,7 +366,7 @@ extension HomeNewVC {
             var newPrograme = [ProgramArray]()
             print("Channel:\(chDetail.StationName ?? "")")
             chDetail.programs?.forEach({ proDetail in
-                print("Start: \(Utility.getDateFromTimeStampByFormat(from: proDetail.starttz ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? "")")
+                print("programme Title: \(proDetail.title ?? "") \nStart: \(Utility.getDateFromTimeStampByFormat(from: proDetail.starttz ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.endtz ?? 0) ?? "")")
                 // chekck if start time is existing on programe or not
                 if startTime == Utility.getDateFromTimeStampByFormat(from: proDetail.starttz ?? 0) ?? "" { // yes
                     newPrograme.append(proDetail)
@@ -389,7 +389,7 @@ extension HomeNewVC {
     
     func makeNewTime(startTime: String) -> TimeInterval  {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        formatter.dateFormat = "dd/MM/yyyy hh:mm a"
         formatter.locale = Calendar.current.locale//Locale(identifier: "en_US_POSIX")
         formatter.timeZone = Calendar.current.timeZone
         return  formatter.date(from: startTime)?.timeIntervalSince1970 ?? 0

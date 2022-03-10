@@ -38,7 +38,7 @@ class AllGenrsListingCell: UICollectionViewCell {
     private func setupUI()
     {
         self.gradientView.layer.borderWidth = 3.0
-        self.gradientView.layer.borderColor = UIColor.secondGradientColor.cgColor
+        self.gradientView.layer.borderColor = UIColor.white.cgColor
     }
 
     private func unFousedUI(){

@@ -34,8 +34,9 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         
       //  channelNameLbl.alpha = 1.0
         self.content.layer.cornerRadius = 8.0
-        self.content.borderWidth = 0.0
-        //self.content.backgroundColor = UIColor.gray.withAlphaComponent(0.9)
+        self.content.borderWidth = 4.0
+        self.content.borderColor = .gray
+        self.content.backgroundColor = .clear//UIColor.gray.withAlphaComponent(0.9)
 
     }
     
@@ -50,7 +51,8 @@ class DataItemCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
         // Reset the label's alpha value so it's initially hidden.
-        self.content.borderWidth = 0.0
+        self.content.borderWidth = 4.0
+        self.content.borderColor = .gray
     }
     
     // MARK: UIFocusEnvironment
@@ -63,13 +65,14 @@ class DataItemCollectionViewCell: UICollectionViewCell {
          */
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
-                self.content.borderWidth = 4.0
-                self.content.layer.backgroundColor = UIColor.white.cgColor
+                self.content.borderWidth = 6.0
+                self.content.borderColor = UIColor.white
             }
             else {
-                self.content.borderWidth = 0.0
-                self.content.layer.backgroundColor = UIColor.clear.cgColor
+                self.content.borderWidth = 4.0
+                self.content.borderColor = UIColor.gray
             }
+            self.content.layer.backgroundColor = UIColor.clear.cgColor
         }, completion: nil)
     }
 }

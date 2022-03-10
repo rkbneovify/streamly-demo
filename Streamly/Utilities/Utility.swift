@@ -76,6 +76,8 @@ class Utility {
         let date = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd/MM/yyyy hh:mm a"
+        dateFormatter.locale = Calendar.current.locale
+        dateFormatter.timeZone = Calendar.current.timeZone
         let current_date = dateFormatter.string(from: date)
         return current_date
     }

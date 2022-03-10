@@ -57,9 +57,13 @@ class ChannelCollectionViewCell: UICollectionViewCell {
         coordinator.addCoordinatedAnimations({
             if !self.isFocused {
                 self.containerView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
+                self.containerView.borderWidth = 1.0
+                self.containerView.borderColor = .clear
                 //    self.backgroundColor = UIColor.gray
             }
             else {
+                self.containerView.borderWidth = 1.0
+                self.containerView.borderColor = .white
                 self.containerView.backgroundColor = UIColor.lightGray
             }
         }, completion: nil)

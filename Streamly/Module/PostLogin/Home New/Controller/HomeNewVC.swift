@@ -644,8 +644,8 @@ extension HomeNewVC{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.configureButtons()
                 self.settingsButton.layer.borderWidth = 3.0
-                self.settingsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
+//                self.settingsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+                self.settingsButton.layer.borderColor = UIColor.white.cgColor
                 
             }, completion: nil)
         }
@@ -653,8 +653,8 @@ extension HomeNewVC{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.configureButtons()
                 self.searchButton.layer.borderWidth = 3.0
-                self.searchButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-                
+//                self.searchButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+                self.searchButton.layer.borderColor = UIColor.white.cgColor
                 
             }, completion: nil)
         }
