@@ -149,16 +149,18 @@ class EPGViewModel: NSObject {
         }) { (error, data, code)  in
             
             if error == nil {
-                if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                if let `data` = data {
+                    if let geoModel = EPGDataParser.parseGeoFenceData(data) {
+                       // self.geoData!((geoModel))
+                        ////debugPrint(epgModel)
+                        self.delegate?.handleError(geoModel.popupmsg ?? "", code ?? 0)
                         return
+                    } else if let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                        self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                        return
+                    }
                 }
-                if let geoModel = EPGDataParser.parseGeoFenceData(data!) {
-                    self.geoData!((geoModel))
-                    ////debugPrint(epgModel)
-                    self.delegate?.handleError(geoModel.message ?? "", code ?? 0)
-                    return
-                }
+                
                // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
                 
             }
