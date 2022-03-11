@@ -388,16 +388,66 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
         
         $starttime = strip_tags($request->input('starttime'));
         $callsign = strip_tags($request->input('callsign'));
+        $timeoffset = $request->input('hoursoffset');
+        $datenew = date('Y-m-d H:i:s', strtotime('-325 minutes'));
+        $datetz = substr($datenew,0,10);
+
+        $timetz = substr($datenew,11,8);
+        
+        $tz=$timeoffset??'-07:00';
+        if (str_contains($tz, '-')) { 
+            if($tz == '-08:00'){
+                $rt = '+00:00';
+            }else{
+                $rt = '+00:00';
+            }
+        }else
+        {
+            $tz = "+".$tz;
+            $rt = '+00:00';
+        }
         // die;
 // $callSign='COMEDYP';
-        if ($request->ajax()) {
+        // if ($request->ajax()) {
 
             $term = trim($request->term);
+         //   $startdatetime = DB::table('gracenote')->select('StartDateTime');
+            //$starttz = DB::table('gracenote')->select('StartDateTime');
             $posts = DB::table('gracenote')->select('id','EventTitle as text','StartDateTime')
+
+            ->select(
+                DB::raw('gracenote.id as id'),
+                DB::raw('gracenote.EventTitle as text'),
+                DB::raw('gracenote.StartDateTime as StartDateTime'),
+                DB::raw("CONVERT_TZ(gracenote.StartDateTime,'$rt','$tz') as StartDateTimewithTimezon"))
+            
+            
+
+            //$startdatetime = DB::table('gracenote')->select('StartDateTime');
+           
+
+            // DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
+            // $record  = Gracenote::select("sub.callSign as CallSign","sub.genre_name as genre_name",
+            // DB::raw('concat(id,"") ChanId') ,DB::raw('concat(id,"") ChanNum'),"StationName","$type as url",
+            // DB::raw("CONCAT('$imagePath/',`image`) IconURL"))
+            // ->selectRaw(" concat( '[', group_concat(json_object( 'Title', EventTitle,'Description', EventDescription,'CatType', CatType,'Category', Category ,'StartTime',DATE_FORMAT(StartDateTimewithTimezon, '%Y-%m-%dT%TZ'),'EndTime',DATE_FORMAT(EndDateTimewithTimezon, '%Y-%m-%dT%TZ'),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') Programs")
+            // ->selectRaw(" concat( '[', group_concat(json_object( 'Title' ),']') Programs")
+            // // ->fromSub(function ($query) use ($type,$tz) {
+            // //     DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle')
+            // // )}
+            // DB::raw('IFNULL(gracenote.EventTitle,channels.name) Title')
+            
                 ->where('EventTitle', 'LIKE',  '%' . $term. '%')
                 ->whereRaw("CallSign= '$callsign'")
-->whereRaw('gracenote.`EndDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " '.$starttime.'"), "%Y-%m-%d %H:%i:%s")
+->whereRaw('gracenote.`EndDateTime` BETWEEN DATE_FORMAT(CONCAT("'.$datetz.'", " '.$timetz.'"), "%Y-%m-%d %H:%i:%s")
 AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
+
+// DB::raw(" CASE gracenote.TimeZoneName
+//             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
+//             WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
+//             WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
+//             ELSE CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), ' 00:00:00'), '%Y-%m-%d %H:%i:%s'),'+00:00','$tz') end StartDateTimewithTimezon"),
+
  ->orderBy('gracenote.StartDateTime', 'asc')
  ->simplePaginate(10);
         //    echo $posts;
@@ -417,7 +467,7 @@ AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
         
             return \Response::json($results);
         }
-    }
+    // }
     public function getdataforselectUser(Request $request){
         
         if ($request->ajax()) {
@@ -554,8 +604,8 @@ AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
 					// 	<img src="{{ $channeldet->logo }}">
                     // 	<p>{{  $channeldet->callSign}}</p></a>
                     // <div class="live-news-item">
-					// 	<a href="http://127.0.0.1:8000/livetv/AETVP/Others">
-					// 	<img src="http://127.0.0.1:8000/uploads/channellogo/AETV.png">
+					// 	<a href="https://b9a0-110-235-237-173.ngrok.io/livetv/AETVP/Others">
+					// 	<img src="https://b9a0-110-235-237-173.ngrok.io/uploads/channellogo/AETV.png">
 					// 	<p>AETVP</p></a>
 				
 					// </div>
@@ -578,3 +628,5 @@ AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
     
 
 }
+
+
