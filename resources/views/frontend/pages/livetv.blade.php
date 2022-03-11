@@ -221,7 +221,7 @@ $.ajax({
 							
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
 								
-									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding:1vw' class="lazy" data-src="https://streamlytv.com/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding:1vw' class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
 							<p  style=" max-width: 20ch;
 							overflow: hidden;

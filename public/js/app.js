@@ -2238,7 +2238,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     // Utility
     hoursList: function hoursList() {
-      return this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(this.programmeDate).get('hours'), 24);
+      var date1 = new Date();
+      date1.setMinutes(date1.getMinutes()-810);
+      var date2 = new Date();
+      date2.setMinutes(date2.getMinutes()+630);
+      //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
+      //let result2 = newconvert.substring(16, 18);
+      var result2 = this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(date1).get('hours'), 24);
+      console.log(date1);
+      console.log(date2)
+      var newarray= [];
+      for (let i = 0; i < 24; i++) {
+        var resultxs = date1.getHours() + i;
+        if(resultxs < 24){
+          var addtimehours = resultxs;
+          newarray.push(addtimehours);
+        }else{
+          var addtimehours = resultxs - 24;
+          newarray.push(addtimehours);
+        } 
+      }
+      
+      console.log(newarray)
+      //return this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(date1).get('hours'), 24);
+      return newarray;
     }
   }),
   methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])(['increment', 'sortChannelList', 'getFavouriteList', 'clearFavouriteList', 'setProgrammeDate', 'fetchChannelLogo'])), {}, {
@@ -6953,7 +6976,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.channel__details__container[data-v-54cd676a] {\n    position: fixed;\n    margin: 0;\n    padding: 0;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    background: rgba(15, 15, 15, 0.74);\n}\n.channel__details__box[data-v-54cd676a] {\n    transform: translateX(0vw);\n    transition: 1s 0s linear;\n    position: absolute;\n    top: 10vh;\n    left: 5vw;\n    width: 90vw;\n    height: 80vh;\n    background: rgba(227, 227, 227, 0.9);\n}\n.channel__details__header[data-v-54cd676a] {\n    display: flex;\n    flex-direction: row;\n    /*    justify-content: flex-start;\n    align-items: center;*/\n    height: 60px;\n    background-color: #000000;\n    color: #448fe0;\n}\n.channel__logo img[data-v-54cd676a] {\n    height: 100%;\n}\n.channel__details__header .channel__logo[data-v-54cd676a] {\n    flex: 0 0 120px;\n    margin-right: 20px;\n    width: 120px;\n}\n.channel__details__header .channel__name[data-v-54cd676a] {\n    flex: 2 0 120px;\n    align-self: center;\n}\n.channel__details__header .channel__language[data-v-54cd676a] {\n    font-size: 0.7em;\n    color: #aeaeae;\n}\n.channel__details__header .channel__id[data-v-54cd676a] {\n    flex: 1 0 50px;\n    align-self: center;\n}\n.channel__details__header .close[data-v-54cd676a] {\n    flex: 0 0 50px;\n    cursor: pointer;\n    align-self: center;\n    margin-left: 20px;\n}\n.channel__details__body[data-v-54cd676a] {\n    padding: 15px;\n    display: block;\n    height: calc(80vh - 60px);\n    overflow-y: scroll;\n}\n.channel__details__body[data-v-54cd676a]::-webkit-scrollbar {\n    display: none;\n}\n\n", ""]);
+exports.push([module.i, "\n.channel__details__container[data-v-54cd676a] {\n    position: fixed;\n    margin: 0;\n    padding: 0;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    background: rgba(15, 15, 15, 0.74);\n}\n.channel__details__box[data-v-54cd676a] {\n    transform: translateX(0vw);\n margin-top: 5vw;\n   transition: 1s 0s linear;\n    position: absolute;\n    top: 10vh;\n    left: 26.5vw;\n    width: 45vw;\n    height: 45vh;\n    background: rgba(227, 227, 227, 0.9);\n}\n.channel__details__header[data-v-54cd676a] {\nalign-items: center;\n justify-content: space-between;\n padding-left: 1vw;\n padding-right: 1vw; \n  display: flex;\n    flex-direction: row;\n    /*    justify-content: flex-start;\n    align-items: center;*/\n    height: 4vw;\n    background-color: #d5d5d6;\n    color: #448fe0;\n}\n.channel__logo img[data-v-54cd676a] {\n    height: 100%;\n}\n.channel__details__header .channel__logo[data-v-54cd676a] {\n    flex: 0 0 120px;\n    margin-right: 20px;\n    width: 120px;\n}\n.channel__details__header .channel__name[data-v-54cd676a] {\n    flex: 2 0 120px;\n    align-self: center;\n}\n.channel__details__header .channel__language[data-v-54cd676a] {\n    font-size: 0.7em;\n    color: #aeaeae;\n}\n.channel__details__header .channel__id[data-v-54cd676a] {\n    flex: 1 0 50px;\n    align-self: center;\n}\n.channel__details__header .close[data-v-54cd676a] {\n font-weight: 100;\n   color: 4d5659;\n flex: 0 0 20px;\n    cursor: pointer;\n    align-self: center;\n    margin-left: 20px;\n}\n.channel__details__body[data-v-54cd676a] {\n background-color: #4d5659;\n   padding: 15px;\n    display: block;\n    height: calc(50vh - 60px);\n    overflow-y: scroll;\n}\n.channel__details__body[data-v-54cd676a]::-webkit-scrollbar {\n    display: none;\n}\n\n", ""]);
 
 // exports
 
@@ -6972,7 +6995,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #368ed2;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    border: 1px solid #dcdcdc;\n    padding: 0 10px;\n    display: flex;\n    flex: 0 0 40px;\n    flex-direction: row;\n    align-items: center;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: center;\n    padding-right:5%\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 20ch; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-around;\n    font-size: 0.8em;\n    background-color: #333;\n    color: #4085ce;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.5em;\n    color: rgb(231, 9, 98);\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: bold;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #4085ce;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    padding-left: 15px;\n    box-sizing: border-box;\n    background-color: rgb(51, 51, 51);\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 42px;\n    /*border: 1px solid #dcdcdc;*/\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n    padding: 8px 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n    color: rgb(198, 88, 42);\n    line-height: 15px;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n        flex-direction: column;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n        flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    border: 1px solid #dcdcdc;\n    padding: 0 10px;\n    display: flex;\n    flex: 0 0 40px;\n    flex-direction: row;\n    align-items: center;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: center;\n    padding-right:5%\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 20ch; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-around;\n    font-size: 0.8em;\n    background-color: #333;\n    color: #fff;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.5em;\n    color: rgb(231, 9, 98);\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: bold;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #fff;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: rgb(51, 51, 51);\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 42px;\n    /*border: 1px solid #dcdcdc;*/\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n    padding: 8px 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n    color: rgb(198, 88, 42);\n    line-height: 15px;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n        flex-direction: column;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n        flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
 
 // exports
 
@@ -7010,7 +7033,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.programme__details__view[data-v-0905d6f1]{\n    position: fixed;\n    bottom: 20px;\n    right: 20px;\n    width: 300px;\n    /* border: 2px solid; */\n    background: #333;\n    height: 200px;\n    font-size: 0.7em;\n    overflow-y: scroll;\n    color: #5087f3;\n    padding: 5px;\n}\n.programme__details__view[data-v-0905d6f1]::-webkit-scrollbar { \n    display: none;\n}\n.programme__header[data-v-0905d6f1]{     display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n    background-color: #252222;\n    color: white;}\n.programme__content[data-v-0905d6f1]{   \n     display: flex;\n    flex-direction: column;}\n\n", ""]);
+exports.push([module.i, "\n.programme__details__view[data-v-0905d6f1]{\n    position: fixed;\n    bottom: 20px;\n    right: 20px;\n    width: 300px;\n    /* border: 2px solid; */\n    background: #333;\n    height: 200px;\n    font-size: 0.7em;\n    overflow-y: scroll;\n    color: #5087f3;\n    padding: 0.6vw;\n}\n.programme__details__view[data-v-0905d6f1]::-webkit-scrollbar { \n    display: none;\n}\n.programme__header[data-v-0905d6f1]{     display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n    background-color: #252222;\n    color: white;\n  padding-right: 0.5vw;\n padding-left: 0.5vw;}\n.programme__content[data-v-0905d6f1]{   \n     display: flex;\n    flex-direction: column;}\n\n", ""]);
 
 // exports
 
@@ -83184,6 +83207,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+   //console.log(_vm.channelDetails);
+  // console.log('nw');
+  // console.log(_vm);
   return _c(
     "div",
     {
@@ -83201,34 +83227,49 @@ var render = function() {
     [
       _c("div", { staticClass: "channel__details__box" }, [
         _c("div", { staticClass: "channel__details__header" }, [
-          _c("div", { staticClass: "channel__logo" }, [
-            _c("img", { attrs: { src: _vm.imageURL } })
+          _c("div", { staticClass: "newfontepg" }, [
+             _vm._v(" "),
+            _c("h2", {staticStyle: { fontSize: "1.4vw", fontWeight: 300, color: "#4d5659", marginBottom: "0px" } },[_vm._v("Channel Name:  " + _vm._s(_vm.channelDetails.channelTitle))]),
           ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "channel__name" }, [
-            _vm._v(_vm._s(_vm.channelDetails.channelTitle)),
-            _c("span", { staticClass: "channel__language" }, [
-              _vm._v(_vm._s(_vm.channelDetails.channelLanguage))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "channel__id" }, [
-            _vm._v("Channel No." + _vm._s(_vm.channelDetails.channelStbNumber))
-          ]),
+          // _vm._v(" "),
+          // _c("div", { staticClass: "channel__name" }, [
+          //   _vm._v(_vm._s(_vm.channelDetails.channelTitle)),
+          //   _c("span", { staticClass: "channel__language" }, [
+          //     _vm._v(_vm._s(_vm.channelDetails.channelLanguage))
+          //   ])
+          // ]),
+          // _vm._v(" "),
+          // _c("div", { staticClass: "channel__id" }, [
+          //   _vm._v("Channel No." + _vm._s(_vm.channelDetails.channelStbNumber))
+          // ]),
           _vm._v(" "),
           _c("div", { staticClass: "close", on: { click: _vm.onCloseClick } }, [
-            _vm._v("Close")
+            _vm._v("X")
           ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "channel__details__body" }, [
-          _c("h2", [_vm._v("Description:-")]),
+          _c("div", { staticClass: "channel__logo",staticStyle: { height: "6vw" }}, [               _c("img", {                 staticStyle: { width: "auto%" },                 attrs: { src: _vm.channelDetails.epgEventImage }               })             ]),
+          //_c("h2", [_vm._v("Channel Name:" + _vm._s(_vm.channelDetails.channelTitle))]),
           _vm._v(" "),
-          _c("sub", [
-            _vm._v("Type:" + _vm._s(_vm.channelDetails.channelCategory))
+          _c("div", { staticClass: "channel__id",staticStyle: { color: "#d5d5d6",fontSize: "1.2vw" } }, [
+            _vm._v("Channel Language: English")
           ]),
           _vm._v(" "),
-          _c("p", [_vm._v(" " + _vm._s(_vm.channelDetails.channelDescription))])
+          _c("div", { staticClass: "channel__id" ,staticStyle: { color: "#d5d5d6",fontSize: "1.2vw" }}, [
+            _vm._v("Channel No: " + _vm._s(_vm.channelDetails.channelStbNumber))
+          ]),
+          _vm._v(" "),
+            _c("p", { staticClass: "channel_description",staticStyle: { color: "#d5d5d6",fontSize: "1.2vw" } }, [
+              _vm._v("Now Playing: " +_vm._s(_vm.channelDetails.programmeTitle))
+            ]),
+          _vm._v(" "),
+            _c("p", { staticClass: "channel_description",staticStyle: { color: "#d5d5d6",fontSize: "1.2vw" } }, [
+              _vm._v("Program Description: " +_vm._s(_vm.channelDetails.shortSynopsis))
+            ]),
+          // _vm._v(" "),
+          // _c("div", { staticClass: "channel__logo" }, [               _c("img", {                 staticStyle: { width: "25%" },                 attrs: { src: _vm.channelDetails.epgEventImage }               })             ]),
+          // _c("p", [_vm._v(" " + _vm._s(_vm.channelDetails.channelDescription))])
         ])
       ])
     ]
@@ -83253,6 +83294,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 var render = function() {
+  // var displayDateTime = programme.displayDateTime;
+  // var resulttime = displayDateTime.substr(11, 2);
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
@@ -83527,6 +83570,13 @@ var render = function() {
             "div",
             { staticClass: "programme__header" },
             _vm._l(_vm.hoursList, function(n) {
+//               var myDate = new Date(1633071599000)
+// var pstDate = myDate.toLocaleString("en-US", {
+//   timeZone: "America/Los_Angeles"
+// })
+// console.log(pstDate)
+
+console.log(n);
               return _c("div", { key: n, staticClass: "header__time" }, [
                 _vm._v(
                   "\n                    " +
@@ -83792,6 +83842,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  //console.log(_vm);
   return _c("div", { staticClass: "programme__details__view" }, [
     _vm.programmeDetails
       ? _c("div", [
@@ -83818,12 +83869,12 @@ var render = function() {
           _c("div", { staticClass: "programme__content" }, [
             _c("div", { staticClass: "channel__logo" }, [
               _c("img", {
-                staticStyle: { width: "200px" },
+                staticStyle: { width: "25%" },
                 attrs: { src: _vm.programmeDetails.epgEventImage }
               })
             ]),
             _vm._v(" "),
-            _c("p", { staticClass: "channel_description" }, [
+            _c("p", { staticClass: "channel_description",staticStyle: { color: "#fff" } }, [
               _vm._v(_vm._s(_vm.programmeDetails.shortSynopsis))
             ])
           ]),
@@ -101892,9 +101943,10 @@ var actions = {
               break;
 
             case 8:
+              
               _context.next = 10;
-              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_DETAILS, "?channelId=").concat(channelId));
-
+              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat('2022-03-11%2014:00', "&periodEnd=").concat('2022-03-11%2023:59'));
+        
             case 10:
               response = _context.sent;
               _context.next = 13;
@@ -101907,7 +101959,7 @@ var actions = {
               if (data.responseCode != "200") {
                 commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_CHANNEL_DETAILS_ERROR"], data.responseMessage);
               } else {
-                channelDetails = data.channel[0];
+                channelDetails = data.getevent[0];
                 commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_CHANNEL_DETAILS_SUCCESS"], channelDetails); // Also caching for future use 
 
                 dispatch('cacheChannelDetails', channelDetails);

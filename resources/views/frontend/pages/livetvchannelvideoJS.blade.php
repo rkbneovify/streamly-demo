@@ -413,13 +413,14 @@ console.log("playr ready");
 					page: params.page || 1,
 					starttime:time,
 					callsign: window.location.pathname.split('/')[2],
+					hoursoffset: '-08:00',
 				}
 			},
 			cache: true
 		}, escapeMarkup: function (markup) { return markup; },
 		templateResult: function (data) {
 		// console.log('templateResult',data);
-			return '<span>'+data.StartDateTime+ ' '+ data.text + '</span>';
+			return '<span>'+data.StartDateTimewithTimezon+ ' '+ data.text + '</span>';
 		}
 
 	});
@@ -699,7 +700,7 @@ console.log("playr ready");
 						@foreach ($relatedchannel as $channeldet)
 
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$channeldet->genrenae)}}">
-							<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain'  class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
+							<div class="live-news-item"><div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding: 0.5vw;'  class="lazy" data-src="/uploads/channellogo/{{  $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 		
 											<p  style=" max-width: 20ch;
 							overflow: hidden;
