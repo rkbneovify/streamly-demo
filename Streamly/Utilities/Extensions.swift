@@ -164,6 +164,8 @@ extension String
     func toDate() -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd/MM/yyyy hh:mm a"
+        formatter.locale = Calendar.current.locale
+        formatter.timeZone = Calendar.current.timeZone
         return formatter.date(from: self)
     }
 
