@@ -104,6 +104,15 @@ return response()->json($response, 200);
             // periodStart=2021-02-01 15:00&periodEnd=2021-02-01 23:59
             // http://ams-api.astro.com.my/ams/v3/getEvents?channelId=275,80,182,64,87,114,65&periodStart=2021-02-02%2015:00&periodEnd=2021-02-02%2023:59
             $id = $request->input('id');
+            $timeoffset = '-08:00';
+            $datenew = date('Y-m-d H:i:s', strtotime('-391 minutes'));
+
+            $tz=$timeoffset??'-07:00';
+            if (str_contains($tz, '-')) { 
+            }else
+            {
+                $tz = "+".$tz;
+            }
 	
 
             /* returns array of entire input query value */
@@ -130,10 +139,16 @@ return response()->json($response, 200);
             // $ids = $str_arr;
             // dump($ids);
             // dd($str_arr);
+            $imagePath=url("/uploads/channellogo/");
             $users = Gracenote::toBase()->select(DB::raw('concat(gracenote.id,"") eventID'),'channels.id as channelId',
             DB::raw('concat(channels.id,"") channelStbNumber'),DB::raw("'false' as channelHD"),'gracenote.StationName as channelTitle',
-            DB::raw("'null' as epgEventImage"),
-            DB::raw("gracenote.Rating as certification"),'StartDateTime as displayDateTimeUtc','StartDateTime as displayDateTime',
+            DB::raw("CONCAT('$imagePath/',channels.image) as epgEventImage"),
+            // DB::raw("gracenote.Rating as certification"),'StartDateTime as displayDateTimeUtc','StartDateTime as displayDateTime',
+            DB::raw("gracenote.Rating as certification"),
+            'StartDateTime as displayDateTimeUtcOld',
+            'StartDateTime as displayDateTimeOld',
+            DB::raw("CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz') as displayDateTimeUtc"),
+            DB::raw("CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz') as displayDateTime"),
             DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),DB::raw("'1:964:41911209' as siTrafficKey"),
             'EventTitle as programmeTitle','gracenote.EventID as programmeId',DB::raw('concat(gracenote.EventID,"p") programmeId'),
             DB::raw('concat(gracenote.EventID,"e") episodeId'),'EventDescription as shortSynopsis')
@@ -146,7 +161,7 @@ return response()->json($response, 200);
             // Channel::select('gracenote.')
             ->whereRaw('channels.status = ?','1')
             ->wherein('channels.id',$str_arr)
-            ->whereBetween('gracenote.StartDateTime', [$query['periodStart'], $query['periodEnd']])
+            ->whereBetween('gracenote.StartDateTime', [$datenew , $query['periodEnd']])
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
             ->get();
             // SELECT * FROM `gracenote` WHERE StartDateTime BETWEEN '2021-02-01 15:00' AND'2021-02-01 23:59'
