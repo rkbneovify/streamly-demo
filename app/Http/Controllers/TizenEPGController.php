@@ -226,8 +226,10 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
     
    ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
      ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-      ->whereRaw('gracenote.`StartDateTime` BETWEEN DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s") 
-      AND DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 1 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")   or `channels`.`callSign` IS NULL')
+      ->whereRaw('gracenote.`StartDateTime` 
+      BETWEEN DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s") 
+      AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")
+         or `channels`.`callSign` IS NULL')
        ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
         ->where('sub.status','=','1')
