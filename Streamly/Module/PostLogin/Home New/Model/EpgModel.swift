@@ -123,15 +123,15 @@ struct ProgramArray : Codable {
     let TimeZoneName: String?
 
     var startDate: Date {
-        return Date(timeIntervalSince1970: TimeInterval(self.starttz ?? 0))
+        return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
      }
     
     var endDate: Date {
-        return Date(timeIntervalSince1970: TimeInterval(self.endtz ?? 0))
+        return Date(timeIntervalSince1970: TimeInterval(self.end ?? 0))
      }
     
     var duration: TimeInterval {
-        let duration = self.endDate.addingTimeInterval(-(self.starttz ?? 0)).timeIntervalSince1970
+        let duration = self.endDate.addingTimeInterval(-(self.start ?? 0)).timeIntervalSince1970
        return duration
      }
 

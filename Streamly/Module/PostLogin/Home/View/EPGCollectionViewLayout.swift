@@ -230,7 +230,7 @@ extension CustomCollectionViewLayout {
         }
         else
         {
-            width = Utility.getProgrammWidth(start: programData?.starttz ?? 0, end: programData?.endtz ?? 0)
+            width = Utility.getProgrammWidth(start: programData?.start ?? 0, end: programData?.end ?? 0)
 //            if width < 297 {
 //                width = 297
 //            }

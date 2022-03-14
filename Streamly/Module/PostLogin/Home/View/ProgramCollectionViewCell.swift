@@ -85,13 +85,13 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         if program.title?.lowercased() == "no broadcast" {
             print(program.title ?? "")
         }
-        self.comapreTime(program.endtz ?? 0)
-        self.liveShowView.isHidden = !(self.calculateTimeDiffrence(program.starttz ?? 0,program.endtz ?? 0))
+        self.comapreTime(program.end ?? 0)
+        self.liveShowView.isHidden = !(self.calculateTimeDiffrence(program.start ?? 0,program.end ?? 0))
         if !self.liveShowView.isHidden
         {
-            let cellWidth = Utility.getProgrammWidth(start: program.starttz ?? 0, end: program.endtz ?? 0)
+            let cellWidth = Utility.getProgrammWidth(start: program.start ?? 0, end: program.end ?? 0)
             guard let d1 = Utility.getCurrentDateTime().toDate() else {return}
-            guard let startDate = (Utility.getDateFromTimeStampByFormat(from: program.starttz ?? 0 , "dd/MM/yyyy hh:mm a") ?? "").toDate() else {return}
+            guard let startDate = (Utility.getDateFromTimeStampByFormat(from: program.start ?? 0 , "dd/MM/yyyy hh:mm a") ?? "").toDate() else {return}
             let intervals = d1.timeIntervalSince(startDate)
             let numberOfHours = CGFloat(intervals / 900)
             let width = CGFloat(numberOfHours) * (408 * 2)
@@ -103,7 +103,7 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         }
        
         self.titleLabel.text = program.title ?? ""
-        self.timeLabel.text = "\(Utility.getDateFromTimeStampByFormat(from: program.starttz ?? 0.0) ?? "") - \(Utility.getDateFromTimeStampByFormat(from: program.endtz ?? 0.0) ?? "")"
+        self.timeLabel.text = "\(Utility.getDateFromTimeStampByFormat(from: program.start ?? 0.0) ?? "") - \(Utility.getDateFromTimeStampByFormat(from: program.end ?? 0.0) ?? "")"
 
     }
     
