@@ -291,8 +291,8 @@ class HomeNewVC: UIViewController {
     {
         var comp: DateComponents = Calendar.current.dateComponents([.year, .month, .day,], from: Date())
         var comp1: DateComponents = Calendar.current.dateComponents([.year, .month, .day,.hour,.minute], from: Date())
-        comp1.timeZone = TimeZone(abbreviation: "UTC")!
-        comp.timeZone = TimeZone(abbreviation: "UTC")!
+        comp1.timeZone = Calendar.current.timeZone//TimeZone(abbreviation: "UTC")!
+        comp.timeZone = Calendar.current.timeZone//TimeZone(abbreviation: "UTC")!
         if let d1 = Calendar.current.date(from: comp)?.dayBefore
         {
             let d2 = Calendar.current.date(from: comp1)!
