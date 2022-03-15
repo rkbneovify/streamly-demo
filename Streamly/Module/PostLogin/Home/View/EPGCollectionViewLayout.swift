@@ -133,7 +133,7 @@ extension CustomCollectionViewLayout {
                     if let d1 = Calendar.current.date(from: comp)?.dayBefore
                     {
 
-                        let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].starttz ?? 0))
+                        let d2 = Date.init(timeIntervalSince1970: (dataArrayAtSection.programArray?[item - 1].start ?? 0))
                         let intervals = d2.timeIntervalSince(d1)
                         let numberOfHours = CGFloat(intervals / 3600)
                         xOffset += CGFloat(numberOfHours) * (TILE_WIDTH * 4)
