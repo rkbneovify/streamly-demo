@@ -101945,7 +101945,7 @@ var actions = {
             case 8:
               
               _context.next = 10;
-              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat('2022-03-14%2011:00', "&periodEnd=").concat('2022-03-14%2023:59'));
+              return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat('2022-03-15%2010:00', "&periodEnd=").concat('2022-03-15%2023:59'));
         
             case 10:
               response = _context.sent;

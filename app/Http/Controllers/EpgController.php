@@ -45,7 +45,10 @@ return response()->json($response, 200);
 
     public function channeljsonFunc($type){
   
-    $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
+    $imagePath=url("/uploads/channellogo/");
+    $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',
+    DB::raw("CONCAT('$imagePath/',channels.image) as epgEventImage"),
+    DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
     // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
            
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]' ) genrename")
