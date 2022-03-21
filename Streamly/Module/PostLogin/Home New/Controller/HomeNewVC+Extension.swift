@@ -46,7 +46,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         if indexPath.section == 0
         {
             let timeCell = cell as? TimeCollectionViewCell
-            timeCell?.configureCell(indexInt: indexPath.row)
+            timeCell?.configureCell(indexInt: indexPath.item)
             timeCell?.layer.zPosition = 2000
             timeCell?.backgroundColor = .clear
 
