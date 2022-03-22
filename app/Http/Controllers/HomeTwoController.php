@@ -64,7 +64,8 @@ class HomeTwoController extends Controller
             'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
             'zip_code'=>'required|exists:zipcodes,zipcode,status,1',
             'g-recaptcha-response'=>'required'
-        ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
+        // ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
+    ], ['zip_code.exists'=>'Unfortunately service is not yet available for the zip code you submitted.'], $attributeNames);
 
         /*if ( $validatedData->fails() ) {
             return redirect()->back()->withInput()->with( 'errors', $validatedData->errors() );
