@@ -107,8 +107,8 @@ return response()->json($response, 200);
             // periodStart=2021-02-01 15:00&periodEnd=2021-02-01 23:59
             // http://ams-api.astro.com.my/ams/v3/getEvents?channelId=275,80,182,64,87,114,65&periodStart=2021-02-02%2015:00&periodEnd=2021-02-02%2023:59
             $id = $request->input('id');
-            $timeoffset = '-08:00';
-            $datenew = date('Y-m-d H:i:s', strtotime('-391 minutes'));
+            $timeoffset = '-07:00';
+            //$datenew = date('Y-m-d H:i:s', strtotime('-360 minutes'));
 
             $tz=$timeoffset??'-07:00';
             if (str_contains($tz, '-')) { 
@@ -121,7 +121,10 @@ return response()->json($response, 200);
             /* returns array of entire input query value */
             $query = $request->all();
             $str_arr = explode (",", $query['channelId']);  
-             
+            $thestimestart = $query['periodStart'];
+            // $thestimeend = $query['periodEnd'];
+            $datestart = date("Y-m-d h:i",strtotime("-300 minutes",strtotime($thestimestart)));
+            //$dateend = date("Y-m-d h:i",strtotime("+1140 minutes",strtotime($thestimeend)));
              
             $ids = [1,2,3];
             $validator = Validator::make($query, [
@@ -158,13 +161,14 @@ return response()->json($response, 200);
             ->addSelect(DB::raw("'null' as longSynopsis"),DB::raw("'' as actors"),DB::raw("'' as directors"),
             DB::raw("'' as producers"),DB::raw("gracenote.EventType as genre"),DB::raw("'' as subGenre"),DB::raw("false as live"),
             DB::raw("false as premier"),DB::raw("false as ottBlackout"),DB::raw("null as highlight"),
-            DB::raw("'false' as contentId"),DB::raw("'false' as contentImage"),DB::raw("'null' as groupKey"),DB::raw("null as vernacularData"))
-            
+            DB::raw("'false' as contentId"),DB::raw("'false' as contentImage"),DB::raw("'null' as groupKey"),
+            DB::raw("null as vernacularData"),
+            DB::raw("'$datestart' as date"))
            
             // Channel::select('gracenote.')
             ->whereRaw('channels.status = ?','1')
             ->wherein('channels.id',$str_arr)
-            ->whereBetween('gracenote.StartDateTime', [$datenew , $query['periodEnd']])
+            ->whereBetween('gracenote.StartDateTime', [$datestart , $query['periodEnd']])
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
             ->get();
             // SELECT * FROM `gracenote` WHERE StartDateTime BETWEEN '2021-02-01 15:00' AND'2021-02-01 23:59'
