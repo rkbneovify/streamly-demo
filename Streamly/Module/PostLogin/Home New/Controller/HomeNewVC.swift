@@ -134,7 +134,8 @@ class HomeNewVC: UIViewController {
     @IBOutlet weak var discriptionHeader: UILabel!
     @IBOutlet weak var discriptionThumbNail: UIImageView!
     @IBOutlet weak var discriptionView: UIView!
-
+    @IBOutlet weak var descriptionHeightConstraint: NSLayoutConstraint! // 300
+    
     // MARK: - LifeCycle
     override func viewDidLoad() 
     {
@@ -177,6 +178,7 @@ class HomeNewVC: UIViewController {
     private func intialSetup()
     {
 
+        self.descriptionHeightConstraint.constant = 0
         // Layout for categories
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: cateGiriesCollectionView.frame.width/6, height: cateGiriesCollectionView.frame.height)

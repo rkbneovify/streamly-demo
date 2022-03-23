@@ -127,7 +127,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         if self.collectionView == collectionView
         {
             if let chanelCell = context.nextFocusedView as? ChannelCollectionViewCell {
-                guard let indexPath: IndexPath = self.collectionView.indexPath(for: chanelCell) as IndexPath? else { return true}
+                guard let indexPath: IndexPath = self.collectionView.indexPath(for: chanelCell) as IndexPath? else {
+                    self.discriptionView.isHidden = true
+                    self.descriptionHeightConstraint.constant = 0
+                    return true}
                 // Call API for pagination
                 
                 if indexPath.section ==
@@ -150,6 +153,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 }
             }
             guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
+                    self.descriptionHeightConstraint.constant = 0
                 return true}
             guard let indexPath: IndexPath = self.collectionView.indexPath(for: programCell) as IndexPath? else { return true}
             // Call API for pagination when focus on programme also.
@@ -177,6 +181,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 guard (indexPath.item - 1) <= programs.count else { return true }
                 self.headerTimeLbl.text = Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "E, d MMM yyyy")
                 self.discriptionView.isHidden = false
+                self.descriptionHeightConstraint.constant = 300
                 self.discriptionHeader.text = programs[indexPath.item - 1].title ?? ""
                 self.discriptionThumbNail.sd_setImage(with: URL(string: channel.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
                 self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""

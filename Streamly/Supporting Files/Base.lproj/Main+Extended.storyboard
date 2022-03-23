@@ -624,7 +624,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" insetsLayoutMarginsFromSafeArea="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="always" dataMode="prototypes" prefetchingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-gg-zYn">
-                                <rect key="frame" x="36" y="246.5" width="1884" height="833.5"/>
+                                <rect key="frame" x="36" y="246.5" width="1884" height="533.5"/>
                                 <viewLayoutGuide key="safeArea" id="lcD-0T-ye1"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewLayout key="collectionViewLayout" id="5Yw-Rb-z72" customClass="CustomCollectionViewLayout" customModule="StreamlyTV" customModuleProvider="target"/>
@@ -886,8 +886,8 @@
                         <viewLayoutGuide key="safeArea" id="NNg-TT-3ij"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="ix6-JS-shb" firstAttribute="top" secondItem="bvZ-gg-zYn" secondAttribute="bottom" id="2uG-Mw-hVP"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="top" secondItem="VlV-PK-P8U" secondAttribute="top" constant="40" id="3QD-ga-q1R"/>
-                            <constraint firstAttribute="bottom" secondItem="bvZ-gg-zYn" secondAttribute="bottom" id="3X6-1b-aef"/>
                             <constraint firstItem="n28-zC-q1c" firstAttribute="top" secondItem="Fnz-5i-nxU" secondAttribute="top" id="DVk-Nj-RH5"/>
                             <constraint firstItem="ix6-JS-shb" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" id="Ijf-F9-m5A"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
@@ -911,6 +911,7 @@
                     <connections>
                         <outlet property="cateGiriesCollectionView" destination="n28-zC-q1c" id="lMP-zU-HPg"/>
                         <outlet property="collectionView" destination="bvZ-gg-zYn" id="M2X-hi-bfK"/>
+                        <outlet property="descriptionHeightConstraint" destination="2aV-nW-lWd" id="VKC-6J-tXS"/>
                         <outlet property="descriptionLbl" destination="muQ-Vo-o67" id="Rk4-bI-JOZ"/>
                         <outlet property="discriptionHeader" destination="NDB-XO-97E" id="uZF-SA-Soh"/>
                         <outlet property="discriptionStartTimeLbl" destination="KeX-a7-NNu" id="aCq-uR-Cp5"/>
