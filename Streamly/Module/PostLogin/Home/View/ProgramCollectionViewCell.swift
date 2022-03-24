@@ -93,8 +93,8 @@ class ProgramCollectionViewCell: UICollectionViewCell {
             guard let d1 = Utility.getCurrentDateTime().toDate() else {return}
             guard let startDate = (Utility.getDateFromTimeStampByFormat(from: program.start ?? 0 , "dd/MM/yyyy hh:mm a") ?? "").toDate() else {return}
             let intervals = d1.timeIntervalSince(startDate)
-            let numberOfHours = CGFloat(intervals / 900)
-            let width = CGFloat(numberOfHours) * (408 * 2)
+            let numberOfHours = CGFloat(intervals / 3600)
+            let width = CGFloat(numberOfHours) * (408 * 4)
             self.liveViewTraling.constant = cellWidth - width
                 ////print(width)
         }

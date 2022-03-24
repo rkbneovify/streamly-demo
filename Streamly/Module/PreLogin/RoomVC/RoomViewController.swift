@@ -97,7 +97,13 @@ class RoomViewController: UIViewController {
     fileprivate func openUpdateDeviceName(session: String) {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
         vc.viewModel.personaldeviceid = session
-        self.navigationController?.pushViewController(vc, animated: true)
+        if navigationController == nil {
+            let nav = UINavigationController.init(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: false, completion: nil)
+        } else {
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
     
     private func viewPopups()
