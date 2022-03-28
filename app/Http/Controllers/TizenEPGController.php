@@ -249,7 +249,9 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
     ->selectRaw(" concat( '[', group_concat(json_object( 'Title', EventTitle,'Description', EventDescription,'CatType', CatType,'Category', Category,'StartTime', DATE_FORMAT(StartDateTime, '%Y-%m-%dT%TZ'),'EndTime', DATE_FORMAT(EndDateTime, '%Y-%m-%dT%TZ') ) Order By StartDateTime ), ']') Programs")
     
     ->fromSub(function ($query) use ($type) {
-      $query->select(DB::raw('IFNULL(genre.name,"Others") genre_name'),DB::raw('IFNULL(gracenote.StationName,concat("z",channels.name)) StationName'),DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+      // $query->select(DB::raw('IFNULL(genre.name,"Others") genre_name'),DB::raw('IFNULL(gracenote.StationName,concat("z",channels.name)) StationName'),
+      $query->select(DB::raw('IFNULL(genre.name,"Others") genre_name'),DB::raw('IFNULL(gracenote.StationName,concat(channels.name)) StationName'),
+      DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
       DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),
       DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 00:00:00"), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
       DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(date_add(CURDATE(), interval 3 day), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),'channels.id','channels.status',DB::raw("'series' as Category"),DB::raw("'series' as CatType"),DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type")
