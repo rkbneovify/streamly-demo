@@ -367,17 +367,23 @@ extension HomeNewVC {
 //        return channel
         channel.forEach { chDetail in
             let yesterDayDate = Date().dayBefore.string(format: "dd/MM/yyyy")
-            let makeDateWithSpTime = "\(yesterDayDate) 12:00 AM"
+            let endTime = "\(Date().dayAfter.string(format: "dd/MM/yyyy")) 12:00 PM"
             var startTime = "\(yesterDayDate) 12:00 AM"
             var newPrograme = [ProgramArray]()
             print("Channel:\(chDetail.StationName ?? "")")
             chDetail.programs?.forEach({ proDetail in
                 print("programme Title: \(proDetail.title ?? "") \nStart: \(Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0) ?? "")")
                 // chekck if start time is existing on programe or not
-                if startTime == Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0, "dd/MM/yyyy hh:mm a") ?? "" { // yes
+                if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" {
+                let makeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
+//                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
+                newPrograme.append(proDetail)
+                newPrograme.append(makeNoBroadcast)
+                startTime = Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
+                } else if startTime == Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0, "dd/MM/yyyy hh:mm a") ?? "" { // yes
                     newPrograme.append(proDetail)
                     startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
-                } else { // Add no broadcast cell with end time
+                }  else {// Add no broadcast cell with end time
                     let makeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ: proDetail.start ?? 0.0, start: makeNewTime(startTime: startTime), end: proDetail.start ?? 0.0, title: "No broadcast", timezoneName: "", description: "")
 //                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
                         newPrograme.append(makeNoBroadcast)

@@ -99,6 +99,15 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
+        } else if status == 402 {
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        } else if status == 429 {
+            showAlert(withMessage: message,setFirstButtonTitle: "OK") { _ in }
+        } else {
+            showSimpleAlertWithMessage(message)
         }
         //showSimpleAlertWithMessage(message)
     }

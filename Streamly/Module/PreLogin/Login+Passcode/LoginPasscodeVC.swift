@@ -133,17 +133,23 @@ extension LoginPasscodeVC: APIResponseDelegate {
     }
     
     func apiFailure(_ message: String,_ status: Int) {
-        if status == 401 {
+        self.removeSpinner()
+        if !viewModel.removeIdKey.isEmpty {
+            openAlertForRemoveId()
+        } else if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
                 Utility.logOut()
             }
             return
-        }
-        self.removeSpinner()
-        if !viewModel.removeIdKey.isEmpty {
-            openAlertForRemoveId()
+        } else if status == 402 {
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.logOut()
+            }
+        } else if status == 429 {
+            showAlert(withMessage: message,setFirstButtonTitle: "OK") { _ in }
         } else {
             showSimpleAlertWithMessage(message)
         }
