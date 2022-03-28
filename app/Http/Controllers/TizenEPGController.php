@@ -199,7 +199,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
 
     ->fromSub(function ($query) use ($type,$tz) {
       $query->select(DB::raw('DISTINCT IFNULL(genre.name,"Others") genre_name'),
-      DB::raw('IFNULL(gracenote.StationName,concatchannels.name)) StationName'),
+      DB::raw('IFNULL(gracenote.StationName,concat(channels.name)) StationName'),
       DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
       DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
       DB::raw('IFNULL(gracenote.EventDescription,"EventDescription") EventDescription'),
