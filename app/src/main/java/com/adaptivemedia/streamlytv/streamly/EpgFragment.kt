@@ -9,14 +9,14 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import com.adaptivemedia.streamlytv.R
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideChannel
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideSchedule
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -25,11 +25,13 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
-class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.streamlytv.streamly.epg.Datum>) : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
+class EpgFragment(
+    context: Context,
+    dataListm: MutableList<com.adaptivemedia.streamlytv.streamly.epg.Datum>
+) : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
 
 
@@ -58,19 +60,19 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
 
 
     data class SimpleChannel(
-            override val id: String,
-            override val name: Spanned?,
-            override val imageUrl: String?,
-            val videoUrl: String?
+        override val id: String,
+        override val name: Spanned?,
+        override val imageUrl: String?,
+        val videoUrl: String?
     ) : ProgramGuideChannel
 
     // You can put your own data in the program class
     data class SimpleProgram(
-            val id: String,
-            val description: String,
-            val metadata: String,
-            val playUrl: String,
-            val channelId: String
+        val id: String,
+        val description: String,
+        val metadata: String,
+        val playUrl: String,
+        val channelId: String
 
     )
 
@@ -87,10 +89,12 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
             return
         }
         if (programGuideSchedule.isCurrentProgram) {
-            Log.e(TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
-                    + "\nid: " + programGuideSchedule.id
-                    + "\ndisplaytitle : " + programGuideSchedule.displayTitle
-                    + "\nchannel_name : " + innerSchedule.channelId)
+            Log.e(
+                TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
+                        + "\nid: " + programGuideSchedule.id
+                        + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+                        + "\nchannel_name : " + innerSchedule.channelId
+            )
 
             /*for (i in 0 until channel_showName_list.size) {
                 for (j in 0 until channels.size) {
@@ -128,11 +132,15 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
 //            intent1.putExtra("from", innerSchedule.)
             startActivity(intent1)
 
-            Log.e(TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
-                    + "<<>>" + innerSchedule.id)
+            Log.e(
+                TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
+                        + "<<>>" + innerSchedule.id
+            )
         } else {
-            Log.e(TAG, "Open detail page " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
-                    + "<<>>" + innerSchedule.id)
+            Log.e(
+                TAG, "Open detail page " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
+                        + "<<>>" + innerSchedule.id
+            )
         }
     }
 
@@ -161,12 +169,12 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
 
         if (programGuideSchedule != null) {
             Glide.with(imageView)
-                    .load("https://picsum.photos/462/240?random=" + programGuideSchedule.displayTitle.hashCode())
-                    .centerCrop()
-                    .error(R.drawable.programguide_icon_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(imageView)
+                .load("https://picsum.photos/462/240?random=" + programGuideSchedule.displayTitle.hashCode())
+                .centerCrop()
+                .error(R.drawable.programguide_icon_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imageView)
         } else {
             Glide.with(imageView).clear(imageView)
         }
@@ -188,10 +196,18 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
         setState(State.Loading)
 
 
-        MIN_CHANNEL_START_TIME = localDate.atStartOfDay().minusDays(1).withHour(2).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MAX_CHANNEL_START_TIME = localDate.atStartOfDay().minusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MIN_CHANNEL_END_TIME = localDate.atStartOfDay().plusDays(1).withHour(21).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
-        MAX_CHANNEL_END_TIME = localDate.atStartOfDay().plusDays(2).withHour(4).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
+        MIN_CHANNEL_START_TIME =
+            localDate.atStartOfDay().minusDays(1).withHour(2).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MAX_CHANNEL_START_TIME =
+            localDate.atStartOfDay().minusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MIN_CHANNEL_END_TIME =
+            localDate.atStartOfDay().plusDays(1).withHour(21).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
+        MAX_CHANNEL_END_TIME =
+            localDate.atStartOfDay().plusDays(2).withHour(4).truncatedTo(ChronoUnit.HOURS)
+                .atZone(DISPLAY_TIMEZONE)
 
 
 //        MIN_CHANNEL_START_TIME = localDate.atStartOfDay().withHour(2).truncatedTo(ChronoUnit.HOURS).atZone(DISPLAY_TIMEZONE)
@@ -219,32 +235,32 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
 
 
 //                  Log.e("listitem" , list[0].genrename[0].toString())
-                    list.forEach {
+        list.forEach {
 
 
-                        Log.e("item" , "{ " +  it +  " }")
-
+            Log.e("item", "{ " + it + " }")
 
 
 //                        Log.e("listitem" , it.id.toString());
-                        channels.add(SimpleChannel(it.id.toString(), SpannedString(it.callSign), it.logo, it.url))
-                    }
+            channels.add(
+                SimpleChannel(
+                    it.id.toString(),
+                    SpannedString(it.callSign),
+                    it.logo,
+                    it.url
+                )
+            )
+        }
 
 
 
-        Log.e("item" , "-------------------------------------------------")
-
-
-
-
+        Log.e("item", "-------------------------------------------------")
 
 
 //                    it.data.forEach {
 //                        channels.add(SimpleChannel(it.id.toString(), SpannedString(it.callSign), it.logo, it.url))
 //                    }
-                    //Log.e("### arrayList", channels.toString())
-
-
+        //Log.e("### arrayList", channels.toString())
 
 
 //
@@ -425,35 +441,34 @@ class EpgFragment(context: Context, dataListm: MutableList<com.adaptivemedia.str
     }
 
 
-
     private fun createSchedule(
-            channel: SimpleChannel,
-            scheduleName: String,
-            startTime: Instant,
-            endTime: Instant,
+        channel: SimpleChannel,
+        scheduleName: String,
+        startTime: Instant,
+        endTime: Instant,
 //            startTime: ZonedDateTime,
 //            endTime: ZonedDateTime,
-            playUrl: String,
-            description: String,
-            id: Long,channelId: String
+        playUrl: String,
+        description: String,
+        id: Long, channelId: String
     ): ProgramGuideSchedule<SimpleProgram> {
 //        val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
         val metadata = getDate(startTime.toEpochMilli(), "'Starts at' HH:mm")
         return ProgramGuideSchedule.createScheduleWithProgram(
-                id,
-                startTime,
-                endTime,
-                true,
-                scheduleName,
+            id,
+            startTime,
+            endTime,
+            true,
+            scheduleName,
 //        return ProgramGuideSchedule.createScheduleWithProgram(id, startTime.toInstant(), endTime.toInstant(), true, scheduleName,
-                SimpleProgram(
-                        id.toString(),
-                        description,
-                        metadata+"",
-                        playUrl,
-                        channelId
-                ), playUrl
+            SimpleProgram(
+                id.toString(),
+                description,
+                metadata + "",
+                playUrl,
+                channelId
+            ), playUrl
         )
     }
 
