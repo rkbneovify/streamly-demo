@@ -109,7 +109,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
             viewModel.removeIdKey = data
             self.openAlertForRemoveId()
         } else if !(viewModel.responseData?.subscribed ?? false) {
-            self.showAlert(withMessage: viewModel.responseData?.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
+            self.showAlert(withMessage: viewModel.responseData?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
 //                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
 //                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
 //                Utility.logOut()

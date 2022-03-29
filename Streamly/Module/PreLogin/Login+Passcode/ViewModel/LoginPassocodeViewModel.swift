@@ -78,7 +78,6 @@ class LoginPassocodeViewModel: NSObject {
                 weak.delegate?.apiFailure(data.message ?? "", data.response_code ?? 0)
             }
             debugPrint(error?.localizedDescription ?? "")
-           
         }
     }
 }

@@ -77,7 +77,7 @@ class CustomCollectionViewLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-//        guard itemAttributes[indexPath.section].count <= indexPath.item else { return  itemAttributes[indexPath.section][0] }
+        guard itemAttributes[indexPath.section].count <= indexPath.item else { return  itemAttributes[indexPath.section][indexPath.item] }
         return itemAttributes[indexPath.section][indexPath.item]
     }
 
