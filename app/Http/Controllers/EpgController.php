@@ -122,9 +122,9 @@ return response()->json($response, 200);
             $query = $request->all();
             $str_arr = explode (",", $query['channelId']);  
             $thestimestart = $query['periodStart'];
-            // $thestimeend = $query['periodEnd'];
+            $thestimeend = $query['periodEnd'];
             $datestart = date("Y-m-d h:i",strtotime("-300 minutes",strtotime($thestimestart)));
-            //$dateend = date("Y-m-d h:i",strtotime("+1140 minutes",strtotime($thestimeend)));
+            $dateend = date("Y-m-d h:i",strtotime("+1110 minutes",strtotime($thestimestart)));
              
             $ids = [1,2,3];
             $validator = Validator::make($query, [
@@ -168,7 +168,7 @@ return response()->json($response, 200);
             // Channel::select('gracenote.')
             ->whereRaw('channels.status = ?','1')
             ->wherein('channels.id',$str_arr)
-            ->whereBetween('gracenote.StartDateTime', [$datestart , $query['periodEnd']])
+            ->whereBetween('gracenote.StartDateTime', [$datestart , $dateend])
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
             ->get();
             // SELECT * FROM `gracenote` WHERE StartDateTime BETWEEN '2021-02-01 15:00' AND'2021-02-01 23:59'
