@@ -123,8 +123,8 @@ return response()->json($response, 200);
             $str_arr = explode (",", $query['channelId']);  
             $thestimestart = $query['periodStart'];
             $thestimeend = $query['periodEnd'];
-            $datestart = date("Y-m-d h:i",strtotime("-300 minutes",strtotime($thestimestart)));
-            $dateend = date("Y-m-d h:i",strtotime("+1110 minutes",strtotime($thestimestart)));
+            $datestart = date("Y-m-d G:i:s",strtotime("-300 minutes",strtotime($thestimestart)));
+            $dateend = date("Y-m-d G:i:s",strtotime("+1110 minutes",strtotime($thestimestart)));
              
             $ids = [1,2,3];
             $validator = Validator::make($query, [
@@ -163,7 +163,7 @@ return response()->json($response, 200);
             DB::raw("false as premier"),DB::raw("false as ottBlackout"),DB::raw("null as highlight"),
             DB::raw("'false' as contentId"),DB::raw("'false' as contentImage"),DB::raw("'null' as groupKey"),
             DB::raw("null as vernacularData"),
-            DB::raw("'$datestart' as date"))
+            DB::raw("'$dateend' as date"))
            
             // Channel::select('gracenote.')
             ->whereRaw('channels.status = ?','1')
