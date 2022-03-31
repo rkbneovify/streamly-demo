@@ -249,10 +249,17 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
     
     func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let indexPath = context.nextFocusedIndexPath,
-            let _ = collectionView.cellForItem(at: indexPath) {
+           let cell = collectionView.cellForItem(at: indexPath) {
             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
             self.collectionView.scrollToItem(at: indexPath, at:
              .centeredVertically, animated: true)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    if cell is ProgramCollectionViewCell {
+                        if self.collectionView.contentOffset.x > cell.frame.origin.x - 300 {
+                            self.collectionView.contentOffset.x = cell.frame.origin.x - 300
+                        }
+                    }
+                }
             }
         }
     }
@@ -308,6 +315,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             }
 
         }
+    }
+    
+    private func makeCellVisible(_ cell: ProgramCollectionViewCell) {
+        
     }
 }
 
