@@ -65,8 +65,8 @@ extension LoginPasscodeVC {
 
 // MARK: - UI Logics
 extension LoginPasscodeVC {
-    private func openAlertForRemoveId() {
-        let alertAction = UIAlertController(title: "", message: "Do you want to remove the old session(with this device)", preferredStyle: .alert)
+    private func openAlertForRemoveId(message: String) {
+        let alertAction = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alertAction.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned self] _ in
             self.viewModel.sameDeviceLogOut(id: viewModel.removeIdKey)
         }))
@@ -107,7 +107,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
         self.removeSpinner()
         if let data = viewModel.responseData?.data { // check session exist.
             viewModel.removeIdKey = data
-            self.openAlertForRemoveId()
+            self.openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
         } else if !(viewModel.responseData?.subscribed ?? false) {
             self.showAlert(withMessage: viewModel.responseData?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
 //                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -135,7 +135,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
     func apiFailure(_ message: String,_ status: Int) {
         self.removeSpinner()
         if !viewModel.removeIdKey.isEmpty {
-            openAlertForRemoveId()
+            openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
         } else if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)

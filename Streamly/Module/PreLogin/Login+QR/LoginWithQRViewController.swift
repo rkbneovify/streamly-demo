@@ -59,7 +59,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
                 if let removIdKey = data.data {
-                    self.openAlertForRemoveId(id: removIdKey)
+                    self.openAlertForRemoveId(id: removIdKey, message: data.message ?? "")
                 } else if !(data.subscribed ?? false) {
                     self.showAlert(withMessage: data.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
 //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -88,7 +88,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 }
             }
         } else if let data = data as? FailedResponse { // handle Login failed Response
-            self.openAlertForRemoveId(id: data.data ?? "")
+            self.openAlertForRemoveId(id: data.data ?? "", message: data.message ?? "")
         }
     }
 
@@ -117,8 +117,8 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
 
 // MARK: - UI Logics
 extension LoginWithQRViewController {
-    private func openAlertForRemoveId(id: String) {
-        let alertAction = UIAlertController(title: "", message: "Do you want to remove the old session(with this device)", preferredStyle: .alert)
+    private func openAlertForRemoveId(id: String, message: String) {
+        let alertAction = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alertAction.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned self] _ in
             viewModel.sameDeviceLogOut(id: id)
         }))

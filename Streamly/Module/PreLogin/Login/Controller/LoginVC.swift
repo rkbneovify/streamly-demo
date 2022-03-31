@@ -293,7 +293,7 @@ extension LoginVC
 
                 } else if response.success?.success == false {
                     if let data = response.success?.data { // check session exist.
-                        selfStrong.openAlertForRemoveId(id: data)
+                        selfStrong.openAlertForRemoveId(id: data, message: response.success?.message ?? "")
                     } else if !(response.success?.subscribed ?? false) {
                         selfStrong.showAlert(withMessage: response.success?.response_code == 429 ? response.success?.message ?? "" : response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
     //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -318,7 +318,7 @@ extension LoginVC
                         }
 //                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     } else if let data = failureResponse.data { // check session exist.
-                        selfStrong.openAlertForRemoveId(id: data)
+                        selfStrong.openAlertForRemoveId(id: data, message: failureResponse.message ?? "")
                     } else {
                         selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     }
@@ -355,8 +355,8 @@ extension LoginVC
 
 // MARK: - UI Logics
 extension LoginVC {
-    private func openAlertForRemoveId(id: String) {
-        let alertAction = UIAlertController(title: "", message: "Do you want to remove the old session(with this device)", preferredStyle: .alert)
+    private func openAlertForRemoveId(id: String, message: String) {
+        let alertAction = UIAlertController(title: "", message: message, preferredStyle: .alert)
         alertAction.addAction(UIAlertAction(title: "Yes", style: .default, handler: { [unowned self] _ in
             self.sameDeviceLogOut(id: id)
         }))
