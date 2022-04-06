@@ -70,17 +70,12 @@ public class LogInActivity extends FragmentActivity {
         call.enqueue(new Callback<QrVisibility>() {
             @Override
             public void onResponse(Call<QrVisibility> call, Response<QrVisibility> response) {
-                if (response.body()!=null && response.body().isVisible()) {
-
+                if (response.body()!=null && response.body().getVisible()) {
                     btnHotelLogin .setVisibility(View.VISIBLE);
-
-
                 }
                 else {
-
                     btnHotelLogin .setVisibility(View.GONE);
                 }
-
             }
 
             @Override

@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CMakeSettings">
-    <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
-    </configurations>
-  </component>
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.19384057971014493" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_login_using_passcode.xml" value="0.2265625" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_main.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_player.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_search.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_user_room.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/dialog_device_limit.xml" value="0.2265625" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/genere_item.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/player_all_channel_row.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/programguide_fragment.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/programguide_item_program.xml" value="0.2421875" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/view_room.xml" value="0.2421875" />
+        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.33" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

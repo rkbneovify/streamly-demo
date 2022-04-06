@@ -202,7 +202,6 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<PersonalDeviceNameDataModel> setPersonalDeviceName(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Path(value = "session_id", encoded = false) String session_id ,@FieldMap(encoded = false) Map<String,String> params);
 
-    @Headers(NetworkKeys.KEY_QRVISIBILITY)
     @GET("/api/auth/qrvisibility")
     Call<QrVisibility> getVisibility();
 }
