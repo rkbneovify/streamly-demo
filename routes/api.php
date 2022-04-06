@@ -22,7 +22,8 @@ Route::get('/unhash/{id}', 'APIController@unhashid')->name('unhashid');
 Route::post('/frontlogin', 'APIController@login')->name('frontlogin');
 Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 
-
+//QR code visibility API
+Route::get('auth/qrvisibility', 'APIController@qrvisibility');
 
 // Registration, confirmations and verification
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
