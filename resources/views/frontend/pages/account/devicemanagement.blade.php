@@ -189,7 +189,7 @@ use Laravel\Cashier\Cashier; ?>
 				<h2 class="section-heading text-center">Account Settings</h2>
 				
 				<div class="">
-				<th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="0" value='InActivate selected' ></th>
+				<th>Check All <input type="checkbox" class='checkall' id='checkall'><input type="button" class='update_record' id="0" value='In Activate selected' ></th>
    <br> <p>Devices {{count($allSession)}}/{{GetLimitForUser(Auth::user()->id)}}</p>
 					<div class="device-body1 device-body" role="list" jsname="rymPhb" jscontroller="staXac">
                   

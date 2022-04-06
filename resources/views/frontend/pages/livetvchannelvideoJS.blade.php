@@ -413,7 +413,7 @@ console.log("playr ready");
 					page: params.page || 1,
 					starttime:time,
 					callsign: window.location.pathname.split('/')[2],
-					hoursoffset: '-08:00',
+					hoursoffset: '-07:00',
 				}
 			},
 			cache: true
