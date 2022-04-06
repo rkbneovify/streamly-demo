@@ -42,6 +42,7 @@ public class LogInActivity extends FragmentActivity {
     private ProgressBar dialog;
     private String uniqueId;
     private String userAgent;
+    private Boolean aBoolean;
     private EditText edUserName, edPassword;
     private TextView txtNeedHelp;
     private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
@@ -61,6 +62,32 @@ public class LogInActivity extends FragmentActivity {
 
         dialog = findViewById(R.id.login_progress_bar);
         TokenStorage.clearSharedToken(LogInActivity.this);
+
+
+
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<QrVisibility> call = apiInterface.getVisibility();
+        call.enqueue(new Callback<QrVisibility>() {
+            @Override
+            public void onResponse(Call<QrVisibility> call, Response<QrVisibility> response) {
+                if (response.body()!=null && response.body().isVisible()) {
+
+                    btnHotelLogin .setVisibility(View.VISIBLE);
+
+
+                }
+                else {
+
+                    btnHotelLogin .setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<QrVisibility> call, Throwable t) {
+
+            }
+        });
 
         txtNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override

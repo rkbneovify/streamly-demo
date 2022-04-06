@@ -8,6 +8,7 @@ import com.adaptivemedia.streamlytv.streamly.channelsschedulepaginate.ChannelSch
 import com.adaptivemedia.streamlytv.streamly.epg.ChannelGenre;
 import com.adaptivemedia.streamlytv.streamly.epg.ChannellistModel;
 import com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceNameDataModel;
+import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
 import com.adaptivemedia.streamlytv.streamly.model.CheckDeviceType;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLogInModel;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
@@ -201,5 +202,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<PersonalDeviceNameDataModel> setPersonalDeviceName(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Path(value = "session_id", encoded = false) String session_id ,@FieldMap(encoded = false) Map<String,String> params);
 
-
+    @Headers(NetworkKeys.KEY_QRVISIBILITY)
+    @GET("/api/auth/qrvisibility")
+    Call<QrVisibility> getVisibility();
 }
