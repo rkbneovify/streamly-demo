@@ -80,7 +80,7 @@ public class LogInActivity extends FragmentActivity {
                 }
                 else {
                     btnHotelLogin .setVisibility(View.GONE);
-                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
+                    btnLoginUsingPasscode.setVisibility(View.GONE);
                 }
             }
 
