@@ -253,13 +253,9 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
             self.collectionView.scrollToItem(at: indexPath, at:
              .centeredVertically, animated: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    if cell is ProgramCollectionViewCell {
-                        if self.collectionView.contentOffset.x > cell.frame.origin.x - 300 {
-                            self.collectionView.contentOffset.x = cell.frame.origin.x - 300
-                        }
-                    }
-                }
+                self.scrollCell = cell
+                NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(callScrollMethod), object: nil)
+                perform(#selector(callScrollMethod), with: nil, afterDelay: 1)
             }
         }
     }
@@ -385,7 +381,15 @@ extension HomeNewVC {
             chDetail.programs?.forEach({ proDetail in
                 print("programme Title: \(proDetail.title ?? "") \nStart: \(Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0) ?? "")")
                 // chekck if start time is existing on programe or not
-                if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" {
+                if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" && (chDetail.programs?.count ?? 0) == 1 {
+                let lastmakeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
+                    let firstmakeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ:  proDetail.starttz ?? 0.0, start: makeNewTime(startTime: startTime), end: proDetail.start ?? 0.0, title: "No broadcast", timezoneName: "", description: "")
+//                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
+                newPrograme.append(firstmakeNoBroadcast)
+                newPrograme.append(proDetail)
+                newPrograme.append(lastmakeNoBroadcast)
+                startTime = Utility.getDateFromTimeStampByFormat(from: lastmakeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
+                } else if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" {
                 let makeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
 //                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
                 newPrograme.append(proDetail)
@@ -411,6 +415,20 @@ extension HomeNewVC {
         }
         return tmpChannel
     }
+    
+    func cellScrollToVisibleTItle(_ cell: ProgramCollectionViewCell) {
+            if self.collectionView.contentOffset.x > cell.frame.origin.x - 300 {
+                self.collectionView.contentOffset.x = cell.frame.origin.x - 300
+            }
+    }
+    
+    @objc func callScrollMethod() {
+        if self.scrollCell is ProgramCollectionViewCell {
+            cellScrollToVisibleTItle(scrollCell as! ProgramCollectionViewCell)
+        }
+    }
+    
+    
     
     func makeNewTime(startTime: String) -> TimeInterval  {
         let formatter = DateFormatter()

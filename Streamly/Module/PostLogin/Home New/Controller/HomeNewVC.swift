@@ -136,6 +136,7 @@ class HomeNewVC: UIViewController {
     @IBOutlet weak var discriptionView: UIView!
     @IBOutlet weak var descriptionHeightConstraint: NSLayoutConstraint! // 300
     
+    var scrollCell = UICollectionViewCell()
     // MARK: - LifeCycle
     override func viewDidLoad() 
     {
