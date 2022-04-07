@@ -146,4 +146,11 @@ public class TokenStorage {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, keyVale);
     }
+
+    public static void savedVisible(Context context, String access_token, boolean savedVisibleKey) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean( access_token,savedVisibleKey);
+        editor.apply();
+    }
 }

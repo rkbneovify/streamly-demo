@@ -1,6 +1,7 @@
 package com.adaptivemedia.streamlytv.streamly.log_in;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -42,7 +43,6 @@ public class LogInActivity extends FragmentActivity {
     private ProgressBar dialog;
     private String uniqueId;
     private String userAgent;
-    private Boolean aBoolean;
     private EditText edUserName, edPassword;
     private TextView txtNeedHelp;
     private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
@@ -70,11 +70,17 @@ public class LogInActivity extends FragmentActivity {
         call.enqueue(new Callback<QrVisibility>() {
             @Override
             public void onResponse(Call<QrVisibility> call, Response<QrVisibility> response) {
+                boolean savedVisibleKey = response.body().getVisible();
+                TokenStorage.savedVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE,savedVisibleKey);
+
+
                 if (response.body()!=null && response.body().getVisible()) {
                     btnHotelLogin .setVisibility(View.VISIBLE);
+                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
                 }
                 else {
                     btnHotelLogin .setVisibility(View.GONE);
+                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -2,9 +2,11 @@ package com.adaptivemedia.streamlytv.streamly.settings;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.adaptivemedia.streamlytv.R;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface;
 import com.adaptivemedia.streamlytv.streamly.settings.privacy.PrivacyDialog;
@@ -60,6 +63,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 
         initListeners();
 
+
 //        account.clearFocus();
 //        account.requestFocus();
     }
@@ -72,7 +76,17 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         privacy=findViewById(R.id.privacy);
         signOut=findViewById(R.id.sign_out);
 
-    }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean  savedVisibleKey= preferences.getBoolean("savedVisibleKey", false);
+        if(savedVisibleKey == true){
+            registerDevice.setVisibility(View.VISIBLE);
+
+        }
+        else{
+            registerDevice.setVisibility(View.GONE);
+        }
+
+        }
 
     private void initListeners() {
         account.setOnClickListener(this);
