@@ -2238,7 +2238,12 @@
       },
       // Utility
       hoursList: function hoursList() {
-        var date1 = new Date();
+        function convertTZ(date, tzString) {
+          return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+        }
+      
+      const date = new Date();
+        var date1 = convertTZ(date, "Asia/Calcutta");
         // var myDate = new Date()
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
@@ -83645,6 +83650,7 @@
               _vm._l(_vm.hoursList, function(n) {
   
   // console.log(n);
+
                 return _c("div", { key: n, staticClass: "header__time" }, [
                   _vm._v(
                     "\n                    " +
@@ -102017,8 +102023,16 @@
                 _context.next = 10;
                 var popupDate = new Date().toJSON().slice(0,10).replace(/-/g,'/');
                  //TZ WEB//
-                 var oldDateObj = new Date();
-                var myDate = new Date();
+                 function convertTZ(date, tzString) {
+                  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+                }
+              
+              const date = new Date();
+              const oldDateObj = convertTZ(date, "Asia/Calcutta");
+              const myDate = convertTZ(date, "Asia/Calcutta");
+              // console.log(timeTZ);
+                //  var oldDateObj = new Date();
+                // var myDate = new Date();
 
                 myDate.setTime(oldDateObj.getTime() - (30 * 60 * 1000));
 
@@ -102032,6 +102046,7 @@
           
                 var start_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0], " ", partstime2[0], ":00");
                 var end_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0]," ", "23:59");
+
                  //TZ END WEB//
                 return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat(start_from, "&periodEnd=").concat(popupDate.concat('%2023:59')));
           
@@ -102052,8 +102067,8 @@
   
                   dispatch('cacheChannelDetails', channelDetails);
                 }
-  
-              case 16:
+   
+             case 16:
               case "end":
                 return _context.stop();
             }
@@ -102305,8 +102320,16 @@
             switch (_context.prev = _context.next) {
               case 0:
                 //TZ WEB//
-                var oldDateObj = new Date();
-                var myDate = new Date();
+                function convertTZ(date, tzString) {
+                  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+                }
+              
+              const date = new Date();
+              const oldDateObj = convertTZ(date, "Asia/Calcutta");
+              const myDate = convertTZ(date, "Asia/Calcutta");
+              // console.log(timeTZ);
+                // var oldDateObj = new Date();
+                // var myDate = new Date();
 
                 myDate.setTime(oldDateObj.getTime() - (30 * 60 * 1000));
 
@@ -102388,8 +102411,17 @@
   
               case 9:
                 //TZ WEB//
-                var oldDateObj = new Date();
-                var myDate = new Date();
+                function convertTZ(date, tzString) {
+                  return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
+                }
+              
+              const date = new Date();
+              const oldDateObj = convertTZ(date, "Asia/Calcutta");
+              const myDate = convertTZ(date, "Asia/Calcutta");
+              // console.log(timeTZ);
+
+              //   var oldDateObj = new Date();
+              //   var myDate = new Date();
 
                 myDate.setTime(oldDateObj.getTime() - (30 * 60 * 1000));
 
