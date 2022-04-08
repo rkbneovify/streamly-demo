@@ -101,9 +101,9 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-        edUserName.setText("vikas.saini1@oodles.io");
+//        edUserName.setText("vikas.saini1@oodles.io");
 //        edUserName.setText("sahilkashyap64@gmail.com");
-        edPassword.setText("123456789");
+//        edPassword.setText("123456789");
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
