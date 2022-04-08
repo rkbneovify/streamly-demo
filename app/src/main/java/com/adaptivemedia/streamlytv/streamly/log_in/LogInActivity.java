@@ -1,5 +1,6 @@
 package com.adaptivemedia.streamlytv.streamly.log_in;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
@@ -99,9 +101,9 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-//        edUserName.setText("vikas.saini1@oodles.io");
+        edUserName.setText("vikas.saini1@oodles.io");
 //        edUserName.setText("sahilkashyap64@gmail.com");
-//        edPassword.setText("123456789");
+        edPassword.setText("123456789");
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -276,10 +278,12 @@ public class LogInActivity extends FragmentActivity {
 
                                 Log.i(TAG, "onResponse:429  " + response.body());
                                 Log.i(TAG, "onResponse:429  " + logInModel.getData().toString());
-                                SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this, logInModel.getData().toString(), edUserName.getText().toString(),
-                                        edPassword.getText().toString(), uniqueId);
-                                signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                                signOutDeviceDialog.show();
+//                                SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this, logInModel.getData().toString(), edUserName.getText().toString(),
+//                                        edPassword.getText().toString(), uniqueId);
+//                                signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+//                                signOutDeviceDialog.show();
+
+                                deviceSignOutCall(logInModel.getData().toString());
                             }
                             if (logInModel.getMessage() != null && !logInModel.getMessage().toString().equals("")) {
                                 if (logInModel.getMessage().contains("Your account is in use on")) {
@@ -318,5 +322,45 @@ public class LogInActivity extends FragmentActivity {
         super.onBackPressed();
         Log.e(TAG, "onBackPressed: login activity");
         LogInActivity.this.finish();
+    }
+
+
+    private void deviceSignOutCall(String deviceId) {
+        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
+        Call<DeviceSignOutResponse> call=apiInterface.postDeviceLogOutCall(deviceId);
+        call.enqueue(new Callback<DeviceSignOutResponse>() {
+            @Override
+            public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
+                try{
+
+                    if (response.isSuccessful() && response.body()!=null && response.code()==200){
+
+                        CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                        signInCall();
+                    }
+
+                    else if (response.code()==404){
+                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.SESSION_EXPIRED);
+                        LogInActivity.this.startActivity(new Intent(LogInActivity.this, LogInActivity.class));
+                        ((Activity)LogInActivity.this).finish();
+                    }
+                    else if (response.code()==500){
+                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
+                    }
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    Log.e(TAG, "Exception "+ex);
+                }
+            }
+
+
+
+            @Override
+            public void onFailure(Call<DeviceSignOutResponse> call, Throwable t) {
+                Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
+                CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
+            }
+        });
     }
 }

@@ -8,6 +8,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/dialog_device_signout.xml" value="0.27291666666666664" />
+        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/session_expired_dialog.xml" value="0.18" />
         <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.1838768115942029" />
         <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_settings.xml" value="0.2421875" />
       </map>

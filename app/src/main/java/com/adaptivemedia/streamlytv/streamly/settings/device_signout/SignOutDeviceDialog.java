@@ -97,7 +97,7 @@ public class SignOutDeviceDialog extends Dialog {
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
                 try{
 
-                  if (response.isSuccessful() && response.body()!=null && response.code()==200){
+                    if (response.isSuccessful() && response.body()!=null && response.code()==200){
 
                         CommonUtility.showToast(context,response.body().getMessage());
                         loginAgain();
