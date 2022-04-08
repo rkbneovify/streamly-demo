@@ -30,7 +30,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility']]);
     }
 
     public function index()
@@ -627,4 +627,12 @@ public function myRecents(Request $request)
         ];
         return response()->json($response, 200);
        }
+
+    public function qrvisibility ()
+    {
+        $return = array(
+            'visible'=>false
+        );
+        return response()->json($return,200);
+    }
 }
