@@ -631,7 +631,7 @@ public function myRecents(Request $request)
     public function qrvisibility ()
     {
         $return = array(
-            'visible'=>true
+            'visible'=>false
         );
         return response()->json($return,200);
     }
