@@ -36,6 +36,14 @@ class SettingsVC: UIViewController {
         
         // Do any additional setup after loading the view.
         self.initialSetup()
+        ApiCall.getQRVisbility { data, status in
+            if let model = data, let data: VisbilityInfo = DataParser.parseReponseToModel(model) {
+                Utility.setBoolInUserDefaultData(value: data.visible ?? false, key: Constant.UserDefault.isVisibility)
+                self.collectionView.reloadData()
+            }
+        } failure: { error, data, statusCode in
+            print(error?.localizedDescription ?? "")
+        }
         
     }
     
@@ -114,7 +122,11 @@ extension SettingsVC:UICollectionViewDelegate, UICollectionViewDelegateFlowLayou
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        indexPath.item == 1 ? Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? CGSize(width: 282, height: 280) : .zero : CGSize(width: 282, height: 280)
+        return indexPath.item == 1 ? Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? CGSize(width: 282, height: 280) : .zero : CGSize(width: 282, height: 280)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? 0 : 10
     }
 }
 
