@@ -166,6 +166,13 @@ open class ApiCall {
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getQrCodeData.rawValue, method: .get, headers: headers, parameters: nil)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
+    
+    @discardableResult
+    public static func getQRVisbility(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let headers = ["Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.qrVisibility.rawValue, method: .get, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
 
     @discardableResult
     public static func getQRDataForLogin(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {

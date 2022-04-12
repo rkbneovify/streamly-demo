@@ -70,6 +70,7 @@ enum API:String {
     case entryLogin         = "login/entry/login"
     case mobileDeviceScanCode = "login/scan/qrcode"
     case personalDeviceName = "auth/personaldevicename"
+    case qrVisibility = "auth/qrvisibility"
 }
 
 /// for settings childView

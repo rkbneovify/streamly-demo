@@ -137,6 +137,7 @@ class Constant: NSObject
         static let mypersonaldeviceid = "Mypersonaldeviceid"
         static let isDeviceNameAdded = "isDeviceNameAdded"
         static let myDeviceType = "myDeviceType"
+        static let isVisibility = "qrvisibility"
     }
 
     //MARK:-: Constant Url & Keys

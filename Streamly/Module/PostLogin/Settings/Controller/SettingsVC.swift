@@ -100,7 +100,7 @@ extension SettingsVC:UICollectionViewDataSource
 
 // MARK: Delegate
 
-extension SettingsVC:UICollectionViewDelegate {
+extension SettingsVC:UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? SettingsGridCell else { fatalError("Expected to display a `SettingsGridCell`.") }
         cell.configureCell(itemname: itemArray[indexPath.item],tag: indexPath.item)
@@ -111,6 +111,10 @@ extension SettingsVC:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.selectItem(indexPath.item)
         
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        indexPath.item == 1 ? Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? CGSize(width: 282, height: 280) : .zero : CGSize(width: 282, height: 280)
     }
 }
 

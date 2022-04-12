@@ -62,7 +62,23 @@ class LoginVC: UIViewController {
         // Do any additional setup after loading the view.
         self.initialSetup()
         self.remeberMeFlag = false
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        ApiCall.getQRVisbility { data, status in
+            if let model = data, let data: VisbilityInfo = DataParser.parseReponseToModel(model) {
+                Utility.setBoolInUserDefaultData(value: data.visible ?? false, key: Constant.UserDefault.isVisibility)
+                self.showORHideVisibility(isShow: data.visible ?? false)
+            }
+        } failure: { error, data, statusCode in
+            print(error?.localizedDescription ?? "")
+        }
+    }
+    
+    func showORHideVisibility(isShow: Bool) {
+        loginWithPasscode.isHidden = !isShow
+        loginWithQRButton.isHidden = !isShow
     }
 
     //MARK: Helpers

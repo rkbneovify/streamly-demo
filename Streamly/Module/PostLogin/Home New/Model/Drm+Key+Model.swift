@@ -24,7 +24,6 @@ struct DrmKey : Codable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         data = try values.decodeIfPresent(String.self, forKey: .data)
         success = try values.decodeIfPresent(Bool.self, forKey: .success)
-
     }
 }
 

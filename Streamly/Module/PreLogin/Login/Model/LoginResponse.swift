@@ -194,3 +194,16 @@ struct FailedResponse: Codable {
        
     }
 }
+
+struct VisbilityInfo: Codable {
+    var visible: Bool?
+    
+    enum CodingKeys : String, CodingKey {
+        case visible
+    }
+    
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        visible = try values.decodeIfPresent(Bool.self, forKey: .visible)
+    }
+}
