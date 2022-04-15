@@ -45,7 +45,7 @@ public class ConstantUtility {
 
     public static final String CHECK_INTERNET_CONNECTION = "NO INTERNET, Please Check Your Internet Connection.";
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
-    public static final String QRVISIBILITY_KEY_VALUE = "qrvisibility boolean value";
+    public static final String QRVISIBILITY_KEY_VALUE = "qrvisibility_boolean_value";
 }
 
 

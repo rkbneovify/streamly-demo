@@ -1,6 +1,8 @@
 package com.adaptivemedia.streamlytv.streamly.log_in;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -79,10 +81,12 @@ public class LogInActivity extends FragmentActivity {
                 if (response.body()!=null && response.body().getVisible()) {
                     btnHotelLogin .setVisibility(View.VISIBLE);
                     btnLoginUsingPasscode.setVisibility(View.VISIBLE);
+                    btnTermsUses.setVisibility(View.VISIBLE);
                 }
                 else {
                     btnHotelLogin .setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
+                    btnTermsUses.setVisibility(View.GONE);
                 }
             }
 
@@ -132,8 +136,27 @@ public class LogInActivity extends FragmentActivity {
         btnRegisterView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (TokenStorage.readBarcodeVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE)) {
+                    startActivity(new Intent(LogInActivity.this, QRCodeActivity.class));
+                }else{
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this);
+                            dialog.setTitle("Register Now");
+                            dialog.setMessage(getString(R.string.open_link_browser) + "\n" + "https://streamlytv.com/");
 
-                startActivity(new Intent(LogInActivity.this, QRCodeActivity.class));
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Continue with delete operation
+                                    dialog.dismiss();
+
+
+                                }
+                            });
+                            dialog.show();
+                    dialog.setCancelable(true);
+                }
+
 
                 /*Toast.makeText(LogInActivity.this, "Please go to "+ ApiConfig.BASE_URL
                         +" for creating new account", Toast.LENGTH_SHORT).show();*/

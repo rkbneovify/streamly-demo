@@ -23,7 +23,7 @@ public class ApiConfig {
 
     public static final String BASE_URL_HOTEL="https://streamlytest.streamlytv.com";
 
-    public static final String IP_URL="http://ip-api.com";
+    public static final String IP_URL="http://ipapi.co";
 
 //    public static final String WEB_URL="http://100.26.190.92";
 //    public static final String BASE_URL=WEB_URL+"/api/auth/";

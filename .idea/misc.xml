@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="CMakeSettings">
-    <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
-    </configurations>
-  </component>
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/drawable/next_button_background.xml" value="0.3505" />
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/drawable/signin_focused.xml" value="0.3505" />
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.15898825654923215" />
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/activity_personal_device_name.xml" value="0.25" />
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/dialog_device_signout.xml" value="0.27291666666666664" />
-        <entry key="..\:/Oodles/AndroidProject/streamly/app/src/main/res/layout/session_expired_dialog.xml" value="0.18" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.1838768115942029" />
-        <entry key="..\:/oodles_credentials/project_streamly/streamly/app/src/main/res/layout/activity_settings.xml" value="0.2421875" />
+        <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_q_r_code.xml" value="0.2" />
       </map>
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/out" />
-  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="16" project-jdk-type="JavaSDK" />
 </project>

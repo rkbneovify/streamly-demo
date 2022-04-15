@@ -153,4 +153,9 @@ public class TokenStorage {
         editor.putBoolean( access_token,savedVisibleKey);
         editor.apply();
     }
+
+    public static Boolean readBarcodeVisible(Context context, String access_token) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(access_token, false);
+    }
 }

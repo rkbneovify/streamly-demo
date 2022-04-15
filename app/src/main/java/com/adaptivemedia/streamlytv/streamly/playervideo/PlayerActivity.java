@@ -1,6 +1,7 @@
 package com.adaptivemedia.streamlytv.streamly.playervideo;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -70,6 +72,8 @@ import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiResponse;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,6 +144,13 @@ public class PlayerActivity extends FragmentActivity {
         playerView.setUseController(false);
         dialog = CommonUtility.custom_loader(this);
 
+//        playerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mediaPlayer) {
+//                mediaPlayer.setScreenOnWhilePlaying(false);
+//            }
+//        });
+
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         params = new Bundle();
@@ -205,29 +216,31 @@ public class PlayerActivity extends FragmentActivity {
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         Log.e(TAG, "IP_Address: " + ip);
+        ip = getIpAddress();
+        Log.e(TAG, "IP_Address: " + ip);
+        ip = "157.42.78.63";
 //        157.42.78.63
 
 
         IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
-        ipViewModel.getLatLong("57.42.78.63", PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
+        ipViewModel.getLatLong(ip, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
             public void onChanged(ApiResponse apiResponse) {
-                IpModel ipModel = (IpModel) apiResponse.getApiResponse();
+                IpDataModel ipModel = (IpDataModel) apiResponse.getApiResponse();
                 switch (apiResponse.getResponseCode()) {
                     case 200:
-                        Log.e(TAG, "ipGetStatus= " + ipModel.getStatus());
-                        if (ipModel.getStatus().equals("fail")) {
-                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.IPNOTVALID);
-                            Log.e(TAG, "emulator IP is not valid for getting coordinate");
+                        if (ipModel.getError()) {
+                            CommonUtility.showToast(PlayerActivity.this, ipModel.getReason());
+                            Log.e(TAG, ipModel.getReason());
                             finish();
                         } else {
-                            Double dbLat = ipModel.getLat();
-                            Double dblon = ipModel.getLon();
+                            Double dbLat = ipModel.getLatitude();
+                            Double dblon = ipModel.getLongitude();
                             postGeofenceCall(dbLat, dblon);
                         }
                         break;
                     case 401:
-                        CommonUtility.showToast(PlayerActivity.this, ipModel.getMessage());
+                        CommonUtility.showToast(PlayerActivity.this, ipModel.getReason());
                         break;
                     case 403:
                         CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
@@ -243,6 +256,30 @@ public class PlayerActivity extends FragmentActivity {
             }
         });
 
+    }
+
+    public String getIpAddress() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext()
+                .getSystemService(WIFI_SERVICE);
+
+        String ipAddress = intToInetAddress(wifiManager.getDhcpInfo().ipAddress).toString();
+
+        ipAddress = ipAddress.substring(1);
+
+        return ipAddress;
+    }
+
+    public InetAddress intToInetAddress(int hostAddress) {
+        byte[] addressBytes = { (byte)(0xff & hostAddress),
+                (byte)(0xff & (hostAddress >> 8)),
+                (byte)(0xff & (hostAddress >> 16)),
+                (byte)(0xff & (hostAddress >> 24)) };
+
+        try {
+            return InetAddress.getByAddress(addressBytes);
+        } catch (UnknownHostException e) {
+            throw new AssertionError();
+        }
     }
 
 

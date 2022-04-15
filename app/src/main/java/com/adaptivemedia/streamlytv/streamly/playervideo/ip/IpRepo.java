@@ -23,14 +23,14 @@ public class IpRepo {
         final MutableLiveData<ApiResponse> mutableLiveData=new MutableLiveData<>();
 
         ApiInterface apiInterface= ApiClient.getIPClient().create(ApiInterface.class);
-        apiInterface.getLatLong(IP_Address).enqueue(new Callback<IpModel>() {
+        apiInterface.getLatLong(IP_Address).enqueue(new Callback<IpDataModel>() {
             @Override
-            public void onResponse(Call<IpModel> call, Response<IpModel> response) {
+            public void onResponse(Call<IpDataModel> call, Response<IpDataModel> response) {
                 try{
                     Log.e(TAG, "response_ip "+response);
                     if (response.isSuccessful()) {
                         mutableLiveData.postValue(new ApiResponse(response.body(),response.code()));
-                        Log.e(TAG, "success "+response);
+                        Log.e(TAG, "success "+response.body());
                     }else {
                         Log.e(TAG, "elseResponse "+response);
                         mutableLiveData.postValue(new ApiResponse(response.body(),response.code()));
@@ -43,7 +43,7 @@ public class IpRepo {
             }
 
             @Override
-            public void onFailure(Call<IpModel> call, Throwable t) {
+            public void onFailure(Call<IpDataModel> call, Throwable t) {
                 Log.e(TAG, "response_error "+t.getLocalizedMessage());
                 CommonUtility.showToast(context,ConstantUtility.SERVER_ISSUE);
             }

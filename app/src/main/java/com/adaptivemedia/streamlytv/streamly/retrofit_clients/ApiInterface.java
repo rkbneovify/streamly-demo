@@ -14,6 +14,7 @@ import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLogInModel;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.adaptivemedia.streamlytv.streamly.playervideo.drm.DrmKeyModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceModel;
+import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.zipcode.OutstationLocationModel;
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
@@ -181,8 +182,8 @@ public interface ApiInterface {
 //    http://ip-api.com/json/['your ip']
 
     @Headers("Accept: application/json")
-    @GET("json/{your_ip}")
-    Call<IpModel> getLatLong(@Path("your_ip") String your_ip);
+    @GET("/{your_ip}/json/")
+    Call<IpDataModel> getLatLong(@Path("your_ip") String your_ip);
 
 //    https://streamlytv.com/api/auth/geofence"
 

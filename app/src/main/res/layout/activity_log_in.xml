@@ -147,6 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginBottom="@dimen/_4sdp"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
 
@@ -170,7 +171,8 @@
                 android:layout_width="@dimen/_160sdp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_4sdp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
 
                 <Button

@@ -10,10 +10,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.View
 import android.view.Window
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentActivity
 import com.adaptivemedia.streamlytv.streamly.MainActivity
@@ -33,7 +30,7 @@ import retrofit2.Response
 
 class PersonalDeviceName : FragmentActivity() {
     private lateinit var personalDeviceName: EditText
-    private lateinit var nextImageButton: AppCompatButton
+    private lateinit var nextImageButton: Button
     private lateinit var logoutButton: TextView
     private lateinit var loadingProgressBar: ProgressBar
     private lateinit var context:Context;

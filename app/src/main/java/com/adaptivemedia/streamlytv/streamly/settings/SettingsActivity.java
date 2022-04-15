@@ -16,15 +16,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
-import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface;
 import com.adaptivemedia.streamlytv.streamly.settings.privacy.PrivacyDialog;
@@ -44,7 +44,7 @@ import retrofit2.Response;
 public class SettingsActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = SettingsActivity.class.getSimpleName();
     private TextView textChannels;
-    private LinearLayout account,registerDevice,support,privacy,signOut;
+    private LinearLayout account, registerDevice, support, privacy, signOut;
 
     //#neovifyissueresolved28sep
     private Dialog pDialog;
@@ -68,25 +68,25 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 //        account.requestFocus();
     }
 
-    private void initViews(){
-        textChannels=findViewById(R.id.text_channels);
-        account=findViewById(R.id.account);
-        registerDevice=findViewById(R.id.register_device);
-        support=findViewById(R.id.support);
-        privacy=findViewById(R.id.privacy);
-        signOut=findViewById(R.id.sign_out);
+    private void initViews() {
+        textChannels = findViewById(R.id.text_channels);
+        account = findViewById(R.id.account);
+        registerDevice = findViewById(R.id.register_device);
+        support = findViewById(R.id.support);
+        privacy = findViewById(R.id.privacy);
+        signOut = findViewById(R.id.sign_out);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean  savedVisibleKey= preferences.getBoolean("savedVisibleKey", false);
-        if(savedVisibleKey == true){
+        boolean savedVisibleKey = TokenStorage.readBarcodeVisible(this, ConstantUtility.QRVISIBILITY_KEY_VALUE);
+        if (savedVisibleKey == true) {
             registerDevice.setVisibility(View.VISIBLE);
-
-        }
-        else{
+            privacy.setVisibility(View.VISIBLE);
+        } else {
             registerDevice.setVisibility(View.GONE);
+            privacy.setVisibility(View.GONE);
         }
 
-        }
+    }
 
     private void initListeners() {
         account.setOnClickListener(this);
@@ -200,7 +200,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                         buildDate.setText(response.body().getData().getUpdatedAt());
 
                     } else if (response.code() == 401) {
-                        if(response.errorBody()!=null){
+                        if (response.errorBody() != null) {
                             SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(SettingsActivity.this);
                             sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             sessionExpiredDialog.setCancelable(false);
@@ -223,6 +223,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 }
                 progressBar.setVisibility(View.INVISIBLE);
             }
+
             @Override
             public void onFailure(Call<ProfileModel> call, Throwable t) {
                 Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());

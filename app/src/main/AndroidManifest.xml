@@ -53,9 +53,8 @@
         <activity android:name="com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity" />
         <activity
             android:name="com.adaptivemedia.streamlytv.streamly.splash.SplashActivity"
-            android:banner="@drawable/app_icon_tv"
-            android:icon="@drawable/app_icon_tv"
-            android:logo="@drawable/app_icon_tv">
+            android:banner="@drawable/resized"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
