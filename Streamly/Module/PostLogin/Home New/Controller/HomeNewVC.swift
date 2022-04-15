@@ -349,7 +349,7 @@ class HomeNewVC: UIViewController {
                     if viewModel.isPageExist {
                         if let indexPath = self.lastIndexPath {
                             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                                collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                             }
                         }
                     }
@@ -373,7 +373,7 @@ class HomeNewVC: UIViewController {
                     if viewModel.isPageExist {
                         if let indexPath = self.lastIndexPath {
                             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                                collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                             }
                         }
                     }
@@ -388,7 +388,7 @@ class HomeNewVC: UIViewController {
                     if viewModel.isPageExist {
                         if let indexPath = self.lastIndexPath {
                             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                                collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                             }
                         }
                     }
@@ -430,7 +430,7 @@ class HomeNewVC: UIViewController {
                 if viewModel.isPageExist {
                     if let indexPath = self.lastIndexPath {
                         if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                            collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                         }
                     }
                 }
