@@ -66,6 +66,7 @@ class LoginVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        showORHideVisibility(isShow: false)
         ApiCall.getQRVisbility { data, status in
             if let model = data, let data: VisbilityInfo = DataParser.parseReponseToModel(model) {
                 Utility.setBoolInUserDefaultData(value: data.visible ?? false, key: Constant.UserDefault.isVisibility)
