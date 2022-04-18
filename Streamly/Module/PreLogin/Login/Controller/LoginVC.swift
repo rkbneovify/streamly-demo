@@ -218,12 +218,14 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 5
         {
-           /* let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-            popUPViewsVC.isFetchData = ( qrData == nil) ? false : true
-            popUPViewsVC.qrData = self.qrData
-            self.present(popUPViewsVC, animated:true, completion:nil)
-            */
-            showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
+            if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) {
+                let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+                popUPViewsVC.isFetchData = ( qrData == nil) ? false : true
+                popUPViewsVC.qrData = self.qrData
+                self.present(popUPViewsVC, animated:true, completion:nil)
+            } else {
+                showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
+            }
 
         }
         else if sender.tag == 6
