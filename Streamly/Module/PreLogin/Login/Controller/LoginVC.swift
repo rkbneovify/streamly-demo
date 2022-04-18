@@ -80,6 +80,7 @@ class LoginVC: UIViewController {
     func showORHideVisibility(isShow: Bool) {
         loginWithPasscode.isHidden = !isShow
         loginWithQRButton.isHidden = !isShow
+        terms.isHidden = !isShow
     }
 
     //MARK: Helpers
@@ -217,11 +218,12 @@ class LoginVC: UIViewController {
         }
         else if sender.tag == 5
         {
-            let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+           /* let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
             popUPViewsVC.isFetchData = ( qrData == nil) ? false : true
             popUPViewsVC.qrData = self.qrData
             self.present(popUPViewsVC, animated:true, completion:nil)
-
+            */
+            showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
 
         }
         else if sender.tag == 6

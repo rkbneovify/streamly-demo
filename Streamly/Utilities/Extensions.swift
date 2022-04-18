@@ -84,9 +84,9 @@ extension UIViewController
     }
 
   
-  func showAlert(withMessage message: String, setTwoButton: Bool? = false , setFirstButtonTitle: String? = "Ok" , setSecondButtonTitle: String? = "No" , handler: ((UIAlertAction) -> Void)?) {
+    func showAlert(title: String = appName,withMessage message: String, setTwoButton: Bool? = false , setFirstButtonTitle: String? = "Ok" , setSecondButtonTitle: String? = "No" , handler: ((UIAlertAction) -> Void)?) {
 
-        let alert = UIAlertController(title: appName, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         if (setTwoButton == true) {
             alert.addAction(UIAlertAction(title: setSecondButtonTitle, style: .default, handler:nil))
