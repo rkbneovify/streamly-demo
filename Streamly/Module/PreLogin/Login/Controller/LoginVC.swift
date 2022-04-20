@@ -18,7 +18,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var registerNowBtn:  UIButton!
     @IBOutlet weak var signBtn:         GradientBUtton!
     @IBOutlet weak var terms:           UIButton!
-
+    @IBOutlet weak var dontHaveAClabel: UILabel!
     @IBOutlet weak var loginWithPasscode: GradientBUtton!
     @IBOutlet weak var loginWithQRButton: UIButton!
     
@@ -81,6 +81,8 @@ class LoginVC: UIViewController {
         loginWithPasscode.isHidden = !isShow
         loginWithQRButton.isHidden = !isShow
         terms.isHidden = !isShow
+        registerNowBtn.isHidden = !isShow
+        dontHaveAClabel.isHidden = !isShow
     }
 
     //MARK: Helpers
