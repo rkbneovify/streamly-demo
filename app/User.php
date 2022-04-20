@@ -78,10 +78,12 @@ class User extends Authenticatable implements JWTSubject
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
             'password' => 'required|max:255',
+            'zipcode' => 'required|regex:/^[0-9]{3,7}$/',
+            'zipcode'=>'required|exists:zipcodes,zipcode,status,1',
             'dob'=>'date|date_format:Y-m-d',
             'gender'=>'max:1',
             
-        ]);
+        ],['zipcode.exists'=>'Unfortunately service is not yet available for the zip code you submitted.']);
     }
 
     public static function updateValidator(Request $request)
