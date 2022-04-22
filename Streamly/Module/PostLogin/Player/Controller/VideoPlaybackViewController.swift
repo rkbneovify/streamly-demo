@@ -449,11 +449,17 @@ extension VideoPlaybackViewController
             case .failed:
                 debugPrint("failed")
                 handleErrorWithMessage(self.playerViewController?.player?.currentItem?.error?.localizedDescription, error:self.playerViewController?.player?.currentItem?.error)
+                showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                    self.dismiss(animated: true, completion: nil)
+                }
             // Player item failed. See error.
             case .unknown:
                 debugPrint("unknown")
                 handleErrorWithMessage(self.playerViewController?.player?.currentItem?.error?.localizedDescription, error:self.playerViewController?.player?.currentItem?.error)
             // Player item is not yet ready.
+                showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                    self.dismiss(animated: true, completion: nil)
+                }
             @unknown default:
                 debugPrint("hello")
             }
