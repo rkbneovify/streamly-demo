@@ -178,7 +178,8 @@ width: 100px;
 						{{-- <img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"> --}}
 						<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding: 1vw'  class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 						
-						<p style=" max-width: 20ch;
+						<p style=" max-width: auto;
+						padding: 0px 10px;
 						overflow: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;">{{  $channeldet->StationName}}</p></a>

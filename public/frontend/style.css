@@ -10990,3 +10990,6 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
     width: 95px!important;
   }
 }
+.section-heading {
+  margin-top: 0.5rem;
+}
