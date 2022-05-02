@@ -142,7 +142,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     showSpinner(onView: self.view)
                     if let lasIndexPath = lastIndexPath {
                         if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                        collectionView.reloadSections(IndexSet(integer: lasIndexPath.section ))
+                        collectionView.reloadItems(at: [lasIndexPath])
                         }
                     }
                     group.enter()
@@ -193,6 +193,16 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         } else {
             return true
         }
+    }
+    
+    func indexPathForPreferredFocusedView(in collectionView: UICollectionView) -> IndexPath? {
+        return self.lastIndexPath
+    }
+
+    private func moveFocus(to indexPath: IndexPath) {
+        self.lastIndexPath = indexPath
+        collectionView.setNeedsFocusUpdate()
+        //collectionView.updateFocusIfNeeded() //can update it now if you need it to
     }
 
     func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
@@ -311,10 +321,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             }
 
         }
-    }
-    
-    private func makeCellVisible(_ cell: ProgramCollectionViewCell) {
-        
     }
 }
 
