@@ -196,12 +196,17 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
     }
     
     func indexPathForPreferredFocusedView(in collectionView: UICollectionView) -> IndexPath? {
-        return self.lastIndexPath
+        if let indexPath = self.lastIndexPath, collectionView.cellForItem(at: indexPath) is ChannelCollectionViewCell {
+            return indexPath
+        }
+        return nil
     }
 
     private func moveFocus(to indexPath: IndexPath) {
-        self.lastIndexPath = indexPath
-        collectionView.setNeedsFocusUpdate()
+        if collectionView.cellForItem(at: indexPath) is ChannelCollectionViewCell {
+            self.lastIndexPath = indexPath
+            collectionView.setNeedsFocusUpdate()
+        }
         //collectionView.updateFocusIfNeeded() //can update it now if you need it to
     }
 
