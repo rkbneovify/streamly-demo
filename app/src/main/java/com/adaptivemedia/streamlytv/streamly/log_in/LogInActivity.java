@@ -10,6 +10,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class LogInActivity extends FragmentActivity {
     private EditText edUserName, edPassword;
     private TextView txtNeedHelp;
     private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
+    private CheckBox rememberMeCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +107,15 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-//        edUserName.setText("vikas.saini1@oodles.io");
+    edUserName.setText("vikas.saini1@oodles.io");
+    //    edUserName.setText("mina@neovix.com");
+   //    edUserName.setText("pm13426@gmail.com");
+  //      edPassword.setText("Piyush123456789");
+   //     edUserName.setText("sahil.kumar@oodlestechnologies.com");
+     //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
-//        edPassword.setText("123456789");
+  //     edUserName.setText("streamly1@yopmail.com");
+    edPassword.setText("123456789");
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,6 +231,7 @@ public class LogInActivity extends FragmentActivity {
         btnRegisterView = findViewById(R.id.btn_register_view);
         btnTermsUses = findViewById(R.id.btn_terms_uses);
         btnLoginUsingPasscode = findViewById(R.id.btn_login_using_passcode_uses);
+        rememberMeCheck = findViewById(R.id.checkbox_remember);
     }
 
     private void signInCall() {
@@ -251,6 +260,7 @@ public class LogInActivity extends FragmentActivity {
 
                             TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST, json);
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
+                            TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
                             TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
                             TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
                             TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
@@ -267,11 +277,16 @@ public class LogInActivity extends FragmentActivity {
                             }
                             finish();
 
-                            edUserName.setText("");
-                            edPassword.setText("");
+                            if(!rememberMeCheck.isChecked()){
+                                TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
+                                ConstantUtility.isRemember = false;
+                            }else{
+                                ConstantUtility.isRemember = true;
+                            }
                         } else if (response.body().getUserRole().equals("user")) {
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
                             TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
                             TokenStorage.savePersonalDeviceID(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
@@ -283,6 +298,9 @@ public class LogInActivity extends FragmentActivity {
                                 startActivity(new Intent(LogInActivity.this, MainActivity.class));
                             }
                             finish();
+                            if(!rememberMeCheck.isChecked()){
+                                 TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
+                            }
                         }
 
 
@@ -292,6 +310,8 @@ public class LogInActivity extends FragmentActivity {
                         sessionExpiredDialog.setCancelable(false);
                         sessionExpiredDialog.show();
                     } else if (response.code() == 429) {
+
+                        Log.i(TAG, "onResponse:429  " + response.body());
 
                         if (response.errorBody() != null) {
                             NewLoginErrorResponse logInModel = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
@@ -358,7 +378,7 @@ public class LogInActivity extends FragmentActivity {
 
                     if (response.isSuccessful() && response.body()!=null && response.code()==200){
 
-                        CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                     //   CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         signInCall();
                     }
 

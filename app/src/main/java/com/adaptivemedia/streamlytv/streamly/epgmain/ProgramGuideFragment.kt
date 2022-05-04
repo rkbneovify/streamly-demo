@@ -104,12 +104,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     private var created = false
 
     override val programGuideGrid get() = view?.findViewById<ProgramGuideGridView<T>>(R.id.programguide_grid)!!
-//    lateinit var programGuideGrids: ProgramGuideFragment<T>
+    //    lateinit var programGuideGrids: ProgramGuideFragment<T>
     private val timeRow get() = view?.findViewById<ProgramGuideTimelineRow>(R.id.programguide_time_row)
     private val currentDateView get() = view?.findViewById<TextView>(R.id.programguide_current_date)
     private val jumpToLive get() = view?.findViewById<TextView>(R.id.programguide_jump_to_live)
     private val currentTimeIndicator get() = view?.findViewById<FrameLayout>(R.id.programguide_current_time_indicator)
-//    private val timeOfDayFilter get() = view?.findViewById<View>(R.id.programguide_time_of_day_filter)
+    //    private val timeOfDayFilter get() = view?.findViewById<View>(R.id.programguide_time_of_day_filter)
     private val dayFilter get() = view?.findViewById<View>(R.id.programguide_day_filter)
     private val focusCatcher get() = view?.findViewById<View>(R.id.programguide_focus_catcher)
     private val contentAnimator get() = view?.findViewById<ViewAnimator>(R.id.programguide_content_animator)
@@ -176,7 +176,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         // Overriding the layout ID is also possible, so that if your layout naming follows a specific
         // structure, you are not obligated to use the name we use in the library.
         val view = inflater.inflate(OVERRIDE_LAYOUT_ID
-                ?: R.layout.programguide_fragment, container, false)
+            ?: R.layout.programguide_fragment, container, false)
 //        setupFilters(view)
         setupComponents(view)
         return view
@@ -308,8 +308,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (!created) {
             viewportMillis = gridWidth * HOUR_IN_MILLIS / widthPerHour
             timelineStartMillis = ProgramGuideUtil.floorTime(
-                    System.currentTimeMillis() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
-                    HALF_HOUR_IN_MILLIS
+                System.currentTimeMillis() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
+                HALF_HOUR_IN_MILLIS
             )
             programGuideManager.updateInitialTimeRange(timelineStartMillis, timelineStartMillis + viewportMillis
 
@@ -431,19 +431,19 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         } else {
             if (currentTimeIndicatorWidth == 0) {
                 currentTimeIndicator?.measure(
-                        View.MeasureSpec.UNSPECIFIED,
-                        View.MeasureSpec.UNSPECIFIED
+                    View.MeasureSpec.UNSPECIFIED,
+                    View.MeasureSpec.UNSPECIFIED
                 )
                 currentTimeIndicatorWidth = currentTimeIndicator?.measuredWidth ?: 0
             }
 
 
             currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
-           /* if (currentTimeIndicator?.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-                currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
-            } else {
-                currentTimeIndicator?.translationX = -offset - currentTimeIndicatorWidth / 2f
-            }*/
+            /* if (currentTimeIndicator?.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+                 currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
+             } else {
+                 currentTimeIndicator?.translationX = -offset - currentTimeIndicatorWidth / 2f
+             }*/
 
             currentTimeIndicator?.visibility = View.VISIBLE
             setJumpToLiveButtonVisible(currentState != State.Loading && offset > gridWidth)
@@ -508,10 +508,10 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      */
     @MainThread
     fun setData(
-            newChannels: List<ProgramGuideChannel>,
-            newChannelEntries: Map<String, List<ProgramGuideSchedule<T>>>,
-            selectedDate: LocalDate,
-            days: Int
+        newChannels: List<ProgramGuideChannel>,
+        newChannelEntries: Map<String, List<ProgramGuideSchedule<T>>>,
+        selectedDate: LocalDate,
+        days: Int
     ) {
         programGuideManager.setData(newChannels, newChannelEntries, selectedDate, DISPLAY_TIMEZONE, days)
     }
@@ -560,24 +560,24 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                     var childAttachStateChangeListener: RecyclerView.OnChildAttachStateChangeListener? = null
                     childAttachStateChangeListener = object : RecyclerView.OnChildAttachStateChangeListener {
 
-                            private var didPostCallback = false
+                        private var didPostCallback = false
 
-                            override fun onChildViewDetachedFromWindow(view: View) {
-                                // Unused.
-                            }
-
-                            override fun onChildViewAttachedToWindow(view: View) {
-                                childAttachStateChangeListener?.let {
-                                    timeRow?.removeOnChildAttachStateChangeListener(it)
-                                }
-                                if (!willUseScrollListener && !didPostCallback) {
-                                    Log.v(TAG, "Scroll listener will not fire, posting idle scroll runnable.")
-                                    timeRow?.postDelayed(idleScrollRunnable, 50L)
-                                    didPostCallback = true
-                                }
-                            }
-
+                        override fun onChildViewDetachedFromWindow(view: View) {
+                            // Unused.
                         }
+
+                        override fun onChildViewAttachedToWindow(view: View) {
+                            childAttachStateChangeListener?.let {
+                                timeRow?.removeOnChildAttachStateChangeListener(it)
+                            }
+                            if (!willUseScrollListener && !didPostCallback) {
+                                Log.v(TAG, "Scroll listener will not fire, posting idle scroll runnable.")
+                                timeRow?.postDelayed(idleScrollRunnable, 50L)
+                                didPostCallback = true
+                            }
+                        }
+
+                    }
                     timeRow?.addOnChildAttachStateChangeListener(childAttachStateChangeListener)
 
                 }
@@ -626,8 +626,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
     private fun updateTimeline() {
         timelineStartMillis = ProgramGuideUtil.floorTime(
-                programGuideManager.getStartTime() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
-                HALF_HOUR_IN_MILLIS
+            programGuideManager.getStartTime() - MIN_DURATION_FROM_START_TIME_TO_CURRENT_TIME,
+            HALF_HOUR_IN_MILLIS
         )
         val timelineDifference = programGuideManager.getStartTime() - timelineStartMillis
         timelineAdjustmentPixels = ProgramGuideUtil.convertMillisToPixel(timelineDifference)
@@ -788,3 +788,4 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
     }
 }
+

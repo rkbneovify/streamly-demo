@@ -59,7 +59,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         initViews();
         authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
-
+        ConstantUtility.isRemember = false;
         Log.e(TAG, "authToken " + authToken);
         Log.i(TAG, "authToken " + authToken);
 

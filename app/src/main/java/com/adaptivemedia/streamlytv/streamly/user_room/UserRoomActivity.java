@@ -147,7 +147,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         searchRoomEd = findViewById(R.id.ed_search_room);
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
-        authToken = TokenStorage.readSharedTokenPasscode(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
+        authToken = TokenStorage.readSharedToken(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN, null);
 
         Log.i(TAG, "onCreate: UserRoomActivity " + authToken);
         initViews();

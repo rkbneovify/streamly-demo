@@ -8,6 +8,8 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.Window
 import android.widget.*
@@ -139,9 +141,9 @@ class PersonalDeviceName : FragmentActivity() {
                     ConstantUtility.SESSION_ID,
                     null
                 );
-                val authToken = NetworkKeys.KEY_BEARER + TokenStorage.readSharedTokenPasscode(
+                val authToken = NetworkKeys.KEY_BEARER + TokenStorage.readSharedToken(
                     this@PersonalDeviceName,
-                    ConstantUtility.AUTH_TOKEN_PASSCODE,
+                    ConstantUtility.AUTH_TOKEN,
                     null
                 )
                 var deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
@@ -154,6 +156,7 @@ class PersonalDeviceName : FragmentActivity() {
                 var data = HashMap<String, String>()
                 data.set("devicename", deviceName);
                 data.set("device_type", deviceID);
+                Log.e("Personal ","Auth : "+authToken);
                 if (session_id != null) {
                     val call = apiInterface.setPersonalDeviceName(authToken, personalDeviceId, data)
                     call.enqueue(object : retrofit2.Callback<PersonalDeviceNameDataModel> {
@@ -174,16 +177,12 @@ class PersonalDeviceName : FragmentActivity() {
                                     ConstantUtility.PERSONAL_DEVICE_NAME,
                                     deviceName
                                 )
-                                Toast.makeText(
-                                    this@PersonalDeviceName,
-                                    response.message(),
-                                    Toast.LENGTH_SHORT
-                                ).show()
                                 val userRole = readUserRole(
                                     this@PersonalDeviceName,
                                     ConstantUtility.USER_ROLE,
                                     ""
                                 )
+                              //  TokenStorage.savedSharedTokenPassCode(this@PersonalDeviceName, ConstantUtility.AUTH_TOKEN_PASSCODE,ConstantUtility.AUTH_TOKEN_PASSCODE);
                                 if (userRole != "" && userRole == "user") {
                                     startActivity(
                                         Intent(
@@ -191,6 +190,11 @@ class PersonalDeviceName : FragmentActivity() {
                                             MainActivity::class.java
                                         )
                                     )
+                                    /*CommonUtility.showToast(
+                                            this@PersonalDeviceName,
+                                            response.message()
+                                    )
+                                    Log.e("After","data : "+response.body());*/
                                 } else {
                                     startActivity(
                                         Intent(
@@ -198,7 +202,17 @@ class PersonalDeviceName : FragmentActivity() {
                                             UserRoomActivity::class.java
                                         )
                                     )
+                                    /*CommonUtility.showToast(
+                                            this@PersonalDeviceName,
+                                            response.code().toString()
+                                    )
+                                    Log.e("After","data : "+response.body());*/
                                 }
+                                /*Toast.makeText(
+                                        this@PersonalDeviceName,
+                                        response.message(),
+                                        Toast.LENGTH_SHORT
+                                ).show()*/
                                 finish()
                             } else {
                                 Toast.makeText(

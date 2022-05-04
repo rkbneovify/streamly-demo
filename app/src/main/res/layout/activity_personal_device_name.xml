@@ -71,7 +71,8 @@
                 android:textColorHint="@color/md_white_1000"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:singleLine="true"/>
 
             <View
                 android:id="@+id/view"

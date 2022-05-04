@@ -22,6 +22,7 @@ public class SplashActivity extends FragmentActivity {
     String auth_token_passcode;
     String personDeviceName;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,17 +40,21 @@ public class SplashActivity extends FragmentActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (auth_token != null) {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                if (auth_token_passcode != null && personDeviceName == null ) {
+                    startActivity(new Intent(SplashActivity.this, PersonalDeviceName.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
-                }
-                else if (auth_token_passcode != null && personDeviceName != null) {
+                } else if (auth_token_passcode != null && ConstantUtility.isRemember == true && personDeviceName != null) {
                     startActivity(new Intent(SplashActivity.this, UserRoomActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
-                }else if(auth_token != null && personDeviceName == null){
-                    startActivity(new Intent(SplashActivity.this, PersonalDeviceName.class));
+                }
+                else if (auth_token_passcode != null && personDeviceName != null  && ConstantUtility.isRemember == false) {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
+                    finish();
+                }else if(auth_token_passcode == null && personDeviceName == null){
+                    startActivity(new Intent(SplashActivity.this, LogInActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
                 } else {

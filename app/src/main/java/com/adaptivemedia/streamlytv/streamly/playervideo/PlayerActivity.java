@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.drm.ExoMediaCrypto;
 import com.google.android.exoplayer2.drm.FrameworkMediaDrm;
 import com.google.android.exoplayer2.drm.HttpMediaDrmCallback;
 import com.google.android.exoplayer2.drm.MediaDrmCallback;
+import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.dash.DashMediaSource;
@@ -176,9 +177,11 @@ public class PlayerActivity extends FragmentActivity {
             drawerLayout.setVisibility(View.GONE);
         });
 
+        Log.e("Player","Token : "+authToken);
 
         getLatLong();
     }
+
 
 
     public void playNext(String channelN, String videoUrl, String channelId) {
@@ -240,6 +243,7 @@ public class PlayerActivity extends FragmentActivity {
                         }
                         break;
                     case 401:
+
                         CommonUtility.showToast(PlayerActivity.this, ipModel.getReason());
                         break;
                     case 403:
@@ -623,7 +627,7 @@ public class PlayerActivity extends FragmentActivity {
 //        dialog.show();
         Log.i(TAG, "initializePlayer: "+drmKey);
         Log.i(TAG, "initializePlayer: "+wvUrl);
-        String streamUrl = getIntent().getStringExtra("from");
+        final String streamUrl = getIntent().getStringExtra("from");
 
         String channelIdIntent = getIntent().getStringExtra("channel_id");
         if (channelIdIntent != null) {
@@ -701,6 +705,8 @@ public class PlayerActivity extends FragmentActivity {
 
         // Preapre the player with content
         player.prepare(mediaSource);
+
+
 
         player.addListener(new Player.EventListener() {
             @Override
@@ -856,6 +862,8 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onResponse(Call<ChannellistModel> call, Response<ChannellistModel> response) {
                 try {
+
+
 
                     if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
