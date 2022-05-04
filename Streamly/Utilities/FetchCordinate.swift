@@ -17,7 +17,7 @@ final class Address:NSObject, CLLocationManagerDelegate
     let locationManager = CLLocationManager() // create Location Manager object
     var latitude : Double?
     var longitude : Double?
-    
+    var callthePostAddressGeoFence: (() -> Void)?
     func cordnates()
     {
         // For use in foreground
@@ -39,11 +39,11 @@ final class Address:NSObject, CLLocationManagerDelegate
         // set the value of lat and long
         latitude = location.latitude
         longitude = location.longitude
-
+        callthePostAddressGeoFence?()
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        //debugPrint(error)
+        debugPrint(error)
     }
     
 }

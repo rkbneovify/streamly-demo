@@ -542,9 +542,9 @@ extension VideoPlaybackViewController
     
     func makeApiError(_ errorMsg:String, _ errorCode:String)
     {
-        DispatchQueue.global(qos: .background).async
-            {
-                self.viewModel.postgaError(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false,errorMsg,errorCode)
-        }
+//        DispatchQueue.global(qos: .background).async
+//            {
+//                self.viewModel.postgaError(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false,errorMsg,errorCode)
+//        }
     }
 }

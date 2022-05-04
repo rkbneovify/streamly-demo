@@ -143,6 +143,14 @@ class HomeNewVC: UIViewController {
         //self.allButton.backgroundColor = UIColor.firstGradientColor
         super.viewDidLoad()
         self.intialSetup()
+        DispatchQueue.global(qos: .background).async
+            {
+                Address.sharedInstance.callthePostAddressGeoFence = { [weak self] in
+                    guard let weak = self else { return }
+                    weak.makeApiGeoFencing()
+                }
+                self.makeApiGeoFencing()
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -157,11 +165,7 @@ class HomeNewVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.global(qos: .background).async
-            {
-                self.makeApiGeoFencing()
-                
-        }
+       
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -636,7 +640,7 @@ extension HomeNewVC:HandleError {
             }
             return
         }
-        //self.showSimpleAlertWithMessage(message)
+//        self.showSimpleAlertWithMessage(message)
     }
     
 }
