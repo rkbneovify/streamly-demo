@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface;
 import com.adaptivemedia.streamlytv.streamly.settings.privacy.PrivacyDialog;
@@ -67,6 +69,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 //        account.clearFocus();
 //        account.requestFocus();
     }
+
 
     private void initViews() {
         textChannels = findViewById(R.id.text_channels);
@@ -129,8 +132,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 break;
 
             case R.id.text_channels:
-                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
-                finish();
+                SettingsActivity.this.onBackPressed();
                 break;
             //handle multiple view click events
         }

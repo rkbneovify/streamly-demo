@@ -179,7 +179,8 @@ public class PlayerActivity extends FragmentActivity {
 
         Log.e("Player","Token : "+authToken);
 
-        getLatLong();
+        //getLatLong();
+        getDrmKey();
     }
 
 
@@ -218,6 +219,7 @@ public class PlayerActivity extends FragmentActivity {
     private void getLatLong() {
         WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        Log.e(TAG, "Calling ip address ");
         Log.e(TAG, "IP_Address: " + ip);
         ip = getIpAddress();
         Log.e(TAG, "IP_Address: " + ip);
@@ -239,6 +241,7 @@ public class PlayerActivity extends FragmentActivity {
                         } else {
                             Double dbLat = ipModel.getLatitude();
                             Double dblon = ipModel.getLongitude();
+                            Log.e(TAG, "Calling postGeo ");
                             postGeofenceCall(dbLat, dblon);
                         }
                         break;
@@ -267,6 +270,7 @@ public class PlayerActivity extends FragmentActivity {
                 .getSystemService(WIFI_SERVICE);
 
         String ipAddress = intToInetAddress(wifiManager.getDhcpInfo().ipAddress).toString();
+        Log.e(TAG, "Calling intToInet ");
 
         ipAddress = ipAddress.substring(1);
 
@@ -302,6 +306,7 @@ public class PlayerActivity extends FragmentActivity {
                 switch (apiResponse.getResponseCode()) {
                     case 200:
                         getDrmKey();
+                        Log.e(TAG, "Calling getDrm 200 ");
                         break;
                     case 401:
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
@@ -312,6 +317,7 @@ public class PlayerActivity extends FragmentActivity {
                     case 403:
                         if (item.equals("1")) {
                             getDrmKey();
+                            Log.e(TAG, "Calling getDrm 403 ");
                             item = "0";
                         } else {
                             String popMessage = "You are away from your home zip code:  click here to continue viewing.";
@@ -319,11 +325,13 @@ public class PlayerActivity extends FragmentActivity {
                                 @Override
                                 public void onExitPress() {
 //                                    calling onBackPress
+                                    Log.e(TAG, "Calling back ");
                                     PlayerActivity.this.onBackPressed();
                                 }
 
                                 @Override
                                 public void onContinuePress() {
+                                    Log.e(TAG, "Calling continue ");
 //                                    do Nothing here
                                 }
                             });

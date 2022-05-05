@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInModel;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface;
+import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 import retrofit2.Call;
@@ -85,8 +87,8 @@ public class SignOutDialog extends Dialog {
 
                     if (response.isSuccessful() && response.body()!=null && response.code()!=401){
                         CommonUtility.showToast(context,response.body().getMessage());
-                        TokenStorage.clearSharedToken(context);
                         context.startActivity(new Intent(context, LogInActivity.class));
+                        TokenStorage.clearSharedToken(context);
                         ((Activity)context).finish();
                     }else if (response.code()==401){
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);

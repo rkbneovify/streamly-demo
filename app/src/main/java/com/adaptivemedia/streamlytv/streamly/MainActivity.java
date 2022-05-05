@@ -1,7 +1,10 @@
 package com.adaptivemedia.streamlytv.streamly;
 
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -9,10 +12,19 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
+import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceModel;
+import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceViewModel;
+import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
+import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpViewModel;
+import com.adaptivemedia.streamlytv.streamly.playervideo.zipcode.ZipCodeDialog;
+import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.jakewharton.threetenabp.AndroidThreeTen;
@@ -29,8 +41,12 @@ import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +55,8 @@ import retrofit2.Response;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
-    String authToken;
+    String authToken, uniqueId;
+    String item = "0";
     private LinearLayout imageSearch;
     //    private TextView textAll,textOthers,textFamily,textComedy,
 //            textSports,textNews,textMovies,textKids,settingText,goBackText;
@@ -58,6 +75,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
 
         initViews();
+        uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         authToken = TokenStorage.readSharedToken(MainActivity.this, ConstantUtility.AUTH_TOKEN, null);
         ConstantUtility.isRemember = false;
         Log.e(TAG, "authToken " + authToken);
@@ -73,7 +91,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EPG Channels");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 //        getRecentList();
-        getChannelList();
+
+
+
+        getLatLong();
+       // getChannelList();
     }
 
 //    private void getRecentList() {
@@ -126,7 +148,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     }
 
-    private void getChannelList() {
+    public void getChannelList() {
         Log.e(TAG, "getChannelList: " + authToken);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ChannelGenre> call = apiInterface.getChannelGenre("Bearer " + authToken);
@@ -300,13 +322,136 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             case R.id.setting_text:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                finish();
                 break;
 
             case R.id.go_back_text:
                 finish();
                 break;
         }
+    }
+
+    private void getLatLong() {
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        Log.e(TAG, "IP_Address: " + ip);
+        ip = getIpAddress();
+        Log.e(TAG, "IP_Address: " + ip);
+        ip = "157.42.78.63";
+//        157.42.78.63
+
+
+        IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
+        ipViewModel.getLatLong(ip, MainActivity.this).observe(this, new Observer<ApiResponse>() {
+            @Override
+            public void onChanged(ApiResponse apiResponse) {
+                IpDataModel ipModel = (IpDataModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        if (ipModel.getError()) {
+                            CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+                            Log.e(TAG, ipModel.getReason());
+                            finish();
+                        } else {
+                            Double dbLat = ipModel.getLatitude();
+                            Double dblon = ipModel.getLongitude();
+                            postGeofenceCall(dbLat, dblon);
+                        }
+                        break;
+                    case 401:
+
+                        CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+                        break;
+                    case 403:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    case 404:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    case 500:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                }
+
+            }
+        });
+
+    }
+
+    public String getIpAddress() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext()
+                .getSystemService(WIFI_SERVICE);
+
+        String ipAddress = intToInetAddress(wifiManager.getDhcpInfo().ipAddress).toString();
+
+        ipAddress = ipAddress.substring(1);
+
+        return ipAddress;
+    }
+
+    public InetAddress intToInetAddress(int hostAddress) {
+        byte[] addressBytes = { (byte)(0xff & hostAddress),
+                (byte)(0xff & (hostAddress >> 8)),
+                (byte)(0xff & (hostAddress >> 16)),
+                (byte)(0xff & (hostAddress >> 24)) };
+
+        try {
+            return InetAddress.getByAddress(addressBytes);
+        } catch (UnknownHostException e) {
+            throw new AssertionError();
+        }
+    }
+
+    private void postGeofenceCall(Double dbLat, Double dblon) {
+        Map<String, Double> map = new HashMap<>();
+        map.put("latitude", dbLat);
+        map.put("longitude", dblon);
+//        map.put("latitude",33.88768366489836);
+//        map.put("longitude",-17.90419095752048);
+
+        GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
+        viewModel.getData(map, MainActivity.this).observe(this, new Observer<ApiResponse>() {
+            @Override
+            public void onChanged(ApiResponse apiResponse) {
+                GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        getChannelList();
+                        break;
+                    case 401:
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
+                        break;
+                    case 403:
+                        if (item.equals("1")) {
+                            getChannelList();
+                            item = "0";
+                        } else {
+                            String popMessage = "You are away from your home zip code:  click here to continue viewing.";
+                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(MainActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
+                                @Override
+                                public void onExitPress() {
+//                                    calling onBackPress
+                                    MainActivity.this.onBackPressed();
+                                }
+
+                                @Override
+                                public void onContinuePress() {
+//                                    do Nothing here
+                                }
+                            });
+                            zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            zipCodeDialog.show();
+//                            getDrmKey();
+                        }
+                        break;
+                    default:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                }
+            }
+        });
+
     }
 }
 

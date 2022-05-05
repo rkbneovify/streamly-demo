@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
@@ -71,7 +72,8 @@ public class ZipCodeDialog extends Dialog {
                 dialogCallBack.onContinuePress();
                 outStationLocationPlayCall();
                 cancel();
-                ((PlayerActivity)context).getDrmKey();
+                //((PlayerActivity)context).getDrmKey();
+                ((MainActivity)context).getChannelList();
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {

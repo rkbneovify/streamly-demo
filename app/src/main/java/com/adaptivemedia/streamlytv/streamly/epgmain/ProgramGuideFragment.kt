@@ -457,7 +457,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (!DISPLAY_SHOW_PROGRESS) {
             return
         }
-        for (i in 0 until programGuideGrid?.childCount) {
+        for (i in 0 until programGuideGrid?.childCount as Int) {
             programGuideGrid?.getChildAt(i)?.let {
                 it.findViewById<RecyclerView>(R.id.row)?.let { recycler ->
                     for (j in 0 until recycler.childCount) {
@@ -526,7 +526,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 timeRow?.scrollTo(scrollOffset, false)
             }
         } else {
-            if (!programGuideGrid?.hasFocus()) {
+            if (!programGuideGrid?.hasFocus()!!) {
                 // We will temporarily catch the focus, so that the program guide does not focus on all the views while it is scrolling.
                 // This is better for performance, and also avoids a bug where the focused view would be out of scope.
                 focusEnabledScrollListener?.let {
@@ -635,7 +635,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         timeRow?.let { timelineRow ->
             (timelineRow.adapter as? ProgramGuideTimeListAdapter)?.let { adapter ->
                 adapter.update(timelineStartMillis, timelineAdjustmentPixels)
-                for (i in 0 until programGuideGrid?.childCount) {
+                for (i in 0 until programGuideGrid?.childCount as Int) {
                     programGuideGrid?.getChildAt(i)?.let { (it.findViewById<RecyclerView>(R.id.row).layoutManager as LinearLayoutManager).scrollToPosition(0) }
                 }
                 timelineRow.resetScroll()

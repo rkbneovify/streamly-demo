@@ -107,7 +107,7 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-    edUserName.setText("vikas.saini1@oodles.io");
+ //   edUserName.setText("vikas.saini1@oodles.io");
     //    edUserName.setText("mina@neovix.com");
    //    edUserName.setText("pm13426@gmail.com");
   //      edPassword.setText("Piyush123456789");
@@ -115,7 +115,9 @@ public class LogInActivity extends FragmentActivity {
      //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
   //     edUserName.setText("streamly1@yopmail.com");
-    edPassword.setText("123456789");
+ //   edPassword.setText("123456789");
+
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,7 +341,8 @@ public class LogInActivity extends FragmentActivity {
                         }
 
                     } else if (response.code() == 500) {
-                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
+
+                        CommonUtility.showToast(LogInActivity.this, response.message());
                     }
 
                 } catch (Exception e) {

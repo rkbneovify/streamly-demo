@@ -11,12 +11,17 @@
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.135" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/menu_channel.xml" value="0.135" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/programguide_item_program_background.xml" value="0.135" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_transparent.xml" value="0.1465" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_hotel_qrcode.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_personal_device_name.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_player.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_search.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_settings.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_user_room.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_signout.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_zip_code.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/player_all_channel_row.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_fragment.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_channel.xml" value="0.1796875" />
