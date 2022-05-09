@@ -10993,3 +10993,10 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
 .section-heading {
   margin-top: 0.5rem;
 }
+.hoverSidenav:hover {
+  color: #ff5303!important;
+}
+.closebtn:hover {
+  color: red!important;
+  text-decoration: none!important;
+}

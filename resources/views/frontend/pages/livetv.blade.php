@@ -202,13 +202,61 @@ $.ajax({
 		/* .owl-stage-outer {
 			height: 100%;
 		} */
+		.popupwarning {
+			display: none;
+			position: absolute;
+            padding: 30px 20px;
+            margin: auto;
+			width: 40vw;
+			height: fit-content;
+			text-align: center;
+            left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+            z-index: 999;
+            background-color: #004e92;
+            color: #fff;
+            border-radius: 5px;	
+			transition: background-color 0.5s ease-out;
+		}
+		.button {
+            background-color: #fff;
+            border: none;
+            color: #000;
+            padding: 6px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+		.geolocation {
+			text-align: center;
+            margin-top: 1vw;
+		}
+		.mixs {
+            filter: blur(2px);
+			pointer-events: none;
+		}
+		.mixm {
+			filter: blur(0px)!important;
+			pointer-events: visible!important;
+		}
 	</style>
 @endsection
 
 @section('content')
+
+            <div id="hideElement" class="popupwarning">
+			You are away from your home zip code: click here to continue.
+			<div class="geolocation">
+			<button class="button" onclick="showWarning()">OK</button>
+			</div>
+			</div>
 	
-		<section class="page-section">
-			
+		<section id="blur" class="page-section">
 			
 		@foreach($pagechannel as $key => $user)
 		<div class="container">
@@ -271,4 +319,65 @@ $.ajax({
 	}
 	)
 })();
-	</script>
+
+var x = document.getElementById("demo");
+
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+
+  function showPosition(position) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+
+  var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch("https://streamlytv.com/api/auth/geofence", requestOptions)
+  .then(response => response.json())
+  .then(result => {   
+	   if("Not within zipcode boundary" == result.message){
+		//console.log("{{session()->get('key1')}}");
+		if("{{session()->get('key1')}}"){
+
+		}else{
+			const targetDiv = document.getElementById("hideElement");
+     	    targetDiv.style.display = "block";
+             $('#blur').addClass('mixs');
+		}
+
+	   }else{
+		//    console.log("no");
+	   }
+  })
+  .catch(error => console.log('error', error));
+
+}
+
+
+function showWarning(){
+
+	<?php session(['key1' => 1]);  ?>
+	const targetDiv = document.getElementById("hideElement");
+
+	targetDiv.style.display = "none";
+
+	$('#blur').addClass('mixm');
+
+}
+</script>
