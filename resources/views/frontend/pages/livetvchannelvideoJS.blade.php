@@ -191,8 +191,8 @@
 			localStorage.setItem("geofence", data.success); 
 		// console.log(popupmsgtoggle);
 			if(popupmsgtoggle){
-				alert(JSON.stringify(data.popupmsg));
-				outsidelocationplay();
+				// alert(JSON.stringify(data.popupmsg));
+				// outsidelocationplay();
 			}
 	
 	})
