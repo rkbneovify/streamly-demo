@@ -28,7 +28,7 @@
                   <div class="form-check">
                       <input type="checkbox" class="form-check-input" id="remember-me">
                       <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
-<label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password">Forgot password?</a></label>
+<label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password hoverSidenav">Forgot password?</a></label>
                     </div>
                  
                     @if(env('GOOGLE_RECAPTCHA_KEY'))
@@ -43,7 +43,7 @@
                       <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
                   </div>
 
-                  <span>Don't have an account?</span> <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a>
+                  <span>Don't have an account?</span> <a href="javascript:void(0)" class="hoverSidenav" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a>
 
                   <div class="mt-4">
                       <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
@@ -52,9 +52,9 @@
                   </div>
 
                   <div class="form-group mt-4 text-center">
-                      <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span>LOG IN WITH GOOGLE<span></a>
+                      <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span class="hoverSidenav">LOG IN WITH GOOGLE<span></a>
                       <br>
-                      <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span>LOG IN WITH QR<span></a>
+                      <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span class="hoverSidenav">LOG IN WITH QR<span></a>
                        {{-- <button type="submit" class="btn btn-lg login-btn">LOG IN</button> --}}
                   </div>
                   {!! csrf_field() !!}
