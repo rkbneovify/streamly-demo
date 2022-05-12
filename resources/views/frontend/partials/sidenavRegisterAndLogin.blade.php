@@ -70,7 +70,7 @@
           <a href="javascript:void(0)" class="closebtn" onclick="closeNavReg()">&times;</a>
       </div>
 
-      <div class="container" style="padding: 0px 50px;">
+      <div class="container" style="padding: 0px 50px; padding-bottom: 25px;">
           <div class="row mt-4">
               @if($errors->any()&& !$errors->has('email'))
        <div class="alert alert-danger alert-dismissible ">

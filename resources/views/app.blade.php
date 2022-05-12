@@ -94,5 +94,5 @@
     function logoutUser() {
     window.location.href = '/logout';
 }
-console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
+//console.log(Intl.DateTimeFormat().resolvedOptions().timeZone)
 </script>
