@@ -211,7 +211,7 @@ $("#my_form").submit(function(event){
 	</section>
 	
 @endsection
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script>
 //   var hangoutButton1 = document.getElementById("refresh");
 //   hangoutButton1.click();
