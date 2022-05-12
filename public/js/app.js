@@ -2254,7 +2254,7 @@
         //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
         //let result2 = newconvert.substring(16, 18);
         var result2 = this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(date1).get('hours'), 24);
-        console.log(date1);
+        //console.log(date1);
         //console.log(date2)
         var newarray= [];
         for (let i = 0; i < 24; i++) {
@@ -2268,7 +2268,7 @@
           } 
         }
         
-        console.log(newarray)
+        //console.log(newarray)
         //return this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(date1).get('hours'), 24);
         return newarray;
       }
@@ -2372,7 +2372,7 @@
   
                 case 2:
                   _this4.imageURL = _context2.sent;
-                  console.log('this.imageURL', _this4.imageURL);
+                  //console.log('this.imageURL', _this4.imageURL);
   
                 case 4:
                 case "end":
@@ -88263,7 +88263,7 @@
       if (config.warnHandler) {
         config.warnHandler.call(null, msg, vm, trace);
       } else if (hasConsole && (!config.silent)) {
-        console.error(("[Vue warn]: " + msg + trace));
+        //console.error(("[Vue warn]: " + msg + trace));
       }
     };
   
@@ -99891,8 +99891,6 @@
   
   /* harmony default export */ __webpack_exports__["default"] = (VuexPersistence);
   
-  //# sourceMappingURL=index.js.map
-  
   
   /***/ }),
   
@@ -102656,7 +102654,7 @@
     getFavouriteList: function getFavouriteList(_ref) {
       var state = _ref.state;
       var favourites = [];
-      console.log('statefav', state.favourites);
+      //console.log('statefav', state.favourites);
   
       for (var i in state.favourites) {
         // favourites.push(state.favourites[i])
@@ -102754,7 +102752,7 @@
                   }); //  console.log('achanged',a);
   
                   myarr = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.keyBy(a, 'channelId');
-                  console.log('myarrwithchannelid', myarr);
+                  //console.log('myarrwithchannelid', myarr);
                   commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_FAVORITE_LIST_SUCCESS"], myarr); // console.log('fav',data.favorites)
                   // Fetching Programme data
                   // dispatch('fetchProgrammeTimingList')

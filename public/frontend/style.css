@@ -165,7 +165,7 @@ a {
 }
 a:hover {
   color: #e6b301;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:not([href]) {
@@ -10693,9 +10693,8 @@ footer ul li {
   background: #F7B292;
   color: #202020;
 }
+
 .login-btn:hover {
-  
-  
   background: linear-gradient(to right, #F7B292 50%, #FF712F 50%);
   background-size: 200% 100%;
   background-position: right bottom;
@@ -10999,4 +10998,7 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
 .closebtn:hover {
   color: red!important;
   text-decoration: none!important;
+}
+.google-btn {
+  margin-bottom: 10px;
 }

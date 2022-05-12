@@ -43,7 +43,7 @@ opacity: 0;
         }
 
         .sidenav a:hover {
-            color: #f1f1f1;
+            color: #ff5303;
         }
 
         .sidenav .closebtn {
