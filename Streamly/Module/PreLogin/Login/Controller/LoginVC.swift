@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import AVKit
 
 class LoginVC: UIViewController {
-
+    
     //MARK: Outlets
     @IBOutlet weak var userIDField:     UITextField!
     @IBOutlet weak var passwordField:   UITextField!
@@ -34,7 +35,7 @@ class LoginVC: UIViewController {
                     self.rembemberMe.setBackgroundImage(image, for: .focused)
                     self.rembemberMe.setBackgroundImage(image, for: .highlighted)
                 }
-
+                
             }
             else {
                 self.rembemberMe.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
@@ -43,22 +44,22 @@ class LoginVC: UIViewController {
             }
         }
     }
-
+    
     var privacyData:PrivacyResponseData?
-       var logOut:LogoutResponseData?
-       lazy var viewModel: ContactDataViewModel = {
-           return ContactDataViewModel()
-       }()
+    var logOut:LogoutResponseData?
+    lazy var viewModel: ContactDataViewModel = {
+        return ContactDataViewModel()
+    }()
     var termsData = ""
     var qrData:QRResponse?
     lazy var qrModel: QRViewModel = {
         return QRViewModel()
     }()
-
+    
     //MARK: Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         self.initialSetup()
         self.remeberMeFlag = false
@@ -83,60 +84,58 @@ class LoginVC: UIViewController {
         loginWithPasscode.isHidden = !isShow
         loginWithQRButton.isHidden = !isShow
         terms.isHidden = !isShow
-//        registerNowBtn.isHidden = !isShow
-//        dontHaveAClabel.isHidden = !isShow
     }
-
+    
     //MARK: Helpers
     func initialSetup()
     {
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
         self.needHelpBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
-
+        
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
         self.registerNowBtn.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
         self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .normal)
         self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .focused)
         self.terms.setBackgroundImage(UIImage.imageWithColor(.cardBgColor), for: .highlighted)
-
-
+        
+        
         self.loginWithPasscode.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.loginWithPasscode.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.loginWithPasscode.setTitleColor(UIColor.white, for: .focused)
         self.loginWithPasscode.setTitleColor(UIColor.white, for: .highlighted)
-
+        
         self.loginWithQRButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.loginWithQRButton.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.loginWithQRButton.setTitleColor(UIColor.white, for: .focused)
         self.loginWithQRButton.setTitleColor(UIColor.white, for: .highlighted)
-
+        
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.signBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.signBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.signBtn.setTitleColor(UIColor.white, for: .focused)
         self.signBtn.setTitleColor(UIColor.white, for: .highlighted)
-
+        
         DispatchQueue.global(qos: .background).async
-            {
-                self.makeAPiCallTerms()
-
+        {
+            self.makeAPiCallTerms()
+            
         }
         DispatchQueue.global(qos: .background).async
-            {
-                self.qrmakeAPiCall()
-
+        {
+            self.qrmakeAPiCall()
+            
         }
-
-
+        
+        
     }
-
+    
     private func checkRemebermeValue()
     {
         self.userIDField.text = Utility.retriveStringObject(key: Constant.UserDefault.userField)
         self.passwordField.text = Utility.retriveStringObject(key: Constant.UserDefault.password)
     }
-
+    
     private func rembermeCheck()
     {
         if remeberMeFlag ?? false{
@@ -154,56 +153,55 @@ class LoginVC: UIViewController {
         popUPViewsVC.termsdata = self.termsData
         self.present(popUPViewsVC, animated:true, completion:nil)
     }
-
+    
     private func makeAPiCallTerms()
-       {
+    {
         viewModel.getTerms()
-          // viewModel.delegate = self
-           self.initVMPrivacy()
-       }
-
+        // viewModel.delegate = self
+        self.initVMPrivacy()
+    }
+    
     private func initVMPrivacy()
-       {
-           viewModel.privacyResponseData = { privacyModel in
+    {
+        viewModel.privacyResponseData = { privacyModel in
             self.privacyData = privacyModel
-               guard let dataprivacy = self.privacyData else {
-                   return
-               }
-               if dataprivacy.success ?? false
-               {
+            guard let dataprivacy = self.privacyData else {
+                return
+            }
+            if dataprivacy.success ?? false
+            {
                 self.termsData = dataprivacy.data ?? ""
-               }
-
-           }
-       }
-
+            }
+            
+        }
+    }
+    
     private func qrmakeAPiCall()
     {
         qrModel.getQrData()
         self.qrinitVM()
     }
-
+    
     private func qrinitVM()
     {
         qrModel.qrData = { qryModel in
             self.qrData = qryModel
-
-
+            
+            
         }
     }
-
+    
     //MARK: Action
     @IBAction func btnActions( _ sender:UIButton)
     {
-
+        
         // tag 2 for rembember me
         // tag 3 for Need Help
         // tag 4 for Sign IN
         // tag 5 for Register Now
-
+        
         if sender.tag == 2 {
             self.rembermeCheck()
-
         }
         else if sender.tag == 3
         {
@@ -218,7 +216,7 @@ class LoginVC: UIViewController {
         {
             // check login fields
             self.isValid()
-
+            
         }
         else if sender.tag == 5
         {
@@ -230,20 +228,20 @@ class LoginVC: UIViewController {
             } else {
                 showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
             }
-
+            
         }
         else if sender.tag == 6
         {
             self.openTermsPopUp()
 
         }
-
+        
         else if sender.tag == 7
         {
             // navigate to login with passcode
             let vc = LoginPasscodeVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
             self.navigationController?.pushViewController(vc, animated: true)
-
+            
         } else if sender.tag == 8 {
             // Navigate to login with QR.
             let vc = LoginWithQRViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
@@ -254,7 +252,24 @@ class LoginVC: UIViewController {
 
 extension LoginVC
 {
+    
+    /// Open the video player for tutorials.
+    private func watchVideoTuts() {
+        guard let url = URL(string: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4") else { return }
 
+            // Create an AVPlayer, passing it the HTTP Live Streaming URL.
+            let player = AVPlayer(url: url)
+
+            // Create a new AVPlayerViewController and pass it a reference to the player.
+            let controller = AVPlayerViewController()
+            controller.player = player
+
+            // Modally present the player and call the player's play() method when complete.
+            present(controller, animated: true) {
+                player.play()
+            }
+    }
+    
     private func isValid()
     {
         guard self.validateEmail(text: userIDField.text ?? "") == "" else {
@@ -266,7 +281,7 @@ extension LoginVC
         // call login API
         self.loginAPICall(self.userIDField.text ?? "", self.passwordField.text ?? "")
     }
-
+    
     private func loginAPICall(_ email:String, _ password:String)
     {
         self.showSpinner(onView: self.view)
@@ -279,7 +294,7 @@ extension LoginVC
             if response != nil && errorMessage == nil{
                 guard let selfStrong = self else {return}
                 selfStrong.removeSpinner()
-               
+                
                 if response.success?.success == true {
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
@@ -287,7 +302,7 @@ extension LoginVC
                         Utility.setStringObject(value: self?.passwordField.text ?? "", key: Constant.UserDefault.password)
                         Utility.setStringObject(value: self?.userIDField.text ?? "", key: Constant.UserDefault.userField)
                     }
-
+                    
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setBoolInUserDefaultData(value: response.success?.personaldevicenamePopup ?? false, key: Constant.UserDefault.isDeviceNameAdded)
                     Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
@@ -315,15 +330,15 @@ extension LoginVC
                             }
                         }
                     }
-
+                    
                 } else if response.success?.success == false {
                     if let data = response.success?.data { // check session exist.
                         selfStrong.openAlertForRemoveId(id: data, message: response.success?.message ?? "")
                     } else if !(response.success?.subscribed ?? false) {
                         selfStrong.showAlert(withMessage: response.success?.response_code == 429 ? response.success?.message ?? "" : response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
-    //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
-    //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
-    //                        Utility.logOut()
+                            //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                            //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+                            //                        Utility.logOut()
                             return
                         }
                     } else {
@@ -341,7 +356,7 @@ extension LoginVC
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                             Utility.logOut()
                         }
-//                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
+                        //                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     } else if let data = failureResponse.data { // check session exist.
                         selfStrong.openAlertForRemoveId(id: data, message: failureResponse.message ?? "")
                     } else {
@@ -373,7 +388,7 @@ extension LoginVC
                 weak.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
             }
             debugPrint(error?.localizedDescription ?? "")
-           
+            
         }
     }
 }
@@ -421,7 +436,7 @@ extension LoginVC {
                 self.userIDField.layer.borderColor = UIColor.clear.cgColor
                 self.passwordField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
-
+            
         } else if passwordField.isFocused{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.terms.layer.borderColor = UIColor.gray.cgColor
@@ -461,7 +476,7 @@ extension LoginVC {
                 self.userIDField.layer.borderColor = UIColor.firstGradientColor.cgColor
             }, completion: nil)
         }
-
+        
     }
 }
 

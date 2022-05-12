@@ -45,12 +45,12 @@ class HomeNewVC: UIViewController {
     }
     var showLoading = false
     var videoPlaybackViewController: VideoPlaybackViewController
-
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         videoPlaybackViewController = VideoPlaybackViewController()
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-
+    
     required init?(coder: NSCoder) {
         videoPlaybackViewController = VideoPlaybackViewController()
         super.init(coder: coder)
@@ -70,30 +70,30 @@ class HomeNewVC: UIViewController {
     }()
     
     lazy var liveButton : UIButton =
-        {
-            let button = UIButton(type: UIButton.ButtonType.system)
-            button.frame = CGRect(x: 36, y: 190, width: 170, height: 40)
-            button.setTitle("LIVE", for: .normal)
-            button.setTitleColor(UIColor.white, for: .normal)
-            button.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
-            button.setBackgroundImage(UIImage.imageWithColor(.red), for: .normal)
-            button.setBackgroundImage(UIImage.imageWithColor(.red), for: .focused)
-            button.setBackgroundImage(UIImage.imageWithColor(.red), for: .highlighted)
-            button.layer.cornerRadius = 8
-            button.clipsToBounds = true
-            button.addTarget(self, action: #selector(liveButtonClicked), for: .primaryActionTriggered)
-            return button
+    {
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.frame = CGRect(x: 36, y: 190, width: 170, height: 40)
+        button.setTitle("LIVE", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18)
+        button.setBackgroundImage(UIImage.imageWithColor(.red), for: .normal)
+        button.setBackgroundImage(UIImage.imageWithColor(.red), for: .focused)
+        button.setBackgroundImage(UIImage.imageWithColor(.red), for: .highlighted)
+        button.layer.cornerRadius = 8
+        button.clipsToBounds = true
+        button.addTarget(self, action: #selector(liveButtonClicked), for: .primaryActionTriggered)
+        return button
     }()
-
+    
     lazy var headerTimeLbl:UILabel =
-        {
-            var frame = CGRect(x: 36, y: 240, width: 297, height: 50)
-            let label = UILabel(frame: frame)
-            label.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
-            label.textColor = UIColor.white
-            label.backgroundColor = UIColor(patternImage: getSnappshot(withRect: CGRect(x: 0, y: 249, width: 297, height: 58)))
-            return label
-
+    {
+        var frame = CGRect(x: 36, y: 240, width: 297, height: 50)
+        let label = UILabel(frame: frame)
+        label.font = UIFont(name: "HelveticaNeue-Medium", size: 20)
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor(patternImage: getSnappshot(withRect: CGRect(x: 0, y: 249, width: 297, height: 58)))
+        return label
+        
     }()
     
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
@@ -101,7 +101,7 @@ class HomeNewVC: UIViewController {
     }
     // MARK: - Outlets
     @IBOutlet weak var collectionView:UICollectionView!
-        {
+    {
         didSet
         {
             collectionView.dataSource = self
@@ -119,13 +119,6 @@ class HomeNewVC: UIViewController {
     }
     @IBOutlet weak var cateGiriesCollectionView:UICollectionView!
     @IBOutlet weak var searchButton:          UIButton!
-    //    @IBOutlet weak var allButton:             UIButton!
-    //    @IBOutlet weak var recentButton:          UIButton!
-    //    @IBOutlet weak var myChannelButton:       UIButton!
-    //    @IBOutlet weak var sportsButton:          UIButton!
-    //    @IBOutlet weak var newsButton:            UIButton!
-    //    @IBOutlet weak var moviesButton:          UIButton!
-    //    @IBOutlet weak var kidsButton:            UIButton!
     @IBOutlet weak var emptyChanelLabel: UILabel!
     @IBOutlet weak var settingsButton:        UIButton!
     @IBOutlet weak var descriptionLbl:        UILabel!
@@ -138,18 +131,17 @@ class HomeNewVC: UIViewController {
     
     var scrollCell = UICollectionViewCell()
     // MARK: - LifeCycle
-    override func viewDidLoad() 
+    override func viewDidLoad()
     {
-        //self.allButton.backgroundColor = UIColor.firstGradientColor
         super.viewDidLoad()
         self.intialSetup()
         DispatchQueue.global(qos: .background).async
-            {
-                Address.sharedInstance.callthePostAddressGeoFence = { [weak self] in
-                    guard let weak = self else { return }
-                    weak.makeApiGeoFencing()
-                }
-                self.makeApiGeoFencing()
+        {
+            Address.sharedInstance.callthePostAddressGeoFence = { [weak self] in
+                guard let weak = self else { return }
+                weak.makeApiGeoFencing()
+            }
+            self.makeApiGeoFencing()
         }
         // Do any additional setup after loading the view.
     }
@@ -157,7 +149,7 @@ class HomeNewVC: UIViewController {
     override func viewWillLayoutSubviews() {
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "bacgroundImage")!)
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appDelegate?.getDrmKey()
@@ -165,24 +157,24 @@ class HomeNewVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-       
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         invalidateTimer()
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         //self.collectionView.setContentOffset(self.getCurrenOffset(), animated: false)
-
+        
     }
     
     // MARK: - Helper
     private func intialSetup()
     {
-
+        
         self.descriptionHeightConstraint.constant = 0
         // Layout for categories
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -245,16 +237,16 @@ class HomeNewVC: UIViewController {
         self.makeApiCall()
         self.initVM()
         DispatchQueue.global(qos: .background).async
-            {
-                self.makeApiCallChannelList()
-                self.initVMList()
+        {
+            self.makeApiCallChannelList()
+            self.initVMList()
         }
         DispatchQueue.global(qos: .background).async
-            {
-                self.makeApiCallRecent()
-                self.initVMRecent()
+        {
+            self.makeApiCallRecent()
+            self.initVMRecent()
         }
-
+        
         group.notify(queue: .main)
         {
             self.removeSpinner()
@@ -269,7 +261,7 @@ class HomeNewVC: UIViewController {
         liveButton.isHidden = shouldHidden
         currentTimeLabel.isHidden = true
     }
-
+    
     private func getSnappshot(withRect : CGRect) -> UIImage
     {
         let y = withRect.minY.pointsToPixel()
@@ -278,7 +270,7 @@ class HomeNewVC: UIViewController {
         let rect = CGRect(x: withRect.origin.x, y: y, width: width, height: height)
         return Utility.cropImage(image: UIImage(named: "bacgroundImage")!, toRect: rect) ?? UIImage()
     }
-
+    
     private func configureButtons()
     {
         //self.liveButton.layer.borderWidth = 0.0
@@ -312,8 +304,8 @@ class HomeNewVC: UIViewController {
         var offset = self.collectionView.contentOffset
         offset.x = 0.0
         return offset
-
-
+        
+        
         
     }
     
@@ -326,7 +318,7 @@ class HomeNewVC: UIViewController {
         self.collectionView.setContentOffset(self.getCurrenOffset(), animated: false)
     }
     
-     func selectCategories(_ sender:Int, key:String? = nil)
+    func selectCategories(_ sender:Int, key:String? = nil)
     {
         invalidateTimer()
         switch sender {
@@ -407,26 +399,14 @@ class HomeNewVC: UIViewController {
                 viewModel.currentPage = 1
                 viewModel.getEPGData(1)
             }
-//            collectionView.reloadData()
             self.selectedCategories = sender
-//        case  CategoriesSelect.recent.rawValue:
-//            // guard  self.recentData?.data?.count ?? 0 > 0 else {return self.showSimpleAlertWithMessage("No Recent data available!")}
-//           // guard  self.selectedCategories != sender else {return}
-//            self.filteredList?.removeAll()
-//
-//            self.selectedCategories = sender
-//            self.collectionView.reloadData()
-//        case  CategoriesSelect.myChannels.rawValue:
-//            // guard  self.selectedCategories != sender else {return}
-//            self.selectedCategories = sender
-//            debugPrint("myChannels")
         default:
             self.selectedCategories = sender
             if channelList != nil {
                 if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
                     let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
                     self.filteredList?.append(contentsOf: channelData)
-//                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
+                    //                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
                 } else {
                     self.filteredList?.removeAll()
                     self.filteredList = getUpdatedChannelList(self.channelList?.data?.data ?? [])
@@ -447,18 +427,9 @@ class HomeNewVC: UIViewController {
                 self.showSpinner(onView: self.view)
                 viewModel.getEPGData(1, key ?? "")
             }
-            // guard  self.selectedCategories != sender else {return}
-//            self.filteredList?.removeAll()
-//            self.filteredList = self.loadData(self.genrsList?.data?[[key ?? ""][0]] ?? [])
-//            self.selectedCategories = sender
-//            self.collectionView.reloadData()
         }
         self.collectionView.reloadData()
         self.cateGiriesCollectionView.reloadData()
-//        var offset = self.cateGiriesCollectionView.contentOffset
-//        offset.x = CGFloat(130 * sender)
-//        self.cateGiriesCollectionView.setContentOffset(offset, animated: true)
-
     }
     
     
@@ -485,7 +456,6 @@ class HomeNewVC: UIViewController {
     
     private func makeApiCall(){
         group.enter()
-//        self.showSpinner(onView: self.view)
         viewModel.delegate = self
         viewModel.getEPGData()
         
@@ -510,7 +480,6 @@ class HomeNewVC: UIViewController {
     private func makeApiCallChannelList(){
         group.enter()
         viewModel.getChannelList()
-//        viewModel.getMyChannelList()
     }
     
     private func initVMList() {
@@ -553,9 +522,7 @@ class HomeNewVC: UIViewController {
     private func initVMGeoData() {
         
         viewModel.geoData = { geoDataModel in
-            
             self.geoData = geoDataModel
-            
         }
         
     }
@@ -584,11 +551,7 @@ class HomeNewVC: UIViewController {
         searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Channels)", comment: "")
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
-
-//        guard let rootViewController = view.window?.rootViewController else { fatalError("Unable to get root view controller.") }
-//        viewVC.channelList = self.channelList
         viewVC.geoData = self.geoData
-        // searchController.view.backgroundColor = UIColor.li
         present(searchContainer, animated: true, completion: nil)
     }
     
@@ -598,12 +561,7 @@ class HomeNewVC: UIViewController {
         self.navigationController?.pushViewController(settingVc, animated: true)
     }
     
-    @IBAction func categoriesAction(_ sender:UIButton) {
-        
-        // self.selectCategories(sender.tag)
-        
-        
-    }
+    @IBAction func categoriesAction(_ sender:UIButton) { }
     
 }
 
@@ -632,7 +590,7 @@ extension HomeNewVC:HandleError {
             showAlert(withMessage: message, setFirstButtonTitle: "OK", handler: {
                 _ in
             })
-           return
+            return
         } else if statusCode == 404 {
             showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -640,7 +598,7 @@ extension HomeNewVC:HandleError {
             }
             return
         }
-//        self.showSimpleAlertWithMessage(message)
+        //        self.showSimpleAlertWithMessage(message)
     }
     
 }
@@ -651,7 +609,7 @@ extension HomeNewVC{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.configureButtons()
                 self.settingsButton.layer.borderWidth = 3.0
-//                self.settingsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+                //                self.settingsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
                 self.settingsButton.layer.borderColor = UIColor.white.cgColor
                 
             }, completion: nil)
@@ -660,77 +618,12 @@ extension HomeNewVC{
             coordinator.addCoordinatedAnimations({ () -> Void in
                 self.configureButtons()
                 self.searchButton.layer.borderWidth = 3.0
-//                self.searchButton.layer.borderColor = UIColor.secondGradientColor.cgColor
+                //                self.searchButton.layer.borderColor = UIColor.secondGradientColor.cgColor
                 self.searchButton.layer.borderColor = UIColor.white.cgColor
                 
             }, completion: nil)
         }
-            //        else if allButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.allButton.layer.borderWidth = 3.0
-            //                self.allButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //        else if recentButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.recentButton.layer.borderWidth = 3.0
-            //                self.recentButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //        else if myChannelButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.myChannelButton.layer.borderWidth = 3.0
-            //                self.myChannelButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //
-            //        else if sportsButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.sportsButton.layer.borderWidth = 3.0
-            //                self.sportsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //        else if newsButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.newsButton.layer.borderWidth = 3.0
-            //                self.newsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //        else if moviesButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.moviesButton.layer.borderWidth = 3.0
-            //                self.moviesButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-            //        else if kidsButton.isFocused{
-            //            coordinator.addCoordinatedAnimations({ () -> Void in
-            //                self.configureButtons()
-            //                self.kidsButton.layer.borderWidth = 3.0
-            //                self.kidsButton.layer.borderColor = UIColor.secondGradientColor.cgColor
-            //
-            //
-            //            }, completion: nil)
-            //        }
-
-       else if collectionView.isFocused {
+        else if collectionView.isFocused {
             if let nextCell = context.nextFocusedView as? ProgramCollectionViewCell {
                 let index = Int(nextCell.accessibilityHint!)!
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // 2
@@ -750,8 +643,8 @@ extension HomeNewVC:AddRecentData
     func addRecentData(_ data: RecentData) {
         self.recentData = data
     }
-
-
+    
+    
 }
 
 extension HomeNewVC :GetChannelData
@@ -782,7 +675,7 @@ extension HomeNewVC:UIScrollViewDelegate
                 {
                     let frame = (CGRect(x: currentView.frame.origin.x+(lastContentOffset.x - scrollView.contentOffset.x), y: currentView.frame.origin.y, width: currentView.frame.size.width, height: currentView.frame.size.height))
                     currentView.frame = frame
-
+                    
                 }
                 else if (self.lastContentOffset.x > scrollView.contentOffset.x)
                 {

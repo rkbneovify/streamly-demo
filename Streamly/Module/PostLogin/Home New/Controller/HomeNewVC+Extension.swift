@@ -38,21 +38,19 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             return data.count + fixedCategoriesArray.count
         }
     }
-
-
+    
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        //        if self.collectionView == collectionView
-        //        {
         if indexPath.section == 0
         {
             let timeCell = cell as? TimeCollectionViewCell
             timeCell?.configureCell(indexInt: indexPath.item)
             timeCell?.layer.zPosition = 2000
             timeCell?.backgroundColor = .clear
-
+            
         }
         else {
-
+            
             if indexPath.row == 0
             {
                 let channelCell = cell as? ChannelCollectionViewCell
@@ -76,7 +74,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 }
             }
         }
-        // }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -88,19 +85,19 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 return timeCell
             }
             else {
-
+                
                 if indexPath.row == 0
                 {
                     guard let channelCell = collectionView.dequeueReusableCell(withReuseIdentifier: "channelCell", for: indexPath) as? ChannelCollectionViewCell else {return UICollectionViewCell()}
-
+                    
                     return channelCell
                 }
                 else {
                     guard let programCell = collectionView.dequeueReusableCell(withReuseIdentifier: "programCell", for: indexPath) as? ProgramCollectionViewCell else {return UICollectionViewCell()}
-
+                    
                     return programCell
                 }
-
+                
             }
         }
         else {
@@ -108,17 +105,17 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             switch indexPath.row {
             case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
                 cateGories.confiGureData(self.fixedCategoriesArray[indexPath.row], indexPath.row == self.selectedCategories ? true : false)
-
+                
             default:
                 if let data = genrsList?.allGenre
                 {
                     cateGories.confiGureData(data[indexPath.row - 3], indexPath.row == self.selectedCategories ? true : false)
-
+                    
                 }
             }
-
+            
             return cateGories
-
+            
         }
         
     }
@@ -138,11 +135,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     guard viewModel.currentPage <= viewModel.lastPage  else { return true }
                     lastIndexPath = indexPath
                     showLoading = true
-//                    collectionView.reloadData()
                     showSpinner(onView: self.view)
                     if let lasIndexPath = lastIndexPath {
                         if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                        collectionView.reloadItems(at: [lasIndexPath])
+                            collectionView.reloadItems(at: [lasIndexPath])
                         }
                     }
                     group.enter()
@@ -153,29 +149,9 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 }
             }
             guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
-                    self.descriptionHeightConstraint.constant = 0
+                self.descriptionHeightConstraint.constant = 0
                 return true}
             guard let indexPath: IndexPath = self.collectionView.indexPath(for: programCell) as IndexPath? else { return true}
-            // Call API for pagination when focus on programme also.
-           /* if indexPath.section ==
-                (filteredList?.count ?? 0) && viewModel.isPageExist {
-                guard viewModel.currentPage <= viewModel.lastPage  else { return true }
-                lastIndexPath = indexPath
-                showLoading = true
-//                    collectionView.reloadData()
-                showSpinner(onView: self.view)
-                if let lasIndexPath = lastIndexPath {
-                    if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                    collectionView.reloadSections(IndexSet(integer: lasIndexPath.section ))
-                    }
-                }
-                group.enter()
-                viewModel.getEPGData(viewModel.currentPage)
-            } else {
-                showLoading = false
-                print("loading not called or pageExist is \(viewModel.isPageExist)")
-            }*/
-            
             if let channel = filteredList?[indexPath.section  - 1], let programs = channel.programs
             {
                 guard (indexPath.item - 1) <= programs.count else { return true }
@@ -187,8 +163,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 self.descriptionLbl.text =  programs[indexPath.item - 1].description ?? ""
                 self.discriptionStartTimeLbl.text = "Starts at \(Utility.getDateFromTimeStampByFormat(from: programs[indexPath.item - 1].start ?? 0.0, "hh:mm a") ?? "")"
             }
-            //print(indexPath)
-           
             return true
         } else {
             return true
@@ -201,15 +175,14 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         }
         return nil
     }
-
+    
     private func moveFocus(to indexPath: IndexPath) {
         if collectionView.cellForItem(at: indexPath) is ChannelCollectionViewCell {
             self.lastIndexPath = indexPath
             collectionView.setNeedsFocusUpdate()
         }
-        //collectionView.updateFocusIfNeeded() //can update it now if you need it to
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, shouldUpdateFocusIn context: UICollectionViewFocusUpdateContext) -> Bool {
         if self.collectionView == collectionView
         {
@@ -220,13 +193,13 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     {
                         self.collectionView.isScrollEnabled = false
                         invalidateTimer()
-
+                        
                         collectionView.scrollToItem(
                             at: nextFocusedIndexPath,
                             at: .centeredVertically,
                             animated: true)
                         return true
-
+                        
                     }
                     else if nextFocusedIndexPath.section == 0
                     {
@@ -236,11 +209,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     else {
                         self.collectionView.isScrollEnabled = true
                         return true
-                        //                    invalidateTimer()
-                        //                    collectionView.scrollToItem(
-                        //                        at: nextFocusedIndexPath,
-                        //                        at: .centeredHorizontally,
-                        //                        animated: false)
                     }
                 }
             }
@@ -253,21 +221,21 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                         at: nextFocusedIndexPath,
                         at: .centeredHorizontally,
                         animated: true)
-
+                    
                 }
-
+                
             }
             return true
         }
-
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let indexPath = context.nextFocusedIndexPath,
            let cell = collectionView.cellForItem(at: indexPath) {
             if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-            self.collectionView.scrollToItem(at: indexPath, at:
-             .centeredVertically, animated: true)
+                self.collectionView.scrollToItem(at: indexPath, at:
+                        .centeredVertically, animated: true)
                 self.scrollCell = cell
                 NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(callScrollMethod), object: nil)
                 perform(#selector(callScrollMethod), with: nil, afterDelay: 1)
@@ -275,7 +243,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         }
     }
     
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if self.collectionView == collectionView
         {
@@ -291,10 +259,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     return
                 }
                 guard let item = filteredList?[(indexPath.section - 1)] else {return}
-//                if item.programs?[indexPath.item - 1].title?.lowercased() == "no broadcast"{
-//                    print("it's not playable.")
-//                    return
-//                }
                 present(videoPlaybackViewController, animated: true) {
                     self.videoPlaybackViewController.channelObject = item
                     self.videoPlaybackViewController.isAllowedZipCode = flag
@@ -306,12 +270,6 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     self.videoPlaybackViewController.filterData = self.filteredList
                     self.videoPlaybackViewController.loadAndPlay()
                 }
-                //                let viewController = PlayerVC.instantiateFromAppStoryboard(appStoryboard: .Main)
-//                viewController.channelObject = item
-//                viewController.isAllowedZipCode = flag
-//                viewController.str = geoData?.popupmsg ?? ""
-//                viewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-//                self.present(viewController, animated: true, completion: nil)
             }
         }
         else {
@@ -322,9 +280,9 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 self.selectCategories(indexPath.row, key: nil)
             default:
                 self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
-
+                
             }
-
+            
         }
     }
 }
@@ -345,10 +303,10 @@ extension HomeNewVC {
             timer!.invalidate()
             timer = nil
             setLiveBtnView(UIColor.lightGray,tittle: "GO LIVE")
-
+            
         }
     }
-
+    
     func setLiveBtnView(_ color:UIColor , tittle:String)
     {
         self.liveButton.setBackgroundImage(UIImage.imageWithColor(color), for: .normal)
@@ -367,14 +325,14 @@ extension HomeNewVC {
             offset.x += 13.5
             self.collectionView.reloadData()
             self.collectionView.layoutIfNeeded()
-
+            
             DispatchQueue.main.async(execute: {
                 /* Scroll to the previous saved position */
                 self.collectionView.setContentOffset(offset, animated: false)
             })
-
+            
         }
-
+        
     }
 }
 
@@ -382,7 +340,7 @@ extension HomeNewVC {
 extension HomeNewVC {
     func getUpdatedChannelList(_ channel: [ChannelDetails]) -> [ChannelDetails] {
         var tmpChannel = [ChannelDetails]()
-//        return channel
+        //        return channel
         channel.forEach { chDetail in
             let yesterDayDate = Date().dayBefore.string(format: "dd/MM/yyyy")
             let endTime = "\(Date().dayAfter.string(format: "dd/MM/yyyy")) 12:00 PM"
@@ -393,27 +351,27 @@ extension HomeNewVC {
                 print("programme Title: \(proDetail.title ?? "") \nStart: \(Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) ?? "") - end: \(Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0) ?? "")")
                 // chekck if start time is existing on programe or not
                 if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" && (chDetail.programs?.count ?? 0) == 1 {
-                let lastmakeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
+                    let lastmakeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
                     let firstmakeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ:  proDetail.starttz ?? 0.0, start: makeNewTime(startTime: startTime), end: proDetail.start ?? 0.0, title: "No broadcast", timezoneName: "", description: "")
-//                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
-                newPrograme.append(firstmakeNoBroadcast)
-                newPrograme.append(proDetail)
-                newPrograme.append(lastmakeNoBroadcast)
-                startTime = Utility.getDateFromTimeStampByFormat(from: lastmakeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
+                    //                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
+                    newPrograme.append(firstmakeNoBroadcast)
+                    newPrograme.append(proDetail)
+                    newPrograme.append(lastmakeNoBroadcast)
+                    startTime = Utility.getDateFromTimeStampByFormat(from: lastmakeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
                 } else if chDetail.programs?.last?.end == proDetail.end && endTime > Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? "" {
-                let makeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
-//                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
-                newPrograme.append(proDetail)
-                newPrograme.append(makeNoBroadcast)
-                startTime = Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
+                    let makeNoBroadcast = ProgramArray(startTZ: proDetail.end ?? 0.0, endTZ:  makeNewTime(startTime: endTime), start: proDetail.end ?? 0.0, end: makeNewTime(startTime: endTime), title: "No broadcast", timezoneName: "", description: "")
+                    //                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
+                    newPrograme.append(proDetail)
+                    newPrograme.append(makeNoBroadcast)
+                    startTime = Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
                 } else if startTime == Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0, "dd/MM/yyyy hh:mm a") ?? "" { // yes
                     newPrograme.append(proDetail)
                     startTime = Utility.getDateFromTimeStampByFormat(from: proDetail.end ?? 0, "dd/MM/yyyy hh:mm a") ?? ""
                 }  else {// Add no broadcast cell with end time
                     let makeNoBroadcast = ProgramArray(startTZ: makeNewTime(startTime: startTime), endTZ: proDetail.start ?? 0.0, start: makeNewTime(startTime: startTime), end: proDetail.start ?? 0.0, title: "No broadcast", timezoneName: "", description: "")
-//                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
-                        newPrograme.append(makeNoBroadcast)
-//                    }
+                    //                    if Utility.getDateFromTimeStampByFormat(from: proDetail.start ?? 0) != startTime {
+                    newPrograme.append(makeNoBroadcast)
+                    //                    }
                     print("makeNoBroadcast start:\(Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.start ?? 0) ?? "")- \(Utility.getDateFromTimeStampByFormat(from: makeNoBroadcast.end ?? 0) ?? "")")
                     newPrograme.append(proDetail)
                     // added latest start time
@@ -428,9 +386,9 @@ extension HomeNewVC {
     }
     
     func cellScrollToVisibleTItle(_ cell: ProgramCollectionViewCell) {
-            if self.collectionView.contentOffset.x > cell.frame.origin.x - 300 {
-                self.collectionView.contentOffset.x = cell.frame.origin.x - 300
-            }
+        if self.collectionView.contentOffset.x > cell.frame.origin.x - 300 {
+            self.collectionView.contentOffset.x = cell.frame.origin.x - 300
+        }
     }
     
     @objc func callScrollMethod() {
