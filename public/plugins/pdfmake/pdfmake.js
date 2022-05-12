@@ -51833,7 +51833,6 @@ fontkit.registerFormat(TrueTypeCollection);
 fontkit.registerFormat(DFont);
 
 module.exports = fontkit;
-//# sourceMappingURL=index.js.map
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(4).Buffer, __webpack_require__(25)))
 

@@ -51,6 +51,9 @@ $("#my_form").submit(function(event){
 });
 </script>
 	<style>
+		.setting-cards {
+			display: none;
+		}
 		nav#mainNav {
 			background-color: #004E92;
 		}
@@ -157,7 +160,7 @@ $("#my_form").submit(function(event){
     @include('frontend.partials.sidenavRegisterAndLogin')
 	<section class="page-section">
 		<div class="container">
-				<h2 class="section-heading text-center">Error while playing video</h2>
+				<h2 class="section-heading text-center">Please wait a second</h2>
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
@@ -208,3 +211,20 @@ $("#my_form").submit(function(event){
 	</section>
 	
 @endsection
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script>
+//   var hangoutButton1 = document.getElementById("refresh");
+//   hangoutButton1.click();
+
+  $.ajax({
+	  url: '/account/refresh', 
+	  type:"GET",
+	  success: function(result){
+	//   console.log(result);
+	location.reload();
+      },
+	  error: function(error){
+		console.log(error);
+	  }
+	  });
+</script>
