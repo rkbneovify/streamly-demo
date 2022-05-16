@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/_12sdp"
     android:paddingRight="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
-    android:background="@color/transparent_color1"
+    android:background="@color/color_white"
    >
 
 <LinearLayout
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textColor="@color/md_white_1000"
+        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/helvetica_neue_medium"
         android:textAlignment="center"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="We&apos;re having some trouble with your current subscription. We&apos;ll try again, but in meantime you may want to update your subscription. For more help, please visit streamlytv.com or contact at https://streamlytv.com/helpandsupport."
-        android:textColor="@color/md_white_1000"
+        android:textColor="@color/md_black_1000"
         android:textSize="@dimen/_9ssp"
         android:fontFamily="@font/helvetica_neue_medium"
         android:textAlignment="center"

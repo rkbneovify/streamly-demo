@@ -1,6 +1,7 @@
 
 package com.adaptivemedia.streamlytv.streamly.playervideo.allchannel;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
+import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 import com.bumptech.glide.Glide;
 import com.adaptivemedia.streamlytv.R;
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
@@ -38,15 +42,33 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onViewAttachedToWindow(@NonNull MyViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
         if(position == cPosition){
+            holder.card.requestFocus();
             holder.card.setSelected(true);
             holder.card.setFocusable(true);
         }
         holder.textView.setText(channelList.get(position).getId().toString());
         Glide.with(ctx).load(channelList.get(position).getLogo()).into(holder.imageView);
 
-        holder.itemView.setOnClickListener(view -> {
+        holder.card.setOnClickListener(view -> {
+
+            if (ctx instanceof PlayerActivity) {
+                ((PlayerActivity)ctx).playNext(channelList.get(position).getId().toString() , channelList.get(position).getUrl(),channelList.get(position).getId().toString(),position);
+            }
+            else{
+                Log.e("playerac" , "no");
+
+            }
+        });
+
+       /* holder.itemView.setOnClickListener(view -> {
 
             Log.e("playerac" , "done");
             Log.e("playerac" , "id "+channelList.get(position).getId().toString());
@@ -58,9 +80,11 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
 
             }
 
-        });
+        });*/
 
     }
+
+
 
     @Override
     public int getItemCount() {

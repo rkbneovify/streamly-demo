@@ -51,6 +51,8 @@ public class SupportDialog extends Dialog {
         CommonUtility.checkInternetConnection(context);
         initViews();
 
+        btnOk.requestFocus();
+
         if (ConstantUtility.isNetworkConnected) {
             getSupportDetails();
         }else {

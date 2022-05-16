@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.dialogs.NoPlanDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
@@ -33,6 +34,7 @@ import com.adaptivemedia.streamlytv.streamly.settings.privacy.PrivacyDialog;
 import com.adaptivemedia.streamlytv.streamly.settings.profile.profilemodel.ProfileModel;
 import com.adaptivemedia.streamlytv.streamly.settings.registerdevice.RegisterDeviceDialog;
 import com.adaptivemedia.streamlytv.streamly.settings.signout.SignOutDialog;
+import com.adaptivemedia.streamlytv.streamly.settings.support.SupportActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.support.SupportDialog;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
@@ -117,6 +119,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 SupportDialog supportDialog = new SupportDialog(this);
                 supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                 supportDialog.show();
+                //startActivity(new Intent(SettingsActivity.this, SupportActivity.class));
                 break;
 
             case R.id.privacy:

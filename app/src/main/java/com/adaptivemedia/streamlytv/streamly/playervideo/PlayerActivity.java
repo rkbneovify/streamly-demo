@@ -105,6 +105,7 @@ public class PlayerActivity extends FragmentActivity {
     String item = "0";
     String rvItemClick = "0";
     String channelId;
+    int finalPosition;
 
     @Override
     protected void onStart() {
@@ -144,6 +145,8 @@ public class PlayerActivity extends FragmentActivity {
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         playerView.setUseController(false);
         dialog = CommonUtility.custom_loader(this);
+
+
 
 //        playerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
@@ -185,11 +188,15 @@ public class PlayerActivity extends FragmentActivity {
 
 
 
-    public void playNext(String channelN, String videoUrl, String channelId) {
+
+
+
+    public void playNext(String channelN, String videoUrl, String channelId, int position) {
         Log.e(TAG, "playNext: 1 " + channelId);
         Log.e(TAG, "playNext: 2 " + videoUrl);
         Log.e(TAG, "playNext: 3 " + channelN);
         rvItemClick = "1";
+        finalPosition = position;
         checkStreamingPlying=true;
 //        Intent i = new Intent(this , PlayerActivity.class);
 //        i.putExtra("from", videoUrl);
@@ -847,11 +854,11 @@ public class PlayerActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        handler.removeCallbacks(runnable);
-        player.stop();
-        Log.e(TAG, "back_press_called");
-        finish();
+            super.onBackPressed();
+            handler.removeCallbacks(runnable);
+            player.stop();
+            Log.e(TAG, "back_press_called");
+            finish();
     }
 
     @Override
@@ -895,19 +902,25 @@ public class PlayerActivity extends FragmentActivity {
 
 
 
+                        if(rvItemClick.equals("1")){
+                            allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this, LinearLayoutManager.VERTICAL, false));
+                            allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList, finalPosition);
+                            allChannelRecyclerView.setAdapter(allChannelAdapter);
 
-                        allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this, LinearLayoutManager.VERTICAL, false));
-                        allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList, position);
-                        allChannelRecyclerView.setAdapter(allChannelAdapter);
+                        }else {
 
-                        int finalPosition = position;
+                            allChannelRecyclerView.setLayoutManager(new LinearLayoutManager(PlayerActivity.this, LinearLayoutManager.VERTICAL, false));
+                            allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList, position);
+                            allChannelRecyclerView.setAdapter(allChannelAdapter);
+
+                             finalPosition = position;
+                        }
                         allChannelRecyclerView.post(new Runnable() {
                             @Override
                             public void run() {
-                                allChannelRecyclerView.scrollToPosition(finalPosition);
                                 allChannelRecyclerView.setSelected(true);
                                 allChannelRecyclerView.setFocusable(true);
-
+                                allChannelRecyclerView.scrollToPosition(finalPosition);
                             }
                         });
 

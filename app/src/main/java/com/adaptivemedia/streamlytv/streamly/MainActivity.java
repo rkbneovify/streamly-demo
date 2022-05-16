@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     } else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
                         imageSearch.setVisibility(View.GONE);
-                        CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
+                        //CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
                         NoPlanDialog noPlanDialog = new NoPlanDialog(MainActivity.this);
                         noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                         noPlanDialog.setCancelable(false);

@@ -8,13 +8,11 @@ import android.text.SpannedString
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.HomeBean
 import com.adaptivemedia.streamlytv.streamly.ProgramGuideFragment
-import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.VerticalHomeBean
+import com.adaptivemedia.streamlytv.streamly.dialogs.NoPlanDialog
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideChannel
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideSchedule
@@ -27,6 +25,9 @@ import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
 import com.adaptivemedia.streamlytv.streamly.utilities.NetworkKeys
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.threeten.bp.Instant
@@ -104,6 +105,8 @@ class ChannelFragment(context: Context, val genre: String) :
                 TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
                         + "\nid: " + programGuideSchedule.id
                         + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+                        + "\ndisplaytitle : " + programGuideSchedule.startsAtMillis
+                        + "\ndisplaytitle : " + programGuideSchedule.endsAtMillis
             )
 
             /*for (i in 0 until channel_showName_list.size) {
@@ -251,10 +254,14 @@ class ChannelFragment(context: Context, val genre: String) :
                     } else if (response.code() == 402) {
 //                        (requireActivity() as MainActivity).settingText.setVisibility(View.GONE)
 //                        imageSearch.setVisibility(View.GONE)
-                        CommonUtility.showToast(
+                        /*CommonUtility.showToast(
                             requireContext(),
                             "Payment Required. Kindly buy subscription"
-                        )
+                        )*/
+                        val noPlanDialog = NoPlanDialog(eContext)
+                        noPlanDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                        noPlanDialog.setCancelable(false)
+                        noPlanDialog.show()
                     }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -438,6 +445,7 @@ class ChannelFragment(context: Context, val genre: String) :
                                     Log.e(TAG, "getSecondApi: " + channels.get(k).id)
                                     Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
 
+
                                     scheduleList.add(schedule)
                                     nextTime = endTime
                                 }
@@ -450,7 +458,12 @@ class ChannelFragment(context: Context, val genre: String) :
                             k += 1
                         }
                         val pair = Pair(channels, channelMap)
-                        updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(0))
+
+                        for(i in 0 until channelMap.get(channelMap.keys.elementAt(0))?.size!!){
+                            updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(i))
+                        }
+
+
                         setData(pair.first, pair.second, localDate, dayss!!)
                         setState(State.Content)
 
@@ -473,10 +486,14 @@ class ChannelFragment(context: Context, val genre: String) :
                             sessionExpiredDialog.setCancelable(false)
                             sessionExpiredDialog.show()
                         } else if (it.message.toString().contains("402")) {
-                            CommonUtility.showToast(
+                            /*CommonUtility.showToast(
                                 eContext,
                                 "Payment Required. Kindly buy subscription"
-                            )
+                            )*/
+                            val noPlanDialog = NoPlanDialog(eContext)
+                            noPlanDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            noPlanDialog.setCancelable(false)
+                            noPlanDialog.show()
 
                         }
 
@@ -597,7 +614,9 @@ class ChannelFragment(context: Context, val genre: String) :
                             k += 1
                         }
                         val pair = Pair(channels, channelMap)
-                        updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(0))
+                        for(i in 0 until channelMap.get(channelMap.keys.elementAt(0))?.size!!){
+                            updateBottomDiscriptionViewForFirstTime(channelMap.get(channelMap.keys.elementAt(0))?.get(i))
+                        }
                         setData(pair.first, pair.second, localDate, dayss!!)
                         setState(State.Content)
 
@@ -634,25 +653,31 @@ class ChannelFragment(context: Context, val genre: String) :
     }
 
     fun updateBottomDiscriptionViewForFirstTime(programGuideSchedule : ProgramGuideSchedule<SimpleProgram>?){
-        val titleView = view?.findViewById<TextView>(R.id.programguide_detail_title)
-        titleView?.text = programGuideSchedule?.displayTitle
-        val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
-        metadataView?.text = programGuideSchedule?.program?.metadata
+        if (programGuideSchedule != null) {
+            if(programGuideSchedule.isCurrentProgram){
+
+                val titleView = view?.findViewById<TextView>(R.id.programguide_detail_title)
+                titleView?.text = programGuideSchedule?.displayTitle
+                val metadataView = view?.findViewById<TextView>(R.id.programguide_detail_metadata)
+                metadataView?.text = programGuideSchedule?.program?.metadata
 //        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
 //        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
-        val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
-        descriptionView?.text = programGuideSchedule?.program?.description
-        val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
-        if (programGuideSchedule != null) {
-            Glide.with(imageView)
-                .load(programGuideSchedule.program?.imageUrl.toString())
-                .error(R.drawable.programguide_icon_placeholder)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView)
-        } else {
-            Glide.with(imageView).clear(imageView)
+                val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
+                descriptionView?.text = programGuideSchedule?.program?.description
+                val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
+                if (programGuideSchedule != null) {
+                    Glide.with(imageView)
+                        .load(programGuideSchedule.program?.imageUrl.toString())
+                        .error(R.drawable.programguide_icon_placeholder)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(imageView)
+                } else {
+                    Glide.with(imageView).clear(imageView)
+                }
+            }
         }
+
     }
 
 

@@ -25,13 +25,14 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceName" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.user_room.UserRoomActivity" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.loginusingpasscode.LoginUsingPasscodeActivity" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.QRCode.QRCodeActivity" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.search_channels.SearchActivity" />
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity" />
+        <activity android:name=".streamly.settings.support.SupportActivity"/>
+        <activity android:name=".streamly.log_in.PersonalDeviceName" />
+        <activity android:name=".streamly.user_room.UserRoomActivity" />
+        <activity android:name=".streamly.loginusingpasscode.LoginUsingPasscodeActivity" />
+        <activity android:name=".streamly.HotelQRCode.HotelQRCodeActivity" />
+        <activity android:name=".streamly.QRCode.QRCodeActivity" />
+        <activity android:name=".streamly.search_channels.SearchActivity" />
+        <activity android:name=".streamly.playervideo.PlayerActivity" />
         <!--
         <activity
             android:name=".MainActivity"
@@ -47,12 +48,12 @@
             </intent-filter>
         </activity>
         -->
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
+        <activity android:name=".streamly.settings.SettingsActivity" /> <!-- <activity android:name=".channel_page.ChannelActivity" > -->
         <!--  -->
         <!-- </activity> -->
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity" />
+        <activity android:name=".streamly.log_in.LogInActivity" />
         <activity
-            android:name="com.adaptivemedia.streamlytv.streamly.splash.SplashActivity"
+            android:name=".streamly.splash.SplashActivity"
             android:banner="@drawable/resized"
             android:screenOrientation="landscape">
             <intent-filter>
@@ -61,7 +62,7 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.adaptivemedia.streamlytv.streamly.MainActivity" />
+        <activity android:name=".streamly.MainActivity" />
     </application>
 
 </manifest>

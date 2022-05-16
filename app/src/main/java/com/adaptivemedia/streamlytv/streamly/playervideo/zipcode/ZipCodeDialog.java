@@ -58,6 +58,8 @@ public class ZipCodeDialog extends Dialog {
         CommonUtility.checkInternetConnection(context);
         initViews();
 
+        btnContinue.requestFocus();
+
         poptext.setText(popMessage);
         if (ConstantUtility.isNetworkConnected) {
 //            getSupportDetails();

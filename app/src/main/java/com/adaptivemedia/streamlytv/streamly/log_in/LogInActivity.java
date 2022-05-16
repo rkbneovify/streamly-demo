@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -88,7 +91,7 @@ public class LogInActivity extends FragmentActivity {
                 else {
                     btnHotelLogin .setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
-                    btnTermsUses.setVisibility(View.GONE);
+                    btnTermsUses.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -107,15 +110,16 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
- //   edUserName.setText("vikas.saini1@oodles.io");
-    //    edUserName.setText("mina@neovix.com");
-   //    edUserName.setText("pm13426@gmail.com");
-  //      edPassword.setText("Piyush123456789");
-   //     edUserName.setText("sahil.kumar@oodlestechnologies.com");
+   // edUserName.setText("vikas.saini1@oodles.io");
+       edUserName.setText("mina@neovix.com");
+    //  edUserName.setText("pm13426@gmail.com");
+     //   edPassword.setText("Piyush123456789");
+      //  edUserName.setText("sahil.kumar@oodlestechnologies.com");
      //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
   //     edUserName.setText("streamly1@yopmail.com");
- //   edPassword.setText("123456789");
+    edPassword.setText("123456789");
+
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +153,7 @@ public class LogInActivity extends FragmentActivity {
                 if (TokenStorage.readBarcodeVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE)) {
                     startActivity(new Intent(LogInActivity.this, QRCodeActivity.class));
                 }else{
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this);
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
                             dialog.setTitle("Register Now");
                             dialog.setMessage(getString(R.string.open_link_browser) + "\n" + "https://streamlytv.com/");
 
@@ -188,7 +192,7 @@ public class LogInActivity extends FragmentActivity {
         btnTermsUses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TermsOfUses terms = new TermsOfUses(LogInActivity.this);
+                TermsOfUses terms = new TermsOfUses(LogInActivity.this );
                 terms.show();
             }
         });
@@ -307,10 +311,14 @@ public class LogInActivity extends FragmentActivity {
 
 
                     } else if (response.code() == 401) {
-                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
+                        Log.i(TAG, "onResponse:401  " + response.isSuccessful());
+                        if(!response.isSuccessful()) {
+                            CommonUtility.showToast(LogInActivity.this, "Invalid credentials");
+                        }
+                        /*SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                         sessionExpiredDialog.setCancelable(false);
-                        sessionExpiredDialog.show();
+                        sessionExpiredDialog.show();*/
                     } else if (response.code() == 429) {
 
                         Log.i(TAG, "onResponse:429  " + response.body());
@@ -367,7 +375,7 @@ public class LogInActivity extends FragmentActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Log.e(TAG, "onBackPressed: login activity");
-        LogInActivity.this.finish();
+        finish();
     }
 
 

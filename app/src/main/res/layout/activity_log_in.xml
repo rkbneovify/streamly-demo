@@ -53,6 +53,7 @@
                 android:textSize="@dimen/_7ssp" />
 
 
+
             <EditText
                 android:id="@+id/ed_user_name"
                 android:layout_width="@dimen/_160sdp"
@@ -83,17 +84,16 @@
                 android:layout_width="@dimen/_160sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_2sdp"
-                android:background="@drawable/edittext_states"
                 android:fontFamily="@font/helvetica_neue_regular"
                 android:inputType="textPassword"
+                android:background="@drawable/edittext_states"
                 android:maxLength="40"
                 android:maxLines="1"
                 android:padding="@dimen/_4sdp"
                 android:textAlignment="viewStart"
                 android:textColor="@color/md_black_1000"
                 android:textColorHint="@color/md_grey_600"
-                android:textSize="@dimen/_7ssp" />
-
+                android:textSize="@dimen/_7ssp"/>
 
             <FrameLayout
                 android:layout_width="@dimen/_160sdp"

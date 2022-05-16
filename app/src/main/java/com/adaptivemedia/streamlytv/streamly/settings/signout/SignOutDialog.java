@@ -87,8 +87,8 @@ public class SignOutDialog extends Dialog {
 
                     if (response.isSuccessful() && response.body()!=null && response.code()!=401){
                         CommonUtility.showToast(context,response.body().getMessage());
-                        context.startActivity(new Intent(context, LogInActivity.class));
                         TokenStorage.clearSharedToken(context);
+                        context.startActivity(new Intent(context, LogInActivity.class));
                         ((Activity)context).finish();
                     }else if (response.code()==401){
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
