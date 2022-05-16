@@ -218,6 +218,7 @@ Route::get('api/vueprogramlistwithid', 'EpgController@programelistwithid');
 Route::get('api/auth/tizenepg', 'TizenEPGController@channelDaysSchedule')->middleware(['jwt.verify','subscribed']);
 Route::get('api/auth/v2/tizenepg', 'TizenEPGController@channelDaysScheduleV2')->middleware(['jwt.verify','subscribed']);
 Route::get('api/auth/v2/tizenepgwithoffset', 'TizenEPGController@channelDaysScheduleV2offset')->middleware(['jwt.verify','subscribed']);
+Route::get('api/auth/v2/tizenEPGschedule', 'TizenEPGController@channelDaysnew')->middleware(['jwt.verify','subscribed']);
 Route::get('api/tizenepg/search', 'TizenEPGController@channelSearchSchedule');
 Route::get('api/vuefavoritelist', 'EpgController@favoritelist');
 Route::get('api/vueprogramlist', 'EpgController@programelist');
