@@ -185,8 +185,8 @@ use Laravel\Cashier\Cashier;?>
 
 						<div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 							<label for="cnewpassword">Confirm New Password</label>
-							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword password">
-							<span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password2"></span>
+							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
+							<!-- <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password2"></span> -->
 						</div>
 
 						<div class="text-center">

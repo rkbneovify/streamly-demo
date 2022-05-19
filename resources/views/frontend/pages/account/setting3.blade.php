@@ -100,10 +100,18 @@ use Laravel\Cashier\Cashier;
     background-color: rgba(86,61,124,.15);
     border: 1px solid rgba(86,61,124,.15);
 }
+.field_icon{
+	float: right;
+    margin-right: 10px;
+    margin-top: -30px;
+    position: relative;
+    z-index: 2;
+}
 
 @include('components.deviceCSS')
 
 	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script>
@@ -183,12 +191,20 @@ use Laravel\Cashier\Cashier;
 
 						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
 							<label for="newpassword">New Password</label>
+							<div>
 							<input type="text" class="form-control" name="password" id="newpassword">
+							<span class="bi bi-eye-slash field_icon" id="togglePasswordnew"></span>
+							</div>
 						</div>
 
 						<div class="form-group {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
 							<label for="cnewpassword">Confirm New Password</label>
+					
+						
+							<div>
 							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
+							<span class="bi bi-eye-slash field_icon" id="togglePassword"></span>
+							</div>
 						</div>
 
 						<div class="text-center">
@@ -203,6 +219,36 @@ use Laravel\Cashier\Cashier;
 			</div>
 	    </div>
 	</div>
+<script>
+        const togglePasswordnew = document.querySelector("#togglePasswordnew");
+        const passwordnew = document.querySelector("#newpassword");
+		const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#cnewpassword");
+
+        togglePasswordnew.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = passwordnew.getAttribute("type") === "password" ? "text" : "password";
+            passwordnew.setAttribute("type", type);
+            
+            // toggle the icon
+            this.classList.toggle("bi-eye");
+        });
+		togglePassword.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+            
+            // toggle the icon
+            this.classList.toggle("bi-eye");
+        });
+
+        // prevent form submit
+        const form = document.querySelector("form");
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+        });
+</script>
+
 		
 
 @if(session()->has('message'))
