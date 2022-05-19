@@ -201,10 +201,26 @@ jQuery('body').on('click','#ajaxSubmit',function(e){
                   		});
                   	}
                   	else
-                  	{ console.log("success");
-                  		jQuery('.alert-danger').hide();
-                  		// $('#open').hide();
-                  		$('#checkAvailibiltyModal').modal('hide');
+                  	{ 
+						  //console.log("success2");
+						let x = document.forms["myForm"]["fname"].value;
+                        if (x == "") {
+							document.getElementById("validationEmail").innerHTML = "Email field is required!";
+                        return false;
+                        }else{
+							let inputValue = document.forms["myForm"]["fname"].value;
+							let stringEmail = String(inputValue);
+							var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+							if(stringEmail.match(mailformat)){
+								jQuery('.alert-danger').hide();
+                  		        $('#open').hide();
+                  		        $('#checkAvailibiltyModal').modal('hide');
+								  document.getElementById("jsonresponse").innerHTML = "Your response is been recorded we will let you know when service is available at your location";
+							}else{
+								document.getElementById("validationEmail").innerHTML = "You have entered an invalid email address!";
+								return false;
+							}
+						}
                   	}
                   }});
                });
@@ -330,7 +346,7 @@ jQuery('body').on('click','#ajaxSubmit',function(e){
 		.modal-body {
 		    position: relative;
 		    /* flex: 1 1 auto; */
-		    padding: 3rem 5rem;
+		    padding: 1.5rem 5rem;
 		}
 
 		.modal-body p{
@@ -339,7 +355,7 @@ jQuery('body').on('click','#ajaxSubmit',function(e){
 			
 		}
 		.logo-margin-negative{
-margin-top: -80px;
+/* margin-top: -80px; */
 }
 .whitecircle
 { width:76px;
@@ -384,6 +400,12 @@ background-position: center;
 	.ui-helper-hidden-accessible {
             display: none;
         }
+		@media (min-width: 576px){
+			.modal-dialog {
+                max-width: 60%!important;
+                margin: 1.75rem auto;
+        }
+		}
 	</style>
 
 
@@ -405,13 +427,14 @@ background-position: center;
 		<div class="alert alert-danger" style="display:none"></div>
 		<div class="modal-body text-center">
 			{{-- <h4>Your check availbilty status</h4> --}}
-			<form method="post" action="{{url('checkAvailabiltyStore')}}" id="form">
+			<form method="post" action="{{url('checkAvailabiltyStore')}}" name="myForm" id="form">
         @csrf
-			<h4 style="height: height: 31px;">Your Zipcode:<span id="modalzip"></span> </h4>
+			<h4 style="height: height: 31px;">Your Zipcode:<span style="margin-left: 5px;" id="modalzip"></span> </h4>
 			<p ><span id="zipanswer"></span> </p>
-			<p><strong style="color: #909090;">City:</strong><span id="citymodal"></span> </p>
-			<p><strong style="color: #909090;">State:</strong><span id="statemodal"></span> </p>
-			<span id="emailzipquery">Enter your email:<input type="email" id="email" ></span>
+			<p><strong style="color: #909090; margin-right: 5px;">City:</strong><span id="citymodal"></span> </p>
+			<p><strong style="color: #909090; margin-right: 5px;">State:</strong><span id="statemodal"></span> </p>
+			<div id="validationEmail" style="margin-bottom:10px; font-size:16px; color:red; font-weight: bold;"></div>
+			<span id="emailzipquery">Enter your email:<input style="margin-left: 5px;" type="email" id="email" name="fname" required></span>
 			{{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 			<div>
 				{{-- <form action="" method="POST"> --}}
@@ -446,6 +469,7 @@ background-position: center;
 			{{-- <svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
 			
 			</svg> --}}
+			<div id="jsonresponse" style="text-align: center; margin-bottom:20px; font-size:1rem; color:#004E92;"></div>
 				<h2 class="section-heading text-center" id="first-element-introduction" >Check Availability</h2>
 				<div style="text-align: center; "><p  style=" display: inline-block; background-color: #eff0f1; border-radius: 6px; padding-right: 1rem; padding-left: 1rem; "><img src="{{url('../frontend/img/location.png')}}" 
   
