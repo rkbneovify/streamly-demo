@@ -311,7 +311,8 @@ input[type=number] {
 														@else
                     
 														<span class="remove-p-a-r">
-				                  {{$frontendjson['billingdetailspage']}}	</span>
+				                  <!-- {{$frontendjson['billingdetailspage']}}	 -->
+								</span>
 		
 												@endif
 													<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">	
