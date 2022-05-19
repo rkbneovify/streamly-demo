@@ -353,7 +353,8 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 						</div> @if (empty($frontendjson['billingdetailspage'])) <span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 												</span> @else <span class="remove-p-a-r">
-											{{$frontendjson['billingdetailspage']}}	</span> @endif
+											<!-- {{$frontendjson['billingdetailspage']}} -->
+											</span> @endif
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
