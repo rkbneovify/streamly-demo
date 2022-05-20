@@ -324,6 +324,7 @@ extension VideoPlaybackViewController {
                     let parsedData = try JSONSerialization.jsonObject(with: data) as! [String:Any]
                     let errorId = parsedData["errorid"] as! String
                     let errorMsg = parsedData["errormsg"] as! String
+                    self.showSimpleAlertWithMessage("License request failed with an error: \(errorMsg) [\(errorId)]")
                     //print(#function, "License request failed with an error: \(errorMsg) [\(errorId)]")
                 } catch let error as NSError {
                     //print(#function, "License request failed. Can't parse the response. \(error)")
@@ -436,6 +437,8 @@ extension VideoPlaybackViewController
         if keyPath == #keyPath(AVPlayerItem.status) {
             let status: AVPlayerItem.Status
             if let statusNumber = change?[.newKey] as? NSNumber {
+                status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+            } if let statusNumber = change?[.kindKey] as? NSNumber {
                 status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
             } else {
                 status = .unknown
