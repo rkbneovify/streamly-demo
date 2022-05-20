@@ -317,10 +317,10 @@ extension VideoPlaybackViewController {
         let configuration = URLSessionConfiguration.default
         let session = URLSession(configuration: configuration)
         let task = session.dataTask(with: request) { data, response, error in
-            if let data = data {
+            if let data = data, error == nil {
                 
                 // The response from the KeyOS MultiKey License server may be an error inside JSON.
-                do {
+               /* do {
                     let parsedData = try JSONSerialization.jsonObject(with: data) as! [String:Any]
                     let errorId = parsedData["errorid"] as! String
                     let errorMsg = parsedData["errormsg"] as! String
@@ -328,6 +328,13 @@ extension VideoPlaybackViewController {
                     //print(#function, "License request failed with an error: \(errorMsg) [\(errorId)]")
                 } catch let error as NSError {
                     //print(#function, "License request failed. Can't parse the response. \(error)")
+                }*/
+                
+                if let parsedData = try? JSONSerialization.jsonObject(with: data) as? [String:Any] {
+                    let errorId = parsedData["errorid"] as! String
+                    let errorMsg = parsedData["errormsg"] as! String
+                     self.showSimpleAlertWithMessage("License request failed with an error: \(errorMsg) [\(errorId)]")
+                    return
                 }
                 
                 // The response from the KeyOS MultiKey License server is Base64 encoded.
