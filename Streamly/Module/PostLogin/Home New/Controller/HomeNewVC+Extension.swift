@@ -259,6 +259,7 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     return
                 }
                 guard let item = filteredList?[(indexPath.section - 1)] else {return}
+                print(item)
                 present(videoPlaybackViewController, animated: true) {
                     self.videoPlaybackViewController.channelObject = item
                     self.videoPlaybackViewController.isAllowedZipCode = flag
