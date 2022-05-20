@@ -438,7 +438,7 @@ extension VideoPlaybackViewController
             let status: AVPlayerItem.Status
             if let statusNumber = change?[.newKey] as? NSNumber {
                 status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
-            } if let statusNumber = change?[.kindKey] as? NSNumber {
+            } else if let statusNumber = change?[.kindKey] as? NSNumber {
                 status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
             } else {
                 status = .unknown
