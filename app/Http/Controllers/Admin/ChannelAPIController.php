@@ -573,7 +573,7 @@ public function channelDaysScheduleFuncwithoutSearchoffsettz($request,$isDevice,
         $type='url';
         $reco =  $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->paginate(10);
     } else {
-        $type='dash_url';
+        $type='url';
         $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->paginate(10);
     }
     return $reco;
