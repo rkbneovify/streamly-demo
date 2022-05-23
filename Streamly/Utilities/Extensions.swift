@@ -114,6 +114,7 @@ extension UIViewController
         return appStoryboard.viewController(viewControllerClass: self)
     }
     func showSpinner(onView : UIView) {
+        removeSpinner()
         let spinnerView = UIView.init(frame: onView.bounds)
         spinnerView.backgroundColor = .spinnerBackgroundColor
         let aIndi = UIActivityIndicatorView.init(style: .large)
