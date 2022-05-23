@@ -135,15 +135,14 @@ class HomeNewVC: UIViewController {
     {
         super.viewDidLoad()
         self.intialSetup()
-        DispatchQueue.global(qos: .background).async
+      /*  DispatchQueue.global(qos: .background).async
         {
             Address.sharedInstance.callthePostAddressGeoFence = { [weak self] in
                 guard let weak = self else { return }
                 weak.makeApiGeoFencing()
             }
             self.makeApiGeoFencing()
-        }
-        // Do any additional setup after loading the view.
+        }*/
     }
     
     override func viewWillLayoutSubviews() {
@@ -320,6 +319,7 @@ class HomeNewVC: UIViewController {
     
     func selectCategories(_ sender:Int, key:String? = nil)
     {
+        
         invalidateTimer()
         switch sender {
         case CategoriesSelect.all.rawValue, CategoriesSelect.recent.rawValue, CategoriesSelect.myChannels.rawValue:

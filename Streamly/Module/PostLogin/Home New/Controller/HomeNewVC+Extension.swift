@@ -274,6 +274,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
             }
         }
         else {
+            if selectedCategories == indexPath.row {
+                print("Same Category selected")
+                return
+            }
             viewModel.currentPage = 1
             channelList = nil
             switch indexPath.row {

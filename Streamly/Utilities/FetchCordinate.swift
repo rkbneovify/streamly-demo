@@ -39,7 +39,20 @@ final class Address:NSObject, CLLocationManagerDelegate
         // set the value of lat and long
         latitude = location.latitude
         longitude = location.longitude
-        callthePostAddressGeoFence?()
+        let locationTupple = (latitude: latitude, longtitude: longitude)
+        if let lastLocation = UserDefaults.standard.value(forKey: Constant.UserDefault.lastLocation) as? [String: Any] {
+            if lastLocation["latitude"] as? Double == locationTupple.latitude && lastLocation["longtitude"] as? Double == locationTupple.longtitude {
+                print("Location Exist for geoFence")
+                return
+            } else {
+                print("Location New for geoFence")
+                callthePostAddressGeoFence?()
+            }
+        } else {
+            print("Location New for geoFence")
+            callthePostAddressGeoFence?()
+        }
+       
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

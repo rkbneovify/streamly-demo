@@ -92,6 +92,23 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        Address.sharedInstance.callthePostAddressGeoFence = {
+            DispatchQueue.global(qos: .background).async
+                {
+                    if let lastLocation = UserDefaults.standard.value(forKey: Constant.UserDefault.lastLocation) as? [String: Any] {
+                        if lastLocation["latitude"] as? Double == Address.sharedInstance.latitude && lastLocation["longtitude"] as? Double == Address.sharedInstance.longitude {
+                            print("Location Exist for geoFence")
+                            return
+                        }
+                        print("Location New for geoFence")
+                        self.makeApiGeoFencing()
+                    } else {
+                        print("Location New for geoFence")
+                        self.makeApiGeoFencing()
+                    }
+            }
+        }
         view.backgroundColor = .black
         if let playerViewController = playerViewController {
             view.addSubview(playerViewController.view)
@@ -198,7 +215,18 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
             }
             DispatchQueue.global(qos: .background).async
                 {
-                    self.makeApiGeoFencing()
+                    if let lastLocation = UserDefaults.standard.value(forKey: Constant.UserDefault.lastLocation) as? [String: Any] {
+                        if lastLocation["latitude"] as? Double == Address.sharedInstance.latitude && lastLocation["longtitude"] as? Double == Address.sharedInstance.longitude {
+                            print("Location Exist for geoFence")
+                            return
+                        }
+                        print("Location New for geoFence")
+                        self.makeApiGeoFencing()
+                    } else {
+                        print("Location New for geoFence")
+                        self.makeApiGeoFencing()
+                    }
+                    
                     
             }
         }
@@ -504,6 +532,8 @@ extension VideoPlaybackViewController
     }
     
     private func makeApiGeoFencing(){
+        let locationDict = ["latitude": Address.sharedInstance.latitude ?? 0.0, "longtitude": Address.sharedInstance.longitude ?? 0.0]
+        UserDefaults.standard.set(locationDict, forKey: Constant.UserDefault.lastLocation)
         viewModel.postOutsideAddress()
         initVMGeoData()
         
