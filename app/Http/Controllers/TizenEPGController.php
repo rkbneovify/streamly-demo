@@ -148,7 +148,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
   public function channelDaysnew(Request $request){
   
  
-    $type='dash_url';
+    $type='url';
     $timeoffset=$request->get('hoursoffset');
     $reco= $this->channelDaysScheduleFuncV2offsetnew($type,$timeoffset)->get();
  
