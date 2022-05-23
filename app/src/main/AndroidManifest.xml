@@ -15,17 +15,18 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:largeHeap="true"
         android:allowBackup="false"
         android:banner="@drawable/resized"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_streamly"
         android:label="@string/app_name"
-        android:logo="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:screenOrientation="landscape"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
-        <activity android:name=".streamly.settings.support.SupportActivity"/>
+        <activity android:name=".streamly.settings.support.SupportActivity" android:theme="@style/AppTheme"/>
         <activity android:name=".streamly.log_in.PersonalDeviceName" />
         <activity android:name=".streamly.user_room.UserRoomActivity" />
         <activity android:name=".streamly.loginusingpasscode.LoginUsingPasscodeActivity" />

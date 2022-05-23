@@ -89,7 +89,7 @@ public class SignOutDialog extends Dialog {
                         CommonUtility.showToast(context,response.body().getMessage());
                         TokenStorage.clearSharedToken(context);
                         context.startActivity(new Intent(context, LogInActivity.class));
-                        ((Activity)context).finish();
+                        ((Activity)context).finishAffinity();
                     }else if (response.code()==401){
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);

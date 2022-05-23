@@ -74,8 +74,8 @@ public class ZipCodeDialog extends Dialog {
                 dialogCallBack.onContinuePress();
                 outStationLocationPlayCall();
                 cancel();
-                //((PlayerActivity)context).getDrmKey();
-                ((MainActivity)context).getChannelList();
+                ((PlayerActivity)context).getDrmKey();
+                //((MainActivity)context).getChannelList();
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {

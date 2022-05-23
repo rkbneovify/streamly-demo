@@ -54,7 +54,7 @@
     <string name="programguide_part_of_day_afternoon">Afternoon</string>
     <string name="programguide_part_of_day_evening">Evening</string>
 
-    <string name="programguide_button_jump_to_live">Jump to live</string>
+    <string name="programguide_button_jump_to_live">Go Live</string>
 
     <string name="programguide_day_selector_title">Select the desired day</string>
     <string name="programguide_day_time_selector_title">Select the desired time of day</string>

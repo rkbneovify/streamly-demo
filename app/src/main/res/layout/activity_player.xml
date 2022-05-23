@@ -17,7 +17,10 @@
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/playerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+
+
+        </com.google.android.exoplayer2.ui.PlayerView>
 
 
         <ImageView
@@ -44,6 +47,16 @@
             android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
             android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/load"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:foregroundGravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:backgroundTint="@color/app_blue_light"/>
 
 
 

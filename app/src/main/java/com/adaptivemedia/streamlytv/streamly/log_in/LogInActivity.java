@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -55,6 +56,7 @@ public class LogInActivity extends FragmentActivity {
     private TextView txtNeedHelp;
     private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
     private CheckBox rememberMeCheck;
+    private ImageView passwordTog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,7 @@ public class LogInActivity extends FragmentActivity {
                 else {
                     btnHotelLogin .setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
-                    btnTermsUses.setVisibility(View.VISIBLE);
+                    btnTermsUses.setVisibility(View.GONE);
                 }
             }
 
@@ -110,15 +112,15 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-   // edUserName.setText("vikas.saini1@oodles.io");
-       edUserName.setText("mina@neovix.com");
+  //  edUserName.setText("vikas.saini1@oodles.io");
+   //    edUserName.setText("mina@neovix.com");
     //  edUserName.setText("pm13426@gmail.com");
      //   edPassword.setText("Piyush123456789");
       //  edUserName.setText("sahil.kumar@oodlestechnologies.com");
      //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
   //     edUserName.setText("streamly1@yopmail.com");
-    edPassword.setText("123456789");
+ //   edPassword.setText("123456789");
 
 
 
@@ -205,6 +207,18 @@ public class LogInActivity extends FragmentActivity {
 
             }
         });
+        passwordTog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(edPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                    edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_off_24);
+                }else{
+                    edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_24);
+                }
+            }
+        });
     }
 
 
@@ -238,6 +252,7 @@ public class LogInActivity extends FragmentActivity {
         btnTermsUses = findViewById(R.id.btn_terms_uses);
         btnLoginUsingPasscode = findViewById(R.id.btn_login_using_passcode_uses);
         rememberMeCheck = findViewById(R.id.checkbox_remember);
+        passwordTog = findViewById(R.id.password_toggle);
     }
 
     private void signInCall() {

@@ -116,10 +116,10 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 break;
 
             case R.id.support:
-                SupportDialog supportDialog = new SupportDialog(this);
+                /*SupportDialog supportDialog = new SupportDialog(this);
                 supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                supportDialog.show();
-                //startActivity(new Intent(SettingsActivity.this, SupportActivity.class));
+                supportDialog.show();*/
+                startActivity(new Intent(SettingsActivity.this, SupportActivity.class));
                 break;
 
             case R.id.privacy:

@@ -158,4 +158,21 @@ public class TokenStorage {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(access_token, false);
     }
+
+    public static void saveHomeZipCodeName(Context context, Double db_Lat, Double db_Lon) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("Lat",db_Lat.toString());
+        editor.putString("Lon", db_Lon.toString());
+        editor.apply();
+    }
+
+    public static String[] readHomeZipCodeName(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        String la = sharedPreferences.getString("Lat","");
+        String lo = sharedPreferences.getString("Lon","");
+
+        String[] LatLong = new String[]{la,lo};
+        return LatLong;
+    }
 }

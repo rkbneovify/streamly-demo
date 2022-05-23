@@ -1,7 +1,9 @@
 package com.adaptivemedia.streamlytv.streamly.playervideo;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -13,14 +15,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.dialogs.CustomDialog;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -94,7 +100,7 @@ public class PlayerActivity extends FragmentActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     Bundle params;
     Handler handler = new Handler();
-    final int delay = 15000; //millisecondsaddto
+    final int delay = 10000; //millisecondsaddto
     Runnable runnable;
     RecyclerView allChannelRecyclerView;
     List<Datum> channelList;
@@ -106,6 +112,7 @@ public class PlayerActivity extends FragmentActivity {
     String rvItemClick = "0";
     String channelId;
     int finalPosition;
+    ProgressBar loader;
 
     @Override
     protected void onStart() {
@@ -145,6 +152,7 @@ public class PlayerActivity extends FragmentActivity {
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         playerView.setUseController(false);
         dialog = CommonUtility.custom_loader(this);
+        loader = findViewById(R.id.load);
 
 
 
@@ -154,7 +162,8 @@ public class PlayerActivity extends FragmentActivity {
 //                mediaPlayer.setScreenOnWhilePlaying(false);
 //            }
 //        });
-
+        loader.setVisibility(View.VISIBLE);
+        playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         params = new Bundle();
@@ -169,6 +178,18 @@ public class PlayerActivity extends FragmentActivity {
         mFirebaseAnalytics.setUserId(userId);
 
 
+        Log.e("Player","Token : "+authToken);
+
+        String[] LatLong = TokenStorage.readHomeZipCodeName(getApplicationContext());
+        String lat = LatLong[0];
+        String lon = LatLong[1];
+        if(lat != "" && lon != ""){
+            getDrmKey();
+        }else{
+            getLatLong();
+        }
+        //getDrmKey();
+
         menuImage.setOnClickListener(view -> {
             menuImage.setVisibility(View.GONE);
             drawerLayout.setVisibility(View.VISIBLE);
@@ -180,10 +201,6 @@ public class PlayerActivity extends FragmentActivity {
             drawerLayout.setVisibility(View.GONE);
         });
 
-        Log.e("Player","Token : "+authToken);
-
-        //getLatLong();
-        getDrmKey();
     }
 
 
@@ -192,6 +209,8 @@ public class PlayerActivity extends FragmentActivity {
 
 
     public void playNext(String channelN, String videoUrl, String channelId, int position) {
+
+        playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
         Log.e(TAG, "playNext: 1 " + channelId);
         Log.e(TAG, "playNext: 2 " + videoUrl);
         Log.e(TAG, "playNext: 3 " + channelN);
@@ -214,10 +233,12 @@ public class PlayerActivity extends FragmentActivity {
         player.stop();
 
 
+        getDrmKey2(videoUrl, channelId, channelN);
+
         menuImage.setVisibility(View.VISIBLE);
         drawerLayout.setVisibility(View.GONE);
 
-        getDrmKey2(videoUrl, channelId, channelN);
+
 
 //        initializePlayer2("",videoUrl,channelN,channelId);
     }
@@ -262,6 +283,9 @@ public class PlayerActivity extends FragmentActivity {
                     case 404:
                         CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
+                    case 429:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
                     case 500:
                         CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
@@ -299,60 +323,76 @@ public class PlayerActivity extends FragmentActivity {
 
 
     private void postGeofenceCall(Double dbLat, Double dblon) {
-        Map<String, Double> map = new HashMap<>();
-        map.put("latitude", dbLat);
-        map.put("longitude", dblon);
+        String[] LatLong = TokenStorage.readHomeZipCodeName(getApplicationContext());
+        String lat = LatLong[0];
+        String lon = LatLong[1];
+
+       // CommonUtility.showToast(PlayerActivity.this, "lat" + lat + " long " + lon);
+
+        if(lat == dbLat.toString() && lon == dblon.toString()){
+            getDrmKey();
+        }
+        else if(lat == "" && lon == "") {
+            TokenStorage.saveHomeZipCodeName(getApplicationContext(),dbLat,dblon);
+            Log.e(TAG, "read " + lat + " " + lon);
+            Log.e(TAG, "new " + dbLat + " " + dblon);
+            Map<String, Double> map = new HashMap<>();
+            map.put("latitude", dbLat);
+            map.put("longitude", dblon);
 //        map.put("latitude",33.88768366489836);
 //        map.put("longitude",-17.90419095752048);
 
-        GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
-        viewModel.getData(map, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
-            @Override
-            public void onChanged(ApiResponse apiResponse) {
-                GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()) {
-                    case 200:
-                        getDrmKey();
-                        Log.e(TAG, "Calling getDrm 200 ");
-                        break;
-                    case 401:
-                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
-                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                        sessionExpiredDialog.setCancelable(false);
-                        sessionExpiredDialog.show();
-                        break;
-                    case 403:
-                        if (item.equals("1")) {
+            GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
+            viewModel.getData(map, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
+                @Override
+                public void onChanged(ApiResponse apiResponse) {
+                    GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
+                    switch (apiResponse.getResponseCode()) {
+                        case 200:
                             getDrmKey();
-                            Log.e(TAG, "Calling getDrm 403 ");
-                            item = "0";
-                        } else {
-                            String popMessage = "You are away from your home zip code:  click here to continue viewing.";
-                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
-                                @Override
-                                public void onExitPress() {
+                            Log.e(TAG, "Calling getDrm 200 ");
+                            break;
+                        case 401:
+                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            sessionExpiredDialog.setCancelable(false);
+                            sessionExpiredDialog.show();
+                            break;
+                        case 403:
+                            if (item.equals("1")) {
+                                getDrmKey();
+                                Log.e(TAG, "Calling getDrm 403 ");
+                                item = "0";
+                            } else {
+                                String popMessage = "You are away from your home zip code:  click here to continue viewing.";
+                                ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, geofenceModel.getPopupmsg(), uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
+                                    @Override
+                                    public void onExitPress() {
 //                                    calling onBackPress
-                                    Log.e(TAG, "Calling back ");
-                                    PlayerActivity.this.onBackPressed();
-                                }
+                                        Log.e(TAG, "Calling back ");
+                                        PlayerActivity.this.onBackPressed();
+                                    }
 
-                                @Override
-                                public void onContinuePress() {
-                                    Log.e(TAG, "Calling continue ");
+                                    @Override
+                                    public void onContinuePress() {
+                                        Log.e(TAG, "Calling continue ");
 //                                    do Nothing here
-                                }
-                            });
-                            zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            zipCodeDialog.show();
+                                    }
+                                });
+                                zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                                zipCodeDialog.show();
 //                            getDrmKey();
-                        }
-                        break;
-                    default:
-                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                            }
+                            break;
+                        case 429:
+                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                            break;
+                        default:
+                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                    }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     public void getDrmKey() {
@@ -435,6 +475,7 @@ public class PlayerActivity extends FragmentActivity {
     }
 
     private void initializePlayer2(String drmKey, String wvUrl, String channelN, String channelId, String videoUrl) {
+        playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
         Log.e(TAG, "initializePlayer2: " + drmKey);
         Log.e(TAG, "initializePlayer2: " + wvUrl);
         Log.e(TAG, "initializePlayer2: " + channelN);
@@ -574,6 +615,7 @@ public class PlayerActivity extends FragmentActivity {
 //                    menuImage.setVisibility(View.GONE);
 
 //
+                    Log.e(TAG, "yes" );
                     mFirebaseAnalytics.logEvent("video_play", params);
 //
                     runnable = new Runnable() {
@@ -587,6 +629,7 @@ public class PlayerActivity extends FragmentActivity {
                     };
                     handler.postDelayed(runnable, delay);
                 } else {
+                    Log.e(TAG, "no" );
 //                    logoImage.setVisibility(View.GONE);
 //                    menuImage.setVisibility(View.VISIBLE);
 
@@ -606,6 +649,27 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
+                /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later","StreamlyTV");
+                customDialog.show();*/
+                AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
+                dialog.setTitle("StreamlyTV");
+                dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        dialog.dismiss();
+                        handler.removeCallbacks(runnable);
+                        player.stop();
+                        finish();
+
+
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(true);
                 Log.e(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
@@ -640,6 +704,7 @@ public class PlayerActivity extends FragmentActivity {
 
     private void initializePlayer(String drmKey, String wvUrl) {
 //        dialog.show();
+        playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
         Log.i(TAG, "initializePlayer: "+drmKey);
         Log.i(TAG, "initializePlayer: "+wvUrl);
         final String streamUrl = getIntent().getStringExtra("from");
@@ -716,6 +781,7 @@ public class PlayerActivity extends FragmentActivity {
 //                .createMediaSource(dashUri);
 /////////////////////////////////////////////////////////////////////////////////////////////////////
         // Attach it to the view
+
         playerView.setPlayer(player);
 
         // Preapre the player with content
@@ -774,17 +840,13 @@ public class PlayerActivity extends FragmentActivity {
 
             }
 
+
+
             @Override
             public void onIsPlayingChanged(boolean isPlaying) {
-                Log.i(TAG, "onIsPlayingChanged: " );
 
                 if (isPlaying) {
-
-                    Log.i(TAG, "onIsPlayingChanged: if " );
-//                    logoImage.setVisibility(View.VISIBLE);
-//                    menuImage.setVisibility(View.GONE);
-
-
+                    Log.e(TAG, "yes");
                     mFirebaseAnalytics.logEvent("video_play", params);
 
                     runnable = new Runnable() {
@@ -798,7 +860,7 @@ public class PlayerActivity extends FragmentActivity {
                     };
                     handler.postDelayed(runnable, delay);
                 } else {
-                    Log.i(TAG, "onIsPlayingChanged: ");
+                    Log.i(TAG, "no ");
 //                    logoImage.setVisibility(View.GONE);
 //                    menuImage.setVisibility(View.VISIBLE);
 
@@ -819,6 +881,28 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
+                /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later", "StreamlyTV");
+                customDialog.show();*/
+                AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
+                dialog.setTitle("StreamlyTV");
+                dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        dialog.dismiss();
+                        handler.removeCallbacks(runnable);
+                        player.stop();
+                        finish();
+
+
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(true);
+
                 Log.i(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
@@ -860,6 +944,7 @@ public class PlayerActivity extends FragmentActivity {
             Log.e(TAG, "back_press_called");
             finish();
     }
+
 
     @Override
     protected void onStop() {
@@ -929,6 +1014,7 @@ public class PlayerActivity extends FragmentActivity {
                             rvItemClick = "0";
 
                         } else {
+                            loader.setVisibility(View.GONE);
                             initializePlayer(drmKey, wvUrl);
                         }
 

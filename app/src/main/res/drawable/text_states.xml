@@ -4,10 +4,10 @@
         android:color="@color/md_black_1000"/> <!-- pressed -->
 
     <item android:state_focused="true"
-        android:color="@color/app_focus"/>
+        android:color="@color/app_blue_light"/>
     <!-- focused -->
 
 
     <item
-        android:color="@color/app_grey"/> <!-- default -->
+        android:color="@color/md_black_1000"/> <!-- default -->
 </selector>

@@ -16,5 +16,11 @@
   -->
 
 <resources>
-    <color name="ic_launcher_background">#1565C0</color>
+    <color name="ic_launcher_background">
+        <gradient
+            startColor="#001346"
+            centerColor="#002E6A"
+            endColor="#00478B"
+            angle="60"/>
+    </color>
 </resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_330sdp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:paddingLeft="@dimen/_12sdp"
+    android:paddingRight="@dimen/_12sdp"
+    android:paddingBottom="@dimen/_4sdp"
+    android:background="@color/color_white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="@color/color_white">
+
+
+        <TextView
+            android:id="@+id/custom_dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_black_1000"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="@font/helvetica_neue_medium"
+            android:padding="@dimen/_8sdp" />
+
+        <TextView
+            android:id="@+id/custom_dialog_msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_black_1000"
+            android:textSize="@dimen/_9ssp"
+            android:fontFamily="@font/helvetica_neue_medium"
+            android:padding="@dimen/_8sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="@dimen/_6sdp"
+            >
+            <!--        <requestFocus/>-->
+
+
+
+
+            <Button
+                android:id="@+id/custom_btn_ok"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:elevation="@dimen/_6sdp"
+                android:text="@string/ok"
+                android:textStyle="bold"
+                android:textColor="@color/color_white"
+                android:fontFamily="@font/helvetica_neue_bold"
+                android:textSize="@dimen/_8ssp"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:layout_marginLeft="@dimen/_6sdp"
+                android:background="@drawable/button_states"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>
+

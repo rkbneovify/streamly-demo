@@ -94,8 +94,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
 
-        getLatLong();
-       // getChannelList();
+       // getLatLong();
+        getChannelList();
     }
 
 //    private void getRecentList() {
@@ -186,6 +186,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        getChannelList();
 
                     } else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
@@ -367,6 +368,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     case 404:
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
+                    case 429:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
                     case 500:
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
@@ -408,6 +412,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        map.put("latitude",33.88768366489836);
 //        map.put("longitude",-17.90419095752048);
 
+        Log.e(TAG, "Add" + dbLat +" "+ dblon);
         GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
         viewModel.getData(map, MainActivity.this).observe(this, new Observer<ApiResponse>() {
             @Override
@@ -428,7 +433,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             getChannelList();
                             item = "0";
                         } else {
-                            String popMessage = "You are away from your home zip code:  click here to continue viewing.";
+                            String popMessage = "I am away from your home zip code:  click here to continue viewing.";
                             ZipCodeDialog zipCodeDialog = new ZipCodeDialog(MainActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
                                 @Override
                                 public void onExitPress() {

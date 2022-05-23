@@ -3,23 +3,44 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable-mdpi/options_states2.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.135" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/app_icon_tv.xml" value="0.135" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/black_transparent.xml" value="0.135" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/button_default.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/button_focused.xml" value="0.1345" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/button_states.xml" value="0.1365" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/custom_dialog.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_outline.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_password.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_password_btn.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_password_btn_outline.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_password_outline.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/edittext_states.xml" value="0.1475" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/gradent_background_color.xml" value="0.1345" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_baseline_visibility_24.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_baseline_visibility_off_24.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_launcher_background.xml" value="0.135" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.135" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/ic_noun_account.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/layout_focus2.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/menu_channel.xml" value="0.135" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/option_press.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/options_states.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/programguide_button_background.xml" value="0.1185" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/programguide_channel_item_background.xml" value="0.1185" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/programguide_item_program_background.xml" value="0.135" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/rectangle_focus.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/rectangle_password_btn_focus.xml" value="0.1475" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/rectangle_password_focus.xml" value="0.1475" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/show_password_selector.xml" value="0.1365" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/signin_focused.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/splash_background.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/support_circle_shape.xml" value="0.129" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/support_rectangle_white_box.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/text_states.xml" value="0.1" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_transparent.xml" value="0.1465" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_transparent2.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_hotel_qrcode.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_log_in.xml" value="0.25" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_main.xml" value="0.1796875" />
@@ -27,19 +48,24 @@
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_player.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_search.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_settings.xml" value="0.1796875" />
-        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_support.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_splash.xml" value="0.14749893116716545" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_support.xml" value="0.125" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_user_room.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/custom_dialog.xml" value="0.14749893116716545" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_device_limit.xml" value="0.14749893116716545" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_loading_progress_bar.xml" value="0.14749893116716545" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_no_plan.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_signout.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_support.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_terms_of_uses.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_zip_code.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/genere_item.xml" value="0.14749893116716545" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/player_all_channel_row.xml" value="0.1796875" />
-        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_fragment.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_fragment.xml" value="0.17229729729729729" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_channel.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_filter.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_program.xml" value="0.1796875" />
-        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_program_container.xml" value="0.1796875" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_program_container.xml" value="0.25" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_row.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_time.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/programguide_item_time_indicator.xml" value="0.1796875" />
