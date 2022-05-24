@@ -69,6 +69,16 @@ struct ChannelArray : Codable {
         case logo = "logo"
     }
     
+    init(id: Int, callSign: String, stationName: String, image: String, url: String, genreName: [String], logo: String) {
+        self.id = id
+        self.callSign = callSign
+        self.stationName = stationName
+        self.image = image
+        self.url = url
+        self.genrename = genreName
+        self.logo = logo
+    }
+    
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         //  connected_devices = try values.decodeIfPresent(Int.self, forKey: .connected_devices)

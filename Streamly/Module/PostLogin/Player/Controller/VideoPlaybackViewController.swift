@@ -18,7 +18,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     // The playerViewController is the one currently in use for full-screen playback.
     @objc dynamic var playerViewController: AVPlayerViewController?
     let customInteractiveVideoOverlay = CustomInteractiveVideoOverlay(nibName: "CustomInteractiveVideoOverlay", bundle: nil)
-    var filterData:[ChannelDetails]?
+    var filterData:[ChannelArray]?
     var player: AVQueuePlayer?
     @objc dynamic var pendingPlayerItem: AVPlayerItem?
     var playerItemStatusObservation: NSKeyValueObservation?
@@ -38,6 +38,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     lazy var viewModel: EPGViewModel = {
         return EPGViewModel()
     }()
+    var searchViewModel = SearchDataViewModel()
     
     func commonInit() {
         
@@ -92,7 +93,8 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
+        searchViewModel.getAllChannelListForSearch()
+        searchViewModel.delegate = self
         Address.sharedInstance.callthePostAddressGeoFence = {
             DispatchQueue.global(qos: .background).async
                 {
@@ -148,6 +150,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
         newPlayerViewController.delegate = self
         customInteractiveVideoOverlay.delegate = self
         customInteractiveVideoOverlay.data = self.filterData
+        customInteractiveVideoOverlay.selectedIndex = filterData?.firstIndex(where: {$0.id == channelObject?.id ?? 0}) ?? 0
         newPlayerViewController.customOverlayViewController = customInteractiveVideoOverlay
         if let oldPlayerViewController = self.playerViewController {
             oldPlayerViewController.removeFromParent()
@@ -423,7 +426,7 @@ extension VideoPlaybackViewController:CustomViews
     func callAction(_ tag: Int) {
         
         guard let item = self.filterData?[tag] else {return}
-        self.channelObject = item
+        self.channelObject = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
         self.playChannel()
         
     }
@@ -547,6 +550,10 @@ extension VideoPlaybackViewController
             
         }
         
+        searchViewModel.searchData = { data in
+            self.filterData = data.data
+        }
+        
     }
     
     
@@ -587,4 +594,18 @@ extension VideoPlaybackViewController
 //                self.viewModel.postgaError(self.channelObject?.CallSign ?? "", self.isAllowedZipCode ?? false,errorMsg,errorCode)
 //        }
     }
+}
+
+
+// MARK: - HandleError
+extension VideoPlaybackViewController: HandleError {
+    func handleError(_ message: String, _ statusCode: Int) {
+        print(message + "\(statusCode)")
+    }
+    
+    func successAPI() {
+        
+    }
+    
+    
 }

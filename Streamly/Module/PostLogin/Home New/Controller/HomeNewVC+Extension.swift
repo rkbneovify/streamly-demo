@@ -268,7 +268,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
                     self.videoPlaybackViewController.isfromRcent = self.selectedCategories == 1 ? true : false
                     self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
-                    self.videoPlaybackViewController.filterData = self.filteredList
+                    let list: [ChannelArray] = self.filteredList?.map({ chdetail in
+                        return ChannelArray(id: chdetail.id ?? 0, callSign: chdetail.CallSign ?? "", stationName: chdetail.StationName ?? "", image: "", url: chdetail.url ?? "", genreName: [""], logo: chdetail.logo ?? "")
+                    }) ?? []
+                    self.videoPlaybackViewController.filterData = list
                     self.videoPlaybackViewController.loadAndPlay()
                 }
             }

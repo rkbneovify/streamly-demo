@@ -17,8 +17,8 @@ class CustomInteractiveVideoOverlay: UIViewController {
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         return [self.collectionView]
     }
-    
-    var data:[ChannelDetails]?
+    var selectedIndex = 0
+    var data:[ChannelArray]?
     weak var delegate:CustomViews?
     
     
@@ -41,7 +41,8 @@ class CustomInteractiveVideoOverlay: UIViewController {
         self.collectionView.delegate = self
         collectionView.register(UINib(nibName: PosterCell.identiFier, bundle: nil),
                                 forCellWithReuseIdentifier: PosterCell.identiFier)
-        
+        collectionView.reloadData()
+        collectionView.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredVertically, animated: true)
     }
 }
 
@@ -73,6 +74,7 @@ extension CustomInteractiveVideoOverlay: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         // Now, thanks to the function above, this is disabled
+        selectedIndex = indexPath.item
         self.delegate?.callAction(indexPath.row)
 
     }

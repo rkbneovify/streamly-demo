@@ -194,9 +194,10 @@ extension SearchVC:UICollectionViewDelegate
             self.videoPlaybackViewController.isfromRcent = false
             self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
             self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-            self.videoPlaybackViewController.filterData = self.filteredChannelListInfo?.map({ obj in
+            self.videoPlaybackViewController.filterData = self.filteredChannelListInfo
+            /*?.map({ obj in
                 return ChannelDetails(id: obj.id ?? 0, stationName: obj.stationName ?? "", url: obj.url ?? "", logo: obj.logo ?? "", callSign: obj.callSign ?? "", programs: [])
-            })
+            })*/
             self.videoPlaybackViewController.loadAndPlay()
         
     }

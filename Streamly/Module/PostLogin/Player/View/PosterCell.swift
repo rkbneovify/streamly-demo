@@ -37,9 +37,9 @@ class PosterCell: UICollectionViewCell {
     }
     
     // MARK: Helpers
-    func confiGureData(_ data:ChannelDetails, _ index:Int)
+    func confiGureData(_ data:ChannelArray, _ index:Int)
     {
-        self.labelTxt.text = "\(index)"
+        self.labelTxt.text = "\(data.id ?? index+1)"
         self.imageView.sd_setImage(with: URL(string: data.logo ?? ""), placeholderImage: UIImage(named: "Logo2"))
         
     }
