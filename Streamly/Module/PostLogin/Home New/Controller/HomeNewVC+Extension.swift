@@ -16,10 +16,8 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         if self.collectionView == collectionView
         {
             guard let channels = filteredList, !channels.isEmpty else {
-                emptyChanelLabel.isHidden = false
                 return 0
             }
-            emptyChanelLabel.isHidden = true
             return (channels.count + 1)
         }
         else {

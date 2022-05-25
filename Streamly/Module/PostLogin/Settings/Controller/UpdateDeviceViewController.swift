@@ -126,10 +126,10 @@ extension UpdateDeviceViewController: APIResponseDelegate {
     }
     
     func apiUpdateNameSuccess() {
-        if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
+        if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isTierUser) {
             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-            openSearchVC(room: room)
+            openSearchVC()
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
             Switcher.updateRootVC()
@@ -146,9 +146,8 @@ extension UpdateDeviceViewController: APIResponseDelegate {
 // MARK: - Other Controller
 extension UpdateDeviceViewController {
     // MARK: - Open Other Controller
-    fileprivate func openSearchVC(room: [Room]) {
+    fileprivate func openSearchVC() {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
-        vc.viewModel.listOfRoom = room
         if navigationController == nil {
             let nav = UINavigationController(rootViewController: vc)
             present(nav, animated: true, completion: nil)

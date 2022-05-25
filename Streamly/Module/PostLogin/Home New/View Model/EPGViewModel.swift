@@ -43,7 +43,11 @@ class EPGViewModel: NSObject {
             //debugPrint("Success")
         }) { (error, data, code)  in
             if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                if failedData.message == "The token has been blacklisted" {
+                    self.delegate?.handleError(failedData.message ?? "", 401)
+                } else {
                     self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                }
                 return
             } else {
                // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)

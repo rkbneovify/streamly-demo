@@ -122,7 +122,7 @@ class Constant: NSObject
     }
 
     struct UserDefault {
-        
+        static let isTierUser = "userRole"
         static let isLogin = "isLogin"
         static let userName = "userName"
         static let token = "tokan"

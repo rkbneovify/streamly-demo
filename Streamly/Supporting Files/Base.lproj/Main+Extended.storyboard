@@ -617,8 +617,8 @@
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VlV-PK-P8U">
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel not found." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8Q-0l-NhN">
-                                <rect key="frame" x="802" y="517" width="316" height="46"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel not found." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i8Q-0l-NhN">
+                                <rect key="frame" x="100" y="517" width="1720" height="46"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -889,6 +889,7 @@
                             <constraint firstItem="ix6-JS-shb" firstAttribute="top" secondItem="bvZ-gg-zYn" secondAttribute="bottom" id="2uG-Mw-hVP"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="top" secondItem="VlV-PK-P8U" secondAttribute="top" constant="40" id="3QD-ga-q1R"/>
                             <constraint firstItem="n28-zC-q1c" firstAttribute="top" secondItem="Fnz-5i-nxU" secondAttribute="top" id="DVk-Nj-RH5"/>
+                            <constraint firstItem="NNg-TT-3ij" firstAttribute="trailing" secondItem="i8Q-0l-NhN" secondAttribute="trailing" constant="20" id="Gs0-jw-aAT"/>
                             <constraint firstItem="ix6-JS-shb" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" id="Ijf-F9-m5A"/>
                             <constraint firstItem="Fnz-5i-nxU" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="55" id="MKj-Sy-gJT"/>
                             <constraint firstItem="jte-II-w2x" firstAttribute="leading" secondItem="Fnz-5i-nxU" secondAttribute="trailing" constant="10" id="N2N-2b-Wum"/>
@@ -901,6 +902,7 @@
                             <constraint firstAttribute="bottom" secondItem="ix6-JS-shb" secondAttribute="bottom" id="eTn-dn-90H"/>
                             <constraint firstItem="kL9-t4-knR" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="hdv-kY-3FB"/>
                             <constraint firstItem="bvZ-gg-zYn" firstAttribute="leading" secondItem="VlV-PK-P8U" secondAttribute="leading" constant="36" id="iSA-Na-7u9"/>
+                            <constraint firstItem="i8Q-0l-NhN" firstAttribute="leading" secondItem="NNg-TT-3ij" secondAttribute="leading" constant="20" id="iVM-fS-DoC"/>
                             <constraint firstItem="n28-zC-q1c" firstAttribute="height" secondItem="Fnz-5i-nxU" secondAttribute="height" id="jHy-S4-MyI"/>
                             <constraint firstAttribute="trailing" secondItem="ix6-JS-shb" secondAttribute="trailing" id="kEW-Is-zS6"/>
                             <constraint firstAttribute="trailing" secondItem="bvZ-gg-zYn" secondAttribute="trailing" id="mNp-rY-U3c"/>

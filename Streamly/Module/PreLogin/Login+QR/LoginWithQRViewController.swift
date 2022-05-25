@@ -58,6 +58,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.name ?? "", key: Constant.UserDefault.userName)
                 Utility.setStringObject(value: data.user?.email ?? "", key: Constant.UserDefault.email)
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
+                Utility.setBoolInUserDefaultData(value: data.userrole != "user", key: Constant.UserDefault.isTierUser)
                 if let removIdKey = data.data {
                     self.openAlertForRemoveId(id: removIdKey, message: data.message ?? "")
                 } else if !(data.subscribed ?? false) {
@@ -67,13 +68,15 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
 //                        Utility.logOut()
                     }
                     return
-                } else if let room = data.rooms, data.userrole != "user" {
-                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
-                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                    openSearchVC(room: room,showDeviceNamePopup: data.personaldevicenamePopup ?? false)
                 } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                     if !(data.personaldevicenamePopup ?? false) {
-                        Switcher.updateRootVC()
+                        if let room = data.rooms, data.userrole != "user" {
+                           Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+                           Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+                           openSearchVC(room: room,showDeviceNamePopup: data.personaldevicenamePopup ?? false)
+                        } else {
+                            Switcher.updateRootVC()
+                        }
                     } else {
                         openUpdateDeviceName(session: data.personaldeviceid ?? "")
                     }

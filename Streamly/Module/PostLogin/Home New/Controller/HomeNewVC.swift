@@ -31,6 +31,7 @@ class HomeNewVC: UIViewController {
     {
         willSet
         {
+            self.emptyChanelLabel.isHidden = (filteredList?.count ?? 0) > 0
             currentTimeLabel.text = formatter.string(from: Date())
             hideOrShowLiveObject(shouldHidden: true)
             if (newValue?.count ?? 0) > 0
@@ -40,6 +41,7 @@ class HomeNewVC: UIViewController {
         }
         didSet
         {
+            self.emptyChanelLabel.isHidden = (filteredList?.count ?? 0) > 0
             self.setupEPGLayout()
         }
     }
@@ -173,7 +175,7 @@ class HomeNewVC: UIViewController {
     // MARK: - Helper
     private func intialSetup()
     {
-        
+        self.emptyChanelLabel.text = "Oops! It looks like technical issues have taken our channels offline! We’re working on it, and will have the channels back up as soon as possible!"
         self.descriptionHeightConstraint.constant = 0
         // Layout for categories
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -427,6 +429,13 @@ class HomeNewVC: UIViewController {
                 self.showSpinner(onView: self.view)
                 viewModel.getEPGData(1, key ?? "")
             }
+        }
+        if sender == 1 {
+            self.emptyChanelLabel.text = "Channels not added on Recent, yet."
+        } else if sender == 2 {
+            self.emptyChanelLabel.text = "Channels not added on MyChannel, yet."
+        } else {
+            self.emptyChanelLabel.text = "Oops! It looks like technical issues have taken our channels offline! We’re working on it, and will have the channels back up as soon as possible!"
         }
         self.collectionView.reloadData()
         self.cateGiriesCollectionView.reloadData()

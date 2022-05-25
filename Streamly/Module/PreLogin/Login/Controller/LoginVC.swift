@@ -305,6 +305,7 @@ extension LoginVC
                     
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)
                     Utility.setBoolInUserDefaultData(value: response.success?.personaldevicenamePopup ?? false, key: Constant.UserDefault.isDeviceNameAdded)
+                    Utility.setBoolInUserDefaultData(value: response.success?.userrole != "user", key: Constant.UserDefault.isTierUser)
                     Utility.setStringObject(value: response.success?.user?.name ?? "", key: Constant.UserDefault.userName)
                     Utility.setStringObject(value: response.success?.user?.email ?? "", key: Constant.UserDefault.email)
                     Utility.setStringObject(value: response.success?.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
@@ -317,14 +318,20 @@ extension LoginVC
                         //                        })
                     }
                     else {
-                        if let room = response.success?.rooms, response.success?.userrole != "user" {
+                       /* if let room = response.success?.rooms, response.success?.userrole != "user" {
                             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
                             selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
-                        } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
+                        } else*/ if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                             if !(response.success?.personaldevicenamePopup ?? false) {
-                                Utility.setBoolInUserDefaultData(value: (response.success?.personaldevicenamePopup ?? false), key: Constant.UserDefault.isDeviceNameAdded)
-                                Switcher.updateRootVC()
+                                if let room = response.success?.rooms, response.success?.userrole != "user" {
+                                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+                                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+                                    selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
+                                } else {
+                                    Utility.setBoolInUserDefaultData(value: (response.success?.personaldevicenamePopup ?? false), key: Constant.UserDefault.isDeviceNameAdded)
+                                    Switcher.updateRootVC()
+                                }
                             } else {
                                 selfStrong.updateDeviceName(sessionId: response.success?.personaldeviceid ?? "")
                             }

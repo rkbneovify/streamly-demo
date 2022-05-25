@@ -115,14 +115,16 @@ extension LoginPasscodeVC: APIResponseDelegate {
 //                Utility.logOut()
                 return
             }
-        } else if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
-            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
-            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-            openSearchVC(room: room,showNamePopup: viewModel.responseData?.personaldevicenamePopup ?? false)
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
             // Open controller
             if !(viewModel.responseData?.personaldevicenamePopup ?? false) {
-                Switcher.updateRootVC()
+                if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {
+                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+                    openSearchVC(room: room,showNamePopup: viewModel.responseData?.personaldevicenamePopup ?? false)
+                } else {
+                    Switcher.updateRootVC()
+                }
             } else {
                 openEnterTVNameVC(sessionId: viewModel.personaldeviceid)
             }
