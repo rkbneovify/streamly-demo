@@ -14,7 +14,7 @@ protocol GetChannelData
 
 class CustomCollectionViewLayout: UICollectionViewLayout {
 
-    var itemAttributes = [[UICollectionViewLayoutAttributes]]()
+    var itemAttributes: [[UICollectionViewLayoutAttributes]]?
     var itemsSize = [[CGSize]]()
     var contentSize: CGSize = .zero
     var delegate : GetChannelData!
@@ -35,7 +35,8 @@ class CustomCollectionViewLayout: UICollectionViewLayout {
             return
         }
 
-        if itemAttributes.count != collectionView.numberOfSections {
+        itemAttributes = []
+        if itemAttributes?.count != collectionView.numberOfSections {
             generateItemAttributes(collectionView: collectionView)
             return
         }
@@ -77,13 +78,16 @@ class CustomCollectionViewLayout: UICollectionViewLayout {
     }
 
     override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-//        guard itemAttributes[indexPath.section].count <= indexPath.item else { return  itemAttributes[indexPath.section][indexPath.item] }
-        return itemAttributes[indexPath.section][indexPath.item]
+        if let sectionAttribute = itemAttributes?[indexPath.section] {
+            let itemAttribute = sectionAttribute[indexPath.item]
+            return itemAttribute
+        }
+        return itemAttributes?[indexPath.section][indexPath.item]
     }
 
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         var attributes = [UICollectionViewLayoutAttributes]()
-        for section in itemAttributes {
+        for section in itemAttributes ?? [] {
             let filteredArray = section.filter { obj -> Bool in
                 return rect.intersects(obj.frame)
             }
@@ -177,11 +181,11 @@ extension CustomCollectionViewLayout {
                     yOffset += itemSize.height
                 }
             }
-
-            itemAttributes.append(sectionAttributes)
+            print("SectionAttributes count is \(sectionAttributes.count)")
+            itemAttributes?.append(sectionAttributes)
         }
-
-        if let attributes = itemAttributes.last?.last
+        print("ItemAttributes count is \(itemAttributes?.count ?? 0)")
+        if let attributes = itemAttributes?.last?.last
         {
             maxX = (attributes.frame.maxX > maxX) ? attributes.frame.maxX : maxX
             contentSize = CGSize(width: maxX + 50, height: attributes.frame.maxY)
