@@ -314,9 +314,7 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onFailure(Call<GetIp> call, Throwable t) {
-
                 Log.e(TAG, "Ip Fail");
-
             }
         });
     }
