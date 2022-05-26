@@ -44,7 +44,7 @@
 
 
     <string name="programguide_title_no_program">No broadcast</string>
-    <string name="programguide_error_fetching_content">Unable to display content. Please try again later.</string>
+    <string name="programguide_error_fetching_content">Oops! It looks like technical issues have taken our channels offline! We\'re working on it, and will have the channels back up as soon as possible. </string>
 
     <string name="programguide_day_yesterday">Yesterday</string>
     <string name="programguide_day_today">Today</string>

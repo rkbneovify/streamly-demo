@@ -65,6 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:visibility="visible"
         />
 
     <ImageView
@@ -78,6 +79,7 @@
         app:layout_constraintBottom_toBottomOf="@id/bottom_detail"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/bottom_detail"
+        android:visibility="visible"
         />
 
     <TextView
@@ -168,11 +170,29 @@
             android:indeterminate="true" />
 
         <!-- Error state -->
+        <LinearLayout
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:textColor="@color/color_white"
+            android:textAlignment="center"
+            android:textSize="@dimen/_10sdp"
             android:text="@string/programguide_error_fetching_content" />
+        <Button
+            android:id="@+id/try_again"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_15sdp"
+            android:background="@drawable/button_states"
+            android:text="Try Again"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:textAllCaps="false"/>
+        </LinearLayout>
 
         <!-- Data state -->
         <com.adaptivemedia.streamlytv.streamly.ProgramGuideGridView

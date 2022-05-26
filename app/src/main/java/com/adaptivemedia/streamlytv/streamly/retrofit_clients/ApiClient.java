@@ -15,6 +15,7 @@ public class ApiClient {
     private static final String BASE_URL = ApiConfig.BASE_URL;
     private static final String BASE_URL_HOTEL = ApiConfig.BASE_URL;
     private static final String IP_URL = ApiConfig.IP_URL;
+    private static final String IPA_URL = ApiConfig.IPA_URL;
     public static Retrofit retrofit = null;
     private static Retrofit ipRetrofit = null;
 
@@ -96,6 +97,21 @@ public class ApiClient {
 
         ipRetrofit = new Retrofit.Builder()
                 .baseUrl(IP_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        return ipRetrofit;
+    }
+
+    public static Retrofit getIPAdd() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        ipRetrofit = new Retrofit.Builder()
+                .baseUrl(IPA_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)

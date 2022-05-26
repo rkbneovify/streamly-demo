@@ -10,6 +10,7 @@ import com.adaptivemedia.streamlytv.streamly.epg.ChannellistModel;
 import com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceNameDataModel;
 import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
 import com.adaptivemedia.streamlytv.streamly.model.CheckDeviceType;
+import com.adaptivemedia.streamlytv.streamly.model.GetIp;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLogInModel;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.adaptivemedia.streamlytv.streamly.playervideo.drm.DrmKeyModel;
@@ -205,4 +206,9 @@ public interface ApiInterface {
 
     @GET("/api/auth/qrvisibility")
     Call<QrVisibility> getVisibility();
+
+
+    @GET("/get_json.php")
+    Call<GetIp> getDeviceIpAddress();
+
 }

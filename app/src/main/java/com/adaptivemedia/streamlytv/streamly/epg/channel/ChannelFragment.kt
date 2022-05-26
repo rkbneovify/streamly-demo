@@ -6,8 +6,13 @@ import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.HomeBean
 import com.adaptivemedia.streamlytv.streamly.ProgramGuideFragment
@@ -30,6 +35,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.programguide_fragment.*
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -44,6 +50,7 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.random.Random
+
 
 class ChannelFragment(context: Context, val genre: String) :
     ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
@@ -238,6 +245,7 @@ class ChannelFragment(context: Context, val genre: String) :
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
                         recentList = response.body()!!.data
+                        Log.e(TAG, "Data : "+response.body())
                         getSecondApi(authToken)
                     } else if (response.code() == 401) {
                         if (response.errorBody() != null) {
@@ -308,22 +316,38 @@ class ChannelFragment(context: Context, val genre: String) :
                             dayss = (m.group()).toInt()
                         }
 //                        checking for gener type is all or recent if recent the add only those channel who are in recent list
+                        // checking if list is empty or null
                         if (genre.lowercase().equals("recent")) {
-                            for (d in it.data) {
-                                recentList?.let { recentList ->
-                                    for (recent in recentList) {
-                                        if (recent.id.equals(d.getmId())) {
-                                            channels.add(
-                                                SimpleChannel(
-                                                    d.getmId().toString(),
-                                                    SpannedString(d.callSign.toString()),
-                                                    d.logo,
-                                                    d.channelUrl
+                            if(recentList != null && recentList?.isEmpty() == false) {
+                                for (d in it.data) {
+                                    recentList?.let { recentList ->
+                                        for (recent in recentList) {
+                                            if (recent.id.equals(d.getmId())) {
+                                                channels.add(
+                                                    SimpleChannel(
+                                                        d.getmId().toString(),
+                                                        SpannedString(d.callSign.toString()),
+                                                        d.logo,
+                                                        d.channelUrl
+                                                    )
                                                 )
-                                            )
+                                            }
                                         }
                                     }
                                 }
+                            }else{
+                                val View = view?.findViewById<View>(R.id.bottom_detail)
+                                val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image)
+                                View?.isVisible = false
+                                imageView?.isVisible = false
+                                val tryBtn = view?.findViewById<Button>(R.id.try_again)
+                                tryBtn?.setOnClickListener {
+                                    setState(State.Loading)
+                                    requestRefresh()
+                                    View?.isVisible = true
+                                    imageView?.isVisible = true
+                                }
+                                setState(State.Error)
                             }
                         } else {
                             for (d in it.data) {
@@ -343,37 +367,54 @@ class ChannelFragment(context: Context, val genre: String) :
 //                            here i am saperate the data by all and recent genre
                             if (genre.lowercase().equals("recent")) {
                                 for (recent in recentList!!){
-                                    if(recent.id.equals(it.data[i].getmId())){
-                                        verticalBean = VerticalHomeBean()
-                                        verticalBean.headerTitle = it.data[i].callSign
-                                        verticalBean.channelId = it.data[i].getmId();
-                                        verticalBean.logoUrl = it.data[i].logo
-                                        verticalBean.baseUrl = it.data[i].channelUrl
-                                        Log.e(TAG, "call sign 1 " + it.data[i].callSign)
+                                    if(recentList != null && recentList?.isEmpty() == false) {
+                                        if (recent.id.equals(it.data[i].getmId())) {
+                                            verticalBean = VerticalHomeBean()
+                                            verticalBean.headerTitle = it.data[i].callSign
+                                            verticalBean.channelId = it.data[i].getmId();
+                                            verticalBean.logoUrl = it.data[i].logo
+                                            verticalBean.baseUrl = it.data[i].channelUrl
+                                            Log.e(TAG, "call sign 1 " + it.data[i].callSign)
 
-                                        homelist = ArrayList()
+                                            homelist = ArrayList()
 
-                                        it.data[i].programs.forEach {
-                                            homeBean = HomeBean()
+                                            it.data[i].programs.forEach {
+                                                homeBean = HomeBean()
 
-                                            showNames.add(it.title)
-                                            showName_list.add(it.title)
+                                                showNames.add(it.title)
+                                                showName_list.add(it.title)
 
-                                            val st =
-                                                Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
-                                            val et =
-                                                Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
+                                                val st =
+                                                    Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
+                                                val et =
+                                                    Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
 
-                                            homeBean.title = it.title
-                                            homeBean.description = it.description
-                                            homeBean.start_time = st
-                                            homeBean.end_time = et
-                                            homelist.add(homeBean)
+                                                homeBean.title = it.title
+                                                homeBean.description = it.description
+                                                homeBean.start_time = st
+                                                homeBean.end_time = et
+                                                homelist.add(homeBean)
+                                            }
+
+                                            verticalBean.allItemsInSection = homelist
+                                            channel_showName_list.add(
+                                                it.data[i].getmId().toString()
+                                            )
+                                            verticallist.add(verticalBean)
                                         }
-
-                                        verticalBean.allItemsInSection = homelist
-                                        channel_showName_list.add(it.data[i].getmId().toString())
-                                        verticallist.add(verticalBean)
+                                    }else{
+                                        val View = view?.findViewById<View>(R.id.bottom_detail)
+                                        val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image)
+                                        View?.isVisible = false
+                                        imageView?.isVisible = false
+                                        val tryBtn = view?.findViewById<Button>(R.id.try_again)
+                                        tryBtn?.setOnClickListener {
+                                            setState(State.Loading)
+                                            requestRefresh()
+                                            View?.isVisible = true
+                                            imageView?.isVisible = true
+                                        }
+                                        setState(State.Error)
                                     }
                                 }
                             } else {
@@ -466,6 +507,7 @@ class ChannelFragment(context: Context, val genre: String) :
 
 
                         setData(pair.first, pair.second, localDate, dayss!!)
+                        Log.e("###$TAG", "content set ")
                         setState(State.Content)
 
                         if (it.responseCode.toInt() == 401) {
@@ -640,10 +682,14 @@ class ChannelFragment(context: Context, val genre: String) :
                             sessionExpiredDialog.setCancelable(false)
                             sessionExpiredDialog.show()
                         } else if (it.message.toString().contains("402")) {
-                            CommonUtility.showToast(
+                            /*CommonUtility.showToast(
                                 eContext,
                                 "Payment Required. Kindly buy subscription"
-                            )
+                            )*/
+                            val noPlanDialog = NoPlanDialog(eContext)
+                            noPlanDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
+                            noPlanDialog.setCancelable(false)
+                            noPlanDialog.show()
 
                         }
 
@@ -739,4 +785,5 @@ class ChannelFragment(context: Context, val genre: String) :
         // You can refresh other data here as well.
         requestingProgramGuideFor(currentDate)
     }
+
 }

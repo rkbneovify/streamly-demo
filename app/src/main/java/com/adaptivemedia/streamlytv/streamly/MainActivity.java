@@ -7,11 +7,13 @@ import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
+import androidx.leanback.widget.GuidedActionAdapter;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -261,6 +263,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        textKids.setOnClickListener(this);
         settingText.setOnClickListener(this);
         goBackText.setOnClickListener(this);
+
 
     }
 

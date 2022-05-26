@@ -218,5 +218,15 @@
             tools:context=".MainActivity"
             tools:deviceIds="tv" />
 
+    <FrameLayout
+        android:id="@+id/fragment_container2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_265sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:context=".MainActivity"
+        tools:deviceIds="tv" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.CustomDialog;
+import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
+import com.adaptivemedia.streamlytv.streamly.model.GetIp;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -79,13 +81,22 @@ import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiResponse;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -180,14 +191,7 @@ public class PlayerActivity extends FragmentActivity {
 
         Log.e("Player","Token : "+authToken);
 
-        String[] LatLong = TokenStorage.readHomeZipCodeName(getApplicationContext());
-        String lat = LatLong[0];
-        String lon = LatLong[1];
-        if(lat != "" && lon != ""){
-            getDrmKey();
-        }else{
-            getLatLong();
-        }
+        getIpAddress2();
         //getDrmKey();
 
         menuImage.setOnClickListener(view -> {
@@ -244,15 +248,17 @@ public class PlayerActivity extends FragmentActivity {
     }
 
 
-    private void getLatLong() {
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+    private void getLatLong(String ip) {
+       /* WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         Log.e(TAG, "Calling ip address ");
         Log.e(TAG, "IP_Address: " + ip);
         ip = getIpAddress();
         Log.e(TAG, "IP_Address: " + ip);
-        ip = "157.42.78.63";
-//        157.42.78.63
+  //     ip = "157.42.78.63";
+//        157.42.78.63*/
+
+        Log.e(TAG,"IP "+ip);
 
 
         IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
@@ -284,7 +290,7 @@ public class PlayerActivity extends FragmentActivity {
                         CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                         break;
                     case 429:
-                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                        getDrmKey();
                         break;
                     case 500:
                         CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
@@ -295,6 +301,26 @@ public class PlayerActivity extends FragmentActivity {
         });
 
     }
+
+    private void getIpAddress2() {
+        ApiInterface apiInterface = ApiClient.getIPAdd().create(ApiInterface.class);
+        Call<GetIp> call = apiInterface.getDeviceIpAddress();
+        call.enqueue(new Callback<GetIp>() {
+            @Override
+            public void onResponse(Call<GetIp> call, Response<GetIp> response) {
+               String  ip = response.body().getIpAddress();
+               getLatLong(ip);
+            }
+
+            @Override
+            public void onFailure(Call<GetIp> call, Throwable t) {
+
+                Log.e(TAG, "Ip Fail");
+
+            }
+        });
+    }
+
 
     public String getIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext()
@@ -323,77 +349,75 @@ public class PlayerActivity extends FragmentActivity {
 
 
     private void postGeofenceCall(Double dbLat, Double dblon) {
+        // CommonUtility.showToast(PlayerActivity.this, "lat" + lat + " long " + lon);
+
         String[] LatLong = TokenStorage.readHomeZipCodeName(getApplicationContext());
         String lat = LatLong[0];
         String lon = LatLong[1];
 
-       // CommonUtility.showToast(PlayerActivity.this, "lat" + lat + " long " + lon);
-
-        if(lat == dbLat.toString() && lon == dblon.toString()){
+        if ((lat != "" && lon != "") && (lat != dbLat.toString() && lon != dblon.toString())) {
             getDrmKey();
-        }
-        else if(lat == "" && lon == "") {
-            TokenStorage.saveHomeZipCodeName(getApplicationContext(),dbLat,dblon);
-            Log.e(TAG, "read " + lat + " " + lon);
-            Log.e(TAG, "new " + dbLat + " " + dblon);
-            Map<String, Double> map = new HashMap<>();
-            map.put("latitude", dbLat);
-            map.put("longitude", dblon);
+        } else {
+
+        TokenStorage.saveHomeZipCodeName(getApplicationContext(), dbLat, dblon);
+        Log.e(TAG, "new " + dbLat + " " + dblon);
+        Map<String, Double> map = new HashMap<>();
+        map.put("latitude", dbLat);
+        map.put("longitude", dblon);
 //        map.put("latitude",33.88768366489836);
 //        map.put("longitude",-17.90419095752048);
 
-            GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
-            viewModel.getData(map, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
-                @Override
-                public void onChanged(ApiResponse apiResponse) {
-                    GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
-                    switch (apiResponse.getResponseCode()) {
-                        case 200:
+        GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
+        viewModel.getData(map, PlayerActivity.this).observe(this, new Observer<ApiResponse>() {
+            @Override
+            public void onChanged(ApiResponse apiResponse) {
+                GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        getDrmKey();
+                        Log.e(TAG, "Calling getDrm 200 ");
+                        break;
+                    case 401:
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
+                        break;
+                    case 403:
+                        if (item.equals("1")) {
                             getDrmKey();
-                            Log.e(TAG, "Calling getDrm 200 ");
-                            break;
-                        case 401:
-                            SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(PlayerActivity.this);
-                            sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            sessionExpiredDialog.setCancelable(false);
-                            sessionExpiredDialog.show();
-                            break;
-                        case 403:
-                            if (item.equals("1")) {
-                                getDrmKey();
-                                Log.e(TAG, "Calling getDrm 403 ");
-                                item = "0";
-                            } else {
-                                String popMessage = "You are away from your home zip code:  click here to continue viewing.";
-                                ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, geofenceModel.getPopupmsg(), uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
-                                    @Override
-                                    public void onExitPress() {
+                            Log.e(TAG, "Calling getDrm 403 ");
+                            item = "0";
+                        } else {
+                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(PlayerActivity.this, geofenceModel.getPopupmsg(), uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
+                                @Override
+                                public void onExitPress() {
 //                                    calling onBackPress
-                                        Log.e(TAG, "Calling back ");
-                                        PlayerActivity.this.onBackPressed();
-                                    }
+                                    Log.e(TAG, "Calling back ");
+                                    PlayerActivity.this.onBackPressed();
+                                }
 
-                                    @Override
-                                    public void onContinuePress() {
-                                        Log.e(TAG, "Calling continue ");
+                                @Override
+                                public void onContinuePress() {
+                                    Log.e(TAG, "Calling continue ");
 //                                    do Nothing here
-                                    }
-                                });
-                                zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                                zipCodeDialog.show();
+                                }
+                            });
+                            zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            zipCodeDialog.show();
 //                            getDrmKey();
-                            }
-                            break;
-                        case 429:
-                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
-                            break;
-                        default:
-                            CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
-                    }
+                        }
+                        break;
+                    case 429:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    default:
+                        CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
                 }
-            });
-        }
+            }
+        });
     }
+        }
 
     public void getDrmKey() {
         DrmViewModel viewModel = new ViewModelProvider(this).get(DrmViewModel.class);

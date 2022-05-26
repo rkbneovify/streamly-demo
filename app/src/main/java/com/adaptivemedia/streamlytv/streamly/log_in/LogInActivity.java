@@ -120,7 +120,7 @@ public class LogInActivity extends FragmentActivity {
      //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
   //     edUserName.setText("streamly1@yopmail.com");
- //   edPassword.setText("123456789");
+  //  edPassword.setText("123456789");
 
 
 
