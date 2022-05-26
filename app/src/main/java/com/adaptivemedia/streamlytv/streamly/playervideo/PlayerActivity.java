@@ -167,6 +167,7 @@ public class PlayerActivity extends FragmentActivity {
 
 
 
+
 //        playerView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
 //            public void onPrepared(MediaPlayer mediaPlayer) {
