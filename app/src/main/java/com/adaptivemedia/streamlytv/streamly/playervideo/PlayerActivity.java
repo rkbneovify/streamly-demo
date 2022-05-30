@@ -1070,6 +1070,25 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onFailure(Call<ChannellistModel> call, Throwable t) {
                 Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+                AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
+                dialog.setTitle("StreamlyTV");
+                dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        dialog.dismiss();
+                        handler.removeCallbacks(runnable);
+                        player.stop();
+                        finish();
+
+
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(true);
                 CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
             }
         });

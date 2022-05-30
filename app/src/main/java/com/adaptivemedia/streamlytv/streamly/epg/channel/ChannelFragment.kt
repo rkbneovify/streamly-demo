@@ -318,6 +318,7 @@ class ChannelFragment(context: Context, val genre: String) :
 //                        checking for gener type is all or recent if recent the add only those channel who are in recent list
                         // checking if list is empty or null
                         if (genre.lowercase().equals("recent")) {
+                            Log.e(TAG , "Recent" + recentList)
                             if(recentList != null && recentList?.isEmpty() == false) {
                                 for (d in it.data) {
                                     recentList?.let { recentList ->
