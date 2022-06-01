@@ -67,7 +67,6 @@ class LoginVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        registerNowBtn.isHidden = true
         dontHaveAClabel.isHidden = true
         showORHideVisibility(isShow: false)
         ApiCall.getQRVisbility { data, status in
