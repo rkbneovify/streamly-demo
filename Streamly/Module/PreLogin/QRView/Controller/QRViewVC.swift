@@ -12,9 +12,10 @@ import SDWebImage
 class QRViewVC: UIViewController {
 
     //MARK: Outlets
-    @IBOutlet weak var qrView:UIImageView!
+//    @IBOutlet weak var qrView:UIImageView!
     @IBOutlet weak var urlLBL:UILabel!
-
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
     //MARK: Properties
 
     var isFetchData = false
@@ -49,9 +50,10 @@ class QRViewVC: UIViewController {
     {
         if let data = qrData
         {
-            self.qrView.sd_setImage(with: URL(string: data.data ?? ""), placeholderImage: UIImage(named: "dummyQR"))
+//            self.qrView.sd_setImage(with: URL(string: data.data ?? ""), placeholderImage: UIImage(named: "dummyQR"))
             self.urlLBL.text = data.message ?? ""
         }
+        descriptionLabel.text = "You’re about to leave the app and go to an external website. You will no longer be transacting with Apple. Any accounts or purchases made outside of this app will be managed by the developer “StreamlyTV.” Your App Store account, stored payment methods, and related features, such as subscription management and refund requests, will not be available. Apple is not responsible for the privacy or security of transactions made with this developer."
         // Get define string to encode
 //        let myString = "https://pennlabs.org"
 //        // Get data from the string

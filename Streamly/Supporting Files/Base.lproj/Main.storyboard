@@ -438,44 +438,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tr-OF-07S">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tr-OF-07S">
                                 <rect key="frame" x="936" y="510" width="48" height="60"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="50"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Stay on this while you sign in on your phone or computer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8f-za-fWI">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Stay on this while you sign in on your phone or computer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8f-za-fWI">
                                 <rect key="frame" x="382" y="983" width="1156" height="53"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="44"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z9W-wr-FPr">
-                                <rect key="frame" x="99" y="348" width="786" height="384"/>
+                                <rect key="frame" x="100" y="512" width="1704" height="400"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the link in a browser" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-W8-L97">
-                                        <rect key="frame" x="50" y="80" width="374" height="37"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="37" id="gl7-TU-1J9"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="31"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://streamlytv.com" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vMy-Jp-LLP">
-                                        <rect key="frame" x="50" y="233" width="686" height="72"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="60"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrN-XF-mao">
+                                        <rect key="frame" x="20" y="10" width="1664" height="380"/>
+                                        <string key="text">You’re about to leave the app and go to an external website. You will no longer be transacting with Apple.
+Any accounts or purchases made outside of this app will be managed by the developer “StreamlyTV.” Your App Store account, stored payment methods, and related features, such as subscription management and refund requests, will not be available. Apple is not responsible for the privacy or security of transactions made with this developer.</string>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="39"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.18823529410000001" green="0.23921568630000001" blue="0.25490196079999999" alpha="0.45000000000000001" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="X0F-W8-L97" firstAttribute="top" secondItem="z9W-wr-FPr" secondAttribute="top" constant="80" id="19r-LW-HWM"/>
-                                    <constraint firstAttribute="bottom" secondItem="vMy-Jp-LLP" secondAttribute="bottom" constant="79" id="BUh-tv-jhM"/>
-                                    <constraint firstAttribute="trailing" secondItem="vMy-Jp-LLP" secondAttribute="trailing" constant="50" id="KGu-7Q-HNI"/>
-                                    <constraint firstItem="vMy-Jp-LLP" firstAttribute="leading" secondItem="X0F-W8-L97" secondAttribute="leading" id="NJF-fC-uLy"/>
-                                    <constraint firstItem="X0F-W8-L97" firstAttribute="leading" secondItem="z9W-wr-FPr" secondAttribute="leading" constant="50" id="z46-mf-clV"/>
+                                    <constraint firstItem="VrN-XF-mao" firstAttribute="leading" secondItem="z9W-wr-FPr" secondAttribute="leading" constant="20" id="7rh-OA-06l"/>
+                                    <constraint firstItem="VrN-XF-mao" firstAttribute="centerY" secondItem="z9W-wr-FPr" secondAttribute="centerY" id="Aoc-OK-DGA"/>
+                                    <constraint firstAttribute="bottom" secondItem="VrN-XF-mao" secondAttribute="bottom" constant="10" id="HH5-8J-7kw"/>
+                                    <constraint firstItem="VrN-XF-mao" firstAttribute="top" secondItem="z9W-wr-FPr" secondAttribute="top" constant="10" id="d3n-rm-vM7"/>
+                                    <constraint firstAttribute="trailing" secondItem="VrN-XF-mao" secondAttribute="trailing" constant="20" id="m5K-eJ-c4e"/>
+                                    <constraint firstAttribute="height" constant="400" id="xiW-G7-ZKo"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -483,51 +477,25 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hnl-oI-Oig">
-                                <rect key="frame" x="1035" y="348" width="786" height="384"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan this QR code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2dU-Jp-YED">
-                                        <rect key="frame" x="50" y="80" width="268" height="37"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="37" id="LNu-7p-JT9"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="31"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try using a phone camera or a QR code scanner" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x6Q-aK-XO3">
-                                        <rect key="frame" x="50" y="223" width="433" height="82"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="34"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="dummyQR" translatesAutoresizingMaskIntoConstraints="NO" id="H7Q-ZH-cfW">
-                                        <rect key="frame" x="511" y="80" width="225" height="225"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="H7Q-ZH-cfW" secondAttribute="height" multiplier="1:1" id="FlQ-hf-Hnc"/>
-                                            <constraint firstAttribute="height" constant="225" id="joM-Gp-1ls"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.25490196078431371" alpha="0.45000000000000001" colorSpace="calibratedRGB"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the link in a browser" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-W8-L97">
+                                <rect key="frame" x="635" y="333" width="650" height="37"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="786" id="13W-8v-snC"/>
-                                    <constraint firstAttribute="trailing" secondItem="H7Q-ZH-cfW" secondAttribute="trailing" constant="50" id="4xJ-zJ-iKM"/>
-                                    <constraint firstItem="2dU-Jp-YED" firstAttribute="leading" secondItem="Hnl-oI-Oig" secondAttribute="leading" constant="50" id="WrD-b3-aZ0"/>
-                                    <constraint firstItem="H7Q-ZH-cfW" firstAttribute="top" secondItem="Hnl-oI-Oig" secondAttribute="top" constant="80" id="bt2-ex-tB3"/>
-                                    <constraint firstAttribute="height" constant="384" id="csX-o8-nMV"/>
-                                    <constraint firstAttribute="bottom" secondItem="x6Q-aK-XO3" secondAttribute="bottom" constant="79" id="dVR-0V-SWV"/>
-                                    <constraint firstAttribute="bottom" secondItem="H7Q-ZH-cfW" secondAttribute="bottom" constant="79" id="g8C-S3-BHH"/>
-                                    <constraint firstItem="H7Q-ZH-cfW" firstAttribute="leading" secondItem="x6Q-aK-XO3" secondAttribute="trailing" constant="28" id="gxp-sR-gID"/>
-                                    <constraint firstItem="x6Q-aK-XO3" firstAttribute="leading" secondItem="2dU-Jp-YED" secondAttribute="leading" id="jq0-mn-ADF"/>
-                                    <constraint firstItem="2dU-Jp-YED" firstAttribute="top" secondItem="Hnl-oI-Oig" secondAttribute="top" constant="80" id="q8O-nG-Bho"/>
+                                    <constraint firstAttribute="height" constant="37" id="gl7-TU-1J9"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="33"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="31"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://streamlytv.com" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vMy-Jp-LLP">
+                                <rect key="frame" x="635" y="396" width="650" height="72"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="650" id="0ki-hP-aQ8"/>
+                                    <constraint firstAttribute="height" constant="72" id="ulD-Km-jqc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="60"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Activate your Streamly Account on your TV" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xQg-6H-ieZ">
                                 <rect key="frame" x="465" y="222" width="990" height="67"/>
                                 <constraints>
@@ -549,19 +517,21 @@
                         <viewLayoutGuide key="safeArea" id="Uqk-sm-TVf"/>
                         <constraints>
                             <constraint firstItem="gPD-MS-TXv" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="14u-eH-Rc2"/>
-                            <constraint firstItem="z9W-wr-FPr" firstAttribute="leading" secondItem="jj8-8s-GMx" secondAttribute="leading" constant="99" id="2Bq-eG-hPD"/>
+                            <constraint firstItem="X0F-W8-L97" firstAttribute="trailing" secondItem="vMy-Jp-LLP" secondAttribute="trailing" id="4zX-37-h2a"/>
                             <constraint firstItem="xQg-6H-ieZ" firstAttribute="centerX" secondItem="gPD-MS-TXv" secondAttribute="centerX" id="66M-OZ-zxv"/>
-                            <constraint firstItem="z9W-wr-FPr" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="Epv-zo-B4q"/>
                             <constraint firstItem="xQg-6H-ieZ" firstAttribute="top" secondItem="gPD-MS-TXv" secondAttribute="bottom" constant="100" id="F2V-ij-ck7"/>
-                            <constraint firstItem="z9W-wr-FPr" firstAttribute="height" secondItem="Hnl-oI-Oig" secondAttribute="height" id="N0v-Zz-6Fc"/>
+                            <constraint firstItem="vMy-Jp-LLP" firstAttribute="top" secondItem="X0F-W8-L97" secondAttribute="bottom" constant="26" id="LgN-y8-VWT"/>
                             <constraint firstItem="3tr-OF-07S" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="Pzg-YP-GZw"/>
+                            <constraint firstItem="vMy-Jp-LLP" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="Tyq-tH-vdK"/>
                             <constraint firstAttribute="bottom" secondItem="h8f-za-fWI" secondAttribute="bottom" constant="44" id="VDd-Xq-7Nv"/>
-                            <constraint firstItem="z9W-wr-FPr" firstAttribute="width" secondItem="Hnl-oI-Oig" secondAttribute="width" id="VJc-ja-eee"/>
-                            <constraint firstAttribute="trailing" secondItem="Hnl-oI-Oig" secondAttribute="trailing" constant="99" id="bkq-Bl-0d5"/>
                             <constraint firstItem="gPD-MS-TXv" firstAttribute="top" secondItem="jj8-8s-GMx" secondAttribute="top" constant="44" id="fom-ll-oxu"/>
-                            <constraint firstItem="Hnl-oI-Oig" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="jDG-o9-O2i"/>
+                            <constraint firstItem="X0F-W8-L97" firstAttribute="leading" secondItem="vMy-Jp-LLP" secondAttribute="leading" id="ir1-ry-Pxb"/>
                             <constraint firstItem="h8f-za-fWI" firstAttribute="centerX" secondItem="3tr-OF-07S" secondAttribute="centerX" id="kjE-q2-U0W"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="z9W-wr-FPr" secondAttribute="trailing" constant="20" id="lZt-Sc-461"/>
+                            <constraint firstItem="z9W-wr-FPr" firstAttribute="leading" secondItem="Uqk-sm-TVf" secondAttribute="leading" constant="20" id="lwk-4p-DnH"/>
                             <constraint firstItem="3tr-OF-07S" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="qul-rD-Tlm"/>
+                            <constraint firstItem="X0F-W8-L97" firstAttribute="top" secondItem="xQg-6H-ieZ" secondAttribute="bottom" constant="44" id="umG-eh-uuP"/>
+                            <constraint firstItem="z9W-wr-FPr" firstAttribute="top" secondItem="vMy-Jp-LLP" secondAttribute="bottom" constant="44" id="yCp-Gr-j1k"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
@@ -573,7 +543,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                     <connections>
-                        <outlet property="qrView" destination="H7Q-ZH-cfW" id="l6c-eq-B6c"/>
+                        <outlet property="descriptionLabel" destination="VrN-XF-mao" id="elL-CT-zs3"/>
                         <outlet property="urlLBL" destination="vMy-Jp-LLP" id="jmf-HZ-Gnx"/>
                     </connections>
                 </viewController>

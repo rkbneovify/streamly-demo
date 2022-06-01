@@ -67,7 +67,7 @@ class LoginVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        registerNowBtn.isHidden = true
+//        registerNowBtn.isHidden = true
         dontHaveAClabel.isHidden = true
         showORHideVisibility(isShow: false)
         ApiCall.getQRVisbility { data, status in
@@ -226,7 +226,11 @@ class LoginVC: UIViewController {
                 popUPViewsVC.qrData = self.qrData
                 self.present(popUPViewsVC, animated:true, completion:nil)
             } else {
-                showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
+                let popUPViewsVC = QRViewVC.instantiateFromAppStoryboard(appStoryboard: .Main)
+                popUPViewsVC.isFetchData = ( qrData == nil) ? false : true
+                popUPViewsVC.qrData = self.qrData
+                self.present(popUPViewsVC, animated:true, completion:nil)
+//                showAlert(title: "Register Now",withMessage: "Open the link in a browser\nhttps://streamlytv.com/", setFirstButtonTitle: "Ok") { _ in }
             }
             
         }
