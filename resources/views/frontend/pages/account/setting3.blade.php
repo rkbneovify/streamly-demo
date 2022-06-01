@@ -108,6 +108,49 @@ use Laravel\Cashier\Cashier;
     z-index: 2;
 }
 
+.popupwarning {
+			display: none;
+			position: absolute;
+            padding: 30px 20px;
+            margin: auto;
+			width: 40vw;
+			height: fit-content;
+			text-align: center;
+            left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+            z-index: 999;
+            background-color: #004e92;
+            color: #fff;
+            border-radius: 5px;	
+			transition: background-color 0.5s ease-out;
+		}
+		.button {
+            background-color: #fff;
+            border: none;
+            color: #000;
+            padding: 6px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+		.geolocation {
+			text-align: center;
+            margin-top: 1vw;
+		}
+		.mixs {
+            filter: blur(20px);
+			pointer-events: none;
+		}
+		.mixm {
+			filter: blur(0px)!important;
+			pointer-events: visible!important;
+		}
+
 @include('components.deviceCSS')
 
 	</style>
@@ -126,20 +169,39 @@ use Laravel\Cashier\Cashier;
 				jQuery('#changePassword').modal('show');
 			});
 
-@if ($errors->has('old_password')||$errors->has('password')||$errors->has('password_confirmation') )
+@if ($errors->has('old_password')||$errors->has('password')||$errors->has('password_confirmation'||$errors->has('Error')) )
 		jQuery('#changePassword').modal('show');
 		@endif
 
-		});
+		@if(session()->has('message2'))
+        jQuery('#changePassword').modal('show');
+		@endif
 
+		@if(session()->has('message'))
+        const targetDiv = document.getElementById("hideElement");
+		const targetNav = document.getElementById("mainNav");
+     	targetDiv.style.display = "block";
+		targetNav.style.display = "none";
+		jQuery('#blur').addClass('mixs');
+		setTimeout(
+        function() { 
+			window.location.href = '/logout';
+        }, 2000);
+		@endif
+
+		});
 
 		</script>
 @endsection
 
 @section('content')
+
+            <div id="hideElement" class="popupwarning">
+			Your Password Updated Successfully. Redirecting You To Login Screen.
+			</div>
 	
 
-	<section class="page-section">
+	<section id="blur" class="page-section">
 
 		<div class="modal fade" id="cancelSubscription">
 	    <div class="modal-dialog">
@@ -178,6 +240,12 @@ use Laravel\Cashier\Cashier;
             </ul>
           </div>
           @endif
+		  @if(session()->has('message2'))
+			  <div class="alert alert-danger">
+			  <strong>Whoops!</strong> There were some problems with your input.<br><br>
+			  <li>{{ session()->get('message2') }}</li>
+			  </div>
+              @endif
 					 <form action="{{ url("/userupdate", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -192,7 +260,7 @@ use Laravel\Cashier\Cashier;
 						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
 							<label for="newpassword">New Password</label>
 							<div>
-							<input type="text" class="form-control" name="password" id="newpassword">
+							<input type="password" class="form-control" name="password" id="newpassword">
 							<span class="bi bi-eye-slash field_icon" id="togglePasswordnew"></span>
 							</div>
 						</div>
@@ -257,6 +325,7 @@ use Laravel\Cashier\Cashier;
 		{{ session()->get('message') }}
 </div>
 @endif
+
 		<div class="container">
 				<h2 class="section-heading text-center">Account Settings</h2>
 				
