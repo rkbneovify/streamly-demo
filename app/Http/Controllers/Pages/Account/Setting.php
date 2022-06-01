@@ -257,7 +257,7 @@ class Setting extends Controller
             return redirect()->back()->withInput()->withErrors($validator);
         }
         
-        $input = $request->only('name', 'email', 'password','dob','gender','country','address','zipcode','contact');
+        $input = $request->only('name', 'email', 'old_password', 'password','dob','gender','country','address','zipcode','contact');
         // $input = $request->only('password','zipcode');
        
     
@@ -271,11 +271,14 @@ class Setting extends Controller
         }
        //$allpost= $request->post();
        // dd($input); exit; get all the post data
+       if($request['password'] == $request['old_password']){
+        return redirect()->back()->with('message2','Your Old Password Cannot Be New Password');
+       }else{
         $user = User::find($id);
         $user->update($input); //update the user info
-     return redirect()->back()->with('message','Password Updated Successfully');
-        
-        
+        return redirect()->back()->with('message','Password Updated Successfully');
+       }
+             
     }
     public function updatePersonalDeviceName(Request $request, $id)
     {  $validator = Validator::make($request->all(), [
