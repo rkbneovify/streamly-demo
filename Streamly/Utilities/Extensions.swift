@@ -137,6 +137,16 @@ extension UIViewController
             vSpinner = nil
         }
     }
+    
+    func removeAllSpinerForcely(onView: UIView) {
+        DispatchQueue.main.async {
+            onView.subviews.forEach { view in
+                if view.backgroundColor == .spinnerBackgroundColor {
+                    view.removeFromSuperview()
+                }
+            }
+        }
+    }
 
     func validateEmail(text: String) -> String {
         if text.isEmptyString() {

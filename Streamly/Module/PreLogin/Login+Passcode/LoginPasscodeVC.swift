@@ -107,7 +107,8 @@ extension LoginPasscodeVC: APIResponseDelegate {
         self.removeSpinner()
         if let data = viewModel.responseData?.data { // check session exist.
             viewModel.removeIdKey = data
-            self.openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
+            self.viewModel.sameDeviceLogOut(id: viewModel.removeIdKey)
+            //self.openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
         } else if !(viewModel.responseData?.subscribed ?? false) {
             self.showAlert(withMessage: viewModel.responseData?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
 //                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -137,7 +138,8 @@ extension LoginPasscodeVC: APIResponseDelegate {
     func apiFailure(_ message: String,_ status: Int) {
         self.removeSpinner()
         if !viewModel.removeIdKey.isEmpty {
-            openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
+            self.viewModel.sameDeviceLogOut(id: viewModel.removeIdKey)
+//            openAlertForRemoveId(message: viewModel.responseData?.message ?? "")
         } else if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -152,7 +154,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
             }
         } else if status == 429 {
             showAlert(withMessage: message,setFirstButtonTitle: "OK") { _ in }
-        } else {
+        } else if !message.isEmpty {
             showSimpleAlertWithMessage(message)
         }
     }

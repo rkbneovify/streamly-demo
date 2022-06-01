@@ -365,19 +365,20 @@ extension LoginVC
                         }
                         //                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     } else if let data = failureResponse.data { // check session exist.
-                        selfStrong.openAlertForRemoveId(id: data, message: failureResponse.message ?? "")
+                        selfStrong.sameDeviceLogOut(id: data)
+                        //selfStrong.openAlertForRemoveId(id: data, message: failureResponse.message ?? "")
                     } else {
                         selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     }
                 } else {
                     guard let error = errorMessage else{return}
-                    selfStrong.showSimpleAlertWithMessage(error)
+//                    selfStrong.showSimpleAlertWithMessage(error)
                     
                 }
             }
             else {
                 self?.removeSpinner()
-                self?.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
+//                self?.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
             }
         }
     }
@@ -386,7 +387,8 @@ extension LoginVC
         ApiCall.sameDeviceIdLogout(id: id) { [weak self] data, status in
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
-                weak.showSimpleAlertWithMessage(data.message ?? "")
+                weak.loginAPICall(weak.userIDField.text ?? "", weak.passwordField.text ?? "")
+//                weak.showSimpleAlertWithMessage(data.message ?? "")
             }
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }

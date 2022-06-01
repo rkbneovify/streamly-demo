@@ -60,7 +60,8 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 Utility.setStringObject(value: data.user?.createdAt ?? "", key: Constant.UserDefault.createdAt)
                 Utility.setBoolInUserDefaultData(value: data.userrole != "user", key: Constant.UserDefault.isTierUser)
                 if let removIdKey = data.data {
-                    self.openAlertForRemoveId(id: removIdKey, message: data.message ?? "")
+                    self.viewModel.sameDeviceLogOut(id: removIdKey)
+//                    self.openAlertForRemoveId(id: removIdKey, message: data.message ?? "")
                 } else if !(data.subscribed ?? false) {
                     self.showAlert(withMessage: data.subscribedmsgis ?? "",setFirstButtonTitle: "Logout") { _ in
 //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
@@ -91,7 +92,8 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
                 }
             }
         } else if let data = data as? FailedResponse { // handle Login failed Response
-            self.openAlertForRemoveId(id: data.data ?? "", message: data.message ?? "")
+            self.viewModel.sameDeviceLogOut(id: data.data ?? "")
+//            self.openAlertForRemoveId(id: data.data ?? "", message: data.message ?? "")
         }
     }
 
@@ -109,7 +111,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
             }
         } else if status == 429 {
             showAlert(withMessage: message,setFirstButtonTitle: "OK") { _ in }
-        } else {
+        } else if !message.isEmpty {
             showSimpleAlertWithMessage(message)
         }
         //showSimpleAlertWithMessage(message)

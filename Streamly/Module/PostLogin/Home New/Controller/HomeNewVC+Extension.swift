@@ -279,13 +279,18 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 print("Same Category selected")
                 return
             }
-            viewModel.currentPage = 1
-            channelList = nil
-            switch indexPath.row {
-            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
-                self.selectCategories(indexPath.row, key: nil)
-            default:
-                self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
+           
+            NetworkManagerWrapper.canceltheRequest {
+                self.removeAllSpinerForcely(onView: self.view)
+                viewModel.currentPage = 1
+                channelList = nil
+                switch indexPath.row {
+                case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                    self.selectCategories(indexPath.row, key: nil)
+                default:
+                    self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
+                }
+                
                 
             }
             

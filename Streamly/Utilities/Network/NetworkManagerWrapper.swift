@@ -11,6 +11,7 @@ import Alamofire
 
 public typealias SuccessClosure = (_ data: Data?,_ status: Int?) -> (Void)
 public typealias FailureClosure = (_ error: Error?, _ data: Data?, _ statusCode: Int?) -> (Void)
+public typealias CancelAllPreviouseRequest = () -> (Void)
 
 
 class NetworkManagerWrapper: NSObject {
@@ -51,6 +52,11 @@ class NetworkManagerWrapper: NSObject {
     }
     return request
   }
+    
+    static func canceltheRequest(cancelRequest: CancelAllPreviouseRequest) {
+        AF.cancelAllRequests()
+        cancelRequest()
+    }
 
     static func multiPartFormData(params: [String: Any],_ requestParamter: RequestParameter,loader:Bool = true, encoding: ParameterEncoding = URLEncoding.default, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request  {
 
