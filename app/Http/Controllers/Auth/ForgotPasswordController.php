@@ -48,7 +48,7 @@ class ForgotPasswordController extends Controller
             
             $FRONTEND_URL=env('FRONTEND_URL');
 
-            $password_reset_link=$FRONTEND_URL.'/password/reset?token='.$token;
+            $password_reset_link=$FRONTEND_URL.'/password/reset/token='.$token.'?email='.$request->email;
 
             $html='<html>
                 Hi, '.$user->name.'<br><br>
