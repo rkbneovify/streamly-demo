@@ -139,8 +139,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                             collectionView.reloadItems(at: [lasIndexPath])
                         }
                     }
-                    group.enter()
-                    viewModel.getEPGData(viewModel.currentPage)
+                    NetworkManagerWrapper.canceltheRequest {
+                        group.enter()
+                        viewModel.getEPGData(viewModel.currentPage)
+                    }
                 } else {
                     showLoading = false
                     print("loading not called or pageExist is \(viewModel.isPageExist)")
