@@ -635,4 +635,39 @@ public function myRecents(Request $request)
         );
         return response()->json($return,200);
     }
+
+    public function userdelete ($id)
+    {
+        $User= User::find($id);
+
+        if($User){
+            $UserName = $User['name'];
+            $UserEmail = $User['email'];
+            if($User['is_active'] == 1){
+                DB::table('users')
+               ->where('id', $id)
+               ->update(['is_active' => "0"]);
+
+               DB::table('users')
+               ->where('id', $id)
+               ->update(['email' => $UserEmail.'old']);
+
+               DB::table('session_table')
+               ->where('users_id', $id)
+               ->where('status', "1")
+               ->update(['status' => "0"]);
+   
+               $response = array('status' => true,'message'=>'User with account name: '.$UserName.' Is Deleted Sucessfully.','User_email'=>$UserEmail);             
+               return response()->json($response, 200);
+   
+           }else{
+               $response = array('status' => false,'message'=>'User Already Deleted.');             
+               return response()->json($response, 200);
+           }
+        }else{
+            $response = array('status' => false,'message'=>'User with Id: '.$id.' Does Not Exist.','UserID'=>$id);             
+            return response()->json($response, 200);
+        }
+
+    }
 }
