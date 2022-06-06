@@ -24,6 +24,7 @@ Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 
 //QR code visibility API
 Route::get('auth/qrvisibility', 'APIController@qrvisibility');
+Route::delete('auth/userdelete/{id}','APIController@userdelete');
 
 // Registration, confirmations and verification
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');

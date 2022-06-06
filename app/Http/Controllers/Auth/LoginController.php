@@ -57,7 +57,7 @@ class LoginController extends Controller
     if( $user && !$user->email_verified_at){
         throw ValidationException::withMessages([$this->username() => __('Verify your email')]);
     }
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password]))
+    if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_active' => '1']))
     {
         // Updated this line
         return $this->sendLoginResponse($request);
