@@ -11,6 +11,8 @@ use App\Models\Role;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use Mail;
 class Payment extends Controller
 {   
     public function __construct()
@@ -213,6 +215,23 @@ $Genrekey=$pagechannel->keys();
                     $newSubscription = $user->newSubscription('main', $StripeplanId)
                     ->quantity($quantity)
                     ->create($request->payment_method, ['email' => $user->email]);}
+
+                    //send user email after successfull payment
+
+            $website_link = env('WEBSITE_URL');
+
+            $html='<html>
+                Hi, '.$user->name.'<br><br>
+
+                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your subscription is now active.<br> 
+                Start watching StreamlyTV right here by visiting the link <br><br><a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
+                $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! '.env('APP_NAME'));
+            });
 
     }
     public function persist($user)
