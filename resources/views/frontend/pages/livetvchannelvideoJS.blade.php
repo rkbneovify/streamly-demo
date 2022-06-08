@@ -31,6 +31,7 @@
 	}
 	/* Centered DIV element for our banner ad */
 	.overlay {
+		width: auto;
 		position:absolute;
 		top:50%;
 		left:50%;
@@ -610,6 +611,12 @@ console.log("playr ready");
 	border: 1px solid rgba( 255, 255, 255, 0.18 );
 	}
 
+	@media only screen and (min-width: 600px) {
+		details[open] {
+			width: 28vw;
+		}
+}
+
 		</style>
 	@endsection
 
@@ -633,7 +640,7 @@ console.log("playr ready");
 	<summary>Menu</summary><ul style="
 	list-style: none;
 	max-height: 300px;
-		
+	padding: 25px;	
 	/* background-color: #27507E; */
 	overflow-x: hidden;
 	overflow-y: scroll;">
@@ -645,11 +652,12 @@ console.log("playr ready");
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				margin-bottom: 15px;
 				width: 100%;
 					height: 150px;
 					border: 2px solid #FFFFFF;
 					
-				border-radius: 10px;   "><img style=' height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="{{  $channel->logo}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
+				border-radius: 10px;   "><img style=' height: 80%;width: 80%; object-fit: contain'  class="lazy" data-src="/uploads/channellogo/{{  $channel->image}}" loading="lazy"  alt="{{  $channel->StationName}}"></div>
 					{{-- {{$channel->StationName}} --}}
 				</li></a>
 		@endforeach
