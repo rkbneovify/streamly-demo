@@ -675,7 +675,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
     $website_link = env('WEBSITE_URL');
     
     // here you can set your pagination path/route.
-    $reco->withPath(''.$website_link.'/api/auth/channeldayschdeulepaginateoffsettz?genre='.$request->genre.'');
+    $reco->withPath(''.$website_link.'api/auth/channeldayschdeulepaginateoffsettz?genre='.$request->genre.'');
     return $reco;
        // return $reco;
 }
