@@ -11,8 +11,11 @@ use App\Models\Channel;
 use Validator;
 use Illuminate\Support\Facades\Cache;
 use Jenssegers\Agent\Agent;
+use App\Traits\PaginationTraits;
 class ChannelAPIController extends Controller
 {
+    use PaginationTraits;
+
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['checkdevice','sortdevice','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','PacificFrontEpgchannelDaysSchedule']]);
@@ -634,37 +637,47 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+            //->paginate(10)->appends(['genre' => $request->genre]);
+            ->get()->toArray();
         }else if($isDevice=='apple'){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+           // ->paginate(10)->appends(['genre' => $request->genre]);
+           ->get()->toArray();
         }else{
             $type='dash_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+            //->paginate(10)->appends(['genre' => $request->genre]);
+            ->get()->toArray();
             }
     }else{
         if($isDevice=='roku'){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+            ->get()->toArray();
         }else if($isDevice=='apple'){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+            ->get()->toArray();
         }else{
             $type='dash_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
-            ->paginate(10)->appends(['genre' => $request->genre]);
+            ->get()->toArray();
         }
     }
-        return $reco;
+    
+    $reco = $this->paginate($reco);
+    $website_link = env('WEBSITE_URL');
+    
+    // here you can set your pagination path/route.
+    $reco->withPath(''.$website_link.'/api/auth/channeldayschdeulepaginateoffsettz?genre='.$request->genre.'');
+    return $reco;
+       // return $reco;
 }
 public function channelDaysScheduleoffsettz(Request $request){
 $ua = $request->server('HTTP_USER_AGENT');
