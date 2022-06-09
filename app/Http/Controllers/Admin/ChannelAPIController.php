@@ -191,7 +191,7 @@ public function channeljson(Request $request)
     }else{
 
         $record= Cache::rememberForever('channelslistdash', function () {
-        $type='dash_url';
+        $type='url';
         return $this->channeljsonFunc($type)->get();
     });
     }
@@ -646,7 +646,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
            // ->paginate(10)->appends(['genre' => $request->genre]);
            ->get()->toArray();
         }else{
-            $type='dash_url';
+            $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
             //->paginate(10)->appends(['genre' => $request->genre]);
@@ -664,7 +664,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             // ->toSql();
             ->get()->toArray();
         }else{
-            $type='dash_url';
+            $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)
             // ->toSql();
             ->get()->toArray();
