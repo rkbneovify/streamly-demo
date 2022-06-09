@@ -151,12 +151,12 @@ extension RoomViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        showAlert(withMessage: "Are you sure to select this room?", setTwoButton: true, setFirstButtonTitle: "Yes", setSecondButtonTitle: "No") { [weak self] _ in
-            guard let weak = self else { return }
-            if let selectedID = weak.filterRoomList[indexPath.item].id {
-                weak.viewModel.selectRoomToLogin("\(selectedID)")
+//        showAlert(withMessage: "Are you sure to select this room?", setTwoButton: true, setFirstButtonTitle: "Yes", setSecondButtonTitle: "No") { [weak self] _ in
+//            guard let weak = self else { return }
+        if let selectedID = self.filterRoomList[indexPath.item].id {
+                self.viewModel.selectRoomToLogin("\(selectedID)")
             }
-        }
+//        }
        
         /* let flag = self.geoData?.success ?? false
          guard let item = filtterdChannelList?[(indexPath.item)] else {return}
@@ -177,17 +177,24 @@ extension RoomViewController: UICollectionViewDelegate {
 extension RoomViewController: RoomViewModelDelegate {
     func apiSuccess() {
         self.removeSpinner()
-        showToast(message: "Successfully added to room/slot", completion: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
-                if !isShow {
+//        let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
+//        if !isShow {
 //                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
-                    Switcher.updateRootVC()
-                } else {
-                    self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
-                }
-            }
-        })
+            Switcher.updateRootVC()
+//        } else {
+//            self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
+//        }
+//        showToast(message: "Successfully added to room/slot", completion: {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
+//                if !isShow {
+////                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+//                    Switcher.updateRootVC()
+//                } else {
+//                    self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
+//                }
+//            }
+//        })
         
     }
     

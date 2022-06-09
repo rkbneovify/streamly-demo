@@ -129,6 +129,7 @@ extension UpdateDeviceViewController: APIResponseDelegate {
         if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isTierUser) {
             Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+            Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
             openSearchVC()
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)

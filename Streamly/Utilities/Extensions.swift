@@ -114,6 +114,7 @@ extension UIViewController
         return appStoryboard.viewController(viewControllerClass: self)
     }
     func showSpinner(onView : UIView) {
+        self.view.isUserInteractionEnabled = false
         if vSpinner != nil {
             removeSpinner()
         }
@@ -132,6 +133,7 @@ extension UIViewController
     }
 
     func removeSpinner() {
+        self.view.isUserInteractionEnabled = true
         DispatchQueue.main.async {
             vSpinner?.removeFromSuperview()
             vSpinner = nil
@@ -139,6 +141,7 @@ extension UIViewController
     }
     
     func removeAllSpinerForcely(onView: UIView) {
+        self.view.isUserInteractionEnabled = true
         DispatchQueue.main.async {
             onView.subviews.forEach { view in
                 if view.backgroundColor == .spinnerBackgroundColor {

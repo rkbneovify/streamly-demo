@@ -327,14 +327,14 @@ extension LoginVC
                             selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
                         } else*/ if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                             if !(response.success?.personaldevicenamePopup ?? false) {
-                                if let room = response.success?.rooms, response.success?.userrole != "user" {
-                                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
-                                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-                                    selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
-                                } else {
+//                                if let room = response.success?.rooms, response.success?.userrole != "user" {
+//                                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+//                                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+//                                    selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
+//                                } else {
                                     Utility.setBoolInUserDefaultData(value: (response.success?.personaldevicenamePopup ?? false), key: Constant.UserDefault.isDeviceNameAdded)
                                     Switcher.updateRootVC()
-                                }
+//                                }
                             } else {
                                 selfStrong.updateDeviceName(sessionId: response.success?.personaldeviceid ?? "")
                             }

@@ -140,8 +140,12 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                         }
                     }
                     NetworkManagerWrapper.canceltheRequest {
-                        group.enter()
-                        viewModel.getEPGData(viewModel.currentPage)
+                        switch self.selectedCategories {
+                        case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                            self.viewModel.getEPGData(viewModel.currentPage)
+                        default:
+                            self.viewModel.getEPGData(viewModel.currentPage, self.genrsList?.allGenre?[self.selectedCategories - 3] ?? "")
+                        }
                     }
                 } else {
                     showLoading = false
@@ -172,6 +176,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
     func indexPathForPreferredFocusedView(in collectionView: UICollectionView) -> IndexPath? {
         if let indexPath = self.lastIndexPath, collectionView.cellForItem(at: indexPath) is ChannelCollectionViewCell {
             return indexPath
+        }
+        if collectionView == self.cateGiriesCollectionView {
+            if collectionView.cellForItem(at: IndexPath(item: selectedCategories, section: 0)) is AllGenrsListingCell {
+                return IndexPath(item: selectedCategories, section: 0)
+            }
         }
         return nil
     }

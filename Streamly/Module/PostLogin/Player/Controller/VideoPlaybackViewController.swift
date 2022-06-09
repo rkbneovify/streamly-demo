@@ -427,7 +427,8 @@ extension VideoPlaybackViewController:CustomViews
         
         guard let item = self.filterData?[tag] else {return}
         self.channelObject = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
-        self.playChannel()
+//        self.playChannel()
+        self.loadAvView()
         
     }
 }
