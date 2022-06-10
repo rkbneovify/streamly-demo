@@ -313,6 +313,9 @@ extension VideoPlaybackViewController {
             let url = loadingRequest.request.url else {
                 //print(#function, "Unable to read URL from loadingRequest")
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -1, userInfo: nil))
+            self.showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                self.dismiss(animated: true, completion: nil)
+            }
                 return false
         }
         
@@ -321,6 +324,9 @@ extension VideoPlaybackViewController {
             let certificateData = try? Data(contentsOf: URL(string: Constant.drmCertificateURL)!) else {
                 //print(#function, "Unable to read the certificate data.")
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -2, userInfo: nil))
+            self.showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                self.dismiss(animated: true, completion: nil)
+            }
                 return false
         }
         
@@ -332,6 +338,9 @@ extension VideoPlaybackViewController {
             let spcData = try? loadingRequest.streamingContentKeyRequestData(forApp: certificateData, contentIdentifier: contentIdData, options: nil) else {
                 loadingRequest.finishLoading(with: NSError(domain: "", code: -3, userInfo: nil))
                 //print(#function, "Unable to read the SPC data.")
+            self.showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                self.dismiss(animated: true, completion: nil)
+            }
                 return false
         }
         
@@ -378,6 +387,9 @@ extension VideoPlaybackViewController {
                 }
                 loadingRequest.finishLoading()
             } else {
+                self.showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                    self.dismiss(animated: true, completion: nil)
+                }
                 //print(#function, error?.localizedDescription ?? "Error during CKC request.")
             }
         }
@@ -497,6 +509,7 @@ extension VideoPlaybackViewController
             // Player item failed. See error.
             case .unknown:
                 debugPrint("unknown")
+                
 //                handleErrorWithMessage(self.playerViewController?.player?.currentItem?.error?.localizedDescription, error:self.playerViewController?.player?.currentItem?.error)
             // Player item is not yet ready.
 //                showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
@@ -511,7 +524,10 @@ extension VideoPlaybackViewController
     func handleErrorWithMessage(_ message: String?, error: Error? = nil) {
         
         if error != nil{
-            self.makeApiError(message ?? "", "\((error as NSError?)?.code ?? 0)")
+            showAlert(withMessage: "Due to some technical reason, channel gets interrupted. kindle try again later.") { _ in
+                self.dismiss(animated: true, completion: nil)
+            }
+//            self.makeApiError(message ?? "", "\((error as NSError?)?.code ?? 0)")
         }
     }
     
@@ -553,6 +569,10 @@ extension VideoPlaybackViewController
         
         searchViewModel.searchData = { data in
             self.filterData = data.data
+            if let chDetails = self.filterData?.first(where: {"\($0.id ?? 0)" == self.idS}) {
+                self.channelObject = ChannelDetails(id: chDetails.id ?? 0, stationName: chDetails.stationName ?? "", url: chDetails.url ?? "", logo: chDetails.logo ?? "", callSign: chDetails.callSign ?? "", programs: [])
+                self.loadAvView()
+            }
         }
         
     }

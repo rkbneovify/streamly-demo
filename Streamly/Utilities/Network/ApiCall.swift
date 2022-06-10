@@ -62,9 +62,9 @@ open class ApiCall {
     public static func getAllChannelList(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
-//         let param:[String:String] = ["search": search]
+         let param:[String:String] = ["deviceType": "apple"]
         
-        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getChannelList.rawValue, method: .get, headers: headers, parameters: nil)
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getChannelList.rawValue, method: .get, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
 

@@ -58,7 +58,7 @@ class HomeNewVC: UIViewController {
         super.init(coder: coder)
     }
     var selectedCategories = -1
-    let fixedCategoriesArray = ["ALL","RECENT","MY CHANNELS"]
+    let fixedCategoriesArray = ["ALL","RECENT"]//,"MY CHANNELS"]
     var timer:Timer?
     var lastContentOffset: CGPoint = CGPoint.zero
     let currentView = UIView()
@@ -324,7 +324,7 @@ class HomeNewVC: UIViewController {
         
         invalidateTimer()
         switch sender {
-        case CategoriesSelect.all.rawValue, CategoriesSelect.recent.rawValue, CategoriesSelect.myChannels.rawValue:
+        case CategoriesSelect.all.rawValue, CategoriesSelect.recent.rawValue://, CategoriesSelect.myChannels.rawValue:
             // guard  self.selectedCategories != sender else {return}
             if channelList != nil {
                 if CategoriesSelect.init(rawValue: sender) == .recent {
@@ -351,7 +351,7 @@ class HomeNewVC: UIViewController {
                             }
                         }
                     }
-                } else if CategoriesSelect.init(rawValue: sender) == .myChannels {
+                } /*else if CategoriesSelect.init(rawValue: sender) == .myChannels {
                     self.viewModel.getMyChannelList()
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
                         let tempRecent = self.loadMyChannelData(self.myChannelListData?.data ?? []) ?? []
@@ -375,7 +375,7 @@ class HomeNewVC: UIViewController {
                             }
                         }
                     }
-                } else {
+                }*/ else {
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
                         let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
                         self.filteredList?.append(contentsOf: channelData)
@@ -432,9 +432,9 @@ class HomeNewVC: UIViewController {
         }
         if sender == 1 {
             self.emptyChanelLabel.text = "Channels not added on Recent, yet."
-        } else if sender == 2 {
+        }/* else if sender == 2 {
             self.emptyChanelLabel.text = "Channels not added on MyChannel, yet."
-        } else {
+        }*/ else {
             self.emptyChanelLabel.text = "Oops! It looks like technical issues have taken our channels offline! We’re working on it, and will have the channels back up as soon as possible!"
         }
         self.collectionView.reloadData()

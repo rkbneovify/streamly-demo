@@ -101,13 +101,13 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
         else {
             guard let cateGories = collectionView.dequeueReusableCell(withReuseIdentifier: AllGenrsListingCell.identifier, for: indexPath) as? AllGenrsListingCell else {return UICollectionViewCell()}
             switch indexPath.row {
-            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+            case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue: //,CategoriesSelect.myChannels.rawValue:
                 cateGories.confiGureData(self.fixedCategoriesArray[indexPath.row], indexPath.row == self.selectedCategories ? true : false)
                 
             default:
                 if let data = genrsList?.allGenre
                 {
-                    cateGories.confiGureData(data[indexPath.row - 3], indexPath.row == self.selectedCategories ? true : false)
+                    cateGories.confiGureData(data[indexPath.row - 2], indexPath.row == self.selectedCategories ? true : false)
                     
                 }
             }
@@ -141,10 +141,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     }
                     NetworkManagerWrapper.canceltheRequest {
                         switch self.selectedCategories {
-                        case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                        case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue://,CategoriesSelect.myChannels.rawValue:
                             self.viewModel.getEPGData(viewModel.currentPage)
                         default:
-                            self.viewModel.getEPGData(viewModel.currentPage, self.genrsList?.allGenre?[self.selectedCategories - 3] ?? "")
+                            self.viewModel.getEPGData(viewModel.currentPage, self.genrsList?.allGenre?[self.selectedCategories - 2] ?? "")
                         }
                     }
                 } else {
@@ -277,10 +277,10 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
                     self.videoPlaybackViewController.isfromRcent = self.selectedCategories == 1 ? true : false
                     self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
-                    let list: [ChannelArray] = self.filteredList?.map({ chdetail in
-                        return ChannelArray(id: chdetail.id ?? 0, callSign: chdetail.CallSign ?? "", stationName: chdetail.StationName ?? "", image: "", url: chdetail.url ?? "", genreName: [""], logo: chdetail.logo ?? "")
-                    }) ?? []
-                    self.videoPlaybackViewController.filterData = list
+//                    let list: [ChannelArray] = self.filteredList?.map({ chdetail in
+//                        return ChannelArray(id: chdetail.id ?? 0, callSign: chdetail.CallSign ?? "", stationName: chdetail.StationName ?? "", image: "", url: chdetail.url ?? "", genreName: [""], logo: chdetail.logo ?? "")
+//                    }) ?? []
+//                    self.videoPlaybackViewController.filterData = list
                     self.videoPlaybackViewController.loadAndPlay()
                 }
             }
@@ -296,13 +296,11 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                 viewModel.currentPage = 1
                 channelList = nil
                 switch indexPath.row {
-                case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue,CategoriesSelect.myChannels.rawValue:
+                case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue: //,CategoriesSelect.myChannels.rawValue:
                     self.selectCategories(indexPath.row, key: nil)
                 default:
-                    self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 3])
+                    self.selectCategories(indexPath.row, key: self.genrsList?.allGenre?[indexPath.row - 2])
                 }
-                
-                
             }
             
         }
