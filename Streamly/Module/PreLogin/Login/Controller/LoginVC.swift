@@ -327,14 +327,14 @@ extension LoginVC
                             selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
                         } else*/ if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
                             if !(response.success?.personaldevicenamePopup ?? false) {
-//                                if let room = response.success?.rooms, response.success?.userrole != "user" {
-//                                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
-//                                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
-//                                    selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
-//                                } else {
+                                if let room = response.success?.rooms, response.success?.userrole != "user" {
+                                    Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isRoomExist)
+                                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isRoomSelected)
+                                    selfStrong.openSearchVC(room: room, showDeviceName: response.success?.personaldevicenamePopup ?? false)
+                                } else {
                                     Utility.setBoolInUserDefaultData(value: (response.success?.personaldevicenamePopup ?? false), key: Constant.UserDefault.isDeviceNameAdded)
                                     Switcher.updateRootVC()
-//                                }
+                                }
                             } else {
                                 selfStrong.updateDeviceName(sessionId: response.success?.personaldeviceid ?? "")
                             }
@@ -343,7 +343,8 @@ extension LoginVC
                     
                 } else if response.success?.success == false {
                     if let data = response.success?.data { // check session exist.
-                        selfStrong.openAlertForRemoveId(id: data, message: response.success?.message ?? "")
+                        selfStrong.sameDeviceLogOut(id: data)
+//                        selfStrong.openAlertForRemoveId(id: data, message: response.success?.message ?? "")
                     } else if !(response.success?.subscribed ?? false) {
                         selfStrong.showAlert(withMessage: response.success?.response_code == 429 ? response.success?.message ?? "" : response.success?.subscribedmsgis ?? "",setFirstButtonTitle: "OK") { _ in
                             //                        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
