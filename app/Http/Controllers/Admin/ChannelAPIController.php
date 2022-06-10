@@ -177,6 +177,7 @@ class ChannelAPIController extends Controller
 public function channeljson(Request $request) 
 {   
     $ua = $request->server('HTTP_USER_AGENT');
+    $deviceType=$request->get('deviceType');
     $isDevice=isDeviceAppleRokuOthers($ua);
     if($isDevice=='roku'){    
         $record= Cache::rememberForever('channelslistsmooth', function () {
@@ -188,10 +189,16 @@ public function channeljson(Request $request)
         $type='url';
         return $this->channeljsonFunc($type)->get();});
                 
-    }else{
+    }else if($deviceType=='apple')  {
+    $record= Cache::rememberForever('channelslistapple', function () {
+    $type='url';
+    return $this->channeljsonFunc($type)->get();});
+            
+    }
+    else{
 
         $record= Cache::rememberForever('channelslistdash', function () {
-        $type='url';
+        $type='dash_url';
         return $this->channeljsonFunc($type)->get();
     });
     }
