@@ -11,6 +11,12 @@ import Foundation
 protocol CustomViews:NSObject {
     
     func callAction(_ tag:Int)
+    func changeChannel(_ channel: ChannelArray)
+}
+
+extension CustomViews {
+    func callAction(_ tag:Int) {}
+    func changeChannel(_ channel: ChannelArray) {   }
 }
 
 protocol Scroll:NSObject {

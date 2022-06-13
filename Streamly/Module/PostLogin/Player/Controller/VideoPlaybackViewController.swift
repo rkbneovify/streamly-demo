@@ -149,7 +149,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
         let newPlayerViewController = AVPlayerViewController()
         newPlayerViewController.delegate = self
         customInteractiveVideoOverlay.delegate = self
-        customInteractiveVideoOverlay.data = self.filterData
+        customInteractiveVideoOverlay.data = self.filterData ?? []
         customInteractiveVideoOverlay.selectedIndex = filterData?.firstIndex(where: {$0.id == channelObject?.id ?? 0}) ?? 0
         newPlayerViewController.customOverlayViewController = customInteractiveVideoOverlay
         if let oldPlayerViewController = self.playerViewController {
@@ -436,12 +436,17 @@ extension VideoPlaybackViewController {
 extension VideoPlaybackViewController:CustomViews
 {
     func callAction(_ tag: Int) {
-        
-        guard let item = self.filterData?[tag] else {return}
-        self.channelObject = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
-//        self.playChannel()
+//
+//        guard let item = self.filterData?[tag] else {return}
+//        self.channelObject = ChannelDetails(id: item.id ?? 0, stationName: item.stationName ?? "", url: item.url ?? "", logo: item.logo ?? "", callSign: item.callSign ?? "", programs: [])
+////        self.playChannel()
+//        self.loadAvView()
+//
+    }
+    
+    func changeChannel(_ channel: ChannelArray) {
+        self.channelObject = ChannelDetails(id: channel.id ?? 0, stationName: channel.stationName ?? "", url: channel.url ?? "", logo: channel.logo ?? "", callSign: channel.callSign ?? "", programs: [])
         self.loadAvView()
-        
     }
 }
 

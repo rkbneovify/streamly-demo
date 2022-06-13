@@ -18,7 +18,7 @@ class CustomInteractiveVideoOverlay: UIViewController {
         return [self.collectionView]
     }
     var selectedIndex = 0
-    var data:[ChannelArray]?
+    var data = [ChannelArray]()
     weak var delegate:CustomViews?
     
     
@@ -50,16 +50,14 @@ class CustomInteractiveVideoOverlay: UIViewController {
 extension CustomInteractiveVideoOverlay:UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data?.count ?? 0
+        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identiFier, for: indexPath) as? PosterCell else {return UICollectionViewCell()}
-        if let rowData = self.data?[indexPath.row]
-        {
-            cell.confiGureData(rowData, indexPath.row)
-        }
+         let rowData = self.data[indexPath.row]
+         cell.confiGureData(rowData, indexPath.row)
         
         return cell
     }
@@ -75,7 +73,7 @@ extension CustomInteractiveVideoOverlay: UICollectionViewDelegate {
                         didSelectItemAt indexPath: IndexPath) {
         // Now, thanks to the function above, this is disabled
         selectedIndex = indexPath.item
-        self.delegate?.callAction(indexPath.row)
+        self.delegate?.changeChannel(data[indexPath.item])
 
     }
 }
