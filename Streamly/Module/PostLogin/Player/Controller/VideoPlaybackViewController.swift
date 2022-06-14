@@ -168,7 +168,6 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     
     private func loadAvView()
     {
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemNewAccessLogEntry, object: self.playerViewController?.player?.currentItem)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(playerItemDidReadyToPlay(notification:)),
                                                name: .AVPlayerItemNewAccessLogEntry,
@@ -491,7 +490,8 @@ extension VideoPlaybackViewController
         //            return
         //        }
         
-        if keyPath == #keyPath(AVPlayerItem.status) {
+        #warning("After check issue no: 27 if it's work fine then remove it this commented code from line no 494 to 529")
+       /* if keyPath == #keyPath(AVPlayerItem.status) {
             let status: AVPlayerItem.Status
             if let statusNumber = change?[.newKey] as? NSNumber {
                 status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
@@ -500,6 +500,8 @@ extension VideoPlaybackViewController
             } else {
                 status = .unknown
             }
+            
+            
             
             // Switch over status value
             switch status {
@@ -523,6 +525,16 @@ extension VideoPlaybackViewController
 //                }
             @unknown default:
                 debugPrint("hello")
+            }
+        }*/
+        if keyPath == #keyPath(AVPlayerItem.status) {
+            var status: AVPlayerItem.Status = .unknown
+            if let statusNumber = change?[.kindKey] as? NSNumber {
+                status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+            }
+            print("Switch over status value \(status.rawValue)")
+            if let aError = player?.currentItem?.error {
+                handleErrorWithMessage(aError.localizedDescription, error: aError)
             }
         }
     }
