@@ -168,6 +168,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     
     private func loadAvView()
     {
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemNewAccessLogEntry, object: self.playerViewController?.player?.currentItem)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(playerItemDidReadyToPlay(notification:)),
                                                name: .AVPlayerItemNewAccessLogEntry,

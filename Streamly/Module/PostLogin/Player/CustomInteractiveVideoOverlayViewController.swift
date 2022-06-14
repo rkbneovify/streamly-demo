@@ -42,7 +42,9 @@ class CustomInteractiveVideoOverlay: UIViewController {
         collectionView.register(UINib(nibName: PosterCell.identiFier, bundle: nil),
                                 forCellWithReuseIdentifier: PosterCell.identiFier)
         collectionView.reloadData()
-        collectionView.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredVertically, animated: true)
+        if data.count > 0 {
+            collectionView.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
+        }
     }
 }
 
@@ -56,8 +58,8 @@ extension CustomInteractiveVideoOverlay:UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identiFier, for: indexPath) as? PosterCell else {return UICollectionViewCell()}
-         let rowData = self.data[indexPath.row]
-         cell.confiGureData(rowData, indexPath.row)
+         let rowData = self.data[indexPath.item]
+         cell.confiGureData(rowData, indexPath.item)
         
         return cell
     }
