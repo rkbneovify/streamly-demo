@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Address.sharedInstance.cordnates()
         // Navigate to root
         // check login validation
-        print("Latest code of date: 15/06/2022")
+        print("Latest code of date: 16/06/2022")
         Switcher.updateRootVC()
         return true
     }
