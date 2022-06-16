@@ -20,7 +20,7 @@ class CustomInteractiveVideoOverlay: UIViewController {
     var selectedIndex = 0
     var data = [ChannelArray]()
     weak var delegate:CustomViews?
-    
+    var searchViewModel = SearchDataViewModel()
     
     // MARK: LifeCycle
     override func viewDidLoad() {
@@ -30,12 +30,18 @@ class CustomInteractiveVideoOverlay: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         //print("jjh")
+        super.viewWillAppear(animated)
+        if self.data.count > 0 {
+            self.collectionView.scrollToItem(at: IndexPath(item: self.selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
+        }
     }
     
     // MARK: Helper
     
     private func inititAlSetup()
     {
+        searchViewModel.getAllChannelListForSearch()
+        searchViewModel.delegate = self
         self.headingLbl.text = "All Channel"
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -44,6 +50,15 @@ class CustomInteractiveVideoOverlay: UIViewController {
         collectionView.reloadData()
         if data.count > 0 {
             collectionView.scrollToItem(at: IndexPath(item: selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
+        }
+        
+        searchViewModel.searchData = { data in
+            self.data = data.data ?? []
+            self.collectionView.reloadData()
+            if self.data.count > 0 {
+                self.collectionView.scrollToItem(at: IndexPath(item: self.selectedIndex, section: 0), at: .centeredHorizontally, animated: true)
+            }
+           
         }
     }
 }
@@ -78,4 +93,17 @@ extension CustomInteractiveVideoOverlay: UICollectionViewDelegate {
         self.delegate?.changeChannel(data[indexPath.item])
 
     }
+}
+
+// MARK: - HandleError
+extension CustomInteractiveVideoOverlay: HandleError {
+    func handleError(_ message: String, _ statusCode: Int) {
+        print(message + "\(statusCode)")
+    }
+    
+    func successAPI() {
+        self.collectionView.reloadData()
+    }
+    
+    
 }

@@ -38,7 +38,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     lazy var viewModel: EPGViewModel = {
         return EPGViewModel()
     }()
-    var searchViewModel = SearchDataViewModel()
+   
     
     func commonInit() {
         
@@ -92,9 +92,7 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        searchViewModel.getAllChannelListForSearch()
-        searchViewModel.delegate = self
+        
         Address.sharedInstance.callthePostAddressGeoFence = {
             DispatchQueue.global(qos: .background).async
                 {
@@ -118,11 +116,29 @@ class VideoPlaybackViewController: UIViewController, AVPlayerViewControllerDeleg
         }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewDidDisappear(true)
+    deinit {
         self.timer?.invalidate()
         self.timer = nil
         
+        // For check
+        NotificationCenter.default.removeObserver(self,
+                                               name: .AVPlayerItemNewAccessLogEntry,
+                                               object: self.playerViewController?.player?.currentItem)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.timer?.invalidate()
+        self.timer = nil
+        
+        // For check
+        NotificationCenter.default.removeObserver(self,
+                                               name: .AVPlayerItemNewAccessLogEntry,
+                                               object: self.playerViewController?.player?.currentItem)
+        if let oldPlayerViewController = self.playerViewController {
+            oldPlayerViewController.removeFromParent()
+            oldPlayerViewController.viewIfLoaded?.removeFromSuperview()
+        }
         
         /// set the data into HomeNewVC
         if !isfromRcent
@@ -446,7 +462,7 @@ extension VideoPlaybackViewController:CustomViews
     
     func changeChannel(_ channel: ChannelArray) {
         self.channelObject = ChannelDetails(id: channel.id ?? 0, stationName: channel.stationName ?? "", url: channel.url ?? "", logo: channel.logo ?? "", callSign: channel.callSign ?? "", programs: [])
-        self.loadAvView()
+        self.playChannel()
     }
 }
 
@@ -454,7 +470,9 @@ extension VideoPlaybackViewController
 {
     private func setuPTimer()
     {
-        timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        if timer == nil {
+            timer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(runTimedCode), userInfo: nil, repeats: true)
+        }
     }
     
     @objc func runTimedCode()
@@ -465,7 +483,7 @@ extension VideoPlaybackViewController
     @objc func playerItemDidReadyToPlay(notification: Notification) {
         if let _ = notification.object as? AVPlayerItem {
             // player is ready to play now!!
-            self.makeApiCallSign()
+//            self.makeApiCallSign()
             self.setuPTimer()
         }
     }
@@ -585,13 +603,13 @@ extension VideoPlaybackViewController
             
         }
         
-        searchViewModel.searchData = { data in
-            self.filterData = data.data
-            if let chDetails = self.filterData?.first(where: {"\($0.id ?? 0)" == self.idS}) {
-                self.channelObject = ChannelDetails(id: chDetails.id ?? 0, stationName: chDetails.stationName ?? "", url: chDetails.url ?? "", logo: chDetails.logo ?? "", callSign: chDetails.callSign ?? "", programs: [])
-                self.loadAvView()
-            }
-        }
+//        searchViewModel.searchData = { data in
+//            self.filterData = data.data
+//            if let chDetails = self.filterData?.first(where: {"\($0.id ?? 0)" == self.idS}) {
+//                self.channelObject = ChannelDetails(id: chDetails.id ?? 0, stationName: chDetails.stationName ?? "", url: chDetails.url ?? "", logo: chDetails.logo ?? "", callSign: chDetails.callSign ?? "", programs: [])
+//                self.loadAvView()
+//            }
+//        }
         
     }
     
