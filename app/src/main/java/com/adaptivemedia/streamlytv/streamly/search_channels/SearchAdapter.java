@@ -1,5 +1,6 @@
 package com.adaptivemedia.streamlytv.streamly.search_channels;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.DisplayMetrics;
@@ -53,7 +54,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         int holderWidth = rvWidth/4 - dpToPx(20);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.channelLayout.getLayoutParams();
@@ -72,6 +73,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
             @Override
             public void onClick(View v) {
                 Log.e("channel_count", list.get(position).getVideoUrl() + "");
+                Log.e("channel_count", "Pos :"+ list.get(position));
                 context.startActivity(new Intent(context, PlayerActivity.class)
                         .putExtra("from", list.get(position).getVideoUrl()));
             }

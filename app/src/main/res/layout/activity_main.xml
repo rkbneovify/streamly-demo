@@ -187,7 +187,8 @@
                 android:gravity="center_vertical|right"
                 android:textAllCaps="true"
                 android:textSize="@dimen/_8ssp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:focusable="true"/>
 
             <TextView
                 android:id="@+id/go_back_text"

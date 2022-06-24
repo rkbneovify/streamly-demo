@@ -165,8 +165,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         genreList.add("All");
                         genreList.add("Recent");
                         genreList.addAll(datumList);
+                        int postion = 0;
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
-                        GenereAdapter adapter = new GenereAdapter(MainActivity.this, genreList);
+                        GenereAdapter adapter = new GenereAdapter(MainActivity.this, genreList,postion);
                         recyclerView.setAdapter(adapter);
                         fragment(genreList.get(0));
                     } else if (response.code() == 401) {

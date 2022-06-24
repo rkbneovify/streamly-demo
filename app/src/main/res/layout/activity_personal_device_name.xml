@@ -144,7 +144,9 @@
             android:textSize="@dimen/_10ssp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="20dp"
-            android:id="@+id/personal_device_name_logout_btn" />
+            android:id="@+id/personal_device_name_logout_btn"
+            android:focusable="true"
+            android:focusableInTouchMode="true"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

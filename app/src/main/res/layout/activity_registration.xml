@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/splash_background"
+    tools:context=".streamly.settings.support.SupportActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@mipmap/streamly_logo" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/activate_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_15sdp"
+        android:text="@string/activate_account"
+        android:fontFamily="@font/helvetica_neue_bold"
+        android:textColor="@color/color_white"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginBottom="@dimen/_8sdp"/>
+
+    <TextView
+        android:id="@+id/link_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_8sdp"
+        android:text="@string/open_link_browser"
+        android:fontFamily="@font/helvetica_neue_bold"
+        android:textColor="@color/color_white"
+        android:layout_marginBottom="@dimen/_8sdp"/>
+
+    <TextView
+        android:id="@+id/web_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_15sdp"
+        android:text="@string/streamly_web"
+        android:fontFamily="@font/helvetica_neue_bold"
+        android:textColor="@color/color_white"
+        android:layout_marginBottom="@dimen/_10sdp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/support_rectangle_white_box"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/_50ssp"
+        android:layout_marginEnd="@dimen/_50ssp"
+        android:padding="@dimen/_2sdp">
+
+
+        <TextView
+            android:id="@+id/reg_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/helvetica_neue_medium"
+            android:text="@string/reg_message"
+            android:textSize="@dimen/_11sdp"
+            android:padding="@dimen/_4ssp"
+            android:textColor="@color/app_blue_light"/>
+    </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -11,13 +11,13 @@
 
             <corners android:radius="3dp" />
 
-            <solid android:color="@color/app_blue_dark"/>
+            <!--<solid android:color="@color/app_blue_dark"/>-->
 
 
-            <!--<stroke
+            <stroke
                 android:width="2dp"
                 android:color="@color/md_white_1000"
-                />-->
+                />
         </shape>
     </item>
 </selector>

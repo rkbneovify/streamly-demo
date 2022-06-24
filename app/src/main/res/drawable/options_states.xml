@@ -8,5 +8,6 @@
 
 
     <!--    <item android:state_hovered="true" android:drawable="@drawable/white_transparent" /> &lt;!&ndash; hovered &ndash;&gt;-->
-    <item android:drawable="@drawable/option_default" /> <!-- default -->
+    <item android:drawable="@drawable/option_default" />
+    <!-- default -->
 </selector>

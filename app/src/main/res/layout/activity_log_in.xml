@@ -142,7 +142,9 @@
                     android:textAlignment="center"
                     android:textColor="@drawable/text_states"
                     android:textSize="@dimen/_7ssp"
-                    tools:ignore="RtlCompat" />
+                    tools:ignore="RtlCompat"
+                    android:focusableInTouchMode="true"
+                    android:focusable="true"/>
 
             </FrameLayout>
 
@@ -256,7 +258,8 @@
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@drawable/register_background"
-                    android:textSize="@dimen/_6ssp" />
+                    android:textSize="@dimen/_6ssp"
+                    android:focusable="true"/>
             </LinearLayout>
         </LinearLayout>
         <ProgressBar

@@ -306,6 +306,7 @@ class ChannelFragment(context: Context, val genre: String) :
                         Log.e(TAG, "GET SECHEDULELIST " + it.message);
                         val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
+                        Log.e("### episodeData", "Data : " + showNames)
                         Log.e("### episodeData", it.data.size.toString())
 
                         //#neovifyissueresolved28sep

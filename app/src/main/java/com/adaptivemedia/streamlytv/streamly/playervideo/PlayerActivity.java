@@ -315,7 +315,7 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onFailure(Call<GetIp> call, Throwable t) {
-                Log.e(TAG, "Ip Fail");
+                getDrmKey();
             }
         });
     }
@@ -503,6 +503,8 @@ public class PlayerActivity extends FragmentActivity {
         Log.e(TAG, "initializePlayer2: " + wvUrl);
         Log.e(TAG, "initializePlayer2: " + channelN);
         Log.e(TAG, "initializePlayer2: " + channelId);
+        String drmkey = drmKey;
+        String wvurl = wvUrl;
         String streamUrl = videoUrl;
 
         String channelIdIntent = channelId;
@@ -673,7 +675,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later","StreamlyTV");
-                customDialog.show();*/
+                customDialog.show();*//*
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
@@ -697,7 +699,8 @@ public class PlayerActivity extends FragmentActivity {
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
                 mFirebaseAnalytics.logEvent("player_error", params);
-//                Log.e(TAG,"error_msg2 "+error.getSourceException());
+//                Log.e(TAG,"error_msg2 "+error.getSourceException());*/
+                playerFail(drmkey,wvurl);
 
             }
 
@@ -728,8 +731,13 @@ public class PlayerActivity extends FragmentActivity {
     private void initializePlayer(String drmKey, String wvUrl) {
 //        dialog.show();
         playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
+        String drmkey = drmKey;
+        String wvurl = wvUrl;
         Log.i(TAG, "initializePlayer: "+drmKey);
         Log.i(TAG, "initializePlayer: "+wvUrl);
+        Log.e(
+                TAG, "Open live player " + getIntent().getStringExtra("from")
+        );
         final String streamUrl = getIntent().getStringExtra("from");
 
         String channelIdIntent = getIntent().getStringExtra("channel_id");
@@ -905,7 +913,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later", "StreamlyTV");
-                customDialog.show();*/
+                customDialog.show();*//*
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
@@ -930,7 +938,13 @@ public class PlayerActivity extends FragmentActivity {
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
                 mFirebaseAnalytics.logEvent("player_error", params);
-//                Log.e(TAG,"error_msg2 "+error.getSourceException());
+//                Log.e(TAG,"error_msg2 "+error.getSourceException());*/
+                /*String errorMsg = "Due to some technical reason, channel gets interrupted. Kindly try again later";
+                CommonUtility.showToast(PlayerActivity.this,errorMsg );
+                handler.removeCallbacks(runnable);
+                player.stop();
+                finish();*/
+                playerFail(drmkey,wvurl);
 
             }
 
@@ -956,6 +970,243 @@ public class PlayerActivity extends FragmentActivity {
         player.setPlayWhenReady(true);
         postRecentViewChannel(channel_id);
 
+
+    }
+
+    private void playerFail(String drmKey, String wvUrl) {
+        playerView.setShowBuffering(playerView.SHOW_BUFFERING_ALWAYS);
+        Log.i(TAG, "initializePlayer: "+drmKey);
+        Log.i(TAG, "initializePlayer: "+wvUrl);
+        final String streamUrl = "https://channelstore2.streamlytv.com/Military/index.mpd";
+
+        String channelIdIntent = getIntent().getStringExtra("channel_id");
+        if (channelIdIntent != null) {
+            channel_id = channelIdIntent;
+        }
+
+        // URL of the KeyOS MultiKey License API for Widevine
+//        String wvUrl = "https://wv-keyos.licensekeyserver.com/";
+//        String wvURL1="http://127.0.0.1:8000/api/generic?drm-type=widevine";
+//        String wvURL1="https://streamlytv.com/api/generic?drm-type=widevine";
+//        String wvUrl1="https://demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=widevine";
+//        String streamUrl2="https://channelstore.streamlytv.com/streamly/AETVP.stream/manifest.mpd";
+//        Uri dashUri = Uri.parse("https://path/to/your/stream.mpd");
+
+        Uri dashUri = Uri.parse(streamUrl.trim());
+//        Uri dashUri = Uri.parse("https://cdn.streamlytv.com/espn/index.m3u8");
+//        Uri dashUri = Uri.parse("https://5db313b643fd8.streamlock.net:443/ZerounoTVEventi/ZerounoTVEventi/playlist.m3u8");
+//        Uri dashUri = Uri.parse("https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd");
+
+        Log.e(TAG, "1) license_server: " + wvUrl + "\n"
+                + "2) DRM_key: " + drmKey + "\n"
+                + "3) Stream_URL: " + streamUrl + "\n"
+                + "4) dash_uri: " + dashUri
+                + "5) channel_id: " + channelIdIntent
+        );
+
+        // Identifies the Widevine DRM
+        UUID widevineUuid = UUID.fromString("edef8ba9-79d6-4ace-a3c8-27dcd51d21ed");
+
+        // Security token required to acquire a license. Base64 encoded Authentication XML
+        String[] keyRequestProperties = new String[]{"x-keyos-authorization", drmKey};
+//        String[] keyRequestProperties = new String[] { "customdata", "PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIwLTEwLTE5IDE0OjUxOjU1LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjAtMTAtMTkgMTU6MDY6NTUuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZjEzNGMxNjBlYjU1ZTE5ZTJjMjUxODM1YjZlYjdjZDY8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+dS9YQVgxNnNxU2FvUU43UW9FKzY3TlNuTzY0UXFhbUVBOUFsYnNVSlozOWdUT1l3NEpDTW9md3NaYkFQWWVJaS9DKy9SMkJweHJwVEpuWS9ZRGx2dERoSFluYlNwYy9wMXNKcUxOdmREaE4yejEwS2wyT0hKekE1OTdxU0Urcnd2d3BHd09FSm1iVEFidm8zK3FTQVdsTnQ0dWJoMTg0M1VQU3FYMDVZNFEzdlJLWXdzSzR5SUxRdFJuTStENDJsWXcvcTlpc0pUR0pGVWRqY1hJVnh3QWdPRGpDNEdWQVIycXM1VXhHY1cyT0c0THd6ZWpkeUkwMENrK1FYZHpNcTVab3pUZ243a2ZJaGpPS0JETUx0L2VrNnhNYTZ2VjRTQlZEdWxkYnZCR1BjZW9CVzNYWDc1WFY4VjZxdUxJM29GM3FTM3FZQzUvNkJiRmNuQ0k2YjFRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=="};
+
+        // Create the DRM session manager and set required request parameters.
+        MediaDrmCallback mediaDrmCallback = createMediaDrmCallback(wvUrl, keyRequestProperties);
+        DrmSessionManager<ExoMediaCrypto> drmSessionManager = new DefaultDrmSessionManager.Builder()
+                .setUuidAndExoMediaDrmProvider(widevineUuid, FrameworkMediaDrm.DEFAULT_PROVIDER)
+                .build(mediaDrmCallback);
+
+
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(PlayerActivity.this,
+                Util.getUserAgent(this, "StreamlyTV"), null);
+        //todo HLs for the testing purpose (m3u8)
+//        HlsMediaSource mediaSource =new HlsMediaSource.Factory(dataSourceFactory)
+//                .setDrmSessionManager(drmSessionManager)
+//                .createMediaSource(dashUri);
+
+        //todo DASH for the testing purpose (mpd)
+        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+                .setDrmSessionManager(drmSessionManager)
+                .createMediaSource(dashUri);
+
+//        DashMediaSource mediaSource = new DashMediaSource(dashUri, dataSourceFactory,
+//                new DefaultDashChunkSource.Factory(dataSourceFactory),
+//                null, null);
+
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+//        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(32*1024, 64*1024, 1024, 1024).createDefaultLoadControl();
+//        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(99*1024, 120*1024, 1024, 1024).createDefaultLoadControl();
+        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+        //todo for the DRM protected streaming
+        // Create a data source factory.
+//        DataSource.Factory dataSourceFactory = getDefaultDataSourceFactory();
+        // Create a DASH media source pointing to a DASH manifest uri.
+//        MediaSource mediaSource = new DashMediaSource.Factory(dataSourceFactory)
+//                .setDrmSessionManager(drmSessionManager)
+//                .createMediaSource(dashUri);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Attach it to the view
+
+        playerView.setPlayer(player);
+
+        // Preapre the player with content
+        player.prepare(mediaSource);
+
+
+
+        player.addListener(new Player.EventListener() {
+            @Override
+            public void onTimelineChanged(Timeline timeline, int reason) {
+                Log.i(TAG, "onTimelineChanged: 1 "+timeline);
+                Log.i(TAG, "onTimelineChanged: 2 "+reason);
+            }
+
+            @Override
+            public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+                Log.i(TAG, "onTimelineChanged: 3 "+timeline);
+                Log.i(TAG, "onTimelineChanged: 4 "+reason);
+            }
+
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+                Log.i(TAG, "onTracksChanged: "+trackGroups);
+                Log.i(TAG, "onTracksChanged: "+trackSelections);
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+                Log.i(TAG, "onLoadingChanged: "+isLoading);
+                /*if (isLoading){
+                    mFirebaseAnalytics.logEvent("video_play", params);
+                }*/
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                switch (playbackState) {
+                    case ExoPlayer.STATE_IDLE:
+                        Log.i(TAG, "onPlayerStateChanged: idle ");
+                        break;
+                    case ExoPlayer.STATE_READY:
+                        Log.i(TAG, "onPlayerStateChanged: ready ");
+                        break;
+                    case ExoPlayer.STATE_BUFFERING:
+                        Log.i(TAG, "onPlayerStateChanged: buffering ");
+                        break;
+                    case ExoPlayer.STATE_ENDED:
+                        Log.i(TAG, "onPlayerStateChanged: STATE_ENDED  ");
+                        break;
+                }
+            }
+
+            @Override
+            public void onPlaybackSuppressionReasonChanged(int playbackSuppressionReason) {
+                Log.i(TAG, "onPlaybackSuppressionReasonChanged: " );
+
+            }
+
+
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+
+                if (isPlaying) {
+                    Log.e(TAG, "yes");
+                    mFirebaseAnalytics.logEvent("video_play", params);
+
+                    runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            //do something
+                            params.putString("livestream_seconds_watched", "15");
+                            mFirebaseAnalytics.logEvent("video_livestream_duration", params);
+                            handler.postDelayed(this, delay);
+                        }
+                    };
+                    handler.postDelayed(runnable, delay);
+                } else {
+                    Log.i(TAG, "no ");
+//                    logoImage.setVisibility(View.GONE);
+//                    menuImage.setVisibility(View.VISIBLE);
+
+                }
+
+            }
+
+            @Override
+            public void onRepeatModeChanged(int repeatMode) {
+                Log.i(TAG, "onRepeatModeChanged: else " );
+            }
+
+            @Override
+            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+                Log.i(TAG, "onShuffleModeEnabledChanged: " );
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later", "StreamlyTV");
+                customDialog.show();*//*
+                AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
+                dialog.setTitle("StreamlyTV");
+                dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
+
+                // Specifying a listener allows you to take an action before dismissing the dialog.
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                dialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Continue with delete operation
+                        dialog.dismiss();
+                        handler.removeCallbacks(runnable);
+                        player.stop();
+                        finish();
+
+
+                    }
+                });
+                dialog.show();
+                dialog.setCancelable(true);
+
+                Log.i(TAG, "error_msg" + error.toString());
+                params.putString("error_color", "red");
+                params.putString("error_msg", error.getSourceException().toString());
+                mFirebaseAnalytics.logEvent("player_error", params);
+//                Log.e(TAG,"error_msg2 "+error.getSourceException());*/
+                /*String errorMsg = "Due to some technical reason, channel gets interrupted. Kindly try again later";
+                CommonUtility.showToast(PlayerActivity.this,errorMsg );
+                handler.removeCallbacks(runnable);
+                player.stop();
+                finish();*/
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity(int reason) {
+                Log.i(TAG, "onPositionDiscontinuity: " );
+
+            }
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                Log.i(TAG, "onPlaybackParametersChanged: " );
+
+            }
+
+            @Override
+            public void onSeekProcessed() {
+                Log.i(TAG, "onSeekProcessed: " );
+
+            }
+        });
+
+        player.setPlayWhenReady(true);
+        postRecentViewChannel(channel_id);
 
     }
 
@@ -1005,6 +1256,8 @@ public class PlayerActivity extends FragmentActivity {
                             }
                             if(channelList.get(i).getId().toString().equals(channelId)){
                                 position = i;
+                            }else if(channelList.get(i).getId().toString().equals(channel_id)){
+                                position = i;
                             }
                         }
 
@@ -1021,6 +1274,7 @@ public class PlayerActivity extends FragmentActivity {
                             allChannelAdapter = new AllChannelAdapter(PlayerActivity.this, channelList, position);
                             allChannelRecyclerView.setAdapter(allChannelAdapter);
 
+                            Log.e(TAG, "onResponse: channel position " + position);
                              finalPosition = position;
                         }
                         allChannelRecyclerView.post(new Runnable() {
@@ -1070,7 +1324,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onFailure(Call<ChannellistModel> call, Throwable t) {
                 Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
-                AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
+                /*AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
 
@@ -1088,8 +1342,12 @@ public class PlayerActivity extends FragmentActivity {
                     }
                 });
                 dialog.show();
-                dialog.setCancelable(true);
-                CommonUtility.showToast(PlayerActivity.this, ConstantUtility.SERVER_ISSUE);
+                dialog.setCancelable(true);*/
+                String errorMsg = "Due to some technical reason, channel gets interrupted. Kindly try again later";
+                CommonUtility.showToast(PlayerActivity.this,errorMsg );
+                handler.removeCallbacks(runnable);
+                player.stop();
+                finish();
             }
         });
     }

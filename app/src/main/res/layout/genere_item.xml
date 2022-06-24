@@ -15,6 +15,6 @@
         android:text="@string/Kids"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="@dimen/_8ssp" />
+        android:textSize="@dimen/_8ssp"/>
 
 </LinearLayout>

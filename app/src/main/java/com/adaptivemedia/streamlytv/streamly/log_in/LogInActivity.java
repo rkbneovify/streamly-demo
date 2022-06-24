@@ -21,7 +21,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.adaptivemedia.streamlytv.streamly.registration.RegistrationActivity;
+import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
+import com.adaptivemedia.streamlytv.streamly.settings.support.SupportActivity;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
@@ -48,15 +51,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LogInActivity extends FragmentActivity {
-    private static final String TAG = LogInActivity.class.getSimpleName();
-    private ProgressBar dialog;
-    private String uniqueId;
-    private String userAgent;
-    private EditText edUserName, edPassword;
-    private TextView txtNeedHelp;
-    private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
-    private CheckBox rememberMeCheck;
-    private ImageView passwordTog;
+        private static final String TAG = com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity.class.getSimpleName();
+        private ProgressBar dialog;
+        private String uniqueId;
+        private String userAgent;
+        private EditText edUserName, edPassword;
+        private TextView txtNeedHelp;
+        private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
+        private CheckBox rememberMeCheck;
+        private ImageView passwordTog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,8 +114,7 @@ public class LogInActivity extends FragmentActivity {
                 supportDialog.show();
             }
         });
-
-  //  edUserName.setText("vikas.saini1@oodles.io");
+  //      edUserName.setText("vikas.saini1@oodles.io");
    //    edUserName.setText("mina@neovix.com");
     //  edUserName.setText("pm13426@gmail.com");
      //   edPassword.setText("Piyush123456789");
@@ -120,7 +122,7 @@ public class LogInActivity extends FragmentActivity {
      //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
   //     edUserName.setText("streamly1@yopmail.com");
-  //  edPassword.setText("123456789");
+   //  edPassword.setText("123456789");
 
 
 
@@ -155,7 +157,7 @@ public class LogInActivity extends FragmentActivity {
                 if (TokenStorage.readBarcodeVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE)) {
                     startActivity(new Intent(LogInActivity.this, QRCodeActivity.class));
                 }else{
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+                  /*  AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
                             dialog.setTitle("Register Now");
                             dialog.setMessage(getString(R.string.open_link_browser) + "\n" + "https://streamlytv.com/");
 
@@ -170,7 +172,8 @@ public class LogInActivity extends FragmentActivity {
                                 }
                             });
                             dialog.show();
-                    dialog.setCancelable(true);
+                    dialog.setCancelable(true);*/
+                    startActivity(new Intent(LogInActivity.this, RegistrationActivity.class));
                 }
 
 
@@ -255,7 +258,7 @@ public class LogInActivity extends FragmentActivity {
         passwordTog = findViewById(R.id.password_toggle);
     }
 
-    private void signInCall() {
+    private void  signInCall() {
         dialog.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<NewLogInModel> call = apiInterface.postLogInCall(userAgent, edUserName.getText().toString(),
