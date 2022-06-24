@@ -689,8 +689,6 @@ public class PlayerActivity extends FragmentActivity {
                         handler.removeCallbacks(runnable);
                         player.stop();
                         finish();
-
-
                     }
                 });
                 dialog.show();
