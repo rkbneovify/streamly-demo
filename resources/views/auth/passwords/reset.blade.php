@@ -9,6 +9,9 @@
     position: relative;
     z-index: 2;
 }
+.invalid-feedback {
+    display: block!important;
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
 
@@ -20,7 +23,7 @@
                 <div class="card-header">{{ __('Reset Password') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
+                    <form method="POST" id="myForm" action="{{ route('password.update') }}">
                         @csrf
 
                         <input type="hidden" name="token" value="{{ $token }}">
@@ -109,7 +112,8 @@ const togglePasswordnew = document.querySelector("#togglePasswordnew");
         // prevent form submit
         const form = document.querySelector("form");
         form.addEventListener('submit', function (e) {
-            e.preventDefault();
+            // e.preventDefault();
+            document.getElementById("myForm").submit();
         });
 </script>
 @endsection
