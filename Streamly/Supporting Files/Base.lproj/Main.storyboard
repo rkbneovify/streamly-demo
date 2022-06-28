@@ -438,19 +438,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tr-OF-07S">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3tr-OF-07S">
                                 <rect key="frame" x="936" y="510" width="48" height="60"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="50"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Stay on this while you sign in on your phone or computer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8f-za-fWI">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Stay on this while you sign in on your phone or computer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h8f-za-fWI">
                                 <rect key="frame" x="382" y="983" width="1156" height="53"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="44"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z9W-wr-FPr">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z9W-wr-FPr">
                                 <rect key="frame" x="100" y="512" width="1704" height="400"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VrN-XF-mao">
@@ -477,7 +477,7 @@ Any accounts or purchases made outside of this app will be managed by the develo
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the link in a browser" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-W8-L97">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the link in a browser" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X0F-W8-L97">
                                 <rect key="frame" x="635" y="333" width="650" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="37" id="gl7-TU-1J9"/>
@@ -486,7 +486,7 @@ Any accounts or purchases made outside of this app will be managed by the develo
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://streamlytv.com" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vMy-Jp-LLP">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://streamlytv.com" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vMy-Jp-LLP">
                                 <rect key="frame" x="635" y="396" width="650" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="650" id="0ki-hP-aQ8"/>
@@ -505,6 +505,44 @@ Any accounts or purchases made outside of this app will be managed by the develo
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YaG-xv-adv">
+                                <rect key="frame" x="100" y="340" width="800" height="400"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Open the link in a browser" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zg6-wN-4Rq">
+                                        <rect key="frame" x="40" y="80" width="740" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="8fT-my-iso"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="31"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="http://streamlytv.com/" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="voC-ZW-mCy">
+                                        <rect key="frame" x="40" y="248.5" width="650" height="72"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="650" id="tNn-Vb-kQ1"/>
+                                            <constraint firstAttribute="height" constant="72" id="tnw-uh-XiH"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="60"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.18823529411764706" green="0.23921568627450979" blue="0.25490196078431371" alpha="0.45000000000000001" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="zg6-wN-4Rq" secondAttribute="trailing" constant="20" id="2yk-nn-LwI"/>
+                                    <constraint firstItem="voC-ZW-mCy" firstAttribute="leading" secondItem="zg6-wN-4Rq" secondAttribute="leading" id="5Ks-av-R4x"/>
+                                    <constraint firstAttribute="height" constant="400" id="Ekh-vF-lQ4"/>
+                                    <constraint firstItem="zg6-wN-4Rq" firstAttribute="leading" secondItem="YaG-xv-adv" secondAttribute="leading" constant="40" id="KEU-ag-FH9"/>
+                                    <constraint firstItem="zg6-wN-4Rq" firstAttribute="top" secondItem="YaG-xv-adv" secondAttribute="top" constant="80" id="dt2-FK-GNR"/>
+                                    <constraint firstAttribute="width" constant="800" id="f0V-Ig-HII"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="33"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="gPD-MS-TXv">
                                 <rect key="frame" x="803" y="44" width="314" height="78"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -513,22 +551,74 @@ Any accounts or purchases made outside of this app will be managed by the develo
                                     <constraint firstAttribute="height" constant="78" id="m8w-ve-Df3"/>
                                 </constraints>
                             </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i71-tD-aO5">
+                                <rect key="frame" x="1020" y="340" width="800" height="400"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan this QR Code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DVj-GS-KPk">
+                                        <rect key="frame" x="40" y="80" width="334" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="37" id="aad-p5-7PM"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="38"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Try Using a phone camera or a QR code scanner" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QUi-Wv-Tee">
+                                        <rect key="frame" x="40" y="239" width="470" height="91"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="38"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dummyQR" translatesAutoresizingMaskIntoConstraints="NO" id="rfZ-qH-Xvi">
+                                        <rect key="frame" x="530" y="80" width="250" height="250"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="250" id="EU3-ET-clS"/>
+                                            <constraint firstAttribute="width" constant="250" id="ctw-V7-ibC"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <viewLayoutGuide key="safeArea" id="Idh-x4-dGT"/>
+                                <color key="backgroundColor" red="0.18823529410000001" green="0.23921568630000001" blue="0.25490196079999999" alpha="0.45000000000000001" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="rfZ-qH-Xvi" firstAttribute="top" secondItem="DVj-GS-KPk" secondAttribute="top" id="4Xp-zs-j44"/>
+                                    <constraint firstItem="rfZ-qH-Xvi" firstAttribute="leading" secondItem="QUi-Wv-Tee" secondAttribute="trailing" constant="20" id="Aas-E4-8Yu"/>
+                                    <constraint firstItem="QUi-Wv-Tee" firstAttribute="leading" secondItem="DVj-GS-KPk" secondAttribute="leading" id="HTd-kN-PvG"/>
+                                    <constraint firstItem="Idh-x4-dGT" firstAttribute="trailing" secondItem="rfZ-qH-Xvi" secondAttribute="trailing" constant="20" id="KQl-2d-CtS"/>
+                                    <constraint firstAttribute="height" constant="400" id="KxY-3O-28M"/>
+                                    <constraint firstItem="DVj-GS-KPk" firstAttribute="leading" secondItem="i71-tD-aO5" secondAttribute="leading" constant="40" id="fK4-mT-zIm"/>
+                                    <constraint firstItem="QUi-Wv-Tee" firstAttribute="bottom" secondItem="rfZ-qH-Xvi" secondAttribute="bottom" id="iE5-dx-QRY"/>
+                                    <constraint firstAttribute="width" constant="800" id="oqh-L1-l5K"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="33"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Uqk-sm-TVf"/>
                         <constraints>
                             <constraint firstItem="gPD-MS-TXv" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="14u-eH-Rc2"/>
+                            <constraint firstItem="voC-ZW-mCy" firstAttribute="centerY" secondItem="QUi-Wv-Tee" secondAttribute="centerY" id="2Cs-f8-Tdt"/>
                             <constraint firstItem="X0F-W8-L97" firstAttribute="trailing" secondItem="vMy-Jp-LLP" secondAttribute="trailing" id="4zX-37-h2a"/>
                             <constraint firstItem="xQg-6H-ieZ" firstAttribute="centerX" secondItem="gPD-MS-TXv" secondAttribute="centerX" id="66M-OZ-zxv"/>
+                            <constraint firstItem="i71-tD-aO5" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="CLr-b6-TDG"/>
                             <constraint firstItem="xQg-6H-ieZ" firstAttribute="top" secondItem="gPD-MS-TXv" secondAttribute="bottom" constant="100" id="F2V-ij-ck7"/>
+                            <constraint firstItem="3tr-OF-07S" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="YaG-xv-adv" secondAttribute="trailing" constant="36" id="KsC-Yj-DlM"/>
                             <constraint firstItem="vMy-Jp-LLP" firstAttribute="top" secondItem="X0F-W8-L97" secondAttribute="bottom" constant="26" id="LgN-y8-VWT"/>
+                            <constraint firstItem="DVj-GS-KPk" firstAttribute="top" secondItem="zg6-wN-4Rq" secondAttribute="top" id="NLi-SR-zbc"/>
                             <constraint firstItem="3tr-OF-07S" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="Pzg-YP-GZw"/>
                             <constraint firstItem="vMy-Jp-LLP" firstAttribute="centerX" secondItem="Uqk-sm-TVf" secondAttribute="centerX" id="Tyq-tH-vdK"/>
                             <constraint firstAttribute="bottom" secondItem="h8f-za-fWI" secondAttribute="bottom" constant="44" id="VDd-Xq-7Nv"/>
+                            <constraint firstItem="YaG-xv-adv" firstAttribute="leading" secondItem="Uqk-sm-TVf" secondAttribute="leading" constant="20" id="WGn-b2-93r"/>
+                            <constraint firstItem="Uqk-sm-TVf" firstAttribute="trailing" secondItem="i71-tD-aO5" secondAttribute="trailing" constant="20" id="eHj-5s-Qc6"/>
                             <constraint firstItem="gPD-MS-TXv" firstAttribute="top" secondItem="jj8-8s-GMx" secondAttribute="top" constant="44" id="fom-ll-oxu"/>
                             <constraint firstItem="X0F-W8-L97" firstAttribute="leading" secondItem="vMy-Jp-LLP" secondAttribute="leading" id="ir1-ry-Pxb"/>
                             <constraint firstItem="h8f-za-fWI" firstAttribute="centerX" secondItem="3tr-OF-07S" secondAttribute="centerX" id="kjE-q2-U0W"/>
                             <constraint firstAttribute="trailingMargin" secondItem="z9W-wr-FPr" secondAttribute="trailing" constant="20" id="lZt-Sc-461"/>
                             <constraint firstItem="z9W-wr-FPr" firstAttribute="leading" secondItem="Uqk-sm-TVf" secondAttribute="leading" constant="20" id="lwk-4p-DnH"/>
+                            <constraint firstItem="YaG-xv-adv" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="mYx-IZ-DRg"/>
+                            <constraint firstItem="i71-tD-aO5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3tr-OF-07S" secondAttribute="trailing" constant="36" id="puE-8l-REp"/>
                             <constraint firstItem="3tr-OF-07S" firstAttribute="centerY" secondItem="Uqk-sm-TVf" secondAttribute="centerY" id="qul-rD-Tlm"/>
                             <constraint firstItem="X0F-W8-L97" firstAttribute="top" secondItem="xQg-6H-ieZ" secondAttribute="bottom" constant="44" id="umG-eh-uuP"/>
                             <constraint firstItem="z9W-wr-FPr" firstAttribute="top" secondItem="vMy-Jp-LLP" secondAttribute="bottom" constant="44" id="yCp-Gr-j1k"/>
@@ -544,7 +634,8 @@ Any accounts or purchases made outside of this app will be managed by the develo
                     </view>
                     <connections>
                         <outlet property="descriptionLabel" destination="VrN-XF-mao" id="elL-CT-zs3"/>
-                        <outlet property="urlLBL" destination="vMy-Jp-LLP" id="jmf-HZ-Gnx"/>
+                        <outlet property="qrView" destination="rfZ-qH-Xvi" id="1ID-8J-2hC"/>
+                        <outlet property="urlLBL" destination="voC-ZW-mCy" id="QyG-yK-o5n"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fjj-nd-rRN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
