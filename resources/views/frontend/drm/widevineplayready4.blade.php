@@ -51,11 +51,11 @@
           },'abr': { 'autoSwitchBitrate': { 'video': false } }
       });
       player.setProtectionData({
-        "com.widevine.alpha": {
-          // serverURL: "//demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=widevine",
-          serverURL: "{{ url('/api/generic?drm-type=widevine') }}",
-          clearkeys: ""
-        },
+        // "com.widevine.alpha": {
+        //   // serverURL: "//demo.keyos.com/roman/logging-proxy/generic-neovix.php?drm-type=widevine",
+        //   serverURL: "{{ url('/api/generic?drm-type=widevine') }}",
+        //   clearkeys: ""
+        // },
         "com.microsoft.playready": {
           serverURL: "{{ url('/api/generic?drm-type=playready') }}",
           clearkeys: ""
