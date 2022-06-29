@@ -61,7 +61,6 @@
           clearkeys: ""
         }
       });
-	  }''
       firstLoad = false;
                   
               var url = "http://rdmedia.bbc.co.uk/dash/ondemand/testcard/1/client_manifest-events.mpd";
