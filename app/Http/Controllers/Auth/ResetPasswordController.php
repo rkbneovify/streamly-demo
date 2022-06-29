@@ -60,7 +60,8 @@ class ResetPasswordController extends Controller
             }
         } else {
             if ($response == Password::PASSWORD_RESET) {
-                return redirect('/')->with('message', 'Password reset successfull.');    
+                Auth::logout();
+                return redirect('/')->with('message', 'Your password has been successfully reset. Please login to continue.');    
             }    else {
                 return redirect('/')->with('message', 'Password reset token is invalid.');           
             }
