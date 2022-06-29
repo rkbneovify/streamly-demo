@@ -57,7 +57,7 @@
         //   clearkeys: ""
         // },
         "com.microsoft.playready": {
-          serverURL: "{{ url('/api/generic?drm-type=playready') }}",
+          serverURL: "{{ url('/api/generic?drm-type=proxy/playready') }}",
           clearkeys: ""
         }
       });

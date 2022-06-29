@@ -197,6 +197,9 @@ if ($drm_type == 'widevine') {
 else if ($drm_type == 'playready') {
   $la_url = 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx';
 }
+else if ($drm_type == 'proxy/playready') {
+  $la_url = 'https://demo.keyos.com/roman/logging-proxy/generic.12577.php?drm-type=playready';
+}
 else if ($drm_type == 'fairplay') {
   $la_url = 'https://fp-keyos.licensekeyserver.com/getkey';
 }
@@ -229,6 +232,23 @@ $drm_type =$this->get_drm_type();
   $encoded_auth_xml=$this->getTheEncodedAuthXml($certificate);
 
   // POST Headers may be different depending on the DRM type.
+  if (strtolower($drm_type) === 'proxy/playready') {
+    // For PlayReady license acquisition.
+    $headers = array(
+      'customdata:' . $encoded_auth_xml,
+      'Content-Type:text/xml',
+      'SOAPAction:http://schemas.microsoft.com/DRM/2007/03/protocols/AcquireLicense',
+      'Referer:https://www.buydrm.com/multikey-demo',
+      'Accept-Language:en-US,en;q=0.7,ru;q=0.3',
+      'Origin:https://www.buydrm.com',
+      'Accept-Encoding:gzip, deflate',
+      'User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
+      'Host:pr-keyos.licensekeyserver.com',
+      'Content-Length:8224',
+      'Connection:Keep-Alive',
+      'Cache-Control:no-cache',
+    );
+  }
   if (strtolower($drm_type) === 'playready') {
     // For PlayReady license acquisition.
     $headers = array(
