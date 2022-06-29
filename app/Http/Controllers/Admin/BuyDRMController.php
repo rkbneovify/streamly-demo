@@ -248,6 +248,7 @@ $drm_type =$this->get_drm_type();
       'Connection:Keep-Alive',
       'Cache-Control:no-cache',
     );
+    $raw = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><AcquireLicense xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols\"><challenge><Challenge xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols/messages\"><LA xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols\" Id=\"SignedData\" xml:space=\"preserve\"><Version>1</Version><ContentHeader><WRMHEADER xmlns=\"http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader\" version=\"4.0.0.0\"><DATA><PROTECTINFO><KEYLEN>16</KEYLEN><ALGID>AESCTR</ALGID></PROTECTINFO><KID>VAky8Q21lUS967MMasj9XA==</KID><LA_URL>http://sldrm.licensekeyserver.com/core/rightsmanager.asmx</LA_URL><DS_ID>VlR7IdsIJEuRd06Laqs2jw==</DS_ID><CUSTOMATTRIBUTES xmlns=\"\"><CID>Vnxgh3uDn0mgyq5oPOf/3w==</CID><DRMTYPE>smooth</DRMTYPE></CUSTOMATTRIBUTES><CHECKSUM>21WoM0S/nEU=</CHECKSUM></DATA></WRMHEADER></Conten...KeyInfo xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><KeyValue><ECCKeyValue><PublicKey>cfnJ73f5RDvS3rGgzOhAMYVUb6EPVRgVN9VClYrGLHfwdv2tGKQhz1AmMcKBxbitYcbziT6HypnKZA/Z9Vu5lQ==</PublicKey></ECCKeyValue></KeyValue></KeyInfo></Signature></Challenge></challenge></AcquireLicense></soap:Body></soap:Envelope>";
   }
   if (strtolower($drm_type) === 'playready') {
     // For PlayReady license acquisition.
@@ -264,7 +265,7 @@ $drm_type =$this->get_drm_type();
   }
   
   // Make a request to the license service.
-  $response = $this->do_post($la_url, $payload, $headers, $encoded_auth_xml);
+  $response = $this->do_post($la_url, $payload, $headers, $raw, $encoded_auth_xml);
 
   // Return license service response back to the client.
   exit($response);
