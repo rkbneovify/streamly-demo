@@ -257,14 +257,6 @@ $.ajax({
 			</div>
 	
 		<section id="blur" class="page-section">
-			<div class="container">
-			@if(session()->has('message'))
-     <div class="alert alert-success alert-dismissible ">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ session()->get('message') }}
-    </div>
-    @endif
-			</div>
 			
 		@foreach($pagechannel as $key => $user)
 		<div class="container">
