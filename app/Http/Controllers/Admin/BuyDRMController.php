@@ -165,23 +165,7 @@ public function getPayload(){
   }
 
   if (empty($payload)) {
-    $res = 'customdata: PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIyLTA2LTEwIDEyOjMyOjM3LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjItMDYtMTEgMTI6MzI6MzcuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+NTFkNGI3ZTY0ODI4MmYwYzZiN2I3NGJiMTAxNGZkOTA8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+a05RTGZDL2tDVWZTOG5FNG9vU0c5Z2xERlNGNWJudEJKQ3drOGZLeEpCSXBBZ3VTcy9kdFROakRwK2dFdzI0UGdvMkR2cllmc0dTNzJQK3pFZ1JidW5kSEtvTVIxNncrYXdCVVpyVUFaUVMzcjRUT29iaWt5cTF0NERpbXJsMVVXclgxS1owYjNvZyt2WnBnT0pPN3RyR3FEWkZSUUpzY0krcXVQQnVHakprUzJFa0p5dWdkMHJoSkdxcGQzU3d4aFdDcktHSG5vS2JuZy9iaWJBc1JvM3pHMDVVUlFEQkRJNHNEUzZuei9WZXNKblBzcXRoWi9ubnFmN0VoTXFQYTlnOG9YRUpNMmRzRjJ6a2NqYTRGQytKdzdYRjZEYjZOMW5vL3ZSTHpqVllQVWhpZ3ozUUwzaXVDVDNiR1crTTEzV0tEbGFFVE1MaTY5UlVYTFY3eE5nPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==,<br>
-    Content-Type:text/xml,<br>
-    SOAPAction:http://schemas.microsoft.com/DRM/2007/03/protocols/AcquireLicense,<br>
-    Referer:https://www.buydrm.com/multikey-demo,<br>
-    Accept-Language:en-US,en;q=0.7,ru;q=0.3,<br>
-    Origin:https://www.buydrm.com,<br>
-    Accept-Encoding:gzip, deflate,<br>
-    User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko,<br>
-    Host:pr-keyos.licensekeyserver.com,<br>
-    Content-Length:8224,<br>
-    Connection:Keep-Alive,<br>
-    Cache-Control:no-cache,';
-    if($res){
-      exit($res);
-    }else{
-      exit('challenge/payload is empty');
-    }
+    exit('`Challenge/payload` is empty.');
   }
 
   return $payload;
@@ -283,7 +267,7 @@ $drm_type =$this->get_drm_type();
   $response = $this->do_post($la_url, $payload, $headers, $encoded_auth_xml);
 
   // Return license service response back to the client.
-  //exit($headers);
+  exit($response);
     }
 
      // Local functions.
