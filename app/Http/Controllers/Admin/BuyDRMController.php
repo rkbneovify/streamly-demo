@@ -165,7 +165,7 @@ public function getPayload(){
   }
 
   if (empty($payload)) {
-    exit('`Challenge/payload` is empty.');
+    exit($headers);
   }
 
   return $payload;
