@@ -177,7 +177,11 @@ public function getPayload(){
     Content-Length:8224,<br>
     Connection:Keep-Alive,<br>
     Cache-Control:no-cache,';
-    exit($res);
+    if($res){
+      exit($res);
+    }else{
+      exit('challenge/payload is empty');
+    }
   }
 
   return $payload;
