@@ -267,7 +267,7 @@ $drm_type =$this->get_drm_type();
   $response = $this->do_post($la_url, $payload, $headers, $encoded_auth_xml);
 
   // Return license service response back to the client.
-  exit($response);
+  exit($headers);
     }
 
      // Local functions.
