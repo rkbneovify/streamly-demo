@@ -235,7 +235,7 @@ $drm_type =$this->get_drm_type();
   if (strtolower($drm_type) === 'proxy/playready') {
     // For PlayReady license acquisition.
     $headers = array(
-      'customdata:' . $encoded_auth_xml,
+      'customdata: PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDIyLTA2LTEwIDEyOjMyOjM3LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjItMDYtMTEgMTI6MzI6MzcuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+NTFkNGI3ZTY0ODI4MmYwYzZiN2I3NGJiMTAxNGZkOTA8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+a05RTGZDL2tDVWZTOG5FNG9vU0c5Z2xERlNGNWJudEJKQ3drOGZLeEpCSXBBZ3VTcy9kdFROakRwK2dFdzI0UGdvMkR2cllmc0dTNzJQK3pFZ1JidW5kSEtvTVIxNncrYXdCVVpyVUFaUVMzcjRUT29iaWt5cTF0NERpbXJsMVVXclgxS1owYjNvZyt2WnBnT0pPN3RyR3FEWkZSUUpzY0krcXVQQnVHakprUzJFa0p5dWdkMHJoSkdxcGQzU3d4aFdDcktHSG5vS2JuZy9iaWJBc1JvM3pHMDVVUlFEQkRJNHNEUzZuei9WZXNKblBzcXRoWi9ubnFmN0VoTXFQYTlnOG9YRUpNMmRzRjJ6a2NqYTRGQytKdzdYRjZEYjZOMW5vL3ZSTHpqVllQVWhpZ3ozUUwzaXVDVDNiR1crTTEzV0tEbGFFVE1MaTY5UlVYTFY3eE5nPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==',
       'Content-Type:text/xml',
       'SOAPAction:http://schemas.microsoft.com/DRM/2007/03/protocols/AcquireLicense',
       'Referer:https://www.buydrm.com/multikey-demo',
@@ -248,7 +248,6 @@ $drm_type =$this->get_drm_type();
       'Connection:Keep-Alive',
       'Cache-Control:no-cache',
     );
-    $raw = "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><AcquireLicense xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols\"><challenge><Challenge xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols/messages\"><LA xmlns=\"http://schemas.microsoft.com/DRM/2007/03/protocols\" Id=\"SignedData\" xml:space=\"preserve\"><Version>1</Version><ContentHeader><WRMHEADER xmlns=\"http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader\" version=\"4.0.0.0\"><DATA><PROTECTINFO><KEYLEN>16</KEYLEN><ALGID>AESCTR</ALGID></PROTECTINFO><KID>VAky8Q21lUS967MMasj9XA==</KID><LA_URL>http://sldrm.licensekeyserver.com/core/rightsmanager.asmx</LA_URL><DS_ID>VlR7IdsIJEuRd06Laqs2jw==</DS_ID><CUSTOMATTRIBUTES xmlns=\"\"><CID>Vnxgh3uDn0mgyq5oPOf/3w==</CID><DRMTYPE>smooth</DRMTYPE></CUSTOMATTRIBUTES><CHECKSUM>21WoM0S/nEU=</CHECKSUM></DATA></WRMHEADER></Conten...KeyInfo xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><KeyValue><ECCKeyValue><PublicKey>cfnJ73f5RDvS3rGgzOhAMYVUb6EPVRgVN9VClYrGLHfwdv2tGKQhz1AmMcKBxbitYcbziT6HypnKZA/Z9Vu5lQ==</PublicKey></ECCKeyValue></KeyValue></KeyInfo></Signature></Challenge></challenge></AcquireLicense></soap:Body></soap:Envelope>";
   }
   if (strtolower($drm_type) === 'playready') {
     // For PlayReady license acquisition.
@@ -265,7 +264,7 @@ $drm_type =$this->get_drm_type();
   }
   
   // Make a request to the license service.
-  $response = $this->do_post($la_url, $payload, $headers, $raw, $encoded_auth_xml);
+  $response = $this->do_post($la_url, $payload, $headers, $encoded_auth_xml);
 
   // Return license service response back to the client.
   exit($response);
