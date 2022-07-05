@@ -11,7 +11,7 @@
 */
 use App\Http\Controllers\BotManController;
 
-Route::view('/botman/chat', 'frontend.search4');
+Route::view('/botman/chat', 'frontend.botman');
 
 Route::get('/', function () {
     return view('auth/login');
