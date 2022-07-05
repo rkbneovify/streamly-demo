@@ -12,7 +12,8 @@
 use App\Http\Controllers\BotManController;
 
 Route::view('/botman/chat', 'frontend.botman');
-Route::match(['get', 'post'], '/botman', 'App\Http\Controllers\BotManController@handle');
+Route::match(['get', 'post'], '/botman', 'BotManController@handle');
+Route::post('/botman', 'BotManController@handle');
 
 Route::get('/', function () {
     return view('auth/login');
