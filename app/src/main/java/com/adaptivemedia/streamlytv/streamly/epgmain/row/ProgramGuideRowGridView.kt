@@ -2,9 +2,11 @@ package com.adaptivemedia.streamlytv.streamly.row
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adaptivemedia.streamlytv.streamly.ProgramGuideHolder
 import com.adaptivemedia.streamlytv.streamly.ProgramGuideManager
@@ -71,61 +73,66 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
     }
 
     override fun focusSearch(focused: View, direction: Int): View? {
-        val focusedEntry = (focused as ProgramGuideItemView<*>).schedule
+        try {
+            val focusedEntry = (focused as ProgramGuideItemView<*>).schedule
                 ?: return super.focusSearch(focused, direction)
-        val fromMillis = programGuideManager.getFromUtcMillis()
-        val toMillis = programGuideManager.getToUtcMillis()
+            val fromMillis = programGuideManager.getFromUtcMillis()
+            val toMillis = programGuideManager.getToUtcMillis()
 
-        if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
-            if (focusedEntry.startsAtMillis < fromMillis) {
-                // The current entry starts outside of the view; Align or scroll to the left.
-                scrollByTime(
+            if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
+                if (focusedEntry.startsAtMillis < fromMillis) {
+                    // The current entry starts outside of the view; Align or scroll to the left.
+                    scrollByTime(
                         max(-ONE_HOUR_MILLIS, focusedEntry.startsAtMillis - fromMillis)
-                )
-                return focused
-            }
-        } else if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
-            if (focusedEntry.endsAtMillis > toMillis) {
-                // The current entry ends outside of the view; Scroll to the right.
-                scrollByTime(ONE_HOUR_MILLIS)
-                return focused
-            }
-        }
-
-        val target = super.focusSearch(focused, direction)
-        if (target !is ProgramGuideItemView<*>) {
-            if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
-                if (focusedEntry.endsAtMillis != toMillis) {
-                    // The focused entry is the last entry; Align to the right edge.
-                    scrollByTime(focusedEntry.endsAtMillis - toMillis)
+                    )
+                    return focused
+                }
+            } else if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
+                if (focusedEntry.endsAtMillis > toMillis) {
+                    // The current entry ends outside of the view; Scroll to the right.
+                    scrollByTime(ONE_HOUR_MILLIS)
                     return focused
                 }
             }
-            return target
-        }
 
-        val targetEntry = target.schedule ?: return target
+            val target = super.focusSearch(focused, direction)
+            if (target !is ProgramGuideItemView<*>) {
+                if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
+                    if (focusedEntry.endsAtMillis != toMillis) {
+                        // The focused entry is the last entry; Align to the right edge.
+                        scrollByTime(focusedEntry.endsAtMillis - toMillis)
+                        return focused
+                    }
+                }
+                return target
+            }
 
-        if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
-            if (targetEntry.startsAtMillis < fromMillis && targetEntry.endsAtMillis < fromMillis + HALF_HOUR_MILLIS) {
-                // The target entry starts outside the view; Align or scroll to the left.
-                scrollByTime(
+            val targetEntry = target.schedule ?: return target
+
+            if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
+                if (targetEntry.startsAtMillis < fromMillis && targetEntry.endsAtMillis < fromMillis + HALF_HOUR_MILLIS) {
+                    // The target entry starts outside the view; Align or scroll to the left.
+                    scrollByTime(
                         max(-ONE_HOUR_MILLIS, targetEntry.startsAtMillis - fromMillis)
-                )
-            }
-        } else if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
-            if (targetEntry.startsAtMillis > fromMillis + ONE_HOUR_MILLIS + HALF_HOUR_MILLIS) {
-                // The target entry starts outside the view; Align or scroll to the right.
-                scrollByTime(
+                    )
+                }
+            } else if (isDirectionEnd(direction) || direction == View.FOCUS_FORWARD) {
+                if (targetEntry.startsAtMillis > fromMillis + ONE_HOUR_MILLIS + HALF_HOUR_MILLIS) {
+                    // The target entry starts outside the view; Align or scroll to the right.
+                    scrollByTime(
                         min(
-                                ONE_HOUR_MILLIS,
-                                targetEntry.startsAtMillis - fromMillis - ONE_HOUR_MILLIS
+                            ONE_HOUR_MILLIS,
+                            targetEntry.startsAtMillis - fromMillis - ONE_HOUR_MILLIS
                         )
-                )
+                    )
+                }
             }
-        }
 
-        return target
+            return target
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+        return null
     }
 
 
@@ -163,6 +170,7 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun requestChildFocus(child: View?, focused: View?) {
         // This part is required to intercept the default child focus behavior.
         // When focus is coming from the top, and there's an item hiding behind the left channel column, default focus behavior
@@ -189,6 +197,7 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
         super.requestChildFocus(child, focused)
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun findNextFocusableChild(child: View): View? {
         //Check if child is focusable and return
         val leftEdge = child.left
@@ -209,6 +218,7 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
         return null
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     public override fun onRequestFocusInDescendants(direction: Int, previouslyFocusedRect: Rect?): Boolean {
         val programGrid = programGuideHolder.programGuideGrid
         // Give focus according to the previous focused range

@@ -45,7 +45,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class SettingsActivity extends FragmentActivity implements View.OnClickListener {
+public class SettingsActivity extends FragmentActivity implements View.OnClickListener{
     private static final String TAG = SettingsActivity.class.getSimpleName();
     private TextView textChannels;
     private LinearLayout account, registerDevice, support, privacy, signOut;

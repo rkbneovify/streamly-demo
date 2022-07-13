@@ -114,7 +114,7 @@ public class LogInActivity extends FragmentActivity {
                 supportDialog.show();
             }
         });
-  //      edUserName.setText("vikas.saini1@oodles.io");
+     //   edUserName.setText("vikas.saini1@oodles.io");
    //    edUserName.setText("mina@neovix.com");
     //  edUserName.setText("pm13426@gmail.com");
      //   edPassword.setText("Piyush123456789");

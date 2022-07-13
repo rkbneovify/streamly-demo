@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AlertDialogCustom" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="buttonBarPositiveButtonStyle">@color/app_blue_light</item>
+        <item name="android:colorAccent">@color/md_black_1000</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColorPrimary">@color/md_black_1000</item>
+    </style>
+</resources>

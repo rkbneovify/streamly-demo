@@ -675,7 +675,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later","StreamlyTV");
-                customDialog.show();*//*
+                customDialog.show();*/
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
@@ -695,12 +695,12 @@ public class PlayerActivity extends FragmentActivity {
                 });
                 dialog.show();
                 dialog.setCancelable(true);
-                Log.e(TAG, "error_msg" + error.toString());
+                /*Log.e(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
                 mFirebaseAnalytics.logEvent("player_error", params);
 //                Log.e(TAG,"error_msg2 "+error.getSourceException());*/
-                playerFail(drmkey,wvurl);
+               // playerFail(drmkey,wvurl);
 
             }
 
@@ -912,8 +912,8 @@ public class PlayerActivity extends FragmentActivity {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later", "StreamlyTV");
-                customDialog.show();*//*
+                /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later","StreamlyTV");
+                customDialog.show();*/
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
@@ -933,7 +933,7 @@ public class PlayerActivity extends FragmentActivity {
                 });
                 dialog.show();
                 dialog.setCancelable(true);
-
+/*
                 Log.i(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
@@ -944,7 +944,7 @@ public class PlayerActivity extends FragmentActivity {
                 handler.removeCallbacks(runnable);
                 player.stop();
                 finish();*/
-                playerFail(drmkey,wvurl);
+                //playerFail(drmkey,wvurl);
 
             }
 
@@ -1152,7 +1152,7 @@ public class PlayerActivity extends FragmentActivity {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 /*CustomDialog customDialog = new CustomDialog(PlayerActivity.this,"Due to some technical reason, channel gets interrupted. Kindly try again later", "StreamlyTV");
-                customDialog.show();*//*
+                customDialog.show();*/
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PlayerActivity.this, R.style.AlertDialogCustom);
                 dialog.setTitle("StreamlyTV");
                 dialog.setMessage("Due to some technical reason, channel gets interrupted. Kindly try again later");
@@ -1172,12 +1172,12 @@ public class PlayerActivity extends FragmentActivity {
                 });
                 dialog.show();
                 dialog.setCancelable(true);
-
+/*
                 Log.i(TAG, "error_msg" + error.toString());
                 params.putString("error_color", "red");
                 params.putString("error_msg", error.getSourceException().toString());
-                mFirebaseAnalytics.logEvent("player_error", params);
-//                Log.e(TAG,"error_msg2 "+error.getSourceException());*/
+                mFirebaseAnalytics.logEvent("player_error", params);*/
+//                Log.e(TAG,"error_msg2 "+error.getSourceException());
                 /*String errorMsg = "Due to some technical reason, channel gets interrupted. Kindly try again later";
                 CommonUtility.showToast(PlayerActivity.this,errorMsg );
                 handler.removeCallbacks(runnable);

@@ -54,7 +54,7 @@ public class CustomDialog extends Dialog {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                cancel();
             }
         });
     }
