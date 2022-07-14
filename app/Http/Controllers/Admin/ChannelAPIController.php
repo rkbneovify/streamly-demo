@@ -178,13 +178,14 @@ public function channeljson(Request $request)
 {   
     $ua = $request->server('HTTP_USER_AGENT');
     $deviceType=$request->get('deviceType');
+    $urlType=$request->get('typeurl');
     $isDevice=isDeviceAppleRokuOthers($ua);
-    if($isDevice=='roku'){    
+    if($isDevice=='roku' || $urlType=='manifest'){    
         $record= Cache::rememberForever('channelslistsmooth', function () {
         $type='smooth_url';
         return $this->channeljsonFunc($type)->get();});
                 
-    }else if($isDevice=='apple')  {
+    }else if($isDevice=='apple' || $urlType=='m3u8')  {
         $record= Cache::rememberForever('channelslistapple', function () {
         $type='url';
         return $this->channeljsonFunc($type)->get();});
