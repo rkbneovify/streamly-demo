@@ -711,19 +711,19 @@ $type='smooth_url';
 if($request->exists('genre')){
     $arr = explode(',', $request->genre);
     if($isDevice=='roku'){
-            $type='url';
+            $type='dash_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }else if($isDevice=='apple'){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     } else {
-            $type='url';
+            $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }
 }else{
     if($isDevice=='roku'){ 
         // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
-            $type='url';
+            $type='dash_url';
             $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
     }else if($isDevice=='apple')  {
@@ -735,7 +735,7 @@ if($request->exists('genre')){
     } else {
 
     // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
-        $type='url';
+        $type='smooth_url';
         $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
     }
