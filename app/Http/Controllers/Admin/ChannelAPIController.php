@@ -711,36 +711,29 @@ $type='smooth_url';
 // return response()->json($reco);
 if($request->exists('genre')){
     $arr = explode(',', $request->genre);
-    if($isDevice=='roku'){
+    if($isDevice=='roku' || $deviceType=='manifest'){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }else if($isDevice=='apple'){
+    }else if($isDevice=='apple' || $deviceType=='m3u8'){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }else if($deviceType=='manifest'){
-        $type='smooth_url';
-        $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-} else {
+    }else {
             $type='dash_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }
 }else{
-    if($isDevice=='roku'){ 
+    if($isDevice=='roku' || $deviceType=='manifest'){ 
         // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
-    }else if($isDevice=='apple')  {
+    }else if($isDevice=='apple' || $deviceType=='m3u8')  {
 
     // $reco = Cache::remember('channelscheduleappletz',60*60*24, function () {
         $type='url';
         $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
-    }else if($deviceType=='manifest'){
-        $type='smooth_url';
-        $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-}
-     else {
+    }else {
 
     // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
         $type='dash_url';
