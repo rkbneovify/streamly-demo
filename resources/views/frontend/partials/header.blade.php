@@ -50,7 +50,7 @@
                             <a class="dropdown-item" href="/my_favorites">My favorites</a>
                             <a class="dropdown-item" href="/livetv/recent">My recents</a>
                             @endif
-                            <a class="dropdown-item" href="#">Download app</a>
+                            <a class="dropdown-item" href="/#">Download app</a>
                             <a class="dropdown-item" href="/faq">Help & Support</a>
                             <a class="dropdown-item logouttheuser"  href="javascript:void(0)">Logout</a>
                         </div>

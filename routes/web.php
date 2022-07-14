@@ -190,6 +190,7 @@ Route::get('/livetv/{genre}', 'Pages\LiveTv@genrePage');
 Route::get('/videojs', 'Pages\LiveTv@videojs');
 Route::get('/videojs2', 'Pages\LiveTv@videojs2');
 Route::get('/faq', 'Pages\Faq@showPage');
+Route::get('/download', 'Pages\Faq@downloadPage');
 Route::get('/termsofuse', 'Pages\Faq@termsofuse');
 Route::get('/privacy', 'Pages\Faq@privacy');
 Route::get('/accessibility', 'Pages\Faq@accessibility');
