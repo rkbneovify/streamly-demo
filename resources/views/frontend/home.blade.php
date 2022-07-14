@@ -661,7 +661,6 @@ details[open] > summary::before {
     height: 41px; */
 
 }
-
 </style>
 
 <section class="page-section bg-light">
