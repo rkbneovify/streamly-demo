@@ -1,5 +1,15 @@
+<?php 
+use Laravel\Cashier\Cashier;?>
+@extends('frontend/partials/master')
+
+@section('top-stylesheets')
+@include('frontend.partials.sidenavRegisterAndLoginCSS')
+@endsection
+@section('stylesheets-bottom')
+@include('frontend.partials.sidenavRegisterAndLoginJS')
+@endsection
 @section('stylesheets')
-    <style>
+  <style>
  #botmanWidgetRoot>div{
     z-index: 1000 !important;
  }
@@ -440,49 +450,57 @@ background-position: center;
   stroke-width: 0.5;
   transform: scale(15);
     }
-	
+	nav#mainNav {
+    background-color: #004E92!important;
+}
     </style>
 @endsection
 
-<section class="page-section " id="portfolio">
+<section class="page-section " id="portfolio" style="padding: 7.5rem 0;">
 
     <div class="css-thjkr7">
         <div class="css-5nata0">
             <div class="upper-section">
                 <div class="content">
-                    <div class="title">Watch on all
-                        <br> your devices.</div>
-                    <div class="sub-title">Download the free Streamly apps for all your devices.
-                        <br> Watch what you want, when you want.</div>
-                    <div  ><a class="btn  btn-see-all-plan btn-xl" href="{{ url('/devices') }}" style=" text-transform: uppercase;">See all apps and devices</a></div>
+                    <div class="title">Download the free Streamly <br>apps for all your devices</div>
+                    <div class="sub-title">1. Roku
+                        <br> 2. FireTV <br> 3. IOS <br> 4. IOS TV <br> 5. Android <br> 6. Samsung</div>
+                    <!-- <div id="scrollButton" class="btn  btn-see-all-plan btn-xl" style=" text-transform: uppercase;">See all apps and devices</div> -->
                 </div>
-                {{-- <div class="content"><div class="title">Watch on all <br> your devices.</div><div class="sub-title">Download the free fuboTV apps for all your devices. <br> Watch what you want, when you want.</div>
-                <div role="button" aria-label="" class="apps css-q9bl1b"><a href="/welcome/apps">See all apps and devices</a></div></div> --}}
+                
                 <div class="devices-preview"><img class="lazy img-fluid" data-src="{{url('../frontend/img/devices3.png')}}" 
   
 alt="image of tv guide"
 ></div>
             </div>
         </div>
+        <div class="text-center" style="margin: 2vw;">
 
-        <div class="flex-container space-evenly">
+            <h2 class="section-heading">GET IT ON</h2>
+            </div>
+        
+        <div class="flex-container space-evenly" style="margin-left: 100px; margin-right: 100px;">
             
-            <div><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+            <div><a href="https://channelstore.roku.com/details/808032303f904844be7cb88148cc0aad/streamlytv"><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
             <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-            </svg></div>
+            </svg></a></div>
               
-              <div><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://www.amazon.in/Adaptive-Media-Inc-StreamlyTV/dp/B09VH3K4WH/ref=sr_1_1?keywords=streamlyTv&qid=1657795043&s=mobile-apps&sr=1-1"><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
-              <div><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
+              </svg></a></div>
+
+              <div><a href="https://apps.apple.com/us/app/streamlytv/id1607812200"><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
+              </svg></a></div>
+
               <div><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></div>
-              <div><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
+              
+              <div><a href="https://play.google.com/store/apps/details?id=com.adaptivemedia.streamlytv&hl=en&gl=US"><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
+              </svg></a></div>
+
               <div><svg class = "circle" id="samsungtv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></div> </div>
