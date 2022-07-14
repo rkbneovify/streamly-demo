@@ -717,7 +717,7 @@ if($request->exists('genre')){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     } else {
-            $type='smooth_url';
+            $type='dash_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }
 }else{
@@ -735,7 +735,7 @@ if($request->exists('genre')){
     } else {
 
     // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
-        $type='smooth_url';
+        $type='dash_url';
         $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
     }
