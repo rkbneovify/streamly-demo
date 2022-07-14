@@ -351,8 +351,7 @@ console.log("playr ready");
 								player.src(dashdrmplay);
 								player.on('play', function() {
 	console.log("it's playing bro");
-	console.log(dashdrmplay
-	+);
+	console.log(dashdrmplay);
 		tabplayer.broadcast('stop');
 		document.title = 'play...';
 
