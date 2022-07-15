@@ -23,7 +23,7 @@
 
                     <li class="nav-item">
                         <div class="search-box">
-    <button class="btn-search" style="z-index: 1"><img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/></button>
+    <button class="btn-search"><img class="form-control-feedback" src="{{ asset('frontend/img/search.svg') }}" style="z-index:-1;"/></button>
     <input type="text" id="search-typehead" class="input-search" placeholder="Search...">
   </div>
                         {{-- <div class="form-group has-search">
