@@ -481,15 +481,15 @@ alt="image of tv guide"
         
         <div class="flex-container space-evenly" style="margin-left: 100px; margin-right: 100px;">
             
-            <div><a href="https://channelstore.roku.com/details/808032303f904844be7cb88148cc0aad/streamlytv"><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
+            <div><a href="https://channelstore.roku.com/details/808032303f904844be7cb88148cc0aad/streamlytv" target="_blank"><svg class = "circle" id="roku" expanded = "true" height = "200px" width = "200px" >
             <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
             </svg></a></div>
               
-              <div><a href="https://www.amazon.in/Adaptive-Media-Inc-StreamlyTV/dp/B09VH3K4WH/ref=sr_1_1?keywords=streamlyTv&qid=1657795043&s=mobile-apps&sr=1-1"><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://www.amazon.in/Adaptive-Media-Inc-StreamlyTV/dp/B09VH3K4WH/ref=sr_1_1?keywords=streamlyTv&qid=1657795043&s=mobile-apps&sr=1-1" target="_blank"><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></a></div>
 
-              <div><a href="https://apps.apple.com/us/app/streamlytv/id1607812200"><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://apps.apple.com/us/app/streamlytv/id1607812200" target="_blank"><svg class = "circle" id="appletv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></a></div>
 
@@ -497,7 +497,7 @@ alt="image of tv guide"
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></div>
               
-              <div><a href="https://play.google.com/store/apps/details?id=com.adaptivemedia.streamlytv&hl=en&gl=US"><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://play.google.com/store/apps/details?id=com.adaptivemedia.streamlytv&hl=en&gl=US" target="_blank"><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></a></div>
 
