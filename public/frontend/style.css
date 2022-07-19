@@ -10747,7 +10747,7 @@ a#navbarDropdownMenuLink:after {
   display:block !important;
 }
 .navbar-shrink #search-btn-header{
-  background: #1c619e 0% 0% no-repeat padding-box !important;
+  background: #1c619e4a 0% 0% no-repeat padding-box !important;
   border: 1px solid #707070;
   border-radius: 27px;
   color: #FFFFFF; 
