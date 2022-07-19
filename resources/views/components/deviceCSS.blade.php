@@ -423,7 +423,7 @@
    .device-logo-div[data-form-factor='12'] {
    
     background-color: #575B60;
-    background-image: url("..frontend/img/newicon/andriodtv.png"); 
+    background-image: url("https://streamlytv.com/frontend/img/newicon/andriodtv.png"); 
    
    /*background-size: cover;*/
    background-size: 70px;
@@ -433,7 +433,7 @@
    .device-logo-div[data-form-factor='13'] {
    
     background-color: #575B60;
-    background-image: url("..frontend/img/newicon/smarttv.png"); 
+    background-image: url("https://streamlytv.com/frontend/img/newicon/smarttv.png"); 
    
    /*background-size: cover;*/
    background-size: 70px;

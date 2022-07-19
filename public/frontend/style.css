@@ -10752,8 +10752,11 @@ a#navbarDropdownMenuLink:after {
   border-radius: 27px;
   color: #FFFFFF; 
 }
+.input-search {
+  background: none 0% 0% / auto repeat scroll padding-box border-box rgba(0, 0, 0, 0)!important;
+}
 .navbar-shrink #search-typehead{
-  background: #1c619e 0% 0% no-repeat padding-box !important;
+  /* background: #1c619e 0% 0% no-repeat padding-box !important; */
   border: 1px solid #707070;
   border-radius: 27px;
   color: #FFFFFF; 
