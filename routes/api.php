@@ -24,7 +24,7 @@ Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 
 //QR code visibility API
 Route::get('auth/qrvisibility', 'APIController@qrvisibility');
-Route::get('auth/connecteddevicelist', 'APIController@connecteddeviceemail');
+Route::post('auth/connecteddevicelist', 'APIController@connecteddeviceemail');
 Route::delete('auth/userdelete/{id}','APIController@userdelete');
 
 // Registration, confirmations and verification
