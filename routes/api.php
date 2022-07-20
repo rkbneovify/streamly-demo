@@ -24,6 +24,7 @@ Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 
 //QR code visibility API
 Route::get('auth/qrvisibility', 'APIController@qrvisibility');
+Route::get('auth/connecteddevicelist', 'APIController@connecteddeviceemail');
 Route::delete('auth/userdelete/{id}','APIController@userdelete');
 
 // Registration, confirmations and verification
@@ -136,7 +137,6 @@ Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQ
 Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
 Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned 
 Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
-
 
 // Route::fallback(function(){
 //     return response()->json([
