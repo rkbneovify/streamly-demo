@@ -30,7 +30,7 @@ class APIController extends Controller
     public $loginAfterSignUp = true;
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility','connecteddeviceemail']]);
     }
 
     public function index()
@@ -634,6 +634,91 @@ public function myRecents(Request $request)
             'visible'=>false
         );
         return response()->json($return,200);
+    }
+
+    public function connecteddeviceemail (Request $request)
+    {
+        $userEmail = $request['email'];
+        $userEmailID = User::where('email', $userEmail)->first()->id;
+        $uid = $userEmailID;
+        $user= User::find($uid);
+        //$user = JWTAuth::user();//all the user info
+       // $uid=  $user['id'];
+        //and get the number of last connected device
+        $userRole=  $user->roles->first()->name;
+
+        //return response()->json($userRole,200);
+
+        if($userRole=='tieruser'){
+        $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id','pdname'=> function($q) use($uid) {
+            // Query the name field in status table
+            $q->select('id','personal_devicename','device_id','user_id')->where('user_id', '=', $uid);
+        }])
+        ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+        ->where([
+        ['status', '=', '1'],
+        ['users_id', '=', $uid],
+         ])->orderBy('connected_devices', 'asc');
+        $s='';
+        $numofdevice='';
+    $s=$prevConnectDevicecount->get()->makeHidden('pdname')
+    ->map(function ($address)  {
+        
+        $address['session_id'] = HashUserID($address['id']);
+        if(is_null($address->hotel)){
+            $address['hotel_room'] = null;
+        }else{
+            $address['hotel_room'] = $address->hotel->hotel_room;
+
+    
+        }
+
+        $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+        $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+        unset($address['hotel']);
+        unset($address['device']);
+        unset($address['id']);
+        unset($address['pdname']);
+       
+          return $address;
+                    
+                    });
+                }else{
+                    $prevConnectDevicecount = SessionTable::with(['pdname'=> function($q) use($uid) {
+                        // Query the name field in status table
+                            $q->select('id','personal_devicename','device_id','user_id')
+                            ->where('user_id', '=', $uid); 
+                    }])
+                    ->where([
+                    ['status', '=', '1'],
+                    ['users_id', '=', $uid],
+                    ])
+                    ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+                    ->orderBy('connected_devices', 'asc');
+        $s='';
+        $numofdevice='';
+        $s=$prevConnectDevicecount->get()->makeHidden('pdname')
+        ->map(function ($address)  {
+        
+        $address['session_id'] = HashUserID($address['id']);
+    
+        $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+        $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+        unset($address->pdname);
+        unset($address['device']);
+        unset($address['id']);
+          return $address;
+                    
+                    });
+    
+                }
+    $numofdevice=$prevConnectDevicecount->count();
+    
+    //  dd($s);
+         $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+         return response()->json($response, 200);
+         
+
     }
 
     public function userdelete ($id)
