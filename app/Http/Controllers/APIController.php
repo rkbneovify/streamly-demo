@@ -638,6 +638,7 @@ public function myRecents(Request $request)
 
     public function connecteddeviceemail (Request $request)
     {
+        $credentials = request(['email', 'password']);
         $userEmail = $request['email'];
         $userEmailID = User::where('email', $userEmail)->first()->id;
         $uid = $userEmailID;
@@ -648,7 +649,13 @@ public function myRecents(Request $request)
         $userRole=  $user->roles->first()->name;
 
         //return response()->json($userRole,200);
-
+        if(empty(request('email')) || empty(request('password'))){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
+        }
+    
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Invalid credentials'], 401);
+        }else{
         if($userRole=='tieruser'){
         $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id','pdname'=> function($q) use($uid) {
             // Query the name field in status table
@@ -720,6 +727,7 @@ public function myRecents(Request $request)
          
 
     }
+}
 
     public function userdelete ($id)
     {
