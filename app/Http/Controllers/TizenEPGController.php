@@ -104,7 +104,7 @@ $a=["AsOf"=> substr(date(DATE_ISO8601), 0, -5).'Z', "Version"=> "0.28",'Channels
 public function channelDaysScheduleV2(Request $request){
 
 $reco= Cache::remember('channelscheduletizen',60*60*24, function () {
-  $type='dash_url';
+  $type='smooth_url';
   return $this->channelDaysScheduleFuncV2($type)->get();});
   
 // $reco=$record->toSql(); echo $reco;exit; 
