@@ -224,7 +224,6 @@ public class HotelQRCodeActivity extends FragmentActivity {
                         startRepeating();
 
 
-
                     } else if (response.body().getStatus()  == 500) {
                         CommonUtility.showToast(HotelQRCodeActivity.this, ConstantUtility.SERVER_ISSUE);
                     }

@@ -541,7 +541,6 @@ class ChannelFragment(context: Context, val genre: String) :
                             noPlanDialog.show()
 
                         }
-
                     })
         }
         else {

@@ -464,7 +464,7 @@ public class PlayerActivity extends FragmentActivity {
                 switch (apiResponse.getResponseCode()) {
                     case 200:
                         String drmKey = drmKeyModel.getData();
-                        String wvUrl = drmKeyModel.getWidevinelicense();
+                        String wvUrl = drmKeyModel.getPlayreadylicense();
                         //call all channel api....
 //                        getChannelList(drmKey,wvUrl);
                         Log.e(TAG, "onChanged: getDrmKey2 " + wvUrl);
@@ -737,6 +737,9 @@ public class PlayerActivity extends FragmentActivity {
                 TAG, "Open live player " + getIntent().getStringExtra("from")
         );
         final String streamUrl = getIntent().getStringExtra("from");
+
+       // final String streamUrl = "https://channelstore1.streamlytv.com/DJCHP/index.mpd";
+
 
         String channelIdIntent = getIntent().getStringExtra("channel_id");
         if (channelIdIntent != null) {
