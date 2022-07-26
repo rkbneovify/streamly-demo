@@ -1,5 +1,7 @@
 package com.adaptivemedia.streamlytv.streamly.log_in;
 
+import static com.adaptivemedia.streamlytv.streamly.utilities.ExtentionsKt.showDialogs;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
+import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.LoginDevicesModel;
 import com.adaptivemedia.streamlytv.streamly.registration.RegistrationActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
@@ -327,12 +330,12 @@ public class LogInActivity extends FragmentActivity {
                             }
                         }
                     } else if (response.code() == 479) {
-
-
-                        Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
-                        assert response.body() != null;
-                        intent.putExtra("list", response.body().getLoggedindeviceinfolist());
-                        startActivity(intent);
+                        NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
+                        Log.e(TAG, "onResponse111: "+loginErrorResponse );
+                        if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
+                            Log.e(TAG, "onResponse1: "+loginErrorResponse.getLoggedindeviceinfolist() );
+                            showDialog(loginErrorResponse);
+                        }
                     } else if (response.code() == 401) {
                         Log.i(TAG, "onResponse:401  " + response.isSuccessful());
                         if (!response.isSuccessful()) {
@@ -360,16 +363,12 @@ public class LogInActivity extends FragmentActivity {
                                     DeviceLimitDialog deviceLimitDialog = new DeviceLimitDialog(LogInActivity.this, logInModel.getMessage().toString());
                                     deviceLimitDialog.show();
                                 }
-
                             }
 //
                         }
-
                     } else if (response.code() == 500) {
-
                         CommonUtility.showToast(LogInActivity.this, response.message());
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e(TAG, "Exception: " + e.toString());
@@ -388,6 +387,11 @@ public class LogInActivity extends FragmentActivity {
         });
     }
 
+
+    private void errorResponse(JSONObject jsonObject) {
+        Log.e(TAG, "errorResponse:" + jsonObject.optString("message"));
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -403,9 +407,7 @@ public class LogInActivity extends FragmentActivity {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
                 try {
-
                     if (response.isSuccessful() && response.body() != null && response.code() == 200) {
-
                         //   CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         signInCall();
                     } else if (response.code() == 404) {
@@ -415,7 +417,6 @@ public class LogInActivity extends FragmentActivity {
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e(TAG, "Exception " + ex);
@@ -429,5 +430,40 @@ public class LogInActivity extends FragmentActivity {
                 CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
             }
         });
+
+
+    }
+
+
+    private void showDialog(NewLoginErrorResponse body) {
+        Log.e(TAG, "showDialog: " + body);
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+/*
+        dialog.setTitle("Register Now");*/
+        dialog.setMessage(body.getMessage());
+
+        // Specifying a listener allows you to take an action before dismissing the dialog.
+        // The dialog is automatically dismissed when a dialog button is clicked.
+        dialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
+                intent.putExtra("list", body.getLoggedindeviceinfolist());
+                startActivity(intent);
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Continue with delete operation
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.show();
+        dialog.setCancelable(true);
     }
 }

@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@drawable/gradent_background_color"
         android:layout_height="match_parent"
+        android:background="@drawable/gradent_background_color"
         tools:context=".streamly.logoutdevices.LogoutDevicesActivity">
 
 
@@ -67,13 +67,14 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/_15sdp"
-            tools:listitem="@layout/loggin_devices_row_layout"
+            android:layout_marginBottom="@dimen/_50sdp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvTotalConnectedDevices"
             app:layout_constraintTop_toBottomOf="@id/tvTotalConnectedDevices"
-            app:spanCount="2" />
+            app:spanCount="2"
+            tools:listitem="@layout/loggin_devices_row_layout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

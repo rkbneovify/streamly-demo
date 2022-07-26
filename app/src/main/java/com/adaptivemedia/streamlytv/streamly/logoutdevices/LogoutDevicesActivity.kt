@@ -21,7 +21,18 @@ class LogoutDevicesActivity : FragmentActivity() {
     private var model = Data()
     private var logout = 0
     private val loginAdapter = LogoutDevicesAdapter()
-    val list = mutableListOf<Data?>()
+    val list = mutableListOf<Data?>()/*.apply {
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
+    }*/
     private val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +76,7 @@ class LogoutDevicesActivity : FragmentActivity() {
                     toast("You can logout at a time only one device")
                 } else {
                     showDialogs("Are you sure you want to logout this device.") {
-                        deviceLogout(model.device_id!!)
+                        deviceLogout(model.session_id!!)
                     }
                 }
             }

@@ -30,7 +30,7 @@ class LogoutDevicesAdapter : ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder
             tvDeviceName.text = Html.fromHtml("<b>Device Name:</b> ${model.device_name}")
             tvDeviceType.text = Html.fromHtml("<b>Device Type:</b> ${model.device_type}")
             logout.setOnCheckedChangeListener { compoundButton, b ->
-                model.isLogout = b
+                //model.isLogout = b
             }
         }
     }

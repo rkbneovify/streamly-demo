@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.adaptivemedia.streamlytv.R
 
+
 /**
  * this is for message dialog box
  */
