@@ -3,11 +3,56 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable-ldpi/search_white_border_2.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable-v24/button_radius_background.xml" value="0.16" />
+        <entry key="app/src/main/res/drawable-v24/conected_device_state.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/black_transparent.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/button_default.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/button_focused.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/button_press.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/button_states.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/channel_grey_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/channel_white_border.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/dialog_background.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/edittext_outline.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/edittext_password.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/edittext_password_btn.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/edittext_password_btn_outline.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/edittext_password_outline.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/edittext_states.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/gradent_background_color.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_arrow_right.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_important_devices_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_mail_outline_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_phone_iphone_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_support_agent_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_visibility_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_baseline_visibility_off_24.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/ic_channel_icon.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_button_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_channel_item_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_filter_spinner_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_gap_item_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_icon_placeholder.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/programguide_item_program_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/qr_code_rectangle.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/recatangle_shape.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/rectangle_focus.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/rectangle_password_btn_focus.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/rectangle_password_focus.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/rectangle_states.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/register_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/register_normal.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/search_text_background.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/selected_category.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/selected_category_focus.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/show_password_selector.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/sign_in_focus.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/signin_normal.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/splash_background.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/white_border_background.xml" value="0.1755" />
         <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/activity_login_using_passcode.xml" value="0.16770833333333332" />
@@ -22,6 +67,7 @@
         <entry key="app/src/main/res/layout/logout_dialog_view.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/programguide_fragment.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/programguide_item_row.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/layout/view_room.xml" value="0.16770833333333332" />
       </map>
     </option>
   </component>

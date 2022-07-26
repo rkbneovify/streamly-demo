@@ -20,29 +20,18 @@ class LogoutDevicesActivity : FragmentActivity() {
     private lateinit var binding: ActivityLogoutDevicesBinding
     private var model = Data()
     private var logout = 0
-    private val loginAdapter = LogoutDevicesAdapter()
-    val list = mutableListOf<Data?>()/*.apply {
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-        add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-    }*/
+    private var loginAdapter: LogoutDevicesAdapter? = null
+    val list = mutableListOf<Data?>()
     private val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLogoutDevicesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
-        binding.tvTotalConnectedDevices.text = "Total Connected Devices ${data.numofdevice}"
-        data.data?.let {
-            list.addAll(it)
-        }
+           val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
+           binding.tvTotalConnectedDevices.text = "Total Connected Devices ${data.numofdevice}"
+           data.data?.let {
+               list.addAll(it)
+           }
         onClickListeners()
         recyclerViewInit()
 
@@ -53,7 +42,7 @@ class LogoutDevicesActivity : FragmentActivity() {
      * update a data into the list
      */
     private fun recyclerViewInit() {
-        loginAdapter.submitList(list.toMutableList())
+        loginAdapter!!.submitList(list.toMutableList())
     }
 
     /**
@@ -61,6 +50,12 @@ class LogoutDevicesActivity : FragmentActivity() {
      */
     private fun onClickListeners() {
         binding.apply {
+            loginAdapter = LogoutDevicesAdapter() { data, pos ->
+                model = data
+                showDialogs("Are you sure you want to logout this device.") {
+                    deviceLogout(model.session_id!!)
+                }
+            }
             rvLogoutDevices.adapter = loginAdapter
             roomLogoutBtn.setOnClickListener {
                 logout = 0

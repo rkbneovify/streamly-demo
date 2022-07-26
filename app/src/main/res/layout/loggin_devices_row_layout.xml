@@ -14,6 +14,7 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:background="@drawable/white_border_background"
         android:clickable="true"
+        android:focusableInTouchMode="true"
         android:focusable="true"
         android:padding="@dimen/_10sdp">
 
