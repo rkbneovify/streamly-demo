@@ -122,4 +122,5 @@
     <string name="streamly_web">http://streamlytv.com/</string>
     <string name="reg_message">You\'re about to leave the app and go to an external website. You will no longer be transacting with Apple. Any accounts or purchases made outside of this app will be managed by the developer "StreamlyTV". Your App Store acciunt , stored payment methods, and related features, such as subscription managed and refund requests, will not be available. Appe is not responsible for the privacy or security of transactions made with this developer.</string>
     <string name="player_error">"Due to some technical reason, channel gets interrupted. Kindly try again later"</string>
+    <string name="registered_devices">Registered Devices</string>
 </resources>

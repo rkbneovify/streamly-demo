@@ -2,6 +2,7 @@ package com.adaptivemedia.streamlytv.streamly.retrofit_clients;
 
 
 import com.adaptivemedia.streamlytv.streamly.utilities.ApiConfig;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -37,6 +38,10 @@ public class ApiClient {
         return retrofit;
     }
 
+    public static ApiInterface retrofitClient() {
+        return getClient().create(ApiInterface.class);
+    }
+
     public static Retrofit getClientHotelLogin() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -50,6 +55,7 @@ public class ApiClient {
 
         return retrofit;
     }
+
     public static Retrofit getClient3() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -63,6 +69,7 @@ public class ApiClient {
 
         return retrofit;
     }
+
     public static Retrofit getClientTesting() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -76,6 +83,7 @@ public class ApiClient {
 
         return retrofit;
     }
+
     public static Retrofit getClientTesting2() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -90,6 +98,7 @@ public class ApiClient {
 
         return retrofit;
     }
+
     public static Retrofit getIPClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

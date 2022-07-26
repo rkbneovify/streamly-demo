@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/gradent_background_color"
+        android:layout_height="match_parent"
+        tools:context=".streamly.logoutdevices.LogoutDevicesActivity">
+
+
+        <TextView
+            android:id="@+id/room_logout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/options_states"
+            android:focusable="true"
+            android:fontFamily="@font/helvetica_neue_bold"
+            android:padding="10dp"
+            android:text="@string/log_out"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/helvetica_neue_medium"
+            android:text="@string/registered_devices"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_15ssp"
+            app:layout_constraintBottom_toBottomOf="@id/room_logout_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/room_logout_btn" />
+
+
+        <TextView
+            android:id="@+id/tvTotalConnectedDevices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/helvetica_neue_medium"
+            android:text="@string/hotel_account_select_room"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="@dimen/_10ssp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLogoutDevices"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            tools:listitem="@layout/loggin_devices_row_layout"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvTotalConnectedDevices"
+            app:layout_constraintTop_toBottomOf="@id/tvTotalConnectedDevices"
+            app:spanCount="2" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

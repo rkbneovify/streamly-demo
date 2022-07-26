@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
+import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
 import com.adaptivemedia.streamlytv.streamly.registration.RegistrationActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
@@ -45,21 +46,24 @@ import com.adaptivemedia.streamlytv.streamly.termsofuses.TermsOfUses;
 import com.adaptivemedia.streamlytv.streamly.user_room.UserRoomActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LogInActivity extends FragmentActivity {
-        private static final String TAG = com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity.class.getSimpleName();
-        private ProgressBar dialog;
-        private String uniqueId;
-        private String userAgent;
-        private EditText edUserName, edPassword;
-        private TextView txtNeedHelp;
-        private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
-        private CheckBox rememberMeCheck;
-        private ImageView passwordTog;
+    private static final String TAG = com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity.class.getSimpleName();
+    private ProgressBar dialog;
+    private String uniqueId;
+    private String userAgent;
+    private EditText edUserName, edPassword;
+    private TextView txtNeedHelp;
+    private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
+    private CheckBox rememberMeCheck;
+    private ImageView passwordTog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +82,21 @@ public class LogInActivity extends FragmentActivity {
         TokenStorage.clearSharedToken(LogInActivity.this);
 
 
-
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<QrVisibility> call = apiInterface.getVisibility();
         call.enqueue(new Callback<QrVisibility>() {
             @Override
             public void onResponse(Call<QrVisibility> call, Response<QrVisibility> response) {
                 boolean savedVisibleKey = response.body().getVisible();
-                TokenStorage.savedVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE,savedVisibleKey);
+                TokenStorage.savedVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE, savedVisibleKey);
 
 
-                if (response.body()!=null && response.body().getVisible()) {
-                    btnHotelLogin .setVisibility(View.VISIBLE);
+                if (response.body() != null && response.body().getVisible()) {
+                    btnHotelLogin.setVisibility(View.VISIBLE);
                     btnLoginUsingPasscode.setVisibility(View.VISIBLE);
                     btnTermsUses.setVisibility(View.VISIBLE);
-                }
-                else {
-                    btnHotelLogin .setVisibility(View.GONE);
+                } else {
+                    btnHotelLogin.setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
                     btnTermsUses.setVisibility(View.GONE);
                 }
@@ -114,16 +116,15 @@ public class LogInActivity extends FragmentActivity {
                 supportDialog.show();
             }
         });
-     //   edUserName.setText("vikas.saini1@oodles.io");
-   //    edUserName.setText("mina@neovix.com");
-    //  edUserName.setText("pm13426@gmail.com");
-     //   edPassword.setText("Piyush123456789");
-      //  edUserName.setText("sahil.kumar@oodlestechnologies.com");
-     //   edPassword.setText("sahil123456789");
+        edUserName.setText("vikas.saini1@oodles.io");
+        //    edUserName.setText("mina@neovix.com");
+        //  edUserName.setText("pm13426@gmail.com");
+        //   edPassword.setText("Piyush123456789");
+        //  edUserName.setText("sahil.kumar@oodlestechnologies.com");
+        //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
-  //     edUserName.setText("streamly1@yopmail.com");
-   //  edPassword.setText("123456789");
-
+        //     edUserName.setText("streamly1@yopmail.com");
+        edPassword.setText("123456789");
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +157,7 @@ public class LogInActivity extends FragmentActivity {
             public void onClick(View v) {
                 if (TokenStorage.readBarcodeVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE)) {
                     startActivity(new Intent(LogInActivity.this, QRCodeActivity.class));
-                }else{
+                } else {
                   /*  AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
                             dialog.setTitle("Register Now");
                             dialog.setMessage(getString(R.string.open_link_browser) + "\n" + "https://streamlytv.com/");
@@ -197,7 +198,7 @@ public class LogInActivity extends FragmentActivity {
         btnTermsUses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TermsOfUses terms = new TermsOfUses(LogInActivity.this );
+                TermsOfUses terms = new TermsOfUses(LogInActivity.this);
                 terms.show();
             }
         });
@@ -213,17 +214,16 @@ public class LogInActivity extends FragmentActivity {
         passwordTog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(edPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())){
+                if (edPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
                     edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     passwordTog.setImageResource(R.drawable.ic_baseline_visibility_off_24);
-                }else{
+                } else {
                     edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     passwordTog.setImageResource(R.drawable.ic_baseline_visibility_24);
                 }
             }
         });
     }
-
 
 
     private void getUserAgentType() {
@@ -258,7 +258,7 @@ public class LogInActivity extends FragmentActivity {
         passwordTog = findViewById(R.id.password_toggle);
     }
 
-    private void  signInCall() {
+    private void signInCall() {
         dialog.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<NewLogInModel> call = apiInterface.postLogInCall(userAgent, edUserName.getText().toString(),
@@ -268,6 +268,8 @@ public class LogInActivity extends FragmentActivity {
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
                     Log.e(TAG, "resCode " + response.code());
+                    Log.e(TAG, "resCode " + response.body());
+                    Log.e(TAG, "resCode " + response.errorBody().string());
                     if (response.isSuccessful() && response.body() != null && response.code() != 429) {
                         String access_token = response.body().getAccessToken();
                         String sessionid = response.body().getSessionid();
@@ -281,7 +283,6 @@ public class LogInActivity extends FragmentActivity {
 //                        set.addAll(response.body().getRooms());
                             Gson gson = new Gson();
                             String json = gson.toJson(response.body().getRooms());
-
                             TokenStorage.savedRoomList(LogInActivity.this, ConstantUtility.ROOM_LIST, json);
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.USER_ID, userId.toString());
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
@@ -294,17 +295,16 @@ public class LogInActivity extends FragmentActivity {
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            if(personaDeviceNamePopup){
+                            if (personaDeviceNamePopup) {
                                 startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
-                            }else{
+                            } else {
                                 startActivity(new Intent(LogInActivity.this, UserRoomActivity.class));
                             }
                             finish();
-
-                            if(!rememberMeCheck.isChecked()){
+                            if (!rememberMeCheck.isChecked()) {
                                 TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
                                 ConstantUtility.isRemember = false;
-                            }else{
+                            } else {
                                 ConstantUtility.isRemember = true;
                             }
                         } else if (response.body().getUserRole().equals("user")) {
@@ -316,21 +316,26 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            if(personaDeviceNamePopup){
+                            if (personaDeviceNamePopup) {
                                 startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
-                            }else{
+                            } else {
                                 startActivity(new Intent(LogInActivity.this, MainActivity.class));
                             }
                             finish();
-                            if(!rememberMeCheck.isChecked()){
-                                 TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
+                            if (!rememberMeCheck.isChecked()) {
+                                TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
                             }
                         }
+                    } else if (response.code() == 479) {
 
 
+                        Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
+                        assert response.body() != null;
+                        intent.putExtra("list", response.body().getLoggedindeviceinfolist());
+                        startActivity(intent);
                     } else if (response.code() == 401) {
                         Log.i(TAG, "onResponse:401  " + response.isSuccessful());
-                        if(!response.isSuccessful()) {
+                        if (!response.isSuccessful()) {
                             CommonUtility.showToast(LogInActivity.this, "Invalid credentials");
                         }
                         /*SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
@@ -338,22 +343,16 @@ public class LogInActivity extends FragmentActivity {
                         sessionExpiredDialog.setCancelable(false);
                         sessionExpiredDialog.show();*/
                     } else if (response.code() == 429) {
-
                         Log.i(TAG, "onResponse:429  " + response.body());
-
                         if (response.errorBody() != null) {
                             NewLoginErrorResponse logInModel = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
-
                             if (logInModel.getData() != null && !logInModel.getData().toString().equals("")) {
-
-
                                 Log.i(TAG, "onResponse:429  " + response.body());
                                 Log.i(TAG, "onResponse:429  " + logInModel.getData().toString());
 //                                SignOutDeviceDialog signOutDeviceDialog = new SignOutDeviceDialog(LogInActivity.this, logInModel.getData().toString(), edUserName.getText().toString(),
 //                                        edPassword.getText().toString(), uniqueId);
 //                                signOutDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
 //                                signOutDeviceDialog.show();
-
                                 deviceSignOutCall(logInModel.getData().toString());
                             }
                             if (logInModel.getMessage() != null && !logInModel.getMessage().toString().equals("")) {
@@ -398,40 +397,36 @@ public class LogInActivity extends FragmentActivity {
 
 
     private void deviceSignOutCall(String deviceId) {
-        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
-        Call<DeviceSignOutResponse> call=apiInterface.postDeviceLogOutCall(deviceId);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<DeviceSignOutResponse> call = apiInterface.postDeviceLogOutCall(deviceId);
         call.enqueue(new Callback<DeviceSignOutResponse>() {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
-                try{
+                try {
 
-                    if (response.isSuccessful() && response.body()!=null && response.code()==200){
+                    if (response.isSuccessful() && response.body() != null && response.code() == 200) {
 
-                     //   CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
+                        //   CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         signInCall();
-                    }
-
-                    else if (response.code()==404){
-                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.SESSION_EXPIRED);
+                    } else if (response.code() == 404) {
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.SESSION_EXPIRED);
                         LogInActivity.this.startActivity(new Intent(LogInActivity.this, LogInActivity.class));
-                        ((Activity)LogInActivity.this).finish();
-                    }
-                    else if (response.code()==500){
-                        CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
+                        ((Activity) LogInActivity.this).finish();
+                    } else if (response.code() == 500) {
+                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
 
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
-                    Log.e(TAG, "Exception "+ex);
+                    Log.e(TAG, "Exception " + ex);
                 }
             }
 
 
-
             @Override
             public void onFailure(Call<DeviceSignOutResponse> call, Throwable t) {
-                Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
-                CommonUtility.showToast(LogInActivity.this,ConstantUtility.SERVER_ISSUE);
+                Log.e(TAG, "failure: " + call + " " + t.getLocalizedMessage());
+                CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
             }
         });
     }
