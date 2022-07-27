@@ -7,15 +7,16 @@
 //
 
 import UIKit
+import CoreImage
 
 class DeviceInfoGridCell: UICollectionViewCell {
-    @IBOutlet weak var deviceNamePH: UILabel!
     @IBOutlet weak var deviceNameLabel: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var deviceImage: UIImageView!
-    @IBOutlet weak var deviceTypePHLabel: UILabel!
-    @IBOutlet weak var deviceTypLabel: UILabel!
+    @IBOutlet weak var turnOFFImageView: UIImageView!
     
+    @IBOutlet weak var blurImageView
+    :UIImageView!
     static let identifier = String(describing: DeviceInfoGridCell.self)
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,24 +24,18 @@ class DeviceInfoGridCell: UICollectionViewCell {
     }
     
     private func configureCell() {
-        deviceNamePH.text = "Device Name:"
-        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 22.0)
-        deviceTypePHLabel.text = "Device Type:"
-        deviceTypLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 22.0)
-        deviceNamePH.font = UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
-        deviceTypePHLabel.font = UIFont.init(name: "HelveticaNeue-Light", size: 28.0)
+        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 25.0)
         bgView.layer.cornerRadius = 10
         bgView.layer.borderWidth = 1.0
-        
+        turnOFFImageView.isHidden = true
+        self.blurImageView.backgroundColor = .black.withAlphaComponent(0.50)
+        self.blurImageView.isHidden = true
     }
     
     func setupData(model: DeviceInfo) {
-        deviceTypLabel.text = model.deviceType ?? ""
         deviceNameLabel.text = model.deviceName
         deviceImage.sd_setImage(with: URL(string: model.deviceImg ?? ""), completed: nil)
-        
     }
-    
     // MARK: UIFocusEnvironment
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -51,15 +46,19 @@ class DeviceInfoGridCell: UICollectionViewCell {
          */
         coordinator.addCoordinatedAnimations({
             if !self.isFocused {
-                self.bgView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
+//                self.bgView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
                 self.bgView.borderWidth = 1.0
                 self.bgView.borderColor = .clear
+                self.blurImageView.isHidden = true
+                self.turnOFFImageView.isHidden = true
                 //    self.backgroundColor = UIColor.gray
             }
             else {
+                self.blurImageView.isHidden = false
+                self.turnOFFImageView.isHidden = false
                 self.bgView.borderWidth = 1.0
                 self.bgView.borderColor = .white
-                self.bgView.backgroundColor = UIColor.lightGray
+//                self.bgView.backgroundColor = UIColor.lightGray
             }
         }, completion: nil)
     }

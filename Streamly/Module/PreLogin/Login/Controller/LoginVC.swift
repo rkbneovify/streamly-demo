@@ -61,6 +61,10 @@ class LoginVC: UIViewController {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        #if DEBUG
+        self.userIDField.text = "rohit@gmail.com"
+        self.passwordField.text = "123456789"
+        #endif
         self.initialSetup()
         self.remeberMeFlag = false
     }
