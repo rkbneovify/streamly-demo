@@ -22,7 +22,7 @@ class LoginRequest: NSObject {
             debugPrint(response)
             guard let data = response.data else { return }
             let decoder = JSONDecoder()
-            if let loginData = try? decoder.decode(LoginResponse.self, from: data) {
+            if let loginData = try? decoder.decode(LoginResponse.self, from: data), response.response?.statusCode == 200 {
                 complition((loginData, nil), nil)
             } else if let loginData = try? decoder.decode(FailedResponse.self, from: data) {
                 complition((nil, loginData), ValidationErrorMessages.somethingWentWrong.descriptipon())

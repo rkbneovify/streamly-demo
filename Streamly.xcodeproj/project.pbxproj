@@ -11,6 +11,11 @@
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
 		9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */; };
 		9313554D2788282D00944ADA /* UpdateDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */; };
+		935E4DE0288FABFE0047AAA6 /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E4DDF288FABFD0047AAA6 /* DeviceListViewController.swift */; };
+		935E4DE2288FAE8E0047AAA6 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E4DE1288FAE8E0047AAA6 /* DeviceInfo.swift */; };
+		935E4DE6288FAFC40047AAA6 /* DeviceInfoGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E4DE4288FAFC40047AAA6 /* DeviceInfoGridCell.swift */; };
+		935E4DE7288FAFC40047AAA6 /* DeviceInfoGridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 935E4DE5288FAFC40047AAA6 /* DeviceInfoGridCell.xib */; };
+		935E4DEA288FBA010047AAA6 /* DeviceManageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E4DE9288FBA010047AAA6 /* DeviceManageViewModel.swift */; };
 		93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */; };
 		93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */; };
 		93662C6A270ED6F7006DA962 /* QRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93662C69270ED6F7006DA962 /* QRModel.swift */; };
@@ -149,6 +154,11 @@
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeNewVC+Extension.swift"; sourceTree = "<group>"; };
 		9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateDeviceViewController.swift; sourceTree = "<group>"; };
+		935E4DDF288FABFD0047AAA6 /* DeviceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
+		935E4DE1288FAE8E0047AAA6 /* DeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
+		935E4DE4288FAFC40047AAA6 /* DeviceInfoGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoGridCell.swift; sourceTree = "<group>"; };
+		935E4DE5288FAFC40047AAA6 /* DeviceInfoGridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceInfoGridCell.xib; sourceTree = "<group>"; };
+		935E4DE9288FBA010047AAA6 /* DeviceManageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManageViewModel.swift; sourceTree = "<group>"; };
 		93662C65270ECF61006DA962 /* LoginWithQRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewController.swift; sourceTree = "<group>"; };
 		93662C67270ED3FF006DA962 /* LoginWithQRViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWithQRViewModel.swift; sourceTree = "<group>"; };
 		93662C69270ED6F7006DA962 /* QRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRModel.swift; sourceTree = "<group>"; };
@@ -312,6 +322,34 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		935E4DDE288FABE10047AAA6 /* DeviceList */ = {
+			isa = PBXGroup;
+			children = (
+				935E4DE3288FAFAF0047AAA6 /* Views */,
+				935E4DDF288FABFD0047AAA6 /* DeviceListViewController.swift */,
+				935E4DE8288FB9EB0047AAA6 /* ViewModels */,
+				935E4DE1288FAE8E0047AAA6 /* DeviceInfo.swift */,
+			);
+			path = DeviceList;
+			sourceTree = "<group>";
+		};
+		935E4DE3288FAFAF0047AAA6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				935E4DE4288FAFC40047AAA6 /* DeviceInfoGridCell.swift */,
+				935E4DE5288FAFC40047AAA6 /* DeviceInfoGridCell.xib */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		935E4DE8288FB9EB0047AAA6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				935E4DE9288FBA010047AAA6 /* DeviceManageViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		93662C64270ECF25006DA962 /* Login+QR */ = {
 			isa = PBXGroup;
 			children = (
@@ -600,6 +638,7 @@
 		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
 			isa = PBXGroup;
 			children = (
+				935E4DDE288FABE10047AAA6 /* DeviceList */,
 				93662C64270ECF25006DA962 /* Login+QR */,
 				A84958522706EB2B00B2FE73 /* RoomVC */,
 				AA4FD8BF26C1575D00BC0EA3 /* Login+Passcode */,
@@ -1044,6 +1083,7 @@
 				A849585F270724BF00B2FE73 /* RoomViewCell.xib in Resources */,
 				AAC9C8C4246A700400708812 /* Assets.xcassets in Resources */,
 				AA5E20F424C61758000B648F /* Lato-SemiboldItalic.ttf in Resources */,
+				935E4DE7288FAFC40047AAA6 /* DeviceInfoGridCell.xib in Resources */,
 				AA5E20FD24C61758000B648F /* Lato-Light.ttf in Resources */,
 				AA5E20FB24C61758000B648F /* Lato-Heavy.ttf in Resources */,
 				AA105C78249767A000CF075B /* ChannelCollectionViewCell.xib in Resources */,
@@ -1236,6 +1276,7 @@
 				AAFC43E92480EEE5000928C0 /* SearchVC.swift in Sources */,
 				AA54083624926C9D000D5F76 /* PrivacyData.swift in Sources */,
 				AA94D637248A7A1000EBF947 /* RegistredDeviceModel.swift in Sources */,
+				935E4DE0288FABFE0047AAA6 /* DeviceListViewController.swift in Sources */,
 				AA94D63A248A7A4800EBF947 /* RegistredDeviceViewModel.swift in Sources */,
 				AA5F5A4E2542A7E800FA8FB6 /* Switcher.swift in Sources */,
 				A849585A2707098100B2FE73 /* RoomModel.swift in Sources */,
@@ -1296,12 +1337,15 @@
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,
 				AA5F5A5A2542A7E800FA8FB6 /* Gradient.swift in Sources */,
 				9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */,
+				935E4DE2288FAE8E0047AAA6 /* DeviceInfo.swift in Sources */,
 				AA5F5A4C2542A7E800FA8FB6 /* Constant.swift in Sources */,
 				AAA27BA3255022C800E44328 /* QR+viewModel.swift in Sources */,
 				AA5F5A4F2542A7E800FA8FB6 /* NoInternetVC.swift in Sources */,
 				AA5F5A552542A7E800FA8FB6 /* NibView.swift in Sources */,
 				AA352CB724813B01009ACD55 /* DataItem+SampleData.swift in Sources */,
 				938A0874270AFCEB00647394 /* DeviceRegisterCell.swift in Sources */,
+				935E4DE6288FAFC40047AAA6 /* DeviceInfoGridCell.swift in Sources */,
+				935E4DEA288FBA010047AAA6 /* DeviceManageViewModel.swift in Sources */,
 				AA94D626248A0F0D00EBF947 /* PopUPTvVC.swift in Sources */,
 				AA72AF8C2473F5E600906796 /* TimeCollectionViewCell.swift in Sources */,
 				AA0C255825F10C4300BC03B9 /* AllGenrsListingCell.swift in Sources */,

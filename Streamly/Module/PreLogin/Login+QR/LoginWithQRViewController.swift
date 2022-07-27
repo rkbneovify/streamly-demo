@@ -98,7 +98,14 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     }
 
     func apiFailed(_ message: String,_ status: Int) {
-        if status == 401 {
+        if status == 479 {
+            if let devicelist = viewModel.deviceInfoList {
+                self.showAlert(title: appName, withMessage: "Your Account is in use on 5 device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                    self.deviceListScreen(deviceInfo: devicelist)
+                }
+                return
+            }
+        } else if status == 401 {
             showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                 Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
@@ -150,5 +157,24 @@ extension LoginWithQRViewController {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
         vc.viewModel.personaldeviceid = session
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    fileprivate func deviceListScreen(deviceInfo: Loggedindeviceinfolist) {
+        let vc = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        vc.deviceList = deviceInfo.data ?? []
+        vc.delegate = self
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Device ID or Name)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
+        self.navigationController?.pushViewController(searchContainer, animated: true)
+    }
+}
+
+// MARK: - DeviceListDelegate
+extension LoginWithQRViewController: DeviceListDelegate {
+    func sessionLogoutSuccess() {
+        viewModel.pollingInAPI()
     }
 }

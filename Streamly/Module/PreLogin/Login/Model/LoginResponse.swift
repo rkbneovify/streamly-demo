@@ -176,9 +176,9 @@ struct FailedResponse: Codable {
     var response_code: Int?
     var message: String?
     var data: String?
-    
+    var loggedindeviceinfolist: Loggedindeviceinfolist?
     enum CodingKeys : String, CodingKey {
-
+        case loggedindeviceinfolist
         case success
         case response_code
         case message
@@ -191,7 +191,9 @@ struct FailedResponse: Codable {
         success = try values.decodeIfPresent(Bool.self, forKey: .success)
         message = try values.decodeIfPresent(String.self, forKey: .message)
         data = try values.decodeIfPresent(String.self, forKey: .data)
-       
+        if let listOFDevice = try values.decodeIfPresent(Loggedindeviceinfolist.self, forKey: .loggedindeviceinfolist) {
+            loggedindeviceinfolist = listOFDevice
+        }
     }
 }
 

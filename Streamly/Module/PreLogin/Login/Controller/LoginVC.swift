@@ -293,11 +293,10 @@ extension LoginVC
         loginrequest.password = password
         loginrequest.deviceID  = deviceId
         loginrequest.userLogin { [weak self] (response, errorMessage) in
+            guard let selfStrong = self else {return}
             self?.removeSpinner()
             if response != nil && errorMessage == nil{
-                guard let selfStrong = self else {return}
                 selfStrong.removeSpinner()
-                
                 if response.success?.success == true {
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
@@ -356,7 +355,14 @@ extension LoginVC
                         selfStrong.showSimpleAlertWithMessage(response.success?.message ?? "")
                     }
                 } else if let failureResponse = response.failure {
-                    if failureResponse.response_code == 401 { // token expired
+                    if failureResponse.response_code == 479 {
+                        if let devicelist = response.failure?.loggedindeviceinfolist {
+                            selfStrong.showAlert(title: appName, withMessage: "Your Account is in use on 5 device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                                selfStrong.deviceListScreen(deviceInfo: devicelist)
+                            }
+                            return
+                        }
+                    } else if failureResponse.response_code == 401 { // token expired
                         selfStrong.showAlert(withMessage: "Your session has expired. You have to log in again to proceed further.",setFirstButtonTitle: "Logout") { _ in
                             Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
                             Utility.logOut()
@@ -381,6 +387,16 @@ extension LoginVC
                 }
             }
             else {
+                if let failureResponse = response.failure {
+                    if failureResponse.response_code == 479 {
+                        if let devicelist = response.failure?.loggedindeviceinfolist {
+                            selfStrong.showAlert(title: appName, withMessage: "Your Account is in use on \(devicelist.numofdevice ?? 0) device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                                selfStrong.deviceListScreen(deviceInfo: devicelist)
+                            }
+                            return
+                        }
+                    }
+                }
                 self?.removeSpinner()
 //                self?.showSimpleAlertWithMessage(ValidationErrorMessages.somethingWentWrong.descriptipon())
             }
@@ -436,6 +452,18 @@ extension LoginVC {
         let vc = UpdateDeviceViewController.instantiateFromAppStoryboard(appStoryboard: .Extended)
         vc.viewModel.personaldeviceid = sessionId
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    fileprivate func deviceListScreen(deviceInfo: Loggedindeviceinfolist) {
+        let vc = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        vc.deviceList = deviceInfo.data ?? []
+        vc.delegate = self
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Device ID or Name)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
+        self.navigationController?.pushViewController(searchContainer, animated: true)
     }
 }
 
@@ -493,3 +521,9 @@ extension LoginVC {
     }
 }
 
+// MARK: - DeviceListDelegate
+extension LoginVC: DeviceListDelegate {
+    func sessionLogoutSuccess() {
+        loginAPICall(self.userIDField.text ?? "", self.passwordField.text ?? "")
+    }
+}

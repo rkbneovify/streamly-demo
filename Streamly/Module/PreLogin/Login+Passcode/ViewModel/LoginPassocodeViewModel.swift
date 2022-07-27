@@ -18,6 +18,7 @@ class LoginPassocodeViewModel: NSObject {
     var passode = ""
     var responseData: LoginResponse?
     var removeIdKey = ""
+    var deviceListInfo: Loggedindeviceinfolist?
     var personaldeviceid = ""
     weak var delegate: APIResponseDelegate?
     
@@ -55,6 +56,9 @@ class LoginPassocodeViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data = DataParser.parseFailLoginResponse(data!) {
+                if let deviceInfo = data.loggedindeviceinfolist {
+                    weak.deviceListInfo = deviceInfo
+                }
                 if let removeKeyAvailAble = data.data {
                     weak.removeIdKey = removeKeyAvailAble
                 }

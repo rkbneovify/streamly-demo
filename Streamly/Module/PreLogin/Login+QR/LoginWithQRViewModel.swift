@@ -22,6 +22,7 @@ class LoginWithQRViewModel: NSObject {
     }
     weak var delegate: LoginWithQRDelegate?
     var currentAPIPolling: PollinInAPI = .isGetQR
+    var deviceInfoList: Loggedindeviceinfolist?
     
     private func getQrImage() {
         ApiCall.getQRDataForLogin { [weak self] data, status in
@@ -78,6 +79,9 @@ class LoginWithQRViewModel: NSObject {
         } failure: { [weak self] error, data, status in
             guard let weak = self else { return }
             if let data:FailedResponse = DataParser.parseReponseToModel(data!) {
+                if let deviceInfoList = data.loggedindeviceinfolist {
+                    weak.deviceInfoList = deviceInfoList
+                }
                     weak.delegate?.apiFailed(data.message ?? "", data.response_code ?? 0)
                 return
             }

@@ -92,7 +92,7 @@ extension UIViewController
             alert.addAction(UIAlertAction(title: setSecondButtonTitle, style: .default, handler:nil))
         }
         alert.addAction(UIAlertAction(title: setFirstButtonTitle, style: .default, handler:{ (action) in
-            handler!(action)
+            handler?(action)
         }))
         self.present(alert, animated: true, completion: nil)
     }
