@@ -6,10 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.databinding.LogginDevicesRowLayoutBinding
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
+import com.bumptech.glide.Glide
 
-class LogoutDevicesAdapter : ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder>(DiffUtilLogin()) {
+class LogoutDevicesAdapter(
+    private val onClick: (data: Data, pos: Int) -> Unit
+) :
+    ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder>(DiffUtilLogin()) {
 
     class MyViewHolder(val binding: LogginDevicesRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -27,8 +32,14 @@ class LogoutDevicesAdapter : ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.binding.apply {
             val model = getItem(position)
+            Glide.with(root.context)
+                .load(model.device_img)
+                .into(ivImage);
             tvDeviceName.text = Html.fromHtml("<b>Device Name:</b> ${model.device_name}")
             tvDeviceType.text = Html.fromHtml("<b>Device Type:</b> ${model.device_type}")
+            root.setOnClickListener {
+                onClick.invoke(model, position)
+            }
             logout.setOnCheckedChangeListener { compoundButton, b ->
                 //model.isLogout = b
             }
