@@ -4,7 +4,7 @@
         android:drawable="@drawable/white_transparent4" /> <!-- pressed -->
 
     <item android:state_focused="true"
-        android:drawable="@drawable/channel_grey_background" /> <!-- focused -->
+        android:drawable="@drawable/channel_white_border" /> <!-- focused -->
 
 
     <!--    <item android:state_hovered="true" android:drawable="@drawable/white_transparent" /> &lt;!&ndash; hovered &ndash;&gt;-->

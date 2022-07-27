@@ -74,18 +74,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvTotalConnectedDevices"
             app:layout_constraintTop_toBottomOf="@id/tvTotalConnectedDevices"
-            app:spanCount="2"
-            tools:listitem="@layout/loggin_devices_row_layout" />
+            app:spanCount="4"
+            tools:listitem="@layout/loggin_devices_row_layout"
+            tools:spanCount="2" />
 
 
         <LinearLayout
             android:id="@+id/progressBar"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@android:color/transparent"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:background="@android:color/transparent"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rvLogoutDevices"
