@@ -21,7 +21,7 @@ class LogoutDevicesActivity : FragmentActivity() {
     private var model = Data()
     private var logout = 0
     private val loginAdapter = LogoutDevicesAdapter()
-    val list = mutableListOf<Data?>()/*.apply {
+    val list = mutableListOf<Data?>().apply {
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
@@ -32,17 +32,17 @@ class LogoutDevicesActivity : FragmentActivity() {
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
         add(Data(device_type = "Kallu", device_name = "nfbsabgf"))
-    }*/
+    }
     private val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLogoutDevicesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
+        /*val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
         binding.tvTotalConnectedDevices.text = "Total Connected Devices ${data.numofdevice}"
         data.data?.let {
             list.addAll(it)
-        }
+        }*/
         onClickListeners()
         recyclerViewInit()
 
