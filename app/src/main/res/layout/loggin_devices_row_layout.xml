@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:background="@drawable/white_border_background"
+        android:background="@drawable/logout_device_state"
         android:clickable="true"
         android:focusableInTouchMode="true"
         android:focusable="true"

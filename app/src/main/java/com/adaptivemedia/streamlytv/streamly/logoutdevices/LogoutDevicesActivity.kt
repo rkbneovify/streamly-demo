@@ -10,9 +10,7 @@ import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindevicein
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse
-import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
-import com.adaptivemedia.streamlytv.streamly.utilities.showDialogs
-import com.adaptivemedia.streamlytv.streamly.utilities.toast
+import com.adaptivemedia.streamlytv.streamly.utilities.*
 import retrofit2.Call
 import retrofit2.Response
 
@@ -27,11 +25,12 @@ class LogoutDevicesActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLogoutDevicesBinding.inflate(layoutInflater)
         setContentView(binding.root)
-           val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
-           binding.tvTotalConnectedDevices.text = "Total Connected Devices ${data.numofdevice}"
-           data.data?.let {
-               list.addAll(it)
-           }
+        val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
+        logout = data.numofdevice!!
+        binding.tvTotalConnectedDevices.text = "Total Connected Devices $logout"
+        data.data?.let {
+            list.addAll(it)
+        }
         onClickListeners()
         recyclerViewInit()
 
@@ -83,6 +82,7 @@ class LogoutDevicesActivity : FragmentActivity() {
      * device logout api call
      */
     private fun deviceLogout(deviceId: String) {
+        binding.progressBar.show()
         val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
         val call = apiInterface.postDeviceLogOutCall(deviceId)
         call.enqueue(object : retrofit2.Callback<DeviceSignOutResponse> {
@@ -90,13 +90,17 @@ class LogoutDevicesActivity : FragmentActivity() {
                 call: Call<DeviceSignOutResponse>,
                 response: Response<DeviceSignOutResponse>
             ) {
+                binding.progressBar.gone()
+
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
                         list.remove(model)
                         recyclerViewInit()
+                        binding.tvTotalConnectedDevices.text = "Total Connected Devices ${--logout}"
+
                         toast(response.body()!!.message)
                     } else {
-                        toast(response.body()!!.message)
+                        toast(ConstantUtility.SERVER_ISSUE)
                     }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -105,6 +109,8 @@ class LogoutDevicesActivity : FragmentActivity() {
             }
 
             override fun onFailure(call: Call<DeviceSignOutResponse>, t: Throwable) {
+                binding.progressBar.gone()
+
                 toast(ConstantUtility.SERVER_ISSUE)
             }
         })

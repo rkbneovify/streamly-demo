@@ -35,7 +35,6 @@ class LogoutDevicesAdapter(
             tvDeviceType.text = Html.fromHtml("<b>Device Type:</b> ${model.device_type}")
             root.setOnClickListener {
                 onClick.invoke(model, position)
-                //root.setBackgroundResource(R.drawable.app_icon_tv)
             }
             logout.setOnCheckedChangeListener { compoundButton, b ->
                 //model.isLogout = b

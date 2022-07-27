@@ -272,7 +272,7 @@ public class LogInActivity extends FragmentActivity {
                 try {
                     Log.e(TAG, "resCode " + response.code());
                     Log.e(TAG, "resCode " + response.body());
-                    Log.e(TAG, "resCode " + response.errorBody().string());
+
                     if (response.isSuccessful() && response.body() != null && response.code() != 429) {
                         String access_token = response.body().getAccessToken();
                         String sessionid = response.body().getSessionid();
@@ -330,10 +330,17 @@ public class LogInActivity extends FragmentActivity {
                             }
                         }
                     } else if (response.code() == 479) {
-                        NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
-                        Log.e(TAG, "onResponse111: "+loginErrorResponse );
+
+                        String s = response.errorBody().string();
+
+                        Log.e(TAG, "onResponse123: " + s);
+                        Log.e(TAG, "onResponse123: " + response.errorBody().string());
+                        NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(s,
+                                NewLoginErrorResponse.class);
+
+                        Log.e(TAG, "onResponse111: " + loginErrorResponse);
                         if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
-                            Log.e(TAG, "onResponse1: "+loginErrorResponse.getLoggedindeviceinfolist() );
+                            Log.e(TAG, "onResponse1: " + loginErrorResponse.getLoggedindeviceinfolist());
                             showDialog(loginErrorResponse);
                         }
                     } else if (response.code() == 401) {

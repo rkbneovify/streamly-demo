@@ -78,5 +78,23 @@
             tools:listitem="@layout/loggin_devices_row_layout" />
 
 
+        <LinearLayout
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/rvLogoutDevices"
+            app:layout_constraintStart_toStartOf="@id/rvLogoutDevices"
+            app:layout_constraintTop_toTopOf="@id/rvLogoutDevices">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
