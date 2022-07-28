@@ -1,9 +1,12 @@
 package com.adaptivemedia.streamlytv.streamly.logoutdevices
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.adaptivemedia.streamlytv.databinding.ActivityLogoutDevicesBinding
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindeviceinfolist
@@ -14,10 +17,12 @@ import com.adaptivemedia.streamlytv.streamly.utilities.*
 import retrofit2.Call
 import retrofit2.Response
 
+
 class LogoutDevicesActivity : FragmentActivity() {
     private lateinit var binding: ActivityLogoutDevicesBinding
     private var model = Data()
     private var logout = 0
+    private var logout1 = 0
     private var loginAdapter: LogoutDevicesAdapter? = null
     val list = mutableListOf<Data?>()
     private val context = this
@@ -26,8 +31,8 @@ class LogoutDevicesActivity : FragmentActivity() {
         binding = ActivityLogoutDevicesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
-        logout = data.numofdevice!!
-        binding.tvTotalConnectedDevices.text = "Total Connected Devices $logout"
+        logout1 = data.numofdevice!!
+        binding.tvTotalConnectedDevices.text = "Total Connected Devices $logout1"
         data.data?.let {
             list.addAll(it)
         }
@@ -55,6 +60,7 @@ class LogoutDevicesActivity : FragmentActivity() {
                     deviceLogout(model.session_id!!)
                 }
             }
+
             rvLogoutDevices.adapter = loginAdapter
             roomLogoutBtn.setOnClickListener {
                 logout = 0
@@ -91,14 +97,15 @@ class LogoutDevicesActivity : FragmentActivity() {
                 response: Response<DeviceSignOutResponse>
             ) {
                 binding.progressBar.gone()
-
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
                         list.remove(model)
                         recyclerViewInit()
-                        binding.tvTotalConnectedDevices.text = "Total Connected Devices ${--logout}"
-
+                        binding.tvTotalConnectedDevices.text =
+                            "Total Connected Devices ${--logout1}"
                         toast(response.body()!!.message)
+                        setResult(Activity.RESULT_OK)
+                        finish()
                     } else {
                         toast(ConstantUtility.SERVER_ISSUE)
                     }

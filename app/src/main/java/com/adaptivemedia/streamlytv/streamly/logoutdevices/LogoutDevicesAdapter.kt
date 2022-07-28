@@ -1,5 +1,6 @@
 package com.adaptivemedia.streamlytv.streamly.logoutdevices
 
+import android.annotation.SuppressLint
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ class LogoutDevicesAdapter(
 ) :
     ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder>(DiffUtilLogin()) {
 
+    var index = -1
+
     class MyViewHolder(val binding: LogginDevicesRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -29,20 +32,34 @@ class LogoutDevicesAdapter(
         )
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.binding.apply {
             val model = getItem(position)
             Glide.with(root.context)
                 .load(model.device_img)
                 .into(ivImage);
-            tvDeviceName.text = Html.fromHtml("<b>Device Name:</b> ${model.device_name}")
-            tvDeviceType.text = Html.fromHtml("<b>Device Type:</b> ${model.device_type}")
-            root.setOnClickListener {
+            tvDeviceName.text = model.device_name
+            //Html.fromHtml("<b>Device Name: </b> ${model.device_name}")
+            // tvDeviceType.text = Html.fromHtml("<b>Device Type: </b> ${model.device_type}")
+
+            llLayout.setOnClickListener {
                 onClick.invoke(model, position)
+                /*  index = position
+                  notifyDataSetChanged()*/
             }
-            logout.setOnCheckedChangeListener { compoundButton, b ->
-                //model.isLogout = b
-            }
+
+            /*    if (position == index) {
+                    model.isLogout = true
+                    logout.isChecked = true
+                } else {
+                    model.isLogout = false
+                    logout.isChecked = false
+                }*/
+
+            /*    logout.setOnCheckedChangeListener { compoundButton, b ->
+                    model.isLogout = b
+                }*/
         }
     }
 
