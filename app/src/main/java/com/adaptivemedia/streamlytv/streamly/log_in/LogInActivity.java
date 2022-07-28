@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
@@ -134,23 +135,7 @@ public class LogInActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
 
-                if (ConstantUtility.isNetworkConnected) {
-                    if (edUserName.getText().toString().matches("")) {
-                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_EMAIL);
-
-                    } else if (edUserName.getText().toString().matches(ConstantUtility.EMAIL_REGEX) == false) {
-                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.WRONG_EMAIL);
-
-                    } else if (edPassword.getText().toString().matches("")) {
-                        CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_PASSW);
-
-                    } else {
-                        signInCall();
-                    }
-
-                } else {
-                    CommonUtility.showToast(LogInActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
-                }
+                login();
 
             }
         });
@@ -228,6 +213,26 @@ public class LogInActivity extends FragmentActivity {
         });
     }
 
+    private void login() {
+        if (ConstantUtility.isNetworkConnected) {
+            if (edUserName.getText().toString().matches("")) {
+                CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_EMAIL);
+
+            } else if (edUserName.getText().toString().matches(ConstantUtility.EMAIL_REGEX) == false) {
+                CommonUtility.showToast(LogInActivity.this, ConstantUtility.WRONG_EMAIL);
+
+            } else if (edPassword.getText().toString().matches("")) {
+                CommonUtility.showToast(LogInActivity.this, ConstantUtility.FILL_PASSW);
+
+            } else {
+                signInCall();
+            }
+
+        } else {
+            CommonUtility.showToast(LogInActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
+        }
+    }
+
 
     private void getUserAgentType() {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -279,7 +284,7 @@ public class LogInActivity extends FragmentActivity {
                         String personalDeviceId = response.body().getPersonalDeviceId();
                         String deviceType = response.body().getDeviceType();
                         boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
-
+                        Log.e(TAG, "onResponse222: " + personaDeviceNamePopup);
                         if (response.body().getUserRole().equals("tieruser")) {
                             Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
@@ -330,14 +335,11 @@ public class LogInActivity extends FragmentActivity {
                             }
                         }
                     } else if (response.code() == 479) {
-
                         String s = response.errorBody().string();
-
                         Log.e(TAG, "onResponse123: " + s);
                         Log.e(TAG, "onResponse123: " + response.errorBody().string());
                         NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(s,
                                 NewLoginErrorResponse.class);
-
                         Log.e(TAG, "onResponse111: " + loginErrorResponse);
                         if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
                             Log.e(TAG, "onResponse1: " + loginErrorResponse.getLoggedindeviceinfolist());
@@ -456,7 +458,7 @@ public class LogInActivity extends FragmentActivity {
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
                 intent.putExtra("list", body.getLoggedindeviceinfolist());
-                startActivity(intent);
+                startActivityForResult(intent, 123);
                 dialog.dismiss();
 
 
@@ -472,5 +474,14 @@ public class LogInActivity extends FragmentActivity {
         });
         dialog.show();
         dialog.setCancelable(true);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            login();
+        }
     }
 }

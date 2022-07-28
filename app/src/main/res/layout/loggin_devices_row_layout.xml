@@ -11,38 +11,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:background="@drawable/logout_device_state"
-        android:clickable="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:padding="@dimen/_10sdp">
+        android:layout_marginEnd="@dimen/_10sdp">
 
-
-        <ImageView
-            android:id="@+id/ivImage"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llLayout"
             android:layout_width="match_parent"
-            android:contentDescription="@string/register_device"
-            android:layout_height="@dimen/_60sdp"
-            android:src="@drawable/ic_register_devices"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/logout_device_state"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintTop_toTopOf="parent">
 
+
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_80sdp"
+                android:contentDescription="@string/register_device"
+                android:src="@drawable/ic_register_devices"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tvDeviceName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:fontFamily="@font/helvetica_neue_medium"
-            android:maxLines="2"
             android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/helvetica_neue_regular"
+            android:gravity="center"
+            android:textStyle="bold"
             android:paddingVertical="@dimen/_4sdp"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintEnd_toStartOf="@id/logout"
-            app:layout_constraintStart_toStartOf="@id/ivImage"
-            app:layout_constraintTop_toBottomOf="@id/ivImage"
+            app:layout_constraintStart_toStartOf="@id/llLayout"
+            app:layout_constraintTop_toBottomOf="@id/llLayout"
             tools:text="@string/hotel_account_select_room" />
 
 
@@ -56,6 +64,7 @@
             android:paddingVertical="@dimen/_4sdp"
             android:textColor="@color/md_white_1000"
             android:textSize="@dimen/_10ssp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@id/tvDeviceName"
             app:layout_constraintStart_toStartOf="@id/tvDeviceName"
             app:layout_constraintTop_toBottomOf="@id/tvDeviceName"
@@ -67,6 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/color_white"
+            android:clickable="false"
+            android:focusable="false"
             android:fontFamily="@font/helvetica_neue_medium"
             android:textColor="@drawable/text_states"
             android:textSize="@dimen/_7ssp"
