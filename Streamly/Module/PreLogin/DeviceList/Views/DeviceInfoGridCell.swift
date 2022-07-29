@@ -14,6 +14,7 @@ class DeviceInfoGridCell: UICollectionViewCell {
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var deviceImage: UIImageView!
     @IBOutlet weak var turnOFFImageView: UIImageView!
+    @IBOutlet weak var blureBGVIew: UIVisualEffectView!
     
     @IBOutlet weak var blurImageView
     :UIImageView!
@@ -26,10 +27,13 @@ class DeviceInfoGridCell: UICollectionViewCell {
     private func configureCell() {
         deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 25.0)
         bgView.layer.cornerRadius = 10
+        blurImageView.layer.cornerRadius = 10
         bgView.layer.borderWidth = 1.0
+        self.bgView.borderColor = .white
         turnOFFImageView.isHidden = true
-        self.blurImageView.backgroundColor = .black.withAlphaComponent(0.50)
+        self.blurImageView.backgroundColor = .clear//.white.withAlphaComponent(0.50)
         self.blurImageView.isHidden = true
+        blureBGVIew.isHidden = true
     }
     
     func setupData(model: DeviceInfo) {
@@ -49,15 +53,18 @@ class DeviceInfoGridCell: UICollectionViewCell {
 //                self.bgView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
                 self.bgView.borderWidth = 1.0
                 self.bgView.borderColor = .clear
-                self.blurImageView.isHidden = true
+                self.bgView.borderColor = .white
+//                self.blurImageView.isHidden = true
                 self.turnOFFImageView.isHidden = true
+                self.blureBGVIew.isHidden = true
                 //    self.backgroundColor = UIColor.gray
             }
             else {
-                self.blurImageView.isHidden = false
+                self.blureBGVIew.isHidden = false
+//                self.blurImageView.isHidden = false
                 self.turnOFFImageView.isHidden = false
                 self.bgView.borderWidth = 1.0
-                self.bgView.borderColor = .white
+                self.bgView.borderColor = .clear
 //                self.bgView.backgroundColor = UIColor.lightGray
             }
         }, completion: nil)

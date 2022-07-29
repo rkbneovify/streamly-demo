@@ -26,7 +26,27 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="a73-IC-dOz">
                                 <rect key="frame" x="0.0" y="0.0" width="627" height="376"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="turnOff" translatesAutoresizingMaskIntoConstraints="NO" id="Drp-3H-9p8">
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zrt-ki-SCd">
+                                <rect key="frame" x="0.0" y="0.0" width="627" height="376"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Oqh-DB-uMt">
+                                    <rect key="frame" x="0.0" y="0.0" width="627" height="376"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <blurEffect style="regular"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="recycleBin" translatesAutoresizingMaskIntoConstraints="NO" id="Drp-3H-9p8">
                                 <rect key="frame" x="263.5" y="138" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -40,13 +60,17 @@
                             <constraint firstAttribute="bottom" secondItem="m77-NU-Blh" secondAttribute="bottom" constant="10" id="1qA-XP-IwY"/>
                             <constraint firstItem="a73-IC-dOz" firstAttribute="leading" secondItem="8Ru-cZ-ZgJ" secondAttribute="leading" id="4id-iK-muK"/>
                             <constraint firstItem="a73-IC-dOz" firstAttribute="top" secondItem="8Ru-cZ-ZgJ" secondAttribute="top" id="AIe-os-fE8"/>
+                            <constraint firstItem="zrt-ki-SCd" firstAttribute="top" secondItem="8Ru-cZ-ZgJ" secondAttribute="top" id="Gtj-g6-tXg"/>
                             <constraint firstAttribute="trailing" secondItem="a73-IC-dOz" secondAttribute="trailing" id="Qbb-Ud-qAR"/>
                             <constraint firstItem="Drp-3H-9p8" firstAttribute="centerX" secondItem="8Ru-cZ-ZgJ" secondAttribute="centerX" id="WcY-12-bJu"/>
                             <constraint firstAttribute="bottom" secondItem="a73-IC-dOz" secondAttribute="bottom" id="Z5y-sN-h3I"/>
                             <constraint firstItem="Drp-3H-9p8" firstAttribute="centerY" secondItem="8Ru-cZ-ZgJ" secondAttribute="centerY" id="Zmh-Cn-b3o"/>
+                            <constraint firstAttribute="bottom" secondItem="zrt-ki-SCd" secondAttribute="bottom" id="aHE-Tt-Lsp"/>
                             <constraint firstItem="Drp-3H-9p8" firstAttribute="centerY" secondItem="m77-NU-Blh" secondAttribute="centerY" id="cm5-If-aQR"/>
                             <constraint firstItem="m77-NU-Blh" firstAttribute="top" secondItem="8Ru-cZ-ZgJ" secondAttribute="top" constant="10" id="h8s-jL-pXA"/>
                             <constraint firstAttribute="trailing" secondItem="m77-NU-Blh" secondAttribute="trailing" constant="15" id="j04-oD-UPc"/>
+                            <constraint firstAttribute="trailing" secondItem="zrt-ki-SCd" secondAttribute="trailing" id="mHP-3N-pvi"/>
+                            <constraint firstItem="zrt-ki-SCd" firstAttribute="leading" secondItem="8Ru-cZ-ZgJ" secondAttribute="leading" id="wNR-8F-0oJ"/>
                             <constraint firstItem="m77-NU-Blh" firstAttribute="leading" secondItem="8Ru-cZ-ZgJ" secondAttribute="leading" constant="15" id="wSe-64-D19"/>
                         </constraints>
                     </view>
@@ -74,6 +98,7 @@
             <connections>
                 <outlet property="bgView" destination="8Ru-cZ-ZgJ" id="Qrs-sA-Bqa"/>
                 <outlet property="blurImageView" destination="a73-IC-dOz" id="N8o-ut-k2q"/>
+                <outlet property="blureBGVIew" destination="zrt-ki-SCd" id="yqY-P7-Y6z"/>
                 <outlet property="deviceImage" destination="m77-NU-Blh" id="dJj-Zf-8H7"/>
                 <outlet property="deviceNameLabel" destination="YpH-Sa-Mdt" id="pLE-IG-4yH"/>
                 <outlet property="turnOFFImageView" destination="Drp-3H-9p8" id="ffj-z6-Qdw"/>
@@ -82,6 +107,6 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="turnOff" width="60" height="60"/>
+        <image name="recycleBin" width="60" height="60"/>
     </resources>
 </document>

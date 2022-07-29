@@ -29,7 +29,7 @@ class DeviceListViewController: UIViewController {
             if filterString.isEmpty {
                 filterList = deviceList
             } else {
-                filterList = deviceList.filter({($0.deviceName?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.deviceID ?? "") == filterString })
+                filterList = deviceList.filter({($0.deviceName?.lowercased().contains(filterString.lowercased()) ?? false)})
             }
 
             // Reload the collection view to reflect the changes.
@@ -42,7 +42,6 @@ class DeviceListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         initialSetup()
     }
 
