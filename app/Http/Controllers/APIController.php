@@ -832,7 +832,7 @@ public function myRecents(Request $request)
 
                DB::table('users')
                ->where('id', $id)
-               ->update(['email' => $UserEmail.'old']);
+               ->update(['email' => $UserEmail.rand()]);
 
                DB::table('session_table')
                ->where('users_id', $id)
