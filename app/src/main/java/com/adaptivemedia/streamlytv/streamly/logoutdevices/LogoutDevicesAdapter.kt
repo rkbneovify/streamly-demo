@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.databinding.LogginDevicesRowLayoutBinding
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
+import com.adaptivemedia.streamlytv.streamly.utilities.inVisible
+import com.adaptivemedia.streamlytv.streamly.utilities.show
 import com.bumptech.glide.Glide
 
 class LogoutDevicesAdapter(
@@ -42,7 +44,16 @@ class LogoutDevicesAdapter(
             tvDeviceName.text = model.device_name
             //Html.fromHtml("<b>Device Name: </b> ${model.device_name}")
             // tvDeviceType.text = Html.fromHtml("<b>Device Type: </b> ${model.device_type}")
+            // llLayout.requestFocus()
 
+
+            llLayout.setOnFocusChangeListener { view, b ->
+                if (b) {
+                    ivImage.inVisible()
+                } else {
+                    ivImage.show()
+                }
+            }
             llLayout.setOnClickListener {
                 onClick.invoke(model, position)
                 /*  index = position

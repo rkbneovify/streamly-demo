@@ -242,7 +242,7 @@ val data = "{\n" +
  * this is for message dialog box
  */
 fun Context.showDialogs(message: String, onClick: () -> Unit) {
-    val builder = AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+    val builder = AlertDialog.Builder(this, R.style.CustomDialogTheme)
     builder.setMessage(message)
     builder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
         onClick()

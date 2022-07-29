@@ -1,13 +1,16 @@
 package com.adaptivemedia.streamlytv.streamly.logoutdevices
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.databinding.ActivityLogoutDevicesBinding
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity
+import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLoginErrorResponse
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindeviceinfolist
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient
@@ -38,7 +41,6 @@ class LogoutDevicesActivity : FragmentActivity() {
         }
         onClickListeners()
         recyclerViewInit()
-
     }
 
 
@@ -56,9 +58,7 @@ class LogoutDevicesActivity : FragmentActivity() {
         binding.apply {
             loginAdapter = LogoutDevicesAdapter() { data, pos ->
                 model = data
-                showDialogs("Are you sure you want to logout this device.") {
-                    deviceLogout(model.session_id!!)
-                }
+             showDialog()
             }
 
             rvLogoutDevices.adapter = loginAdapter
@@ -84,6 +84,7 @@ class LogoutDevicesActivity : FragmentActivity() {
     }
 
 
+
     /**
      * device logout api call
      */
@@ -100,7 +101,7 @@ class LogoutDevicesActivity : FragmentActivity() {
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
                         list.remove(model)
-                        recyclerViewInit()
+                        // recyclerViewInit()
                         binding.tvTotalConnectedDevices.text =
                             "Total Connected Devices ${--logout1}"
                         toast(response.body()!!.message)
@@ -121,5 +122,28 @@ class LogoutDevicesActivity : FragmentActivity() {
                 toast(ConstantUtility.SERVER_ISSUE)
             }
         })
+    }
+
+
+    private fun showDialog() {
+        val dialog = AlertDialog.Builder(this, R.style.AlertDialogCustom)
+        /*
+        dialog.setTitle("Register Now");*/dialog.setMessage("Are you sure you want to logout this device.")
+
+        // Specifying a listener allows you to take an action before dismissing the dialog.
+        // The dialog is automatically dismissed when a dialog button is clicked.
+        dialog.setPositiveButton(
+            getString(R.string.yes)
+        ) { dialog, which ->
+            deviceLogout(model.session_id!!)
+            dialog.dismiss()
+        }
+        dialog.setNegativeButton(
+            getString(R.string.no)
+        ) { dialog, which -> // Continue with delete operation
+            dialog.dismiss()
+        }
+        dialog.show()
+        dialog.setCancelable(true)
     }
 }

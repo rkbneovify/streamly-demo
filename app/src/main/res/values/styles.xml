@@ -174,5 +174,10 @@
         <item name="android:textColorPrimary">@color/md_black_1000</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColorPrimary">@color/md_black_1000</item>
 
+    </style>
 </resources>
