@@ -84,9 +84,9 @@ class LoginVC: UIViewController {
     }
     
     func showORHideVisibility(isShow: Bool) {
-        loginWithPasscode.isHidden = !isShow
-        loginWithQRButton.isHidden = !isShow
-        terms.isHidden = !isShow
+//        loginWithPasscode.isHidden = !isShow
+//        loginWithQRButton.isHidden = !isShow
+//        terms.isHidden = !isShow
     }
     
     //MARK: Helpers
@@ -399,6 +399,8 @@ extension LoginVC
                             }
                             return
                         }
+                    } else if failureResponse.response_code == 401 {
+                        selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     }
                 }
                 self?.removeSpinner()

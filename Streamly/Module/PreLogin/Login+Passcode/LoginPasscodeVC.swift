@@ -176,6 +176,8 @@ extension LoginPasscodeVC: APIResponseDelegate {
             showAlert(withMessage: message,setFirstButtonTitle: "OK") { _ in }
         } else if !message.isEmpty {
             showSimpleAlertWithMessage(message)
+        } else if status == 401 {
+            showSimpleAlertWithMessage(message)
         }
     }
     

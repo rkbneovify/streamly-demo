@@ -122,7 +122,8 @@ extension SettingsVC:UICollectionViewDelegate, UICollectionViewDelegateFlowLayou
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return indexPath.item == 1 || indexPath.item == 3 ? Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? CGSize(width: 282, height: 280) : .zero : CGSize(width: 282, height: 280)
+//        return indexPath.item == 1 || indexPath.item == 3 ? Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isVisibility) ? CGSize(width: 282, height: 280) : .zero : CGSize(width: 282, height: 280)
+        return CGSize(width: 282, height: 280)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

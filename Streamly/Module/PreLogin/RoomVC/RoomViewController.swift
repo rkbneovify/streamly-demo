@@ -151,25 +151,12 @@ extension RoomViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-//        showAlert(withMessage: "Are you sure to select this room?", setTwoButton: true, setFirstButtonTitle: "Yes", setSecondButtonTitle: "No") { [weak self] _ in
-//            guard let weak = self else { return }
-        if let selectedID = self.filterRoomList[indexPath.item].id {
-                self.viewModel.selectRoomToLogin("\(selectedID)")
+        showAlert(withMessage: "Are you sure to select this room?", setTwoButton: true, setFirstButtonTitle: "Yes", setSecondButtonTitle: "No") { [weak self] _ in
+            guard let weak = self else { return }
+        if let selectedID = weak.filterRoomList[indexPath.item].id {
+            weak.viewModel.selectRoomToLogin("\(selectedID)")
             }
-//        }
-       
-        /* let flag = self.geoData?.success ?? false
-         guard let item = filtterdChannelList?[(indexPath.item)] else {return}
-         present(videoPlaybackViewController, animated: true) {
-         self.videoPlaybackViewController.channelObject = item
-         self.videoPlaybackViewController.isAllowedZipCode = flag
-         self.videoPlaybackViewController.str = self.geoData?.popupmsg ?? ""
-         self.videoPlaybackViewController.isfromRcent = false
-         self.videoPlaybackViewController.idS = "\(item.id ?? 0)"
-         self.videoPlaybackViewController.isPopAllow = self.geoData?.popupmsgtoggle ?? true
-         self.videoPlaybackViewController.filterData = self.filtterdChannelList
-         self.videoPlaybackViewController.loadAndPlay()*/
-        
+        }
     }
 }
 
@@ -177,25 +164,7 @@ extension RoomViewController: UICollectionViewDelegate {
 extension RoomViewController: RoomViewModelDelegate {
     func apiSuccess() {
         self.removeSpinner()
-//        let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
-//        if !isShow {
-//                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
-            Switcher.updateRootVC()
-//        } else {
-//            self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
-//        }
-//        showToast(message: "Successfully added to room/slot", completion: {
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                let isShow = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isDeviceNameAdded)
-//                if !isShow {
-////                    Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
-//                    Switcher.updateRootVC()
-//                } else {
-//                    self.openUpdateDeviceName(session: Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid))
-//                }
-//            }
-//        })
-        
+        Switcher.updateRootVC()
     }
     
     func apiFailure(_ message: String,_ status: Int) {
