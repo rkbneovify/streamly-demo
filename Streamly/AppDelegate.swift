@@ -11,10 +11,6 @@ import CoreData
 import AVFoundation
 import FirebaseCore
 
-
-
-
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

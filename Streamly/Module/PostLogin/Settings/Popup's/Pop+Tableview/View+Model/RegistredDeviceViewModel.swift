@@ -28,6 +28,32 @@ class RegistredDeviceViewModel: NSObject {
             //debugPrint("failure")
         }
     }
+    
+    func deleteUserFromSource(_ completion: ((_ success: Bool, _ message: String) -> Void)?) {
+        ApiCall.deleteRegisteredDevice { data, status in
+            if status == 200 {
+                if let `data` = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        // try to read out a string array
+                        if let status = json["status"] as? Bool {
+                            if !status {
+                                completion?(false, json["message"] as? String ?? "")
+                                return
+                            }
+                            completion?(true, json["message"] as? String ?? "")
+                        }
+                    }
+                completion?(false, "Something went wrong!!!")
+            }
+        } failure: { error, data, statusCode in
+            if let `data` = data, let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                // try to read out a string array
+                completion?(false, json["message"] as? String ?? "")
+                return
+            }
+            completion?(false, "Something went wrong!!!")
+        }
+        
+    }
 }
 
 class DataParser {

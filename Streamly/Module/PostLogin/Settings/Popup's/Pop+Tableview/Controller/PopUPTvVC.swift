@@ -17,7 +17,8 @@ class PopUPTvVC: UIViewController {
     @IBOutlet weak var backView:UIView!
     @IBOutlet weak var okButton:UIButton!
     @IBOutlet weak var alertBlurImage: UIImageView!
-
+    @IBOutlet weak var deleteButton: UIButton!
+    
     // MARK: - Properties
     var profileItemArr:[(heading:String,data:String)]?
     var isProfile:Bool?
@@ -57,6 +58,7 @@ class PopUPTvVC: UIViewController {
         
       //  self.backView.alpha = 0.8
         self.okButton.setBtnProperties(self.okButton, false)
+        self.deleteButton.setBtnProperties(self.deleteButton, false)
 
     }
 
@@ -66,11 +68,28 @@ class PopUPTvVC: UIViewController {
         self.dismiss(animated: true, completion: nil)
 
     }
+    
+    @IBAction func deleteAction(_ sender: UIButton) {
+        showAlert(title: appName, withMessage: "Are you sure you want to delete this account?", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+            self.viewModel.deleteUserFromSource { [weak self] success, message in
+                guard let weak = self else { return }
+                if success {
+                    weak.showToast(message: message) {
+                        Constant.logOut()
+                        Switcher.updateRootVC()
+                    }
+                } else {
+                    weak.showSimpleAlertWithMessage(message)
+                }
+            }
+        }
+    }
 
     // MARK: - Helpers
 
     private func initialSetup()
     {
+        deleteButton.isHidden = !(isProfile ?? false)
         if !(isProfile ?? true)
         {
             self.showSpinner(onView: self.view)

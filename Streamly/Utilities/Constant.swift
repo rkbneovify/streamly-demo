@@ -41,13 +41,14 @@ class Constant: NSObject
         guard let app = appDelegate else {return}
         let loginVc = LoginVC.instantiateFromAppStoryboard(appStoryboard: .Main)
 //        let loginVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
-        let rootViewController = appDelegate?.window?.rootViewController as? UINavigationController
-        rootViewController?.setViewControllers([loginVc], animated: false)
-        rootViewController?.isNavigationBarHidden = true
+        let rootViewController = UINavigationController()
+        rootViewController.setViewControllers([loginVc], animated: false)
+        rootViewController.isNavigationBarHidden = true
         app.window?.rootViewController!.removeFromParent()
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
     }
 
     class func navigateToRootHome()
@@ -61,6 +62,7 @@ class Constant: NSObject
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
     }
     
     class func navigateToDeviceNameScreen()
@@ -75,6 +77,7 @@ class Constant: NSObject
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
     }
     
     class func navigateToHotelRoomHome()
@@ -93,6 +96,7 @@ class Constant: NSObject
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
     }
 
     class func navigateToNoNetwork()
@@ -106,6 +110,7 @@ class Constant: NSObject
         app.window?.rootViewController!.view.removeFromSuperview()
         app.window?.rootViewController = nil
         app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
     }
 
 
@@ -122,6 +127,7 @@ class Constant: NSObject
     }
 
     struct UserDefault {
+        static let userID = "UserID"
         static let isTierUser = "userRole"
         static let isLogin = "isLogin"
         static let userName = "userName"

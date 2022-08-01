@@ -129,6 +129,7 @@ extension LoginPasscodeVC: APIResponseDelegate {
                 return
             }
         } else if UserDefaults.standard.bool(forKey: Constant.UserDefault.isLogin) {
+            Utility.setStringObject(value: "\( viewModel.responseData?.user?.id ?? 0)", key: Constant.UserDefault.userID)
             // Open controller
             if !(viewModel.responseData?.personaldevicenamePopup ?? false) {
                 if let room = viewModel.responseData?.rooms, viewModel.responseData?.userrole != "user" {

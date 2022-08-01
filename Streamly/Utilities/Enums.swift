@@ -41,7 +41,7 @@ enum ValidationErrorMessages:String
 //MARK:-: API endPoints
 
 enum API:String {
-
+    case deleteUser = "auth/userdelete"
     case getConnectedDevice = "auth/connecteddevice"
     case getContactInfo     = "auth/support"
     case logOut             = "auth/logout"

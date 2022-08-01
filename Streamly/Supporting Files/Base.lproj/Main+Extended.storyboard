@@ -238,7 +238,7 @@
                                                             <rect key="frame" x="469" y="72" width="328" height="34"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="34" id="9dB-A5-FFi"/>
-                                                                <constraint firstAttribute="width" constant="328" id="p7Q-u9-Q3d"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="328" id="p7Q-u9-Q3d"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="28"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -275,46 +275,73 @@
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MWa-xd-NtZ">
-                                        <rect key="frame" x="471.5" y="665" width="280" height="84"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="40" translatesAutoresizingMaskIntoConstraints="NO" id="dt7-OT-0iY">
+                                        <rect key="frame" x="301.5" y="665" width="620" height="84"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MWa-xd-NtZ">
+                                                <rect key="frame" x="0.0" y="0.0" width="280" height="84"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="MIM-fB-6UW"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                <state key="normal" title="Ok"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                        <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="okAction:" destination="GH6-3f-xkP" eventType="primaryActionTriggered" id="eKF-js-Qad"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="psn-5t-nbn">
+                                                <rect key="frame" x="320" y="0.0" width="300" height="84"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="BYX-zv-BAf"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
+                                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                                                <state key="normal" title="Delete Account"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
+                                                        <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
+                                                        <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="deleteAction:" destination="GH6-3f-xkP" eventType="primaryActionTriggered" id="tT2-mF-y0q"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="280" id="MIM-fB-6UW"/>
-                                            <constraint firstAttribute="height" constant="84" id="hAG-FI-lNv"/>
+                                            <constraint firstAttribute="height" constant="84" id="apV-Cj-Qxy"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
-                                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                        <state key="normal" title="Ok"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="firstColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="secondColor">
-                                                <color key="value" red="0.0" green="0.30588235289999999" blue="0.57254901960000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="okAction:" destination="GH6-3f-xkP" eventType="primaryActionTriggered" id="eKF-js-Qad"/>
-                                        </connections>
-                                    </button>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.55000000000000004" alpha="0.94999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="Glo-Ez-oNj" firstAttribute="leading" secondItem="zB2-b4-jey" secondAttribute="leading" constant="203" id="0Nq-to-yvb"/>
                                     <constraint firstAttribute="trailing" secondItem="x57-Lw-fIz" secondAttribute="trailing" id="0Qn-qH-BfV"/>
-                                    <constraint firstAttribute="bottom" secondItem="MWa-xd-NtZ" secondAttribute="bottom" constant="51" id="7kG-oB-9jz"/>
                                     <constraint firstItem="x57-Lw-fIz" firstAttribute="top" secondItem="zB2-b4-jey" secondAttribute="top" id="B9q-cu-1aH"/>
+                                    <constraint firstAttribute="bottom" secondItem="dt7-OT-0iY" secondAttribute="bottom" constant="51" id="Cdt-2o-5VM"/>
                                     <constraint firstAttribute="trailing" secondItem="Glo-Ez-oNj" secondAttribute="trailing" constant="203" id="Fr9-0v-dDa"/>
                                     <constraint firstAttribute="height" constant="800" id="HQB-In-6Vc"/>
-                                    <constraint firstItem="MWa-xd-NtZ" firstAttribute="top" secondItem="Glo-Ez-oNj" secondAttribute="bottom" constant="37" id="M4Q-hv-kSY"/>
                                     <constraint firstItem="Glo-Ez-oNj" firstAttribute="top" secondItem="zB2-b4-jey" secondAttribute="top" constant="93" id="Pem-KH-huV"/>
                                     <constraint firstAttribute="trailing" secondItem="32Q-g8-Gkl" secondAttribute="trailing" id="SJo-Jd-tAB"/>
+                                    <constraint firstItem="dt7-OT-0iY" firstAttribute="centerX" secondItem="Glo-Ez-oNj" secondAttribute="centerX" id="T1N-RQ-4ld"/>
                                     <constraint firstItem="32Q-g8-Gkl" firstAttribute="leading" secondItem="zB2-b4-jey" secondAttribute="leading" id="c6Y-RT-dHe"/>
                                     <constraint firstAttribute="bottom" secondItem="32Q-g8-Gkl" secondAttribute="bottom" id="fdR-ER-ZvG"/>
+                                    <constraint firstItem="dt7-OT-0iY" firstAttribute="top" secondItem="Glo-Ez-oNj" secondAttribute="bottom" constant="37" id="gXu-c1-0k9"/>
                                     <constraint firstItem="32Q-g8-Gkl" firstAttribute="top" secondItem="zB2-b4-jey" secondAttribute="top" id="h6S-vM-ceU"/>
                                     <constraint firstAttribute="bottom" secondItem="x57-Lw-fIz" secondAttribute="bottom" id="k6H-Sz-OcA"/>
                                     <constraint firstAttribute="width" constant="1223" id="mBn-ef-2Q3"/>
                                     <constraint firstItem="x57-Lw-fIz" firstAttribute="leading" secondItem="zB2-b4-jey" secondAttribute="leading" id="nC9-Ou-3n4"/>
-                                    <constraint firstItem="MWa-xd-NtZ" firstAttribute="centerX" secondItem="Glo-Ez-oNj" secondAttribute="centerX" id="x5b-9S-7Ea"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -333,6 +360,7 @@
                     <connections>
                         <outlet property="alertBlurImage" destination="32Q-g8-Gkl" id="F41-hh-d60"/>
                         <outlet property="backView" destination="zB2-b4-jey" id="KdX-mu-ZUE"/>
+                        <outlet property="deleteButton" destination="psn-5t-nbn" id="sJi-eq-p8U"/>
                         <outlet property="okButton" destination="MWa-xd-NtZ" id="r2r-sq-fuf"/>
                         <outlet property="tableview" destination="Glo-Ez-oNj" id="rIR-uM-Jzg"/>
                     </connections>

@@ -21,6 +21,15 @@ open class ApiCall {
     }
     
     @discardableResult
+    public static func deleteRegisteredDevice(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.deleteUser.rawValue + "/\(Utility.retriveStringObject(key: Constant.UserDefault.userID))", method: .delete, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
     public static func getContactInfoData(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]

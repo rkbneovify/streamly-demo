@@ -302,6 +302,7 @@ extension LoginVC
             if response != nil && errorMessage == nil{
                 selfStrong.removeSpinner()
                 if response.success?.success == true {
+                    Utility.setStringObject(value: "\(response.success?.user?.id ?? 0)", key: Constant.UserDefault.userID)
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
                     if self?.remeberMeFlag ?? false {
@@ -399,6 +400,9 @@ extension LoginVC
                             }
                             return
                         }
+                    } else if let data = failureResponse.data { // check session exist.
+                        selfStrong.sameDeviceLogOut(id: data)
+                        //selfStrong.openAlertForRemoveId(id: data, message: failureResponse.message ?? "")
                     } else if failureResponse.response_code == 401 {
                         selfStrong.showSimpleAlertWithMessage(failureResponse.message ?? "")
                     }
