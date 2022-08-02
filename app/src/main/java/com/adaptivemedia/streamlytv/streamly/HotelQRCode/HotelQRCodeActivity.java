@@ -50,7 +50,6 @@ public class HotelQRCodeActivity extends FragmentActivity {
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         initViews();
         getQRCode();
-
     }
 
     private void getHotelLogin() {
@@ -222,14 +221,10 @@ public class HotelQRCodeActivity extends FragmentActivity {
                         TokenStorage.savedHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY,key);
                         Log.e(TAG,"getQRCode key : "+TokenStorage.readHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY, null));
                         startRepeating();
-
-
-
                     } else if (response.body().getStatus()  == 500) {
                         CommonUtility.showToast(HotelQRCodeActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
                     progressBar.setVisibility(View.INVISIBLE);
-
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e(TAG,"Exception: "+e.toString());

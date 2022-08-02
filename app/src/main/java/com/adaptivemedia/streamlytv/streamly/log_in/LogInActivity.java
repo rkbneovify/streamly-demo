@@ -96,13 +96,13 @@ public class LogInActivity extends FragmentActivity {
 
 
                 if (response.body() != null && response.body().getVisible()) {
-                    btnHotelLogin.setVisibility(View.VISIBLE);
-                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
-                    btnTermsUses.setVisibility(View.VISIBLE);
-                } else {
                     btnHotelLogin.setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
-                    btnTermsUses.setVisibility(View.GONE);
+                  //  btnTermsUses.setVisibility(View.GONE);
+                } else {
+                    btnHotelLogin.setVisibility(View.VISIBLE);
+                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
+                 //   btnTermsUses.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -182,8 +182,8 @@
                     android:textAlignment="center"
                     android:textAllCaps="false"
                     android:textColor="@color/color_white"
-                    android:textSize="@dimen/_6ssp"
-                    android:visibility="gone"/>
+                    android:textSize="@dimen/_7ssp"
+                    android:visibility="visible"/>
 
 
             </LinearLayout>
@@ -208,7 +208,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/color_white"
                     android:textSize="@dimen/_7ssp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
 
             </LinearLayout>
