@@ -57,6 +57,72 @@ class HomeTwoController extends Controller
            'zip_code' => 'Zip Code',
         );
 
+        $checkEmail = $request['user-email'];
+        $User = User::where('email', $checkEmail)->first();
+
+        if($User){
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'user-password' => 'required|string|min:8',
+                'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
+                'zip_code'=>'required|exists:zipcodes,zipcode,status,1',
+                'g-recaptcha-response'=>'required'
+            // ], ['zip_code.exists'=>'Service not available at this zipcode or your zipcode is not valid'], $attributeNames);
+        ], ['zip_code.exists'=>'Unfortunately service is not yet available for the zip code you submitted.'], $attributeNames);
+
+        $secret = env('GOOGLE_RECAPTCHA_SECRET');
+        $captchaId = $request->input('g-recaptcha-response');
+        
+        //sends post request to the URL and tranforms response to JSON
+        $responseCaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$captchaId));
+        if($responseCaptcha->success == true){
+        
+            $verification_code=Crypt::encrypt($request['user-email']);
+        
+            $FRONTEND_URL=env('FRONTEND_URL');
+        
+            $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+            $html='<html>
+                Hi, '.$request['name'].'<br><br>
+        
+                Thank you for registering for '.env('APP_NAME').'.<br><br>
+                Please click the following link to verify your account.
+                <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+                width: 115px;
+                height: 25px;
+                background: #004E92 0% 0% no-repeat padding-box;
+                padding: 10px;
+                text-align: center;
+                border-radius: 5px;
+                color: white;
+                font-weight: bold;
+                line-height: 25px;">Verify</a><br><br>
+                Thank you!<br>
+                The '.env('APP_NAME').' Team!
+            </html>';
+        
+            try{
+                Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
+                    $message->to($request['user-email'], $request['name'])
+                    ->subject(env('APP_NAME').': Account Verification');
+                
+                });
+
+                $User->name = $request['name'];
+                $User->password=Hash::make($request['user-password']);
+                $User->zipcode = $request['zip_code'];
+                $User->save();
+            
+            } catch (Exception $ex) {
+                     //$ex->getMessage();
+                     return redirect()->back()->withInput()->withErrors(['SMTP-Error'=> "We've got errors!".json_encode($ex->getMessage(), true)]);
+                }
+                return redirect('/')->with('message', 'Thanks! We have sent you an email to verify your email address. Click  on the verification link in the email to activate your account. ');
+            }
+
+        }else{
+
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'user-email' => 'required|string|email|max:255|unique:users,email',
@@ -142,6 +208,7 @@ if($responseCaptcha->success == true){
     }
 
     }
+}
     public function contactformsend(ContactFormRequest $request){
 
     // check if reCaptcha has been validated by Google      

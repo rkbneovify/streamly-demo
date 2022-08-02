@@ -830,9 +830,9 @@ public function myRecents(Request $request)
                ->where('id', $id)
                ->update(['is_active' => "0"]);
 
-               DB::table('users')
-               ->where('id', $id)
-               ->update(['email' => $UserEmail.rand()]);
+               //delete subscriptions
+               DB::table('subscriptions')->where('user_id', $id)->delete();
+               //delete manage connected devices
 
                DB::table('session_table')
                ->where('users_id', $id)
