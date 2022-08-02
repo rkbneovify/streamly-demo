@@ -147,7 +147,7 @@ extension SettingsVC{
         case CustomPopUp.profile.rawValue:
             self.tablePopup(true)
         case CustomPopUp.registrdDevice.rawValue:
-            self.tablePopup(false)
+            openDeviceList()//self.tablePopup(false)
         case CustomPopUp.support.rawValue:
             self.viewPopups(itemNo)
         case CustomPopUp.policies.rawValue:
@@ -159,6 +159,12 @@ extension SettingsVC{
             
         }
         
+    }
+    
+    private func openDeviceList() {
+        let deviceList = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        deviceList.isFromLogin = false
+        present(deviceList, animated: true)
     }
     
     ///Helpers select item

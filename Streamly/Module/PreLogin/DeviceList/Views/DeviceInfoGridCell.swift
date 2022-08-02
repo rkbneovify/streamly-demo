@@ -52,7 +52,6 @@ class DeviceInfoGridCell: UICollectionViewCell {
             if !self.isFocused {
 //                self.bgView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
                 self.bgView.borderWidth = 1.0
-                self.bgView.borderColor = .clear
                 self.bgView.borderColor = .white
 //                self.blurImageView.isHidden = true
                 self.turnOFFImageView.isHidden = true
@@ -64,7 +63,7 @@ class DeviceInfoGridCell: UICollectionViewCell {
 //                self.blurImageView.isHidden = false
                 self.turnOFFImageView.isHidden = false
                 self.bgView.borderWidth = 1.0
-                self.bgView.borderColor = .clear
+                self.bgView.borderColor = .white
 //                self.bgView.backgroundColor = UIColor.lightGray
             }
         }, completion: nil)

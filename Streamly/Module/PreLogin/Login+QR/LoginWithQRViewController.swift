@@ -165,6 +165,7 @@ extension LoginWithQRViewController {
     fileprivate func deviceListScreen(deviceInfo: Loggedindeviceinfolist) {
         let vc = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
         vc.deviceList = deviceInfo.data ?? []
+        vc.isFromLogin = true
         vc.delegate = self
         let searchController = UISearchController(searchResultsController: vc)
         searchController.searchResultsUpdater = vc

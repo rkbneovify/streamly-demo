@@ -11,6 +11,7 @@ import Foundation
 
 class DeviceManageViewModel: NSObject {
 
+    var handleDeviceListResponse: ((DeviceResponseData) -> Void)?
     func logOutSession(id: String,_ completion: ((_ success: Bool,_ message: String) -> Void)?) {
         ApiCall.sameDeviceIdLogout(id: id) { data, status in
             completion?(true, "")
@@ -24,6 +25,22 @@ class DeviceManageViewModel: NSObject {
             completion?(false, error?.localizedDescription ?? "")
         }
 
+    }
+    
+    func getRegistredDeviceData() {
+        ApiCall.getRegistredDeviceData(success: { data, _
+            in
+            if let contactModel = DataParser.parseContactData(data!) {
+                self.handleDeviceListResponse?(contactModel)
+                //debugPrint(contactModel)
+            }
+            //debugPrint("Success")
+        }) { (error, data, code)  in
+            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                print(failedData.message ?? "")
+            }
+            //debugPrint("failure")
+        }
     }
     
     func sameDeviceLogOut(id: String, _ completion: ((_ success: Bool,_ message: String) -> Void)?) {

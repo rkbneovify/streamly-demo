@@ -38,6 +38,8 @@ class DeviceListViewController: UIViewController {
     }
     var deviceList = [DeviceInfo]()
     var filterList = [DeviceInfo]()
+    var isFromLogin = false
+    
     weak var delegate: DeviceListDelegate?
     
     override func viewDidLoad() {
@@ -70,8 +72,24 @@ class DeviceListViewController: UIViewController {
             // Fallback on earlier versions
             logOutButton.addTarget(self, action: #selector(logOutAction(_:)), for: .primaryActionTriggered)
         }
+        
+        apicalling()
     }
     
+    
+    private func apicalling() {
+        if !isFromLogin {
+            viewModel.getRegistredDeviceData()
+            viewModel.handleDeviceListResponse = { model in
+                self.deviceList = model.data?.map({ device in
+                    return DeviceInfo(connectedDevices: device.connected_devices, deviceID: device.device_id, deviceName: device.device_name, sessionID: device.session_id, personaldevicename: device.personaldevicename, personaldeviceid: device.personaldeviceid, deviceImg: device.device_img, deviceType: device.deviceType)
+                }) ?? []
+                self.filterList = self.deviceList
+                self.totalCountLabel.text = "Total connected Devices: \(self.deviceList.count)"
+                self.deviceCollectionView.reloadData()
+            }
+        }
+    }
 }
 
 // MARK: - @objc and @IBaction
