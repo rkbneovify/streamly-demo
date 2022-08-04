@@ -346,7 +346,6 @@ class ProgramGuideManager<T> {
                 days: Int) {
         channels.clear()
         channelEntriesMap.clear()
-
         channels.addAll(newChannels)
         channelEntriesMap.putAll(newChannelEntries)
 

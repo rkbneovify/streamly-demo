@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp">
 
@@ -28,7 +29,7 @@
             <ImageView
                 android:id="@+id/ivImage"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_80sdp"
+                android:layout_height="@dimen/_60sdp"
                 android:contentDescription="@string/register_device"
                 android:src="@drawable/ic_register_devices"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +42,6 @@
             android:id="@+id/tvDeviceName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/helvetica_neue_regular"
             android:gravity="center"
             android:textStyle="bold"
@@ -84,7 +84,7 @@
             android:theme="@style/MyCheckbox"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ivImage"
+            app:layout_constraintTop_toTopOf="parent"
             tools:checked="true" />
 
 

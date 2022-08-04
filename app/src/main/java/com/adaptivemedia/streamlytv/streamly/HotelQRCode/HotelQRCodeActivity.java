@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
@@ -50,7 +52,6 @@ public class HotelQRCodeActivity extends FragmentActivity {
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         initViews();
         getQRCode();
-
     }
 
     private void getHotelLogin() {
@@ -81,8 +82,10 @@ public class HotelQRCodeActivity extends FragmentActivity {
                             CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            startActivity(new Intent(HotelQRCodeActivity.this, UserRoomActivity.class));
-                            finish();
+                            Intent intent = new  Intent(HotelQRCodeActivity.this, UserRoomActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+                            startActivity(intent);
+
 
                         }
                         else if(response.body().getUserRole().equals("user")) {
@@ -222,14 +225,10 @@ public class HotelQRCodeActivity extends FragmentActivity {
                         TokenStorage.savedHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY,key);
                         Log.e(TAG,"getQRCode key : "+TokenStorage.readHotelKey(HotelQRCodeActivity.this, ConstantUtility.KEY, null));
                         startRepeating();
-
-
-
                     } else if (response.body().getStatus()  == 500) {
                         CommonUtility.showToast(HotelQRCodeActivity.this, ConstantUtility.SERVER_ISSUE);
                     }
                     progressBar.setVisibility(View.INVISIBLE);
-
                 }catch (Exception e){
                     e.printStackTrace();
                     Log.e(TAG,"Exception: "+e.toString());

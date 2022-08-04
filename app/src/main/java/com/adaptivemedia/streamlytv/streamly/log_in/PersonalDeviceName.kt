@@ -35,7 +35,7 @@ class PersonalDeviceName : FragmentActivity() {
     private lateinit var nextImageButton: Button
     private lateinit var logoutButton: TextView
     private lateinit var loadingProgressBar: ProgressBar
-    private lateinit var context:Context;
+    private lateinit var context: Context;
     var builder: AlertDialog.Builder? = null
     var alertDialog: Dialog? = null
     private var dialogClickListener =
@@ -115,7 +115,8 @@ class PersonalDeviceName : FragmentActivity() {
             alertDialog!!.dismiss()
         }
 
-        alertDialog!!.findViewById<View>(R.id.no_btn_logout_dialog).setOnClickListener { alertDialog!!.dismiss() }
+        alertDialog!!.findViewById<View>(R.id.no_btn_logout_dialog)
+            .setOnClickListener { alertDialog!!.dismiss() }
         personalDeviceName = findViewById(R.id.editTextTextPersonName)
         nextImageButton = findViewById(R.id.next_image_button)
         logoutButton = findViewById(R.id.personal_device_name_logout_btn);
@@ -146,20 +147,25 @@ class PersonalDeviceName : FragmentActivity() {
                     ConstantUtility.AUTH_TOKEN,
                     null
                 )
-                var deviceID = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+                var deviceID =
+                    Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
 
-                val personalDeviceId = TokenStorage.readPersonalDeviceID(this, ConstantUtility.PERSONAL_DEVICE_ID, "")
+                val personalDeviceId =
+                    TokenStorage.readPersonalDeviceID(this, ConstantUtility.PERSONAL_DEVICE_ID, "")
                 val deviceType = TokenStorage.readDeviceType(this, ConstantUtility.DEVICE_TYPE, "")
                 val apiInterface = ApiClient.getClient().create(
                     ApiInterface::class.java
                 )
                 var data = HashMap<String, String>()
                 data.set("devicename", deviceName);
-                data.set("device_type", deviceID);
-                Log.e("Personal ","Auth : "+authToken);
+                data.set("device_type", deviceType);
+                Log.e("Personal ", "Auth : " + authToken);
+                Log.e("Personal ", "Auth : " + deviceName);
+                    Log.e("Personal ", "Auth : " + deviceID);
+                Log.e("Personal ", "Auth : " + personalDeviceId);
                 if (session_id != null) {
                     val call = apiInterface.setPersonalDeviceName(authToken, personalDeviceId, data)
-                    call.enqueue(object : retrofit2.Callback<PersonalDeviceNameDataModel> {
+                    call.enqueue(object : Callback<PersonalDeviceNameDataModel> {
                         /**
                          * Invoked for a received HTTP response.
                          *
@@ -182,7 +188,7 @@ class PersonalDeviceName : FragmentActivity() {
                                     ConstantUtility.USER_ROLE,
                                     ""
                                 )
-                              //  TokenStorage.savedSharedTokenPassCode(this@PersonalDeviceName, ConstantUtility.AUTH_TOKEN_PASSCODE,ConstantUtility.AUTH_TOKEN_PASSCODE);
+                                //  TokenStorage.savedSharedTokenPassCode(this@PersonalDeviceName, ConstantUtility.AUTH_TOKEN_PASSCODE,ConstantUtility.AUTH_TOKEN_PASSCODE);
                                 if (userRole != "" && userRole == "user") {
                                     startActivity(
                                         Intent(

@@ -25,4 +25,8 @@ public class NetworkKeys {
     public static final String KEY_SUPPORT="/api/auth/support";
     public static final String KEY_QRVISIBILITY="/api/auth/qrvisibility";
 
+
+    void  test(){
+        ExtentionsKt.data();
+    }
 }

@@ -168,11 +168,16 @@
     </style>
 
     <style name="AlertDialogCustom" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="buttonBarPositiveButtonStyle">@color/app_blue_light</item>
+        <item name="buttonBarPositiveButtonStyle">@drawable/next_button_background</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/md_black_1000</item>
         <item name="android:textColorPrimary">@color/md_black_1000</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColorPrimary">@color/md_black_1000</item>
 
+    </style>
 </resources>

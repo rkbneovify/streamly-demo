@@ -24,6 +24,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.CustomDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
+import com.adaptivemedia.streamlytv.streamly.dialogs.ToastDialog;
 import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.LoginDevicesModel;
 import com.adaptivemedia.streamlytv.streamly.registration.RegistrationActivity;
@@ -75,6 +79,7 @@ public class LogInActivity extends FragmentActivity {
         CommonUtility.checkInternetConnection(LogInActivity.this);
         setContentView(R.layout.activity_log_in);
         initViews();
+
         userAgent = System.getProperty("http.agent");
 //        getUserAgentType();
         Log.i(TAG, "onResponse: user agent " + userAgent);
@@ -96,13 +101,13 @@ public class LogInActivity extends FragmentActivity {
 
 
                 if (response.body() != null && response.body().getVisible()) {
-                    btnHotelLogin.setVisibility(View.VISIBLE);
-                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
-                    btnTermsUses.setVisibility(View.VISIBLE);
-                } else {
                     btnHotelLogin.setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
-                    btnTermsUses.setVisibility(View.GONE);
+                    //  btnTermsUses.setVisibility(View.GONE);
+                } else {
+                    btnHotelLogin.setVisibility(View.VISIBLE);
+                    btnLoginUsingPasscode.setVisibility(View.VISIBLE);
+                    //   btnTermsUses.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -120,7 +125,10 @@ public class LogInActivity extends FragmentActivity {
                 supportDialog.show();
             }
         });
-        edUserName.setText("vikas.saini1@oodles.io");
+
+      //  edUserName.setText("vikas.saini1@oodles.io");
+        // edUserName.setText("kallusingh.rajput@oodles.io");
+        //edUserName.setText("aashish.kumar@oodles.io");
         //    edUserName.setText("mina@neovix.com");
         //  edUserName.setText("pm13426@gmail.com");
         //   edPassword.setText("Piyush123456789");
@@ -128,7 +136,8 @@ public class LogInActivity extends FragmentActivity {
         //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
         //     edUserName.setText("streamly1@yopmail.com");
-        edPassword.setText("123456789");
+        // edPassword.setText("123456789");
+        //edPassword.setText("123456789");
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +185,7 @@ public class LogInActivity extends FragmentActivity {
             public void onClick(View v) {
 
                 startActivity(new Intent(LogInActivity.this, LoginUsingPasscodeActivity.class));
-                finish();
+                // finish();
                 /*Toast.makeText(LogInActivity.this, "Please go to "+ ApiConfig.BASE_URL
                         +" for creating new account", Toast.LENGTH_SHORT).show();*/
             }
@@ -194,7 +203,7 @@ public class LogInActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LogInActivity.this, HotelQRCodeActivity.class));
-                finish();
+                // finish();
 
 
             }
@@ -211,6 +220,12 @@ public class LogInActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+
+    void toastDialog(String message) {
+        ToastDialog t = new ToastDialog(message);
+        t.show(getSupportFragmentManager(), "Tag");
     }
 
     private void login() {
@@ -285,6 +300,10 @@ public class LogInActivity extends FragmentActivity {
                         String deviceType = response.body().getDeviceType();
                         boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
                         Log.e(TAG, "onResponse222: " + personaDeviceNamePopup);
+                        Log.e(TAG, "onResponse222: " + response.body().getUserRole());
+                        Log.e(TAG, "onResponse222: " + response.body().getDeviceType());
+                        Log.e(TAG, "onResponse222: " + uniqueId);
+                                  Log.e(TAG, "onResponse222: " + response.body().getPersonalDeviceId());
                         if (response.body().getUserRole().equals("tieruser")) {
                             Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
@@ -336,19 +355,17 @@ public class LogInActivity extends FragmentActivity {
                         }
                     } else if (response.code() == 479) {
                         String s = response.errorBody().string();
-                        Log.e(TAG, "onResponse123: " + s);
-                        Log.e(TAG, "onResponse123: " + response.errorBody().string());
+
                         NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(s,
                                 NewLoginErrorResponse.class);
-                        Log.e(TAG, "onResponse111: " + loginErrorResponse);
                         if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
-                            Log.e(TAG, "onResponse1: " + loginErrorResponse.getLoggedindeviceinfolist());
                             showDialog(loginErrorResponse);
                         }
                     } else if (response.code() == 401) {
                         Log.i(TAG, "onResponse:401  " + response.isSuccessful());
                         if (!response.isSuccessful()) {
-                            CommonUtility.showToast(LogInActivity.this, "Invalid credentials");
+                            toastDialog("Invalid credentials");
+                            // CommonUtility.showToast(LogInActivity.this, "Invalid credentials");
                         }
                         /*SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
@@ -376,7 +393,8 @@ public class LogInActivity extends FragmentActivity {
 //
                         }
                     } else if (response.code() == 500) {
-                        CommonUtility.showToast(LogInActivity.this, response.message());
+                        toastDialog(response.message());
+                        // CommonUtility.showToast(LogInActivity.this, response.message());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -390,7 +408,8 @@ public class LogInActivity extends FragmentActivity {
             public void onFailure(Call<NewLogInModel> call, Throwable t) {
                 Log.e(TAG, "failure: " + t.getMessage());
                 Log.e(TAG, "failRequest: " + call.request());
-                CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
+                toastDialog(ConstantUtility.SERVER_ISSUE);
+                // CommonUtility.showToast(LogInActivity.this, ConstantUtility.SERVER_ISSUE);
                 dialog.setVisibility(View.GONE);
             }
         });
@@ -446,20 +465,34 @@ public class LogInActivity extends FragmentActivity {
 
     private void showDialog(NewLoginErrorResponse body) {
         Log.e(TAG, "showDialog: " + body);
+        CommonDialog c = new CommonDialog(body.getMessage(), new DialogClickListeners() {
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
-/*
-        dialog.setTitle("Register Now");*/
+            @Override
+            public void negative() {
+
+
+            }
+
+            @Override
+            public void positive() {
+                Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
+                intent.putExtra("list", body.getLoggedindeviceinfolist());
+                intent.putExtra("isLogin", true);
+                startActivityForResult(intent, 123);
+            }
+        });
+
+        c.show(getSupportFragmentManager(), "ffnadjg");
+        /*     AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+         *//*
+        dialog.setTitle("Register Now");*//*
         dialog.setMessage(body.getMessage());
 
         // Specifying a listener allows you to take an action before dismissing the dialog.
         // The dialog is automatically dismissed when a dialog button is clicked.
         dialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(LogInActivity.this, LogoutDevicesActivity.class);
-                intent.putExtra("list", body.getLoggedindeviceinfolist());
-                startActivityForResult(intent, 123);
-                dialog.dismiss();
+
 
 
             }
@@ -473,7 +506,7 @@ public class LogInActivity extends FragmentActivity {
             }
         });
         dialog.show();
-        dialog.setCancelable(true);
+        dialog.setCancelable(true);*/
     }
 
 
