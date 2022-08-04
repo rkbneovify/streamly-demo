@@ -63,7 +63,7 @@
             android:textAlignment="center"
             android:textAllCaps="false"
             android:layout_marginLeft="@dimen/_6sdp"
-            android:background="@drawable/button_states"/>
+            android:background="@drawable/button_states1"/>
 
     </LinearLayout>
 

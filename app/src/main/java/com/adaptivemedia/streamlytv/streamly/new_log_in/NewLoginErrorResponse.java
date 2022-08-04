@@ -2,6 +2,7 @@
 package com.adaptivemedia.streamlytv.streamly.new_log_in;
 
 
+import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindeviceinfolist;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -20,6 +21,9 @@ public class NewLoginErrorResponse {
     @SerializedName("data")
     @Expose
     private String data;
+    @SerializedName("loggedindeviceinfolist")
+    @Expose
+    private Loggedindeviceinfolist loggedindeviceinfolist;
 
     public Boolean getSuccess() {
         return success;
@@ -53,4 +57,11 @@ public class NewLoginErrorResponse {
         this.data = data;
     }
 
+    public Loggedindeviceinfolist getLoggedindeviceinfolist() {
+        return loggedindeviceinfolist;
+    }
+
+    public void setLoggedindeviceinfolist(Loggedindeviceinfolist loggedindeviceinfolist) {
+        this.loggedindeviceinfolist = loggedindeviceinfolist;
+    }
 }

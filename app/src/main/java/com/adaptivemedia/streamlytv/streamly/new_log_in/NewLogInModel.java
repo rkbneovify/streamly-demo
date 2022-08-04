@@ -1,13 +1,16 @@
 
 package com.adaptivemedia.streamlytv.streamly.new_log_in;
 
+import androidx.annotation.Keep;
+
 import java.util.List;
 
+import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindeviceinfolist;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-
+@Keep
 public class NewLogInModel {
 
     @SerializedName("success")
@@ -67,6 +70,23 @@ public class NewLogInModel {
     @SerializedName("rooms")
     @Expose
     private List<Room> rooms = null;
+
+    @SerializedName("loggedindeviceinfolist")
+    @Expose
+    private Loggedindeviceinfolist loggedindeviceinfolist;
+
+    public boolean isPersonaldevicename_popup() {
+        return personaldevicename_popup;
+    }
+
+    public Loggedindeviceinfolist getLoggedindeviceinfolist() {
+        return loggedindeviceinfolist;
+    }
+
+    public void setLoggedindeviceinfolist(Loggedindeviceinfolist loggedindeviceinfolist) {
+        this.loggedindeviceinfolist = loggedindeviceinfolist;
+    }
+
 
     public Boolean getSuccess() {
         return success;

@@ -28,7 +28,12 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".streamly.registration.RegistrationActivity"/>
+            android:name=".streamly.logoutdevices.LogoutDevicesActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+
+        </activity>
+        <activity android:name=".streamly.registration.RegistrationActivity" />
         <activity
             android:name=".streamly.settings.support.SupportActivity"
             android:theme="@style/AppTheme" />
