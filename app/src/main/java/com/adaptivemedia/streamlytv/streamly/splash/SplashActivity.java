@@ -14,6 +14,7 @@ import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
 import com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceName;
 import com.adaptivemedia.streamlytv.streamly.user_room.UserRoomActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
+import com.adaptivemedia.streamlytv.streamly.utilities.ExtentionsKt;
 
 
 public class SplashActivity extends FragmentActivity {

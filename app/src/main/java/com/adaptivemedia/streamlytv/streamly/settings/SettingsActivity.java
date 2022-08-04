@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
 import com.adaptivemedia.streamlytv.streamly.dialogs.NoPlanDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
@@ -66,7 +68,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
     private BlurDialog blurView;
     private String auth_token;
     private Long id;
-    private  String userAgent;
+    private String userAgent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +99,8 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             registerDevice.setVisibility(View.VISIBLE);
             privacy.setVisibility(View.VISIBLE);
         } else {
-            registerDevice.setVisibility(View.GONE);
-            privacy.setVisibility(View.GONE);
+            registerDevice.setVisibility(View.VISIBLE);
+            privacy.setVisibility(View.VISIBLE);
         }
 
     }
@@ -120,9 +122,9 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 break;
 
             case R.id.register_device:
-                RegisterDeviceDialog registerDeviceDialog = new RegisterDeviceDialog(this);
-                registerDeviceDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                registerDeviceDialog.show();
+                Intent intent = new Intent(SettingsActivity.this, LogoutDevicesActivity.class);
+                intent.putExtra("isLogin", false);
+                startActivity(intent);
                 break;
 
             case R.id.support:
@@ -201,18 +203,29 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 
 
     private void showDialog() {
+        CommonDialog c = new CommonDialog("Are you sure you want to delete this account.", new DialogClickListeners() {
+            @Override
+            public void negative() {
+            }
 
+            @Override
+            public void positive() {
+                deleteUserAccount();
+            }
+        });
 
-        AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialogCustom);
+        c.show(getSupportFragmentManager(), "ffnadjg");
 /*
-        dialog.setTitle("Register Now");*/
+        AlertDialog.Builder dialog = new AlertDialog.Builder(SettingsActivity.this, R.style.AlertDialogCustom);
+*//*
+        dialog.setTitle("Register Now");*//*
         dialog.setMessage("Are you sure you want to delete this account.");
 
         // Specifying a listener allows you to take an action before dismissing the dialog.
         // The dialog is automatically dismissed when a dialog button is clicked.
         dialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-              deleteUserAccount();
+                deleteUserAccount();
                 dialog.dismiss();
 
 
@@ -227,13 +240,13 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             }
         });
         dialog.show();
-        dialog.setCancelable(true);
+        dialog.setCancelable(true);*/
     }
 
     private void deleteUserAccount() {
         progressBar.setVisibility(View.VISIBLE);
         //  Response<DeviceSignOutResponse> response = retrofitClient().deleteUserApi(id);
-        Call<DeviceSignOutResponse> call = retrofitClient().deleteUserApi(userAgent,"Bearer " + auth_token, id);
+        Call<DeviceSignOutResponse> call = retrofitClient().deleteUserApi(userAgent, "Bearer " + auth_token, id);
         call.enqueue(new Callback<DeviceSignOutResponse>() {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
@@ -241,9 +254,9 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                     progressBar.setVisibility(View.GONE);
                     DeviceSignOutResponse data = response.body();
                     CommonUtility.showToast(SettingsActivity.this, data.getMessage());
-                        Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-                        startActivity(intent);
+                    Intent intent = new Intent(SettingsActivity.this, LogInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 } else {
                     progressBar.setVisibility(View.GONE);
                     CommonUtility.showToast(SettingsActivity.this, ConstantUtility.SERVER_ISSUE);

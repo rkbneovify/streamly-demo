@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.R;
@@ -91,8 +92,11 @@ Button btn_sign_in_using_passcode;
                             TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID,userId.toString());
                             TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
                             CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
-                            startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
-                            finish();
+
+                            Intent intent = new  Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+                            startActivity(intent);
+
                             et_passcode.setText("");
                         }
                         else if(response.body().getUserRole().equals("user")) {

@@ -42,7 +42,6 @@
             android:id="@+id/tvDeviceName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/helvetica_neue_regular"
             android:gravity="center"
             android:textStyle="bold"

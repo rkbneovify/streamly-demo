@@ -262,9 +262,23 @@ fun Context.toast(message: String) {
 fun View.gone() {
     visibility = View.GONE
 }
+
 fun View.inVisible() {
     visibility = View.INVISIBLE
 }
+
 fun View.show() {
     visibility = View.VISIBLE
+}
+internal fun data(){
+
+}
+val pair = Pair<Boolean, Int>(false, 20)
+fun main() {
+    val numbers = listOf("one", "two", "three", "four")
+    val longerThan3 = numbers.filter { it =="four" }.joinToString { it }
+    println(longerThan3)
+
+
+    println(numbers.lastIndexOf("four"))
 }

@@ -62,6 +62,7 @@
         <entry key="app/src/main/res/drawable/layout_border.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/layout_focus2.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/menu_channel.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/next_button_background.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/option_channel_default.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/option_channels.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/option_default.xml" value="0.1765" />
@@ -107,12 +108,15 @@
         <entry key="app/src/main/res/drawable/white_border_background.xml" value="0.1755" />
         <entry key="app/src/main/res/drawable/white_transparent.xml" value="0.1765" />
         <entry key="app/src/main/res/drawable/white_transparent2.xml" value="0.1765" />
+        <entry key="app/src/main/res/layout/activity_hotel_qrcode1.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.31537708129285014" />
         <entry key="app/src/main/res/layout/activity_login_using_passcode.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/activity_logout_devices.xml" value="0.18" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15208333333333332" />
         <entry key="app/src/main/res/layout/activity_personal_device_name.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/layout/activity_player.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_support.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/activity_user_room.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/custom_dialog.xml" value="0.15208333333333332" />
         <entry key="app/src/main/res/layout/dialog_device_limit.xml" value="0.15208333333333332" />
@@ -121,7 +125,9 @@
         <entry key="app/src/main/res/layout/dialog_no_plan.xml" value="0.5" />
         <entry key="app/src/main/res/layout/dialog_privacy.xml" value="0.12447916666666667" />
         <entry key="app/src/main/res/layout/dialog_profile_new.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/dialog_register_device.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/layout/dialog_signout.xml" value="0.16770833333333332" />
+        <entry key="app/src/main/res/layout/dialog_zip_code.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/genere_item.xml" value="0.15208333333333332" />
         <entry key="app/src/main/res/layout/loggin_devices_row_layout.xml" value="0.22" />
         <entry key="app/src/main/res/layout/logout_dialog_view.xml" value="0.16770833333333332" />
@@ -130,6 +136,7 @@
         <entry key="app/src/main/res/layout/programguide_item_row.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/programguide_item_time.xml" value="0.15208333333333332" />
         <entry key="app/src/main/res/layout/programguide_item_time_indicator.xml" value="0.15208333333333332" />
+        <entry key="app/src/main/res/layout/session_expired_dialog.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/layout/view_register_device.xml" value="0.16770833333333332" />
         <entry key="app/src/main/res/layout/view_room.xml" value="0.16770833333333332" />
       </map>

@@ -12,6 +12,7 @@ import com.adaptivemedia.streamlytv.streamly.log_in.QrVisibility;
 import com.adaptivemedia.streamlytv.streamly.model.CheckDeviceType;
 import com.adaptivemedia.streamlytv.streamly.model.GetIp;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLogInModel;
+import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindeviceinfolist;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.new_hotel_response.NewHotelRoomResponse;
 import com.adaptivemedia.streamlytv.streamly.playervideo.drm.DrmKeyModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceModel;
@@ -85,7 +86,7 @@ public interface ApiInterface {
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/connecteddevice")
-    Call<ConnectedDeviceModel> getConnectedDevice(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+    Call<Loggedindeviceinfolist> getConnectedDevice(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/check")
@@ -213,7 +214,7 @@ public interface ApiInterface {
     @Headers("Accept: application/json")
     @PUT("/api/auth/personaldevicename/{session_id}")
     @FormUrlEncoded
-    Call<PersonalDeviceNameDataModel> setPersonalDeviceName(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Path(value = "session_id", encoded = false) String session_id, @FieldMap(encoded = false) Map<String, String> params);
+    Call<PersonalDeviceNameDataModel> setPersonalDeviceName(@Header(NetworkKeys.KEY_AUTH) String authorization_token, @Path(value = "session_id") String session_id, @FieldMap(encoded = false) Map<String, String> params);
 
     @GET("/api/auth/qrvisibility")
     Call<QrVisibility> getVisibility();

@@ -55,7 +55,7 @@ public class RegisterDeviceDialog extends Dialog {
         initViews();
         auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null);
         if (ConstantUtility.isNetworkConnected) {
-            connectedDevice();
+         //   connectedDevice();
         }else {
             CommonUtility.showToast(context,ConstantUtility.CHECK_INTERNET_CONNECTION);
         }
@@ -64,6 +64,7 @@ public class RegisterDeviceDialog extends Dialog {
 
     }
 
+/*
     private void connectedDevice() {
         progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
@@ -126,6 +127,7 @@ public class RegisterDeviceDialog extends Dialog {
             }
         });
     }
+*/
 
 
     private void initViews() {
