@@ -10966,9 +10966,9 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
   .pgGuideheight {
     height: 20vw;
   }
-  .programme__row {
+  /* .programme__row {
     height: 20vw!important;
-  }
+  } */
   .pgGuideicon {
     width: 7vw;
     height: 7vw;
@@ -10988,9 +10988,9 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
   }
 }
 @media only screen and (max-width: 600px) {
-  .pgGuideheight {
+  /* .pgGuideheight {
     width: 95px!important;
-  }
+  } */
 }
 .section-heading {
   margin-top: 0.5rem;
