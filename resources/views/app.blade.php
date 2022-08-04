@@ -337,7 +337,7 @@ button:focus {
 {
     border: 1px solid red !important;
     min-height: 35% !important;
-    z-index: 999 !important;
+    z-index: 9995 !important;
     left: 65px !important;
     position: relative;
 }
