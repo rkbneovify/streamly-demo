@@ -7004,7 +7004,7 @@
   
   
   // module
-  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n    padding: 0 10px;\n    display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:15%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n}@media only screen and (max-width: 780px) {}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
+  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n   display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:15%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n    font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] {\n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n}@media only screen and (max-width: 780px) {}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
   
   // exports
   
@@ -83541,7 +83541,7 @@
                       "div",
                       {
                         key: channel.CallSign + "fav",
-                        staticClass: "Aligner-item Aligner-item--top",
+                        staticClass: "Aligner-item Aligner-item--top clickme",
                         attrs: { index: index },
                         on: {
                           click: function($event) {
@@ -83645,18 +83645,293 @@
             ],           
             2
           ),
+         
+           //
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        
+                        staticClass: "nav__left__horizontal", 
+                        attrs: { id: "navlefthorizontal" },
+                        on: {
+                            click: function($event) {
+                              //alert('OK');
+                              
+                                          $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '-=260' }, 1000);
+                                          $('.programme__header').animate( { scrollLeft: '-=260' }, 1000);
+                               document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft -= 260;
+                               document.querySelector('.programme__header').scrollLeft -= 260;
+
+                             
+
+                             },
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ],
+
+                    ),
+         //
+
+         //
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        
+                        staticClass: "nav__right__horizontal", 
+                        attrs: { id: "navrighthorizontal" },
+                        on: {
+                            click: function($event) {
+                              //alert('OK');
+                              
+                               
+                                          $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
+                                          $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
+                               document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft += 260;
+                               document.querySelector('.programme__header').scrollLeft += 260;
+                             },
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ],
+
+                    ),
+         //
+
+          //
+          /*
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        
+                        staticClass: "channel__nav__left", 
+                        attrs: { id: "navleft" },
+                        on: {
+                            click: function($event) {
+                              //alert('OK');
+                              $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
+                              $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
+
+                             },
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ],
+
+                    ),
+                    */
+         //
+         
+
+         //
+         /*
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        
+                        staticClass: "channel__nav__right", 
+                        attrs: { id: "navright" },
+                        on: {
+                            click: function($event) {
+                              $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '-=260' }, 1000);
+                              $('.programme__header').animate( { scrollLeft: '-=260' }, 1000);
+                            },
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ]
+                    ),
+                    */
+         //  
+
+
+          //
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        
+                        staticClass: "channel__load__more", 
+                        attrs: { id: "loadmore" },
+                        on: {
+                             click: function($event) 
+                             {
+                                
+                                // alert('Load More...');
+                                
+                                //   var x=$('.pgGuideheight:visible:last').attr('data-channel');
+
+                                //   var numItems = $('.pgGuideheight').length;
+                                //   alert('Total No Of Classes Found:'+numItems);
+                                  
+                                //   shownext(x);  
+                                //   x++;
+                                  
+                                //   function shownext(x)
+                                //   {
+                                //     $('*[data-channel="'+x+'"]').next('div').attr('style','display:block !important');
+                                //     $('*[data-channel-id="'+x+'"]').next('div').attr('style','display:block !important');
+                                //     $('*[data-channel-id="'+x+'"]').next('div').closest('.pgFlexwidth').attr('style','position:relative;top:-230px !important;')
+                                //   }
+                                
+                 // $(".channel__list__section[data-v-56b65aa6]").wrap("<div id='wrapper' style='max-height:1182px;overflow-y:scroll;width:100%;min-width:100px;'></div>");
+                                //last                                
+                                // $('.channel__name__box').wrapAll('<div id="wrap" style="max-height:1137px;overflow-y:scroll;"></div>');
+                                //$('.channel__name__box.pgGuideheight').attr('style','padding: 25px !important'); 
+                             
+                             // $('.pgGuideheight').wrapAll('<div id="wrap" style="max-height:930px;overflow-y:scroll"></div>');
+                                //last
+                                //$('.channel__name.pgFlexwidth').attr('style','vertical-align: middle !important;text-align: center !important;justify-content: center !important;margin-left: 15px !important;margin-bottom: 25px !important;padding-bottom: 15px !important;');
+                                
+                                //$('.Aligner-item.Aligner-item--top').attr('style','padding-right: 0.4vw !important;left: 323px !important;top: 285px !important;overflow: hidden !important;max-width: 44px !important;');
+                             },
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ]
+                    ),
+         // 
+
+
+
+
+         //
+                    _vm._v(" "),
+                    _c(
+                      "style",
+                      {
+                        
+                        staticClass: "channel__live", 
+                        attrs: { id: "livechannel" },
+                        on: {
+                             load: function($event) {
+                             
+                              $('#loadmore').after('<div id="livechannel1" class="channel__live1" style="border:1px solid red !important;"></div>');
+                              $(this).css('border','1px solid red');
+                              $('.pgGuideheight').attr('style','z-index:999 !important');
+                              const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                              //alert(timezone); // Asia/Karachi
+                              const d = new Date();
+                              let hour = d.getHours()+':00';
+                              hour=hour.trim();
+                              $('.channel__header>div').removeClass('active');
+
+
+                              $('.header__time').each(function(i, obj) 
+                              {
+                                       //test
+                                                 
+                                                          var html=$(this).html();
+                                                          //alert(minutes);
+                                                          if(html.indexOf(hour) !== -1)
+                                                          {
+                                                                  html=html.trim();
+                                                                  let result = html.startsWith(hour);
+                                                                  if(result==true)
+                                                                  {
+                                                                     $(this).prev('div').removeClass('active');
+                                                                     $(this).addClass('active');
+                                                                     $(this).attr('style','background-color: #1b62cc !important;color: #fff5f5 !important;border: 1px solid #6894d4 !important;');
+                                                                     var index = $(this).index();
+                                                                     //console.log(index);
+                                                                     //var pos=$(this).position().left;
+                                                                     var one=$('#livechannel1').position().left;
+                                                                     var two=$('.programme__header .active').position().left;
+                                                                     $('#livechannel1').position().left=two;
+                                                                     $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two}, 1000);
+                                                                     $('.programme__header').animate({ scrollLeft: '+='+two}, 1000); 
+                                                              //
+                                                                  }
+                                                           }   
+                                                           window.setInterval(function () 
+                                                           {
+                                                               const d = new Date();
+                                                               let minutes = d.getMinutes();
+                                                               if(minutes<59)
+                                                               {
+                                                                   //alert('Less Than 60 Minutes');
+                                                                 $('.programme__header').animate({ scrollLeft: '+=3'}, 60000);   
+                                                                 $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=3'}, 60000);
+                                                               
+                                                               }
+
+                                                           }, 60000);
+                                       
+                                                 });
+                                                           window.setInterval(function () 
+                                                           {
+                                                    //     //
+                                                               const d = new Date();
+                                                               let minutes = d.getMinutes();
+                                                               if(minutes==15)
+                                                               {
+                                                                 $('.active').next().addClass('active1');
+                                                                 $('.active1').prev('.active').removeClass('active');   
+                                                                 $('.active1').prev('div').attr('style','box-sizing: border-box;background-color: #4d5659;border-right: 2px solid #464646;');
+                                                                 //$('.programme__header .active:last-child').removeClass('active');
+                                                                //$('.programme__header .active').attr('style','border:1px solid blue !important;background-color:#0000E7 !important;');
+                                                                 var index1 = $('.programme__header .active1').index();
+                                                                 //console.log(index);
+                                                                 //var pos=$(this).position().left;
+                                                                 var one1=$('#livechannel1').position().left;
+                                                                 var two1=$('.active1').position().left;
+                                                                 $('#livechannel1').position().left=two1;  
+                                                                 $('#livechannel1').attr('style','left:'+(two1+45)+'px !important');
+                                                                 $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two1}, 60000);
+                                                                 $('.programme__header').animate({ scrollLeft: '+='+two1}, 60000); 
+                                                                 $('.active1').addClass('active');
+                                                                 $('.active').removeClass('active1'); 
+
+                                                                 //window.location.reload();   
+                                                               }
+                                                              
+                                                       
+                                                          }, 60000);
+                              //alert(hour);
+                            }
+                            //
+                           
+                          }
+                      },
+                      [
+                        _vm._v(" "),
+                       
+                      ]
+                    ),
+         // 
+
+
           _vm._v(" "),
           _c("div", { staticClass: "channel__programme__section" }, [
             _c(
               "div",
               { staticClass: "programme__header" },
-              _vm._l(_vm.hoursList, function(n) {
-  
-  // console.log(n);
+                _vm._l(_vm.hoursList, function(n) {
+               // console.log(n);
 
-                return _c("div", { key: n, staticClass: "header__time" }, [
+                return _c("div", { key: n, staticClass: "header__time" },[
                   _vm._v(
                     "\n                    " +
+                     
                       _vm._s(n) +
                       ":00 to " +
                       _vm._s(n + 1) +
@@ -83715,6 +83990,7 @@
                           },
                           on: {
                             mouseover: function($event) {
+                              
                               return _vm.onProgrammeHover(
                                 $event,
                                 programme,
@@ -83922,7 +84198,7 @@
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     //console.log(_vm);
-    return _c("div", { staticClass: "programme__details__view" }, [
+    return _c("div", { staticClass: "programme__details__view"}, [
       _vm.programmeDetails
         ? _c("div", [
             _c("div", { staticClass: "programme__header" }, [
