@@ -1,6 +1,7 @@
 package com.adaptivemedia.streamlytv.streamly.logoutdevices
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.databinding.LogginDevicesRowLayoutBinding
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
+import com.adaptivemedia.streamlytv.streamly.utilities.gone
 import com.adaptivemedia.streamlytv.streamly.utilities.inVisible
 import com.adaptivemedia.streamlytv.streamly.utilities.show
 import com.bumptech.glide.Glide
@@ -42,17 +44,21 @@ class LogoutDevicesAdapter(
                 .load(model.device_img)
                 .into(ivImage);
             tvDeviceName.text = model.device_name
-            tvDeviceType.text = model.device_type
-            //Html.fromHtml("<b>Device Name: </b> ${model.device_name}")
-            // tvDeviceType.text = Html.fromHtml("<b>Device Type: </b> ${model.device_type}")
+            tvDeviceName1.text = Html.fromHtml("<b>Device Name : </b> ${model.personaldevicename}")
+            tvDeviceType.text = Html.fromHtml("<b>Device Type : </b> ${model.device_type}")
             // llLayout.requestFocus()
 
 
             llLayout.setOnFocusChangeListener { view, b ->
                 if (b) {
                     ivImage.inVisible()
+                    llDelete.show()
+                    llLayout.setBackgroundColor(Color.TRANSPARENT)
                 } else {
                     ivImage.show()
+                    llDelete.gone()
+                    llLayout.setBackgroundResource(R.drawable.white_border_background)
+
                 }
             }
             llLayout.setOnClickListener {
