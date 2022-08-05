@@ -221,6 +221,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         }
         //update recyclerview
         userRoomAdapter.updateList(temp);
+
     }
 
     private void initViews() {
