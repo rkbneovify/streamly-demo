@@ -1,7 +1,9 @@
 package com.adaptivemedia.streamlytv.streamly.loginusingpasscode;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +14,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
+import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceName;
+import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.R;
@@ -44,6 +51,7 @@ Button btn_sign_in_using_passcode;
         setContentView(R.layout.activity_login_using_passcode);
         userAgent = System.getProperty("http.agent");
         et_passcode=findViewById(R.id.et_passcode);
+        //et_passcode.setText("rQWvyj8JoG");
         btn_sign_in_using_passcode=findViewById(R.id.btn_sign_in_using_passcode);
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         dialog= CommonUtility.custom_loader(LoginUsingPasscodeActivity.this);
@@ -72,6 +80,20 @@ Button btn_sign_in_using_passcode;
 
     }
 
+    private void login() {
+        if (ConstantUtility.isNetworkConnected) {
+            if (et_passcode.getText().toString().matches("")) {
+                CommonUtility.showToast(LoginUsingPasscodeActivity.this, ConstantUtility.FILL_PASSCODE);
+
+            } else {
+                signInCall();
+            }
+
+        } else {
+            CommonUtility.showToast(LoginUsingPasscodeActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
+        }
+    }
+
 
     private void signInCall() {
         dialog.show();
@@ -81,33 +103,68 @@ Button btn_sign_in_using_passcode;
             @Override
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
-                    if (response.isSuccessful() && response.body()!=null && response.code()!=429){
-                        String access_token=response.body().getAccessToken();
-
-                        if(response.body().getUserRole().equals("tieruser")){
-                            Long userId=response.body().getUser().getId();
+                    if (response.isSuccessful() && response.body() != null && response.code() != 429) {
+                        String access_token = response.body().getAccessToken();
+                        String sessionid = response.body().getSessionid();
+                        String personalDeviceId = response.body().getPersonalDeviceId();
+                        String deviceType = response.body().getDeviceType();
+                        boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
+                        Log.e(TAG, "onResponse222: " + personaDeviceNamePopup);
+                        Log.e(TAG, "onResponse222: " + response.body().getUserRole());
+                        Log.e(TAG, "onResponse222: " + response.body().getDeviceType());
+                        Log.e(TAG, "onResponse222: " + uniqueId);
+                        Log.e(TAG, "onResponse222: " + response.body().getPersonalDeviceId());
+                        if (response.body().getUserRole().equals("tieruser")) {
+                            Long userId = response.body().getUser().getId();
+//                        ArrayList<Room> set = new ArrayList<>();
+//                        set.addAll(response.body().getRooms());
                             Gson gson = new Gson();
                             String json = gson.toJson(response.body().getRooms());
-                            TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST,json);
-                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID,userId.toString());
-                            TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                            CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
-
-                            Intent intent = new  Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-                            startActivity(intent);
-
-                            et_passcode.setText("");
+                            TokenStorage.savedRoomList(LoginUsingPasscodeActivity.this, ConstantUtility.ROOM_LIST, json);
+                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ID, userId.toString());
+                            TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                            TokenStorage.saveSessionId(LoginUsingPasscodeActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(LoginUsingPasscodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            CommonUtility.showToast(LoginUsingPasscodeActivity.this, response.body().getMessage());
+//                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+//                        finish();
+                            if (personaDeviceNamePopup) {
+                                startActivity(new Intent(LoginUsingPasscodeActivity.this, PersonalDeviceName.class));
+                            } else {
+                                startActivity(new Intent(LoginUsingPasscodeActivity.this, UserRoomActivity.class));
+                            }
+                            finish();
                         }
                         else if(response.body().getUserRole().equals("user")) {
-                            CommonUtility.showToast(LoginUsingPasscodeActivity.this,response.body().getMessage());
+                            CommonUtility.showToast(LoginUsingPasscodeActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
-                            startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+                            TokenStorage.savedSharedTokenPassCode(LoginUsingPasscodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                            TokenStorage.saveSessionId(LoginUsingPasscodeActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(LoginUsingPasscodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            if (personaDeviceNamePopup) {
+                                startActivity(new Intent(LoginUsingPasscodeActivity.this, PersonalDeviceName.class));
+                            } else {
+                                startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
+                            }
                             finish();
                         }
 
 
+                    }else if (response.code() == 479) {
+                        String s = response.errorBody().string();
 
+                        NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(s,
+                                NewLoginErrorResponse.class);
+                        if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
+                            showDialog(loginErrorResponse);
+                        }
                     }
                     else if (response.code()==401){
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LoginUsingPasscodeActivity.this);
@@ -166,6 +223,7 @@ Button btn_sign_in_using_passcode;
 
 
 
+
 //        AndroidNetworking.post(BASE_URL_TESTING+"/api/auth/login-with-passcode")
 //                .addBodyParameter("passcode", et_passcode.getText().toString())
 //                .addBodyParameter("deviceid", uniqueId)
@@ -205,5 +263,59 @@ Button btn_sign_in_using_passcode;
 //
 //                    }
 //                });
+    }
+
+
+    private void showDialog(NewLoginErrorResponse body) {
+        Log.e(TAG, "showDialog: " + body);
+        CommonDialog c = new CommonDialog(body.getMessage(), new DialogClickListeners() {
+
+            @Override
+            public void negative() {
+
+
+            }
+
+            @Override
+            public void positive() {
+                Intent intent = new Intent(LoginUsingPasscodeActivity.this, LogoutDevicesActivity.class);
+                intent.putExtra("list", body.getLoggedindeviceinfolist());
+                intent.putExtra("isLogin", true);
+                startActivityForResult(intent, 123);
+            }
+        });
+
+        c.show(getSupportFragmentManager(), "ffnadjg");
+        /*     AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+         *//*
+        dialog.setTitle("Register Now");*//*
+        dialog.setMessage(body.getMessage());
+
+        // Specifying a listener allows you to take an action before dismissing the dialog.
+        // The dialog is automatically dismissed when a dialog button is clicked.
+        dialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+
+
+            }
+        });
+        dialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Continue with delete operation
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.show();
+        dialog.setCancelable(true);*/
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            login();
+        }
     }
 }

@@ -40,6 +40,7 @@ public class ConstantUtility {
     public static final String FILL_PASSCODE = "Fill Passcode";
     public static final String FILL_PASSW = "Fill Password";
     public static final String WRONG_EMAIL = "Wrong email, Please check your email Id";
+    public static final String WRONG_PASSCODE = "Wrong passcode, Please check your passcode";
     public static final String SESSION_EXPIRED = "Session expired, Please re-login";
     public static final String MAX_USER_LOGIN = "Your account is in use on 5 devices. Please stop playing on other devices to continue";
 

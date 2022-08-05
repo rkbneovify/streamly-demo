@@ -26,7 +26,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class LogoutDevicesActivity : FragmentActivity() {
+class   LogoutDevicesActivity : FragmentActivity() {
     private lateinit var binding: ActivityLogoutDevicesBinding
     private var model = Data()
     private var logout = 0

@@ -41,11 +41,7 @@ public class SplashActivity extends FragmentActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (auth_token_passcode != null && personDeviceName == null ) {
-                    startActivity(new Intent(SplashActivity.this, PersonalDeviceName.class));
-//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
-                    finish();
-                } else if (auth_token_passcode != null && ConstantUtility.isRemember == true && personDeviceName != null) {
+                if (auth_token_passcode != null && ConstantUtility.isRemember == true ) {
                     startActivity(new Intent(SplashActivity.this, UserRoomActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
@@ -58,7 +54,11 @@ public class SplashActivity extends FragmentActivity {
                     startActivity(new Intent(SplashActivity.this, LogInActivity.class));
 //                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
                     finish();
-                } else {
+                }else if(auth_token_passcode != null && auth_token != null){
+                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+//                    startActivity(new Intent(SplashActivity.this, SettingsActivity.class));
+                finish();
+                }else {
                     startActivity(new Intent(SplashActivity.this, LogInActivity.class));
                     finish();
                 }

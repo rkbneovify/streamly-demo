@@ -1,7 +1,9 @@
 package com.adaptivemedia.streamlytv.streamly.HotelQRCode;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,7 +13,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.adaptivemedia.streamlytv.streamly.QRCode.QRCodeActivity;
+import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
+import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.log_in.PersonalDeviceName;
+import com.adaptivemedia.streamlytv.streamly.loginusingpasscode.LoginUsingPasscodeActivity;
+import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -64,38 +72,65 @@ public class HotelQRCodeActivity extends FragmentActivity {
             public void onResponse(Call<NewLogInModel> call, Response<NewLogInModel> response) {
                 try {
                     Log.e(TAG, "resCode "+response.code());
-                    if (response.isSuccessful() && response.body()!=null && response.code()!=429){
-
-
-                        String access_token=response.body().getAccessToken();
-
-                        if(response.body().getUserRole().equals("tieruser")){
-                            Long userId=response.body().getUser().getId();
+                    if (response.isSuccessful() && response.body() != null && response.code() != 429) {
+                        String access_token = response.body().getAccessToken();
+                        String sessionid = response.body().getSessionid();
+                        String personalDeviceId = response.body().getPersonalDeviceId();
+                        String deviceType = response.body().getDeviceType();
+                        boolean personaDeviceNamePopup = response.body().getPersonaldevicename_popup();
+                        Log.e(TAG, "onResponse222: " + personaDeviceNamePopup);
+                        Log.e(TAG, "onResponse222: " + response.body().getUserRole());
+                        Log.e(TAG, "onResponse222: " + response.body().getDeviceType());
+                        Log.e(TAG, "onResponse222: " + uniqueId);
+                        Log.e(TAG, "onResponse222: " + response.body().getPersonalDeviceId());
+                        if (response.body().getUserRole().equals("tieruser")) {
+                            Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
 //                        set.addAll(response.body().getRooms());
                             Gson gson = new Gson();
                             String json = gson.toJson(response.body().getRooms());
-
-                            TokenStorage.savedRoomList(HotelQRCodeActivity.this, ConstantUtility.ROOM_LIST,json);
-                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.USER_ID,userId.toString());
-                            TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE,access_token);
-                            CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
+                            TokenStorage.savedRoomList(HotelQRCodeActivity.this, ConstantUtility.ROOM_LIST, json);
+                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.USER_ID, userId.toString());
+                            TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
+                            TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                            TokenStorage.saveSessionId(HotelQRCodeActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            CommonUtility.showToast(HotelQRCodeActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
-                            Intent intent = new  Intent(HotelQRCodeActivity.this, UserRoomActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-                            startActivity(intent);
-
-
-                        }
-                        else if(response.body().getUserRole().equals("user")) {
-                            CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
+                            if (personaDeviceNamePopup) {
+                                startActivity(new Intent(HotelQRCodeActivity.this, PersonalDeviceName.class));
+                            } else {
+                                startActivity(new Intent(HotelQRCodeActivity.this, UserRoomActivity.class));
+                            }
+                            finish();
+                        } else if (response.body().getUserRole().equals("user")) {
+                            CommonUtility.showToast(HotelQRCodeActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
-                            startActivity(new Intent(HotelQRCodeActivity.this, MainActivity.class));
+                            TokenStorage.savedSharedTokenPassCode(HotelQRCodeActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
+                            TokenStorage.saveSessionId(HotelQRCodeActivity.this, ConstantUtility.SESSION_ID, sessionid);
+                            TokenStorage.savePersonalDeviceID(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_ID, personalDeviceId);
+                            TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
+                            TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
+                            TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            if (personaDeviceNamePopup) {
+                                startActivity(new Intent(HotelQRCodeActivity.this, PersonalDeviceName.class));
+                            } else {
+                                startActivity(new Intent(HotelQRCodeActivity.this, MainActivity.class));
+                            }
                             finish();
                         }
+                    }else if (response.code() == 479) {
+                        String s = response.errorBody().string();
 
-
+                        NewLoginErrorResponse loginErrorResponse = new Gson().fromJson(s,
+                                NewLoginErrorResponse.class);
+                        if (loginErrorResponse.getLoggedindeviceinfolist() != null) {
+                            showDialog(loginErrorResponse);
+                        }
                     }
                     else if (response.code()==401){
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(HotelQRCodeActivity.this);
@@ -244,6 +279,52 @@ public class HotelQRCodeActivity extends FragmentActivity {
         });
     }
 
+    private void showDialog(NewLoginErrorResponse body) {
+        Log.e(TAG, "showDialog: " + body);
+        CommonDialog c = new CommonDialog(body.getMessage(), new DialogClickListeners() {
+
+            @Override
+            public void negative() {
+
+
+            }
+
+            @Override
+            public void positive() {
+                Intent intent = new Intent(HotelQRCodeActivity.this, LogoutDevicesActivity.class);
+                intent.putExtra("list", body.getLoggedindeviceinfolist());
+                intent.putExtra("isLogin", true);
+                startActivityForResult(intent, 123);
+            }
+        });
+
+        c.show(getSupportFragmentManager(), "ffnadjg");
+        /*     AlertDialog.Builder dialog = new AlertDialog.Builder(LogInActivity.this, R.style.AlertDialogCustom);
+         *//*
+        dialog.setTitle("Register Now");*//*
+        dialog.setMessage(body.getMessage());
+
+        // Specifying a listener allows you to take an action before dismissing the dialog.
+        // The dialog is automatically dismissed when a dialog button is clicked.
+        dialog.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+
+
+            }
+        });
+        dialog.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Continue with delete operation
+                dialog.dismiss();
+
+
+            }
+        });
+        dialog.show();
+        dialog.setCancelable(true);*/
+    }
+
     private void setQRImage(String qrCode_Link) {
         Glide.with(HotelQRCodeActivity.this).load(qrCode_Link).into(imgQrCode);
     }
@@ -252,5 +333,12 @@ public class HotelQRCodeActivity extends FragmentActivity {
     public void onBackPressed() {
         super.onBackPressed();
         stopRepeating();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            getHotelLogin();
+        }
     }
 }
