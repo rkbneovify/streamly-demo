@@ -10,14 +10,16 @@ import UIKit
 import CoreImage
 
 class DeviceInfoGridCell: UICollectionViewCell {
-    @IBOutlet weak var deviceNameLabel: UILabel!
+    @IBOutlet weak var deviceMainTypeLabel: UILabel!
     @IBOutlet weak var bgView: UIView!
     @IBOutlet weak var deviceImage: UIImageView!
     @IBOutlet weak var turnOFFImageView: UIImageView!
     @IBOutlet weak var blureBGVIew: UIVisualEffectView!
+    @IBOutlet weak var lowerBGView: UIView!
+    @IBOutlet weak var blurImageView: UIImageView!
+    @IBOutlet weak var deviceNameLabel: UILabel!
+    @IBOutlet weak var deviceTypeLabel: UILabel!
     
-    @IBOutlet weak var blurImageView
-    :UIImageView!
     static let identifier = String(describing: DeviceInfoGridCell.self)
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,9 +27,14 @@ class DeviceInfoGridCell: UICollectionViewCell {
     }
     
     private func configureCell() {
-        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 25.0)
+        deviceMainTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 25.0)
+        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
+        deviceTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
         bgView.layer.cornerRadius = 10
         blurImageView.layer.cornerRadius = 10
+        lowerBGView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        lowerBGView.backgroundColor = .darkGray
+        lowerBGView.layer.cornerRadius = 10
         bgView.layer.borderWidth = 1.0
         self.bgView.borderColor = .white
         turnOFFImageView.isHidden = true
@@ -37,7 +44,9 @@ class DeviceInfoGridCell: UICollectionViewCell {
     }
     
     func setupData(model: DeviceInfo) {
-        deviceNameLabel.text = model.deviceName
+        deviceMainTypeLabel.text = model.deviceName
+        deviceNameLabel.text = "Device Name: \(model.personaldevicename ?? "")"
+        deviceTypeLabel.text = "Device Type: \(model.deviceType ?? "")"
         deviceImage.sd_setImage(with: URL(string: model.deviceImg ?? ""), completed: nil)
     }
     // MARK: UIFocusEnvironment
@@ -56,9 +65,11 @@ class DeviceInfoGridCell: UICollectionViewCell {
 //                self.blurImageView.isHidden = true
                 self.turnOFFImageView.isHidden = true
                 self.blureBGVIew.isHidden = true
+                self.lowerBGView.isHidden = true
                 //    self.backgroundColor = UIColor.gray
             }
             else {
+                self.lowerBGView.isHidden = false
                 self.blureBGVIew.isHidden = false
 //                self.blurImageView.isHidden = false
                 self.turnOFFImageView.isHidden = false
