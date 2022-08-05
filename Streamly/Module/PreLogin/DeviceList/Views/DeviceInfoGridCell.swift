@@ -32,14 +32,15 @@ class DeviceInfoGridCell: UICollectionViewCell {
         deviceTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
         bgView.layer.cornerRadius = 10
         blurImageView.layer.cornerRadius = 10
+        self.bgView.borderColor = .white
         lowerBGView.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
         lowerBGView.backgroundColor = .darkGray
         lowerBGView.layer.cornerRadius = 10
-        bgView.layer.borderWidth = 1.0
-        self.bgView.borderColor = .white
+        self.lowerBGView.borderColor = .white
         turnOFFImageView.isHidden = true
         self.blurImageView.backgroundColor = .clear//.white.withAlphaComponent(0.50)
         self.blurImageView.isHidden = true
+        lowerBGView.isHidden = true
         blureBGVIew.isHidden = true
     }
     
@@ -61,21 +62,15 @@ class DeviceInfoGridCell: UICollectionViewCell {
             if !self.isFocused {
 //                self.bgView.backgroundColor = UIColor.init(red: 89/255, green: 97/255, blue: 100/255, alpha: 1.0)
                 self.bgView.borderWidth = 1.0
-                self.bgView.borderColor = .white
-//                self.blurImageView.isHidden = true
                 self.turnOFFImageView.isHidden = true
                 self.blureBGVIew.isHidden = true
                 self.lowerBGView.isHidden = true
-                //    self.backgroundColor = UIColor.gray
             }
             else {
                 self.lowerBGView.isHidden = false
                 self.blureBGVIew.isHidden = false
-//                self.blurImageView.isHidden = false
                 self.turnOFFImageView.isHidden = false
-                self.bgView.borderWidth = 1.0
-                self.bgView.borderColor = .white
-//                self.bgView.backgroundColor = UIColor.lightGray
+                self.bgView.borderWidth = 0
             }
         }, completion: nil)
     }
