@@ -126,7 +126,7 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-      //  edUserName.setText("vikas.saini1@oodles.io");
+        edUserName.setText("vikas.saini1@oodles.io");
         // edUserName.setText("kallusingh.rajput@oodles.io");
         //edUserName.setText("aashish.kumar@oodles.io");
         //    edUserName.setText("mina@neovix.com");
@@ -137,7 +137,7 @@ public class LogInActivity extends FragmentActivity {
 //        edUserName.setText("sahilkashyap64@gmail.com");
         //     edUserName.setText("streamly1@yopmail.com");
         // edPassword.setText("123456789");
-        //edPassword.setText("123456789");
+        edPassword.setText("123456789");
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
