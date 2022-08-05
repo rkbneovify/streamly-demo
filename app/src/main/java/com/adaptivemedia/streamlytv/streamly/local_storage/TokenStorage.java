@@ -26,6 +26,20 @@ public class TokenStorage {
         editor.apply();
     }
 
+    public static String readRoom(Context context, String room, String room_value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(room, room_value);
+    }
+
+    public static void savedRoom(Context context, String room, String room_value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(room, room_value);
+        editor.apply();
+    }
+
+
+
     public static String readSharedTokenPasscode(Context context, String access_token, String access_token_Value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(access_token, access_token_Value);

@@ -79,6 +79,7 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
             val fromMillis = programGuideManager.getFromUtcMillis()
             val toMillis = programGuideManager.getToUtcMillis()
 
+
             if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
                 if (focusedEntry.startsAtMillis < fromMillis) {
                     // The current entry starts outside of the view; Align or scroll to the left.

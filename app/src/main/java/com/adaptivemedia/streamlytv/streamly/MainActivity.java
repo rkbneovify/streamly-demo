@@ -177,15 +177,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                             sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                             sessionExpiredDialog.setCancelable(false);
                             sessionExpiredDialog.show();
-
-
                         }
-
 
                     } else if (response.code() == 404) {
                         TokenStorage.clearSharedToken(MainActivity.this);
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SESSION_EXPIRED);
-
 
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
@@ -199,7 +195,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                         noPlanDialog.setCancelable(false);
                         noPlanDialog.show();
-
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -388,11 +383,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public String getIpAddress() {
         WifiManager wifiManager = (WifiManager) getApplicationContext()
                 .getSystemService(WIFI_SERVICE);
-
         String ipAddress = intToInetAddress(wifiManager.getDhcpInfo().ipAddress).toString();
-
         ipAddress = ipAddress.substring(1);
-
         return ipAddress;
     }
 
@@ -401,7 +393,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 (byte)(0xff & (hostAddress >> 8)),
                 (byte)(0xff & (hostAddress >> 16)),
                 (byte)(0xff & (hostAddress >> 24)) };
-
         try {
             return InetAddress.getByAddress(addressBytes);
         } catch (UnknownHostException e) {

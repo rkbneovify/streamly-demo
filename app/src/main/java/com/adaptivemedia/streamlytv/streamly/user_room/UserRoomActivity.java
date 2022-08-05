@@ -364,6 +364,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                                 Log.i(TAG, "onResponse: roomListData 6 ");
                                                 CommonUtility.showToast(UserRoomActivity.this, response.getString("message").toString());
                                                 TokenStorage.savedSharedToken(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN, authToken);
+                                                TokenStorage.savedRoom(UserRoomActivity.this, ConstantUtility.ROOM,"room");
                                                 startActivity(new Intent(UserRoomActivity.this, MainActivity.class));
                                                 finish();
                                             } else if (response.getInt("response_code") == 409) {
