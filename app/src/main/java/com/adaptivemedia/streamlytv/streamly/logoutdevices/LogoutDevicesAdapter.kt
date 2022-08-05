@@ -42,6 +42,7 @@ class LogoutDevicesAdapter(
                 .load(model.device_img)
                 .into(ivImage);
             tvDeviceName.text = model.device_name
+            tvDeviceType.text = model.device_type
             //Html.fromHtml("<b>Device Name: </b> ${model.device_name}")
             // tvDeviceType.text = Html.fromHtml("<b>Device Type: </b> ${model.device_type}")
             // llLayout.requestFocus()
