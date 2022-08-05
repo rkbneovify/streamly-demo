@@ -53,6 +53,7 @@
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/support_rectangle_white_box.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/text_focus.xml" value="0.116" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/text_states.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_border_background.xml" value="0.1865" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_transparent.xml" value="0.1465" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/drawable/white_transparent2.xml" value="0.134" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_hotel_qrcode.xml" value="0.1796875" />
@@ -67,7 +68,7 @@
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_settings.xml" value="0.1796875" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_splash.xml" value="0.14749893116716545" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_support.xml" value="0.125" />
-        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_user_room.xml" value="0.1" />
+        <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/activity_user_room.xml" value="0.165" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/custom_dialog.xml" value="0.14749893116716545" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_device_limit.xml" value="0.14749893116716545" />
         <entry key="..\:/oodlesProject/streamly/app/src/main/res/layout/dialog_device_signout.xml" value="0.14749893116716545" />
