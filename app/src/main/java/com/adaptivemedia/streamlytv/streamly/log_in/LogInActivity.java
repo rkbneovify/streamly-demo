@@ -146,6 +146,8 @@ public class LogInActivity extends FragmentActivity {
 
                 login();
 
+
+
             }
         });
 
