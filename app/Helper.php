@@ -136,7 +136,7 @@ use App\User;
             'success' => false,
             'response_code'=>479,
             'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
-            'Houroffset' => '-05:30',
+            'houroffset' => '-05:30',
             'loggedindeviceinfolist'=>$response,
           ],479)->send();
 
