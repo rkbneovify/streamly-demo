@@ -462,6 +462,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
       'device_type'=>'non-web',
       'personaldevicename_popup'=>$personal_device_data['show_popup'],
+      'houroffset' => '-05:30',
       // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
