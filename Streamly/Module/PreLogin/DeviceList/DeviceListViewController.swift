@@ -47,6 +47,7 @@ class DeviceListViewController: UIViewController {
         initialSetup()
     }
 
+    
 
     private func initialSetup() {
         logOutButton.isHidden = true

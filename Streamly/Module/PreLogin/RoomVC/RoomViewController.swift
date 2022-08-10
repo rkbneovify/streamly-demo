@@ -108,9 +108,9 @@ class RoomViewController: UIViewController {
     
     private func viewPopups()
     {
-        let popUPViewsVC = PopUPViewsVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        let popUPViewsVC = locationPopUpVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
         popUPViewsVC.modalPresentationStyle = .overCurrentContext
-        popUPViewsVC.item = 4
+        //popUPViewsVC.item = 4
         self.present(popUPViewsVC, animated:true, completion:nil)
     }
 }

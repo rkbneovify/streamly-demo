@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 
+
 final class Address:NSObject, CLLocationManagerDelegate
 {
     static let sharedInstance = Address()
@@ -32,8 +33,17 @@ final class Address:NSObject, CLLocationManagerDelegate
         }
         
     }
+    
+    
+    //func checkLocationServices() {
+       // if CLLocationManager.locationServicesEnabled() {
+            
+       //     checklocationAuthorization()
+       // }
+        
+    //}
 
-    // Add this function to your program
+    // Mark:- locationmanger delegate Method
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         // set the value of lat and long
@@ -60,3 +70,35 @@ final class Address:NSObject, CLLocationManagerDelegate
     }
     
 }
+
+// Mark:- check location Autherization
+/*extension Address {
+    
+    func checklocationAuthorization() {
+        
+        switch CLLocationManager.authorizationStatus() {
+            
+        case.authorizedWhenInUse:
+            //
+            break
+        case.denied:
+            break
+            
+        case.notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+            
+            
+        case.restricted:
+            break
+            
+        case.authorizedAlways:
+            break
+            
+            
+      
+        }
+        
+    }
+    
+}
+*/

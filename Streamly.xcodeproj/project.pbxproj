@@ -126,6 +126,7 @@
 		AAD5954F2472705B00BC5E6C /* Rechability.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD5954E2472705B00BC5E6C /* Rechability.swift */; };
 		AAFC43E92480EEE5000928C0 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC43E82480EEE5000928C0 /* SearchVC.swift */; };
 		AAFC54B1246D68B80027B5DB /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFC54B0246D68B80027B5DB /* LoginVC.swift */; };
+		B1919A7C28A26B66001EE438 /* locationPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1919A7B28A26B66001EE438 /* locationPopUpVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -289,6 +290,7 @@
 		AAD5954E2472705B00BC5E6C /* Rechability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rechability.swift; sourceTree = "<group>"; };
 		AAFC43E82480EEE5000928C0 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
 		AAFC54B0246D68B80027B5DB /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		B1919A7B28A26B66001EE438 /* locationPopUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = locationPopUpVC.swift; path = "Streamly/Module/PostLogin/Settings/Popup's/PopUP+View's/View+models/locationPopUpVC.swift"; sourceTree = SOURCE_ROOT; };
 		BE003A075C67ACDE55437B82 /* Pods-Streamly-StreamlyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.debug.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FD9A79341CF79A970A8296A6 /* Pods-StreamlyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamlyTests.release.xcconfig"; path = "Target Support Files/Pods-StreamlyTests/Pods-StreamlyTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -906,6 +908,7 @@
 			isa = PBXGroup;
 			children = (
 				AACA71242490E2A2002318AF /* ContectInfoViewModel.swift */,
+				B1919A7B28A26B66001EE438 /* locationPopUpVC.swift */,
 			);
 			path = "View+models";
 			sourceTree = "<group>";
@@ -1334,6 +1337,7 @@
 				93662C66270ECF61006DA962 /* LoginWithQRViewController.swift in Sources */,
 				AA5F5A572542A7E800FA8FB6 /* GEVersionMonitor.swift in Sources */,
 				A84958542706EB4D00B2FE73 /* RoomViewController.swift in Sources */,
+				B1919A7C28A26B66001EE438 /* locationPopUpVC.swift in Sources */,
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,
 				AA5F5A5A2542A7E800FA8FB6 /* Gradient.swift in Sources */,
 				9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */,
