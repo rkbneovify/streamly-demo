@@ -29,7 +29,7 @@ class PopUPTvVC: UIViewController {
                 let minutes = abs(seconds/60) % 60
                 let hours = seconds/3600
                 let tz = String(format: "%.2d:%.2d", hours, minutes)
-                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))"),("Home TimeZone:","For Your Home Timezone GMT \(Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone) )"), ("Current TimeZone:","For current time zone Your current Time zone GMT \(tz)")]
+                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))"),("Home TimeZone:","Your Home Timezone GMT \(Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone) )"), ("Current TimeZone:","Your current Time zone GMT \(tz)")]
             }
         }
     }
