@@ -25,7 +25,7 @@ class PopUPTvVC: UIViewController {
     {
         didSet{
             if isProfile ?? false {
-                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))")]
+                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))"),("Home TimeZone:","\(String(describing:  Utility.setStringObject(value: houroffset ?? "", key: Constant.UserDefault.addressTimeZone)))"), ("Current TimeZone:" "\()")]
             }
         }
     }
