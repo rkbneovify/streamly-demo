@@ -127,6 +127,9 @@ class Constant: NSObject
     }
 
     struct UserDefault {
+        static let fristTimeLogin = "FirstTimeLogin"
+        static let isCurrenttimeZone = "Timezone"
+        static let addressTimeZone = "AddressTimezone"
         static let userID = "UserID"
         static let isTierUser = "userRole"
         static let isLogin = "isLogin"

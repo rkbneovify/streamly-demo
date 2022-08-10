@@ -302,6 +302,7 @@ extension LoginVC
             if response != nil && errorMessage == nil{
                 selfStrong.removeSpinner()
                 if response.success?.success == true {
+                    Utility.setStringObject(value: response.success?.houroffset ?? "", key: Constant.UserDefault.addressTimeZone)
                     Utility.setStringObject(value: "\(response.success?.user?.id ?? 0)", key: Constant.UserDefault.userID)
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)

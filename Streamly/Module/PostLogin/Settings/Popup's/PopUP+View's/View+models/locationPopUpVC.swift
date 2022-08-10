@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import CoreLocation
 
 
 class locationPopUpVC: UIViewController {
@@ -15,29 +14,14 @@ class locationPopUpVC: UIViewController {
     @IBOutlet weak var selctionLbl: UILabel!
     @IBOutlet weak var currentLocBtn: UIButton!
     @IBOutlet weak var homeAddBtn: UIButton!
-    
-    let locationManager = CLLocationManager()
+    var handleAction: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetup()
-        locationManager.requestWhenInUseAuthorization()
-        setupLocationServices()
-    
     }
     
-    private func setupLocationServices() {
-        locationManager.delegate = self
-        
-        guard CLLocationManager.locationServicesEnabled() else {
-            //give permission
-            return
-        }
-        locationManager.requestWhenInUseAuthorization()
-        
-    }
     private func initialSetup() {
-       
         self.currentLocBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.currentLocBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .focused)
         self.currentLocBtn.setBackgroundImage(UIImage.gradientImageWithBounds(bounds: self.currentLocBtn.bounds, colors: [UIColor.firstGradientColor.cgColor,UIColor.secondGradientColor.cgColor]), for: .highlighted)
         self.currentLocBtn.setTitleColor(UIColor.white, for: .focused)
@@ -51,46 +35,17 @@ class locationPopUpVC: UIViewController {
     
     
     @IBAction func chooseCurrentLoc(_ sender: Any) {
-        setupLocationServices()
-        
-        
+        Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isCurrenttimeZone)
+        self.handleAction?()
+        self.dismiss(animated: true)
     }
     
     @IBAction func chooseAddress(_ sender: Any) {
-        
+        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isCurrenttimeZone)
+        handleAction?()
+        self.dismiss(animated: true)
         
     }
     
 
-}
-
-//Mark: - Location manager Delegate method
-extension locationPopUpVC: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        
-        switch CLLocationManager.authorizationStatus() {
-            
-        case.authorizedWhenInUse:
-            //sent data to programme collection viewCell
-            break
-        case.denied:
-        locationManager.requestWhenInUseAuthorization()
-        case.notDetermined:
-        locationManager.requestWhenInUseAuthorization()
-            
-        case.restricted:
-            break
-            
-        case.authorizedAlways:
-            break
-            
-        default:
-            print("unknown")
-      
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print(locations)
-    }
 }

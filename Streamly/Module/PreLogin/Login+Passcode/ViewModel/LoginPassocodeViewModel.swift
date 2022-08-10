@@ -38,6 +38,7 @@ class LoginPassocodeViewModel: NSObject {
             guard let weak = self else { return }
             if let data = DataParser.parseLoginResponse(data!) {
                 if data.success == true {
+                    Utility.setStringObject(value: data.houroffset ?? "", key: Constant.UserDefault.addressTimeZone)
                     Utility.setBoolInUserDefaultData(value: data.userrole != "user", key: Constant.UserDefault.isTierUser)
                     weak.personaldeviceid = data.personaldeviceid ?? ""
                     Utility.setStringObject(value: data.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)

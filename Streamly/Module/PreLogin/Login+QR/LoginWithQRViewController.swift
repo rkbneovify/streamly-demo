@@ -49,6 +49,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
             if data.success == true {
                
                 timer.invalidate()
+                Utility.setStringObject(value: data.houroffset ?? "", key: Constant.UserDefault.addressTimeZone)
                 Utility.setStringObject(value: "\(data.user?.id ?? 0)", key: Constant.UserDefault.userID)
                 Utility.setStringObject(value: data.personaldeviceid ?? "", key: Constant.UserDefault.mypersonaldeviceid)
                 Utility.setStringObject(value: data.deviceType ?? "", key: Constant.UserDefault.myDeviceType)

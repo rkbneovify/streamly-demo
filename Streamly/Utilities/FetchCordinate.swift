@@ -19,6 +19,7 @@ final class Address:NSObject, CLLocationManagerDelegate
     var latitude : Double?
     var longitude : Double?
     var callthePostAddressGeoFence: (() -> Void)?
+    var authorizationCallback: (() -> Void)?
     func cordnates()
     {
         // For use in foreground
@@ -69,36 +70,32 @@ final class Address:NSObject, CLLocationManagerDelegate
         debugPrint(error)
     }
     
-}
-
-// Mark:- check location Autherization
-/*extension Address {
-    
-    func checklocationAuthorization() {
-        
-        switch CLLocationManager.authorizationStatus() {
-            
-        case.authorizedWhenInUse:
-            //
-            break
-        case.denied:
-            break
-            
-        case.notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-            
-            
-        case.restricted:
-            break
-            
-        case.authorizedAlways:
-            break
-            
-            
-      
-        }
-        
+    public func locationManager(_ manager: CLLocationManager,
+                                   didChangeAuthorization status: CLAuthorizationStatus) {
+        checklocationAuthorization()
     }
     
 }
-*/
+
+ // MARK: - check location Autherization
+extension Address {
+    
+    func checklocationAuthorization() {
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                print("No access")
+                locationManager.requestWhenInUseAuthorization()
+                locationManager.requestLocation()
+            case .authorizedAlways, .authorizedWhenInUse:
+                print("Access")
+                authorizationCallback?()
+            @unknown default:
+                fatalError()
+            }
+        } else {
+            locationManager.requestWhenInUseAuthorization()
+            print("Location services are not enabled")
+        }
+    }
+}

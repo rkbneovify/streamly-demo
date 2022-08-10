@@ -85,11 +85,18 @@ open class ApiCall {
         if genere != "All" {
             param["genre"] = genere
         }
-        let seconds = TimeZone.current.secondsFromGMT()
-        let minutes = abs(seconds/60) % 60
-        let hours = seconds/3600
-        let tz = String(format: "%.2d:%.2d", hours, minutes)
-        param["hoursoffset"] = tz
+        if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isCurrenttimeZone) {
+            let seconds = TimeZone.current.secondsFromGMT()
+            let minutes = abs(seconds/60) % 60
+            let hours = seconds/3600
+            let tz = String(format: "%.2d:%.2d", hours, minutes)
+            param["hoursoffset"] = tz
+            print("Current time zone used")
+        } else {
+            param["hoursoffset"] = Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone)
+            print("Address time zone used")
+        }
+       
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getEpgData.rawValue, method: .get, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)

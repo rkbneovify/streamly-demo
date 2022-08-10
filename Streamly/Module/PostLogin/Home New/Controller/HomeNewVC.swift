@@ -234,8 +234,15 @@ class HomeNewVC: UIViewController {
         captureImageView.image = getSnappshot(withRect: CGRect(x: 36, y: 249, width: collectionView.frame.size.width, height: 58))
         
         hideOrShowLiveObject(shouldHidden: true)
+        let fristTime = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.fristTimeLogin)
+        if !fristTime {
+            self.openLocationPopup()
+            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.fristTimeLogin)
+            return
+        } else {
+            self.makeApiCall()
+        }
         
-        self.makeApiCall()
         self.initVM()
         DispatchQueue.global(qos: .background).async
         {
@@ -706,5 +713,17 @@ extension HomeNewVC:UIScrollViewDelegate
             }
             self.lastContentOffset = scrollViewOffset
         }
+    }
+}
+
+// MARK: - Handle Other controllers
+extension HomeNewVC {
+    fileprivate func openLocationPopup() {
+        let locationVC = locationPopUpVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        locationVC.handleAction = { [weak self] in
+            guard let weak = self else { return }
+            weak.makeApiCall()
+        }
+        self.present(locationVC, animated: true, completion: nil)
     }
 }
