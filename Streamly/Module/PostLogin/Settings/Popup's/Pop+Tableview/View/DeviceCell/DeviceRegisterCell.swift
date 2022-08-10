@@ -54,13 +54,5 @@ class DeviceRegisterCell: UITableViewCell {
         deviceNameLabel.text = device
         sessionIDLabel.text = sessionId
         deviceImage.sd_setImage(with: URL(string: image), completed: nil)
-        #warning("Use this comments as value just uncomment it and add to label.")
-        // For Your Home Timezone GMT \(Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone) ?? "")
-        let seconds = TimeZone.current.secondsFromGMT()
-        let minutes = abs(seconds/60) % 60
-        let hours = seconds/3600
-        let tz = String(format: "%.2d:%.2d", hours, minutes)
-        // For current time zone Your current Time zone GMT \(tz)
-        
     }
 }
