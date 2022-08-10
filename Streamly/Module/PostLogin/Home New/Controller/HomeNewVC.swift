@@ -234,15 +234,7 @@ class HomeNewVC: UIViewController {
         captureImageView.image = getSnappshot(withRect: CGRect(x: 36, y: 249, width: collectionView.frame.size.width, height: 58))
         
         hideOrShowLiveObject(shouldHidden: true)
-        let fristTime = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.fristTimeLogin)
-        if !fristTime {
-            self.openLocationPopup()
-            Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.fristTimeLogin)
-            return
-        } else {
-            self.makeApiCall()
-        }
-        
+        self.makeApiCall()
         self.initVM()
         DispatchQueue.global(qos: .background).async
         {

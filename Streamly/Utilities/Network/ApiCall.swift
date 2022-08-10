@@ -85,8 +85,8 @@ open class ApiCall {
         if genere != "All" {
             param["genre"] = genere
         }
-        if Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.isCurrenttimeZone) {
-            let seconds = TimeZone.current.secondsFromGMT()
+        let seconds = TimeZone.current.secondsFromGMT()
+        if seconds > 0 {
             let minutes = abs(seconds/60) % 60
             let hours = seconds/3600
             let tz = String(format: "%.2d:%.2d", hours, minutes)

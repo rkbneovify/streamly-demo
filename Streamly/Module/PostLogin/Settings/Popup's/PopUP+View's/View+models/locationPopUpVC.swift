@@ -35,13 +35,11 @@ class locationPopUpVC: UIViewController {
     
     
     @IBAction func chooseCurrentLoc(_ sender: Any) {
-        Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isCurrenttimeZone)
         self.handleAction?()
         self.dismiss(animated: true)
     }
     
     @IBAction func chooseAddress(_ sender: Any) {
-        Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isCurrenttimeZone)
         handleAction?()
         self.dismiss(animated: true)
         
