@@ -162,9 +162,13 @@ extension SettingsVC{
     }
     
     private func openDeviceList() {
-        let deviceList = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
-        deviceList.isFromLogin = false
-        present(deviceList, animated: true)
+        let vc = DeviceListViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Device ID or Name)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
+        self.navigationController?.pushViewController(searchContainer, animated: true)
     }
     
     ///Helpers select item

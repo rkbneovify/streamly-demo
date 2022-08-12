@@ -29,7 +29,7 @@ class DeviceListViewController: UIViewController {
             if filterString.isEmpty {
                 filterList = deviceList
             } else {
-                filterList = deviceList.filter({($0.deviceName?.lowercased().contains(filterString.lowercased()) ?? false)})
+                filterList = deviceList.filter({($0.deviceName?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.deviceType?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.hotelRoom?.lowercased().contains(filterString.lowercased()) ?? false)})
             }
 
             // Reload the collection view to reflect the changes.
@@ -83,8 +83,9 @@ class DeviceListViewController: UIViewController {
             viewModel.getRegistredDeviceData()
             viewModel.handleDeviceListResponse = { model in
                 self.deviceList = model.data?.map({ device in
-                    return DeviceInfo(connectedDevices: device.connected_devices, deviceID: device.device_id, deviceName: device.device_name, sessionID: device.session_id, personaldevicename: device.personaldevicename, personaldeviceid: device.personaldeviceid, deviceImg: device.device_img, deviceType: device.deviceType)
+                    return DeviceInfo(connectedDevices: device.connected_devices, deviceID: device.device_id, deviceName: device.device_name, sessionID: device.session_id, personaldevicename: device.personaldevicename, personaldeviceid: device.personaldeviceid, deviceImg: device.device_img, deviceType: device.deviceType, hotelRoom: device.hotelRoom)
                 }) ?? []
+                self.deviceList = self.deviceList.filter({$0.personaldeviceid != Utility.retriveStringObject(key: Constant.UserDefault.mypersonaldeviceid)})
                 self.filterList = self.deviceList
                 self.totalCountLabel.text = "Total connected Devices: \(self.deviceList.count)"
                 self.deviceCollectionView.reloadData()
@@ -145,8 +146,14 @@ extension DeviceListViewController: UICollectionViewDelegate {
         showAlert(title: appName, withMessage: "Are you sure want to logout this device?", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
             if let id = self.filterList[indexPath.item].sessionID {
                 self.viewModel.logOutSession(id: id) { success, message in
-                    self.delegate?.sessionLogoutSuccess()
-                    self.navigationController?.popViewController(animated: true)
+                    if success {
+                        if self.isFromLogin {
+                            self.delegate?.sessionLogoutSuccess()
+                            self.navigationController?.popViewController(animated: true)
+                        } else {
+                            self.viewModel.getRegistredDeviceData()
+                        }
+                    }
                 }
             }
         }
