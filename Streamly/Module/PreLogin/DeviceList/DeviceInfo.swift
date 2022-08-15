@@ -23,7 +23,8 @@ struct DeviceInfo: Codable {
     let personaldeviceid: String?
     let deviceImg: String?
     let deviceType: String?
-
+    let hotelRoom: String?
+    
     enum CodingKeys: String, CodingKey {
         case connectedDevices = "connected_devices"
         case deviceID = "device_id"
@@ -32,5 +33,6 @@ struct DeviceInfo: Codable {
         case personaldevicename, personaldeviceid
         case deviceImg = "device_img"
         case deviceType = "device_type"
+        case hotelRoom = "hotel_room"
     }
 }

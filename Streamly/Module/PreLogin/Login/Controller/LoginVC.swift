@@ -363,7 +363,7 @@ extension LoginVC
                 } else if let failureResponse = response.failure {
                     if failureResponse.response_code == 479 {
                         if let devicelist = response.failure?.loggedindeviceinfolist {
-                            selfStrong.showAlert(title: appName, withMessage: "Your Account is in use on 5 device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                            selfStrong.showAlert(title: appName, withMessage: failureResponse.message ?? "", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
                                 selfStrong.deviceListScreen(deviceInfo: devicelist)
                             }
                             return
@@ -396,7 +396,7 @@ extension LoginVC
                 if let failureResponse = response.failure {
                     if failureResponse.response_code == 479 {
                         if let devicelist = response.failure?.loggedindeviceinfolist {
-                            selfStrong.showAlert(title: appName, withMessage: "Your Account is in use on \(devicelist.numofdevice ?? 0) device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                            selfStrong.showAlert(title: appName, withMessage: failureResponse.message ?? "", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
                                 selfStrong.deviceListScreen(deviceInfo: devicelist)
                             }
                             return

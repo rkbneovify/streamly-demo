@@ -1432,7 +1432,7 @@ Any accounts or purchases made outside of this app will be managed by the develo
                                 <rect key="frame" x="0.0" y="328" width="1920" height="752"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="25" minimumInteritemSpacing="25" id="dxZ-v9-ry7">
-                                    <size key="itemSize" width="400" height="450"/>
+                                    <size key="itemSize" width="400" height="500"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="121" minY="80.5" maxX="121" maxY="0.0"/>

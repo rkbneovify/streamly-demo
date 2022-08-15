@@ -102,7 +102,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     func apiFailed(_ message: String,_ status: Int) {
         if status == 479 {
             if let devicelist = viewModel.deviceInfoList {
-                self.showAlert(title: appName, withMessage: "Your Account is in use on 5 device. please stop playing on other devices to continue", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
+                self.showAlert(title: appName, withMessage: message, setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
                     self.deviceListScreen(deviceInfo: devicelist)
                 }
                 return
