@@ -29,7 +29,7 @@ class DeviceListViewController: UIViewController {
             if filterString.isEmpty {
                 filterList = deviceList
             } else {
-                filterList = deviceList.filter({($0.deviceName?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.deviceType?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.hotelRoom?.lowercased().contains(filterString.lowercased()) ?? false)})
+                filterList = deviceList.filter({($0.personaldevicename?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.deviceType?.lowercased().contains(filterString.lowercased()) ?? false) || ($0.hotelRoom?.lowercased().contains(filterString.lowercased()) ?? false)})
             }
 
             // Reload the collection view to reflect the changes.

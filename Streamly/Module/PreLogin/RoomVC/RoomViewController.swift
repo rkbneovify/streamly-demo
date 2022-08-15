@@ -15,6 +15,7 @@ class RoomViewController: UIViewController {
     
     var viewModel = RoomViewModel()
     var filterRoomList = [Room]()
+    var isForceLogoutButtonFocus = false
     var filterString = "" {
         didSet {
             // Return if the filter string hasn't changed.
@@ -31,6 +32,11 @@ class RoomViewController: UIViewController {
             collectionView?.reloadData()
         }
     }
+    override var preferredFocusedView: UIView? {
+        return isForceLogoutButtonFocus ? logOutButton : collectionView
+    }
+    
+    
     private let cellComposer = DataItemCellComposer()
     
     override func viewDidLoad() {
@@ -138,6 +144,20 @@ extension RoomViewController: UICollectionViewDataSource
         return collectionView.dequeueReusableCell(withReuseIdentifier: RoomViewCell.identifier, for: indexPath)
     }
     
+    func collectionView(_ collectionView: UICollectionView, didUpdateFocusIn context: UICollectionViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        ///Added code for index is less then 3 and count is also less then 3 and user on last index and move focus then it will go to logout screen forcley
+        if context.focusHeading == .up && self.filterRoomList.count < 4 {
+            for cell in self.collectionView.visibleCells {
+                let indexPath = self.collectionView.indexPath(for: cell)
+                if indexPath?.item == self.filterRoomList.count - 1 {
+                    isForceLogoutButtonFocus = true
+                    self.updateFocusIfNeeded()
+                }
+            }
+        } else {
+            isForceLogoutButtonFocus = false
+        }
+    }
     
 }
 
