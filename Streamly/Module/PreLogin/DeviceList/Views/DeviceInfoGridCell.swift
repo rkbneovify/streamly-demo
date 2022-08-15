@@ -16,6 +16,7 @@ class DeviceInfoGridCell: UICollectionViewCell {
     @IBOutlet weak var turnOffImageView: UIImageView!
     @IBOutlet weak var deviceNameLabel: UILabel!
     @IBOutlet weak var deviceTypeLabel: UILabel!
+    @IBOutlet weak var roomLabel: UILabel!
     
     static let identifier = String(describing: DeviceInfoGridCell.self)
     override func awakeFromNib() {
@@ -24,15 +25,17 @@ class DeviceInfoGridCell: UICollectionViewCell {
     }
     
     private func configureCell() {
-        deviceMainTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 25.0)
-        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 20.0)
-        deviceTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 20.0)
+        deviceMainTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 20.0)
+        deviceNameLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
+        deviceTypeLabel.font = UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
+        roomLabel.font =  UIFont.init(name: "HelveticaNeue-Medium", size: 18.0)
         self.bgView.layer.cornerRadius = 10
         self.bgView.borderColor = .white
         self.bgView.borderWidth = 1.0
         turnOffImageView.isHidden = true
         deviceNameLabel.isHidden = true
         deviceTypeLabel.isHidden = true
+        roomLabel.isHidden = true
       }
     
     func setupData(model: DeviceInfo) {
@@ -40,6 +43,12 @@ class DeviceInfoGridCell: UICollectionViewCell {
         deviceNameLabel.text = "Device Name: \(model.personaldevicename ?? "")"
         deviceTypeLabel.text = "Device Type: \(model.deviceType ?? "")"
         deviceImage.sd_setImage(with: URL(string: model.deviceImg ?? ""), completed: nil)
+        if model.hotelRoom == nil {
+            roomLabel.text = ""
+        } else {
+            roomLabel.text = "Room Number: \(model.hotelRoom ?? "")"
+        }
+       
     }
     // MARK: UIFocusEnvironment
     
@@ -57,14 +66,15 @@ class DeviceInfoGridCell: UICollectionViewCell {
                 self.turnOffImageView.isHidden = true
                 self.deviceNameLabel.isHidden = true
                 self.deviceTypeLabel.isHidden = true
+                self.roomLabel.isHidden = true
                 self.deviceImage.isHidden = false
-                
             }
             else {
                 
                 self.deviceImage.isHidden = true
                 self.deviceNameLabel.isHidden = false
                 self.deviceTypeLabel.isHidden = false
+                self.roomLabel.isHidden = false
                 self.turnOffImageView.isHidden = false
              }
         }, completion: nil)
