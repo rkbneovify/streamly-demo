@@ -1635,7 +1635,7 @@ Any accounts or purchases made outside of this app will be managed by the develo
     <resources>
         <image name="Logo" width="796" height="200"/>
         <image name="dummyQR" width="166" height="166"/>
-        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
+        <image name="magnifyingglass" catalog="system" width="32" height="32"/>
         <image name="no_Wifi" width="256" height="256"/>
         <image name="starIcon" width="56" height="56"/>
     </resources>

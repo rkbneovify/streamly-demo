@@ -63,7 +63,7 @@
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SettingsGridCell" id="PZs-2d-iZd" customClass="SettingsGridCell" customModule="StreamlyTV" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlK-hi-ve9" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hlK-hi-ve9" customClass="GradientView" customModule="StreamlyTV" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="280" height="268"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gRM-Jd-QTU">
@@ -106,11 +106,6 @@
                                             </userDefinedRuntimeAttributes>
                                         </collectionViewCellContentView>
                                         <color key="backgroundColor" red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="0.39000000000000001" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottomMargin" secondItem="hlK-hi-ve9" secondAttribute="bottom" constant="-8" id="6Um-PC-Hym"/>
-                                            <constraint firstItem="hlK-hi-ve9" firstAttribute="top" secondItem="PZs-2d-iZd" secondAttribute="topMargin" constant="-8" id="kJs-hZ-6ah"/>
-                                            <constraint firstItem="hlK-hi-ve9" firstAttribute="leading" secondItem="PZs-2d-iZd" secondAttribute="leadingMargin" constant="-8" id="n38-Wr-wiI"/>
-                                        </constraints>
                                         <size key="customSize" width="280" height="268"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
