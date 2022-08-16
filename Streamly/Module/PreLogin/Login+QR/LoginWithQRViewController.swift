@@ -25,13 +25,17 @@ class LoginWithQRViewController: UIViewController {
         timer.invalidate()
     }
     
-    private func intialSetup() {
-        viewModel.delegate = self
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel.pollingInAPI()
         self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { [weak self] _ in
             guard let weak = self else { return }
             weak.viewModel.pollingInAPI()
         })
+    }
+    
+    private func intialSetup() {
+        viewModel.delegate = self
     }
 }
 
@@ -102,6 +106,7 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     func apiFailed(_ message: String,_ status: Int) {
         if status == 479 {
             if let devicelist = viewModel.deviceInfoList {
+                self.viewModel.currentAPIPolling = .isGetQR
                 self.showAlert(title: appName, withMessage: message, setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
                     self.deviceListScreen(deviceInfo: devicelist)
                 }
