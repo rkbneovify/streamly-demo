@@ -145,7 +145,9 @@ extension DeviceListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlert(title: appName, withMessage: "Are you sure want to logout this device?", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
             if let id = self.filterList[indexPath.item].sessionID {
+                self.showSpinner(onView: self.view)
                 self.viewModel.logOutSession(id: id) { success, message in
+                    self.removeSpinner()
                     if success {
                         if self.isFromLogin {
                             self.delegate?.sessionLogoutSuccess()
@@ -153,6 +155,8 @@ extension DeviceListViewController: UICollectionViewDelegate {
                         } else {
                             self.viewModel.getRegistredDeviceData()
                         }
+                    } else {
+                        self.showSimpleAlertWithMessage(message)
                     }
                 }
             }
