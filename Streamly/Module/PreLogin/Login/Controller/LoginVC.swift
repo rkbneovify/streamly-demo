@@ -456,7 +456,12 @@ extension LoginVC {
         searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
-        self.navigationController?.pushViewController(searchContainer, animated: true)
+        if let navVC = self.navigationController {
+            navVC.pushViewController(searchContainer, animated: true)
+        } else {
+            let navVC = UINavigationController(rootViewController: searchContainer)
+            present(navVC, animated: true, completion: nil)
+        }
     }
     
     fileprivate func updateDeviceName(sessionId: String) {
