@@ -128,6 +128,31 @@ public class TokenStorage {
         editor.apply();
     }
 
+    //    user home timezone ----------------
+    public static String readHomeTimeZoneOffset(Context context, String home_time_zone, String home_time_zone_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(home_time_zone, home_time_zone_Value);
+    }
+
+    public static void saveHomeTimeZoneOffset(Context context, String home_time_zone, String home_time_zone_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(home_time_zone, home_time_zone_Value);
+        editor.apply();
+    }
+
+    //    user home timezone ----------------
+    public static String readCurrentTimeZoneOffset(Context context, String current_time_zone, String current_time_zone_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(current_time_zone, current_time_zone_Value);
+    }
+
+    public static void saveCurrentTimeZoneOffset(Context context, String current_time_zone, String current_time_zone_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(current_time_zone, current_time_zone_Value);
+        editor.apply();
+    }
 
     public static void savedRoomList(Context context, String roomListKey, String roomListValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);

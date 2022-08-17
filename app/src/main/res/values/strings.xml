@@ -30,6 +30,8 @@
     <string name="password_profile">Password:</string>
     <string name="version">Version:</string>
     <string name="build_date">Build Date:</string>
+    <string name="home_timezon">Home Timezone:</string>
+    <string name="current_timezon">Current Timezone:</string>
     <string name="model_name">Device Model</string>
     <string name="support_text">For Help and Support You can call us on below numbers.</string>
     <string name="number_one">+1-548965-51 (24*7)</string>
@@ -41,6 +43,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="continuee">Continue</string>
+    <string name="curentTimeZone">Current TimeZone</string>
+    <string name="homeTimeZone">Home TimeZone</string>
 
 
     <string name="programguide_title_no_program">No broadcast</string>

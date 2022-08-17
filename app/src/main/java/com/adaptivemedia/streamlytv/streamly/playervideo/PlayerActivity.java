@@ -192,8 +192,8 @@ public class PlayerActivity extends FragmentActivity {
 
         Log.e("Player","Token : "+authToken);
 
-        getIpAddress2();
-        //getDrmKey();
+        //getIpAddress2();
+        getDrmKey();
 
         menuImage.setOnClickListener(view -> {
             menuImage.setVisibility(View.GONE);

@@ -55,6 +55,8 @@ class IpDataModel(
     val ip:String,
     @SerializedName("country")
     val country:String,
+    @SerializedName("utc_offset")
+    val utc_offset:String,
     @SerializedName("latitude")
     val latitude:Double,
     @SerializedName("longitude")
@@ -63,4 +65,5 @@ class IpDataModel(
     var error:Boolean = false,
     @SerializedName("reason")
     var reason: String = ""
+
 )

@@ -52,7 +52,7 @@ import java.util.regex.Pattern
 import kotlin.random.Random
 
 
-class ChannelFragment(context: Context, val genre: String) :
+class ChannelFragment(context: Context, val genre: String, val timeOff: String) :
     ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
     //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
     val eContext = context
@@ -288,14 +288,14 @@ class ChannelFragment(context: Context, val genre: String) :
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
         var dayss: Int? = 1
-        val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
+  //      val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
 //        val timeZoneString = "-08:00"
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        Log.d("Time", timeZoneString)
+        Log.d("Time", timeOff)
         Log.d("authTocken", "Bearer $authToken")
         if (genre.lowercase().equals("all") or genre.lowercase().equals("recent")) {
             apiInterface.getScheduleListWithoutGenre(
-                timeZoneString,
+                timeOff,
                 NetworkKeys.KEY_APP_JSON,
                 "Bearer $authToken"
             )
@@ -545,7 +545,7 @@ class ChannelFragment(context: Context, val genre: String) :
         }
         else {
             apiInterface.getScheduleListWithTimeZone(
-                timeZoneString,
+                timeOff,
                 genre,
                 NetworkKeys.KEY_APP_JSON,
                 "Bearer $authToken"

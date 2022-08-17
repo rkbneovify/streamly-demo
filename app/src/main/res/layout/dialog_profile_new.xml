@@ -11,7 +11,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/blurView"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:backgroundTint="#000000"
         android:elevation="24dp"
@@ -69,7 +69,7 @@
                             android:textSize="@dimen/_8ssp" />
 
                         <TextView
-                            android:layout_width="@dimen/_100sdp"
+                            android:layout_width="@dimen/_130sdp"
                             android:layout_height="1dp"
                             android:layout_marginTop="@dimen/_1sdp"
                             android:background="@color/md_white_1000" />
@@ -115,7 +115,7 @@
                             android:textSize="@dimen/_8ssp" />
 
                         <TextView
-                            android:layout_width="@dimen/_100sdp"
+                            android:layout_width="@dimen/_130sdp"
                             android:layout_height="1dp"
                             android:layout_marginTop="@dimen/_1sdp"
                             android:background="@color/md_white_1000" />
@@ -151,16 +151,16 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="@dimen/_100sdp"
+                            android:layout_width="@dimen/_130sdp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:fontFamily="@font/helvetica_neue_medium"
-                            android:text="1.01"
+                            android:id="@+id/text_version"
                             android:textColor="@color/md_white_1000"
                             android:textSize="@dimen/_8ssp" />
 
                         <TextView
-                            android:layout_width="@dimen/_100sdp"
+                            android:layout_width="@dimen/_130sdp"
                             android:layout_height="1dp"
                             android:layout_marginTop="@dimen/_1sdp"
                             android:background="@color/md_white_1000" />
@@ -204,7 +204,95 @@
                             android:textSize="@dimen/_8ssp" />
 
                         <TextView
-                            android:layout_width="@dimen/_100sdp"
+                            android:layout_width="@dimen/_130sdp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:background="@color/md_white_1000" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_6sdp">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/helvetica_neue_medium"
+                        android:text="@string/home_timezon"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_home_timezone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/helvetica_neue_medium"
+                            android:textColor="@color/md_white_1000"
+                            android:textSize="@dimen/_8ssp" />
+
+                        <TextView
+                            android:layout_width="@dimen/_130sdp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:background="@color/md_white_1000" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_6sdp">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/helvetica_neue_medium"
+                        android:text="@string/current_timezon"
+                        android:textAlignment="center"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="@dimen/_10ssp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/text_current_timezone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/helvetica_neue_medium"
+                            android:textColor="@color/md_white_1000"
+                            android:textSize="@dimen/_8ssp" />
+
+                        <TextView
+                            android:layout_width="@dimen/_130sdp"
                             android:layout_height="1dp"
                             android:layout_marginTop="@dimen/_1sdp"
                             android:background="@color/md_white_1000" />

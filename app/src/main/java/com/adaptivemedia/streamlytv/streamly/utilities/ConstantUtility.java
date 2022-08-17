@@ -29,6 +29,8 @@ public class ConstantUtility {
     public static final String PERSONAL_DEVICE_ID = "personaldeviceid";
     public static final String DEVICE_TYPE = "device_type";
     public static final String PERSONAL_DEVICE_POPUP = "personaldevicename_popup";
+    public static final String HOMETIMEZONE = "hometimezone";
+    public static final String CURRENTTIMEZONE = "currenttimezone";
     public static final String USER_ROLE = "user_role";
     public static final String PERSONAL_DEVICE_NAME = "personal_device_name";
     public static final String USER_ID = "user_id";

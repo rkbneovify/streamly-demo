@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
@@ -61,7 +62,8 @@ public class GenereAdapter extends RecyclerView.Adapter<GenereAdapter.MyViewHold
                 lastPostion = position;
                 notifyDataSetChanged();
                 if (context instanceof MainActivity) {
-                    ((MainActivity) context).fragment(genreList.get(position));
+                    String hourOffset = TokenStorage.readHomeTimeZoneOffset(context,ConstantUtility.HOMETIMEZONE,null);
+                    ((MainActivity) context).fragment(genreList.get(position),hourOffset);
                 }
             }
         });

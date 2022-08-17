@@ -98,6 +98,7 @@ public class HotelQRCodeActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
                             CommonUtility.showToast(HotelQRCodeActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
@@ -116,6 +117,7 @@ public class HotelQRCodeActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
                             if (personaDeviceNamePopup) {
                                 startActivity(new Intent(HotelQRCodeActivity.this, PersonalDeviceName.class));
                             } else {

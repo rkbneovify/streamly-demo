@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.dialogs.SelectTimeZoneDialog;
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.model.GetIp;
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceViewModel;
@@ -97,8 +100,104 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
        // getLatLong();
-        getChannelList();
+       // getChannelList();
+        getIpAddress();
     }
+
+    private void getIpAddress() {
+        ApiInterface apiInterface = ApiClient.getIPAdd().create(ApiInterface.class);
+        Call<GetIp> call = apiInterface.getDeviceIpAddress();
+        call.enqueue(new Callback<GetIp>() {
+            @Override
+            public void onResponse(Call<GetIp> call, Response<GetIp> response) {
+                String  ip = response.body().getIpAddress();
+                Log.e("GetIp","ip...");
+                getHoursOffset(ip);
+            }
+
+            @Override
+            public void onFailure(Call<GetIp> call, Throwable t) {
+                //add if fail (home zip)
+            }
+        });
+    }
+
+    private void getHoursOffset(String ip) {
+        IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
+        ipViewModel.getLatLong(ip, MainActivity.this).observe(this, new Observer<ApiResponse>() {
+
+            @Override
+            public void onChanged(ApiResponse apiResponse) {
+                IpDataModel ipModel = (IpDataModel) apiResponse.getApiResponse();
+                String hometimezone = TokenStorage.readHomeTimeZoneOffset(MainActivity.this,ConstantUtility.HOMETIMEZONE,null);
+                switch (apiResponse.getResponseCode()) {
+                    case 200:
+                        if (ipModel.getError()) {
+                            getChannelList(hometimezone);
+                            CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+                            Log.e(TAG, ipModel.getReason());
+                            finish();
+                        } else {
+                            String hourOffset = ipModel.getUtc_offset();
+                            if(hourOffset.length() >= 2) {
+                                char two = ':';
+                                Log.e("HoursOffset", "Value : " + hourOffset);
+                                String currenttimezone = hourOffset.substring(0, 3) + two + hourOffset.substring(3);
+                                Log.e("HoursOffset", "Current : " + currenttimezone);
+                                TokenStorage.saveCurrentTimeZoneOffset(MainActivity.this, ConstantUtility.CURRENTTIMEZONE, currenttimezone);
+                                if (currenttimezone != null) {
+                                    getChannelList(currenttimezone);
+                                } else {
+                                    getChannelList(hometimezone);
+                                }
+                            }else{
+                                TokenStorage.saveCurrentTimeZoneOffset(MainActivity.this, ConstantUtility.CURRENTTIMEZONE, hourOffset);
+                                if (hourOffset != null) {
+                                    getChannelList(hourOffset);
+                                } else {
+                                    getChannelList(hometimezone);
+                                }
+                            }
+
+                            /*SelectTimeZoneDialog selectTimeZoneDialog = new SelectTimeZoneDialog(MainActivity.this,"Please select your timezone",uniqueId,  "",  "", authToken, new SelectTimeZoneDialog.DialogCallBack(){
+
+                                @Override
+                                public void onCurrentPress() {
+                                    TokenStorage.saveCurrentTimeZoneOffset(MainActivity.this,ConstantUtility.HOMETIMEZONE,cblogName);
+                                    //Calling current
+                                }
+
+                                @Override
+                                public void onHomePress() {
+                                    //Calling home
+                                }
+                            });
+                            selectTimeZoneDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                            selectTimeZoneDialog.show();*/
+
+                        }
+                        break;
+                    case 401:
+                        CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+                        break;
+                    case 403:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    case 404:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                    case 429:
+                        getChannelList(hometimezone);
+                        break;
+                    case 500:
+                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
+                        break;
+                }
+
+            }
+        });
+    }
+
 
 //    private void getRecentList() {
 //        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -141,16 +240,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        });
 //    }
 
-    public void fragment(String type) {
+    public void fragment(String type, String offset) {
 
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, type))
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, type, offset))
                 .commit();
 
 
     }
 
-    public void getChannelList() {
+    public void getChannelList(String offset) {
         Log.e(TAG, "getChannelList: " + authToken);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ChannelGenre> call = apiInterface.getChannelGenre("Bearer " + authToken);
@@ -169,7 +268,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                         GenereAdapter adapter = new GenereAdapter(MainActivity.this, genreList,postion);
                         recyclerView.setAdapter(adapter);
-                        fragment(genreList.get(0));
+                        fragment(genreList.get(0),offset);
                     } else if (response.code() == 401) {
 
                         if (response.errorBody() != null) {
@@ -185,7 +284,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                        getChannelList();
+                        String hourOffset = TokenStorage.readHomeTimeZoneOffset(MainActivity.this,ConstantUtility.HOMETIMEZONE,null);
+                        getChannelList(hourOffset);
 
                     } else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
@@ -330,129 +430,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void getLatLong() {
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        Log.e(TAG, "IP_Address: " + ip);
-        ip = getIpAddress();
-        Log.e(TAG, "IP_Address: " + ip);
-        ip = "157.42.78.63";
-//        157.42.78.63
-
-
-        IpViewModel ipViewModel = new ViewModelProvider(this).get(IpViewModel.class);
-        ipViewModel.getLatLong(ip, MainActivity.this).observe(this, new Observer<ApiResponse>() {
-            @Override
-            public void onChanged(ApiResponse apiResponse) {
-                IpDataModel ipModel = (IpDataModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()) {
-                    case 200:
-                        if (ipModel.getError()) {
-                            CommonUtility.showToast(MainActivity.this, ipModel.getReason());
-                            Log.e(TAG, ipModel.getReason());
-                            finish();
-                        } else {
-                            Double dbLat = ipModel.getLatitude();
-                            Double dblon = ipModel.getLongitude();
-                            postGeofenceCall(dbLat, dblon);
-                        }
-                        break;
-                    case 401:
-
-                        CommonUtility.showToast(MainActivity.this, ipModel.getReason());
-                        break;
-                    case 403:
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                        break;
-                    case 404:
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                        break;
-                    case 429:
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                        break;
-                    case 500:
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                        break;
-                }
-
-            }
-        });
-
-    }
-
-    public String getIpAddress() {
-        WifiManager wifiManager = (WifiManager) getApplicationContext()
-                .getSystemService(WIFI_SERVICE);
-        String ipAddress = intToInetAddress(wifiManager.getDhcpInfo().ipAddress).toString();
-        ipAddress = ipAddress.substring(1);
-        return ipAddress;
-    }
-
-    public InetAddress intToInetAddress(int hostAddress) {
-        byte[] addressBytes = { (byte)(0xff & hostAddress),
-                (byte)(0xff & (hostAddress >> 8)),
-                (byte)(0xff & (hostAddress >> 16)),
-                (byte)(0xff & (hostAddress >> 24)) };
-        try {
-            return InetAddress.getByAddress(addressBytes);
-        } catch (UnknownHostException e) {
-            throw new AssertionError();
-        }
-    }
-
-    private void postGeofenceCall(Double dbLat, Double dblon) {
-        Map<String, Double> map = new HashMap<>();
-        map.put("latitude", dbLat);
-        map.put("longitude", dblon);
-//        map.put("latitude",33.88768366489836);
-//        map.put("longitude",-17.90419095752048);
-
-        Log.e(TAG, "Add" + dbLat +" "+ dblon);
-        GeofenceViewModel viewModel = new ViewModelProvider(this).get(GeofenceViewModel.class);
-        viewModel.getData(map, MainActivity.this).observe(this, new Observer<ApiResponse>() {
-            @Override
-            public void onChanged(ApiResponse apiResponse) {
-                GeofenceModel geofenceModel = (GeofenceModel) apiResponse.getApiResponse();
-                switch (apiResponse.getResponseCode()) {
-                    case 200:
-                        getChannelList();
-                        break;
-                    case 401:
-                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
-                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                        sessionExpiredDialog.setCancelable(false);
-                        sessionExpiredDialog.show();
-                        break;
-                    case 403:
-                        if (item.equals("1")) {
-                            getChannelList();
-                            item = "0";
-                        } else {
-                            String popMessage = "I am away from your home zip code:  click here to continue viewing.";
-                            ZipCodeDialog zipCodeDialog = new ZipCodeDialog(MainActivity.this, popMessage, uniqueId, dbLat + "", dblon + "", authToken, new ZipCodeDialog.DialogCallBack() {
-                                @Override
-                                public void onExitPress() {
-//                                    calling onBackPress
-                                    MainActivity.this.onBackPressed();
-                                }
-
-                                @Override
-                                public void onContinuePress() {
-//                                    do Nothing here
-                                }
-                            });
-                            zipCodeDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                            zipCodeDialog.show();
-//                            getDrmKey();
-                        }
-                        break;
-                    default:
-                        CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
-                }
-            }
-        });
-
-    }
 }
 
 

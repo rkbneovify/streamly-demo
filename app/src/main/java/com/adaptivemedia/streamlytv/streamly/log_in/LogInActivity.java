@@ -126,7 +126,7 @@ public class LogInActivity extends FragmentActivity {
             }
         });
 
-        edUserName.setText("vikas.saini1@oodles.io");
+        //edUserName.setText("vikas.saini1@oodles.io");
         // edUserName.setText("kallusingh.rajput@oodles.io");
         //edUserName.setText("aashish.kumar@oodles.io");
         //    edUserName.setText("mina@neovix.com");
@@ -137,7 +137,7 @@ public class LogInActivity extends FragmentActivity {
 //        edUserName.setText("sahilkashyap64@gmail.com");
         //     edUserName.setText("streamly1@yopmail.com");
         // edPassword.setText("123456789");
-        edPassword.setText("123456789");
+        //edPassword.setText("123456789");
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -319,6 +319,8 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            Log.e("HoursOffset","Home : "+response.body().getHouroffset());
                             CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
@@ -343,6 +345,7 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
+                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
                             if (personaDeviceNamePopup) {
                                 startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
                             } else {

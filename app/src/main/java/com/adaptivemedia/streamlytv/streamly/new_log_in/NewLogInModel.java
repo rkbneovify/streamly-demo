@@ -43,6 +43,9 @@ public class NewLogInModel {
     @SerializedName("device_type")
     @Expose
     private String deviceType;
+    @SerializedName("houroffset")
+    @Expose
+    private String houroffset;
 
     @SerializedName("personaldevicename_popup")
     @Expose
@@ -222,5 +225,13 @@ public class NewLogInModel {
 
     public void setPersonaldevicename_popup(boolean personaldevicename_popup) {
         this.personaldevicename_popup = personaldevicename_popup;
+    }
+
+    public String getHouroffset() {
+        return houroffset;
+    }
+
+    public void setHouroffset(String houroffset) {
+        this.houroffset = houroffset;
     }
 }
