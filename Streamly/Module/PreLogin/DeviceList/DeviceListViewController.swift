@@ -144,7 +144,8 @@ extension DeviceListViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         showAlert(title: appName, withMessage: "Are you sure want to logout this device?", setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
-            if let id = self.filterList[indexPath.item].sessionID {
+            let id = self.filterList[indexPath.item].sessionID
+            if let id  = id {
                 self.showSpinner(onView: self.view)
                 self.viewModel.logOutSession(id: id) { success, message in
                     self.removeSpinner()
@@ -159,7 +160,10 @@ extension DeviceListViewController: UICollectionViewDelegate {
                         self.showSimpleAlertWithMessage(message)
                     }
                 }
+            } else {
+                self.showSimpleAlertWithMessage("somethin Wrong with\(self.filterList[indexPath.item].deviceName ?? "") ")
             }
+            
         }
     }
 }

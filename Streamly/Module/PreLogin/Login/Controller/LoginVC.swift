@@ -477,7 +477,7 @@ extension LoginVC {
         vc.delegate = self
         let searchController = UISearchController(searchResultsController: vc)
         searchController.searchResultsUpdater = vc
-        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Device ID or Name)", comment: "")
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Device Type or Name)", comment: "")
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
         self.navigationController?.pushViewController(searchContainer, animated: true)
