@@ -104,11 +104,20 @@ extension LoginWithQRViewController: LoginWithQRDelegate {
     }
 
     func apiFailed(_ message: String,_ status: Int) {
+        
         if status == 479 {
             if let devicelist = viewModel.deviceInfoList {
                 self.viewModel.currentAPIPolling = .isGetQR
-                self.showAlert(title: appName, withMessage: message, setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { _ in
-                    self.deviceListScreen(deviceInfo: devicelist)
+                self.timer.invalidate()
+                self.showAlert(title: appName, withMessage: message, setTwoButton: true, setFirstButtonTitle: "YES", setSecondButtonTitle: "NO") { action in
+                    if action.title == "YES" {
+                        self.deviceListScreen(deviceInfo: devicelist)
+                    } else{
+                        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { [weak self] _ in
+                            guard let weak = self else { return }
+                            weak.viewModel.pollingInAPI()
+                        })
+                    }
                 }
                 return
             }
@@ -185,6 +194,10 @@ extension LoginWithQRViewController {
 // MARK: - DeviceListDelegate
 extension LoginWithQRViewController: DeviceListDelegate {
     func sessionLogoutSuccess() {
-        viewModel.pollingInAPI()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true, block: { [weak self] _ in
+            guard let weak = self else { return }
+            weak.viewModel.currentAPIPolling = .isLogin
+            weak.viewModel.pollingInAPI()
+        })
     }
 }

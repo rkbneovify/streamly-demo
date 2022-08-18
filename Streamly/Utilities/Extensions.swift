@@ -89,7 +89,9 @@ extension UIViewController
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         if (setTwoButton == true) {
-            alert.addAction(UIAlertAction(title: setSecondButtonTitle, style: .default, handler:nil))
+            alert.addAction(UIAlertAction(title: setSecondButtonTitle, style: .default, handler:{ (action) in
+                handler?(action)
+            }))
         }
         alert.addAction(UIAlertAction(title: setFirstButtonTitle, style: .default, handler:{ (action) in
             handler?(action)

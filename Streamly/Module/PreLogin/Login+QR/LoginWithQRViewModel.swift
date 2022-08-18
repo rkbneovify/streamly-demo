@@ -81,8 +81,12 @@ class LoginWithQRViewModel: NSObject {
             if let data:FailedResponse = DataParser.parseReponseToModel(data!) {
                 if let deviceInfoList = data.loggedindeviceinfolist {
                     weak.deviceInfoList = deviceInfoList
-                }
                     weak.delegate?.apiFailed(data.message ?? "", data.response_code ?? 0)
+                } else if data.data != nil {
+                    weak.delegate?.apiSuccessWithData(data: data)
+                } else {
+                    weak.delegate?.apiFailed(data.message ?? "", data.response_code ?? 0)
+                }
                 return
             }
             weak.delegate?.apiFailed(error?.localizedDescription ?? "", status ?? 0)
