@@ -149,12 +149,19 @@ extension UpdateDeviceViewController {
     // MARK: - Open Other Controller
     fileprivate func openSearchVC() {
         let vc = RoomViewController.instantiateFromAppStoryboard(appStoryboard: .Main)
+//        vc.viewModel.listOfRoom = room
+//        vc.viewModel.deviceNamePopup = showNamePopup
+        let searchController = UISearchController(searchResultsController: vc)
+        searchController.searchResultsUpdater = vc
+        searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
+        let searchContainer = UISearchContainerViewController(searchController: searchController)
+        searchContainer.title = NSLocalizedString("Search", comment: "")
         if navigationController == nil {
-            let nav = UINavigationController(rootViewController: vc)
+            let nav = UINavigationController(rootViewController: searchContainer)
             present(nav, animated: true, completion: nil)
             return
         }
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(searchContainer, animated: true)
     }
     
     private func viewPopups()

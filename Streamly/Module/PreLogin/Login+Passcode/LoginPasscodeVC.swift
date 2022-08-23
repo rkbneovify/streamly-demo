@@ -84,7 +84,7 @@ extension LoginPasscodeVC {
         searchController.searchBar.placeholder = NSLocalizedString("Enter keyword (e.g. Rooms)", comment: "")
         let searchContainer = UISearchContainerViewController(searchController: searchController)
         searchContainer.title = NSLocalizedString("Search", comment: "")
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(searchContainer, animated: true)
     }
     
     // MARK: - Open Update name Controller
