@@ -84201,7 +84201,7 @@
     return _c("div", { staticClass: "programme__details__view"}, [
       _vm.programmeDetails
         ? _c("div", [
-            _c("div", { staticClass: "programme__header" }, [
+            _c("div", { staticClass: "programme__headerDesign" }, [
               _c("div", { staticClass: "channel__name" }, [
                 _vm._v(_vm._s(_vm.programmeDetails.programmeTitle))
               ]),
@@ -84211,7 +84211,7 @@
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "programme__header" }, [
+            _c("div", { staticClass: "programme__headerDesign" }, [
               _c("div", { staticClass: "channel__name" }, [
                 _vm._v(_vm._s(_vm.programmeDetails.displayDateTime))
               ]),
