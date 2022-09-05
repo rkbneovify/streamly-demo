@@ -87,6 +87,23 @@ button.channel__nav__left {
     overflow-y: scroll !important;
 }
 */
+.programme__headerDesign {
+    display: flex;
+    justify-content: space-between;
+    background-color: #000;
+    color: #fff;
+    padding: 0px 8px;
+}
+.programme__content {
+    margin-top: 8px;
+}
+.channel_description {
+    overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 4; 
+   -webkit-box-orient: vertical;
+}
 .pgFontguidehead {
     white-space: break-spaces;
 }
