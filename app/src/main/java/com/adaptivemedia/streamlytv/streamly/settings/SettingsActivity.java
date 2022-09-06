@@ -268,7 +268,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 //            blurView.setBackground(getResources().getDrawable(R.drawable.layout_focus));
             blurView.setBackground(getResources().getDrawable(R.drawable.layout_focus2));
             blurView.show();
-
+//
             btnOk = pDialog.findViewById(R.id.btn_ok);
             deleteUser = pDialog.findViewById(R.id.btnDeleteUser);
             userName = pDialog.findViewById(R.id.text_name);

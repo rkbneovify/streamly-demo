@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DesignSurface">
-    <option name="filePathToZoomLevelMap">
-      <map>
-        <entry key="app/src/main/res/drawable/ic_noun_sign_out.xml" value="0.2045" />
-        <entry key="app/src/main/res/drawable/ic_time_zone.xml" value="0.1795" />
-        <entry key="app/src/main/res/layout/activity_logout_devices.xml" value="0.1515625" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/dialog_profile_new.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/dialog_register_device.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/dialog_signout.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/dialog_time_zone.xml" value="0.17028985507246377" />
-        <entry key="app/src/main/res/layout/dialog_zip_code.xml" value="0.17028985507246377" />
-      </map>
-    </option>
-  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
