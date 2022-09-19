@@ -713,7 +713,7 @@ $type='smooth_url';
 if($request->exists('genre')){
     $arr = explode(',', $request->genre);
     if($isDevice=='roku' || $deviceType=='manifest'){
-            $type='dash_url';
+            $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }else if($isDevice=='apple' || $deviceType=='m3u8'){
             $type='url';
@@ -725,7 +725,7 @@ if($request->exists('genre')){
 }else{
     if($isDevice=='roku' || $deviceType=='manifest'){ 
         // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
-            $type='dash_url';
+            $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
     }else if($isDevice=='apple' || $deviceType=='m3u8')  {
