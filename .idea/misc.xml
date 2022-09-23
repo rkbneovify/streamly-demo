@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/button_focused.xml" value="0.104" />
+        <entry key="app/src/main/res/drawable/ic_register_devices.xml" value="0.104" />
+        <entry key="app/src/main/res/drawable/layout_focus2.xml" value="0.104" />
+        <entry key="app/src/main/res/drawable/signin_focused.xml" value="0.114" />
+        <entry key="app/src/main/res/layout/activity_log_in.xml" value="0.19375" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.19375" />
+      </map>
+    </option>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
