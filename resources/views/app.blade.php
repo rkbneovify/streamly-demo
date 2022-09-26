@@ -31,6 +31,10 @@
   
 
 <style>
+    #Logout {
+        z-index: 999999!important;
+        backdrop-filter: brightness(55%);
+    }
 
     nav#mainNav {
         background-color: #004E92;
@@ -659,7 +663,7 @@ button#navrighthorizontal {
 {{-- <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> --}}
 
 <script async src="{{ asset('frontend/popper.min.js') }}" ></script> 
-<script async src="{{ asset('frontend/bootstrap.min.js') }}" ></script>
+<!-- <script async src="{{ asset('frontend/bootstrap.min.js') }}" ></script> -->
 <link rel="stylesheet" href="{{ asset('frontend/style.css') }}" />
 <script>window.addEventListener('load', function() {
      
