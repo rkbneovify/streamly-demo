@@ -67,8 +67,14 @@ $genres = Genre::pluck('name', 'id');
 {{-- <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.5/jquery-ui.min.js'></script> --}}
 {{-- <script defer src="{{ asset('frontend/jquery-ui.min.js') }}" ></script>  --}}
 <script defer src="{{ asset('frontend/popper.min.js') }}" ></script> 
-<script defer src="{{ asset('frontend/bootstrap.min.js') }}" ></script>
-
+<!-- <script defer src="{{ asset('frontend/bootstrap.min.js') }}" ></script> -->
+<?php
+if(strpos($_SERVER['REQUEST_URI'], "react") !== false){
+   //Hide Bootstrap.min.js
+}else{
+  ?><script defer src="{{ asset('frontend/bootstrap.min.js') }}" ></script><?php
+}
+?>
 <link rel="stylesheet" href="{{ asset('frontend/style.css') }}" />
 <script defer src="{{ asset('frontend/script.js') }}" ></script>
 
