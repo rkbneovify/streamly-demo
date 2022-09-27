@@ -1,4 +1,16 @@
 
+    <style>
+    @media only screen and (max-width: 450px){
+    .g-recaptcha-bubble-arrow + div
+    {
+    position: fixed !important;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    }
+    }
+    </style>
     <div id="mySidenav" class="sidenav">
 
       <div style="width: 100%;height: 5%;">
