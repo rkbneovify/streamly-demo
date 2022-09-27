@@ -177,7 +177,7 @@ use Laravel\Cashier\Cashier;
         jQuery('#changePassword').modal('show');
 		@endif
 
-		@if(session()->has('message'))
+		@if(session()->get('message') == 'Password Updated Successfully')
         const targetDiv = document.getElementById("hideElement");
 		const targetNav = document.getElementById("mainNav");
      	targetDiv.style.display = "block";
@@ -211,6 +211,11 @@ use Laravel\Cashier\Cashier;
 					<h4>Cancel Subscription</h4>
 					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
 					<div>
+
+					
+					<form></form>
+
+
 						<form action="{{ url('user/subscriptiondestroy', Auth::user()->id) }}" method="POST">
 							<input type="hidden" name="_method" value="DELETE">
 															<input type="hidden" name="_token" value="{{ csrf_token() }}">
