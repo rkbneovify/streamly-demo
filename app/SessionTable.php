@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 use App\HotelRoomTable;
 use App\Models\PersonalDevice;
@@ -17,7 +18,7 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
-   protected $appends = ['device_img','device_detail','device_type']; 
+   protected $appends = ['device_img','device_detail','device_type', 'authtokenofDevice']; 
    protected $hidden = ['device_detail'];//device detail from json
     protected $fillable=[
         'users_id',
@@ -156,6 +157,16 @@ class SessionTable extends Model
     //     "data-browser='7'"=>'web'
     // ][$this->device['browserclass']?? null] ?? "non-web";
        return $this->pdname?'non-web':'web';
+    }
+    public function getsubscriptionStatusAttribute()
+    { 
+        $subscriptionStatus=DB::table('subscriptions')->where('user_id', $this->users_id)->value('stripe_status');
+        return $subscriptionStatus ?? 'unsubscribe';
+    }
+    public function getauthtokenofDeviceAttribute()
+    { 
+        $authToken=DB::table('session_table')->where('device_id', $this->device_id)->value('access_token');
+        return $authToken ?? 'null';
     }
     
 }
