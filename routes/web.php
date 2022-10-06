@@ -89,6 +89,10 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('hoteladmin/data', 'Admin\HotelController@HotelAdminUserAjaxData');
     Route::get('user/data', 'Admin\UsersController@UserAjaxData');
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
+    Route::get('/report/usersdetails', 'Admin\ReportController@userdetails');//for user session piyush
+    Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis');//for user session piyush
+    Route::get('/report/transactionreport', 'Admin\ReportController@TransactionReports');//for user session piyush
+    Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
@@ -293,3 +297,4 @@ Route::get('/stripesync', function (Request $request) {
 Route::post('admin/multisessiondestroy', 'Admin\UsersController@multisessiondestroy')->name('multisessiondestroy')->middleware(['auth']);
 Route::post('web/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
 Route::post('web/loginws', 'Admin\QRLoginTwoController@loginWS');//Check when passcode hasbeen received
+Route::delete('cancelsubscription/{id}','SubscriptionController@subscriptiondestroy');
