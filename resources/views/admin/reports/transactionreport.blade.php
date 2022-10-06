@@ -1,6 +1,119 @@
 @extends('master')
 @section('content')
+<style>
+  .divfilter {
+    margin: 0px 8px 8px 8px;
+    text-align: end;
+  }
+  #myBtn {
+    background: transparent;
+    border: none;
+    color: #fff;
+  }
+  #myBtn2 {
+    background: transparent;
+    border: none;
+    color: #fff;
+  }
+  #myBtn3 {
+    background: transparent;
+    border: none;
+    color: #fff;
+  }
+  #myBtn4 {
+    background: transparent;
+    border: none;
+    color: #fff;
+  }
+  button:focus {
+    outline: 0px dotted!important;
+    outline: 0px auto -webkit-focus-ring-color!important;
+  }
+  .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  margin-left: 250px;
+  top: 0;
+  width: 81%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
 
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  overflow: auto;
+  height: 35vw;
+}
+
+/* The Close Button */
+.close2 {
+  text-align: end;
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.close {
+  text-align: end;
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.close3 {
+  text-align: end;
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close3:hover,
+.close3:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.close4 {
+  text-align: end;
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close4:hover,
+.close4:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -8,7 +121,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>All Transactions ({{ $count = count($array) }})</h1> {{ session()->get( 'info' ) }}
+            <h1>All Transactions ({{ $count = count($resultCount['data']) }})</h1> {{ session()->get( 'info' ) }}
           </div>
           <!-- <div class="form-group">
                 <label><strong>Filter by Userrole :</strong></label>
@@ -30,7 +143,294 @@
         </div>
       </div><!-- /.container-fluid -->
     </section>
- 
+    <div class="row" style="margin: 1px;">
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-info">
+      <div class="inner">
+      <h3>{{ $newuserCount = count($resultCount['newuser']) }}</h3>
+
+        <p>NEW USERS</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-bag"></i>
+      </div>
+      <!-- <a href=" https://streamlytv.com/admin/users" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+   <!-- Trigger/Open The Modal -->
+<button id="myBtn">View Details 
+<i class="fas fa-arrow-circle-right"></i>
+</button>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div style="display: flex;">
+  <p style="color: #000; font-weight: bold; width: 100%;">NEW USERS</p>
+    <span class="close">&times;</span>
+</div>
+    <div>
+    <table class="table table-striped projects" style="width: 100%;">
+    <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
+    <tbody>
+    @for ($i = 0; $i < $newuserCount; $i++)
+    <tr>
+    <td style="color:#000;">{{ $i + 1}}</td>
+    <td style="color:#000;">{{ $resultCount['newuser'][$i]['name'] ?? '' }}</td>
+    <td style="color:#000;">{{ $resultCount['newuser'][$i]['email'] ?? '' }}</td>
+    </tr>
+    @endfor
+    </tbody>
+</table>
+  </div>
+  </div>
+
+</div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-success">
+      <div class="inner">
+      <h3>{{ $renewedUsers = count($resultCount['reneweduser']) }}</h3>
+
+        <p>RENEWED USERS</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-stats-bars"></i>
+      </div>
+      <!-- <a href=" https://streamlytv.com/admin/channelstatus" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+    <!-- Trigger/Open The Modal -->
+<button id="myBtn2">View Details 
+<i class="fas fa-arrow-circle-right"></i>
+</button>
+<!-- The Modal -->
+<div id="myModal2" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div style="display: flex;">
+  <p style="color: #000; font-weight: bold; width: 100%;">RENEWED USERS</p>
+    <span class="close2">&times;</span>
+</div>
+    <div>
+    <table class="table table-striped projects" style="width: 100%;">
+    <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
+    <tbody>
+    @for ($i = 0; $i < $renewedUsers; $i++)
+    <tr>
+    <td style="color:#000;">{{ $i + 1}}</td>
+    <td style="color:#000;">{{ $resultCount['reneweduser'][$i]['name'] ?? '' }}</td>
+    <td style="color:#000;">{{ $resultCount['reneweduser'][$i]['email'] ?? '' }}</td>
+    </tr>
+    @endfor
+    </tbody>
+</table>
+  </div>
+  </div>
+
+</div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-warning">
+      <div class="inner">
+        <h3>{{ $terminatedUsers = count($resultCount['terminateduser']) }}</h3>
+
+        <p>TERMINATED USERS</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-person-add"></i>
+      </div>
+      <!-- <a href=" https://streamlytv.com/admin/subscriptions" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+      <!-- Trigger/Open The Modal -->
+<button id="myBtn3">View Details 
+<i class="fas fa-arrow-circle-right"></i>
+</button>
+<!-- The Modal -->
+<div id="myModal3" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div style="display: flex;">
+  <p style="color: #000; font-weight: bold; width: 100%;">TERMINATED USERS</p>
+    <span class="close3">&times;</span>
+</div>
+    <div>
+    <table class="table table-striped projects" style="width: 100%;">
+    <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
+    <tbody>
+    @for ($i = 0; $i < $terminatedUsers; $i++)
+    <tr>
+    <td style="color:#000;">{{ $i + 1}}</td>
+    <td style="color:#000;">{{ $resultCount['terminateduser'][$i]['name'] ?? '' }}</td>
+    <td style="color:#000;">{{ $resultCount['terminateduser'][$i]['email'] ?? '' }}</td>
+    </tr>
+    @endfor
+    </tbody>
+</table>
+  </div>
+  </div>
+
+</div>
+    </div>
+  </div>
+  <!-- ./col -->
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ $overdueUsers = count($resultCount['overdueuser']) }}</h3>
+
+        <p>OVERDUE USERS</p>
+      </div>
+      <div class="icon">
+        <i class="ion ion-pie-graph"></i>
+      </div>
+      <!-- <a href=" https://streamlytv.com/admin/hlsmonitor" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+      <!-- Trigger/Open The Modal -->
+<button id="myBtn4">View Details 
+<i class="fas fa-arrow-circle-right"></i>
+</button>
+<!-- The Modal -->
+<div id="myModal4" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div style="display: flex;">
+  <p style="color: #000; font-weight: bold; width: 100%;">OVERDUE USERS</p>
+    <span class="close4">&times;</span>
+</div>
+    <div>
+    <table class="table table-striped projects" style="width: 100%;">
+    <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
+    <tbody>
+    @for ($i = 0; $i < $overdueUsers; $i++)
+    <tr>
+    <td style="color:#000;">{{ $i + 1}}</td>
+    <td style="color:#000;">{{ $resultCount['overdueuser'][$i]['name'] ?? '' }}</td>
+    <td style="color:#000;">{{ $resultCount['overdueuser'][$i]['email'] ?? '' }}</td>
+    </tr>
+    @endfor
+    </tbody>
+</table>
+  </div>
+  </div>
+
+</div>
+    </div>
+  </div>
+  <!-- ./col -->
+</div>
+<div class="divfilter">Filter With Transaction Type:
+<select name="cars" id="myInput" onchange="myFunction()">
+        <option value="">All</option>
+  <option value="active">Active</option>
+  <option value="canceled">Cancelled</option>
+  <option value="trialing">Trialing</option>
+</select>
+</div>
+<script>
+  // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+var modal2 = document.getElementById("myModal2");
+
+// Get the button that opens the modal
+var btn2 = document.getElementById("myBtn2");
+
+// Get the <span> element that closes the modal
+var span2 = document.getElementsByClassName("close2")[0];
+
+// When the user clicks the button, open the modal 
+btn2.onclick = function() {
+  modal2.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span2.onclick = function() {
+  modal2.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal2) {
+    modal2.style.display = "none";
+  }
+}
+
+var modal3 = document.getElementById("myModal3");
+
+// Get the button that opens the modal
+var btn3 = document.getElementById("myBtn3");
+
+// Get the <span> element that closes the modal
+var span3 = document.getElementsByClassName("close3")[0];
+
+// When the user clicks the button, open the modal 
+btn3.onclick = function() {
+  modal3.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span3.onclick = function() {
+  modal3.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal3) {
+    modal3.style.display = "none";
+  }
+}
+
+var modal4 = document.getElementById("myModal4");
+
+// Get the button that opens the modal
+var btn4 = document.getElementById("myBtn4");
+
+// Get the <span> element that closes the modal
+var span4 = document.getElementsByClassName("close4")[0];
+
+// When the user clicks the button, open the modal 
+btn4.onclick = function() {
+  modal4.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span4.onclick = function() {
+  modal4.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal4) {
+    modal4.style.display = "none";
+  }
+}
+</script>
     <!-- Main content -->
     <section class="content">
 
@@ -47,7 +447,9 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table table-striped projects">
+
+        <!-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name"> -->
+          <table id="myTable" class="table table-striped projects">
               <thead>
                   <tr>
                       <th style="width: 2%">
@@ -57,7 +459,7 @@
                           Transaction Date
                       </th>
                       <th style="width: 20%">
-                          Transaction type
+                          Transaction Type
                       </th>
                       <th style="width: 5%">
                           Email
@@ -66,7 +468,7 @@
                           Zipcode
                       </th> 
                       <th style="width: 20%">
-                          Expiration date
+                          Expiration Date
                       </th> 
                      
                       {{-- <th style="width: 8%" class="text-center">
@@ -85,21 +487,21 @@
                         {{ $i + 1 }}
                       </td>
                             <td>
-                                {{ $array[$i]['start_at'] ?? '' }}
+                                {{ $resultCount['data'][$i]['start_at'] ?? '' }}
                             </td>
                             <td>
-                                {{  $array[$i]['stripe_status'] ?? '' }}
+                                {{  $resultCount['data'][$i]['stripe_status'] ?? '' }}
                             </td>
                             
                             
                             <td>
-                                {{ $array[$i]['email'] ?? '' }}
+                                {{ $resultCount['data'][$i]['email'] ?? '' }}
                             </td>
                             <td>
-                                {{ $array[$i]['zipcode'] ?? '' }}
+                                {{ $resultCount['data'][$i]['zipcode'] ?? '' }}
                             </td>
                       <td>
-                                {{ $array[$i]['ends_at'] ?? 'null' }}
+                                {{ $resultCount['data'][$i]['ends_at'] ?? 'null' }}
                       </td>
 
                         </tr>
@@ -129,3 +531,23 @@
 
   </script> -->
 @endsection
+<script>
+function myFunction() {
+  var select, option, input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
