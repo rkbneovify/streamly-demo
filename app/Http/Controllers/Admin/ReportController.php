@@ -40,14 +40,49 @@ class ReportController extends Controller
 
          return 'Under Maintenance';
    }
+
    public function TransactionReports(){
 
     $transaction = DB::table('subscriptions')
-    ->select('id','user_id','stripe_status','ends_at', 'created_at')
+    ->select('id','user_id','stripe_status', 'renews_at', 'ends_at', 'created_at')
     ->get();
 
     $array =[];
+    $arrayRes1 = [];
+    $arrayRes2 = [];
+    $arrayRes3 = [];
+    $arrayRes4 = [];
     foreach ($transaction as $data){
+
+      if($data->renews_at == null && $data->stripe_status == 'active'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $newUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes1, $newUser);
+      }elseif(!empty($data->renews_at) && $data->stripe_status == 'active'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $renewedUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes2, $renewedUser);
+      }elseif($data->stripe_status == 'canceled'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $terminatedUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes3, $terminatedUser);
+      }else{
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $overdueUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes4, $overdueUser);
+      }
 
         $userEmail=DB::table('users')->where('id', $data->user_id)->value('email');
         $userZipcode=DB::table('users')->where('id', $data->user_id)->value('zipcode');
@@ -63,10 +98,18 @@ class ReportController extends Controller
       array_push($array, $arry);
     };
 
+    $resultCount = [
+      'newuser' => $arrayRes1,
+      'reneweduser' => $arrayRes2,
+      'terminateduser' => $arrayRes3,
+      'overdueuser' => $arrayRes4,
+      'data' => $array
+    ];
+
     //$transaction->toArray();
-    return view('admin.reports.transactionreport', compact('array'));
+    return view('admin.reports.transactionreport', compact('resultCount'));
          
-    //return $array;
+    //return $resultCount;
    }
 
    public function subscriptiondestroy()
