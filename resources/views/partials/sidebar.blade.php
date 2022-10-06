@@ -175,6 +175,48 @@
                     </a>
                   </li>
             </ul>
+            <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Reports
+                <i class="fas fa-angle-left right"></i>
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              
+              <li class="nav-item">
+                <a href=" {{ url('/admin/report/channelanalysis') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Channel Analysis</p>
+                </a>
+              </li><li class="nav-item">
+                <a href=" {{ url('/admin/report/usersdetails') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>User Details</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                <a href=" {{ url('/admin/report/zipcode') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Zipcode</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                <a href=" {{ url('/admin/report/transactionreport') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Transaction Reports</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                <a href=" {{ url('/admin/users/session') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Demographic Details</p>
+                  </a>
+                </li>
+            </ul>
+          </li>
             <li class="nav-item ">
               <a href=" {{ url('/admin/frontendtext') }}"  class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
