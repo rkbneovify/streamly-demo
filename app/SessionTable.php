@@ -18,7 +18,7 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
-   protected $appends = ['device_img','device_detail','device_type']; 
+   protected $appends = ['device_img','device_detail','device_type', 'subscriptionStatus']; 
    protected $hidden = ['device_detail'];//device detail from json
     protected $fillable=[
         'users_id',

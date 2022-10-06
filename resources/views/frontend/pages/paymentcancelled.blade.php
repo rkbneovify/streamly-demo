@@ -315,7 +315,7 @@ input[type=number] {
 												</span>
 												@else
 								
-												<span class="remove-p-a-r">
+												<span style="display:none;" class="remove-p-a-r">
 											{{$frontendjson['billingdetailspage']}}	</span>
 
 										@endif
@@ -361,6 +361,16 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
+
+			//Change cvv type to password start
+var cvcElements = document.getElementsByName("cvc"); 
+
+//cvcElements[0].id = 'cvc-1';
+  
+// document.getElementById("cvc-1").type="password";
+//Change cvv type to password end
+
+
 					       $(function() {
 									var bt = document.getElementById('card-button');
 

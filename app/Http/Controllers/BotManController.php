@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+//namespace BotMan\BotMan;
+
+//require 'BotMan/BotMan/BotMan.php';
 
 use Illuminate\Http\Request;
 
@@ -14,7 +17,9 @@ class BotManController extends Controller
 {
     public function handle()
     {
-    	$botman = app('botman');
+    	$botman = app('botman2');
+        //dd($botman);
+
         
         // Simple respond method
         $botman->hears('Hello|Hi', function (BotMan $bot) {

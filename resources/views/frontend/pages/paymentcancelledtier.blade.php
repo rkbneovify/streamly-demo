@@ -330,7 +330,7 @@ input[type=number] {
 								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span class='devicequantity'>1</span> device</div>
 						</div> @if (empty($frontendjson['billingdetailspage'])) <span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
-												</span> @else <span class="remove-p-a-r">
+												</span> @else <span style="display: none;" class="remove-p-a-r">
 											{{$frontendjson['billingdetailspage']}}	</span> @endif
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
@@ -357,7 +357,9 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 
 @if(auth()->user()->subscription('main')->cancelled())
 <script src = "https://js.stripe.com/v3/" > </script> 
-<script> $(function() {
+<script> 
+
+$(function() {
 	var totalPrice;
 	addQuantityListeners();
 	var bt = document.getElementById('card-button');
@@ -624,6 +626,16 @@ function ShowUserthePrice(userIn) {
 		return(tier.up_to >= userIn);
 	});
 	return tierfound;
-} </script>
+} 
+
+//Change cvv type to password start
+// var cvcElements = document.getElementsByName("cvc"); 
+
+// cvcElements[0].id = 'cvc-1';
+  
+// document.getElementById("cvc-1").type="password";
+//Change cvv type to password end
+
+</script>
 @endif
 @endsection

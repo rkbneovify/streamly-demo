@@ -249,11 +249,7 @@ $.ajax({
 
 @section('content')
 
-            <div id="hideElement" class="popupwarning">
-			You are away from your home zip code: click here to continue.
-			<div class="geolocation">
-			<button class="button" onclick="showWarning()">OK</button>
-			</div>
+            <div id="nodeElement">
 			</div>
 	
 		<section id="blur" class="page-section">
@@ -305,6 +301,19 @@ $.ajax({
 
 		
 	</section>
+	<script>
+	const div = document.createElement('div');
+    div.className = 'row';
+    div.innerHTML = `
+	   <div id="hideElement" class="popupwarning">
+	   You are away from your home zip code: click here to continue.
+	   <div class="geolocation">
+	   <button class="button" onclick="showWarning()">OK</button>
+	   </div>
+	   </div>
+	   `;
+     document.getElementById('nodeElement').appendChild(div);
+    </script>
 	
 @endsection
 
