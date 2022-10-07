@@ -93,6 +93,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis');//for user session piyush
     Route::get('/report/transactionreport', 'Admin\ReportController@TransactionReports');//for user session piyush
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
+    Route::get('/report/demographic', 'Admin\ReportController@graph');//for user session piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');

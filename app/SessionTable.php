@@ -18,7 +18,7 @@ class SessionTable extends Model
     protected $casts = [
      'device' => 'array'
    ];
-   protected $appends = ['device_img','device_detail','device_type', 'subscriptionStatus']; 
+   protected $appends = ['device_img','device_detail','device_type', 'subscriptionStatus', 'deviceSign']; 
    protected $hidden = ['device_detail'];//device detail from json
     protected $fillable=[
         'users_id',
@@ -143,6 +143,21 @@ class SessionTable extends Model
         'device-ipad'=>asset("/uploads/devicelogo/").'/mobile/ipad.png',
         'device-iphone'=>asset("/uploads/devicelogo/").'/mobile/iphone.png'
     ][$this->device['device']?? null] ?? asset("/uploads/devicelogo/").'/tv/normaltv.png';
+       
+    }
+    public function getdeviceSignAttribute($size=null)
+    { 
+    return [
+        'desktop'=>'normaltv',
+        'device-rokutv'=>'roku',
+        'device-appletv'=>'appletv',
+        'device-firetv'=>'firetv',
+        'device-smarttv'=>'smarttv',
+        'device-mobile'=>'mobile',
+        'device-tablet'=>'tablet',
+        'device-ipad'=>'ipad',
+        'device-iphone'=>'iphone'
+    ][$this->device['device']?? null] ?? 'normaltv';
        
     }
     public function getDeviceTypeAttribute($size=null)
