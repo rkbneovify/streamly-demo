@@ -206,5 +206,72 @@ class ReportController extends Controller
         // return $resultsData;
    }
 
+   public function graph(){
+
+    // $allSession = SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();
+
+    $allSession=SessionTable::with(['hotel','pdname'=> function($q) {
+      // Query the name field in status table
+      $q->select('id','personal_devicename','device_id','user_id');
+  }])->where([
+      ['status', '=', '1'],
+  ])->orderBy('connected_devices', 'asc')->get();
+
+  $device1 = [];
+  $device2 = [];
+  $device3 = [];
+  $device4 = [];
+  $device5 = [];
+  $device6 = [];
+  $device7 = [];
+  $device8 = [];
+  $device9 = [];
+  $device10 = [];
+  foreach ($allSession as $data){
+
+     if($data->deviceSign == 'normaltv'){
+         array_push($device1, $data->deviceSign);
+     }elseif($data->deviceSign == 'roku'){
+      array_push($device2, $data->deviceSign);
+     }elseif($data->deviceSign == 'appletv'){
+      array_push($device3, $data->deviceSign);
+    }elseif($data->deviceSign == 'firetv'){
+      array_push($device4, $data->deviceSign);
+    }elseif($data->deviceSign == 'smarttv'){
+      array_push($device5, $data->deviceSign);
+    }elseif($data->deviceSign == 'mobile'){
+      array_push($device6, $data->deviceSign);
+    }elseif($data->deviceSign == 'tablet'){
+      array_push($device7, $data->deviceSign);
+    }elseif($data->deviceSign == 'ipad'){
+      array_push($device8, $data->deviceSign);
+    }elseif($data->deviceSign == 'iphone'){
+      array_push($device9, $data->deviceSign);
+    }
+    else{
+      array_push($device10, $data->deviceSign);
+    }
+
+  }
+
+    $resultDevicetype = [
+      'desktop' => count($device1),
+      'roku_tv' => count($device2),
+      'apple_tv' => count($device3),
+      'fire_tv' => count($device4),
+      'samsung_tv' => count($device5),
+      'mobile' => count($device6),
+      'tablet' => count($device7),
+      'ipad' => count($device8),
+      'iphone' => count($device9),
+      'others' => count($device10)
+    ];
+
+    //return $resultDevicetype;
+
+    return view('admin.reports.demographicalreport', compact('resultDevicetype'));
+
+   }
+
    
 }
