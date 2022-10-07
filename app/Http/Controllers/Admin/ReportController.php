@@ -130,7 +130,38 @@ class ReportController extends Controller
    public function zipcode()
    { 
     
-     $zipCode=DB::table('zipcodes')->where('status', '1')->get();
+     $zipCode=DB::table('zipcodes')
+     ->select('id','zipcode','city', 'state', 'county_area', 'status')
+     ->simplePaginate(125);
+
+     $activezipCode=DB::table('zipcodes')
+     ->where('status', '1')
+     ->select('id','zipcode','city', 'state', 'county_area', 'status')
+     ->get();
+
+     $arrayactive =[];
+     foreach ($activezipCode as $activedata){
+ 
+        // $userEmail=DB::table('users')->where('id', $data->user_id)->value('email');
+         $useractiveZipcode=DB::table('users')->where('zipcode', $activedata->zipcode)->get();
+ 
+         $Activecount = count($useractiveZipcode);
+         if($activedata->status == 1){
+           $activezipcodeStatus = 'Active';
+         }else{
+           $activezipcodeStatus = 'Inactive';
+         }
+         
+       $arryactive = [
+         'zipcode' => $activedata->zipcode,
+         'city' => $activedata->city,
+         'state' => $activedata->state,
+         'country' => $activedata->county_area,
+         'status' => $activezipcodeStatus,
+         'userCount'=> $Activecount
+       ];
+       array_push($arrayactive, $arryactive);
+     };
 
      $array =[];
     foreach ($zipCode as $data){
@@ -139,18 +170,40 @@ class ReportController extends Controller
         $userZipcode=DB::table('users')->where('zipcode', $data->zipcode)->get();
 
         $count = count($userZipcode);
+        if($data->status == 1){
+          $zipcodeStatus = 'Active';
+        }else{
+          $zipcodeStatus = 'Inactive';
+        }
         
       $arry = [
         'zipcode' => $data->zipcode,
+        'city' => $data->city,
+        'state' => $data->state,
+        'country' => $data->county_area,
+        'status' => $zipcodeStatus,
         'userCount'=> $count
       ];
       array_push($array, $arry);
     };
+
+    $resultsData = [
+      'current_page' => $zipCode->currentPage(),
+      'count' => $zipCode->count(),
+      'next_page_url' => $zipCode->nextPageUrl(),
+      'hasMorePages' => $zipCode->hasMorePages(),
+      'lastItem' => $zipCode->lastItem(),
+      'firstItem' => $zipCode->firstItem(),
+      'per_page' => $zipCode->perPage(),
+      'prev_page_url' => $zipCode->previousPageUrl(),
+      'data' => $array,
+      'activezipcode' => $arrayactive
+    ];
     
    // return response()->json($array, 200);
-    return view('admin.reports.zipcodreport', compact('array'));
+    return view('admin.reports.zipcodreport', compact('resultsData'));
 
-      // return '1';
+        // return $resultsData;
    }
 
    
