@@ -34,9 +34,6 @@ class ReportController extends Controller
     }
 
     public function channelanalysis(){
-       
-      //  $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();
-       //return view('admin.reports.channelanalysis', compact('allSession'));
 
          return 'Under Maintenance';
    }
