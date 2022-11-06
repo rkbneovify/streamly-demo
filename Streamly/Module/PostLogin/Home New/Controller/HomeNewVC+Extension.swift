@@ -128,29 +128,29 @@ extension HomeNewVC : UICollectionViewDelegate, UICollectionViewDataSource, UICo
                     return true}
                 // Call API for pagination
                 
-                if indexPath.section ==
-                    (filteredList?.count ?? 0) && viewModel.isPageExist {
-                    guard viewModel.currentPage <= viewModel.lastPage  else { return true }
-                    lastIndexPath = indexPath
-                    showLoading = true
-                    showSpinner(onView: self.view)
-                    if let lasIndexPath = lastIndexPath {
-                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                            collectionView.reloadItems(at: [lasIndexPath])
-                        }
-                    }
-                    NetworkManagerWrapper.canceltheRequest {
-                        switch self.selectedCategories {
-                        case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue://,CategoriesSelect.myChannels.rawValue:
-                            self.viewModel.getEPGData(viewModel.currentPage)
-                        default:
-                            self.viewModel.getEPGData(viewModel.currentPage, self.genrsList?.allGenre?[self.selectedCategories - 2] ?? "")
-                        }
-                    }
-                } else {
-                    showLoading = false
-                    print("loading not called or pageExist is \(viewModel.isPageExist)")
-                }
+//                if indexPath.section ==
+//                    (filteredList?.count ?? 0) {
+//                    guard viewModel.currentPage <= viewModel.lastPage  else { return true }
+//                    lastIndexPath = indexPath
+//                    showLoading = true
+//                    showSpinner(onView: self.view)
+//                    if let lasIndexPath = lastIndexPath {
+//                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+//                            collectionView.reloadItems(at: [lasIndexPath])
+//                        }
+//                    }
+//                    NetworkManagerWrapper.canceltheRequest {
+//                        switch self.selectedCategories {
+//                        case CategoriesSelect.all.rawValue , CategoriesSelect.recent.rawValue://,CategoriesSelect.myChannels.rawValue:
+//                            self.viewModel.getAllProgramData()
+//                        default:
+//                            self.viewModel.getAllProgramData(self.genrsList?.allGenre?[self.selectedCategories - 2] ?? "")
+//                        }
+//                    }
+//                } else {
+//                    showLoading = false
+//                    print("loading not called or pageExist is \(viewModel.isPageExist)")
+//                }
             }
             guard let programCell = context.nextFocusedView as? ProgramCollectionViewCell else {self.discriptionView.isHidden = true
                 self.descriptionHeightConstraint.constant = 0

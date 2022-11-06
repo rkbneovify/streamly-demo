@@ -17,8 +17,9 @@ class HomeNewVC: UIViewController {
     var channelList:EPGResponse?
     {
         didSet {
-            viewModel.isPageExist = (channelList?.data?.data?.count ?? 0) > 0
-            viewModel.currentPage += 1
+            viewModel.isPageExist = (channelList?.data?.count ?? 0) > 0
+            //viewModel.currentPage += 1
+           
             showLoading = false
         }
     }
@@ -328,7 +329,8 @@ class HomeNewVC: UIViewController {
             if channelList != nil {
                 if CategoriesSelect.init(rawValue: sender) == .recent {
                     self.viewModel.getRecentData()
-                    if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                    //if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
+                    if (filteredList?.count ?? 0) > 0 {
                         let tempRecent = self.loadRecentData(self.recentData?.data ?? []) ?? []
                         let channelData = getUpdatedChannelList(tempRecent)
                         self.filteredList?.append(contentsOf: channelData)
@@ -339,17 +341,18 @@ class HomeNewVC: UIViewController {
                     }
                     if (filteredList?.count ?? 0) <= (self.recentData?.data?.count ?? 0) { // This works only when data have in Recent and we didn't get all Recent data in once.
                         group.enter()
-                        self.viewModel.getEPGData(viewModel.currentPage)
-                        viewModel.isPageExist = true
+                        self.viewModel.getAllProgramData("")
+                        self.viewModel.getRecentData()
+                       // viewModel.isPageExist = true
                         return
                     }
-                    if viewModel.isPageExist {
-                        if let indexPath = self.lastIndexPath {
-                            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
-                                collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
-                            }
-                        }
+                    //if viewModel.isPageExist {
+                    if let indexPath = self.lastIndexPath {
+                        if (filteredList?.count ?? 0) > 0 {
+                            collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                        
                     }
+                }
                 } /*else if CategoriesSelect.init(rawValue: sender) == .myChannels {
                     self.viewModel.getMyChannelList()
                     if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
@@ -375,16 +378,17 @@ class HomeNewVC: UIViewController {
                         }
                     }
                 }*/ else {
-                    if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                        let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                    if (filteredList?.count ?? 0) > 0 {
+                       let channelData = getUpdatedChannelList(self.channelList?.data ?? [])
+                        
                         self.filteredList?.append(contentsOf: channelData)
                     } else {
                         self.filteredList?.removeAll()
-                        self.filteredList = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                        self.filteredList = getUpdatedChannelList(self.channelList?.data ?? [])
                     }
                     if viewModel.isPageExist {
                         if let indexPath = self.lastIndexPath {
-                            if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                            if (filteredList?.count ?? 0) > 0 {
                                 collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                             }
                         }
@@ -392,41 +396,42 @@ class HomeNewVC: UIViewController {
                 }
             } else {
                 viewModel.isPageExist = true
-                viewModel.lastPage = 10
+                //viewModel.lastPage = 10
                 lastIndexPath = nil
                 filteredList?.removeAll()
                 self.showSpinner(onView: self.view)
                 group.enter()
-                viewModel.currentPage = 1
-                viewModel.getEPGData(1)
+                //viewModel.currentPage = 1
+                //viewModel.getEPGData(1)
+                viewModel.getAllProgramData("")
             }
             self.selectedCategories = sender
         default:
             self.selectedCategories = sender
             if channelList != nil {
-                if (filteredList?.count ?? 0) > 0 && viewModel.currentPage > 1 {
-                    let channelData = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                if (filteredList?.count ?? 0) > 0 {
+                    let channelData = getUpdatedChannelList(self.channelList?.data ?? [])
                     self.filteredList?.append(contentsOf: channelData)
                     //                    self.filteredList?.append(contentsOf: self.channelList?.data?.data ?? [])
                 } else {
                     self.filteredList?.removeAll()
-                    self.filteredList = getUpdatedChannelList(self.channelList?.data?.data ?? [])
+                    self.filteredList = getUpdatedChannelList(self.channelList?.data ?? [])
                 }
                 if viewModel.isPageExist {
                     if let indexPath = self.lastIndexPath {
-                        if viewModel.currentPage > 1 && (filteredList?.count ?? 0) > 0 {
+                        if (filteredList?.count ?? 0) > 0 {
                             collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                         }
                     }
                 }
             } else {
-                viewModel.isPageExist = true
-                viewModel.lastPage = 10
-                viewModel.currentPage = 1
+                //viewModel.isPageExist = true
+                //viewModel.lastPage = 10
+                //viewModel.currentPage = 1
                 filteredList?.removeAll()
                 self.lastIndexPath = nil
                 self.showSpinner(onView: self.view)
-                viewModel.getEPGData(1, key ?? "")
+                viewModel.getAllProgramData(key ?? "")
             }
         }
         if sender == 1 {
@@ -443,21 +448,21 @@ class HomeNewVC: UIViewController {
     
     private func loadData(_ categories:[ChannelList]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
+        let mainArray = self.channelList?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
         return mainArray
         
     }
     
     private func loadMyChannelData(_ myChannelList:[MyChannel]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.data?.filter { i in (myChannelList.contains{ i.id == $0.id} ) }
+        let mainArray = self.channelList?.data?.filter { i in (myChannelList.contains{ i.id == $0.id} ) }
         return mainArray
         
     }
     
     private func loadRecentData(_ categories:[RecentDetails]) -> [ChannelDetails]?
     {
-        let mainArray = self.channelList?.data?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
+        let mainArray = self.channelList?.data?.filter { i in (categories.contains{ i.CallSign == $0.callSign } ) }
         return mainArray
         
     }
@@ -465,7 +470,8 @@ class HomeNewVC: UIViewController {
     private func makeApiCall(){
         group.enter()
         viewModel.delegate = self
-        viewModel.getEPGData()
+        self.showSpinner(onView: self.view)
+        viewModel.getAllProgramData("")
         
     }
     

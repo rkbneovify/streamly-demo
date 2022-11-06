@@ -96,11 +96,41 @@ open class ApiCall {
             param["hoursoffset"] = Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone)
             print("Address time zone used")
         }
-       
+
         let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
         let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getEpgData.rawValue, method: .get, headers: headers, parameters: param)
         return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
     }
+    
+    @discardableResult
+    public static func getAllChannelData(_ genere: String , success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let token  = Utility.retriveStringObject(key: Constant.UserDefault.token)
+        var param = [String: String]()
+        
+    
+        if genere != "" {
+                   param["genre"] = genere
+                }
+     
+        let seconds = TimeZone.current.secondsFromGMT()
+        if seconds > 0 {
+            let minutes = abs(seconds/60) % 60
+            let hours = seconds/3600
+            let tz = String(format: "%.2d:%.2d", hours, minutes)
+            param["hoursoffset"] = tz
+            print("Current time zone used")
+        } else {
+            param["hoursoffset"] = Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone)
+            print("Address time zone used")
+        }
+       
+        let headers = ["Authorization": "Bearer \(token)","Accept": "application/json","User-Agent": userAgent]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.getChannelData.rawValue, method: .get, headers: headers, parameters: param)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    
+    
 
     @discardableResult
     public static func getChannelList(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {

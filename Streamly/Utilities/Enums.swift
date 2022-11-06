@@ -71,6 +71,7 @@ enum API:String {
     case mobileDeviceScanCode = "login/scan/qrcode"
     case personalDeviceName = "auth/personaldevicename"
     case qrVisibility = "auth/qrvisibility"
+    case getChannelData = "auth/channeldayschdeuletzwithoffset"
 }
 
 /// for settings childView

@@ -131,3 +131,75 @@ struct PivotCahnnel: Codable {
         case updatedAt = "updated_at"
     }
 }
+
+// MARK: - All channel & program data
+
+
+
+
+//struct listOfChannel: Codable {
+//    var success: Bool?
+//    var date: String?
+//    var count: Int?
+//    var data: [ProgramData]?
+//    var message: String?
+//    var responseCode: Int?
+//
+// 
+//}
+//
+//// MARK: - Datum
+//struct ProgramData: Codable {
+//    var callSign: String?
+//    var id: Int?
+//    var stationName: String?
+//    var url: String?
+//    var logo: String?
+//    var programs: [ProgramArray]?
+//
+//  
+//}
+//
+//// MARK: - Program
+//struct ProgramArray : Codable {
+//    
+//    let end : TimeInterval?
+//    let start : TimeInterval?
+//    let title:String?
+//    let description:String?
+//    let starttz: TimeInterval?
+//    let endtz: TimeInterval?
+//    let TimeZoneName: String?
+//    
+//    var startDate: Date {
+//        return Date(timeIntervalSince1970: TimeInterval(self.start ?? 0))
+//    }
+//    
+//    var endDate: Date {
+//        return Date(timeIntervalSince1970: TimeInterval(self.end ?? 0))
+//    }
+//    
+//    var duration: TimeInterval {
+//        let duration = self.endDate.addingTimeInterval(-(self.start ?? 0)).timeIntervalSince1970
+//        return duration
+//    }
+//    
+//    
+//    enum CodingKeys: String, CodingKey {
+//        
+//        case TimeZoneName
+//        case endtz
+//        case starttz
+//        case end = "end"
+//        case start = "start"
+//        case title = "title"
+//        case description = "description"
+//    }
+//    
+//    //enum TimeZoneName: String, Codable {
+//    //    case centralObserving = "Central Observing"
+//    //    case easternObserving = "Eastern Observing"
+//    //    case pacificObserving = "Pacific Observing"
+//    //    case timeZoneName = "TimeZoneName"
+//    //}
+//}

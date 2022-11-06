@@ -17,49 +17,91 @@ class EPGViewModel: NSObject {
     var myChannelList: ((MychannelData) -> ())?
     var channelData:((ChannelListResponse)->())?
     var currentPage = 1
-    var lastPage = 10
+    //var lastPage = 10
     var isPageExist = true
     weak var delegate:HandleError?
     
-    func getEPGData(_ page: Int = 1,_ genere: String = "All") {
-        guard currentPage <= lastPage else {
-            delegate?.successAPI()
-            return
-        }
-        guard isPageExist else {
-            delegate?.successAPI()
-            return
-        }
-        ApiCall.getEPGData(page, genere, success: { data, _
-            in
-            if let `data` = data, let epgModel = EPGDataParser.parseContactData(data) {
-                self.epgData?((epgModel))
-                self.lastPage = epgModel.data?.lastPage ?? 0
-                ////debugPrint(epgModel)
-                self.delegate?.successAPI()
-            } else {
-                print("decode error")
+//    func getEPGData(_ page: Int = 1,_ genere: String = "All") {
+//        guard currentPage <= lastPage else {
+//            delegate?.successAPI()
+//            return
+//        }
+//        guard isPageExist else {
+//            delegate?.successAPI()
+//            return
+//        }
+//        ApiCall.getEPGData(page, genere, success: { data, _
+//                 in
+//                   if let `data` = data, let epgModel = EPGDataParser.parseContactData(data) {
+//                       self.epgData?((epgModel))
+//                       self.lastPage = epgModel.data?.lastPage ?? 0
+//                      ////debugPrint(epgModel)
+//                      self.delegate?.successAPI()
+//                  } else {
+//                       print("decode error")
+//                }
+//                //debugPrint("Success")
+//               }) { (error, data, code)  in
+//                   if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+//                       if failedData.message == "The token has been blacklisted" {
+//                           self.delegate?.handleError(failedData.message ?? "", 401)
+//                       } else {
+//                           self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+//                       }
+//                       return
+//                   } else {
+//                      // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+//                   }
+//                   //debugPrint("failure")
+//
+//
+//       ////            if code == 401 {
+//       ////                Constant.logOut()
+//       ////            }
+//               }
+//           }
+
+   // }
+
+
+
+
+func getAllProgramData(_ genere: String = "All") {
+  
+    ApiCall.getAllChannelData(genere, success: { data, _
+             in
+        if let `data` = data, let epgModel = EPGDataParser.parseContactData(data) {
+                             self.epgData?((epgModel))
+            
+                  ////debugPrint(epgModel)
+                  self.delegate?.successAPI()
+              } else {
+                   print("decode error")
             }
             //debugPrint("Success")
-        }) { (error, data, code)  in
-            if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
-                if failedData.message == "The token has been blacklisted" {
-                    self.delegate?.handleError(failedData.message ?? "", 401)
-                } else {
-                    self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
-                }
-                return
-            } else {
-               // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
-            }
-            //debugPrint("failure")
-           
-            
-//            if code == 401 {
-//                Constant.logOut()
-//            }
-        }
-    }
+           }) { (error, data, code)  in
+               if let `data` = data, let failedData: FailedResponse = DataParser.parseReponseToModel(data) {
+                   if failedData.message == "The token has been blacklisted" {
+                       self.delegate?.handleError(failedData.message ?? "", 401)
+                   } else {
+                       self.delegate?.handleError(failedData.message ?? "", failedData.response_code ?? 0)
+                   }
+                   return
+               } else {
+                  // self.delegate?.handleError(error?.localizedDescription ?? "", code ?? 0)
+               }
+               //debugPrint("failure")
+   
+   
+  
+           }
+       }
+    
+
+    
+    
+    
+    
     
     func getMyChannelList() {
         ApiCall.getMyChannelList(success: { data, _
@@ -80,6 +122,9 @@ class EPGViewModel: NSObject {
             // self.delegate?.handleError(error?.localizedDescription ?? "")
         }
     }
+    
+    
+    
     
     func getChannelList() {
         ApiCall.getChannelList(success: { data, _
