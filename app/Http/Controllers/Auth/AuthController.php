@@ -433,7 +433,7 @@ public function samedevicelogout(Request $request)
                 }catch (JWTException $e){
                     $errors['error']=$e->getMessage();
                 }
-                if($errors['error'] == "Token has expired"){
+                if($errors){
                     $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
                     if($user){
                         $response = [
