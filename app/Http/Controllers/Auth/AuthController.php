@@ -425,7 +425,7 @@ public function samedevicelogout(Request $request)
     //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
 // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
             // $this->logout()->middleware(['jwt.verify']);
-
+            $errors=[];
             try{
                 JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($accesstoken), $forceForever = false);
                 }catch (Exception $e) {
