@@ -433,7 +433,7 @@ public function samedevicelogout(Request $request)
                             "message" => "logged out successful",
                             "error" => false,
                         ];
-                        return response()->json($response, 404);
+                        return response()->json($response, 200);
                    }else{
                     $response = [
             
