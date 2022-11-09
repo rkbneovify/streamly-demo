@@ -425,37 +425,38 @@ public function samedevicelogout(Request $request)
     //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
 // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
             // $this->logout()->middleware(['jwt.verify']);
-            $errors=[];
-            try{
-                JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($accesstoken), $forceForever = false);
-                }catch (Exception $e) {
-                    $errors['error']=$e->getMessage();
-                }catch (JWTException $e){
-                    $errors['error']=$e->getMessage();
-                }
-                if($errors){
-                    $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
-                    if($user){
-                        $response = [
-                            "response_code" => "200",
-                            "success" => true,
-                            "message" => "logged out successful",
-                            "error" => false,
-                        ];
-                        return response()->json($response, 404);
-                   }else{
-                    $response = [
+            //$errors=[];
+            // try{
+            //     JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($accesstoken), $forceForever = false);
+            //     }catch (Exception $e) {
+            //         $errors['error']=$e->getMessage();
+            //     }catch (JWTException $e){
+            //         $errors['error']=$e->getMessage();
+            //     }
+            //     if($errors){
+            //         $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
+            //         if($user){
+            //             $response = [
+            //                 "response_code" => "200",
+            //                 "success" => true,
+            //                 "message" => "logged out successful",
+            //                 "error" => false,
+            //             ];
+            //             return response()->json($response, 404);
+            //        }else{
+            //         $response = [
             
-                        'success' => false,
-                        'data' => 'Empty',
-                        'message' => 'id not found.',
-                        'response_code'=>404,
-                    ];
-                    return response()->json($response, 404);
-                   }
-                }else{
-                    $this->logout()->middleware(['jwt.verify']);
-                }
+            //             'success' => false,
+            //             'data' => 'Empty',
+            //             'message' => 'id not found.',
+            //             'response_code'=>404,
+            //         ];
+            //         return response()->json($response, 404);
+            //        }
+            //     }else{
+            //         $this->logout()->middleware(['jwt.verify']);
+            //     }
+            $this->logout()->middleware(['jwt.verify']);
         } else{
             $response = [
             
