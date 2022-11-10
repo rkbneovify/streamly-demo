@@ -20,6 +20,34 @@ class PopUPTvVC: UIViewController {
     @IBOutlet weak var deleteButton: UIButton!
     
     // MARK: - Properties
+    var buildDate: Date {
+    if let infoPath = Bundle.main.path(forResource: "Info", ofType: "plist"),
+    let infoAttr = try? FileManager.default.attributesOfItem(atPath: infoPath),
+    let infoDate = infoAttr[.modificationDate] as? Date {
+      
+        return infoDate
+    }
+        
+        return Date()
+    }
+    // use this function to convert Date Format to String Format (remove time) and get desired format format
+    func dateToString(input: Date) -> String {
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy"
+        return dateFormatter.string(from: date)
+        
+    }
+    
+
+    
+    //dateFormatter.dateFormat = "MM/dd/yyyy"
+    
+ 
+    
+
+    
+    
     var profileItemArr:[(heading:String,data:String)]?
     var isProfile:Bool?
     {
@@ -29,7 +57,7 @@ class PopUPTvVC: UIViewController {
                 let minutes = abs(seconds/60) % 60
                 let hours = seconds/3600
                 let tz = String(format: "%.2d:%.2d", hours, minutes)
-                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(String(describing: Utility.convertDateFormat(Utility.retriveStringObject(key: Constant.UserDefault.createdAt))))"),("Home TimeZone:","Your Home Timezone GMT \(Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone) )"), ("Current TimeZone:","Your current Time zone GMT \(tz)")]
+                profileItemArr  = [("Username:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.userName)))"),("Email:", "\(String(describing: Utility.retriveStringObject(key: Constant.UserDefault.email)))"),("Version:","\(GEVersionMonitor.shared.formattedVersion)"),("Build Date:","\(dateToString(input: buildDate))"), ("Home TimeZone:","Your Home Timezone GMT \(Utility.retriveStringObject(key: Constant.UserDefault.addressTimeZone) )"), ("Current TimeZone:","Your current Time zone GMT \(tz)")]
             }
         }
     }

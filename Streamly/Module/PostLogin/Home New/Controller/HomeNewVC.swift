@@ -467,21 +467,23 @@ class HomeNewVC: UIViewController {
         
     }
     
-    private func makeApiCall(){
+    private func makeApiCall() {
+        
         group.enter()
         viewModel.delegate = self
-        self.showSpinner(onView: self.view)
-        viewModel.getAllProgramData("")
         
+        viewModel.getAllProgramData("")
+        self.showSpinner(onView: self.view)
     }
     
     private func initVM() {
         viewModel.epgData = { epgModel in
             self.group.notify(queue: .main) {
-                self.group.leave()
+               // self.group.leave()
                 self.removeSpinner()
             }
             self.removeSpinner()
+            
             self.channelList = epgModel
             if self.selectedCategories == -1 {
                 self.selectCategories(0)
@@ -522,7 +524,7 @@ class HomeNewVC: UIViewController {
     private func initVMRecent() {
         
         viewModel.recentData = { recentModel in
-            self.group.leave()
+           // self.group.leave()
             self.recentData = recentModel
         }
         
@@ -640,16 +642,28 @@ extension HomeNewVC{
         else if collectionView.isFocused {
             if let nextCell = context.nextFocusedView as? ProgramCollectionViewCell {
                 let index = Int(nextCell.accessibilityHint!)!
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { // 2
+                DispatchQueue.main.asyncAfter(deadline: .now() + 120) { // 2
                     self.collectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredVertically, animated: true)
                 }
             }
         } else {
             coordinator.addCoordinatedAnimations({ () -> Void in
-                self.configureButtons()
+               self.configureButtons()
+                
+             
             }, completion: nil)
+         
         }
     }
+//    if let nextCell = context.nextFocusedView as? ProgramCollectionViewCell , let indexPath = collectionView.indexPath(for: nextCell ) {
+//        collectionView.isScrollEnabled  = true
+//        coordinator.addCoordinatedAnimations({
+//
+//                self.collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
+//
+//                }, completion: nil)
+//            }
+//    }
 }
 
 extension HomeNewVC:AddRecentData

@@ -145,3 +145,11 @@ class ProgramCollectionViewCell: UICollectionViewCell {
     }
 }
 
+extension String {
+    func toDate(format:String = "MM-dd-yyyy") -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.timeZone = .current
+        return formatter.date(from: self)
+    }
+}

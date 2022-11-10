@@ -71,7 +71,8 @@ func getAllProgramData(_ genere: String = "All") {
     ApiCall.getAllChannelData(genere, success: { data, _
              in
         if let `data` = data, let epgModel = EPGDataParser.parseContactData(data) {
-                             self.epgData?((epgModel))
+             self.epgData?((epgModel))
+            
             
                   ////debugPrint(epgModel)
                   self.delegate?.successAPI()
