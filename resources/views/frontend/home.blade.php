@@ -661,6 +661,11 @@ details[open] > summary::before {
     height: 41px; */
 
 }
+@media screen and (max-width: 540px){
+       #pills-tab {
+            justify-content: center!important;
+        }
+	}
 </style>
 
 <section class="page-section bg-light">
