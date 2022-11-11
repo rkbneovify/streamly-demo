@@ -74,7 +74,14 @@ extension CustomInteractiveVideoOverlay:UICollectionViewDataSource
         
         guard let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identiFier, for: indexPath) as? PosterCell else {return UICollectionViewCell()}
          let rowData = self.data[indexPath.item]
-         cell.confiGureData(rowData, indexPath.item)
+        if data.count > indexPath.item{
+            cell.confiGureData(rowData, indexPath.item)
+        }
+        else{
+            showToast(message: "Something Went Wrong!!!") {
+                print("Here is your count error")
+            }
+        }
         
         return cell
     }
@@ -89,9 +96,18 @@ extension CustomInteractiveVideoOverlay: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         // Now, thanks to the function above, this is disabled
+    
         selectedIndex = indexPath.item
-        self.delegate?.changeChannel(data[indexPath.item])
-
+        if data.count > indexPath.item{
+            self.delegate?.changeChannel(data[indexPath.item])
+        }
+        else{
+            showToast(message: "Something Went Wrong!!!") {
+                print("Here is your count error")
+            }
+        }
+        
+        
     }
 }
 

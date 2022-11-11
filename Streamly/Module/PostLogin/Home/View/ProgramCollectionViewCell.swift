@@ -83,7 +83,7 @@ class ProgramCollectionViewCell: UICollectionViewCell {
     func configureWithModel(program: ProgramArray,row : Int)
     {
         if program.title?.lowercased() == "no broadcast" {
-            print(program.title ?? "")
+            print("here isssisis\(program.title ?? "")")
         }
         self.comapreTime(program.end ?? 0)
         self.liveShowView.isHidden = !(self.calculateTimeDiffrence(program.start ?? 0,program.end ?? 0))
@@ -101,7 +101,10 @@ class ProgramCollectionViewCell: UICollectionViewCell {
         else  {
             self.liveViewTraling.constant = 0.0
         }
+        
        
+        print("here isssisis\(program.title ?? "")")
+
         self.titleLabel.text = program.title ?? ""
         self.timeLabel.text = "\(Utility.getDateFromTimeStampByFormat(from: program.start ?? 0.0) ?? "") - \(Utility.getDateFromTimeStampByFormat(from: program.end ?? 0.0) ?? "")"
 
