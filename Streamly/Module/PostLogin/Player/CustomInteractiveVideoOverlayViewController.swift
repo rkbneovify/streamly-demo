@@ -67,21 +67,33 @@ class CustomInteractiveVideoOverlay: UIViewController {
 extension CustomInteractiveVideoOverlay:UICollectionViewDataSource
 {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data.count
+        
+        if data.count > 0{
+            return data.count
+        }
+        else{
+            showToast(message: "Something Went Wrong!!!") {
+                
+            }
+            return 0
+
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: PosterCell.identiFier, for: indexPath) as? PosterCell else {return UICollectionViewCell()}
          let rowData = self.data[indexPath.item]
-        if data.count > indexPath.item{
-            cell.confiGureData(rowData, indexPath.item)
-        }
-        else{
-            showToast(message: "Something Went Wrong!!!") {
-                print("Here is your count error")
-            }
-        }
+         cell.confiGureData(rowData, indexPath.item)
+
+//        if data.count > indexPath.item{
+//            cell.confiGureData(rowData, indexPath.item)
+//        }
+//        else{
+//            showToast(message: "Something Went Wrong!!!") {
+//                print("Here is your count error")
+//            }
+//        }
         
         return cell
     }
