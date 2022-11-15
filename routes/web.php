@@ -21,6 +21,9 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+/*add Naresh 15-11-2022*/
+Route::get('/cookie/set','HomeController@setCookie');
+/*End Naresh 15-11-2022*/
 
 Route::get('/admin', 'Admin\AdminController@index');
 Route::get('/', 'HomeController@index')->name('home');
@@ -161,6 +164,10 @@ Route::get('declinezipinquiries', 'Admin\DeclineZipsInquiryController@index')->n
 Route::get('declinezipinquiries/data', 'Admin\DeclineZipsInquiryController@ajaxIndex');
 Route::get('bugreport', 'Admin\BugReportingController@index')->name('bugreport');
 Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
+
+/*add Naresh 15-11-2022*/
+Route::get('affiliatereport', 'Admin\AffiliateReportController@index')->name('affiliatereport');
+/*End Naresh 15-11-2022*/
 
 });
 

@@ -31,6 +31,9 @@ use App\Http\Requests\ContactFormRequest;
 
 use App\Models\Genre;
 use Illuminate\Support\Facades\Cache;
+/*add Naresh 15-11-2022*/ 
+use Cookie;
+/*End Naresh 15-11-2022*/ 
 class HomeController extends Controller
 {
 
@@ -53,8 +56,11 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     { 
+        /*add Naresh 15-11-2022*/ 
+       $this->setCookie($request);
+       /*End Naresh 15-11-2022*/
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
         $imagePath=asset("/uploads/channellogo/notfound.png");
    
@@ -98,6 +104,27 @@ $Genrekey=$pagechannel->keys();
       $plankey=$d->keys();
         return view('frontend.home', compact('login','plans','pagechannel','Genrekey','plansdetails','plankey'));
     }
+
+    /*add Naresh 15-11-2022*/ 
+public function setCookie(Request $request) {
+    $UTMSource = $request->UTMSource;
+    $UTMCampaign = $request->UTMCampaign;
+    $UTMMedium = $request->UTMMedium;
+    if($request->has('UTMSource')) {
+    $UTMdata_arr = ['UTMSource'=>$UTMSource,'UTMCampaign'=>$UTMCampaign,'UTMMedium'=>$UTMMedium];
+
+    $UTMdata = json_encode($UTMdata_arr);
+    $minutes = 60;
+    Cookie::queue('UTMdata', $UTMdata, $minutes);
+    // $response = new Response('Hello World');
+    // $response->withCookie(cookie('UTMdata', $UTMdata, $minutes));
+    } else {
+      return '';
+   }
+    //return $response;
+}
+
+/*End Naresh 15-11-2022*/ 
 
     public function indexCache()
     { 
