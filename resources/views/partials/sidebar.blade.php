@@ -253,6 +253,16 @@
                 </p>
               </a>
             </li>
+             <!-- add Naresh 15-11-2022 -->
+             <li class="nav-item ">
+              <a href=" {{ url('/admin/affiliatereport') }}"  class="nav-link">
+              <i class="nav-icon fas fa-file"></i>
+                <p>
+                 Affiliate Report
+                </p>
+              </a>
+            </li>
+            <!-- End Naresh 15-11-2022-->
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">
               <a href=" {{ url('/admin/subscriptionpack') }}" class="nav-link">
