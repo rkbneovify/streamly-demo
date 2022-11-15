@@ -13,6 +13,10 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use Mail;
+/*add Naresh 15-11-2022*/ 
+use Cookie;
+//use DB;
+/*End Naresh 15-11-2022*/ 
 class Payment extends Controller
 {   
     public function __construct()
@@ -108,6 +112,29 @@ $Genrekey=$pagechannel->keys();
     	return view('frontend.pages.plans', compact('plans','pagechannel','Genrekey','plansdetails','plankey'));
         
     }
+
+    /*add Naresh 15-11-2022*/ 
+    public function getCookie(Request $request,$newSubscription,$user,$StripeplanId,$quantity) {
+        $value = Cookie::get('UTMdata');
+        $UTMdata = json_decode($value,true);
+        $UTMSource = $UTMdata['UTMSource'];
+        $UTMCampaign = $UTMdata['UTMCampaign'];
+        $UTMMedium = $UTMdata['UTMMedium'];
+        $campaign_date = time();
+    
+        if(!empty($UTMdata)){
+            if($UTMCampaign == ''){
+                $values = array('user_id' => $user->id,'plan_id'=>$StripeplanId,'stripe_subscription_id' => $newSubscription->stripe_id,'affiliate_source' => $UTMSource, 'create_date'=> $campaign_date);
+                DB::table('affiliate_transaction')->insert($values);
+            }
+            elseif($UTMCampaign != '' && $UTMCampaign >= $campaign_date){
+               $values = array('user_id' => $user->id,'plan_id'=>$StripeplanId,'stripe_subscription_id' => $newSubscription->stripe_id,'affiliate_source' => $UTMSource, 'create_date'=> $campaign_date);
+                DB::table('affiliate_transaction')->insert($values);
+            }
+        }
+
+    }
+/*End Naresh 15-11-2022*/ 
 
     public function pay(Request $request,$StripeplanId) {
         // dd($request);
