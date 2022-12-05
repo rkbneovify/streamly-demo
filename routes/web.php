@@ -168,8 +168,6 @@ Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 /*add Naresh 15-11-2022*/
 Route::get('affiliatereport', 'Admin\AffiliateReportController@index')->name('affiliatereport');
 /*End Naresh 15-11-2022*/
-
-Route::get('subscription', 'HomeController@SubscriptionPage');
 });
 
 /*Prev Next channel*/
@@ -196,6 +194,7 @@ Route::get('/invoice', 'Pages\Account\Setting@invoice');
 Route::get('user/invoice/{invoice}','Pages\Account\Setting@invoicePDF' );
 Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage')->name('payment');
 Route::get('/tierpayment/{stripeplanid}', 'Pages\Payment@showTierPage')->name('tierpayment');
+Route::get('/subscription', 'HomeController@SubscriptionPage');
 Route::get('/selectplan', 'Pages\Payment@showPlan');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
 Route::get('/currentepisode', 'Pages\LiveTv@getcurrentepisode');
