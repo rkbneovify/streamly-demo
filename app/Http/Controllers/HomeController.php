@@ -90,8 +90,8 @@ $Genrekey=$pagechannel->keys();
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                // return redirect('/selectplan');
-                return redirect('/subscription');
+                return redirect('/selectplan');
+                // return redirect('/subscription');
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
