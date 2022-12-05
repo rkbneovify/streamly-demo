@@ -90,7 +90,8 @@ $Genrekey=$pagechannel->keys();
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                return redirect('/selectplan');
+                // return redirect('/selectplan');
+                return redirect('/subscription');
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
@@ -507,7 +508,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     public function SubscriptionPage(Request $request)
     { 
         /*add Naresh 15-11-2022*/ 
-       $this->setCookie($request);
+    //    $this->setCookie($request);
        /*End Naresh 15-11-2022*/
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
         // $imagePath=asset("/uploads/channellogo/notfound.png");
@@ -516,7 +517,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                return redirect('/subscription');
+                // return redirect('/subscription');
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
