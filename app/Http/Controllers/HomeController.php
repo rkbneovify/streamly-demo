@@ -504,8 +504,32 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
         // return view('frontend.verified');
     }
 
-    
+    public function SubscriptionPage(Request $request)
+    { 
+        /*add Naresh 15-11-2022*/ 
+       $this->setCookie($request);
+       /*End Naresh 15-11-2022*/
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+        // $imagePath=asset("/uploads/channellogo/notfound.png");
    
+        if( Auth::check()){
+            $login = true;
+            $user=Auth::user();
+            if (!$user->subscribed('main')) {
+                return redirect('/subscription');
+            } else {   return redirect('/livetv');}
+        } else {
+            $login = false;
+        }
+    //   dump($plans->data);
+      $d=collect($plans->data)
+      ->groupBy('billing_scheme');
+    //   ->where('billing_scheme', 'per_unit')
+      
+      $plansdetails=$d->all();
+      $plankey=$d->keys();
+        return view('frontend.pages.subscription', compact('login','plans','plansdetails','plankey'));
+    }
     
 
 }
