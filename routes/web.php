@@ -169,7 +169,12 @@ Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 Route::get('affiliatereport', 'Admin\AffiliateReportController@index')->name('affiliatereport');
 /*End Naresh 15-11-2022*/
 
+Route::get('subscription', 'HomeController@SubscriptionPage');
 });
+
+/*Prev Next channel*/
+Route::get('nextprev/{id}', 'LivetvController@index');
+/*Prev Next channel*/
 
 Route::get('add-to-log', 'HomeTwoController@myTestAddToLog');
 
