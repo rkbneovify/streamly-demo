@@ -521,6 +521,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
+            return redirect('/selectplan');
         }
     //   dump($plans->data);
       $d=collect($plans->data)
