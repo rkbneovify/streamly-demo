@@ -8,6 +8,63 @@
   #activeshow {
     display: none;
   }
+  .divfilter {
+    margin: 0px 8px 8px 8px;
+    text-align: end;
+  }
+  button:focus {
+    outline: 0px dotted!important;
+    outline: 0px auto -webkit-focus-ring-color!important;
+  }
+  .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  margin-left: 250px;
+  top: 0;
+  width: 81%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  overflow: auto;
+  height: 35vw;
+}
+
+/* The Close Button */
+.close {
+  text-align: end;
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+#zipActive {
+  font-size: 10px;
+  color: blue;
+}
+.zipcodeBox {
+  display: flex;
+  justify-content: space-around;
+}
 </style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -60,6 +117,29 @@
     }
   }
 </script>
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div style="display: flex;">
+  <p style="color: #000; font-weight: bold; width: 100%;">NEW USERS</p>
+    <span class="close">&times;</span>
+</div>
+    <div>
+    <table class="table table-striped projects" style="width: 100%;">
+    <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
+    <tbody>
+    @for ($i = 0; $i < 1; $i++)
+    <tr>
+    <td style="color:#000;">{{ $i + 1}}</td>
+    <td style="color:#000;">{{ $resultCount['newuser'][$i]['name'] ?? '' }}</td>
+    <td style="color:#000;">{{ $resultCount['newuser'][$i]['email'] ?? '' }}</td>
+    </tr>
+    @endfor
+    </tbody>
+</table>
+  </div>
+</div>
+</div>
     <!-- Main content -->
     <section class="content">
 
@@ -129,8 +209,12 @@
                     <td>
                         {{ $resultsData['data'][$i]['country'] ?? '' }}
                     </td>
-                    <td>
+                    <td class="zipcodeBox">
                         {{ $resultsData['data'][$i]['userCount'] ?? '' }}
+                        <input type="button" id="zipActive" value =View_Users onClick=openForm(`{{$i}}`)>
+                        <!-- <button id={{$i}}>View Details 
+                         <i class="fas fa-arrow-circle-right"></i>
+                        </button> -->
                     </td>
                     <td>
                         {{  $resultsData['data'][$i]['status'] ?? '' }}
@@ -201,6 +285,42 @@
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>
+function openForm(val) {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "block";
+
+  // When the user clicks on <span> (x), close the modal
+  var span = document.getElementsByClassName("close")[0];
+  span.onclick = function() {
+  modal.style.display = "none";
+  }
+}
+
+//   var modal = document.getElementById("myModal");
+
+// // Get the button that opens the modal
+// var btn = document.getElementById("2");
+
+// // Get the <span> element that closes the modal
+// var span = document.getElementsByClassName("close")[0];
+
+// // When the user clicks the button, open the modal 
+// btn.onclick = function() {
+//   modal.style.display = "block";
+// }
+
+// // When the user clicks on <span> (x), close the modal
+// span.onclick = function() {
+//   modal.style.display = "none";
+// }
+
+// // When the user clicks anywhere outside of the modal, close it
+// window.onclick = function(event) {
+//   if (event.target == modal) {
+//     modal.style.display = "none";
+//   }
+// }
+
      $('#roles').change(function(){
    table.column( 3 )
                 .search( this.value )
