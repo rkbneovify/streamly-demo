@@ -321,13 +321,21 @@
   </div>
   <!-- ./col -->
 </div>
+<div style="display: flex; justify-content: space-between;">
+<div class="divfilter">Sort data by trasaction data:
+<select name="" id="myInputsort" onchange="myFunctionSort()">
+<option value="">Sort</option>
+      <option value="desc">Descending</option>
+  <option value="asc">Ascending</option>
+</select>
+</div>
 <div class="divfilter">Filter With Transaction Type:
-<select name="cars" id="myInput" onchange="myFunction()">
+<select name="" id="myInput" onchange="myFunction()">
         <option value="">All</option>
   <option value="active">Active</option>
   <option value="canceled">Cancelled</option>
-  <option value="trialing">Trialing</option>
 </select>
+</div>
 </div>
 <script>
   // Get the modal
@@ -501,7 +509,7 @@ window.onclick = function(event) {
                                 {{ $resultCount['data'][$i]['zipcode'] ?? '' }}
                             </td>
                       <td>
-                                {{ $resultCount['data'][$i]['ends_at'] ?? 'null' }}
+                                {{ $resultCount['data'][$i]['ends_at'] ?? $resultCount['data'][$i]['null'] }}
                       </td>
 
                         </tr>
@@ -532,6 +540,15 @@ window.onclick = function(event) {
   </script> -->
 @endsection
 <script>
+function myFunctionSort() {
+  var input = document.getElementById("myInputsort");
+  //console.log(input.value);
+  if(input.value == 'asc'){
+    window.location = "/admin/report/transactionreport/ASC"
+  }else{
+    window.location = "/admin/report/transactionreport/DESC"
+  }
+}
 function myFunction() {
   var select, option, input, filter, table, tr, td, i, txtValue;
   input = document.getElementById("myInput");

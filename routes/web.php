@@ -94,7 +94,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails');//for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis');//for user session piyush
-    Route::get('/report/transactionreport', 'Admin\ReportController@TransactionReports');//for user session piyush
+    Route::get('/report/transactionreport/{sort}', 'Admin\ReportController@TransactionReports');//for user session piyush
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph');//for user session piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
@@ -303,6 +303,7 @@ Route::get('/stripesync', function (Request $request) {
     Artisan::call('stripe:sync-renewals');
     
     return redirect('admin/subscriptions')->with('info',Artisan::output());
+    //return Artisan::output();
  });
 //  Route::get('/botdemo/chatserver1', 'HomeController@index')->name('home');
 

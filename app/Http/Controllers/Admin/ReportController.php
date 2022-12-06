@@ -38,10 +38,11 @@ class ReportController extends Controller
          return 'Under Maintenance';
    }
 
-   public function TransactionReports(){
+   public function TransactionReports($sort){
 
     $transaction = DB::table('subscriptions')
     ->select('id','user_id','stripe_status', 'renews_at', 'ends_at', 'created_at')
+    ->orderBy('created_at', $sort)
     ->get();
 
     $array =[];
@@ -83,6 +84,9 @@ class ReportController extends Controller
 
         $userEmail=DB::table('users')->where('id', $data->user_id)->value('email');
         $userZipcode=DB::table('users')->where('id', $data->user_id)->value('zipcode');
+
+        $time = strtotime($data->created_at);
+        $final = date("Y-m-d H:i:s", strtotime("+1 month", $time));
         
       $arry = [
         'id'=> $data->id ,
@@ -90,10 +94,14 @@ class ReportController extends Controller
         'zipcode' => $userZipcode ,
         'stripe_status'=> $data->stripe_status ,
         'start_at'=> $data->created_at ,
-        'ends_at'=> $data->ends_at ,
+        'ends_at'=> $data->renews_at ,
+        'null'=> $final ,
       ];
       array_push($array, $arry);
     };
+//     $keys = array_column($new, 'order');
+// array_multisort($keys, SORT_ASC, $new);
+
 
     $resultCount = [
       'newuser' => $arrayRes1,
@@ -129,6 +137,7 @@ class ReportController extends Controller
     
      $zipCode=DB::table('zipcodes')
      ->select('id','zipcode','city', 'state', 'county_area', 'status')
+     ->orderBy('status', 'DESC')
      ->simplePaginate(125);
 
      $activezipCode=DB::table('zipcodes')
@@ -183,6 +192,12 @@ class ReportController extends Controller
       ];
       array_push($array, $arry);
     };
+
+    $key_values = array_column($array, 'userCount'); 
+    array_multisort($key_values, SORT_DESC, $array);
+
+    $key_activevalues = array_column($arrayactive, 'userCount'); 
+    array_multisort($key_activevalues, SORT_DESC, $arrayactive);
 
     $resultsData = [
       'current_page' => $zipCode->currentPage(),
