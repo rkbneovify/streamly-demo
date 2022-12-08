@@ -2248,7 +2248,7 @@
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
         // })
-        date1.setMinutes(date1.getMinutes()-750);
+        date1.setMinutes(date1.getMinutes()-550);
        // var date2 = new Date();
        // date2.setMinutes(date2.getMinutes()+570);
         //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
@@ -83832,6 +83832,7 @@
                               //alert(timezone); // Asia/Karachi
                               const d = new Date();
                               let hour = d.getHours()+':00';
+                              console.log(hour);
                               hour=hour.trim();
                               $('.channel__header>div').removeClass('active');
 
@@ -102325,7 +102326,9 @@
                 var end_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0]," ", "23:59");
 
                  //TZ END WEB//
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat(start_from, "&periodEnd=").concat(popupDate.concat('%2023:59')));
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat(start_from, "&periodEnd=").concat(popupDate.concat('%2023:59', "&timezone=").concat(timezone)));
           
               case 10:
                 response = _context.sent;
@@ -102630,7 +102633,8 @@
                   });
                   return typeof channelData['programmes'] == "undefined";
                 }).join(',');
-                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from);
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(timezone);
                 _context.next = 5;
                 return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
   
@@ -102714,7 +102718,9 @@
                 var end_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0]," ", "23:59");
                 
                 //TZ END WEB//
-                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from);
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(timezone);
                 _context2.next = 12;
                 return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
   
