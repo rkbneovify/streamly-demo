@@ -128,13 +128,13 @@
     <table class="table table-striped projects" style="width: 100%;">
     <thead><tr><th style="width: 20%; color:#000;">S:No</th><th style="width: 30%; color:#000;">Name</th><th style="width: 50%; color:#000;">E-Mail</th></tr></thead>
     <tbody>
-    @for ($i = 0; $i < 1; $i++)
+    <!-- @for ($i = 0; $i < 1; $i++) -->
     <tr>
-    <td style="color:#000;">{{ $i + 1}}</td>
-    <td style="color:#000;">{{ $resultCount['newuser'][$i]['name'] ?? '' }}</td>
-    <td style="color:#000;">{{ $resultCount['newuser'][$i]['email'] ?? '' }}</td>
+    <td style="color:#000;" id="sno"></td>
+    <td style="color:#000;" id="zipName"></td>
+    <td style="color:#000;" id="zipEmail"></td>
     </tr>
-    @endfor
+    <!-- @endfor -->
     </tbody>
 </table>
   </div>
@@ -211,10 +211,7 @@
                     </td>
                     <td class="zipcodeBox">
                         {{ $resultsData['data'][$i]['userCount'] ?? '' }}
-                        <input type="button" id="zipActive" value =View_Users onClick=openForm(`{{$i}}`)>
-                        <!-- <button id={{$i}}>View Details 
-                         <i class="fas fa-arrow-circle-right"></i>
-                        </button> -->
+                        <input type="button" id="zipActive" value =View_Users onClick=openForm(`{{$resultsData['data'][$i]['zipcode']}}`)>
                     </td>
                     <td>
                         {{  $resultsData['data'][$i]['status'] ?? '' }}
@@ -250,8 +247,9 @@
                     <td>
                         {{ $resultsData['activezipcode'][$i]['country'] ?? '' }}
                     </td>
-                    <td>
+                    <td class="zipcodeBox">
                         {{ $resultsData['activezipcode'][$i]['userCount'] ?? '' }}
+                        <input type="button" id="zipActive" value =View_Users onClick=openForm(`{{$resultsData['data'][$i]['zipcode']}}`)>
                     </td>
                     <td>
                         {{  $resultsData['activezipcode'][$i]['status'] ?? '' }}
@@ -293,7 +291,47 @@ function openForm(val) {
   var span = document.getElementsByClassName("close")[0];
   span.onclick = function() {
   modal.style.display = "none";
+  document.getElementById('sno').innerHTML = "";
+  document.getElementById('zipName').innerHTML = "";
+  document.getElementById('zipEmail').innerHTML = "";
   }
+
+  var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append("Cookie", "");
+
+var formdata = new FormData();
+
+var requestOptions = {
+  method: 'GET',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("/admin/report/zipcodeusers/"+val+"", requestOptions)
+  .then(response => response.json())
+  .then(result => {
+    for (var counter = 0; counter < result.length; counter++) {
+          var name = result[counter].name;
+          var email = result[counter].email;
+
+          var node = document.createElement("P");
+          var textnode = document.createTextNode(counter + 1);
+          node.appendChild(textnode);
+          document.getElementById("sno").appendChild(node);
+
+          var node = document.createElement("P");
+          var textnode = document.createTextNode(name);
+          node.appendChild(textnode);
+          document.getElementById("zipName").appendChild(node);
+
+          var node = document.createElement("P");
+          var textnode = document.createTextNode(email);
+          node.appendChild(textnode);
+          document.getElementById("zipEmail").appendChild(node);
+    }
+  })
+  .catch(error => console.log('error', error));
 }
 
 //   var modal = document.getElementById("myModal");

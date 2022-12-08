@@ -344,9 +344,9 @@ button#navrighthorizontal:after {
     text-align: center !important;
     justify-content: center !important;
 }
-.programme__timing__section {
+/* .programme__timing__section {
     margin-left: 60px !important;
-}
+} */
 .pgGuideheight
 {
     z-index: 999 !important;

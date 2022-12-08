@@ -107,25 +107,46 @@ return response()->json($response, 200);
             // periodStart=2021-02-01 15:00&periodEnd=2021-02-01 23:59
             // http://ams-api.astro.com.my/ams/v3/getEvents?channelId=275,80,182,64,87,114,65&periodStart=2021-02-02%2015:00&periodEnd=2021-02-02%2023:59
             $id = $request->input('id');
-            $timeoffset = '-07:00';
-            //$datenew = date('Y-m-d H:i:s', strtotime('-360 minutes'));
+            $query = $request->all();
+            if($query['timezone'] == 'Asia/Calcutta'){
+                $timeoffset = '06:00';
+            }else{
+                $timeoffset = '-08:00';
+            }
 
-            $tz=$timeoffset??'-07:00';
+            $tz=$timeoffset??'-08:00';
             if (str_contains($tz, '-')) { 
             }else
             {
                 $tz = "+".$tz;
             }
 	
-
             /* returns array of entire input query value */
-            $query = $request->all();
+            //$query = $request->all();
             $str_arr = explode (",", $query['channelId']);  
             $thestimestart = $query['periodStart'];
             $thestimeend = $query['periodEnd'];
-            $datestart = date("Y-m-d G:i:s",strtotime("-300 minutes",strtotime($thestimestart)));
-            $dateend = date("Y-m-d G:i:s",strtotime("+1110 minutes",strtotime($thestimestart)));
-             
+            $currentTZ = $query['timezone'];
+            if($currentTZ == 'Asia/Calcutta'){
+                date_default_timezone_set('Asia/Kolkata');
+                if(date('i') > 30){
+                $datestart = date("Y-m-d G:i:s",strtotime("-960 minutes"));
+                $dateend = date("Y-m-d G:i:s",strtotime("+540 minutes"));
+                }else{
+                $datestart = date("Y-m-d G:i:s",strtotime("-930 minutes"));
+                $dateend = date("Y-m-d G:i:s",strtotime("+510 minutes"));
+                }
+            }else{
+                date_default_timezone_set('America/Los_Angeles');
+                if(date('i') > 30){
+                    $datestart = date("Y-m-d G:i:s",strtotime("-720 minutes"));
+                    $dateend = date("Y-m-d G:i:s",strtotime("+720 minutes"));
+                }else{
+                    $datestart = date("Y-m-d G:i:s",strtotime("-750 minutes"));
+                    $dateend = date("Y-m-d G:i:s",strtotime("+750 minutes"));
+                }
+            }
+
             $ids = [1,2,3];
             $validator = Validator::make($query, [
                 'channelId' => 'required',

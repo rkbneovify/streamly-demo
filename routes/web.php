@@ -168,6 +168,7 @@ Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 /*add Naresh 15-11-2022*/
 Route::get('affiliatereport', 'Admin\AffiliateReportController@index')->name('affiliatereport');
 /*End Naresh 15-11-2022*/
+Route::get('/report/zipcodeusers/{zipcode}', 'Admin\ReportController@zipcodeUsers');//all users from zipcode
 });
 
 /*Prev Next channel*/
