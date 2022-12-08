@@ -285,5 +285,15 @@ class ReportController extends Controller
 
    }
 
-   
+   public function zipcodeUsers($zipcode){
+
+     $UsersINZipcode=DB::table('users')
+     ->where('zipcode', $zipcode)
+     ->select('id','name','email')
+     ->get();
+
+     //return view('admin.reports.zipcodreport', compact('UsersINZipcode'));
+     return $UsersINZipcode;
+
+   }  
 }
