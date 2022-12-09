@@ -83969,7 +83969,14 @@
                             expression: "typeof channel.programmes == 'undefined'"
                           }
                         ],
-                        staticClass: "programme programme--no__data"
+                        staticClass: "programme programme--no__data",
+                        style: {
+                          flex:
+                            "0 0 " +
+                            //programme.durationMinutes * _vm.minuteWidthPx +
+                            7200 +
+                            "px"
+                        }
                       },
                       [_vm._v("No Data Available or Fetching Data")]
                     ),
