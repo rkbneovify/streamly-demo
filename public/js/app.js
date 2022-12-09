@@ -83832,7 +83832,7 @@
                               //alert(timezone); // Asia/Karachi
                               const d = new Date();
                               let hour = d.getHours()+':00';
-                              console.log(hour);
+                              //console.log(hour);
                               hour=hour.trim();
                               $('.channel__header>div').removeClass('active');
 
@@ -83920,15 +83920,13 @@
                     ),
          // 
 
-
           _vm._v(" "),
           _c("div", { staticClass: "channel__programme__section" }, [
             _c(
               "div",
               { staticClass: "programme__header" },
                 _vm._l(_vm.hoursList, function(n) {
-               // console.log(n);
-
+              
                 return _c("div", { key: n, staticClass: "header__time" },[
                   _vm._v(
                     "\n                    " +

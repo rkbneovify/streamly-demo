@@ -463,18 +463,8 @@ return redirect('/checkzip')->with( [ 'user' => $user ] );
         $timetz = substr($datenew,11,8);
         
         $tz=$timeoffset??'-07:00';
-        if (str_contains($tz, '-')) { 
-            if($tz == '-08:00'){
-                $rt = '+00:00';
-            }else{
-                $rt = '+00:00';
-            }
-        }else
-        {
-            $tz = "+".$tz;
-            $rt = '+00:00';
-        }
-        // die;
+        $rt = '+00:00';
+
 // $callSign='COMEDYP';
         // if ($request->ajax()) {
 
