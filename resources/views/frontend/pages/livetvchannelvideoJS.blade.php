@@ -76,9 +76,9 @@
 	<link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
 	<link rel="stylesheet" href="{{ asset('frontend/owl.theme.default.css') }}" />
 	<script src="{{ asset('frontend/owl.carousel.min.js') }}" ></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video-js.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video-js.min.css">
 	{{-- <link href="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video-js.min.css" rel="stylesheet"> --}}
-	<script src="https://cdn.jsdelivr.net/npm/video.js@7.10.1/dist/video.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/video.js@7.21.1/dist/video.min.js"></script>
 	{{-- <script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs/7.5.4/video.min.js"></script> --}}
 	<script src="https://s3.amazonaws.com/cdn.keyos.com/html5/videojs-contrib-eme/3.5.4/videojs-contrib-eme.min.js"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/can-autoplay@3.0.2/build/can-autoplay.min.js"></script> --}}
@@ -279,6 +279,7 @@
 });
 */
 						// Init player.
+
 					player = videojs('my-player', {
 			preload: true,
 			autoplay: true,
@@ -361,7 +362,43 @@ console.log("playr ready");
 								gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
 								},15000);
 								Addrecent();//save to recents
-	});					
+	});	
+//    let retries = 0;
+//    player.tech_.on('retryplaylist', () => {
+// 	var executed = false;
+// if (!executed) {
+//     executed = true;
+//    console.log('Stream Interrupt');
+//    retries++;
+//    if (retries)
+// //    const targetDiv = document.getElementById("WarningShow");
+// //      	    targetDiv.style.display = "block";
+
+//     setTimeout(
+//     function() {
+     
+//  	 console.log("Stream Refresh!");
+//  	 player.src(dashdrmplay);
+//  	 player.load();
+//  								player.on('play', function() {
+	
+//  }
+//  )
+//  }, 8000);
+// }
+//     });
+
+
+	// refreshPlayer = function() {
+	// 	console.log("Stream Refresh!");
+ 	//  player.src(dashdrmplay);
+ 	//  player.load();
+ 	// 							player.on('play', function() {
+	
+    // }
+    // )
+	// }
+				
 	player.on('pause', function() {
 	console.log("it's paused bro");
 
@@ -400,6 +437,13 @@ console.log("playr ready");
 	//console.log('dateTime',dateTime);
 	//$('#gracenote_data').select2('open');
 	//var dateTime=new Date().toISOString().slice(0, 19).replace('T', ' ');
+	const t = new Date();
+    let diff = t.getTimezoneOffset();
+	if(diff == "-330"){
+		var houroffset = "+05:30";
+	}else{
+		var houroffset = "-08:00";
+	}
 	$("#gracenote_data").select2({
 		placeholder: 'gracenote_data...',
 		// width: '350px',
@@ -415,7 +459,7 @@ console.log("playr ready");
 					page: params.page || 1,
 					starttime:time,
 					callsign: window.location.pathname.split('/')[2],
-					hoursoffset: '-07:00',
+					hoursoffset: houroffset,
 				}
 			},
 			cache: true
@@ -428,7 +472,6 @@ console.log("playr ready");
 	});
 			
 		});
-			
 		</script>
 
 		<style>
@@ -611,13 +654,156 @@ console.log("playr ready");
 	border-radius: 10px;
 	border: 1px solid rgba( 255, 255, 255, 0.18 );
 	}
-
+	.Warning {
+	display: none;
+	position: absolute;
+    padding: 20px 20px;
+    margin: auto;
+    width: 40vw;
+    height: fit-content;
+    text-align: center;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: #004e92;
+    color: #fff;
+    border-radius: 5px;
+    transition: background-color 0.5s ease-out;
+	}
+	.WarningButton {
+	text-align: center;
+    margin-top: 25px;
+	}
+	#warningBtn {
+	padding: 2px 30px;
+    border: 1px solid white;
+    margin: 0px 25px;
+    background-color: transparent;
+    color: white;
+    border-radius: 5px;
+	}
+	#warningBtn:hover {
+    background-color: white;
+    color: black;
+	}
+	.cancel-icon{
+    float:right; 
+    cursor:pointer;
+	margin-top: -15px;
+	margin-right: -10px;
+	color: black;
+    }
+	@media only screen and (max-width: 449px){
+		.Warning {
+			top: 110px;
+			width: 75%!important;
+		}
+		#warningBtn {
+            margin: 5px 5px!important;
+        }
+}
+	@media only screen and (min-width: 450px) and (max-width: 799px){
+		.Warning {
+			top: 130px;
+			width: 75%!important;
+		}
+		#warningBtn {
+            margin: 5px 5px!important;
+        }
+}
+	@media only screen and (min-width: 800px) and (max-width: 927px){
+		.Warning {
+			top: 135px;
+			width: 75%!important;
+		}
+		#warningBtn {
+            margin: 5px 5px!important;
+        }
+}
+	@media only screen and (min-width: 928px) and (max-width: 991px){
+		.Warning {
+			top: 140px;
+		}
+}
+	@media only screen and (min-width: 992px) and (max-width: 1199px){
+		.Warning {
+			top: 190px;
+		}
+}
+	@media only screen and (min-width: 1200px) {
+		.Warning {
+			top: 225px;
+		}
+}
 	@media only screen and (min-width: 600px) {
 		details[open] {
 			width: 28vw;
 		}
 }
-
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.prevnext {
+	cursor: pointer;
+	opacity: 0.45;
+}
+.myDIV {
+	text-align: center;
+}
+.myDIV2 {
+	text-align: center;
+}
+.myDIV .PrevNexthover {
+	position: relative;
+	color: #fff;
+    bottom: 0;
+	line-height: 0;
+	margin-top: 13px;
+    font-size: 0.8vw;
+    opacity: 0.65;
+	/* visibility:hidden; */
+}
+.myDIV:hover .PrevNexthover {
+	color: #004E92;
+    visibility:visible;
+}
+.myDIV2 .PrevNexthover2 {
+	position: relative;
+	color: #fff;
+    bottom: 0;
+	line-height: 0;
+	margin-top: 13px;
+    font-size: 0.8vw;
+    opacity: 0.65;
+	/* visibility:hidden; */
+}
+.myDIV2:hover .PrevNexthover2 {
+	color: #004E92;
+    visibility:visible;
+}
+@media only screen and (min-width: 2000px) {
+	.myDIV .PrevNexthover {
+		font-size: 15px!important;
+	}
+	.myDIV2 .PrevNexthover2 {
+		font-size: 15px!important;
+	}
+}
+@media only screen and (max-width: 767px) {
+	.myDIV {
+		display: none;
+	}
+	.myDIV2 {
+		display: none;
+	}
+}
+@media only screen and (min-width: 992px) and (max-width: 2200px){
+.col-centered {
+    margin: 0 80px!important;
+}
+}
 		</style>
 	@endsection
 
@@ -625,11 +811,17 @@ console.log("playr ready");
 
 	{{-- https://www.onlineedge.co.in/demo/videojsnup/examples/overlay.html --}}
 		<section class="page-section">
+		
 	{{-- {{$channelData}} --}}
 			<div class="full-width">
 				<div class="container">
 					<div class="row">
-					
+						<div class="myDIV">
+						<!-- <a href="http://127.0.0.1:8000/livetv/NewsMax/Others"> -->
+						<img style="transform: rotate(180deg);" class="prevnext" src="/uploads/icons/iconprevnext.png" alt="icon" width="40" height="40" onclick="prevChannel('{{$Channel[0]->name??''}}')">
+						<p class="PrevNexthover">Prev</p>
+                        <!-- </a> -->
+						</div>
 						<div class="col-md-8 col-centered" >
 							
 							<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls muted autoplay></video>
@@ -672,6 +864,13 @@ console.log("playr ready");
 							{{-- <div class="channel-detail">
 								<p>{{$channelData[0]->callSign??'channel detail'}}</p>
 							</div> --}}
+						</div>
+						<!-- <div> -->
+						<!-- <a href="http://127.0.0.1:8000/livetv/NewsMax/Others"> -->
+						<div class="myDIV2">
+						<img class="prevnext" src="/uploads/icons/iconprevnext.png" alt="icon" width="40" height="40" onclick="nextChannel('{{$Channel[0]->name??''}}')">
+                        <!-- </a> -->
+						<p class="PrevNexthover2">Next</p>
 						</div>
 					</div>
 					<!-- <div class="row">
@@ -723,6 +922,55 @@ console.log("playr ready");
 					</div>
 				</div>
 			</div>
+			<!-- stream inturpt popup -->
+			<!-- <div id="WarningShow" class="Warning">
+					<span class="cancel-icon" onclick="functionClose()">×</span>
+					Due to some technical reason, channel get interrupted.<br>Kindly try again later
+					<div class="WarningButton">
+				<button id="warningBtn" type="button" onclick="functionBack()">Back</button>
+				<button id="warningBtn" type="button" onclick="functionRefresh()">Try Again</button>
+			    </div>
+				    </div> -->
+			<!-- stream inturpt popup end-->
 		</section>
+		<script>
+			// function functionBack() {
+			// 	window.location.href = "/";
+			// }
+			// function functionClose() {
+			// 	const targetDiv = document.getElementById("WarningShow");
+     	    //     targetDiv.style.display = "none";
+			// }
+			function prevChannel(val) {
+				var myHeaders = new Headers();
+                var requestOptions = {
+                  method: 'GET',
+                  headers: myHeaders,
+                  redirect: 'follow'
+                };
+
+                fetch(window.location.origin+"/nextprev/"+val, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+					location.href = result.prev.channelurl;
+				})
+                .catch(error => console.log('error', error));
+			}
+			function nextChannel(val) {
+				var myHeaders = new Headers();
+                var requestOptions = {
+                  method: 'GET',
+                  headers: myHeaders,
+                  redirect: 'follow'
+                };
+
+                fetch(window.location.origin+"/nextprev/"+val, requestOptions)
+                .then(response => response.json())
+                .then(result => {
+					location.href = result.next.channelurl;
+				})
+                .catch(error => console.log('error', error));
+			}
+		</script>
 		
 	@endsection
