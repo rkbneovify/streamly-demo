@@ -109,7 +109,7 @@ return response()->json($response, 200);
             $id = $request->input('id');
             $query = $request->all();
             if($query['timezone'] == 'Asia/Calcutta'){
-                $timeoffset = '06:00';
+                $timeoffset = '05:30';
             }else{
                 $timeoffset = '-08:00';
             }
