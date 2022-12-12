@@ -41,7 +41,7 @@ class ReportController extends Controller
    public function TransactionReports($sort){
 
     $transaction = DB::table('subscriptions')
-    ->select('id','user_id','stripe_status', 'renews_at', 'ends_at', 'created_at')
+    ->select('id','user_id', 'stripe_plan', 'stripe_status', 'renews_at', 'ends_at', 'created_at')
     ->orderBy('created_at', $sort)
     ->get();
 
@@ -50,6 +50,39 @@ class ReportController extends Controller
     $arrayRes2 = [];
     $arrayRes3 = [];
     $arrayRes4 = [];
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.stripe.com/v1/plans',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_POSTFIELDS => 'active=true',
+      CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+  ));
+
+$response = curl_exec($curl);
+$newdataplans = json_decode($response);
+curl_close($curl);
+$stripeplans = [];
+for ($x = 0; $x < count($newdataplans->data); $x++) {
+  $plans = [
+    'id' => $newdataplans->data[$x]->id,
+    'interval' => $newdataplans->data[$x]->interval,
+    'interval_count' => $newdataplans->data[$x]->interval_count
+  ];
+
+  array_push($stripeplans, $plans);
+}
+
     foreach ($transaction as $data){
 
       if($data->renews_at == null && $data->stripe_status == 'active'){
@@ -86,7 +119,15 @@ class ReportController extends Controller
         $userZipcode=DB::table('users')->where('id', $data->user_id)->value('zipcode');
 
         $time = strtotime($data->created_at);
-        $final = date("Y-m-d H:i:s", strtotime("+1 month", $time));
+
+        for ($k = 0; $k < count($stripeplans); $k++) {
+             if($data->stripe_plan == $stripeplans[$k]['id']){
+               $final = date("Y-m-d H:i:s", strtotime("+".$stripeplans[$k]['interval_count'].$stripeplans[$k]['interval']."", $time));
+              }
+              else{
+                $final = 'Null';
+              }
+        }
         
       $arry = [
         'id'=> $data->id ,
@@ -95,13 +136,12 @@ class ReportController extends Controller
         'stripe_status'=> $data->stripe_status ,
         'start_at'=> $data->created_at ,
         'ends_at'=> $data->renews_at ,
+        'cancle_at' => $data->ends_at,
         'null'=> $final ,
       ];
+
       array_push($array, $arry);
     };
-//     $keys = array_column($new, 'order');
-// array_multisort($keys, SORT_ASC, $new);
-
 
     $resultCount = [
       'newuser' => $arrayRes1,
@@ -111,7 +151,6 @@ class ReportController extends Controller
       'data' => $array
     ];
 
-    //$transaction->toArray();
     return view('admin.reports.transactionreport', compact('resultCount'));
          
     //return $resultCount;
