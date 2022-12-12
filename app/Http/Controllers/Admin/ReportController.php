@@ -129,7 +129,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
                break;
               }
               else{
-                $final = '';
+                $final = date("Y-m-d H:i:s", strtotime("1 month"));
               }
         }
         
