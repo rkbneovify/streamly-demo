@@ -41,7 +41,7 @@ class ReportController extends Controller
    public function TransactionReports($sort){
 
     $transaction = DB::table('subscriptions')
-    ->select('id','user_id', 'stripe_plan', 'stripe_status', 'renews_at', 'ends_at', 'created_at')
+    ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
     ->orderBy('created_at', $sort)
     ->get();
 
@@ -62,7 +62,6 @@ class ReportController extends Controller
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'GET',
-      CURLOPT_POSTFIELDS => 'active=true',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
     'Authorization: Bearer '.env('STRIPE_SECRET').''
@@ -82,7 +81,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
 
   array_push($stripeplans, $plans);
 }
-
+//dd($stripeplans);
     foreach ($transaction as $data){
 
       if($data->renews_at == null && $data->stripe_status == 'active'){
@@ -118,14 +117,19 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
         $userEmail=DB::table('users')->where('id', $data->user_id)->value('email');
         $userZipcode=DB::table('users')->where('id', $data->user_id)->value('zipcode');
 
+        if(!empty($data->renews_at)){
+        $time = strtotime($data->renews_at);
+        }else{
         $time = strtotime($data->created_at);
+        }
 
         for ($k = 0; $k < count($stripeplans); $k++) {
              if($data->stripe_plan == $stripeplans[$k]['id']){
                $final = date("Y-m-d H:i:s", strtotime("+".$stripeplans[$k]['interval_count'].$stripeplans[$k]['interval']."", $time));
+               break;
               }
               else{
-                $final = 'Null';
+                $final = '';
               }
         }
         
@@ -137,9 +141,12 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
         'start_at'=> $data->created_at ,
         'ends_at'=> $data->renews_at ,
         'cancle_at' => $data->ends_at,
+        'trial_ends_at' => $data->trial_ends_at,
         'null'=> $final ,
       ];
 
+      // dd($arry);
+      // die();
       array_push($array, $arry);
     };
 

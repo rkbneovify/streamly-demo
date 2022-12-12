@@ -509,7 +509,7 @@ window.onclick = function(event) {
                                 {{ $resultCount['data'][$i]['zipcode'] ?? '' }}
                             </td>
                       <td>
-                                {{ $resultCount['data'][$i]['cancle_at'] ?? $resultCount['data'][$i]['ends_at'] ?? $resultCount['data'][$i]['null'] }}
+                                {{ $resultCount['data'][$i]['trial_ends_at'] ?? $resultCount['data'][$i]['cancle_at'] ?? $resultCount['data'][$i]['null'] }}
                       </td>
 
                         </tr>
