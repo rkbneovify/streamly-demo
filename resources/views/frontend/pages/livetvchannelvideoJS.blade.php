@@ -437,13 +437,44 @@ console.log("playr ready");
 	//console.log('dateTime',dateTime);
 	//$('#gracenote_data').select2('open');
 	//var dateTime=new Date().toISOString().slice(0, 19).replace('T', ' ');
-	const t = new Date();
-    let diff = t.getTimezoneOffset();
-	if(diff == "-330"){
-		var houroffset = "+05:30";
-	}else{
-		var houroffset = "-08:00";
+	//hoursoffset start
+	String.prototype.toHHMMSS = function () {
+
+var sec_num = parseInt(this, 10); // don't forget the second param
+var hours   = Math.floor(sec_num / 3600);
+var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+
+
+if (hours   < 10) {hours   = "0"+hours;}
+if (minutes < 10) {minutes = "0"+minutes;}
+
+return hours + ':' + minutes ;
+}
+const d = new Date();
+let diff = d.getTimezoneOffset();
+var newdiff = String(diff * 60);
+if (newdiff < 0) {
+  var resultHours = newdiff.substr(1);
+  var signvalue = true;
+}else{
+	var resultHours = newdiff;
+	var signvalue = false;
+  }  
+var newtz = resultHours.toHHMMSS();
+if(signvalue == true){
+var resultoffset = "+".concat(newtz)
+}else{ 
+	var resultoffset = "-".concat(newtz);
 	}
+	//console.log(resultoffset);
+	//hoursoffset end
+	// const t = new Date();
+    // let diff = t.getTimezoneOffset();
+	// if(diff == "-330"){
+	// 	var houroffset = "+05:30";
+	// }else{
+	// 	var houroffset = "-08:00";
+	// }
 	$("#gracenote_data").select2({
 		placeholder: 'gracenote_data...',
 		// width: '350px',
@@ -459,14 +490,30 @@ console.log("playr ready");
 					page: params.page || 1,
 					starttime:time,
 					callsign: window.location.pathname.split('/')[2],
-					hoursoffset: houroffset,
+					hoursoffset: resultoffset,
 				}
 			},
 			cache: true
 		}, escapeMarkup: function (markup) { return markup; },
 		templateResult: function (data) {
-		// console.log('templateResult',data);
-			return '<span>'+data.StartDateTimewithTimezon+ ' '+ data.text + '</span>';
+		//console.log('templateResult',data);
+		const dtformat = new Date(data.StartDateTimewithTimezon);
+        const month = dtformat.getUTCMonth() + 1; //months from 1-12
+        const day = dtformat.getUTCDate();
+        const year = dtformat.getUTCFullYear();
+        const formatDate = year + "/" + month + "/" + day;
+        let hours = dtformat.getHours() ; // gives the value in 24 hours format
+        const AmOrPm = hours >= 12 ? 'PM' : 'AM';
+        hours = (hours % 12) || 12;
+        const minutes = dtformat.getMinutes() ;
+		if(minutes < 10){
+          var newMin = "0".concat(minutes);
+        }else{
+          var newMin = minutes;
+        }
+        const finalTime = hours + ":" + newMin + " " + AmOrPm; 
+		
+			return '<span>'+formatDate+' '+finalTime+ ' '+ data.text + '</span>';
 		}
 
 	});
@@ -766,7 +813,7 @@ console.log("playr ready");
 	/* visibility:hidden; */
 }
 .myDIV:hover .PrevNexthover {
-	color: #004E92;
+	opacity: 1;
     visibility:visible;
 }
 .myDIV2 .PrevNexthover2 {
@@ -780,7 +827,7 @@ console.log("playr ready");
 	/* visibility:hidden; */
 }
 .myDIV2:hover .PrevNexthover2 {
-	color: #004E92;
+	opacity: 1;
     visibility:visible;
 }
 @media only screen and (min-width: 2000px) {
