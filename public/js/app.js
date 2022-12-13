@@ -83831,8 +83831,11 @@
                               const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                               //alert(timezone); // Asia/Karachi
                               const d = new Date();
-                              let hour = d.getHours()+':00';
-                              //console.log(hour);
+        let hoursNew = d.getHours() ; 
+        const AmOrPm = hoursNew >= 12 ? 'PM' : 'AM';
+        hoursNew = (hoursNew % 12) || 12;
+                              let hour = hoursNew+':00'+AmOrPm;
+                              console.log(hour);
                               hour=hour.trim();
                               $('.channel__header>div').removeClass('active');
 
@@ -83926,17 +83929,31 @@
               "div",
               { staticClass: "programme__header" },
                 _vm._l(_vm.hoursList, function(n) {
-              
-                return _c("div", { key: n, staticClass: "header__time" },[
-                  _vm._v(
-                    "\n                    " +
-                     
-                      _vm._s(n) +
-                      ":00 to " +
-                      _vm._s(n + 1) +
-                      ":00\n                "
-                  )
-                ])
+                  if(n > 11){
+                    const AmOrPm = n >= 12 ? 'PM' : 'AM';
+                    return _c("div", { key: n, staticClass: "header__time" },[
+                      _vm._v(
+                        "\n                    " +
+          
+                          _vm._s(n - 12) +
+                          ":00"+AmOrPm+" to " +
+                          _vm._s(n - 11) +
+                          ":00"+AmOrPm+"\n                "
+                      )
+                    ])
+                   }else{
+                    const AmOrPm = n >= 12 ? 'PM' : 'AM';
+                    return _c("div", { key: n, staticClass: "header__time", staticValue: "kk" },[
+                      _vm._v(
+                        "\n                    " +
+          
+                          _vm._s(n) +
+                          ":00"+AmOrPm+" to " +
+                          _vm._s(n + 1) +
+                          ":00"+AmOrPm+"\n                "
+                      )
+                    ])
+                   }
               }),
               0
             ),
@@ -84204,6 +84221,24 @@
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     //console.log(_vm);
+    if(_vm.programmeDetails){
+    let dtformat = new Date(_vm.programmeDetails.displayDateTime);
+        let month = dtformat.getUTCMonth() + 1; //months from 1-12
+        let day = dtformat.getUTCDate();
+        let year = dtformat.getUTCFullYear();
+        let formatDate = year + "/" + month + "/" + day;
+        let hours = dtformat.getHours() ; // gives the value in 24 hours format
+        let AmOrPm = hours >= 12 ? 'PM' : 'AM';
+        hours = (hours % 12) || 12;
+        let minutes = dtformat.getMinutes() ;
+        if(minutes < 10){
+          var newMin = "0".concat(minutes);
+        }else{
+          var newMin = minutes;
+        }
+        let finalTime = hours + ":" + newMin + " " + AmOrPm; 
+        var updateFormat = formatDate + ' ' + finalTime;
+    }
     return _c("div", { staticClass: "programme__details__view"}, [
       _vm.programmeDetails
         ? _c("div", [
@@ -84219,7 +84254,7 @@
             _vm._v(" "),
             _c("div", { staticClass: "programme__headerDesign" }, [
               _c("div", { staticClass: "channel__name" }, [
-                _vm._v(_vm._s(_vm.programmeDetails.displayDateTime))
+                _vm._v(_vm._s(updateFormat))
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "channel__name" }, [
