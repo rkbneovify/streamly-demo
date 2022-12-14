@@ -161,7 +161,7 @@ width: 100px;
 
 	<div class="container" style="margin-top: 4%;">
 		<div class="page-header">
-		<h3>My Favorites</h3>
+		<h3>My Favorite</h3>
 </div>
 		@forelse($myFavorites->chunk(6) as $chunk)
 	<div class="row">

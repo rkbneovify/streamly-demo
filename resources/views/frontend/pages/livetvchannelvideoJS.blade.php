@@ -794,41 +794,16 @@ var resultoffset = "+".concat(newtz)
 }
 .prevnext {
 	cursor: pointer;
-	opacity: 0.45;
+	opacity: 0.65;
+}
+.prevnext:hover {
+	opacity: 1;
 }
 .myDIV {
 	text-align: center;
 }
 .myDIV2 {
 	text-align: center;
-}
-.myDIV .PrevNexthover {
-	position: relative;
-	color: #fff;
-    bottom: 0;
-	line-height: 0;
-	margin-top: 13px;
-    font-size: 0.8vw;
-    opacity: 0.65;
-	/* visibility:hidden; */
-}
-.myDIV:hover .PrevNexthover {
-	opacity: 1;
-    visibility:visible;
-}
-.myDIV2 .PrevNexthover2 {
-	position: relative;
-	color: #fff;
-    bottom: 0;
-	line-height: 0;
-	margin-top: 13px;
-    font-size: 0.8vw;
-    opacity: 0.65;
-	/* visibility:hidden; */
-}
-.myDIV2:hover .PrevNexthover2 {
-	opacity: 1;
-    visibility:visible;
 }
 @media only screen and (min-width: 2000px) {
 	.myDIV .PrevNexthover {
@@ -864,10 +839,7 @@ var resultoffset = "+".concat(newtz)
 				<div class="container">
 					<div class="row">
 						<div class="myDIV">
-						<!-- <a href="http://127.0.0.1:8000/livetv/NewsMax/Others"> -->
-						<img style="transform: rotate(180deg);" class="prevnext" src="/uploads/icons/iconprevnext.png" alt="icon" width="40" height="40" onclick="prevChannel('{{$Channel[0]->name??''}}')">
-						<p class="PrevNexthover">Prev</p>
-                        <!-- </a> -->
+						<img class="prevnext" src="/uploads/icons/icon2.png" alt="icon" width="40" height="40" onclick="prevChannel('{{$Channel[0]->name??''}}')">
 						</div>
 						<div class="col-md-8 col-centered" >
 							
@@ -913,11 +885,8 @@ var resultoffset = "+".concat(newtz)
 							</div> --}}
 						</div>
 						<!-- <div> -->
-						<!-- <a href="http://127.0.0.1:8000/livetv/NewsMax/Others"> -->
 						<div class="myDIV2">
-						<img class="prevnext" src="/uploads/icons/iconprevnext.png" alt="icon" width="40" height="40" onclick="nextChannel('{{$Channel[0]->name??''}}')">
-                        <!-- </a> -->
-						<p class="PrevNexthover2">Next</p>
+						<img class="prevnext" src="/uploads/icons/icon1.png" alt="icon" width="40" height="40" onclick="nextChannel('{{$Channel[0]->name??''}}')">
 						</div>
 					</div>
 					<!-- <div class="row">
