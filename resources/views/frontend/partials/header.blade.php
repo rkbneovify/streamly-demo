@@ -47,7 +47,7 @@
                             <a class="dropdown-item" href="/react">Program Guide</a>
                             <a class="dropdown-item" href="/livetv/list">All channels</a>
                             <a class="dropdown-item" href="/livetv">All channels with genre</a>
-                            <a class="dropdown-item" href="/my_favorites">My favorites</a>
+                            <a class="dropdown-item" href="/my_favorites">My favorite</a>
                             <a class="dropdown-item" href="/livetv/recent">My recents</a>
                             @endif
                             <a class="dropdown-item" href="/download">Download app</a>
