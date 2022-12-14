@@ -6985,7 +6985,7 @@
   
   
   // module
-  exports.push([module.i, "\n.channel__details__container[data-v-54cd676a] {\n    position: fixed;\n    margin: 0;\n    padding: 0;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    background: rgba(15, 15, 15, 0.74);\n}\n.channel__details__box[data-v-54cd676a] {\n    transform: translateX(0vw);\n margin-top: 5vw;\n   transition: 1s 0s linear;\n    position: absolute;\n    top: 10vh;\n    left: 26.5vw;\n    width: 45vw;\n    height: 45vh;\n    background: rgba(227, 227, 227, 0.9);\n}\n.channel__details__header[data-v-54cd676a] {\nalign-items: center;\n justify-content: space-between;\n padding-left: 1vw;\n padding-right: 1vw; \n  display: flex;\n    flex-direction: row;\n    /*    justify-content: flex-start;\n    align-items: center;*/\n    height: 4vw;\n    background-color: #d5d5d6;\n    color: #448fe0;\n}\n.channel__logo img[data-v-54cd676a] {\n    height: 100%;\n}\n.channel__details__header .channel__logo[data-v-54cd676a] {\n    flex: 0 0 120px;\n    margin-right: 20px;\n    width: 120px;\n}\n.channel__details__header .channel__name[data-v-54cd676a] {\n    flex: 2 0 120px;\n    align-self: center;\n}\n.channel__details__header .channel__language[data-v-54cd676a] {\n    font-size: 0.7em;\n    color: #aeaeae;\n}\n.channel__details__header .channel__id[data-v-54cd676a] {\n    flex: 1 0 50px;\n    align-self: center;\n}\n.channel__details__header .close[data-v-54cd676a] {\n font-weight: 100;\n   color: 4d5659;\n flex: 0 0 20px;\n    cursor: pointer;\n    align-self: center;\n    margin-left: 20px;\n}\n.channel__details__body[data-v-54cd676a] {\n background-color: #4d5659;\n   padding: 15px;\n    display: block;\n    height: calc(50vh - 60px);\n    overflow-y: scroll;\n}\n.channel__details__body[data-v-54cd676a]::-webkit-scrollbar {\n    display: none;\n}\n\n", ""]);
+  exports.push([module.i, "\n.channel__details__container[data-v-54cd676a] {\n    position: fixed;\n    margin: 0;\n    padding: 0;\n    top: 0;\n    left: 0;\n    width: 100%;\n    height: 100vh;\n    background: rgba(15, 15, 15, 0.74);\n}\n.channel__details__box[data-v-54cd676a] {\n    transform: translateX(0vw);\n margin-top: 5vw;\n   transition: 1s 0s linear;\n    position: absolute;\n    top: 10vh;\n    left: 26.5vw;\n    width: 45vw;\n    height: 45vh;\n    background: rgba(227, 227, 227, 0.9);\n}\n.channel__details__header[data-v-54cd676a] {\nalign-items: center;\n justify-content: space-between;\n padding-left: 1vw;\n padding-right: 1vw; \n  display: flex;\n    flex-direction: row;\n    /*    justify-content: flex-start;\n    align-items: center;*/\n    height: 4vw;\n    background-color: #d5d5d6;\n    color: #448fe0;\n}\n.channel__logo img[data-v-54cd676a] {\n    height: 100%;\n}\n.channel__details__header .channel__logo[data-v-54cd676a] {\n    flex: 0 0 120px;\n    margin-right: 20px;\n    width: 120px;\n}\n.channel__details__header .channel__name[data-v-54cd676a] {\n    flex: 2 0 120px;\n    align-self: center;\n}\n.channel__details__header .channel__language[data-v-54cd676a] {\n    font-size: 0.7em;\n    color: #aeaeae;\n}\n.channel__details__header .channel__id[data-v-54cd676a] {\n    flex: 1 0 50px;\n    align-self: center;\n}\n.channel__details__header .close[data-v-54cd676a] {\n font-weight: 100;\n   color: 4d5659;\n flex: 0 0 20px;\n    cursor: pointer;\n    align-self: center;\n    margin-left: 20px;\n}\n.channel__details__body[data-v-54cd676a] {\n background-color: #4d5659;\n   padding: 15px;\n    display: block;\n    height: calc(50vh - 60px);\n    overflow-y: scroll;\n}\n.channel__details__body[data-v-54cd676a]::-webkit-scrollbar {\n    display: none;\n}\n \n", ""]);
   
   // exports
   
@@ -83345,7 +83345,7 @@
                 }
               }
             },
-            [_vm._v("Clear favourites")]
+            [_vm._v("Clear favorite")]
           )
         ]),
         _vm._v(" "),
@@ -83835,7 +83835,6 @@
         const AmOrPm = hoursNew >= 12 ? 'PM' : 'AM';
         hoursNew = (hoursNew % 12) || 12;
                               let hour = hoursNew+':00'+AmOrPm;
-                              console.log(hour);
                               hour=hour.trim();
                               $('.channel__header>div').removeClass('active');
 
@@ -83972,7 +83971,12 @@
                       "data-channel-id": channel.channelId,
                       "data-programme-fetched":
                         typeof channel.programmes != "undefined"
-                    }
+                    },
+                    on: {
+                      click : function($event){
+                        window.location.href =  "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
+                      }
+                    },
                   },
                   [
                     _c(

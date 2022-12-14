@@ -53,15 +53,25 @@ class LivetvController extends Controller
         if( $nextChannelgenre == null){
             $nextChannelgenre = 'Others';
         }
+        if($prevChannel[0]->callSign == ''){
+            $urlprev = ''.env("APP_URL").'/livetv/'.$prevChannel[0]->name.'/'.$prevChannelgenre.'';
+        }else{
+            $urlprev = ''.env("APP_URL").'/livetv/'.$prevChannel[0]->callSign.'/'.$prevChannelgenre.'';
+        }
+        if($nextChannel[0]->callSign == ''){
+            $urlnext = ''.env("APP_URL").'/livetv/'.$nextChannel[0]->name.'/'.$nextChannelgenre.'';
+        }else{
+            $urlnext = ''.env("APP_URL").'/livetv/'.$nextChannel[0]->callSign.'/'.$nextChannelgenre.'';
+        }
 
         $ResponseChannels = [
             'prev'=> [
-                'channelurl' => ''.env("APP_URL").'/livetv/'.$prevChannel[0]->callSign.'/'.$prevChannelgenre.'',
+                'channelurl' => $urlprev,
                 'channelname' => $prevChannel[0]->name,
                 'channelgenre' => $prevChannelgenre
             ],
             'next'=> [
-                'channelurl' => ''.env("APP_URL").'/livetv/'.$nextChannel[0]->callSign.'/'.$nextChannelgenre.'',
+                'channelurl' => $urlnext,
                 'channelname' => $nextChannel[0]->name,
                 'channelgenre' => $nextChannelgenre
             ]
