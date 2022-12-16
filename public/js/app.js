@@ -83836,6 +83836,13 @@
         hoursNew = (hoursNew % 12) || 12;
                               let hour = hoursNew+':00'+AmOrPm;
                               hour=hour.trim();
+                              if(hour == "12:00PM"){
+                                hour = "0:00PM";
+                              }
+                              if(hour == "12:00AM"){
+                                hour = "0:00AM";
+                              }
+                              console.log(hour);
                               $('.channel__header>div').removeClass('active');
 
 
