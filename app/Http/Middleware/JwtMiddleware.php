@@ -7,6 +7,7 @@
     use Exception;
     use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
     use App\SessionTable;
+    use App\User;
     use Illuminate\Support\Facades\DB;
     use Carbon\Carbon;
 
@@ -23,7 +24,23 @@
         public function handle($request, Closure $next)
         {
             try {
-                $user = JWTAuth::parseToken()->authenticate();
+                $acctokenNEw = SessionTable::where([
+                    ['access_token', '=', $request->bearerToken()],
+                ])->select('users_id')->get();
+
+                $useridcheck = $acctokenNEw[0]['users_id'];
+
+                $useraccountcheck = User::where([
+                    ['id', '=', $useridcheck],
+                ])->select('is_active')->get();
+
+                $valueCheck = $useraccountcheck[0]['is_active'];
+                if($valueCheck == 0){
+                    $res = array('status' => false,'success' => false,'message'=>'User account is deactivated','response_code'=>402);
+                    return response()->json($res, 402);
+                }else{
+                    $user = JWTAuth::parseToken()->authenticate();
+                }
             } catch (Exception $e) {
                 if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
                     $response = array('status' => false,'success' => false,'message'=>'Token is Invalid','response_code'=>401);
