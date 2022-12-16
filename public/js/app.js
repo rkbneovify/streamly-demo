@@ -83842,7 +83842,6 @@
                               if(hour == "12:00AM"){
                                 hour = "0:00AM";
                               }
-                              console.log(hour);
                               $('.channel__header>div').removeClass('active');
 
 
