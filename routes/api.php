@@ -123,7 +123,7 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
     
 });
 
-Route::get('/loginguide', 'LoginGuideController@index');
+Route::post('/loginguide', 'LoginGuideController@index');
 Route::post('generic', 'Admin\BuyDRMController@proxyServer');
 Route::get('/qrcode', 'APIController@qrcodeapi');
 Route::post('/ga2', 'GoogleAnalyticsController@index3');
