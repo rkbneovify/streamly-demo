@@ -97,6 +97,12 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/report/transactionreport/{sort}', 'Admin\ReportController@TransactionReports');//for user session piyush
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph');//for user session piyush
+    Route::get('/slide/view', 'LoginGuideController@slideview');//slider piyush
+    Route::get('/slide/create', 'LoginGuideController@slidecreate');//slider piyush
+    Route::post('/slide/add', 'LoginGuideController@slideadd');//slider piyush
+    Route::get('/slide/details/{id}', 'LoginGuideController@singleslideview');//slider piyush
+    Route::delete('/slide/delete/{id}', 'LoginGuideController@slidedelete');//slider piyush
+    Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate');//slider piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
