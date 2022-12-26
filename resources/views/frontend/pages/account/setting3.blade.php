@@ -359,10 +359,19 @@ use Laravel\Cashier\Cashier;
       <td class="text-left text-md-center">Email:</td>
       <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
     </tr>
-    <tr>
+	<tr>
+      <td class="text-left text-md-center">Home Timezone</td>
+      <td class="text-left text-md-center text-wrap">Indian Standard Time</td>
+    </tr>
+	<tr>
+      <td class="text-left text-md-center">Current Timezone</td>
+      <td id="timezone" class="text-left text-md-center text-wrap"></td>
+    </tr>
+	<tr>
       <td class="text-left text-md-center">Password:</td>
       <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
     </tr>
+
 							@if ( Auth::user()->subscribed('main'))
 				 <tr>
       <td class="text-left text-md-center text-wrap" colspan="2">
@@ -529,5 +538,59 @@ else
 		
 	</section>
 	<section></section>
+	<script>
+	//hoursoffset start
+	String.prototype.toHHMMSS = function () {
+
+var sec_num = parseInt(this, 10); // don't forget the second param
+var hours   = Math.floor(sec_num / 3600);
+var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+
+
+if (hours   < 10) {hours   = "0"+hours;}
+if (minutes < 10) {minutes = "0"+minutes;}
+
+return hours + ':' + minutes ;
+}
+const d = new Date();
+let diff = d.getTimezoneOffset();
+var newdiff = String(diff * 60);
+if (newdiff < 0) {
+  var resultHours = newdiff.substr(1);
+  var signvalue = true;
+}else{
+	var resultHours = newdiff;
+	var signvalue = false;
+  }  
+var newtz = resultHours.toHHMMSS();
+if(signvalue == true){
+var resultoffset = "+".concat(newtz)
+}else{ 
+	var resultoffset = "-".concat(newtz);
+	}
+	//hoursoffset end
+	if(resultoffset == "+05:30"){
+		var timezone = "Indian Standard Time";
+	}else if(resultoffset == "-05:00"){
+		var timezone = "Eastern Standard Time";
+	}else if(resultoffset == "-08:00"){
+		var timezone = "Pacific Standard Time";
+	}else if(resultoffset == "-06:00"){
+		var timezone = "Central Standard Time";
+	}else if(resultoffset == "-07:00"){
+		var timezone = "Mountain Standard Time";
+	}else if(resultoffset == "-09:00"){
+		var timezone = "Alaska Standard Time";
+	}else if(resultoffset == "-10:00"){
+		var timezone = "Hawaii Standard Time";
+	}else if(resultoffset == "-04:00"){
+		var timezone = "Canada Atlantic Time";
+	}else if(resultoffset == "-03:30"){
+		var timezone = "Newfoundland Time";
+	}else{
+		var timezone = "GMT".concat(resultoffset)
+	}
+	document.getElementById("timezone").innerHTML = timezone;
+	</script>
 	
 @endsection

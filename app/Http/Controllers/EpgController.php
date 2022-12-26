@@ -108,18 +108,22 @@ return response()->json($response, 200);
             // http://ams-api.astro.com.my/ams/v3/getEvents?channelId=275,80,182,64,87,114,65&periodStart=2021-02-02%2015:00&periodEnd=2021-02-02%2023:59
             $id = $request->input('id');
             $query = $request->all();
-            if($query['timezone'] == 'Asia/Calcutta'){
-                $timeoffset = '05:30';
-            }else{
-                $timeoffset = '-08:00';
-            }
+            $tz = $query['timezone'];
+            // if($query['timezone'] == '+05:30'){
+            //     $timeoffset = '05:30';
+            // }else{
+            //     $timeoffset = '-08:00';
+            // }
 
-            $tz=$timeoffset??'-08:00';
+            // $tz=$timeoffset??'-08:00';
+
             if (str_contains($tz, '-')) { 
             }else
             {
                 $tz = "+".$tz;
             }
+            // dd($tz);
+            // die;
 	
             /* returns array of entire input query value */
             //$query = $request->all();
@@ -127,8 +131,8 @@ return response()->json($response, 200);
             $thestimestart = $query['periodStart'];
             $thestimeend = $query['periodEnd'];
             $currentTZ = $query['timezone'];
-            if($currentTZ == 'Asia/Calcutta'){
-                date_default_timezone_set('Asia/Kolkata');
+
+            date_default_timezone_set('Asia/Kolkata');
                 if(date('i') > 30){
                 $datestart = date("Y-m-d G:i:s",strtotime("-960 minutes"));
                 $dateend = date("Y-m-d G:i:s",strtotime("+540 minutes"));
@@ -136,16 +140,25 @@ return response()->json($response, 200);
                 $datestart = date("Y-m-d G:i:s",strtotime("-930 minutes"));
                 $dateend = date("Y-m-d G:i:s",strtotime("+510 minutes"));
                 }
-            }else{
-                date_default_timezone_set('America/Los_Angeles');
-                if(date('i') > 30){
-                    $datestart = date("Y-m-d G:i:s",strtotime("-720 minutes"));
-                    $dateend = date("Y-m-d G:i:s",strtotime("+720 minutes"));
-                }else{
-                    $datestart = date("Y-m-d G:i:s",strtotime("-750 minutes"));
-                    $dateend = date("Y-m-d G:i:s",strtotime("+750 minutes"));
-                }
-            }
+            // if($currentTZ == '+05:30'){
+            //     date_default_timezone_set('Asia/Kolkata');
+            //     if(date('i') > 30){
+            //     $datestart = date("Y-m-d G:i:s",strtotime("-960 minutes"));
+            //     $dateend = date("Y-m-d G:i:s",strtotime("+540 minutes"));
+            //     }else{
+            //     $datestart = date("Y-m-d G:i:s",strtotime("-930 minutes"));
+            //     $dateend = date("Y-m-d G:i:s",strtotime("+510 minutes"));
+            //     }
+            // }else{
+            //     date_default_timezone_set('Asia/Kolkata');
+            //     if(date('i') > 30){
+            //         $datestart = date("Y-m-d G:i:s",strtotime("-960 minutes"));
+            //         $dateend = date("Y-m-d G:i:s",strtotime("+540 minutes"));
+            //         }else{
+            //         $datestart = date("Y-m-d G:i:s",strtotime("-930 minutes"));
+            //         $dateend = date("Y-m-d G:i:s",strtotime("+510 minutes"));
+            //         }
+            // }
 
             $ids = [1,2,3];
             $validator = Validator::make($query, [
