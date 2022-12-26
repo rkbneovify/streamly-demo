@@ -199,7 +199,7 @@ div#wrap div {
     overflow: hidden;
 }
 .programme__header {
-    margin-top: 62px;
+    margin-top: 102px;
     position: fixed;
     z-index: 9999;
     max-width: 57.5% !important;
@@ -208,17 +208,17 @@ div#wrap div {
 .channel__header {
     position: fixed !important;
     z-index: 9999 !important;
-    top: 158px;
+    top: 198px;
     overflow: hidden !important;
     /* width: 100% !important; */
     max-width: 15.5vw;
 }
 .programme__timing__section 
 {
-    margin-top: 121px !important;
+    margin-top: 161px !important;
 }
 .channel__list__section {
-    margin-top: 121px !important;
+    margin-top: 161px !important;
 }
 
 span.programme.programme--no__data {
@@ -253,7 +253,7 @@ nav#mainNav {
 }*/
 button#navlefthorizontal {
     position: fixed;
-    top: 157px;
+    top: 197px;
     z-index: 99999;
     padding: 41px 14px 23px 1px !important;
     left: 26.4vw;
@@ -302,7 +302,7 @@ button#navlefthorizontal
 }*/
 button#navrighthorizontal {
     position: fixed;
-    top: 157px !important;
+    top: 197px !important;
     z-index: 99998 !important;
     /* left: 87vw !important; */
     padding: 41px 14px 23px 1px !important;
@@ -333,7 +333,7 @@ button#navrighthorizontal:after {
     background-size: 32% 58% !important;
 }
 .programme__header {
-    margin-top: 62px;
+    margin-top: 101px;
     position: fixed;
     z-index: 9999;
     max-width: 62.65vw !important;
@@ -406,10 +406,31 @@ button#navlefthorizontal {
 .programme__header[data-v-0905d6f1] {
     display: none!important;
 }
+.currentTZflex {
+    display: flex;
+    align-items: center;
+}
+.currentTZ {
+    display: block!important;
+}
+.statusTZ {
+	margin-left: 15px;
+	padding: 6px 25px;
+    border: 1px solid #d5bebe;
+    border-radius: 25px;
+}
+.iconTZ {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+.tzwidth {
+    width: 135px;
+}
 @media only screen and (max-width: 599px) {
   .channel__header {
     /* width: 115px!important; */
-    top: 238px!important;
+    top: 295px!important;
   }
   /* button#navlefthorizontal {
     padding: 40px 25px 23px 1px !important;
@@ -418,7 +439,7 @@ button#navlefthorizontal {
   } */
   button#navrighthorizontal {
     padding: 40px 25px 23px 1px !important;
-    top: 236px !important;
+    top: 291px !important;
     z-index: 99998 !important;
   }
   /* .programme__header {
@@ -444,13 +465,19 @@ button#navlefthorizontal {
     width: 82.5vw!important;
   }
   .channel__list__section {
-    margin-top: 200px !important;
+    margin-top: 258px !important;
   }
   .channel__programme__section {
     margin-top: 78px!important;
   }
   .pgGuideheight{
     padding: 0px 10px !important;
+}
+.programme__timing__section {
+    margin-top: 179px !important;
+}
+.programme__header {
+    margin-top: 118px!important;
 }
 }
 @media only screen and (min-width: 550px) and (max-width: 599px) {
@@ -499,7 +526,7 @@ button#navlefthorizontal {
 button#navlefthorizontal {
     padding: 40px 25px 23px 1px !important;
     left: 35vw!important;
-    top: 236px;
+    top: 291px;
 }
 }
 @media only screen and (min-width: 600px){
@@ -531,7 +558,7 @@ button#navlefthorizontal {
     left: 43vw!important;
 }
 button#navlefthorizontal {
-    top: 235px!important;
+    top: 292px!important;
 }
 #navrighthorizontal {
     right: 16.8vw!important;
@@ -617,6 +644,10 @@ button#navrighthorizontal {
 @media only screen and (min-width: 2000px){
 .channel__filter{
     top: 68px !important;
+}}
+@media only screen and (min-width: 760px){
+.statusTZ{
+    font-size: 14px;
 }}
 </style>
 

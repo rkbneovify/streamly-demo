@@ -2243,7 +2243,7 @@
         }
       
       const date = new Date();
-        var date1 = convertTZ(date, "Asia/Calcutta");
+        var date1 = date;
         // var myDate = new Date()
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
@@ -2268,7 +2268,7 @@
           } 
         }
         
-        //console.log(newarray)
+        console.log(newarray)
         //return this.range(moment__WEBPACK_IMPORTED_MODULE_4___default()(date1).get('hours'), 24);
         return newarray;
       }
@@ -83305,6 +83305,57 @@
   var render = function() {
     // var displayDateTime = programme.displayDateTime;
     // var resulttime = displayDateTime.substr(11, 2);
+    //hoursoffset start
+	String.prototype.toHHMMSS = function () {
+
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    
+    
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    
+    return hours + ':' + minutes ;
+    }
+    const d = new Date();
+    let diff = d.getTimezoneOffset();
+    var newdiff = String(diff * 60);
+    if (newdiff < 0) {
+      var resultHours = newdiff.substr(1);
+      var signvalue = true;
+    }else{
+      var resultHours = newdiff;
+      var signvalue = false;
+      }  
+    var newtz = resultHours.toHHMMSS();
+    if(signvalue == true){
+    var resultoffset = "+".concat(newtz)
+    }else{ 
+      var resultoffset = "-".concat(newtz);
+      }
+      //hoursoffset end
+      if(resultoffset == "+05:30"){
+        var timezone = "Indian Standard Time";
+      }else if(resultoffset == "-05:00"){
+        var timezone = "Eastern Standard Time";
+      }else if(resultoffset == "-08:00"){
+        var timezone = "Pacific Standard Time";
+      }else if(resultoffset == "-06:00"){
+        var timezone = "Central Standard Time";
+      }else if(resultoffset == "-07:00"){
+        var timezone = "Mountain Standard Time";
+      }else if(resultoffset == "-09:00"){
+        var timezone = "Alaska Standard Time";
+      }else if(resultoffset == "-10:00"){
+        var timezone = "Hawaii Standard Time";
+      }else if(resultoffset == "-04:00"){
+        var timezone = "Canada Atlantic Time";
+      }else if(resultoffset == "-03:30"){
+        var timezone = "Newfoundland Time";
+      }else{
+        var timezone = "GMT".concat(resultoffset)
+      }
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
@@ -83313,7 +83364,20 @@
       { staticClass: "channel__guide__view" },
       [
         _c("div", { staticClass: "channel__filter" }, [
-          _c("label", { attrs: { for: "txtSearch" } }, [
+          _c("div", { staticClass: "currentTZflex" }, [
+          _c("label", { attrs: { class: "currentTZ tzwidth" } }, [
+            _vm._v("Current Timezone:")
+          ]),
+          _c("label", { attrs: { class: "currentTZ statusTZ" } }, [
+            _c("img", {
+              staticClass: "iconTZ",
+              attrs: { src: _vm._s("/uploads/icons/tzguide.png") }
+            }),
+            _vm._v(timezone)
+          ]),
+        ]),
+          _c("label", { attrs: { class: "tzwidth",
+            for: "txtSearch" } }, [
             _vm._v("Search Channel:")
           ]),
           _vm._v(" "),
@@ -102376,9 +102440,38 @@
                 var end_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0]," ", "23:59");
 
                  //TZ END WEB//
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                //hoursoffset start
+	String.prototype.toHHMMSS = function () {
 
-                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat(start_from, "&periodEnd=").concat(popupDate.concat('%2023:59', "&timezone=").concat(timezone)));
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    
+    
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    
+    return hours + ':' + minutes ;
+    }
+    const d = new Date();
+    let diff = d.getTimezoneOffset();
+    var newdiff = String(diff * 60);
+    if (newdiff < 0) {
+      var resultHours = newdiff.substr(1);
+      var signvalue = true;
+    }else{
+      var resultHours = newdiff;
+      var signvalue = false;
+      }  
+    var newtz = resultHours.toHHMMSS();
+    if(signvalue == true){
+    var resultoffset = "+".concat(newtz)
+    }else{ 
+      var resultoffset = "-".concat(newtz);
+      }
+      //hoursoffset end
+
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelId, "&periodStart=").concat(start_from, "&periodEnd=").concat(popupDate.concat('%2023:59', "&timezone=").concat(resultoffset)));
           
               case 10:
                 response = _context.sent;
@@ -102683,8 +102776,37 @@
                   });
                   return typeof channelData['programmes'] == "undefined";
                 }).join(',');
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(timezone);
+                //hoursoffset start
+	String.prototype.toHHMMSS = function () {
+
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    
+    
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    
+    return hours + ':' + minutes ;
+    }
+    const d = new Date();
+    let diff = d.getTimezoneOffset();
+    var newdiff = String(diff * 60);
+    if (newdiff < 0) {
+      var resultHours = newdiff.substr(1);
+      var signvalue = true;
+    }else{
+      var resultHours = newdiff;
+      var signvalue = false;
+      }  
+    var newtz = resultHours.toHHMMSS();
+    if(signvalue == true){
+    var resultoffset = "+".concat(newtz)
+    }else{ 
+      var resultoffset = "-".concat(newtz);
+      }
+      //hoursoffset end
+                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(resultoffset);
                 _context.next = 5;
                 return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
   
@@ -102768,9 +102890,38 @@
                 var end_from = newSplit[2].concat("-" , newSplit[1], "-", newSplit[0]," ", "23:59");
                 
                 //TZ END WEB//
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                //hoursoffset start
+	String.prototype.toHHMMSS = function () {
 
-                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(timezone);
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    
+    
+    if (hours   < 10) {hours   = "0"+hours;}
+    if (minutes < 10) {minutes = "0"+minutes;}
+    
+    return hours + ':' + minutes ;
+    }
+    const d = new Date();
+    let diff = d.getTimezoneOffset();
+    var newdiff = String(diff * 60);
+    if (newdiff < 0) {
+      var resultHours = newdiff.substr(1);
+      var signvalue = true;
+    }else{
+      var resultHours = newdiff;
+      var signvalue = false;
+      }  
+    var newtz = resultHours.toHHMMSS();
+    if(signvalue == true){
+    var resultoffset = "+".concat(newtz)
+    }else{ 
+      var resultoffset = "-".concat(newtz);
+      }
+      //hoursoffset end
+
+                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(resultoffset);
                 _context2.next = 12;
                 return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
   
