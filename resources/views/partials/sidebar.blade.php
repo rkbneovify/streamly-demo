@@ -217,6 +217,30 @@
                 </li>
             </ul>
           </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-sliders-h"></i>
+              <p>
+                App Slider
+                <i class="fas fa-angle-left right"></i>
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              
+              <li class="nav-item">
+                <a href=" {{ url('/admin/slide/create') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add slide</p>
+                </a>
+              </li><li class="nav-item">
+                <a href=" {{ url('/admin/slide/view') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>View all slides</p>
+                  </a>
+                </li>
+            </ul>
+          </li>
             <li class="nav-item ">
               <a href=" {{ url('/admin/frontendtext') }}"  class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
