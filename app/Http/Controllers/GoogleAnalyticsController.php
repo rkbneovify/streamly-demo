@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use JWTAuth;
 use GuzzleHttp\Client as GuzzleClient;
 use Validator;
+use App\User;
+use Mail;
+use Illuminate\Support\Facades\DB;
 class GoogleAnalyticsController extends Controller
 {
     public function index(Request $request){
@@ -231,7 +234,26 @@ $response = array('success' => true,'response_code'=>200,'message'=>'GA player e
 return response()->json($response, 200);
     } else{
 
-$response = array('success' => false,'response_code'=>404,'message'=>'404');
+$response = array('success' => false,'response_code'=>404,'message'=>'404','data'=>'This channel is temporarily not streaming. We are working on the issue. Please try again later.');
+
+$channel_name = DB::table('channels')->where('callSign', $callSign)->value('stationName');
+
+$website_link = env('WEBSITE_URL');
+
+            $html='<html>
+            Hi, '.env('APP_NAME').'tv Admin!<br><br>
+
+            Channel Name: '.$channel_name.'<br>
+            This channel is temporarily not streaming.<br>Please try again later.<br> 
+
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
+                $message->to('piyush.mishra@oodles.io', 'Admin')
+                ->subject('Channel Error! Info '.env('APP_NAME'));
+            });
+
+
 return response()->json($response, 404);}
     }
 }

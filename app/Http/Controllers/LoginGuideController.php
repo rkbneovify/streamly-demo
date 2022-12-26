@@ -56,9 +56,7 @@ class LoginGuideController extends Controller
          $response = [
             'success' => true,
             'count' => count($Slidearray),
-            'data' => [
-               $Slidearray
-            ],
+            'data' => $Slidearray,
             'response_code'=>200,
             ];
 
