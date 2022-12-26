@@ -136,7 +136,8 @@ use App\User;
             'success' => false,
             'response_code'=>479,
             'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
-            'houroffset' => '-05:30',
+            'houroffset' => '+05:30',
+            'timezone' => 'Indian Standard time',
             'loggedindeviceinfolist'=>$response,
           ],479)->send();
 
@@ -462,7 +463,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
       'device_type'=>'non-web',
       'personaldevicename_popup'=>$personal_device_data['show_popup'],
-      'houroffset' => '-05:30',
+      'houroffset' => '+05:30',
+      'timezone' => 'Indian Standard time',
       // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
