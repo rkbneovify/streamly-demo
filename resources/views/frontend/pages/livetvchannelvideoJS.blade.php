@@ -805,6 +805,20 @@ var resultoffset = "+".concat(newtz)
 .myDIV2 {
 	text-align: center;
 }
+.timetz {
+	font-size: 14px;
+	padding: 6px 10px;
+    border: 1px solid #d5bebe;
+    border-radius: 25px;
+    margin-top: 12px;
+	margin-bottom: 20px;
+}
+.statusTZ {
+	margin-left: 20px;
+}
+.section-heading {
+	margin: 20px 00px;
+}
 @media only screen and (min-width: 2000px) {
 	.myDIV .PrevNexthover {
 		font-size: 15px!important;
@@ -913,8 +927,13 @@ var resultoffset = "+".concat(newtz)
 			</div>
 
 			<div class="container" style="margin-top: 4%;">
+			<div>{{$Channel[0]->stationName??$Channel[0]->callSign}}</div>
+
+			<div style="display: flex;">
+		    <div class="timetz"><img src="/uploads/icons/tz.png" alt="icon" width="16" height="16"> Current Timezone</div>
+			<div id="timezone" class="timetz statusTZ"></div>
+		    </div>
 			
-			{{$Channel[0]->stationName??$Channel[0]->callSign}}
 			<select id='gracenote_data' style="width: 100%; display:block;">
 			<option value='0'>- The schedule -</option>
 		</select>
@@ -987,6 +1006,59 @@ var resultoffset = "+".concat(newtz)
 				})
                 .catch(error => console.log('error', error));
 			}
+
+	//hoursoffset start
+	String.prototype.toHHMMSS = function () {
+
+var sec_num = parseInt(this, 10); // don't forget the second param
+var hours   = Math.floor(sec_num / 3600);
+var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+
+
+if (hours   < 10) {hours   = "0"+hours;}
+if (minutes < 10) {minutes = "0"+minutes;}
+
+return hours + ':' + minutes ;
+}
+const d = new Date();
+let diff = d.getTimezoneOffset();
+var newdiff = String(diff * 60);
+if (newdiff < 0) {
+  var resultHours = newdiff.substr(1);
+  var signvalue = true;
+}else{
+	var resultHours = newdiff;
+	var signvalue = false;
+  }  
+var newtz = resultHours.toHHMMSS();
+if(signvalue == true){
+var resultoffset = "+".concat(newtz)
+}else{ 
+	var resultoffset = "-".concat(newtz);
+	}
+	//hoursoffset end
+	if(resultoffset == "+05:30"){
+		var timezone = "Indian Standard Time";
+	}else if(resultoffset == "-05:00"){
+		var timezone = "Eastern Standard Time";
+	}else if(resultoffset == "-08:00"){
+		var timezone = "Pacific Standard Time";
+	}else if(resultoffset == "-06:00"){
+		var timezone = "Central Standard Time";
+	}else if(resultoffset == "-07:00"){
+		var timezone = "Mountain Standard Time";
+	}else if(resultoffset == "-09:00"){
+		var timezone = "Alaska Standard Time";
+	}else if(resultoffset == "-10:00"){
+		var timezone = "Hawaii Standard Time";
+	}else if(resultoffset == "-04:00"){
+		var timezone = "Canada Atlantic Time";
+	}else if(resultoffset == "-03:30"){
+		var timezone = "Newfoundland Time";
+	}else{
+		var timezone = "GMT".concat(resultoffset)
+	}
+	document.getElementById("timezone").innerHTML = timezone;
 		</script>
 		
 	@endsection
