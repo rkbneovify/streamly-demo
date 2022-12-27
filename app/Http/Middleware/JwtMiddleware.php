@@ -24,6 +24,9 @@
         public function handle($request, Closure $next)
         {
             try {
+                if($request->get('key')){
+                $user = JWTAuth::parseToken()->authenticate();
+            }else{
                 $acctokenNEw = SessionTable::where([
                     ['access_token', '=', $request->bearerToken()],
                 ])->select('users_id')->get();
@@ -41,6 +44,7 @@
                 }else{
                     $user = JWTAuth::parseToken()->authenticate();
                 }
+            }
             } catch (Exception $e) {
                 if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
                     $response = array('status' => false,'success' => false,'message'=>'Token is Invalid','response_code'=>401);
