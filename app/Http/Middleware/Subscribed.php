@@ -29,8 +29,8 @@ class Subscribed
         // dd($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin")));
         if ($user && ! $user->subscribed('main')&& !in_array($userRole[0], array("admin","superadmin"))){
         if($request->wantsJson()){
-            $response = array('success' =>false ,'response_code'=>402,'message'=>KindlySubscribeMsg());
-            return response()->json($response, 402);
+            $response = array('success' =>false ,'response_code'=>410,'message'=>KindlySubscribeMsg());
+            return response()->json($response, 410);
         }else { 
                 return redirect('/selectplan');
              }}
