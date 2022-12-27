@@ -13,7 +13,7 @@ target 'Streamly' do
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Analytics'
   pod 'Firebase/Database'
-
+  pod 'AdvancedPageControl'
   target 'StreamlyTests' do
     inherit! :search_paths
     # Pods for testing

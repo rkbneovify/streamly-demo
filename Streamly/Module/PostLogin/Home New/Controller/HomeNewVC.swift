@@ -614,6 +614,14 @@ extension HomeNewVC:HandleError {
             }
             return
         }
+        else if statusCode == 410 {
+            showAlert(withMessage: message,setFirstButtonTitle: "Logout") { _ in
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isLogin)
+                Utility.setBoolInUserDefaultData(value: false, key: Constant.UserDefault.isDeviceNameAdded)
+                Utility.logOut()
+            }
+           return
+       }
         //        self.showSimpleAlertWithMessage(message)
     }
     

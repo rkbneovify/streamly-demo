@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		2E84347C9BD35412DD6A3688 /* Pods_Streamly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */; };
 		3B5A12B83E864D87BD904CE6 /* Pods_StreamlyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */; };
+		3E6A6E9D2955AD7600412EA2 /* LoginGuideVc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A6E9C2955AD7600412EA2 /* LoginGuideVc.swift */; };
+		3E6A6E9F2955C2A400412EA2 /* LoginGuideViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A6E9E2955C2A400412EA2 /* LoginGuideViewModel.swift */; };
+		3E6A6EAC2959892500412EA2 /* loginGuideCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A6EAA2959892500412EA2 /* loginGuideCollectionViewCell.swift */; };
+		3E6A6EAD2959892500412EA2 /* loginGuideCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E6A6EAB2959892500412EA2 /* loginGuideCollectionViewCell.xib */; };
+		3E6A6EB12959C89E00412EA2 /* LoginGuideResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6A6EB02959C89E00412EA2 /* LoginGuideResponse.swift */; };
 		9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9304DD7D2768A7A300E34F80 /* HomeNewVC+Extension.swift */; };
 		9313554D2788282D00944ADA /* UpdateDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9313554C2788282D00944ADA /* UpdateDeviceViewController.swift */; };
 		935E4DE0288FABFE0047AAA6 /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935E4DDF288FABFD0047AAA6 /* DeviceListViewController.swift */; };
@@ -150,6 +155,11 @@
 		0D545A23981FCCE89D7E736E /* Pods_Streamly_StreamlyUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Streamly_StreamlyUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E64E3B598A15DBA9C80F879 /* Pods-Streamly.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.debug.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.debug.xcconfig"; sourceTree = "<group>"; };
 		3DACA1FA1BDAADB0F00A9A42 /* Pods_Streamly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Streamly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E6A6E9C2955AD7600412EA2 /* LoginGuideVc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginGuideVc.swift; sourceTree = "<group>"; };
+		3E6A6E9E2955C2A400412EA2 /* LoginGuideViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginGuideViewModel.swift; sourceTree = "<group>"; };
+		3E6A6EAA2959892500412EA2 /* loginGuideCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loginGuideCollectionViewCell.swift; sourceTree = "<group>"; };
+		3E6A6EAB2959892500412EA2 /* loginGuideCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = loginGuideCollectionViewCell.xib; sourceTree = "<group>"; };
+		3E6A6EB02959C89E00412EA2 /* LoginGuideResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginGuideResponse.swift; sourceTree = "<group>"; };
 		3FE8BD7CC79FD8EC0B586BBC /* Pods-Streamly-StreamlyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly-StreamlyUITests.release.xcconfig"; path = "Target Support Files/Pods-Streamly-StreamlyUITests/Pods-Streamly-StreamlyUITests.release.xcconfig"; sourceTree = "<group>"; };
 		51FE8DA799B908DE52786731 /* Pods-Streamly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Streamly.release.xcconfig"; path = "Target Support Files/Pods-Streamly/Pods-Streamly.release.xcconfig"; sourceTree = "<group>"; };
 		7BC8843B7CF04830CEA683C9 /* Pods_StreamlyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamlyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -324,6 +334,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E6A6E9B2955AD5600412EA2 /* LoginGuide */ = {
+			isa = PBXGroup;
+			children = (
+				3E6A6E9C2955AD7600412EA2 /* LoginGuideVc.swift */,
+				3E6A6E9E2955C2A400412EA2 /* LoginGuideViewModel.swift */,
+				3E6A6EB02959C89E00412EA2 /* LoginGuideResponse.swift */,
+			);
+			path = LoginGuide;
+			sourceTree = "<group>";
+		};
 		935E4DDE288FABE10047AAA6 /* DeviceList */ = {
 			isa = PBXGroup;
 			children = (
@@ -623,6 +643,8 @@
 				AA72AF8A2473F5E600906796 /* TimeCollectionViewCell.swift */,
 				AA105C88249767C100CF075B /* TimeCollectionViewCell.xib */,
 				AA0C255725F10C4300BC03B9 /* AllGenrsListingCell.swift */,
+				3E6A6EAA2959892500412EA2 /* loginGuideCollectionViewCell.swift */,
+				3E6A6EAB2959892500412EA2 /* loginGuideCollectionViewCell.xib */,
 			);
 			name = View;
 			path = ../Home/View;
@@ -640,6 +662,7 @@
 		AA741F0C246ABC1A0090A0F7 /* PreLogin */ = {
 			isa = PBXGroup;
 			children = (
+				3E6A6E9B2955AD5600412EA2 /* LoginGuide */,
 				935E4DDE288FABE10047AAA6 /* DeviceList */,
 				93662C64270ECF25006DA962 /* Login+QR */,
 				A84958522706EB2B00B2FE73 /* RoomVC */,
@@ -1109,6 +1132,7 @@
 				AAC9C8BF246A700200708812 /* Main.storyboard in Resources */,
 				AA5E20EE24C61758000B648F /* Lato-HeavyItalic.ttf in Resources */,
 				938A0875270AFCEB00647394 /* DeviceRegisterCell.xib in Resources */,
+				3E6A6EAD2959892500412EA2 /* loginGuideCollectionViewCell.xib in Resources */,
 				AA105C7F249767AE00CF075B /* ProgramCollectionViewCell.xib in Resources */,
 				AA24C2372600C10900B15739 /* PosterCell.xib in Resources */,
 				AA5E20F624C61758000B648F /* Lato-Regular.ttf in Resources */,
@@ -1292,6 +1316,7 @@
 				AA71399125FF80C0007D0DFC /* CustomInteractiveVideoOverlayViewController.swift in Sources */,
 				AA5ADDD6248E6C71005936CE /* SupportView.swift in Sources */,
 				AA441CFD2587C5CD001AD30F /* CoustomAlertVC.swift in Sources */,
+				3E6A6E9F2955C2A400412EA2 /* LoginGuideViewModel.swift in Sources */,
 				AA71399325FF8271007D0DFC /* VideoPlaybackViewController.swift in Sources */,
 				AA5ADDCD248E4A94005936CE /* PopUPViewsVC.swift in Sources */,
 				93662C68270ED3FF006DA962 /* LoginWithQRViewModel.swift in Sources */,
@@ -1305,6 +1330,7 @@
 				AA5ADDD0248E4D0F005936CE /* LogOUTView.swift in Sources */,
 				AA72AF842473F40C00906796 /* ChannelCollectionViewCell.swift in Sources */,
 				A84958572706EBAF00B2FE73 /* RoomViewModel.swift in Sources */,
+				3E6A6EAC2959892500412EA2 /* loginGuideCollectionViewCell.swift in Sources */,
 				AAD59545247250EC00BC5E6C /* LoginResponse.swift in Sources */,
 				AA5F5A502542A7E800FA8FB6 /* Enums.swift in Sources */,
 				AA5F5A542542A7E800FA8FB6 /* RequestParameter.swift in Sources */,
@@ -1330,6 +1356,7 @@
 				AA5F5A5B2542A7E800FA8FB6 /* Protocols.swift in Sources */,
 				AAD595472472515800BC5E6C /* Request.swift in Sources */,
 				AA9C800925DAC05300CD532D /* Drm+Key+Model.swift in Sources */,
+				3E6A6EB12959C89E00412EA2 /* LoginGuideResponse.swift in Sources */,
 				AA72AF7C2473F0E100906796 /* EPGCollectionViewLayout.swift in Sources */,
 				AA94D62B248A14D200EBF947 /* ListingProfileCell.swift in Sources */,
 				AA07E87B24A2087100D37ABF /* EPGViewModel.swift in Sources */,
@@ -1340,6 +1367,7 @@
 				B1919A7C28A26B66001EE438 /* locationPopUpVC.swift in Sources */,
 				AA5408302491F84F000D5F76 /* LogOutModel.swift in Sources */,
 				AA5F5A5A2542A7E800FA8FB6 /* Gradient.swift in Sources */,
+				3E6A6E9D2955AD7600412EA2 /* LoginGuideVc.swift in Sources */,
 				9304DD7E2768A7A300E34F80 /* HomeNewVC+Extension.swift in Sources */,
 				935E4DE2288FAE8E0047AAA6 /* DeviceInfo.swift in Sources */,
 				AA5F5A4C2542A7E800FA8FB6 /* Constant.swift in Sources */,

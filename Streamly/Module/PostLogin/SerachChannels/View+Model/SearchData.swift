@@ -41,8 +41,10 @@ class SearchDataParser {
             let contactModelElement = try JSONDecoder().decode(ChannelData.self, from: data)
 
 
+            print("hfhfhfhfhkgkhkhkhk")
             return contactModelElement
         } catch {
+            print("65655565")
             //debugPrint(error)
         }
         return nil

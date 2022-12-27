@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="21507" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <deployment identifier="tvOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="loginGuideCollectionViewCell" id="Rz2-K0-ksD" customClass="loginGuideCollectionViewCell" customModule="StreamlyTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="720" height="646"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="720" height="646"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="luq-eo-vih">
+                        <rect key="frame" x="0.0" y="0.0" width="720" height="646"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person_singing" translatesAutoresizingMaskIntoConstraints="NO" id="42z-3q-5SP">
+                                <rect key="frame" x="110" y="55" width="500" height="256"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="500" id="pgI-Km-zEl"/>
+                                    <constraint firstAttribute="height" constant="256" id="wzr-e2-XBs"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ddsfdfsdfdssdfdsdsdsffdssfdsfdsfdsfdsdsdsfdssf" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xwx-ul-FzJ">
+                                <rect key="frame" x="30" y="371" width="660" height="100"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="og4-c3-UD2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UCw-VW-anK">
+                                <rect key="frame" x="30" y="496" width="660" height="130"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="dsfdssdfdsddsdssddssdsdduiouioeuiewiweriowerouuwerwerouioewiuoweouiewuriouieowuioewruioewrio">
+                                        <attributes>
+                                            <font key="NSFont" size="21" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UCw-VW-anK" firstAttribute="trailing" secondItem="Xwx-ul-FzJ" secondAttribute="trailing" id="1Hc-Be-2oJ"/>
+                            <constraint firstItem="Xwx-ul-FzJ" firstAttribute="top" secondItem="42z-3q-5SP" secondAttribute="bottom" constant="60" id="29C-hS-2OL"/>
+                            <constraint firstItem="42z-3q-5SP" firstAttribute="top" secondItem="luq-eo-vih" secondAttribute="top" constant="55" id="4RN-YH-fxQ"/>
+                            <constraint firstAttribute="trailing" secondItem="Xwx-ul-FzJ" secondAttribute="trailing" constant="30" id="ETG-wb-TbJ"/>
+                            <constraint firstItem="UCw-VW-anK" firstAttribute="top" secondItem="Xwx-ul-FzJ" secondAttribute="bottom" constant="25" id="Hse-sy-rpO"/>
+                            <constraint firstItem="UCw-VW-anK" firstAttribute="leading" secondItem="Xwx-ul-FzJ" secondAttribute="leading" id="Rtk-XE-O0I"/>
+                            <constraint firstAttribute="bottom" secondItem="UCw-VW-anK" secondAttribute="bottom" constant="20" id="ZpL-zN-fhh"/>
+                            <constraint firstItem="Xwx-ul-FzJ" firstAttribute="leading" secondItem="luq-eo-vih" secondAttribute="leading" constant="30" id="e0e-ct-JG7"/>
+                            <constraint firstItem="42z-3q-5SP" firstAttribute="centerX" secondItem="luq-eo-vih" secondAttribute="centerX" id="ruV-wa-o50"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
+            <constraints>
+                <constraint firstItem="luq-eo-vih" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" id="Xbn-lo-e8u"/>
+                <constraint firstItem="luq-eo-vih" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" id="g98-RI-fPc"/>
+                <constraint firstAttribute="trailing" secondItem="luq-eo-vih" secondAttribute="trailing" id="kQC-M8-LYg"/>
+                <constraint firstAttribute="bottom" secondItem="luq-eo-vih" secondAttribute="bottom" id="o7g-2b-ohZ"/>
+            </constraints>
+            <size key="customSize" width="504" height="211"/>
+            <connections>
+                <outlet property="headingLbl" destination="Xwx-ul-FzJ" id="VtJ-Tp-IxT"/>
+                <outlet property="mainImage" destination="42z-3q-5SP" id="Gje-Nx-vyb"/>
+                <outlet property="subHeadingLbl" destination="UCw-VW-anK" id="KXv-3P-zT7"/>
+            </connections>
+            <point key="canvasLocation" x="234" y="45.5"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="person_singing" width="448" height="299"/>
+    </resources>
+</document>

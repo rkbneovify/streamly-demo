@@ -228,6 +228,13 @@ open class ApiCall {
     }
     
     @discardableResult
+    public static func getLoginGuideVcDetail(success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
+        let headers = ["Accept": "application/json"]
+        let requestParameter = RequestParameter.createRequestParameter(Constant.baseURL + API.loginGuide.rawValue, method: .post, headers: headers, parameters: nil)
+        return NetworkManagerWrapper.makeRequest(requestParameter, success: success, failure: failure)
+    }
+    
+    @discardableResult
     public static func entryLogin(key: String, success: @escaping SuccessClosure, failure: @escaping FailureClosure) -> Request {
         let param = ["key": key, "deviceid": deviceId ?? ""]
         let headers = ["Accept": "application/json","User-Agent": userAgent]

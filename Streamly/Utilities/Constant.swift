@@ -53,6 +53,22 @@ class Constant: NSObject
         app.window?.makeKeyAndVisible()
     }
 
+    class func navigateToLoginGuide()
+    {
+        guard let app = appDelegate else {return}
+        let LoginGuideVc = LoginGuideVc.instantiateFromAppStoryboard(appStoryboard: .Main)
+//        let loginVc = HomeNewVC.instantiateFromAppStoryboard(appStoryboard: .Extended)
+        let rootViewController = UINavigationController()
+        rootViewController.setViewControllers([LoginGuideVc], animated: false)
+        rootViewController.isNavigationBarHidden = true
+        app.window?.rootViewController!.removeFromParent()
+        app.window?.rootViewController!.view.removeFromSuperview()
+        app.window?.rootViewController = nil
+        app.window?.rootViewController = rootViewController
+        app.window?.makeKeyAndVisible()
+    }
+
+    
     class func navigateToRootHome()
     {
         guard let app = appDelegate else {return}
@@ -148,6 +164,9 @@ class Constant: NSObject
         static let myDeviceType = "myDeviceType"
         static let isVisibility = "qrvisibility"
         static let lastLocation = "LastLocation"
+        static let timezone = "timezone"
+        static let dontShowAgain = "dontShowAgain"
+
     }
 
     //MARK:-: Constant Url & Keys

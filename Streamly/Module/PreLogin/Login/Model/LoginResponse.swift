@@ -29,6 +29,7 @@ struct LoginResponse : Codable {
     let expires_in: Int?
     var data: String?
     let houroffset: String?
+    let timezone:String?
     
     enum CodingKeys : String, CodingKey {
         case subscribed
@@ -52,6 +53,7 @@ struct LoginResponse : Codable {
         case expires_in = "expires_in"
         case data
         case houroffset
+        case timezone
     }
     
     init(from decoder: Decoder) throws {
@@ -77,6 +79,7 @@ struct LoginResponse : Codable {
         subscribedmsgis = try values.decodeIfPresent(String.self, forKey: .subscribedmsgis)
         subscribed = try values.decodeIfPresent(Bool.self, forKey: .subscribed)
         houroffset = try values.decodeIfPresent(String.self, forKey: .houroffset)
+        timezone = try values.decodeIfPresent(String.self, forKey: .timezone)
     }
     
 }

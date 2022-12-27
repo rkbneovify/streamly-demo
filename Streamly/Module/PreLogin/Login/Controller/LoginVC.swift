@@ -22,7 +22,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var dontHaveAClabel: UILabel!
     @IBOutlet weak var loginWithPasscode: GradientBUtton!
     @IBOutlet weak var loginWithQRButton: UIButton!
-    
+    var getdata:LoginGuideViewModel?
     //MARK: Properties
     var remeberMeFlag:Bool?
     {
@@ -60,6 +60,7 @@ class LoginVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("otooto\(self.getdata)")
         // Do any additional setup after loading the view.
         #if DEBUG
 //        self.userIDField.text = "rohit@gmail.com"
@@ -306,9 +307,12 @@ extension LoginVC
                     Utility.setStringObject(value: "\(response.success?.user?.id ?? 0)", key: Constant.UserDefault.userID)
                     Utility.setStringObject(value: response.success?.access_token ?? "", key: Constant.UserDefault.token)
                     Utility.setStringObject(value: response.success?.user?.zipcode ?? "", key: Constant.UserDefault.zipCode)
+                    Utility.setStringObject(value: response.success?.timezone ?? "", key: Constant.UserDefault.timezone)
+                    
                     if self?.remeberMeFlag ?? false {
                         Utility.setStringObject(value: self?.passwordField.text ?? "", key: Constant.UserDefault.password)
                         Utility.setStringObject(value: self?.userIDField.text ?? "", key: Constant.UserDefault.userField)
+                        
                     }
                     
                     Utility.setBoolInUserDefaultData(value: true, key: Constant.UserDefault.isLogin)

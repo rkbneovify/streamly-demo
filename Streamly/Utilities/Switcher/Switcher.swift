@@ -31,8 +31,16 @@ class Switcher {
                  }
             }
             else {
+                let dontShowAgain = Utility.retriveBooleanFromUserDefault(key: Constant.UserDefault.dontShowAgain)
+
+                if dontShowAgain == true{
+                    Constant.navigateToRootLogin()
+                }
+                else{
+                    Constant.navigateToLoginGuide()
+
+                }
                 // Not login
-                Constant.navigateToRootLogin()
             }
             
         }else{
