@@ -31,6 +31,7 @@ class APIController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility','connecteddeviceemail']]);
+        $this->middleware('subscribed')->only('genrename', 'myRecents', 'myFavorites', 'addToRecent', 'connecteddevice');
     }
 
     public function index()
