@@ -186,12 +186,13 @@
             </a>
             <ul class="nav nav-treeview">
               
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href=" {{ url('/admin/report/channelanalysis') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Channel Analysis</p>
                 </a>
-              </li><li class="nav-item">
+              </li> -->
+              <li class="nav-item">
                 <a href=" {{ url('/admin/report/usersdetails') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>User Details</p>
