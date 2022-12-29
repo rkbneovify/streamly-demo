@@ -321,6 +321,10 @@
   </div>
   <!-- ./col -->
 </div>
+<div style="margin-bottom: 10px;" class="content">
+<input type="text" id="search" placeholder="Search by email.." name="search">
+<button style="padding: 5px;" onclick="funcSearch()"><i class="fa fa-search"></i></button>
+</div>
 <div style="display: flex; justify-content: space-between;">
 <div class="divfilter">Sort data by trasaction data:
 <select name="" id="myInputsort" onchange="myFunctionSort()">
@@ -547,6 +551,29 @@ function myFunctionSort() {
     window.location = "/admin/report/transactionreport/ASC"
   }else{
     window.location = "/admin/report/transactionreport/DESC"
+  }
+}
+function funcSearch(){
+  var inputvalue = document.getElementById("search").value;
+  if(inputvalue){
+  var input, filter, table, tr, td, i, txtValue;
+  input = inputvalue;
+  filter = input.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+  }else{
+    alert("Please enter a value!!");
   }
 }
 function myFunction() {
