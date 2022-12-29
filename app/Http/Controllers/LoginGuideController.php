@@ -10,7 +10,7 @@ class LoginGuideController extends Controller
 {   
     public function __construct()
     {
-      $this->middleware('auth', ['except' => ['index']]);
+      $this->middleware('auth', ['except' => ['index', 'intervalUpdate']]);
     }
 
     public function index(){
@@ -162,4 +162,17 @@ class LoginGuideController extends Controller
       return redirect('admin/slide/create')->with('info','Slide not inserted.'); 
   }
   }
+
+  public function intervalUpdate(Request $request, $value){
+
+   $intervalUpdated = DB::table('sliders')->where('slide_interval', '=', $value)->update(array('slide_interval' => $request['seconds']));
+
+   if($intervalUpdated){
+      return redirect('admin/slide/view')->with('info','Slide interval updated sucessfully.');
+   }else{
+      return redirect('admin/slide/view')->with('info','Slide interval not updated.'); 
+   }
+
+  }
+  
 }
