@@ -55,6 +55,12 @@ function feature( $geometry, $properties ) {
  *
  * //=pt1
  */
+
+public function __construct()
+    {
+        $this->middleware('subscribed')->only('index');
+    }
+
 function point( $coordinates, $properties ) {
 	if ( !is_array( $coordinates ) ) { throw new \Exception( 'Coordinates must be an array' );  }
 	if ( count( $coordinates ) < 2 ) { throw new \Exception( 'Coordinates must be at least 2 numbers long' );  }
