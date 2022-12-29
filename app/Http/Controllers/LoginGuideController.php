@@ -56,6 +56,8 @@ class LoginGuideController extends Controller
          $response = [
             'success' => true,
             'count' => count($Slidearray),
+            'slide_interval_seconds' => $slideData[0]->slide_interval,
+            'slide_interval_milliseconds' => $slideData[0]->slide_interval * 1000,
             'data' => $Slidearray,
             'response_code'=>200,
             ];
