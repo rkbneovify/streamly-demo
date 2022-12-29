@@ -86,8 +86,8 @@ Route::post('addtorecent', 'APIController@addToRecent');
  Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 
-Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify']);
-Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify']);
+Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify','subscribed']);
+Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify', 'subscribed']);
 Route::post('/ga/playererror', 'GoogleAnalyticsController@playererror')->middleware(['jwt.verify']);
 
 
