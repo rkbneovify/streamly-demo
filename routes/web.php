@@ -103,6 +103,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/slide/details/{id}', 'LoginGuideController@singleslideview');//slider piyush
     Route::delete('/slide/delete/{id}', 'LoginGuideController@slidedelete');//slider piyush
     Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate');//slider piyush
+    Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate');//slider piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
@@ -318,3 +319,5 @@ Route::post('admin/multisessiondestroy', 'Admin\UsersController@multisessiondest
 Route::post('web/login/entry/login', 'Admin\QRLoginTwoController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
 Route::post('web/loginws', 'Admin\QRLoginTwoController@loginWS');//Check when passcode hasbeen received
 Route::delete('cancelsubscription/{id}','SubscriptionController@subscriptiondestroy');
+
+Route::post('/stripe/webhook', 'StripeController@index');
