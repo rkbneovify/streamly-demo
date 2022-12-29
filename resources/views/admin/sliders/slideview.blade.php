@@ -9,6 +9,16 @@
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>All Slides ({{ $count = count($slide) }})</h1> {{ session()->get( 'info' ) }}
+            <div style="display: flex; align-items: center; margin-top: 10px;"> 
+            <form action="update/seconds/{{ $slide[1]->slide_interval }}" method="POST" style="display: inline-block; display: flex; align-items: center;" enctype="multipart/form-data">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <label for="tentacles">No of seconds for slide interval:</label>
+            <input style="margin-left: 10px;" type="number" id="seconds" name="seconds"
+            min="1" max="10" value="{{ $slide[1]->slide_interval }}">
+            <input style="padding: 5px 34px; margin-left: 10px;" type="submit" class="btn btn-xs btn-primary" value="Update">
+            </form>  
+          </div>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
