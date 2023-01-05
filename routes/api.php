@@ -76,7 +76,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('connecteddevice', 'APIController@connecteddevice');
     Route::match(['put', 'patch','post'],'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
-    Route::post('/homescreenbanner', 'HomescreenBannerController@index');//piyush banner
+    Route::get('/homescreenbanner', 'HomescreenBannerController@index');//piyush banner
     Route::get('privacypol', 'APIController@privacypol');
     Route::get('termofuse', 'APIController@termofuse');
     Route::post('addtofavorite/', 'APIController@favoriteChannel');
