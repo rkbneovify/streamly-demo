@@ -76,14 +76,15 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('connecteddevice', 'APIController@connecteddevice');
     Route::match(['put', 'patch','post'],'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
+    Route::post('/homescreenbanner', 'HomescreenBannerController@index');//piyush banner
     Route::get('privacypol', 'APIController@privacypol');
     Route::get('termofuse', 'APIController@termofuse');
     Route::post('addtofavorite/', 'APIController@favoriteChannel');
-Route::post('unfavorite/', 'APIController@unFavoriteChannel');
-Route::get('my_favorites', 'APIController@myFavorites');
-Route::get('my_recents', 'APIController@myRecents');
-Route::post('addtorecent', 'APIController@addToRecent');
- Route::get('getdrmkey', 'Admin\BuyDRMController@index');
+    Route::post('unfavorite/', 'APIController@unFavoriteChannel');
+    Route::get('my_favorites', 'APIController@myFavorites');
+    Route::get('my_recents', 'APIController@myRecents');
+    Route::post('addtorecent', 'APIController@addToRecent');
+    Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 
 Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify','subscribed']);
