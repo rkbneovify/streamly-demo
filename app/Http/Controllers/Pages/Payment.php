@@ -137,7 +137,8 @@ $Genrekey=$pagechannel->keys();
 /*End Naresh 15-11-2022*/ 
 
     public function pay(Request $request,$StripeplanId) {
-        // dd($request);
+        // dd($StripeplanId);
+        // die();
         $attributeNames = array(
             'zip' => 'Zip Code',
          );
@@ -154,7 +155,11 @@ $Genrekey=$pagechannel->keys();
         // dump($request->tiers_modes);volumegraduated
         // dump($request->billing_scheme);per_unit tiered
         // dump($request->quantity);
-        $quantity=$request->quantity??1;
+        if($StripeplanId == 't3MAAaea8LOa'){
+            $quantity= 10;
+        }else{
+            $quantity=$request->quantity??1;
+        }
         // dd($StripeplanId);
         $previousURL=$request->input('previousurl');
         try {
