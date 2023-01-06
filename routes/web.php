@@ -98,12 +98,20 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph');//for user session piyush
     Route::get('/slide/view', 'LoginGuideController@slideview');//slider piyush
+    Route::get('/banner/view', 'HomescreenBannerController@bannerview');//slider piyush
     Route::get('/slide/create', 'LoginGuideController@slidecreate');//slider piyush
+    Route::get('/banner/create', 'HomescreenBannerController@bannercreate');//slider piyush
     Route::post('/slide/add', 'LoginGuideController@slideadd');//slider piyush
+    Route::post('/banner/add', 'HomescreenBannerController@banneradd');//slider piyush
     Route::get('/slide/details/{id}', 'LoginGuideController@singleslideview');//slider piyush
+    Route::get('/banner/details/{id}', 'HomescreenBannerController@singlebannerview');//slider piyush
     Route::delete('/slide/delete/{id}', 'LoginGuideController@slidedelete');//slider piyush
+    Route::delete('/banner/delete/{id}', 'HomescreenBannerController@bannerdelete');//slider piyush
     Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate');//slider piyush
+    Route::put('/banner/update/{id}', 'HomescreenBannerController@bannerupdate');//slider piyush
     Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate');//slider piyush
+    Route::get('/stripekeys', 'Admin\StripekeysController@index');//slider piyush
+    Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');

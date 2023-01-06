@@ -10,7 +10,8 @@ class HomescreenBannerController extends Controller
 {   
     public function __construct()
     {
-      $this->middleware('jwt.verify');
+      $this->middleware('jwt.verify', ['except' => ['bannerview', 'bannercreate', 'singlebannerview', 'bannerupdate', 'bannerdelete', 'banneradd']]);
+      $this->middleware('auth', ['except' => ['index']]);
     }
 
     public function index(){
@@ -75,5 +76,86 @@ class HomescreenBannerController extends Controller
                return response()->json($error, 420);
             }
     }
+
+    public function bannerview(){
+      $banner = DB::table('banner_section')->get();
+       //return $banner;
+       return view('admin.banners.bannerview', compact('banner'));
+    }
+
+    public function bannercreate(){
+       return view('admin.banners.banner');
+    }
+
+    public function singlebannerview($id){
+      $bannerUpdate = DB::table('banner_section')->where('id', $id)->get();
+       //return $slideUpdate;
+       return view('admin.banners.singlebanner', compact('bannerUpdate'));
+    }
+
+    public function bannerupdate(Request $request, $id){
+      $text=$request['heading'];
+      $description=$request['description'];
+      $status=$request['status'];
+      $slideDelete = DB::table('banner_section')
+        ->where('id', $id)
+        ->update(array(
+         'text' => $text,
+         'description' => $description,
+         'status' => $status
+      )); 
+
+      if($slideDelete){
+         return redirect('admin/banner/view')->with('info','Banner updated sucessfully.');
+     }else{
+         return redirect('admin/banner/view')->with('info','Banner not updated.'); 
+     }
+
+  }
+
+  public function bannerdelete($id){
+
+   $deleteSlide= DB::table('banner_section')->delete($id); 
+   if($deleteSlide){
+      return redirect('admin/banner/view')->with('info','Banner deleted sucessfully.');
+  }else{
+      return redirect('admin/banner/view')->with('info','Banner not found.'); 
+  }
+ }
+
+ public function banneradd(Request $request){
+
+   $this->validate($request, [
+      'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+   $text=$request['heading'];
+   $description=$request['description'];
+   $status=$request['status'];
+   $image=$request->hasFile('image');
+
+   if ($request->hasFile('image')) {
+      $image = $request->file('image');
+      $name = $image->getClientoriginalName();
+      $destinationPath = public_path('/uploads/banner');
+      $imagePath = $destinationPath. "/".  $name;
+      $image->move($destinationPath, $name);
+    }
+
+   $slideAdd = DB::table('banner_section')->insert(
+      array(
+         'text' => $text,
+         'description' => $description,
+         'status' => $status,
+         'image' => $name
+      )
+   );
+
+   if($slideAdd){
+      return redirect('admin/banner/create')->with('info','Banner added sucessfully.');
+  }else{
+      return redirect('admin/banner/create')->with('info','Banner not inserted.'); 
+  }
+  }
 
 }
