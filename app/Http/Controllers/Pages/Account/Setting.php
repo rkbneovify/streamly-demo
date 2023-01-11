@@ -128,6 +128,19 @@ class Setting extends Controller
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
         $userinfo = User::find($id);
+
+        $resultoffset = $userinfo->zipcode;
+      
+          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+            $timezone = "Mountain Standard Time";
+          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+            $timezone = "Pacific Standard Time";
+          }else if($resultoffset == "75662"){
+            $timezone = "Central Standard Time";
+          }else{
+            $timezone = "Indian Standard Time";
+          }
+        
          $allSession=SessionTable::where([
         ['status', '=', '1'],
         ['users_id', '=', $id],
@@ -156,7 +169,7 @@ class Setting extends Controller
          
     //   dd($allSession);
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone'));
     }
     public function showSettingpage4(){
         $invoices='1';

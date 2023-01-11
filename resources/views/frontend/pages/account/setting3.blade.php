@@ -361,7 +361,7 @@ use Laravel\Cashier\Cashier;
     </tr>
 	<tr>
       <td class="text-left text-md-center">Home Timezone</td>
-      <td class="text-left text-md-center text-wrap">Indian Standard Time</td>
+      <td class="text-left text-md-center text-wrap">{{ $timezone }}</td>
     </tr>
 	<tr>
       <td class="text-left text-md-center">Current Timezone</td>
