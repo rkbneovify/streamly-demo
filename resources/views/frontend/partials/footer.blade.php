@@ -37,7 +37,8 @@
 						@endif
 						<li><a href="{{ url('/devices') }}"  style="color:#C5C5C5">Supported Devices</a></li>
 						<li><a href="{{ url('/account/settings/bug') }}" style="color:#C5C5C5">Report a bug</a></li>
-						<li ><a href="{{ url('accessibility') }}" style="color:#C5C5C5">Accessibility</a></li>
+						<!-- <li ><a href="{{ url('accessibility') }}" style="color:#C5C5C5">Accessibility</a></li> -->
+						<li ><a href="{{ url('uploads/Accessiblity/streamly accessiblity statement for website.pdf') }}" target="_blank" style="color:#C5C5C5">Accessibility</a></li>
 					</ul>
 				</div>
 				
