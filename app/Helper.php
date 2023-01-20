@@ -130,29 +130,29 @@ use App\User;
           $response = array('numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
           //return response()->json($response, 200);
 
-          $resultoffset = $user->zipcode;
+          // $resultoffset = $user->zipcode;
       
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $hrsoffset = "-07:00";
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $hrsoffset = "-08:00";
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $hrsoffset = "-06:00";
-            $timezone = "Central Standard Time";
-          }else{
-            $hrsoffset = "+05:30";
-            $timezone = "Indian Standard Time";
-          }
+          // if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+          //   $hrsoffset = "-07:00";
+          //   $timezone = "Mountain Standard Time";
+          // }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+          //   $hrsoffset = "-08:00";
+          //   $timezone = "Pacific Standard Time";
+          // }else if($resultoffset == "75662"){
+          //   $hrsoffset = "-06:00";
+          //   $timezone = "Central Standard Time";
+          // }else{
+          //   $hrsoffset = "+05:30";
+          //   $timezone = "Indian Standard Time";
+          // }
       
         
         return response()->json([
             'success' => false,
             'response_code'=>479,
             'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
-            'houroffset' => $hrsoffset,
-            'timezone' => $timezone,
+            'houroffset' => '+05:30',
+            'timezone' => 'Indian Time Zone',
             'loggedindeviceinfolist'=>$response,
           ],479)->send();
 
@@ -453,21 +453,21 @@ $Apple_TV = (stripos($ua,"Apple TV") !== false);
 function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
   $userInfo = JWTAuth::setToken($token)->toUser();
   $user= User::find($user_id);
-  $resultoffset = $user->zipcode;
+  // $resultoffset = $user->zipcode;
       
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $hrsoffset = "-07:00";
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $hrsoffset = "-08:00";
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $hrsoffset = "-06:00";
-            $timezone = "Central Standard Time";
-          }else{
-            $hrsoffset = "+05:30";
-            $timezone = "Indian Standard Time";
-          }
+  //         if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+  //           $hrsoffset = "-07:00";
+  //           $timezone = "Mountain Standard Time";
+  //         }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+  //           $hrsoffset = "-08:00";
+  //           $timezone = "Pacific Standard Time";
+  //         }else if($resultoffset == "75662"){
+  //           $hrsoffset = "-06:00";
+  //           $timezone = "Central Standard Time";
+  //         }else{
+  //           $hrsoffset = "+05:30";
+  //           $timezone = "Indian Standard Time";
+  //         }
           
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
@@ -495,8 +495,8 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
       'device_type'=>'non-web',
       'personaldevicename_popup'=>$personal_device_data['show_popup'],
-      'houroffset' => $hrsoffset,
-      'timezone' => $timezone,
+      'houroffset' => '+05:30',
+      'timezone' => 'Indian Standard Time',
       // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
