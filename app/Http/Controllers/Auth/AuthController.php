@@ -29,7 +29,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','loginWithPasscode','samedevicelogout','loginEntry']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','loginWithPasscode','samedevicelogout','loginEntry', 'loginCheck']]);
     }
 
     public function register(Request $request){
@@ -125,6 +125,43 @@ class AuthController extends Controller
        if($userRole[0]=='user'||'tieruser'){
         $uid=  $user['id'];
         checkLoginLimit($uid,$token,$deviceDetails);
+        exit;
+        
+    }
+        $this->authenticated($request,$user,$token);
+        return $this->respondWithToken($token);
+    }
+
+    public function logincheck(Request $request)
+    {	$deviceDetails	=getDeviceIdforAPI($request);
+        $credentials = request(['email', 'password']);
+
+        if(empty(request('email')) || empty(request('password'))){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'both email and password required'], 401);
+        }
+        if(empty(request('deviceid'))){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'deviceid required'], 401);
+        }
+        $expirationInMinutes = 43800;//one month in minutes
+        JWTAuth::factory()->setTTL($expirationInMinutes);
+
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return response()->json(['success'=>false,'message' => 'Invalid credentials','response_code'=>401], 401);
+        }
+
+        $user=JWTAuth::user();
+
+        if($user->email_verified_at==null){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+        }
+
+        if($user->is_active==0){
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+        }
+       $userRole= $user->roles->pluck('name');
+       if($userRole[0]=='user'||'tieruser'){
+        $uid=  $user['id'];
+        checkLoginLimit2($uid,$token,$deviceDetails);
         exit;
         
     }

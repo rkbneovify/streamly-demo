@@ -130,35 +130,188 @@ use App\User;
           $response = array('numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
           //return response()->json($response, 200);
 
-          // $resultoffset = $user->zipcode;
+          $resultoffset = $user->zipcode;
       
-          // if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-          //   $hrsoffset = "-07:00";
-          //   $timezone = "Mountain Standard Time";
-          // }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-          //   $hrsoffset = "-08:00";
-          //   $timezone = "Pacific Standard Time";
-          // }else if($resultoffset == "75662"){
-          //   $hrsoffset = "-06:00";
-          //   $timezone = "Central Standard Time";
-          // }else{
-          //   $hrsoffset = "+05:30";
-          //   $timezone = "Indian Standard Time";
-          // }
+          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+            $hrsoffset = "-07:00";
+            $timezone = "Mountain Standard Time";
+          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+            $hrsoffset = "-08:00";
+            $timezone = "Pacific Standard Time";
+          }else if($resultoffset == "75662"){
+            $hrsoffset = "-06:00";
+            $timezone = "Central Standard Time";
+          }else{
+            $hrsoffset = "+05:30";
+            $timezone = "Indian Standard Time";
+          }
       
         
         return response()->json([
             'success' => false,
             'response_code'=>479,
             'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
-            'houroffset' => '+05:30',
-            'timezone' => 'Indian Time Zone',
+            'houroffset' => $hrsoffset,
+            'timezone' => $timezone,
             'loggedindeviceinfolist'=>$response,
           ],479)->send();
 
     }
     
 }
+
+function checkLoginLimit2($user_id,$token,$deviceDetails){
+  $login_limit =  GetLimitForUser($user_id);
+//find all by user_id and and status=active
+$active_session = App\SessionTable::where([
+['status', '=', '1'],
+['users_id', '=', $user_id],
+])->get()->toArray();
+  //check if there's no entry by this used id
+  if ((count($active_session)==0)) {
+   //new entry of sessionTable
+   sessionTable2($user_id,$token,$deviceDetails,$connected_devices=1);
+} else if (count($active_session) > 0 && count($active_session) < $login_limit) {
+    //check if device id is same
+    if(duplicateDeviceId($user_id,$deviceDetails)==false){
+   //new entry of sessionTable
+   //and get the number of last connected device
+   $prevConnectDevicecount = App\SessionTable::select('connected_devices')
+    ->where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+     ])->orderBy('connected_devices', 'desc')
+     ->first();
+     
+  $device=number_format($prevConnectDevicecount['connected_devices']); 
+  //the number of device previously connected + 1
+  sessionTable2($user_id,$token,$deviceDetails,$connected_devices=$device+1);
+  }
+
+} //after iteration we check if the count of logins is still greater than the limit
+if (count($active_session) >= $login_limit) {
+  //then return a login error that maximum logins reached
+  //echo 'you are not allowed to login as you have breeched the maximum session limit.';
+  //exit;
+  // return response()->json([
+  //   'success' => false,
+  //   'response_code'=>479,
+  //   'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
+  //   //'loggedindeviceinfointheseId'=>$myarr,
+  // ],479)->send();
+  
+
+  $userEmailID = $user_id;
+  // $userEmailID = User::where('email', $userEmail)->first()->id;
+   $uid = $userEmailID;
+   $user= User::find($uid);
+   //$user = JWTAuth::user();//all the user info
+  // $uid=  $user['id'];
+   //and get the number of last connected device
+   $userRole=  $user->roles->first()->name;
+   // $user = JWTAuth::user();//all the user info
+   // $uid=  $user['id'];
+   // //and get the number of last connected device
+   // $userRole=  $user->roles->first()->name;
+   if($userRole=='tieruser'){
+   $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id','pdname'=> function($q) use($uid) {
+       // Query the name field in status table
+       $q->select('id','personal_devicename','device_id','user_id')->where('user_id', '=', $uid);
+   }])
+   ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+   ->where([
+   ['status', '=', '1'],
+   ['users_id', '=', $uid],
+    ])->orderBy('connected_devices', 'asc');
+   $s='';
+   $numofdevice='';
+$s=$prevConnectDevicecount->get()->makeHidden('pdname')
+->map(function ($address)  {
+   
+   $address['session_id'] = HashUserID($address['id']);
+   if(is_null($address->hotel)){
+       $address['hotel_room'] = null;
+   }else{
+       $address['hotel_room'] = $address->hotel->hotel_room;
+
+
+   }
+
+   $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+   $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+   unset($address['hotel']);
+   unset($address['device']);
+   unset($address['id']);
+   unset($address['pdname']);
+  
+     return $address;
+               
+               });
+           }else{
+               $prevConnectDevicecount = SessionTable::with(['pdname'=> function($q) use($uid) {
+                   // Query the name field in status table
+                       $q->select('id','personal_devicename','device_id','user_id')
+                       ->where('user_id', '=', $uid); 
+               }])
+               ->where([
+               ['status', '=', '1'],
+               ['users_id', '=', $uid],
+               ])
+               ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+               ->orderBy('connected_devices', 'asc');
+   $s='';
+   $numofdevice='';
+   $s=$prevConnectDevicecount->get()->makeHidden('pdname')
+   ->map(function ($address)  {
+   
+   $address['session_id'] = HashUserID($address['id']);
+
+   $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+   $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+   unset($address->pdname);
+   unset($address['device']);
+   unset($address['id']);
+     return $address;
+               
+               });
+
+           }
+$numofdevice=$prevConnectDevicecount->count();
+
+//  dd($s);
+    $response = array('numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+    //return response()->json($response, 200);
+
+    // $resultoffset = $user->zipcode;
+
+    // if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+    //   $hrsoffset = "-07:00";
+    //   $timezone = "Mountain Standard Time";
+    // }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+    //   $hrsoffset = "-08:00";
+    //   $timezone = "Pacific Standard Time";
+    // }else if($resultoffset == "75662"){
+    //   $hrsoffset = "-06:00";
+    //   $timezone = "Central Standard Time";
+    // }else{
+    //   $hrsoffset = "+05:30";
+    //   $timezone = "Indian Standard Time";
+    // }
+
+  
+  return response()->json([
+      'success' => false,
+      'response_code'=>479,
+      'message'=>'Your account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
+      'houroffset' => '+05:30',
+      'timezone' => 'Indian Time Zone',
+      'loggedindeviceinfolist'=>$response,
+    ],479)->send();
+
+}
+
+}
+
 function automaticLogoutWithInterval($user_id){
   $login_limit = 5;
   //find all by user_id and and status=active
@@ -453,6 +606,71 @@ $Apple_TV = (stripos($ua,"Apple TV") !== false);
 function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
   $userInfo = JWTAuth::setToken($token)->toUser();
   $user= User::find($user_id);
+  $resultoffset = $user->zipcode;
+      
+          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+            $hrsoffset = "-07:00";
+            $timezone = "Mountain Standard Time";
+          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+            $hrsoffset = "-08:00";
+            $timezone = "Pacific Standard Time";
+          }else if($resultoffset == "75662"){
+            $hrsoffset = "-06:00";
+            $timezone = "Central Standard Time";
+          }else{
+            $hrsoffset = "+05:30";
+            $timezone = "Indian Standard Time";
+          }
+          
+  if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
+    $termAndCondition=true;
+ } else {$termAndCondition=false;}
+  
+
+ $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+ $personal_device_data = personaldeviceTableStore($user_id,$deviceDetails);
+//  $Saved['result'];
+//  $Saved['LastInsertId'];
+  if($Saved['result'] && $personal_device_data['result']){
+    $active_sessioncount = App\SessionTable::where([
+      ['status', '=', '1'],
+      ['users_id', '=', $user_id],
+       ])->get()->count();
+       $rooms=getActiveHotelRooms($user_id);
+       $subscriptionStatus =  GetSubscriptionStatusOfUser($user_id);
+       $kindlysubscribemsg =  $subscriptionStatus?null:KindlySubscribeMsg();
+    return response()->json([
+  
+      'success' => true,
+      'message'=>'logged in successfully ',
+      'response_code'=>200,
+      'sessionid'=>HashUserID($Saved['LastInsertId']),
+      'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
+      'device_type'=>'non-web',
+      'personaldevicename_popup'=>$personal_device_data['show_popup'],
+      'houroffset' => $hrsoffset,
+      'timezone' => $timezone,
+      // 'unhashedsessionid'=>$Saved['LastInsertId'],
+      'connected_device'=> $active_sessioncount.' device connected  ',
+      'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => JWTAuth::factory()->getTTL() * 60,
+        'device_info'=>$deviceDetails,
+        'user'=>$userInfo,
+        'termandcondition'=>$termAndCondition,
+        'rooms'=>$rooms,
+        'userrole'=>$userInfo->roles->pluck('name')[0],
+        'subscribed'=>$subscriptionStatus,
+        'subscribedmsgis'=>$kindlysubscribemsg
+      
+      
+    ],200)->send();}
+
+}
+
+function sessionTable2($user_id,$token,$deviceDetails,$connected_devices){
+  $userInfo = JWTAuth::setToken($token)->toUser();
+  $user= User::find($user_id);
   // $resultoffset = $user->zipcode;
       
   //         if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
@@ -496,7 +714,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'device_type'=>'non-web',
       'personaldevicename_popup'=>$personal_device_data['show_popup'],
       'houroffset' => '+05:30',
-      'timezone' => 'Indian Standard Time',
+      'timezone' => "Indin Time Zone",
       // 'unhashedsessionid'=>$Saved['LastInsertId'],
       'connected_device'=> $active_sessioncount.' device connected  ',
       'access_token' => $token,
