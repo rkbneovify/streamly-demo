@@ -44,6 +44,7 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 Route::group(['prefix' => 'auth'], function ($router) {
     
     Route::post('login', 'Auth\AuthController@login');
+    Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('login-with-passcode', 'Auth\AuthController@loginWithPasscode');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
