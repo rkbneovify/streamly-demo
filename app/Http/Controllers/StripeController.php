@@ -49,9 +49,7 @@ class StripeController extends Controller
    
                     $html='<html>
                     Hi, '.$user[0]->name.'<br><br>
-    
                     Your subscription is cancelled now!
-    
                 </html>';
 
                    Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
@@ -60,7 +58,66 @@ class StripeController extends Controller
                });
 
               }
+            break;
 
+            case 'payment_intent.succeeded':
+                     $paymentIntent = $event->data->object;
+    
+                     if($paymentIntent->description == "Subscription update"){
+    
+                         $user= DB::table('users')->where('email', $paymentIntent->receipt_email)->get();
+
+                         $recipt = $paymentIntent->charges->data[0]->receipt_url;
+       
+                        $website_link = env('WEBSITE_URL');
+       
+                        $html='<html>
+                        Hi, '.$user[0]->name.'<br><br>
+                        We hope you are enjoying streamlyTV,<br>
+                        as a reminder, your subscription is renewed.<br><br>
+                        View your receipt by visiting '.$recipt.'<br><br>
+                        Thanks<br>
+                        Team Streamly
+        
+                    </html>';
+    
+                       Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                       $message->to($user[0]->email, $user[0]->name)
+                       ->subject('Your Streamly Subscription Renewed '.env('APP_NAME'));
+                   });
+    
+                  }
+            break;
+    
+            case 'payment_intent.payment_failed':
+                         $paymentIntent = $event->data->object;
+        
+                         if($paymentIntent->last_payment_error->code == "expired_card"){
+        
+                             $cardExpire = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
+                             $user= DB::table('users')->where('id', $cardExpire[0]->user_id)->get();
+    
+                             //$recipt = $paymentIntent->charges->data->receipt_url;
+           
+                            $website_link = env('WEBSITE_URL');
+           
+                            $html='<html>
+                            Hi, '.$user[0]->name.'<br><br>
+                            Your card is expired.<br>
+                            Please visit my accounts by visiting<br>
+                            '.env('APP_URL').'/account/settings
+                            <br><br>
+                            Thanks<br>
+                            Team Streamly
+            
+                        </html>';
+        
+                           Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                           $message->to($user[0]->email, $user[0]->name)
+                           ->subject('Your Card Expired '.env('APP_NAME'));
+                       });
+        
+                      }
 
             }
        
