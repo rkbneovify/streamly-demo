@@ -468,14 +468,14 @@ use Laravel\Cashier\Cashier;
 
     <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Current Pack</th>
-      <th scope="col" class="text-md-center">{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</th>
+      <th scope="col" class="text-md-center">Plan Renewal Date</th>
       
     </tr>
   </thead>
   <tbody style="color:#5E5E5E;">
     <tr>
-      <td class="text-left text-md-center">{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
-      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}</td>
+      <td class="text-left text-md-center">{{$plan->nickname ?? ''}} {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
+      <td class="text-left text-md-center text-break" >{{$renewaldatetime ?? ''}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Payment method:</td>
@@ -508,6 +508,7 @@ use Laravel\Cashier\Cashier;
 
     <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
+	  <th scope="col" class="text-left text-md-center">Date</th>
       <th scope="col" class="text-left text-md-center">Download</th>
       
     </tr>
@@ -524,6 +525,7 @@ else
 } ?>
   <tr>
       <td class="text-left text-md-center">{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}</td>
+	  <td class="text-left text-md-center"><?php echo gmdate("Y-m-d H:i:s", $invoice->status_transitions->paid_at); ?></td>
       <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
     </tr>
   @endforeach
