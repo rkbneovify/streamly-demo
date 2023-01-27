@@ -166,10 +166,12 @@ class Setting extends Controller
             // ch_1HSfl3LqTwOy7LECVmOdkimy
         //  dd($invoices);
          }
+        $time = ($subscription->created_at)->format('H:i:s');;
+        $renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
+        $renewaldatetime = $renewsDate . ' at ' . $time;
          
-    //   dd($allSession);
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
     }
     public function showSettingpage4(){
         $invoices='1';
