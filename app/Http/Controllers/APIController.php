@@ -147,7 +147,7 @@ public function login(Request $request)
         // }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
         }
 
       $uid=  $user['id'];
@@ -832,7 +832,13 @@ public function myRecents(Request $request)
                ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
 
                //delete subscriptions
-               DB::table('subscriptions')->where('user_id', $id)->delete();
+               $subscribtionCheck = DB::table('subscriptions')
+               ->where(['user_id' => $id, 'stripe_status' => 'active'])
+               ->get();
+
+               if(count($subscribtionCheck) > 0){
+               $User->subscription('main')->skipTrial()->cancelNow();
+               }
                //delete manage connected devices
 
                DB::table('session_table')

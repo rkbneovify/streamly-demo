@@ -119,7 +119,7 @@ class AuthController extends Controller
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'||'tieruser'){
@@ -156,7 +156,7 @@ class AuthController extends Controller
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'||'tieruser'){
@@ -192,7 +192,7 @@ class AuthController extends Controller
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
         }
        $userRole= $user->roles->pluck('name');
        //todo hotel check
