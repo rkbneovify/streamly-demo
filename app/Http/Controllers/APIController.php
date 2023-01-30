@@ -819,7 +819,7 @@ public function myRecents(Request $request)
 }
 }
 
-    public function userdelete ($id)
+    public function userdelete($id)
     {
         $User= User::find($id);
 
@@ -829,7 +829,7 @@ public function myRecents(Request $request)
             if($User['is_active'] == 1){
                 DB::table('users')
                ->where('id', $id)
-               ->update(['is_active' => "0"]);
+               ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
 
                //delete subscriptions
                DB::table('subscriptions')->where('user_id', $id)->delete();
