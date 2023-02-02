@@ -38,7 +38,187 @@ class ReportController extends Controller
          return 'Under Maintenance';
    }
 
-   public function TransactionReports($sort){
+   public function TransactionsReports(){
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.stripe.com/v1/payment_intents?limit=20',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+  ));
+
+$response = curl_exec($curl);
+$newdatatrans = json_decode($response);
+curl_close($curl);
+
+// dd($newdatatrans->data);
+// die();
+
+$alltransactions = [];
+for ($x = 0; $x < count($newdatatrans->data); $x++) {
+
+  if($newdatatrans->data[$x]->status == 'succeeded'){
+    $status = 'Succeeded';
+    $color = '#8df93b';
+  }else{
+    $status = 'Failed';
+    $color = '#f94848';
+  }
+
+  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
+
+  $transaction = [
+    'id' => $newdatatrans->data[$x]->id,
+    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
+    'email' => $email,
+    'type' => $newdatatrans->data[$x]->description,
+    'status' => $status,
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
+    'amount' => $newdatatrans->data[$x]->amount,
+    'color' => $color
+  ];
+
+  array_push($alltransactions, $transaction);
+}
+    
+    //  dd($alltransactions);
+    //  die();
+
+    $serial_no = 1;
+    $page_no = 2;
+    $has_more = $newdatatrans->has_more;
+
+    return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
+   }
+
+   public function TransactionspagingReports($order, $id, $no, $number){
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.stripe.com/v1/payment_intents?limit=20&'.$order.'='.$id.'',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+  ));
+
+$response = curl_exec($curl);
+$newdatatrans = json_decode($response);
+curl_close($curl);
+
+$alltransactions = [];
+for ($x = 0; $x < count($newdatatrans->data); $x++) {
+
+  if($newdatatrans->data[$x]->status == 'succeeded'){
+    $status = 'Succeeded';
+    $color = '#8df93b';
+  }else{
+    $status = 'Failed';
+    $color = '#f94848';
+  }
+
+  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
+
+  $transaction = [
+    'id' => $newdatatrans->data[$x]->id,
+    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
+    'email' => $email,
+    'type' => $newdatatrans->data[$x]->description,
+    'status' => $status,
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
+    'amount' => $newdatatrans->data[$x]->amount,
+    'color' => $color
+  ];
+
+  array_push($alltransactions, $transaction);
+}
+    
+    //  dd($alltransactions);
+    //  die();
+    $serial_no = $no + 20;
+    $page_no = $number + 1;
+    $has_more = $newdatatrans->has_more;
+
+    return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
+   }
+
+   public function Transactionsview($id){
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.stripe.com//v1/payment_intents/'.$id.'',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+  ));
+
+$response = curl_exec($curl);
+$viewTransaction = json_decode($response);
+curl_close($curl);
+
+$singletransaction = [];
+
+if($viewTransaction->status == 'succeeded'){
+  $status = 'Succeeded';
+  $color = '#65a734';
+}else{
+  $status = 'Failed';
+  $color = '#f94848';
+}
+
+$email=DB::table('users')->where('stripe_id', $viewTransaction->customer)->value('email');
+
+$view = [
+  'id' => $viewTransaction->id,
+  'amount' => $viewTransaction->amount,
+  'name' => $viewTransaction->charges->data[0]->billing_details->name,
+  'email' => $email,
+  'status' => $status,
+  'color' => $color,
+  'date' => date("Y-m-d H:i:s", $viewTransaction->charges->data[0]->created),
+  'risk_level' => $viewTransaction->charges->data[0]->outcome->risk_level,
+  'customer' => $viewTransaction->charges->data[0]->customer,
+  'currency' => $viewTransaction->charges->data[0]->currency,
+  'last4' => $viewTransaction->charges->data[0]->payment_method_details->card->last4,
+  'exp_year' => $viewTransaction->charges->data[0]->payment_method_details->card->exp_year,
+  'exp_month' => $viewTransaction->charges->data[0]->payment_method_details->card->exp_month,
+  'receipt_url' => $viewTransaction->charges->data[0]->receipt_url,
+  'address' => json_decode(json_encode ( $viewTransaction->charges->data[0]->billing_details->address ) , true)
+];
+
+array_push($singletransaction, $view);
+
+//dd($singletransaction);
+
+return view('admin.reports.viewtransaction', compact('singletransaction'));
+   }
+
+   public function SubscriptionsReports($sort){
 
     $transaction = DB::table('subscriptions')
     ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
@@ -158,7 +338,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
       'data' => $array
     ];
 
-    return view('admin.reports.transactionreport', compact('resultCount'));
+    return view('admin.reports.subscriptionsreport', compact('resultCount'));
          
     //return $resultCount;
    }

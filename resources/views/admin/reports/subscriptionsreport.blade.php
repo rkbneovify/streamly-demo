@@ -121,7 +121,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>All Transactions ({{ $count = count($resultCount['data']) }})</h1> {{ session()->get( 'info' ) }}
+            <h1>All Subscriptions ({{ $count = count($resultCount['data']) }})</h1> {{ session()->get( 'info' ) }}
           </div>
           <!-- <div class="form-group">
                 <label><strong>Filter by Userrole :</strong></label>
@@ -326,18 +326,19 @@
 <button style="padding: 5px;" onclick="funcSearch()"><i class="fa fa-search"></i></button>
 </div>
 <div style="display: flex; justify-content: space-between;">
-<div class="divfilter">Sort data by trasaction data:
+<div class="divfilter">Sort data by subscription date:
 <select name="" id="myInputsort" onchange="myFunctionSort()">
 <option value="">Sort</option>
       <option value="desc">Descending</option>
   <option value="asc">Ascending</option>
 </select>
 </div>
-<div class="divfilter">Filter With Transaction Type:
+<div class="divfilter">Filter With Subscription Type:
 <select name="" id="myInput" onchange="myFunction()">
         <option value="">All</option>
   <option value="active">Active</option>
   <option value="canceled">Cancelled</option>
+  <option value="trialing">Trialing</option>
 </select>
 </div>
 </div>
@@ -449,7 +450,7 @@ window.onclick = function(event) {
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Transaction Details</h3>
+          <h3 class="card-title">Subscriptions Details</h3>
            
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -467,20 +468,20 @@ window.onclick = function(event) {
                       <th style="width: 2%">
                           S:No
                       </th>
-                      <th style="width: 20%">
-                          Transaction Date
+                      <th style="width: 25%">
+                          Subscription Start Date
                       </th>
                       <th style="width: 20%">
-                          Transaction Type
+                          Subscription Type
                       </th>
                       <th style="width: 5%">
                           Email
                       </th> 
-                      <th style="width: 10%">
+                      <th style="width: 5%">
                           Zipcode
                       </th> 
-                      <th style="width: 20%">
-                          Expiration Date
+                      <th style="width: 25%">
+                          Renewel/Expiration Date
                       </th> 
                      
                       {{-- <th style="width: 8%" class="text-center">

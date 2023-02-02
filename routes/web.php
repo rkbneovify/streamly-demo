@@ -94,7 +94,10 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/users/session', 'Admin\UsersController@activeSession');//for user session
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails');//for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis');//for user session piyush
-    Route::get('/report/transactionreport/{sort}', 'Admin\ReportController@TransactionReports');//for user session piyush
+    Route::get('/report/subscriptionsreport/{sort}', 'Admin\ReportController@SubscriptionsReports');//for user session piyush
+    Route::get('/report/transactionsreport', 'Admin\ReportController@TransactionsReports');//for user session piyush
+    Route::get('/report/transactionsreport/{order}/{id}/{no}/page_number={number}', 'Admin\ReportController@TransactionspagingReports');//for user session piyush
+    Route::get('/report/transactionsreport/viewtransaction/{id}', 'Admin\ReportController@Transactionsview');//for user session piyush
     Route::get('/report/zipcode', 'Admin\ReportController@zipcode');//for user session piyush
     Route::get('/report/demographic', 'Admin\ReportController@graph');//for user session piyush
     Route::get('/slide/view', 'LoginGuideController@slideview');//slider piyush
