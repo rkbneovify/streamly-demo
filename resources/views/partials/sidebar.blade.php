@@ -205,9 +205,15 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                <a href=" {{ url('/admin/report/transactionreport/DESC') }}" class="nav-link">
+                <a href=" {{ url('/admin/report/subscriptionsreport/DESC') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Transaction Reports</p>
+                    <p>Subscriptions Report</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                <a href=" {{ url('/admin/report/transactionsreport') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Transactions Report</p>
                   </a>
                 </li>
                 <li class="nav-item">
