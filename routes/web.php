@@ -113,8 +113,8 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate');//slider piyush
     Route::put('/banner/update/{id}', 'HomescreenBannerController@bannerupdate');//slider piyush
     Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate');//slider piyush
-    Route::get('/stripekeys', 'Admin\StripekeysController@index');//slider piyush
-    Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
+    //Route::get('/stripekeys', 'Admin\StripekeysController@index');//slider piyush
+    //Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
