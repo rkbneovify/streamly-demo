@@ -75,13 +75,19 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
     $color = '#f94848';
   }
 
+  if($newdatatrans->data[$x]->description == 'Subscription creation'){
+     $paymentDescription = 'Subscription Creation';
+  }else{
+    $paymentDescription = 'Subscription Update';
+  }
+
   $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
     'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
     'email' => $email,
-    'type' => $newdatatrans->data[$x]->description,
+    'type' => $paymentDescription,
     'status' => $status,
     'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
     'amount' => $newdatatrans->data[$x]->amount,
@@ -134,13 +140,19 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
     $color = '#f94848';
   }
 
+  if($newdatatrans->data[$x]->description == 'Subscription creation'){
+    $paymentDescription = 'Subscription Creation';
+ }else{
+   $paymentDescription = 'Subscription Update';
+ }
+
   $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
     'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
     'email' => $email,
-    'type' => $newdatatrans->data[$x]->description,
+    'type' => $paymentDescription,
     'status' => $status,
     'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
     'amount' => $newdatatrans->data[$x]->amount,
