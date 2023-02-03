@@ -61,13 +61,20 @@ class StripeController extends Controller
             break;
 
             case 'payment_intent.succeeded':
-                     $paymentIntent = $event->data->object;
+                     $paymentIntent = $event->data;
     
-                     if($paymentIntent->description == "Subscription update"){
+                     if($paymentIntent->description != "Subscription creation"){
     
-                         $user= DB::table('users')->where('email', $paymentIntent->receipt_email)->get();
+                         $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
                          $recipt = $paymentIntent->charges->data[0]->receipt_url;
+
+                        //  $userplanRenewed = DB::table('subscriptions')
+                        //  ->where('stripe_id', $paymentIntent->id)
+                        //  ->update(array(
+                        //  'stripe_status' => 'canceled',
+                        //  'ends_at' => date("Y/m/d h:i:s"),
+                        // )); 
        
                         $website_link = env('WEBSITE_URL');
        
@@ -90,12 +97,12 @@ class StripeController extends Controller
             break;
     
             case 'payment_intent.payment_failed':
-                         $paymentIntent = $event->data->object;
+                         $paymentIntent = $event->data;
         
                          if($paymentIntent->last_payment_error->code == "expired_card"){
         
-                             $cardExpire = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
-                             $user= DB::table('users')->where('id', $cardExpire[0]->user_id)->get();
+                             //$cardExpire = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
+                             $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
     
                              //$recipt = $paymentIntent->charges->data->receipt_url;
            
