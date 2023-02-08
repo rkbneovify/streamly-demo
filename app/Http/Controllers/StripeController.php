@@ -67,7 +67,7 @@ class StripeController extends Controller
     
                          $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
-                         $recipt = $paymentIntent->charges->data[0]->receipt_url;
+                         //$recipt = $paymentIntent->charges->data[0]->receipt_url;
 
                         //  $userplanRenewed = DB::table('subscriptions')
                         //  ->where('stripe_id', $paymentIntent->id)
@@ -82,7 +82,7 @@ class StripeController extends Controller
                         Hi, '.$user[0]->name.'<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
-                        View your receipt by visiting '.$recipt.'<br><br>
+                        View your receipt by visiting <br><br>
                         Thanks<br>
                         Team Streamly
         
