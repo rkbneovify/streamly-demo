@@ -95,6 +95,7 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::get('/report/usersdetails', 'Admin\ReportController@userdetails');//for user session piyush
     Route::get('/report/channelanalysis', 'Admin\ReportController@channelanalysis');//for user session piyush
     Route::get('/report/subscriptionsreport/{sort}', 'Admin\ReportController@SubscriptionsReports');//for user session piyush
+    Route::get('/report/subscriptionsreport/search/from={from}&to={to}/{value}', 'Admin\ReportController@SubscriptionsReportstimeframe');//for user session piyush
     Route::get('/report/transactionsreport', 'Admin\ReportController@TransactionsReports');//for user session piyush
     Route::get('/report/transactionsreport/{order}/{id}/{no}/page_number={number}', 'Admin\ReportController@TransactionspagingReports');//for user session piyush
     Route::get('/report/transactionsreport/viewtransaction/{id}', 'Admin\ReportController@Transactionsview');//for user session piyush

@@ -355,6 +355,142 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
     //return $resultCount;
    }
 
+   public function SubscriptionsReportstimeframe($to, $from, $value){
+
+    if($value == 'all'){
+    $transaction = DB::table('subscriptions')
+    ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+    ->whereDate('created_at', '>=',$to)
+    ->whereDate('created_at', '<=',$from)
+    ->get();
+    }else{
+    $transaction = DB::table('subscriptions')
+    ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+    ->where('stripe_status', $value)
+    ->whereDate('created_at', '>=',$to)
+    ->whereDate('created_at', '<=',$from)
+    ->get();
+    }
+    $array =[];
+    $arrayRes1 = [];
+    $arrayRes2 = [];
+    $arrayRes3 = [];
+    $arrayRes4 = [];
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://api.stripe.com/v1/plans',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+      CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+  ));
+
+$response = curl_exec($curl);
+$newdataplans = json_decode($response);
+curl_close($curl);
+$stripeplans = [];
+for ($x = 0; $x < count($newdataplans->data); $x++) {
+  $plans = [
+    'id' => $newdataplans->data[$x]->id,
+    'interval' => $newdataplans->data[$x]->interval,
+    'interval_count' => $newdataplans->data[$x]->interval_count
+  ];
+
+  array_push($stripeplans, $plans);
+}
+//dd($stripeplans);
+    foreach ($transaction as $data){
+
+      if($data->renews_at == null && $data->stripe_status == 'active'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $newUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes1, $newUser);
+      }elseif(!empty($data->renews_at) && $data->stripe_status == 'active'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $renewedUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes2, $renewedUser);
+      }elseif($data->stripe_status == 'canceled'){
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $terminatedUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes3, $terminatedUser);
+      }else{
+        $email=DB::table('users')->where('id', $data->user_id)->value('email');
+        $name=DB::table('users')->where('id', $data->user_id)->value('name');
+        $overdueUser = ['name' => $name,
+                    'email' => $email
+                   ];
+        array_push($arrayRes4, $overdueUser);
+      }
+
+        $userEmail=DB::table('users')->where('id', $data->user_id)->value('email');
+        $userZipcode=DB::table('users')->where('id', $data->user_id)->value('zipcode');
+
+        if(!empty($data->renews_at)){
+        $time = strtotime($data->renews_at);
+        }else{
+        $time = strtotime($data->created_at);
+        }
+
+        for ($k = 0; $k < count($stripeplans); $k++) {
+             if($data->stripe_plan == $stripeplans[$k]['id']){
+               $final = date("Y-m-d H:i:s", strtotime("+".$stripeplans[$k]['interval_count'].$stripeplans[$k]['interval']."", $time));
+               break;
+              }
+              else{
+                $final = date("Y-m-d H:i:s", strtotime("1 month"));
+              }
+        }
+        
+      $arry = [
+        'id'=> $data->id ,
+        'email'=> $userEmail ,
+        'zipcode' => $userZipcode ,
+        'stripe_status'=> $data->stripe_status ,
+        'start_at'=> $data->created_at ,
+        'ends_at'=> $data->renews_at ,
+        'cancle_at' => $data->ends_at,
+        'trial_ends_at' => $data->trial_ends_at,
+        'null'=> $final ,
+      ];
+
+      // dd($arry);
+      // die();
+      array_push($array, $arry);
+    };
+
+    $resultCount = [
+      'newuser' => $arrayRes1,
+      'reneweduser' => $arrayRes2,
+      'terminateduser' => $arrayRes3,
+      'overdueuser' => $arrayRes4,
+      'data' => $array
+    ];
+    
+    //dd($resultCount);
+
+    return view('admin.reports.subscriptionsreport', compact('resultCount'));
+         
+    //return $resultCount;
+   }
+
    public function subscriptiondestroy()
    {  
    //     $uid= Auth::user()->id;
