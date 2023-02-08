@@ -113,6 +113,13 @@
   text-decoration: none;
   cursor: pointer;
 }
+.heightBox {
+  height: 30px;
+  font-size: 14px;
+}
+.fontboxWeight {
+  font-weight: 400!important;
+}
 </style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -142,7 +149,20 @@
           </div>
         </div>
       </div><!-- /.container-fluid -->
-    </section>
+    <div>
+<label class="fontboxWeight" for="timeframe"><b>Select Date Range:</b> Start Date</label>
+<input class="heightBox" type="date" id="from" name="timeframe">
+<label class="fontboxWeight" for="timeframe">End Date</label>
+<input class="heightBox" type="date" id="to" name="timeframe">
+<label class="fontboxWeight" for="timeframe">Type</label>
+<select class="heightBox" name="" id="valuetf" onchange="">
+        <option value="all">All</option>
+  <option value="active">New Subscribers</option>
+  <option value="canceled">Cancelled Subscribers</option>
+</select>
+<button class="heightBox" style="padding: 0px 8px;" onclick="timeFrame()">Apply</button>
+</div>
+</section>
     <div class="row" style="margin: 1px;">
   <div class="col-lg-3 col-6">
     <!-- small box -->
@@ -593,6 +613,21 @@ function myFunction() {
         tr[i].style.display = "none";
       }
     }       
+  }
+}
+function timeFrame() {
+  var from = document.getElementById("from").value;
+  var to = document.getElementById("to").value;
+  var value = document.getElementById("valuetf").value;
+
+  if(from && to){
+    //  console.log(from);
+    //  console.log(to);
+    //  console.log(value);
+
+     window.location = "/admin/report/subscriptionsreport/search/from="+from+"&to="+to+"/"+value+""
+  }else{
+    alert("Please select a date range!!");
   }
 }
 </script>
