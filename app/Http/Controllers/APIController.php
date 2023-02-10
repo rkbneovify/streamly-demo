@@ -827,24 +827,24 @@ public function myRecents(Request $request)
             $UserName = $User['name'];
             $UserEmail = $User['email'];
             if($User['is_active'] == 1){
-                DB::table('users')
-               ->where('id', $id)
-               ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
+            //     DB::table('users')
+            //    ->where('id', $id)
+            //    ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
 
                //delete subscriptions
-               $subscribtionCheck = DB::table('subscriptions')
-               ->where(['user_id' => $id, 'stripe_status' => 'active'])
-               ->get();
+            //    $subscribtionCheck = DB::table('subscriptions')
+            //    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+            //    ->get();
 
-               if(count($subscribtionCheck) > 0){
-               $User->subscription('main')->skipTrial()->cancelNow();
-               }
+            //    if(count($subscribtionCheck) > 0){
+            //    $User->subscription('main')->skipTrial()->cancelNow();
+            //    }
                //delete manage connected devices
 
-               DB::table('session_table')
-               ->where('users_id', $id)
-               ->where('status', "1")
-               ->update(['status' => "0"]);
+            //    DB::table('session_table')
+            //    ->where('users_id', $id)
+            //    ->where('status', "1")
+            //    ->update(['status' => "0"]);
    
                $response = array('status' => true,'message'=>'User with account name: '.$UserName.' Is Deleted Sucessfully.','User_email'=>$UserEmail);             
                return response()->json($response, 200);
