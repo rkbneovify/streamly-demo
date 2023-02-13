@@ -169,9 +169,30 @@ class Setting extends Controller
         if($subscription->ends_at){
         $renewaldatetime = 'Plan Expired';
         }else{
-        $time = ($subscription->created_at)->format('H:i:s');;
-        $renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
-        $renewaldatetime = $renewsDate . ' at ' . $time;
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer='.$userinfo->stripe_id.'',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'GET',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
+  ),
+));
+
+$response = curl_exec($curl);
+$renewalDatestripe = json_decode($response);
+curl_close($curl);
+
+        // $time = ($subscription->created_at)->format('H:i:s');
+        // $renewsDate = gmdate("Y-m-d", $plan->created);
+        //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
+        //$renewaldatetime = $renewsDate . ' at ' . $time;
+        $renewaldatetime = gmdate("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
         }
          
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
