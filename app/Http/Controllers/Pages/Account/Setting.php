@@ -192,7 +192,7 @@ curl_close($curl);
         // $renewsDate = gmdate("Y-m-d", $plan->created);
         //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
         //$renewaldatetime = $renewsDate . ' at ' . $time;
-        $renewaldatetime = gmdate("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+        $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
         }
          
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
