@@ -65,7 +65,7 @@ class StripeController extends Controller
     
                      if($paymentIntent->description != "Subscription creation"){
     
-                         $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
+                         //$user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
                          //$recipt = $paymentIntent->charges->data[0]->receipt_url;
 
@@ -79,7 +79,7 @@ class StripeController extends Controller
                         $website_link = env('WEBSITE_URL');
        
                         $html='<html>
-                        Hi, '.$user[0]->name.'<br><br>
+                        Hi, Piyush Mishra<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
                         View your receipt by visiting <br><br>
@@ -88,8 +88,8 @@ class StripeController extends Controller
         
                     </html>';
     
-                       Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
-                       $message->to($user[0]->email, $user[0]->name)
+                       Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
+                       $message->to('piyush.mishra@oodles.io', 'Piyush Mishra')
                        ->subject('Your Streamly Subscription Renewed '.env('APP_NAME'));
                    });
     
