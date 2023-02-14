@@ -82,8 +82,8 @@ class StripeController extends Controller
                         Hi, '.$user[0]->name.'<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
-                        View your receipt by visiting <br>
-                        '.$recipt.'
+                        View your receipt by clicking <a href="'.$recipt.'">here</a><br>
+                        If you have any questions or if you find an error, please contact us at contact@streamlytv.com.<br><br>
                         Thanks<br>
                         Team Streamly
         
