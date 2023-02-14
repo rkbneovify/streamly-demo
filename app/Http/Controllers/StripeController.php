@@ -90,7 +90,7 @@ class StripeController extends Controller
                     </html>';
     
                        Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
-                       $message->to('piyush.mishra@oodles.io', $user[0]->name)
+                       $message->to($user[0]->email, $user[0]->name)
                        ->subject('Your Subscription Renewed '.env('APP_NAME'));
                    });
     
