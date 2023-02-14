@@ -98,7 +98,7 @@ class StripeController extends Controller
             break;
     
             case 'payment_intent.payment_failed':
-                         $paymentIntent = $event->data;
+                         $paymentIntent = $event->data->object;
         
                          if($paymentIntent->last_payment_error->code == "expired_card"){
         
