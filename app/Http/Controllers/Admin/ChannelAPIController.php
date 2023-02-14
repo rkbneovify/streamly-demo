@@ -715,7 +715,7 @@ if($request->exists('genre')){
     if($isDevice=='roku' || $deviceType=='manifest'){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }else if($isDevice=='apple' || $isDevice=='Apple TV' || $deviceType=='m3u8'){
+    }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8'){
             $type='url';
             $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
     }else {
@@ -728,7 +728,7 @@ if($request->exists('genre')){
             $type='smooth_url';
             $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
     // });
-    }else if($isDevice=='apple' || $isDevice=='Apple TV' || $deviceType=='m3u8')  {
+    }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8')  {
 
     // $reco = Cache::remember('channelscheduleappletz',60*60*24, function () {
         $type='url';
