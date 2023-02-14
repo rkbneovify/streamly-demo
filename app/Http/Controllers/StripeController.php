@@ -65,7 +65,7 @@ class StripeController extends Controller
     
                      if($paymentIntent->description != "Subscription creation"){
     
-                         //$user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
+                         $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
                          //$recipt = $paymentIntent->charges->data[0]->receipt_url;
 
@@ -79,7 +79,7 @@ class StripeController extends Controller
                         $website_link = env('WEBSITE_URL');
        
                         $html='<html>
-                        Hi, '.$paymentIntent.'<br><br>
+                        Hi, '.$user.'<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
                         View your receipt by visiting <br><br>
