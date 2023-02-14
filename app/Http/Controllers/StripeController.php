@@ -79,7 +79,7 @@ class StripeController extends Controller
                         $website_link = env('WEBSITE_URL');
        
                         $html='<html>
-                        Hi, '.$paymentIntent->customer.'<br><br>
+                        Hi, '.$paymentIntent->object->customer.'<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
                         View your receipt by visiting <br><br>
