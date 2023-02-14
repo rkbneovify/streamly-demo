@@ -63,11 +63,11 @@ class StripeController extends Controller
             case 'payment_intent.succeeded':
                      $paymentIntent = $event->data;
     
-                     if($paymentIntent->description != "Subscription creation"){
+                     if($paymentIntent->object->description != "Subscription creation"){
     
-                         $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
+                         $user= DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
 
-                         //$recipt = $paymentIntent->charges->data[0]->receipt_url;
+                         $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
 
                         //  $userplanRenewed = DB::table('subscriptions')
                         //  ->where('stripe_id', $paymentIntent->id)
@@ -79,18 +79,19 @@ class StripeController extends Controller
                         $website_link = env('WEBSITE_URL');
        
                         $html='<html>
-                        Hi, '.$paymentIntent->object->customer.'<br><br>
+                        Hi, '.$user[0]->name.'<br><br>
                         We hope you are enjoying streamlyTV,<br>
                         as a reminder, your subscription is renewed.<br><br>
-                        View your receipt by visiting <br><br>
+                        View your receipt by visiting <br>
+                        '.$recipt.'
                         Thanks<br>
                         Team Streamly
         
                     </html>';
     
-                       Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
-                       $message->to('piyush.mishra@oodles.io', 'Piyush Mishra')
-                       ->subject('Your Streamly Subscription Renewed '.env('APP_NAME'));
+                       Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                       $message->to('piyush.mishra@oodles.io', $user[0]->name)
+                       ->subject('Your Subscription Renewed '.env('APP_NAME'));
                    });
     
                   }
