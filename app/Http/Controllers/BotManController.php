@@ -17,7 +17,7 @@ class BotManController extends Controller
 {
     public function handle()
     {
-    	$botman = app('botman2');
+    	$botman = app('botman');
         //dd($botman);
 
         
