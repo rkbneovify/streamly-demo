@@ -8,7 +8,7 @@
         background-color: #fff;
     }
     .canvasjsHide {
-        padding: 5vw;
+        padding: 7vw;
         position: absolute;
         background-color: #fff;
         bottom: 0;

@@ -66,7 +66,7 @@ use Laravel\Cashier\Cashier;
 
 		.cancel-subscription {
 			display: block;
-    		text-align: right;
+    		text-align: center;
     		color: #CF0000;
 		}
 
@@ -483,7 +483,7 @@ use Laravel\Cashier\Cashier;
     </tr>
 					
 				 <tr class=" text-md-center text-wrap">
-      <td>
+      <td colspan=2>
         <a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a></td>
     </tr>
 
@@ -507,9 +507,42 @@ use Laravel\Cashier\Cashier;
     color: #FFFFFF;">
 
     <tr>
+      <th scope="col" colspan="2" class="text-left pl-4">Card Details</th>
+    </tr>
+  </thead>
+  <tbody style="color:#5E5E5E;">
+    <tr>
+      <td class="text-left text-md-center">Card Type</td>
+      <td class="text-left text-md-center text-break" >{{$userinfo->card_brand}}</td>
+    </tr>
+    <tr>
+      <td class="text-left text-md-center">Card No:</td>
+      <td class="text-left text-md-center text-wrap"><img src="/uploads/icons/creditcard.png" width="40"> ****{{$userinfo->card_last_four}}</td>
+    </tr>
+  </tbody>
+</table></ul></div></div>
+
+<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+				<table class="table table-borderless" >
+  <thead style="font-weight: bold;
+    background: #004E92 0% 0% no-repeat padding-box;
+    
+    letter-spacing: 0.24px;
+    color: #FFFFFF;">
+
+    <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
+	  @if($invoices->paid == '1')
 	  <th scope="col" class="text-left text-md-center">Date</th>
       <th scope="col" class="text-left text-md-center">Download</th>
+	  @else
+	  <th scope="col" class="text-left text-md-center">Status</th>
+      <th scope="col" class="text-left text-md-center">Failure Reason</th>
+	  @endif
       
     </tr>
   </thead>
@@ -525,8 +558,13 @@ else
 } ?>
   <tr>
       <td class="text-left text-md-center">{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}</td>
-	  <td class="text-left text-md-center"><?php echo gmdate("Y-m-d H:i:s", $invoice->status_transitions->paid_at); ?></td>
-      <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
+	  @if($invoice->paid == '1')
+	  <td class="text-left text-md-center">{{ date("Y-m-d H:i:s", $invoice->status_transitions->paid_at) }}</td>
+	  <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
+	  @else
+	  <td style="color: red;" class="text-left text-md-center">Payment Failed!</td>
+	  <td class="text-left text-md-center text-break font-weight-bold">{{ $invoice->charge->failure_message }}</td>
+	  @endif
     </tr>
   @endforeach
     
