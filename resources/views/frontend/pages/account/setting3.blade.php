@@ -511,14 +511,7 @@ use Laravel\Cashier\Cashier;
     </tr>
   </thead>
   <tbody style="color:#5E5E5E;">
-    <tr>
-      <td class="text-left text-md-center">Card Type</td>
-      <td class="text-left text-md-center text-break" >{{$userinfo->card_brand}}</td>
-    </tr>
-    <tr>
-      <td class="text-left text-md-center">Card No:</td>
-      <td class="text-left text-md-center text-wrap"><img src="/uploads/icons/creditcard.png" width="40"> ****{{$userinfo->card_last_four}}</td>
-    </tr>
+    
   </tbody>
 </table></ul></div></div>
 
