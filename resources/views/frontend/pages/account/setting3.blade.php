@@ -66,7 +66,7 @@ use Laravel\Cashier\Cashier;
 
 		.cancel-subscription {
 			display: block;
-    		text-align: center;
+    		text-align: right;
     		color: #CF0000;
 		}
 
@@ -177,7 +177,7 @@ use Laravel\Cashier\Cashier;
         jQuery('#changePassword').modal('show');
 		@endif
 
-		@if(session()->get('message') == 'Password Updated Successfully')
+		@if(session()->has('message'))
         const targetDiv = document.getElementById("hideElement");
 		const targetNav = document.getElementById("mainNav");
      	targetDiv.style.display = "block";
@@ -211,11 +211,6 @@ use Laravel\Cashier\Cashier;
 					<h4>Cancel Subscription</h4>
 					<p>Are you sure you want to cancel your 		{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}?</p>
 					<div>
-
-					
-					<form></form>
-
-
 						<form action="{{ url('user/subscriptiondestroy', Auth::user()->id) }}" method="POST">
 							<input type="hidden" name="_method" value="DELETE">
 															<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -359,19 +354,10 @@ use Laravel\Cashier\Cashier;
       <td class="text-left text-md-center">Email:</td>
       <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
     </tr>
-	<tr>
-      <td class="text-left text-md-center">Home Timezone</td>
-      <td class="text-left text-md-center text-wrap">{{ $timezone }}</td>
-    </tr>
-	<tr>
-      <td class="text-left text-md-center">Current Timezone</td>
-      <td id="timezone" class="text-left text-md-center text-wrap"></td>
-    </tr>
-	<tr>
+    <tr>
       <td class="text-left text-md-center">Password:</td>
       <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
     </tr>
-
 							@if ( Auth::user()->subscribed('main'))
 				 <tr>
       <td class="text-left text-md-center text-wrap" colspan="2">
@@ -468,14 +454,14 @@ use Laravel\Cashier\Cashier;
 
     <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Current Pack</th>
-      <th scope="col" class="text-md-center">Plan Renewal Date</th>
+      <th scope="col" class="text-md-center">{{$plan->nickname ?? ''}} at  {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}</th>
       
     </tr>
   </thead>
   <tbody style="color:#5E5E5E;">
     <tr>
-      <td class="text-left text-md-center">{{$plan->nickname ?? ''}} {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
-      <td class="text-left text-md-center text-break" >{{$renewaldatetime ?? ''}}</td>
+      <td class="text-left text-md-center">{{$plan->nickname ?? ''}} at {{Cashier::formatAmount($plan->amount??'0', $plan->currency??'USD') }}/{{$plan->interval_count ?? ''}} {{$plan->interval ?? ''}}:</td>
+      <td class="text-left text-md-center text-break" >{{$subscription->created_at ?? ''}}</td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Payment method:</td>
@@ -483,7 +469,7 @@ use Laravel\Cashier\Cashier;
     </tr>
 					
 				 <tr class=" text-md-center text-wrap">
-      <td colspan=2>
+      <td>
         <a href="javascript:void(0)" class="cancel-subscription">Cancel subscription</a></td>
     </tr>
 
@@ -507,35 +493,8 @@ use Laravel\Cashier\Cashier;
     color: #FFFFFF;">
 
     <tr>
-      <th scope="col" colspan="2" class="text-left pl-4">Card Details</th>
-    </tr>
-  </thead>
-  <tbody style="color:#5E5E5E;">
-    
-  </tbody>
-</table></ul></div></div>
-
-<div class="row setting-cards mt-5">
-				<div class="col-centered col-md-8 ">
-				<ul class="setting-card table-responsive " style="
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;">
-				<table class="table table-borderless" >
-  <thead style="font-weight: bold;
-    background: #004E92 0% 0% no-repeat padding-box;
-    
-    letter-spacing: 0.24px;
-    color: #FFFFFF;">
-
-    <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
-	  @if($invoices->paid == '1')
-	  <th scope="col" class="text-left text-md-center">Date</th>
       <th scope="col" class="text-left text-md-center">Download</th>
-	  @else
-	  <th scope="col" class="text-left text-md-center">Status</th>
-      <th scope="col" class="text-left text-md-center">Failure Reason</th>
-	  @endif
       
     </tr>
   </thead>
@@ -551,12 +510,7 @@ else
 } ?>
   <tr>
       <td class="text-left text-md-center">{{$invoicedate??'' }} {{Cashier::formatAmount($invoice->total??'0', $invoice->currency??'USD')}}</td>
-	  @if($invoice->paid == '1')
-	  <td class="text-left text-md-center">{{ date("Y-m-d H:i:s", $invoice->status_transitions->paid_at) }}</td>
-	  <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
-	  @else
-	  
-	  @endif
+      <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
     </tr>
   @endforeach
     
@@ -570,59 +524,5 @@ else
 		
 	</section>
 	<section></section>
-	<script>
-	//hoursoffset start
-	String.prototype.toHHMMSS = function () {
-
-var sec_num = parseInt(this, 10); // don't forget the second param
-var hours   = Math.floor(sec_num / 3600);
-var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-
-
-if (hours   < 10) {hours   = "0"+hours;}
-if (minutes < 10) {minutes = "0"+minutes;}
-
-return hours + ':' + minutes ;
-}
-const d = new Date();
-let diff = d.getTimezoneOffset();
-var newdiff = String(diff * 60);
-if (newdiff < 0) {
-  var resultHours = newdiff.substr(1);
-  var signvalue = true;
-}else{
-	var resultHours = newdiff;
-	var signvalue = false;
-  }  
-var newtz = resultHours.toHHMMSS();
-if(signvalue == true){
-var resultoffset = "+".concat(newtz)
-}else{ 
-	var resultoffset = "-".concat(newtz);
-	}
-	//hoursoffset end
-	if(resultoffset == "+05:30"){
-		var timezone = "Indian Standard Time";
-	}else if(resultoffset == "-05:00"){
-		var timezone = "Eastern Standard Time";
-	}else if(resultoffset == "-08:00"){
-		var timezone = "Pacific Standard Time";
-	}else if(resultoffset == "-06:00"){
-		var timezone = "Central Standard Time";
-	}else if(resultoffset == "-07:00"){
-		var timezone = "Mountain Standard Time";
-	}else if(resultoffset == "-09:00"){
-		var timezone = "Alaska Standard Time";
-	}else if(resultoffset == "-10:00"){
-		var timezone = "Hawaii Standard Time";
-	}else if(resultoffset == "-04:00"){
-		var timezone = "Canada Atlantic Time";
-	}else if(resultoffset == "-03:30"){
-		var timezone = "Newfoundland Time";
-	}else{
-		var timezone = "GMT".concat(resultoffset)
-	}
-	document.getElementById("timezone").innerHTML = timezone;
-	</script>
 	
 @endsection
