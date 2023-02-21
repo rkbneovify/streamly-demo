@@ -188,8 +188,8 @@ $response = curl_exec($curl);
 $renewalDatestripe = json_decode($response);
 curl_close($curl);
 
-dd($userinfo->card_last_four);
-die();
+// dd($userinfo->card_last_four);
+// die();
 
         // $time = ($subscription->created_at)->format('H:i:s');
         // $renewsDate = gmdate("Y-m-d", $plan->created);
