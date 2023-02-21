@@ -555,8 +555,7 @@ else
 	  <td class="text-left text-md-center">{{ date("Y-m-d H:i:s", $invoice->status_transitions->paid_at) }}</td>
 	  <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
 	  @else
-	  <td style="color: red;" class="text-left text-md-center">Payment Failed!</td>
-	  /* <td class="text-left text-md-center text-break font-weight-bold">{{ $invoice->charge->failure_message }}</td> */
+	  
 	  @endif
     </tr>
   @endforeach
