@@ -535,7 +535,7 @@ use Laravel\Cashier\Cashier;
     color: #FFFFFF;">
 
     <tr>
-      <th scope="col" class="text-left pl-4 text-md-center">Invoice</th>
+      <th scope="col" class="text-left pl-4 text-md-center">Invoice {{$invoices->paid}}</th>
 	  @if($invoices->paid == '1')
 	  <th scope="col" class="text-left text-md-center">Date</th>
       <th scope="col" class="text-left text-md-center">Download</th>
