@@ -596,6 +596,10 @@ public function myRecents(Request $request)
        
         $recentschannel=$this->getRecentsChannelUrlForDevice($isDevice);
 
+        foreach($recentschannel as $value){
+            $value['image'] = 'https://streamlytv.com/uploads/channellogo/'.$value->image.'';
+        }
+        
         $response = [
             'success' => true,
             'data' => $recentschannel,
