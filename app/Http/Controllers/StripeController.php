@@ -53,7 +53,8 @@ class StripeController extends Controller
                 </html>';
 
                    Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
-                   $message->to($user[0]->email, $user[0]->name)
+                   $message->to($user[0]->email, $user[0]->name);
+                   $message->cc('piyush.mishra@oodles.io', 'mina@neovix.com')
                    ->subject('subscription cancelled '.env('APP_NAME'));
                });
 
