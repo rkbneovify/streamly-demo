@@ -536,14 +536,8 @@ use Laravel\Cashier\Cashier;
 
     <tr>
       <th scope="col" class="text-left pl-4 text-md-center">Invoice {{$invoices->paid}}</th>
-	  @if($invoices->paid == '1')
 	  <th scope="col" class="text-left text-md-center">Date</th>
       <th scope="col" class="text-left text-md-center">Download</th>
-	  @else
-	  <th scope="col" class="text-left text-md-center">Status</th>
-      <th scope="col" class="text-left text-md-center">Failure Reason</th>
-	  @endif
-      
     </tr>
   </thead>
   <tbody style="color:#5E5E5E;">
