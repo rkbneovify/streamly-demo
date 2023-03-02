@@ -621,6 +621,15 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
             $hrsoffset = "+05:30";
             $timezone = "Indian Standard Time";
           }
+
+          $fcm_token = request('fcm_token');
+       if($fcm_token){
+        $userfcmtoken = DB::table('users')
+                    ->where('id', $user['id'])
+                    ->update(array(
+                    'fcm_token' => $fcm_token,
+                    )); 
+       }
           
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
@@ -644,6 +653,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
       'success' => true,
       'message'=>'logged in successfully ',
       'response_code'=>200,
+      'fcm_token' => $fcm_token,
       'sessionid'=>HashUserID($Saved['LastInsertId']),
       'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
       'device_type'=>'non-web',
