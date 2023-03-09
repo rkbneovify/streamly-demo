@@ -29,37 +29,77 @@ class StripeController extends Controller
             exit();
         }
 
-         switch ($event->type) {
-        //     case 'customer.subscription.deleted':
-        //          $paymentIntent = $event->data->object;
+        switch ($event->type) {
+            case 'customer.subscription.deleted':
+                 $paymentIntent = $event->data->object;
 
-        //          if($paymentIntent->status == "canceled"){
+                 if($paymentIntent->status == "canceled"){
 
-        //             $planCancelled = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
-        //             $user= DB::table('users')->where('id', $planCancelled[0]->user_id)->get();
+                    $planCancelled = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
+                    $user= DB::table('users')->where('id', $planCancelled[0]->user_id)->get();
+                    $fcm_token = DB::table('session_table')
+                    ->where('users_id', $user[0]->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->get('fcm_token');
 
-        //             $userplanCanceled = DB::table('subscriptions')
-        //             ->where('stripe_id', $paymentIntent->id)
-        //             ->update(array(
-        //             'stripe_status' => 'canceled',
-        //             'ends_at' => date("Y/m/d h:i:s"),
-        //             )); 
+                    $fcmResults = [];
+                    foreach ($fcm_token as $tokens) {
+                        array_push($fcmResults, $tokens->fcm_token);
+                    }; 
+
+                    $website_link = env('WEBSITE_URL');
+
+                    if(count($fcm_token) == 0){
+               }else{
+                    $curl = curl_init();
+
+               curl_setopt_array($curl, array(
+               CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+               CURLOPT_RETURNTRANSFER => true,
+               CURLOPT_ENCODING => '',
+               CURLOPT_MAXREDIRS => 10,
+               CURLOPT_TIMEOUT => 0,
+               CURLOPT_FOLLOWLOCATION => true,
+               CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+               CURLOPT_CUSTOMREQUEST => 'POST',
+               CURLOPT_POSTFIELDS =>'{
+                 "registration_ids": '.json_encode($fcmResults).',
+                 "title": "Subscription Cancelled",
+                 "body": "HI '.$user[0]->name.' your subscription is cancelled to renew your subscription please visit http://streamlytv.com/"
+                }',
+                CURLOPT_HTTPHEADER => array(
+                 'Content-Type: application/json'
+                ),
+               ));
+               $response = curl_exec($curl);
+               curl_close($curl);
+               };
+
+                    $userplanCanceled = DB::table('subscriptions')
+                    ->where('stripe_id', $paymentIntent->id)
+                    ->update(array(
+                    'stripe_status' => 'canceled',
+                    'ends_at' => date("Y/m/d h:i:s"),
+                    )); 
    
-        //             $website_link = env('WEBSITE_URL');
-   
-        //             $html='<html>
-        //             Hi, '.$user[0]->name.'<br><br>
-        //             Your subscription is cancelled now!
-        //         </html>';
+                    $html='<html>
+                    Hi, '.$user[0]->name.'<br><br>
+                    Your subscription is cancelled now!<br>
+                    To renew your subscription please visit '.$website_link.'.
+                    <br><br>
+                    Thanks<br>
+                    Team Streamly
+                </html>';
 
-        //            Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
-        //            $message->to($user[0]->email, $user[0]->name);
-        //            $message->cc('piyush.mishra@oodles.io', 'mina@neovix.com')
-        //            ->subject('subscription cancelled '.env('APP_NAME'));
-        //        });
+                   Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                   $message->to($user[0]->email, $user[0]->name);
+                   $message->cc('piyush.mishra@oodles.io', 'mina@neovix.com')
+                   ->subject('subscription cancelled '.env('APP_NAME'));
+               });
 
-        //       }
-        //     break;
+              }
+            break;
 
             case 'payment_intent.succeeded':
                      $paymentIntent = $event->data;
@@ -69,6 +109,43 @@ class StripeController extends Controller
                          $user= DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
 
                          $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
+
+                         $fcm_token = DB::table('session_table')
+                            ->where('users_id', $user[0]->id)
+                            ->where('status', 1)
+                            ->whereNotNull('fcm_token')
+                            ->get('fcm_token');
+
+                         $fcmResults = [];
+                         foreach ($fcm_token as $tokens) {
+                           array_push($fcmResults, $tokens->fcm_token);
+                         };
+
+                         if(count($fcm_token) == 0){
+                        }else{
+                             $curl = curl_init();
+         
+                        curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS =>'{
+                          "registration_ids": '.json_encode($fcmResults).',
+                          "title": "Subscription Renewed",
+                          "body": "HI '.$user[0]->name.' your subscription is renewed."
+                         }',
+                         CURLOPT_HTTPHEADER => array(
+                          'Content-Type: application/json'
+                         ),
+                        ));
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        };
 
                         //  $userplanRenewed = DB::table('subscriptions')
                         //  ->where('stripe_id', $paymentIntent->id)
@@ -107,6 +184,43 @@ class StripeController extends Controller
                              $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
     
                              //$recipt = $paymentIntent->charges->data->receipt_url;
+
+                             $fcm_token = DB::table('session_table')
+                            ->where('users_id', $user[0]->id)
+                            ->where('status', 1)
+                            ->whereNotNull('fcm_token')
+                            ->get('fcm_token');
+
+                         $fcmResults = [];
+                         foreach ($fcm_token as $tokens) {
+                           array_push($fcmResults, $tokens->fcm_token);
+                         };
+
+                         if(count($fcm_token) == 0){
+                        }else{
+                             $curl = curl_init();
+         
+                        curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS =>'{
+                          "registration_ids": '.json_encode($fcmResults).',
+                          "title": "Payment Failed",
+                          "body": "HI '.$user[0]->name.' please renew your card to enjoy streamlytv continously."
+                         }',
+                         CURLOPT_HTTPHEADER => array(
+                          'Content-Type: application/json'
+                         ),
+                        ));
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        };
            
                             $website_link = env('WEBSITE_URL');
            
