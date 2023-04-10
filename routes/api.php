@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function (Request $request) {
     return 'Working';
@@ -45,6 +47,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     
     Route::post('login', 'Auth\AuthController@login');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
+    Route::post('sendNotification', 'NotificationController@sendNotificationApp');
+    Route::post('authtokenrefresh', 'Auth\AuthController@authRefesh');
     Route::post('login-with-passcode', 'Auth\AuthController@loginWithPasscode');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
