@@ -37,6 +37,14 @@
           </li>
           @role(['admin', 'superadmin'])
           <li class="nav-item has-treeview">
+            <a href=" {{ url('/admin/stripekeys') }}" class="nav-link">
+              <i class="nav-icon fas fa-key"></i>
+              <p>
+                Stripe Keys
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>

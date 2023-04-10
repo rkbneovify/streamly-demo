@@ -126,8 +126,13 @@
 			<div class="dotinnermenubody dotinnermenubody1" style="width: 256px; height: auto; min-width: 256px;"> <span class="dotinnermenuitem" aria-label="Sign out this device" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
 							<div class="uyYuVb oJeWuf" jsname="cEoysc">
+								@if(session()->get('jwttoken') == $device->access_token)
+								<div class="dotinnermenuitemname primaryDevice">Primary Device</div>
+							    </div>
+								@else
 								 <div class="dotinnermenuitemname remove-device" data-id="{{ $device->id }}" data-devicename="{{$device->id}}.{{ $device->personal_devicename }}" data-accesstoken="{{ $device->access_token }}" >Sign out</div>
 							</div>
+							@endif
 					 </span>
 					 <span jsslot="" class="dotinnermenuitem" aria-label="Find phone" role="menuitem" tabindex="-1">
 							<div class="aBBjbd MbhUzd" jsname="ksKsZd"></div>
@@ -147,10 +152,18 @@
 </div>
 						<div class="TDjQOc2" data-device-id="Acb514901592fd168" data-source="3">
 	<div role="button" class="dotmenu dotmenu1 dotmenu2 "  aria-label="More info" aria-disabled="false" tabindex="0" aria-haspopup="true" aria-expanded="false" data-menu-corner="top-end" data-anchor-corner="bottom-end">
-		<div class="NWlf3e MbhUzd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div> <span jsslot="" class="MhXXcc oJeWuf">
+		<div class="NWlf3e MbhUzd" style="top: 21px; left: 23.5625px; width: 48px; height: 48px;"></div> 
+		@if(session()->get('jwttoken') == $device->access_token)
+		<!-- <span jsslot="" class="MhXXcc oJeWuf">
+																<span class="Lw7GHd snByac">
+																<input type='checkbox' class='update_check' id='delcheck_{{$device->id}}'  value='{{$device->id}}'>
+																</span> </span> -->
+											 					@else
+																<span jsslot="" class="MhXXcc oJeWuf">
 																<span class="Lw7GHd snByac">
 																<input type='checkbox' class='update_check' id='delcheck_{{$device->id}}'  value='{{$device->id}}'>
 																</span> </span>
+																@endif
 	</div>
 </div>
                         <span class="VfPpkd-BFbNVe-bF1uUb NZp2ef" aria-hidden="true"></span>

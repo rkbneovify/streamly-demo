@@ -10,6 +10,9 @@
 |
 */
 use App\Http\Controllers\BotManController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationSendController;
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -19,6 +22,11 @@ Route::post('/botman', 'MainConversationController@handle');
 Route::get('/', function () {
     return view('auth/login');
 });
+
+Route::post('/store-token', [NotificationController::class, 'updateDeviceToken'])->name('store.token');
+Route::post('/send-web-notification', [NotificationSendController::class, 'sendNotification'])->name('send.web-notification');
+Route::get('push-notification', [NotificationController::class, 'index']);
+Route::post('sendNotification', [NotificationController::class, 'sendNotification'])->name('send.notification');
 
 Auth::routes();
 /*add Naresh 15-11-2022*/
@@ -115,7 +123,8 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::put('/banner/update/{id}', 'HomescreenBannerController@bannerupdate');//slider piyush
     Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate');//slider piyush
     //Route::get('/stripekeys', 'Admin\StripekeysController@index');//slider piyush
-    //Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
+    Route::get('/stripekeys', 'Admin\StripekeysController@index');
+    Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
@@ -215,6 +224,7 @@ Route::get('user/invoice/{invoice}','Pages\Account\Setting@invoicePDF' );
 Route::get('/payment/{stripeplanid}', 'Pages\Payment@showPage')->name('payment');
 Route::get('/tierpayment/{stripeplanid}', 'Pages\Payment@showTierPage')->name('tierpayment');
 Route::get('/subscription', 'HomeController@SubscriptionPage');
+Route::get('/planexpire', 'HomeController@PlanRenews');
 Route::get('/selectplan', 'Pages\Payment@showPlan');
 Route::get('/livetv', 'Pages\LiveTv@showPage');
 Route::get('/currentepisode', 'Pages\LiveTv@getcurrentepisode');
@@ -249,6 +259,9 @@ Route::get('/helpandsupport', 'HomeController@helpandsupp');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->name('user.personaldevicename');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
+Route::get('user/removeCard/{id}','Pages\Account\Setting@removecard')->name('user.removeCard');
+Route::post('user/addCard/{id}','Pages\Account\Setting@addcard')->name('user.addCard');
+Route::get('user/api','Pages\Account\Setting@api')->name('user.removeCard');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
