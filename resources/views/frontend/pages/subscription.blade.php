@@ -378,7 +378,7 @@ body {
   border: 2px solid #FF712F;}
  
     </style>
-<script>
+    <script>
     function autoScrollDown(){
     $(".inner").css({top:-$(".outer").outerHeight()}) // jump back
                .animate({top:0},5000,"linear", autoScrollDown); // and animate

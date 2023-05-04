@@ -166,10 +166,12 @@ class Setting extends Controller
             // ch_1HSfl3LqTwOy7LECVmOdkimy
         //  dd($invoices);
          }
+        if($subscription){
         if($subscription->ends_at){
         $renewaldatetime = 'Plan Expired';
         }else{
 
+$STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -180,7 +182,7 @@ curl_setopt_array($curl, array(
   CURLOPT_CUSTOMREQUEST => 'GET',
   CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
 ));
 
@@ -195,13 +197,16 @@ curl_close($curl);
         // $renewsDate = gmdate("Y-m-d", $plan->created);
         //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
         //$renewaldatetime = $renewsDate . ' at ' . $time;
-        if($userinfo->name != 'Admin'){
-            $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+        // if($userinfo->name != 'Admin'){
+        //     $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+        // }else{
+        //      $renewaldatetime = 'No upcoming invoices';
+        // }
+        $renewaldatetime = 'No upcoming invoices';
+        }
         }else{
-             $renewaldatetime = 'No upcoming invoices';
+        $renewaldatetime = '' ;
         }
-        }
-         
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
     	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
     }

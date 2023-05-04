@@ -149,7 +149,12 @@ use Laravel\Cashier\Cashier;
         </div>
       </div><!-- /.container-fluid -->
       <div class="col-sm-6">
-           <h6>Viewing {{$serial_no}}-{{$serial_no + 19}} of Page Number {{$page_no -1}}</h6> 
+      <?php $count = count($alltransactions); ?>
+                @if($count <= 19)
+                <h6>Viewing {{$count}} of Page Number {{$page_no -1}}</h6> 
+                @else
+                <h6>Viewing {{$serial_no}}-{{$serial_no + 19}} of Page Number {{$page_no -1}}</h6> 
+                @endif
           </div>
     </section>
 
@@ -202,7 +207,15 @@ use Laravel\Cashier\Cashier;
                   </tr>
               </thead>
               <tbody>
-              @for ($i = 0; $i < 20; $i++)
+              <?php 
+                if($count <= 19){
+                   $countloop = $count;
+                }else{
+                  $countloop = 20;
+                }
+                ?>
+
+              @for ($i = 0; $i < $countloop; $i++)
                 
                   
                         <tr data-entry-id="">
@@ -242,6 +255,9 @@ use Laravel\Cashier\Cashier;
         <!-- /.card-body -->
       </div>
       <!-- /.card -->
+      @if($count <= 19)
+
+      @else
       <div id="paginationbutton" style="text-align: center;">
       @if($serial_no != '1')
       <button type="button"><a href="/admin/report/transactionsreport/ending_before/{{$alltransactions[0]['id']}}/{{$serial_no - 40}}/page_number={{$page_no - 2}}/">Prev</a></button>
@@ -250,6 +266,7 @@ use Laravel\Cashier\Cashier;
       <button type="button"><a href="/admin/report/transactionsreport/starting_after/{{$alltransactions[19]['id']}}/{{$serial_no}}/page_number={{$page_no}}">Next</a></button>
       @endif  
     </div>
+    @endif
 
     </section>
     <!-- /.content -->

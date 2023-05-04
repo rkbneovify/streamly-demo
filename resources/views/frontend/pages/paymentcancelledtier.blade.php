@@ -335,9 +335,25 @@ input[type=number] {
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
-							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> <span style="width: 100%;">SUBMIT</span> </button>
+							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> 
+								@if($plandetails->trial_period_days)
+										<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
+										@else
+										<span style="width: 100%;">SUBMIT</span>
+										@endif
+							</button>
 						</div> {!! csrf_field() !!} </form>
-						<!-- Otherwise if the user is subscribed, show them a success message -->@else
+						<!-- Otherwise if the user is subscribed, show them a success message -->
+						@elseif(auth()->user()->subscription('main')->stripe_status)
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
+                            <p class="font-bold mb-2">Thanks for Subscribing!</p>
+                            <p>Your {{$plandetails->trial_period_days}} days trial period subscription is now active.</p>
+							<p>Trial period will end on {{ auth()->user()->subscription('main')->trial_ends_at }} after trial period ends you will be charged as per your subscription</p>
+														<p>Start watching StreamlyTV right here by visiting the link to the Channel Guide above, 
+
+or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
+                        </div>
+						@else
 						<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
 							<p class="font-bold mb-2">Thanks for Subscribing!</p>
 							<p>Your subscription is now active.</p>
@@ -475,7 +491,7 @@ $(function() {
 		}
 	});
 });
-const stripe = Stripe('{{ env("STRIPE_KEY") }}');
+const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
 // console.log(stripe);
 const elements = stripe.elements();
 const cardElement = elements.create('card', {

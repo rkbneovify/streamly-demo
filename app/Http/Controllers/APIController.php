@@ -339,11 +339,11 @@ public function unhashid($id){
     public function support()
     {  $frontendjson = FrontendText::find(1)->frontendjson;
         $supportemail=$frontendjson['supportemail']??'contact@streamlytv.com';
-       $supportphone= $frontendjson['supportphone']??'1234656477';
-       $supportphone2= $frontendjson['supportphone2']??'773727828';
-       $message= $frontendjson['supportapitext']??'For help and support contact on email below';
+        $supportphone= $frontendjson['supportphone2']??'773727828';
+        //$supportphone2= $frontendjson['supportphone']??'1234656477';
+        $message= $frontendjson['supportapitext']??"Our team is available 24*7. We'll do our best to respond to your inquiries as soon as possible.\n  \n Need help or have a question? Our support team is here to assist you. You can reach us at the following:";
         $supportnumber=[];
-        $supportnumber=['email'=>$supportemail,'num1'=>$supportphone,'num2'=>$supportphone2];
+        $supportnumber=['email'=>$supportemail,'num1'=>$supportphone];
         $response = array('success' =>true ,'response_code'=>200,'data'=>$supportnumber,'message'=>$message);
         return response()->json($response, 200);
     }
