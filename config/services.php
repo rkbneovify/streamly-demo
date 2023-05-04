@@ -1,5 +1,22 @@
 <?php
 
+$servername = "127.0.0.1";
+$username = env('DB_USERNAME');
+$password = env('DB_PASSWORD');
+$dbname = env('DB_DATABASE');
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT stripe_key, stripe_secret FROM Stripe_keys WHERE status = 'active'";
+$result = $conn->query($sql);
+
+$row = mysqli_fetch_assoc($result);
+
 return [
 
     /*
@@ -36,8 +53,8 @@ return [
 
     'stripe' => [
         'model' => env('CASHIER_MODEL'),
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
+        'key' => $row['stripe_key'],
+        'secret' => $row['stripe_secret'],
         'webhook' => [
             'secret' => env('STRIPE_WEBHOOK_SECRET'),
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),

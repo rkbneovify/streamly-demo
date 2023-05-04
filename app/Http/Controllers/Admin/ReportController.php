@@ -40,6 +40,8 @@ class ReportController extends Controller
 
    public function TransactionsReports(){
 
+    $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -53,7 +55,7 @@ class ReportController extends Controller
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
   ));
 
@@ -81,33 +83,35 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
     $paymentDescription = 'Subscription Update';
   }
 
-  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
+  $userDetails=DB::table('users')->select('email','name')->where('stripe_id', $newdatatrans->data[$x]->customer)->get();
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
-    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
-    'email' => $email,
+    'name' => $userDetails[0]->name,
+    'email' => $userDetails[0]->email,
     'type' => $paymentDescription,
     'status' => $status,
-    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->created),
     'amount' => $newdatatrans->data[$x]->amount,
     'color' => $color
   ];
 
   array_push($alltransactions, $transaction);
 }
-    
-    //  dd($alltransactions);
-    //  die();
 
     $serial_no = 1;
     $page_no = 2;
     $has_more = $newdatatrans->has_more;
 
+    // dd($alltransactions);
+    // die();
+
     return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
    }
 
    public function TransactionspagingReports($order, $id, $no, $number){
+
+    $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -121,7 +125,7 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
   ));
 
@@ -146,15 +150,15 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
    $paymentDescription = 'Subscription Update';
  }
 
-  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
+ $userDetails=DB::table('users')->select('email','name')->where('stripe_id', $newdatatrans->data[$x]->customer)->get();
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
-    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
-    'email' => $email,
+    'name' => $userDetails[0]->name,
+    'email' => $userDetails[0]->email,
     'type' => $paymentDescription,
     'status' => $status,
-    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->created),
     'amount' => $newdatatrans->data[$x]->amount,
     'color' => $color
   ];
@@ -172,6 +176,8 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
    }
 
    public function Transactionsview($id){
+
+    $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -185,7 +191,7 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
   ));
 
@@ -237,6 +243,8 @@ return view('admin.reports.viewtransaction', compact('singletransaction'));
     ->orderBy('created_at', $sort)
     ->get();
 
+    $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+
     $array =[];
     $arrayRes1 = [];
     $arrayRes2 = [];
@@ -256,7 +264,7 @@ return view('admin.reports.viewtransaction', compact('singletransaction'));
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
   ));
 
@@ -357,6 +365,8 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
 
    public function SubscriptionsReportstimeframe($to, $from, $value){
 
+    $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+
     if($value == 'all'){
     $transaction = DB::table('subscriptions')
     ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
@@ -390,7 +400,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
       CURLOPT_CUSTOMREQUEST => 'GET',
       CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
+    'Authorization: Bearer '.$STRIPE_SECRET.''
   ),
   ));
 
@@ -515,7 +525,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
      ->simplePaginate(125);
 
      $activezipCode=DB::table('zipcodes')
-     ->where('status', '1')
+     ->where('status', '0')
      ->select('id','zipcode','city', 'state', 'county_area', 'status')
      ->get();
 
@@ -583,9 +593,11 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
       'per_page' => $zipCode->perPage(),
       'prev_page_url' => $zipCode->previousPageUrl(),
       'data' => $array,
-      'activezipcode' => $arrayactive
+      'Inactivezipcode' => $arrayactive
     ];
     
+    // dd($resultsData);
+    // die();
    // return response()->json($array, 200);
     return view('admin.reports.zipcodreport', compact('resultsData'));
 

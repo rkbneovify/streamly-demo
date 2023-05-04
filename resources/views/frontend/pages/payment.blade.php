@@ -319,7 +319,11 @@ input[type=number] {
 													<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 													<div class="form-group mt-3">
 				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
-				                        	<span style="width: 100%;">SUBMIT</span>
+				                        	@if($plandetails->trial_period_days)
+										    <span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
+										    @else
+										    <span style="width: 100%;">SUBMIT</span>
+										    @endif
 				                        </button>
 				                    </div>
 
@@ -327,7 +331,15 @@ input[type=number] {
 												</form>
 												<!-- Otherwise if the user is subscribed, show them a success message -->
 										
-
+												@elseif(auth()->user()->subscription('main')->trial_ends_at)
+												<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
+													<p class="font-bold mb-2">Thanks for Subscribing!</p>
+													<p>Your {{$plandetails->trial_period_days}} days trial period subscription is now active.</p>
+													<p>Trial period will end on {{ auth()->user()->subscription('main')->trial_ends_at }} after trial period ends you will be charged as per your subscription</p>
+																				<p>Start watching StreamlyTV right here by visiting the link to the Channel Guide above, 
+						
+						or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
+												</div>
                     	@else
                     
                         <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
@@ -481,7 +493,7 @@ $( "#zipcode" ).autocomplete({
       });
 
 });
-            const stripe = Stripe('{{ env("STRIPE_KEY") }}');
+            const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
            // console.log(stripe);
 
             const elements = stripe.elements();
@@ -544,5 +556,79 @@ myPostalCodeField.addEventListener('change', function(event) {
             });
         
         </script>
+		</script>
 @endif
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyDZUPtq5LXm8bbcX5P-z0r-B08V65xq2aw",
+    authDomain: "streamly-tv-android.firebaseapp.com",
+    databaseURL: "https://streamly-tv-android.firebaseio.com",
+    projectId: "streamly-tv-android",
+    storageBucket: "streamly-tv-android.appspot.com",
+    messagingSenderId: "187207008307",
+    appId: "1:187207008307:web:40473f0b50d96ab0d76346",
+    measurementId: "G-5DTH6FMY71"
+    };
+	firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+	messaging.onMessage(function (payload) {
+        const title = payload.notification.title;
+        const options = {
+            body: payload.notification.body,
+            icon: payload.notification.icon,
+        };
+        new Notification(title, options);
+    });
+</script>
+@if(!auth()->user()->subscribed('main'))
+@else
+<script>
+<?php
+$user= DB::table('users')->where('id', auth()->user()->id)->get();
+                    $fcm_token = DB::table('session_table')
+                    ->where('users_id', $user[0]->id)
+                    ->where('status', 1)
+                    ->whereNotNull('fcm_token')
+                    ->get('fcm_token');
+
+                    $fcmResults = [];
+                    foreach ($fcm_token as $tokens) {
+                        array_push($fcmResults, $tokens->fcm_token);
+                    }; 
+?>
+
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "registration_ids": 
+    <?php echo json_encode($fcmResults); ?>
+  ,
+  "title": "Thanks for Subscribing Streamly.",
+  "body": "Your subscription is now active."
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("/api/auth/sendNotification", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+
+</script>
+@endif
+<script>
+form.addEventListener('submit', () => {
+    if(document.getElementById("cardRem").checked) {
+        document.getElementById('cardremHidden').disabled = true;
+    }
+})
+</script>
 @endsection

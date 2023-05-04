@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Exception;
 use Stripe\Coupon;
 use Stripe\Customer;
+use Illuminate\Support\Facades\DB;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 
 
@@ -324,11 +325,12 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
      */
     public function create()
     {    
+         $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_key');
          $users = User::where('is_active','=','1')->get();
          $plans = \Stripe\Plan::all(['active'=>true]);
          $plans->data;
          $pack = SubscriptionPack::where('is_active','=','1')->get();
-         return view('admin.subscriptions.create', compact('users','pack','plans'));
+         return view('admin.subscriptions.create', compact('users','pack','plans', 'STRIPE_KEY'));
         
         
     }  
@@ -589,9 +591,10 @@ DB::transaction(function () use($arrEmails, $workflow, $menu_ids) {
 
     public function ajaxCheck(Request $request)
     { //dd($request);
+      $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         
         if($request->has('coupon')){
-            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            \Stripe\Stripe::setApiKey($STRIPE_SECRET);
             try {
                $status= Coupon::retrieve($request->input('coupon'));
                if($status->amount_off) {

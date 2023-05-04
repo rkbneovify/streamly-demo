@@ -73,10 +73,20 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+.activestatus {
+  background-color: #6ae50e;
+  padding: 2px 12px;
+}
     </style>
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <div class="container-fluid">
+      @if(session()->has('message'))
+ <div class="alert alert-success alert-dismissible ">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ session()->get('message') }}
+</div>
+@endif
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Stripe Keys</h1> {{ session()->get( 'info' ) }}
@@ -94,17 +104,24 @@ input:checked + .slider:before {
     <div class="card">
     <div style="" class="card-header">
     <div>
-    <h3 class="card-title">TEST KEYS</h3>
+    <h3 class="card-title activestatus">{{ $allSession[0]->type }} Keys Activated</h3>
+    @if( $allSession[0]->type  == 'Live')
     <label class="switch">
-    <input id="togBtn" type="checkbox" value>
+    <input id="togBtn" type="checkbox" value="" checked>
     <span class="slider round"></span>
     </label>
+    @else
+    <label class="switch">
+    <input id="togBtn" type="checkbox" value="" unchecked>
+    <span class="slider round"></span>
+    </label>
+    @endif
     <br><br>
     <label for="pwd">STRIPE KEY:</label><br>
-    <input style="width: 600px;" id="password-field" type="password" class="form-control" name="password" value="secret">
+    <input style="width: 600px;" id="password-field" type="password" class="form-control" name="password" value="{{ $allSession[0]->stripe_key }}">
     <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password1"></span><br><br>
     <label for="pwd">STRIPE SECRET:</label><br>
-    <input style="width: 600px;" id="password-field2" type="password" class="form-control" name="password" value="secret">
+    <input style="width: 600px;" id="password-field2" type="password" class="form-control" name="password" value="{{ $allSession[0]->stripe_secret }}">
     <span toggle="#password-field2" class="fa fa-fw fa-eye field-icon toggle-password2"></span>
     </div>
     </div>
@@ -149,35 +166,42 @@ if (input.attr("type") == "password") {
 
 $("#togBtn").on('change', function() {
 if ($(this).is(':checked')) {
-  alert('live');// To verify
-
-  var myHeaders = new Headers();
+  //alert('live');// To verify
+ 
+  var myHeaders = new Headers({
+    'X-CSRF-TOKEN': $("input[name=_token]").val()
+  });
                 var requestOptions = {
                   method: 'PUT',
                   headers: myHeaders,
                   redirect: 'follow'
                 };
 
-                fetch(window.location.origin+"/keysupdate/live", requestOptions)
-                .then(response => response.json())
+                fetch("/admin/keysupdate/live", requestOptions)
+                .then(response => response.text())
                 .then(result => {
 			        		console.log(result);
+                  location.reload();
 			        	})
                 .catch(error => console.log('error', error));
 }
 else {
-  alert('testing');// To verify
-  var myHeaders = new Headers();
+  //alert('testing');// To verify
+  
+  var myHeaders = new Headers({
+    'X-CSRF-TOKEN': $("input[name=_token]").val()
+  });
                 var requestOptions = {
                   method: 'PUT',
                   headers: myHeaders,
                   redirect: 'follow'
                 };
 
-                fetch(window.location.origin+"/keysupdate/testing", requestOptions)
-                .then(response => response.json())
+                fetch("/admin/keysupdate/testing", requestOptions)
+                .then(response => response.text())
                 .then(result => {
 			        		console.log(result);
+                  location.reload();
 			        	})
                 .catch(error => console.log('error', error));
 }

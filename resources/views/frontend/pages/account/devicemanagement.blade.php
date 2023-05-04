@@ -4,6 +4,18 @@ use Laravel\Cashier\Cashier; ?>
 
 @section('stylesheets-bottom')
 	<style>
+	    @media (min-width:888px) {
+		.F4S0Db {
+           width: calc(32.6% - 16px)!important;
+        }
+        .F4S0Db:nth-of-type(3n) {
+           margin-right: 24px!important;
+        }
+        }
+		.primaryDevice {
+			color: #004e92;
+			font-weight: bold;
+		}
 		nav#mainNav {
 			background-color: #004E92;
 		}

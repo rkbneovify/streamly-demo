@@ -97,23 +97,25 @@
     </section>
 
     <div class="divfilter">Filter With Status Type:
-<select name="cars" id="myInput" onchange="myFunctionchange()">
-        <option value="">All</option>
-  <option value="active">Active</option>
+<select name="" id="myInput" onchange="myFunctionchange()">
+        <option value="">Active</option>
+  <option value="Inactive">Inactive</option>
 </select>
 </div>
 <script>
   function myFunctionchange(){
     var e = document.getElementById("myInput");
     var value = e.value;
-    if(value == 'active'){
+    if(value == 'Inactive'){
       $("#activeshow").show();
       $("#maintable").hide();
       $("#paginationbutton").hide();
+      document.getElementById("changeValue").innerHTML = "Inactive Zipcodes";
     }else{
       $("#activeshow").hide();
       $("#maintable").show();
       $("#paginationbutton").show();
+      document.getElementById("changeValue").innerHTML = "Active Zipcodes";
     }
   }
 </script>
@@ -121,7 +123,7 @@
   <!-- Modal content -->
   <div class="modal-content">
     <div style="display: flex;">
-  <p style="color: #000; font-weight: bold; width: 100%;">NEW USERS</p>
+  <div style="width: 100%; display: flex;"><p style="color: #000; font-weight: bold; margin-right: 10px;">USERS OF ZIPCODE <div style="color:#000; font-weight: bold;" id="popupzipCode"></div></div></p>
     <span class="close">&times;</span>
 </div>
     <div>
@@ -146,7 +148,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">All Zipcode</h3>
+          <h3 id="changeValue" class="card-title">All Zipcode</h3>
            
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -227,32 +229,31 @@
         @endfor
                 </tbody>
                 <tbody id="activeshow">
-              <?php $countActive = count($resultsData['activezipcode']); ?>
+              <?php $countActive = count($resultsData['Inactivezipcode']); ?>
               @for ($i = 0; $i < $countActive; $i++)
-                
-                  
+                                 
                 <tr data-entry-id="">
                 <td>
                 {{ $i + 1 }}
               </td>
                     <td>
-                        {{ $resultsData['activezipcode'][$i]['zipcode'] ?? '' }}
+                        {{ $resultsData['Inactivezipcode'][$i]['zipcode'] ?? '' }}
                     </td>
                     <td>
-                        {{ $resultsData['activezipcode'][$i]['city'] ?? '' }}
+                        {{ $resultsData['Inactivezipcode'][$i]['city'] ?? '' }}
                     </td>
                     <td>
-                        {{ $resultsData['activezipcode'][$i]['state'] ?? '' }}
+                        {{ $resultsData['Inactivezipcode'][$i]['state'] ?? '' }}
                     </td>
                     <td>
-                        {{ $resultsData['activezipcode'][$i]['country'] ?? '' }}
+                        {{ $resultsData['Inactivezipcode'][$i]['country'] ?? '' }}
                     </td>
                     <td class="zipcodeBox">
-                        {{ $resultsData['activezipcode'][$i]['userCount'] ?? '' }}
+                        {{ $resultsData['Inactivezipcode'][$i]['userCount'] ?? '' }}
                         <input type="button" id="zipActive" value =View_Users onClick=openForm(`{{$resultsData['data'][$i]['zipcode']}}`)>
                     </td>
                     <td>
-                        {{  $resultsData['activezipcode'][$i]['status'] ?? '' }}
+                        {{  $resultsData['Inactivezipcode'][$i]['status'] ?? '' }}
                     </td>
                     
                     
@@ -286,6 +287,7 @@
 function openForm(val) {
   var modal = document.getElementById("myModal");
   modal.style.display = "block";
+  document.getElementById("popupzipCode").innerHTML = val;
 
   // When the user clicks on <span> (x), close the modal
   var span = document.getElementsByClassName("close")[0];
@@ -311,6 +313,7 @@ var requestOptions = {
 fetch("/admin/report/zipcodeusers/"+val+"", requestOptions)
   .then(response => response.json())
   .then(result => {
+
     for (var counter = 0; counter < result.length; counter++) {
           var name = result[counter].name;
           var email = result[counter].email;

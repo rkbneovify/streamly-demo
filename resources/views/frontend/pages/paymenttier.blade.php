@@ -358,7 +358,13 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 						<input name="trial_days" type="hidden" value="{{$plandetails->trial_period_days}}">
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
-							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> <span style="width: 100%;">SUBMIT</span> </button>
+							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> 
+								@if($plandetails->trial_period_days)
+								<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
+								@else
+								<span style="width: 100%;">SUBMIT</span>
+								@endif	
+							</button>
 						</div> {!! csrf_field() !!} </form>
                         
                     </div>
@@ -492,7 +498,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 		}
 	});
 });
-const stripe = Stripe('{{ env("STRIPE_KEY") }}');
+const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
 // console.log(stripe);
 const elements = stripe.elements();
 const cardElement = elements.create('card', {
