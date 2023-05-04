@@ -13,6 +13,8 @@ use App\Models\Channel;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use Mail;
+use Illuminate\Support\Facades\Storage;
+use JWTAuth;
 /*add Naresh 15-11-2022*/ 
 use Cookie;
 //use DB;
@@ -22,7 +24,9 @@ class Payment extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+       // \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        \Stripe\Stripe::setApiKey($STRIPE_SECRET);
     }
     public function showTierPage($stripeplanID){
         if( Auth::check()){
@@ -42,11 +46,12 @@ class Payment extends Controller
         //  $catIds = array_column($plandetails->tiers, 'up_to');
         //  dump($plandetails->tiers);
         //  dd($catIds);
+        $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_key');
         $frontendjson = FrontendText::find(1)->frontendjson;
         if (Auth::user()->subscription('main') && Auth::user()->subscription('main')->cancelled() ){
-        return view('frontend.pages.paymentcancelledtier', compact('login','stripeplanID','plandetails','frontendjson','ApproxEndDateOfSubscription'));
+        return view('frontend.pages.paymentcancelledtier', compact('login','stripeplanID','plandetails','frontendjson','ApproxEndDateOfSubscription', 'STRIPE_KEY'));
     }else{
-        return view('frontend.pages.paymenttier', compact('login','stripeplanID','plandetails','frontendjson','ApproxEndDateOfSubscription'));
+        return view('frontend.pages.paymenttier', compact('login','stripeplanID','plandetails','frontendjson','ApproxEndDateOfSubscription', 'STRIPE_KEY'));
     }
        
 
@@ -64,10 +69,11 @@ class Payment extends Controller
         $plandetails = \Stripe\Plan::retrieve($stripeplanID);
         
         $frontendjson = FrontendText::find(1)->frontendjson;
+        $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_key');
         if (Auth::user()->subscription('main') && Auth::user()->subscription('main')->cancelled() ){
-        return view('frontend.pages.paymentcancelled', compact('login','stripeplanID','plandetails','frontendjson'));
+        return view('frontend.pages.paymentcancelled', compact('login','stripeplanID','plandetails','frontendjson', 'STRIPE_KEY'));
     }else{
-        return view('frontend.pages.payment', compact('login','stripeplanID','plandetails','frontendjson'));
+        return view('frontend.pages.payment', compact('login','stripeplanID','plandetails','frontendjson', 'STRIPE_KEY'));
     }
         
         

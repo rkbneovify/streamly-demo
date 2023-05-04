@@ -621,16 +621,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
             $hrsoffset = "+05:30";
             $timezone = "Indian Standard Time";
           }
-
-          $fcm_token = request('fcm_token');
-       if($fcm_token){
-        $userfcmtoken = DB::table('users')
-                    ->where('id', $user['id'])
-                    ->update(array(
-                    'fcm_token' => $fcm_token,
-                    )); 
-       }
-          
+ 
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
  } else {$termAndCondition=false;}
@@ -638,6 +629,19 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
 
  $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
  $personal_device_data = personaldeviceTableStore($user_id,$deviceDetails);
+ $fcm_token = request('fcm_token');
+ if($fcm_token){
+        $userfcmtoken = DB::table('session_table')
+              ->where('access_token', $token)
+              ->update(array(
+              'fcm_token' => $fcm_token,
+              )); 
+    }
+//     if($userfcmtoken == 1){
+//     $tokenResponse = $fcm_token;
+//  }else{
+//     $tokenResponse = null;
+//  }
 //  $Saved['result'];
 //  $Saved['LastInsertId'];
   if($Saved['result'] && $personal_device_data['result']){
@@ -704,6 +708,19 @@ function sessionTable2($user_id,$token,$deviceDetails,$connected_devices){
 
  $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
  $personal_device_data = personaldeviceTableStore($user_id,$deviceDetails);
+$fcm_token = request('fcm_token');
+if($fcm_token){
+        $userfcmtoken = DB::table('session_table')
+              ->where('access_token', $token)
+              ->update(array(
+              'fcm_token' => $fcm_token,
+              ));
+    }
+//     if($userfcmtoken == 1){
+//     $tokenResponse = $fcm_token;
+//  }else{
+//     $tokenResponse = null;
+//  }
 //  $Saved['result'];
 //  $Saved['LastInsertId'];
   if($Saved['result'] && $personal_device_data['result']){
@@ -719,6 +736,7 @@ function sessionTable2($user_id,$token,$deviceDetails,$connected_devices){
       'success' => true,
       'message'=>'logged in successfully ',
       'response_code'=>200,
+      'fcm_token' => $fcm_token,
       'sessionid'=>HashUserID($Saved['LastInsertId']),
       'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
       'device_type'=>'non-web',

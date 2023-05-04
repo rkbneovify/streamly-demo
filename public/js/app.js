@@ -83499,7 +83499,215 @@
               ]),
               _vm._v(" "),
               _vm._l(_vm.filteredChannelList, function(channel, index) {
-                return _c(
+                if(channel.channelId == '11'){
+                  return _c(
+                    "div",
+                    {
+                      key: channel.channelId,
+                      staticClass: "channel__name__box pgGuideheight",
+                      //staticStyle: { height: "7vw" },
+                      attrs: {
+                        "data-channel": channel.channelId,
+                        index: index,
+                        "track-by": "channel.channelId"
+                      },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.onChannelClick(channel)
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          key: channel.CallSign,
+                          staticClass: "favourite",
+                          attrs: { index: index },
+                          on: {
+                            click: function($event) {
+                              $event.stopPropagation()
+                              return _vm.onClick(channel)
+                            }
+                          }
+                        },
+                        // _c(
+                        //     "div",
+                        //     {
+                        //       staticStyle: {
+                        //         "font-size": "0.8em",
+                        //         "font-weight": "bold",
+                        //         color: "#4085ce"
+                        //       },
+                        //       attrs: { index: index }
+                        //     },
+                        //     [_vm._v(_vm._s(channel.channelStbNumber))]
+                        //   )
+                        [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "pgFavrouite",
+                              attrs: {
+                                index: index
+                                // href:
+                                //   "/livetv/" +
+                                //   channel.CallSign +
+                                //   "/" +
+                                //   channel.genrename[0]
+                              }
+                            },
+                            [_vm._v(channel.channelStbNumber)]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          key: channel.CallSign + index,
+                          staticClass: "channel__name pgFlexwidth", 
+                          attrs: { index: index }
+                        },
+                        [
+                          _c("div", { staticClass: "channel__logo", staticStyle: { paddingTop: "0.8vw", paddingBottom: "0.8vw" } }, [
+                            _c("img", {
+                              staticClass: "pgGuideicon",
+                              attrs: { src: _vm._s(channel.epgEventImage) }
+                            })
+                          ]),
+                          _c(
+                            "div",
+                            { staticClass: "overflow newGuidefont", attrs: { index: index } },
+                            [_vm._v(_vm._s('TVG: Horse Racing'))]
+                          ),
+                          _vm._v(" "),
+                          // _c(
+                          //   "div",
+                          //   {
+                          //     staticStyle: {
+                          //       "font-size": "0.8em",
+                          //       "font-weight": "bold",
+                          //       color: "#4085ce"
+                          //     },
+                          //     attrs: { index: index }
+                          //   },
+                          //   [_vm._v(_vm._s(channel.channelStbNumber))]
+                          // )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "favourite" , staticStyle: {
+                              "text-align" : "right"
+                            }}),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          key: channel.CallSign + "fav",
+                          staticClass: "Aligner-item Aligner-item--top clickme",
+                          attrs: { index: index },
+                          on: {
+                            click: function($event) {
+                              $event.stopPropagation()
+                              return _vm.onFavouriteClick(channel)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value:
+                                    _vm.favouriteListComputed.indexOf(
+                                      channel.channelId
+                                    ) != -1,
+                                  expression:
+                                    "favouriteListComputed.indexOf(channel.channelId) != -1"
+                                }
+                              ]
+                            },
+                            //[_vm._v("♥")]
+                            [_vm._v(" "),
+                            _c("img", {
+                              staticClass: "pgGuideiconView1",
+                              attrs: { src: _vm._s('/uploads/devicelogo/heartfill.svg') }
+                            })
+                          ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value:
+                                    _vm.favouriteListComputed.indexOf(
+                                      channel.channelId
+                                    ) == -1,
+                                  expression:
+                                    "favouriteListComputed.indexOf(channel.channelId) == -1"
+                                }
+                              ]
+                            },
+                            //[_vm._v("♡")]
+                            [_vm._v(" "),
+                            _c("img", {
+                              staticClass: "pgGuideiconView1",
+                              attrs: { src: _vm._s('/uploads/devicelogo/heart.svg') }
+                            })
+                          ]
+                          ),
+                          
+                          _c(
+                            "div",
+                            {
+                              key: channel.CallSign,
+                        staticClass: "favourite",
+                        attrs: { index: index },
+                        on: {
+                          click: function($event) {
+                            $event.stopPropagation()
+                            return _vm.onClick(channel)
+                          }
+                        }
+                            },
+                            [
+                              _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href:
+                                  "/livetv/" +
+                                  channel.CallSign +
+                                  "/" +
+                                  channel.genrename[0]
+                              }
+                            },
+                            [_vm._v(" "),
+                            _c("img", {
+                              staticClass: "pgGuideiconView",
+                              attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
+                            })
+                          ]
+                          )
+                            ]
+                          ),
+                          
+                        ]                      
+                      )                    
+                    ]                 
+                  ) 
+                }else{
+                  return _c(
                   "div",
                   {
                     key: channel.channelId,
@@ -83704,7 +83912,8 @@
                       ]                      
                     )                    
                   ]                 
-                )               
+                ) 
+                }             
               })             
             ],           
             2

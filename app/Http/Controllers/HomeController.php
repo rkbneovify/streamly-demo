@@ -90,7 +90,12 @@ $Genrekey=$pagechannel->keys();
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                return redirect('/selectplan');
+                $checkSubscription = json_decode(count($user->subscriptions), true);
+                if($checkSubscription > 0){
+                    return redirect('/planexpire');
+                }else{
+                    return redirect('/selectplan');
+                }
                 // return redirect('/subscription');
             } else {   return redirect('/livetv');}
         } else {
@@ -513,14 +518,19 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
         // $imagePath=asset("/uploads/channellogo/notfound.png");
    
-        if( Auth::check()){
+         if( Auth::check()){
             $login = true;
             $user=Auth::user();
             if (!$user->subscribed('main')) {
-                // return redirect('/subscription');
+                $checkSubscription = json_decode(count($user->subscriptions), true);
+                if($checkSubscription > 0){
+                }else{
+                    return redirect('/selectplan');
+                }
             } else {   return redirect('/livetv');}
         } else {
             $login = false;
+            return redirect(env('FRONTEND_URL'));
         }
     //   dump($plans->data);
       $d=collect($plans->data)
@@ -532,5 +542,25 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
         return view('frontend.pages.subscription', compact('login','plans','plansdetails','plankey'));
     }
     
+public function PlanRenews(Request $request)
+    { 
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+   
+        if( Auth::check()){
+            $login = true;
+            $user=Auth::user();
+            if (!$user->subscribed('main')) {
+                $checkSubscription = json_decode(count($user->subscriptions), true);
+                if($checkSubscription > 0){
+                }else{
+                    return redirect('/selectplan');
+                }
+            } else {   return redirect('/livetv');}
+        } else {
+            $login = false;
+            return redirect(env('FRONTEND_URL'));
+        }
 
+        return view('frontend.pages.subscriptionrenews', compact('login'));
+    }
 }

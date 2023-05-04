@@ -183,10 +183,18 @@ width: 100px;
 						{{-- <img class="lazy" data-src="{{  $channeldet->logo}}" loading="lazy"  alt="{{  $channeldet->name}}"> --}}
 						<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding: 1vw'  class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->StationName}}"></div>
 						
+						@if($channeldet->id == '11')
 						<p class="channelTitle" style=" max-width: 20ch;
 						overflow: hidden;
 						white-space: nowrap;
-						text-overflow: ellipsis;">{{  $channeldet->StationName}}</p></a>
+						text-overflow: ellipsis;">TVG: Horse Racing</p>
+							@else
+							<p class="channelTitle" style=" max-width: 20ch;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;">{{  $channeldet->StationName}}</p>
+							@endif
+						</a>
 						<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                 

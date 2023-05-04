@@ -556,8 +556,8 @@ else
 	  <td class="text-left text-md-center">{{ date("Y-m-d H:i:s", $invoice->status_transitions->paid_at) }}</td>
 	  <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
 	  @else
-	  <td style="color: red;" class="text-left text-md-center">Payment Failed!</td>
-	  <td class="text-left text-md-center text-break font-weight-bold">{{ $invoice->charge->failure_message }}</td>
+	  	  <td class="text-left text-md-center">{{ date("Y-m-d H:i:s", $invoice->status_transitions->paid_at) }}</td>
+	  <td class="text-left text-md-center text-break font-weight-bold" ><a  target="_blank" href="{{ $invoice->charge->receipt_url ?? '' }}">View Receipt</a></td>
 	  @endif
     </tr>
   @endforeach
@@ -626,5 +626,28 @@ var resultoffset = "+".concat(newtz)
 	}
 	document.getElementById("timezone").innerHTML = timezone;
 	</script>
-	
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyDZUPtq5LXm8bbcX5P-z0r-B08V65xq2aw",
+    authDomain: "streamly-tv-android.firebaseapp.com",
+    databaseURL: "https://streamly-tv-android.firebaseio.com",
+    projectId: "streamly-tv-android",
+    storageBucket: "streamly-tv-android.appspot.com",
+    messagingSenderId: "187207008307",
+    appId: "1:187207008307:web:40473f0b50d96ab0d76346",
+    measurementId: "G-5DTH6FMY71"
+    };
+	firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+	messaging.onMessage(function (payload) {
+        const title = payload.notification.title;
+        const options = {
+            body: payload.notification.body,
+            icon: payload.notification.icon,
+        };
+        new Notification(title, options);
+    });
+</script>	
 @endsection

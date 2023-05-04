@@ -131,8 +131,8 @@
 										<span style="display: block;">Paypal</span>
 									</div>
 								</div>
-
-								<form id="signup-form" action="{{ url('insertpay') }}" method="post" class="mt-3 text-left" style="padding: 2rem;">
+{{-- 
+								<form id="signup-form" action="{{-- url('insertpay') --}}" method="post" class="mt-3 text-left" style="padding: 2rem;"> --}}
 				                    {{-- <div class="form-group">
 				                        <label for="card" class="control-label">Card Number</label>
 				                        <input type="text" id="card" name="card" class="form-control">
@@ -170,7 +170,9 @@
 				                    <span class="remove-p-a-r">
 				                    	you will be charged $69/mo plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 				                    </span>
-
+														<button id="card-button" data-secret="{{ $intent->client_secret }}">
+															Update Payment Method
+													</button>
 				                    <div class="form-group mt-3">
 				                        <button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;">
 				                        	<span style="width: 100%;">SUBMIT</span>
@@ -191,60 +193,38 @@
 @endsection
 @section('stylesheets-bottom') 
 <script src="https://js.stripe.com/v3/"></script>
-
 <script>
-		const stripe = Stripe('{{ env("STRIPE_KEY") }}');
-		console.log(stripe);
-
-		const elements = stripe.elements();
-		const cardElement = elements.create('card');
-
-		cardElement.mount('#card-element');
-
-		const cardHolderName = document.getElementById('name');
-		const cardButton = document.getElementById('card-button');
-		const clientSecret = cardButton.dataset.secret;
-		let validCard = false;
-		const cardError = document.getElementById('card-errors');
-
-		cardElement.addEventListener('change', function(event) {
-				
-				if (event.error) {
-						validCard = false;
-						cardError.textContent = event.error.message;
-				} else {
-						validCard = true;
-						cardError.textContent = '';
-				}
-		});
-
-		var form = document.getElementById('signup-form');
-
-		form.addEventListener('submit', async (e) => {
-				event.preventDefault();
-
-				const { paymentMethod, error } = await stripe.createPaymentMethod(
-						'card', cardElement, {
-								billing_details: { name: cardHolderName.value }
-						}
-				);
-
-				if (error) {
-						// Display "error.message" to the user...
-						console.log(error);
-				} else {
-						// The card has been verified successfully...
-						var hiddenInput = document.createElement('input');
-						hiddenInput.setAttribute('type', 'hidden');
-						hiddenInput.setAttribute('name', 'payment_method');
-						hiddenInput.setAttribute('value', paymentMethod.id);
-						form.appendChild(hiddenInput);
-						// Submit the form
-						form.submit();
-				}
-
-		});
-
+	window.addEventListener('load', function() {
+			const stripe = Stripe('{{env('STRIPE_KEY')}}');
+			const elements = stripe.elements();
+			const cardElement = elements.create('card');
+			cardElement.mount('#card-element');
+			const cardHolderName = document.getElementById('card-holder-name');
+			const cardButton = document.getElementById('card-button');
+			const clientSecret = cardButton.dataset.secret;
+			const plan = document.getElementById('subscription-plan').value;
+			cardButton.addEventListener('click', async (e) => {
+					const { setupIntent, error } = await stripe.handleCardSetup(
+							clientSecret, cardElement, {
+									payment_method_data: {
+											billing_details: { name: cardHolderName.value }
+									}
+							}
+					);
+					if (error) {
+							// Display "error.message" to the user...
+					} else {
+							// The card has been verified successfully...
+							console.log('handling success', setupIntent.payment_method);
+							// axios.post('/subscribe',{
+							// 		payment_method: setupIntent.payment_method,
+							// 		plan : plan
+							// }).then((data)=>{
+							// 		location.replace(data.data.success_url)
+							// });
+					}
+			});
+	})
 </script>
 
 @endsection
