@@ -393,4 +393,59 @@ $('.outer').css({maxHeight: $('.inner').height()});
 $('.inner').html($('.inner').html() + $('.inner').html());
 autoScrollUp();
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
+<script>
+    var firebaseConfig = {
+        apiKey: "AIzaSyDZUPtq5LXm8bbcX5P-z0r-B08V65xq2aw",
+    authDomain: "streamly-tv-android.firebaseapp.com",
+    databaseURL: "https://streamly-tv-android.firebaseio.com",
+    projectId: "streamly-tv-android",
+    storageBucket: "streamly-tv-android.appspot.com",
+    messagingSenderId: "187207008307",
+    appId: "1:187207008307:web:40473f0b50d96ab0d76346",
+    measurementId: "G-5DTH6FMY71"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const messaging = firebase.messaging();
+        messaging
+            .requestPermission()
+            .then(function () {
+                return messaging.getToken()
+            })
+            .then(function (response) {
+                console.log(response);
+                $.ajaxSetup({
+                    headers: {
+                         'X-CSRF-TOKEN': $("input[name=_token]").val()
+                }
+                });
+                $.ajax({
+                    url: '{{ route("store.token") }}',
+                    type: 'POST',
+                    data: {
+                        token: response,
+                    },
+                    dataType: 'JSON',
+                    success: function (response) {
+                         alert('Token stored.');
+                    },
+                    error: function (error) {
+                         //alert('');
+                    },
+                });
+            }).catch(function (error) {
+                 //alert('');
+            });
+    messaging.onMessage(function (payload) {
+        const title = payload.notification.title;
+        const options = {
+            body: payload.notification.body,
+            icon: payload.notification.icon,
+        };
+        new Notification(title, options);
+    });
+
+    
+</script>
 @endsection

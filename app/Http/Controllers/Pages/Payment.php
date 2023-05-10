@@ -143,8 +143,6 @@ $Genrekey=$pagechannel->keys();
 /*End Naresh 15-11-2022*/ 
 
     public function pay(Request $request,$StripeplanId) {
-        // dd($StripeplanId);
-        // die();
         $attributeNames = array(
             'zip' => 'Zip Code',
          );
@@ -235,10 +233,51 @@ $Genrekey=$pagechannel->keys();
             $user->newSubscription( 'main', $StripeplanId)->quantity($quantity)->trialDays($trial_days)
             ->withCoupon($coupon)
             ->create($request->payment_method, ['email' => $user->email]); 
+
+            //send user email after successfull payment
+
+            $website_link = env('APP_URL');
+
+            $html='<html>
+                Hi, '.$user->name.'<br><br>
+
+                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your FREE TRIAL PERIOD is now active. After the trial period ends, your credit card will be billed the monthly subscription amount. <br> 
+                Start watching StreamlyTV right here by visiting the link <a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                <br><br>
+                Thanks!<br>
+                Team Streamly
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
+                $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! '.env('APP_NAME'));
+            });
+
         }else{ $user->newSubscription( 'main', $StripeplanId)
             ->quantity($quantity)
                 ->withCoupon($coupon)
-                ->create($request->payment_method, ['email' => $user->email]);}
+                ->create($request->payment_method, ['email' => $user->email]);
+
+            //send user email after successfull payment
+
+            $website_link = env('APP_URL');
+
+            $html='<html>
+                Hi, '.$user->name.'<br><br>
+
+                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your subscription is now active.<br> 
+                Start watching StreamlyTV right here by visiting the link <a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                <br><br>
+                Thanks!<br>
+                Team Streamly
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
+                $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! '.env('APP_NAME'));
+            });
+            
+            }
 
     }
      public function withoutCouponCheckTrialDays($user,$request,$StripeplanId,$quantity,$trial_days){
@@ -249,21 +288,19 @@ $Genrekey=$pagechannel->keys();
                 $newSubscription = $user->newSubscription('main', $StripeplanId)
                 ->quantity($quantity)
                 ->trialDays($trial_days)->create($request->payment_method, ['email' => $user->email]);
-            }else{
-                    $newSubscription = $user->newSubscription('main', $StripeplanId)
-                    ->quantity($quantity)
-                    ->create($request->payment_method, ['email' => $user->email]);}
 
-                    //send user email after successfull payment
+            //send user email after successfull payment
 
-            $website_link = env('WEBSITE_URL');
+            $website_link = env('APP_URL');
 
             $html='<html>
                 Hi, '.$user->name.'<br><br>
 
-                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your subscription is now active.<br> 
-                Start watching StreamlyTV right here by visiting the link <br><br><a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
-
+                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your FREE TRIAL PERIOD is now active. After the trial period ends, your credit card will be billed the monthly subscription amount. <br> 
+                Start watching StreamlyTV right here by visiting the link <a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                <br><br>
+                Thanks!<br>
+                Team Streamly
             </html>';
 
             Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
@@ -271,6 +308,30 @@ $Genrekey=$pagechannel->keys();
                 ->subject('Thanks for Subscribing! '.env('APP_NAME'));
             });
 
+            }else{
+                    $newSubscription = $user->newSubscription('main', $StripeplanId)
+                    ->quantity($quantity)
+                    ->create($request->payment_method, ['email' => $user->email]);
+                
+            //send user email after successfull payment
+
+            $website_link = env('APP_URL');
+
+            $html='<html>
+                Hi, '.$user->name.'<br><br>
+
+                Thanks for Subscribing! '.env('APP_NAME').'.<br>Your subscription is now active.<br> 
+                Start watching StreamlyTV right here by visiting the link <a href="'.$website_link.'" target=_blank >'.$website_link.'</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                <br><br>
+                Thanks!<br>
+                Team Streamly
+            </html>';
+
+            Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$user){
+                $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! '.env('APP_NAME'));
+            });
+                }
     }
     public function persist($user)
     {

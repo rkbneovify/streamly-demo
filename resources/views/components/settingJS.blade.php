@@ -29,7 +29,7 @@ var resultoffset = "+".concat(newtz)
 	}
 	//hoursoffset end
 	if(resultoffset == "+05:30"){
-		var timezone = "Indian Standard Time";
+		var timezone = "Eastern Standard Time";
 	}else if(resultoffset == "-05:00"){
 		var timezone = "Eastern Standard Time";
 	}else if(resultoffset == "-08:00"){

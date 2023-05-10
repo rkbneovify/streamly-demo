@@ -22,6 +22,7 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\HotelRoomTable;
 use Jenssegers\Agent\Agent;
+use \stdClass;
 class Setting extends Controller
 {   public function __construct()
     {
@@ -172,6 +173,7 @@ class Setting extends Controller
         }else{
 
 $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -197,18 +199,63 @@ curl_close($curl);
         // $renewsDate = gmdate("Y-m-d", $plan->created);
         //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
         //$renewaldatetime = $renewsDate . ' at ' . $time;
-        // if($userinfo->name != 'Admin'){
-        //     $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
-        // }else{
-        //      $renewaldatetime = 'No upcoming invoices';
-        // }
-        $renewaldatetime = 'No upcoming invoices';
-        }
+        if($userinfo->name != 'Admin'){
+            $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
         }else{
-        $renewaldatetime = '' ;
+             $renewaldatetime = 'No upcoming invoices';
         }
+        }
+    }
+       
+$STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => 'https://api.stripe.com/v1/customers/'.$userinfo->stripe_id.'/payment_methods',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'GET',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/json',
+    'Authorization: Bearer '.$STRIPE_SECRET.''
+  ),
+));
+$res = curl_exec($curl);
+$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+$allCard = json_decode($res);
+curl_close($curl);
+
+if ($httpCode == 200){
+$slideUpdate = DB::table('customer_card')->select('payment_method','default_value')->where('customer_id', $userinfo->stripe_id)->get();
+// $Cards = $allCards->data;
+// $slideUpdate[0]->payment_method;
+
+$allCards = []; 
+foreach ($allCard->data as $cards) {
+    // dd($cards);
+    // die();
+    foreach ($slideUpdate as $Getcards) {
+       if($cards->id == $Getcards->payment_method){
+           $cards->default_value = $Getcards->default_value;
+           array_push($allCards, $cards);
+       }else{
+
+       }
+    }
+  }
+}else{
+$allCards = [];  
+}
+// $defaultcard = DB::table('customer_card')
+// ->where('customer_id', $userinfo->stripe_id)
+// ->where('default_value', 1)
+// ->get('default_value');
+// dd($allCards);
+// die();
+
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime', 'allCards'));
     }
     public function showSettingpage4(){
         $invoices='1';
@@ -219,7 +266,7 @@ curl_close($curl);
             return redirect()->route('home');
         }
        $id= Auth::user()->id;
-      
+    //    dd(session()->get('jwttoken'));
        $hasid = HashUserID($id);
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
@@ -370,15 +417,214 @@ curl_close($curl);
     {  
         $uid= Auth::user()->id;
         $user = User::find($uid);
-    
+        
         try{
+        $carddetails=\Stripe\PaymentMethod::all([
+            'customer' => $user->stripe_id,
+            'type' => 'card',
+        ]);
+
+        $card_lists = $carddetails->data;
+        foreach($card_lists as $card_list){
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.stripe.com//v1/payment_methods/'.$card_list->id.'/detach',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+           'Content-Type: application/x-www-form-urlencoded',
+           'Authorization: Bearer '.env('STRIPE_SECRET').''
+       ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+
+        }
         $user->subscription('main')->skipTrial()->cancelNow();
+        $cardDelete = DB::table('customer_card')->where('customer_id', $user->stripe_id)->delete();
         return redirect('account/settings')->with('message','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }
         
+    }
 
+    public function removecard($id) 
+    {
+        $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.stripe.com//v1/payment_methods/'.$id.'/detach',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_HTTPHEADER => array(
+           'Content-Type: application/x-www-form-urlencoded',
+           'Authorization: Bearer '.$STRIPE_SECRET.''
+       ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    if($response){
+        return redirect('account/settings')->with('message','Card Removed Successfully');
+    }else{
+        return redirect('account/settings')->with('message','Technical Error!');
+    }
+
+    }
+
+    public function addcard(Request $request, $id){
+
+       $monthyear = explode('/', $request->expirationdate);
+
+       $user_id = $id;
+       $card_number = $request->cardnumber;
+       $exp_year = $monthyear[1];
+       $exp_month = $monthyear[0];
+       $cvv = $request->securitycode;
+       $set_default_card = $request->defaultValue;
+
+       $response = new stdClass();
+
+       if(isset($card_number) && isset($exp_year) && isset($exp_month)) {
+
+$stripe_customer_id=DB::table('users')->where('id', $id)->value('stripe_id');
+$stripe_subscription_id=DB::table('subscriptions')->where('user_id', $id)->where('stripe_status', 'active')->value('stripe_id');
+
+    try 
+    {
+        $token = \Stripe\Token::create(array(
+            "card" => array(
+                "number" => $card_number,
+                "exp_month" => $exp_month,
+                "exp_year" => $exp_year,
+                "cvc" => $cvv,
+                "currency" => 'usd',
+            )
+        ));
         
+        $request_tok_id = $token->id;
+        $new_card_fingerprint = $token->card->fingerprint;
+
+        $carddetails=\Stripe\PaymentMethod::all([
+            'customer' => $stripe_customer_id,
+            'type' => 'card',
+        ]);
+        $card_lists = $carddetails->data;
+        
+        foreach($card_lists as $card_list){
+           
+            $fingerprint[] = $card_list->card->fingerprint;          
+        }
+             
+        if (in_array($new_card_fingerprint, $fingerprint))
+        {
+            $response->error = true;
+            $response->error_msg ='Card Already Exists';
+        }   
+        else
+        {
+
+            $createSource = \Stripe\Customer::createSource(
+                $stripe_customer_id,
+                ['source' => $request_tok_id]
+                );
+           
+               
+                $carddetails_1=\Stripe\PaymentMethod::all([
+                    'customer' => $stripe_customer_id,
+                    'type' => 'card',
+                ]);
+                
+                $customer_card_id = $carddetails_1->data;
+
+                foreach($customer_card_id as $card_new_add){
+                    if($new_card_fingerprint == $card_new_add->card->fingerprint){
+                      
+                        $query = DB::table('customer_card')->insert(
+                                array(
+                                   'user_id' => $id,
+                                   'customer_id' => $stripe_customer_id,
+                                   'payment_method' => $card_new_add->id
+                                )
+                             );
+
+                             if($set_default_card == 1){
+                                $update_payment_method = \Stripe\Customer::update(
+                                    $stripe_customer_id,
+                                    [
+                                        'default_source' => $card_new_add->id
+                                    ]
+                                );
+
+                                $update_set_dafault_card1 = DB::table('customer_card')
+                                ->where('user_id', $id)
+                                ->update(array(
+                                   'default_value' => 0
+                                )); 
+            
+                                $update_set_dafault_card = DB::table('customer_card')
+                                ->where('payment_method', $card_new_add->id)
+                                ->update(array(
+                                   'default_value' => 1
+                                )); 
+                            }
+                    }else{
+                        
+                    }
+                    
+                }
+            
+            $response->error = false;
+            $response->error_msg ='Card Added Sucessfully !';
+            $response->data =$createSource;
+        }
+       
+        
+    }catch(\Stripe\Error\Card $e) {
+        $response = response()->json(['message' => $e->getMessage()], 401);
+        $response->error_msg = $response->original['message'];
+    } 
+    catch (\Stripe\Error\RateLimit $e) {
+        $response = response()->json(['message' => $e->getMessage()], 402);
+        $response->error_msg = $response->original['message'];
+    } catch (\Stripe\Error\InvalidRequest $e) {
+        $response = response()->json(['message' => $e->getMessage()], 403);
+        $response->error_msg = $response->original['message'];
+    } catch (\Stripe\Error\Authentication $e) {
+        $response = response()->json(['message' => $e->getMessage()], 404);
+        $response->error_msg = $response->original['message'];
+    } catch (\Stripe\Error\ApiConnection $e) {
+        $response = response()->json(['message' => $e->getMessage()], 405);
+        $response->error_msg = $response->original['message'];
+    } catch (\Stripe\Error\Base $e) {
+        $response = response()->json(['message' => $e->getMessage()], 406);
+        $response->error_msg = $response->original['message'];
+    } catch (Exception $e) {
+        $response = response()->json(['message' => $e->getMessage()], 407);
+        $response->error_msg = $response->original['message'];
+    }
+    if($response->error_msg == 'Card Added Sucessfully !'){
+        return redirect('account/settings')->with('message', $response->error_msg);
+    }else{
+        return redirect('account/settings')->with('card_message', $response->error_msg);
+    }
+    }
     }
 
     public function BugReportView(){
