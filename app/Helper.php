@@ -143,7 +143,7 @@ use App\User;
             $timezone = "Central Standard Time";
           }else{
             $hrsoffset = "+05:30";
-            $timezone = "Indian Standard Time";
+            $timezone = "Eastern Standard Time";
           }
       
         
@@ -619,7 +619,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
             $timezone = "Central Standard Time";
           }else{
             $hrsoffset = "+05:30";
-            $timezone = "Indian Standard Time";
+            $timezone = "Eastern Standard Time";
           }
  
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {

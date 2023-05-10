@@ -50,7 +50,7 @@ class NotificationController extends Controller
             "registration_ids" => $firebaseToken,
             "notification" => [
                 "title" => $request->title,
-                "body" => $request->body. date("Y/m/d H:i:s"),  
+                "body" => $request->body,  
             ]
         ];
         $dataString = json_encode($data);
@@ -84,7 +84,7 @@ class NotificationController extends Controller
             "registration_ids" => $firebaseToken,
             "notification" => [
                 "title" => $request->title,
-                "body" => $request->body. date("Y/m/d H:i:s"),  
+                "body" => $request->body,  
             ]
         ];
         $dataString = json_encode($data);

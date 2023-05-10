@@ -85,8 +85,8 @@ class StripeController extends Controller
    
                     $html='<html>
                     Hi, '.$user[0]->name.'<br><br>
-                    Your subscription is cancelled now!<br>
-                    To renew your subscription please visit '.$website_link.'.
+                    Your StreamlyTV subscription is now canceled.<br>
+                    To renew your subscription, please visit: '.$website_link.', login, and select a plan!.
                     <br><br>
                     Thanks<br>
                     Team Streamly
@@ -94,8 +94,8 @@ class StripeController extends Controller
 
                    Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
                    $message->to($user[0]->email, $user[0]->name);
-                   $message->cc('piyush.mishra@oodles.io', 'mina@neovix.com')
-                   ->subject('subscription cancelled '.env('APP_NAME'));
+                   $message->bcc('piyush.mishra@oodles.io', 'mina@neovix.com')
+                   ->subject('Your subscription has been canceled. '.env('APP_NAME'));
                });
 
               }
@@ -237,8 +237,77 @@ class StripeController extends Controller
         
                            Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
                            $message->to($user[0]->email, $user[0]->name);
-                           $message->cc('piyush.mishra@oodles.io', 'mina@neovix.com')
+                           $message->bcc('piyush.mishra@oodles.io', 'mina@neovix.com')
                            ->subject('Your Card Expired '.env('APP_NAME'));
+                       });
+        
+                      }
+                      break;
+    
+            case 'customer.subscription.trial_will_end':
+                         $paymentIntent = $event->data->object;
+        
+                         if($paymentIntent->status == "trialing"){
+        
+                             //$cardExpire = DB::table('subscriptions')->where('stripe_id', $paymentIntent->id)->get('user_id');
+                             $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
+    
+                             //$recipt = $paymentIntent->charges->data->receipt_url;
+
+                             $fcm_token = DB::table('session_table')
+                            ->where('users_id', $user[0]->id)
+                            ->where('status', 1)
+                            ->whereNotNull('fcm_token')
+                            ->get('fcm_token');
+
+                         $fcmResults = [];
+                         foreach ($fcm_token as $tokens) {
+                           array_push($fcmResults, $tokens->fcm_token);
+                         };
+
+                         if(count($fcm_token) == 0){
+                        }else{
+                             $curl = curl_init();
+         
+                        curl_setopt_array($curl, array(
+                        CURLOPT_URL => 'https://streamlytv.com/api/auth/sendNotification',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'POST',
+                        CURLOPT_POSTFIELDS =>'{
+                          "registration_ids": '.json_encode($fcmResults).',
+                          "title": "Trial period is ending soon",
+                          "body": "HI '.$user[0]->name.' your trail period is ending on '.date("Y-m-d", $paymentIntent->trial_end).'"
+                         }',
+                         CURLOPT_HTTPHEADER => array(
+                          'Content-Type: application/json'
+                         ),
+                        ));
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                        };
+           
+                            $website_link = env('WEBSITE_URL');
+           
+                            $html='<html>
+                            Hi, '.$user[0]->name.'<br><br>
+                            Your trail period is ending on '.date("Y-m-d", $paymentIntent->trial_end).'.
+                            after the trial period ends, your credit card will be billed the monthly subscription amount.<br><br>
+                            If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
+                            <br><br>
+                            Thanks<br>
+                            Team Streamly
+            
+                        </html>';
+        
+                           Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                           $message->to($user[0]->email, $user[0]->name);
+                           $message->bcc('piyush.mishra@oodles.io')
+                           ->subject('Your trail period is ending soon '.env('APP_NAME'));
                        });
         
                       }
