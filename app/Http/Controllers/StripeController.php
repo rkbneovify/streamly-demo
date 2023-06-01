@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\Models\Subscription;
 use Mail;
 use JWTAuth;
 // use App\Http\Controllers\Controller;
@@ -309,6 +310,51 @@ class StripeController extends Controller
                            $message->bcc('piyush.mishra@oodles.io')
                            ->subject('Your trail period is ending soon '.env('APP_NAME'));
                        });
+        
+                      }
+
+                      break;
+    
+            case 'customer.subscription.updated':
+                         $paymentIntent = $event->data->object;
+        
+                         if($paymentIntent->status == "active"){
+        
+                             $user= DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
+    
+                             $subscriptions = Subscription::where([
+                              ['user_id', '=', $user[0]->id],
+                              ['stripe_status', '=', 'trialing'],
+                              ['ends_at', '=', Null],
+                             ])->get('id');
+
+                             if($subscriptions){
+                              $updateSubscription = DB::table('subscriptions')
+                              ->where('id', $subscriptions[0]['id'])
+                              ->update(array(
+                              'stripe_status' => 'active',
+                              'updated_at' => date("Y/m/d h:i:s"),
+                              ));
+           
+                            $website_link = env('WEBSITE_URL');
+           
+                            $html='<html>
+                            Hi, '.$user[0]->name.'<br><br>
+                            Your trail period is end now and you have charged as per your subscription.
+                            thankyou for choosing to stay with us.<br><br>
+                            If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
+                            <br><br>
+                            Thanks<br>
+                            Team Streamly
+            
+                        </html>';
+        
+                           Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
+                           $message->to($user[0]->email, $user[0]->name);
+                           $message->bcc('piyush.mishra@oodles.io')
+                           ->subject('Subscription Activated '.env('APP_NAME'));
+                       });
+                      }
         
                       }
 

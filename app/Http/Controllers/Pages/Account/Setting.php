@@ -115,7 +115,8 @@ class Setting extends Controller
          $currentMonth = date('m');
         return view('frontend.pages.account.setting4', compact('login','allSession'));
     }
-    public function showSettingpage3(){
+    
+   public function showSettingpage3(){
         $invoices='1';
     	if( Auth::check()){
             $login = true;
@@ -139,7 +140,7 @@ class Setting extends Controller
           }else if($resultoffset == "75662"){
             $timezone = "Central Standard Time";
           }else{
-            $timezone = "Indian Standard Time";
+            $timezone = "Eastern Standard Time";
           }
         
          $allSession=SessionTable::where([
@@ -167,47 +168,10 @@ class Setting extends Controller
             // ch_1HSfl3LqTwOy7LECVmOdkimy
         //  dd($invoices);
          }
-        if($subscription){
-        if($subscription->ends_at){
-        $renewaldatetime = 'Plan Expired';
-        }else{
-
-$STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer='.$userinfo->stripe_id.'',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'GET',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/x-www-form-urlencoded',
-    'Authorization: Bearer '.$STRIPE_SECRET.''
-  ),
-));
-
-$response = curl_exec($curl);
-$renewalDatestripe = json_decode($response);
-curl_close($curl);
-
-// dd($userinfo->card_last_four);
-// die();
-
-        // $time = ($subscription->created_at)->format('H:i:s');
-        // $renewsDate = gmdate("Y-m-d", $plan->created);
-        //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
-        //$renewaldatetime = $renewsDate . ' at ' . $time;
-        if($userinfo->name != 'Admin'){
-            $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
-        }else{
-             $renewaldatetime = 'No upcoming invoices';
-        }
-        }
-    }
-       
-$STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+         $renewaldatetime = $this->getRenewalDateTime($subscription, $userinfo);
+         
+         $allCards = getAllCards($userinfo);
+         
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
@@ -218,20 +182,17 @@ curl_setopt_array($curl, array(
   CURLOPT_CUSTOMREQUEST => 'GET',
   CURLOPT_HTTPHEADER => array(
     'Content-Type: application/json',
-    'Authorization: Bearer '.$STRIPE_SECRET.''
+    'Authorization: Bearer '.env('STRIPE_SECRET').''
   ),
 ));
+
 $res = curl_exec($curl);
-$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 $allCard = json_decode($res);
 curl_close($curl);
 
-if ($httpCode == 200){
 $slideUpdate = DB::table('customer_card')->select('payment_method','default_value')->where('customer_id', $userinfo->stripe_id)->get();
-// $Cards = $allCards->data;
-// $slideUpdate[0]->payment_method;
-
 $allCards = []; 
+if($allCards){
 foreach ($allCard->data as $cards) {
     // dd($cards);
     // die();
@@ -239,24 +200,45 @@ foreach ($allCard->data as $cards) {
        if($cards->id == $Getcards->payment_method){
            $cards->default_value = $Getcards->default_value;
            array_push($allCards, $cards);
-       }else{
-
        }
     }
+    }
   }
-}else{
-$allCards = [];  
-}
-// $defaultcard = DB::table('customer_card')
-// ->where('customer_id', $userinfo->stripe_id)
-// ->where('default_value', 1)
-// ->get('default_value');
-// dd($allCards);
-// die();
-
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
     	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime', 'allCards'));
     }
+
+    public function getRenewalDateTime($subscription, $userinfo)
+{
+    if (!$subscription || $subscription->ends_at) {
+        return 'Plan Expired';
+    }
+
+    if ($userinfo->name == 'Admin') {
+        return 'No upcoming invoices';
+    }
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer=' . $userinfo->stripe_id,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/x-www-form-urlencoded',
+            'Authorization: Bearer ' . env('STRIPE_SECRET'),
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    $renewalDatestripe = json_decode($response);
+    curl_close($curl);
+
+    return date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+}
+
     public function showSettingpage4(){
         $invoices='1';
     	if( Auth::check()){
@@ -266,7 +248,7 @@ $allCards = [];
             return redirect()->route('home');
         }
        $id= Auth::user()->id;
-    //    dd(session()->get('jwttoken'));
+      
        $hasid = HashUserID($id);
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
@@ -417,11 +399,12 @@ $allCards = [];
     {  
         $uid= Auth::user()->id;
         $user = User::find($uid);
-        
+    
         try{
-        $carddetails=\Stripe\PaymentMethod::all([
+            $carddetails=\Stripe\PaymentMethod::all([
             'customer' => $user->stripe_id,
             'type' => 'card',
+            'limit' => '100'
         ]);
 
         $card_lists = $carddetails->data;
@@ -445,7 +428,6 @@ $allCards = [];
     ));
 
     $response = curl_exec($curl);
-
     curl_close($curl);
 
         }
@@ -455,11 +437,12 @@ $allCards = [];
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }
         
+
+        
     }
 
     public function removecard($id) 
     {
-        $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -473,7 +456,7 @@ $allCards = [];
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_HTTPHEADER => array(
            'Content-Type: application/x-www-form-urlencoded',
-           'Authorization: Bearer '.$STRIPE_SECRET.''
+           'Authorization: Bearer '.env('STRIPE_SECRET').''
        ),
     ));
 
@@ -488,7 +471,7 @@ $allCards = [];
 
     }
 
-    public function addcard(Request $request, $id){
+     public function addcard(Request $request, $id){
 
        $monthyear = explode('/', $request->expirationdate);
 
@@ -552,7 +535,6 @@ $stripe_subscription_id=DB::table('subscriptions')->where('user_id', $id)->where
                 ]);
                 
                 $customer_card_id = $carddetails_1->data;
-
                 foreach($customer_card_id as $card_new_add){
                     if($new_card_fingerprint == $card_new_add->card->fingerprint){
                       
