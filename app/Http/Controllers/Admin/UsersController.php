@@ -29,8 +29,7 @@ class UsersController extends Controller
     public function index()
     {
         $roles = Role::all()->pluck('name', 'id');
-        
-          
+
         return view('admin.users.index',compact('roles'));
     }
 
@@ -178,7 +177,25 @@ class UsersController extends Controller
         //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
         //  return response()->json($response, 200);
          //get the users with there session
-         $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
+
+        //old query
+        //  $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
+
+        //new query
+        $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+        $userIds = DB::table('users')
+        ->where('mode', $mode)
+        ->pluck('id')
+        ->toArray();
+
+        $allSession = SessionTable::with('user')
+        ->selectRaw("users_id, count(id) as activesession")
+        ->where("status", '1')
+        ->whereIn('users_id', $userIds)
+        ->groupBy('users_id')
+        ->get();
+
         return view('admin.users.sessions', compact('allSession'));
     }
 
@@ -360,19 +377,21 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         }else{
             $searchroleValue=$columnName_arr[3]['search']['value'];
         }
+        $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
         // Total records
         $totalRecords = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
- })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->count();
+ })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
         $totalRecordswithFilter = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->select('count(*) as allcount')
-        ->where('email', 'like', '%' .$searchValue . '%')->count();
+        ->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
     
         // Fetch records
         $records = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->where('email', 'like', '%' .$searchValue . '%')
+ ->where('mode', 'like', '%' .$mode . '%' )
  ->orderBy($columnName,$columnSortOrder)
           
           ->skip($start)

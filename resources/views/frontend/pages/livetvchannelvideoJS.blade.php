@@ -70,7 +70,14 @@
 	left: 13px;
 	top:6px;
 }
-
+.player-wrapper {
+      width: 90%;
+      margin: 20px auto;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    }
+.bmpui-ui-watermark {
+	display: none;
+}
 </style>
 
 <link rel="stylesheet" href="{{ asset('frontend/owl.carousel.min.css') }}" />
@@ -280,14 +287,14 @@ console.log("cant play");
 */
 					// Init player.
 
-				player = videojs('my-player', {
-		preload: true,
-		autoplay: true,
-		controls: true,
-					responsive: true,
-		controlBar: {
-			'liveDisplay': true,
-			'pictureInPictureToggle': true,
+		// 		player = videojs('my-player', {
+		// preload: true,
+		// autoplay: true,
+		// controls: true,
+		// 			responsive: true,
+		// controlBar: {
+		// 	'liveDisplay': true,
+		// 	'pictureInPictureToggle': true,
 		// 					'volumeMenuButton': true,
 	// 'currentTimeDisplay': true,
 	// 'timeDivider': true,
@@ -295,73 +302,73 @@ console.log("cant play");
 	// 'remainingTimeDisplay': false,
 	// 'progressControl': true,
 	// 'subtitlesButton': true,
-	'fullscreenToggle': true,
-		}
-	});
-					player.httpSourceSelector();
-					player.eme({
-								// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
-								emeHeaders: {
-										'customdata': '{{$encoded_auth_xml}}'
-								}
-						});
+// 	'fullscreenToggle': true,
+// 		}
+// 	});
+// 					player.httpSourceSelector();
+// 					player.eme({
+// 								// If you are using proxy, please, remove 'emeHeaders' block. Only 'player.eme();' should stay to register eme plugin.
+// 								emeHeaders: {
+// 										'customdata': '{{$encoded_auth_xml}}'
+// 								}
+// 						});
 
-					player.on('ready', function() {
-console.log("playr ready");
-						var show_on_start = true;  <!--// Set true to show overlay banner before video start-->
+// 					player.on('ready', function() {
+// console.log("playr ready");
+// 						var show_on_start = true;  <!--// Set true to show overlay banner before video start-->
 
 <!--// Find overlay elements-->
-var parent = player.el().parentNode;
-var closeBtn = parent.querySelector('.over-close');
-var overlay = parent.querySelector('.div-over');
+// var parent = player.el().parentNode;
+// var closeBtn = parent.querySelector('.over-close');
+// var overlay = parent.querySelector('.div-over');
 <!--// Close overlay and play media file on close button click-->
-		closeBtn.addEventListener('click',function(e) {
-			overlay.style.display='none';
-			player.play();
-		}, false);
+		// closeBtn.addEventListener('click',function(e) {
+		// 	overlay.style.display='none';
+		// 	player.play();
+		// }, false);
 
 		<!--// Show overlay on Pause event-->
-		this.on("pause", function(){
-			if (!this.seeking() && this.paused()) {
-				overlay.style.display='block';
-			}
-		});
+		// this.on("pause", function(){
+		// 	if (!this.seeking() && this.paused()) {
+		// 		overlay.style.display='block';
+		// 	}
+		// });
 
 		<!--// Hide overlay on Play event-->
-		this.on('play', function(e) {
-			overlay.style.display='none';
-		});
-		if(show_on_start) {
-			player.pause(); overlay.style.display='block';
-		} else {
-			overlay.style.display='none';
-		}
+		// this.on('play', function(e) {
+		// 	overlay.style.display='none';
+		// });
+		// if(show_on_start) {
+		// 	player.pause(); overlay.style.display='block';
+		// } else {
+		// 	overlay.style.display='none';
+		// }
 
 							// Setup dash + drms
-							var dashdrmplay = {
-									// src: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
-									src: '{{$url[0]->url??"no url found"}}',
-									type: 'application/dash+xml',
-								keySystems: {
-					'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
-					'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
-				}
-							};
+				// 			var dashdrmplay = {
+				// 					// src: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
+				// 					src: '{{$url[0]->url??"no url found"}}',
+				// 					type: 'application/dash+xml',
+				// 				keySystems: {
+				// 	'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+				// 	'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+				// }
+				// 			};
 
 							// Set the source to the player to init/start the playback.
-							player.src(dashdrmplay);
-							player.on('play', function() {
-console.log("it's playing bro");
-console.log(dashdrmplay);
-	tabplayer.broadcast('stop');
-	document.title = 'play...';
+// 							player.src(dashdrmplay);
+// 							player.on('play', function() {
+// console.log("it's playing bro");
+// console.log(dashdrmplay);
+// 	tabplayer.broadcast('stop');
+// 	document.title = 'play...';
 
-						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
-						setInterval(function(){ 
-							// console.log("15 secs");
-							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
-							},15000);
-							Addrecent();//save to recents
+// 						gtag('event', 'video_play', {'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+// 						setInterval(function(){ 
+// 							// console.log("15 secs");
+// 							gtag('event', 'video_livestream_duration', {'livestream_seconds_watched': 15,'call_sign': CallSignValueURL,'inside_geofence':localStorage.getItem("geofence")});
+// 							},15000);
+// 							Addrecent();//save to recents
 });	
 //    let retries = 0;
 //    player.tech_.on('retryplaylist', () => {
@@ -399,13 +406,13 @@ console.log(dashdrmplay);
 // )
 // }
 			
-player.on('pause', function() {
-console.log("it's paused bro");
+// player.on('pause', function() {
+// console.log("it's paused bro");
 
-});
+// });
 
-					});
-			})();
+// 					});
+// 			})();
 	$('document').ready(function(){
 		var owl = $('.owl-carousel');
 			owl.owlCarousel({
@@ -857,7 +864,10 @@ margin: 0 80px!important;
 					</div>
 					<div class="col-md-8 col-centered" >
 						
-						<video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls muted autoplay></video>
+						<!-- <video id="my-player" class="video-js vjs-default-skin vjs-fluid" controls muted autoplay></video> -->
+						<div class="player-wrapper">
+                           <div id="player"></div>
+                        </div>
 
 					<div class="div-over">
 						<div class="overlay" >
@@ -1070,6 +1080,34 @@ if(resultoffset == "+05:30"){
 	var timezone = "GMT".concat(resultoffset)
 }
 document.getElementById("timezone").innerHTML = timezone;
-	</script>
-	
+</script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bitmovin-player@8/bitmovinplayer.js"></script>
+<script type="text/javascript">
+  var conf = {
+    key: '84e0eb02-57d1-40a6-931e-106cbe60e5a6',
+	playback: {
+                autoplay: true,
+                muted: true
+            },
+  };
+
+  var source = {
+    dash: '{{$url[0]->url??"no url found"}}',
+		drm: {
+			widevine: {
+                    LA_URL: "https://wv-keyos.licensekeyserver.com/",
+					headers: {
+						'customdata': '{{$encoded_auth_xml}}'
+                    }
+                  }
+    },
+  };
+
+  var player = new bitmovin.player.Player(document.getElementById('player'), conf);
+  player.on(player.exports.PlayerEvent.Ready, function() {
+    console.log('Video loading is complete');
+  });
+  player.load(source);
+
+</script>
 @endsection
