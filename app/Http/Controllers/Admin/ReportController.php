@@ -27,8 +27,15 @@ class ReportController extends Controller
     }
 
     public function userdetails(){
+
+         $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+         $userIds = DB::table('users')
+         ->where('mode', $mode)
+         ->pluck('id')
+         ->toArray();
        
-         $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();
+         $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->whereIn('users_id', $userIds)->groupBy('users_id')->get();
         return view('admin.reports.userdetails', compact('allSession'));
        // return $allSession;
     }
@@ -238,8 +245,16 @@ return view('admin.reports.viewtransaction', compact('singletransaction'));
 
    public function SubscriptionsReports($sort){
 
+    $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+        $userIds = DB::table('users')
+        ->where('mode', $mode)
+        ->pluck('id')
+        ->toArray();
+
     $transaction = DB::table('subscriptions')
     ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+    ->whereIn('user_id', $userIds)
     ->orderBy('created_at', $sort)
     ->get();
 
@@ -367,9 +382,17 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
 
     $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 
+    $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
+        $userIds = DB::table('users')
+        ->where('mode', $mode)
+        ->pluck('id')
+        ->toArray();
+
     if($value == 'all'){
     $transaction = DB::table('subscriptions')
     ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
+    ->whereIn('user_id', $userIds)
     ->whereDate('created_at', '>=',$to)
     ->whereDate('created_at', '<=',$from)
     ->get();
@@ -377,6 +400,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
     $transaction = DB::table('subscriptions')
     ->select('id','user_id', 'stripe_plan', 'stripe_status', 'trial_ends_at', 'renews_at', 'ends_at', 'created_at')
     ->where('stripe_status', $value)
+    ->whereIn('user_id', $userIds)
     ->whereDate('created_at', '>=',$to)
     ->whereDate('created_at', '<=',$from)
     ->get();

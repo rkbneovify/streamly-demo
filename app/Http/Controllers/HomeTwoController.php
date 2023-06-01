@@ -182,13 +182,16 @@ if($responseCaptcha->success == true){
     
         });
 
+        $Usermode=DB::table('Stripe_keys')->where('status', 'active')->value('type');
+
         $User = User::create([
             'name' => $request['name'],
             'email' => $request['user-email'],
             'password' => Hash::make($request['user-password']),
             'zipcode' => $request['zip_code'],
             'email_verified_at'=>null,
-            'is_active'=>0
+            'is_active'=>0,
+            'mode'=> $Usermode
         ]);
 
         $role = RoleUser::create([
