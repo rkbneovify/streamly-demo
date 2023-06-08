@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ChannelItemComponent" extends="Group"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+  <interface>
+    <field id="content" type="node"  onChange = "showcontent" />
+    <field id="width" type="float" />
+    <field id="height" type="float" />
+    <field id = "listHasFocus" type = "boolean" onChange = "setfocus"/>
+    <field id = "focusPercent" type = "float" onChange = "setfocus"/>
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/HomeScreen/ChannelItemComponent.brs" />
+  <script type = "text/brightscript">
+    <![CDATA[
+  
+
+    ]]>
+  </script>
+  <children>
+
+    <Poster id="channelfocusborder" loadDisplayMode="scaleToFill" translation="[0,0]" height="82" width="280" uri="pkg:/images/home/channelinfobackgrnd.png" opacity = "1"/>
+    <Poster loadDisplayMode="scaleToFill" translation="[0,0]" height="150" width="280" uri="pkg:/images/home/channelinfobackgrnd.png" opacity = "1"/>
+
+    <Poster id="poster" loadDisplayMode="scaletofill" translation="[100,20]"
+            height = "110"
+            width =  "110"
+             />
+    <Label id="title" height="50" width="120" translation="[30,20]" />
+  </children>
+</component>
+

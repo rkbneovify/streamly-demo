@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="qrlogintask" extends="Task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/LoginScreen/qrlogintask.brs" />
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	<interface>
+
+      <field  id="data"  type="roAssociativeArray" />
+      <field  id="callType"  type="String" />
+      <field  id="dialog" type="node"/>
+      
+      <field  id="response"  type="roAssociativeArray" /> 
+      <field  id="error"  type="roAssociativeArray" /> 
+      <field  id="headerData"  type="roAssociativeArray" />  
+      
+    </interface>
+    
+</component>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="RelatedChannelsItemComponent" extends="Group"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+  <interface>
+    <field id = "itemcontent" type = "node" onChange = "showcontent"/>
+    <field id="width" type="float" onChange ="updateLayout"/>
+    <field id="height" type="float" onChange ="updateLayout" />
+    <field id = "listHasFocus" type = "boolean" onChange = "setfocus"/>
+    <field id = "focusPercent" type = "float" onChange = "setfocus"/>
+    <field id = "focusPercent1" type = "float" onChange = "showfocus"/>
+  </interface>
+
+  <script type="text/brightscript" uri="pkg:/components/HomeScreen/RelatedChannelsItemComponent.brs" />
+  <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+  
+  <script type = "text/brightscript">
+    <![CDATA[
+  
+
+    ]]>
+  </script>
+  <children>
+<!-- <Group > -->
+
+    <Label id="channelId" translation="[10,10]" text="3452" vertFocusAnimationStyle = "floatingFocus"/>
+
+    <Poster id="focusBorder"
+            uri = "pkg:/images/videoplayer/related_channel_focus.png" />
+
+    <Poster id="channelborder" loadDisplayMode="scaleToFill" translation="[0,0]" height="82" width="280" uri="pkg:/images/search/search_result_background.png" />
+
+    <Poster id="channelICon" loadDisplayMode="scaleTofit" translation="[0,0]" height="80" width="165" uri="pkg:/images/mtvicon/mtv.png" />
+
+<!-- </Group> -->
+
+  </children>
+</component>
+

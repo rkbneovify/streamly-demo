@@ -1,0 +1,11 @@
+<component name="SpeechRecognizerEmail" extends="Task" >
+
+  <script type="text/brightscript" uri="pkg:/components/LoginScreen/VoiceSearch/SpeechRecognizerEmail.brs"/>
+
+  <interface>
+    <!-- Callback listener -->
+    <field id="delegate" type="node"/>
+    <function name="startListening"/>
+  </interface>
+
+</component>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    
+    
+    <file datatype="x-brs" original="components/LoginScreen.brs" source-language="en-US" target-language="de-DE">
+        <body>
+             <trans-unit id="0">
+              <source>Select the style for the analog clock</source>
+              <target>Wählen Sie den Analog Clock Style</target>
+             </trans-unit>
+        </body>
+    </file>
+    <file datatype="x-brs" original="components/HomeScene.brs" source-language="en-US" target-language="de-DE">
+        <body>
+            <!--Insert Translations rows here similar to: <trans-unit id="0"><source>Select the style for the analog clock</source><target>Wählen Sie den Analog Clock Style</target></trans-unit>-->
+        </body>
+    </file>
+    
+    
+    <file datatype="x-brs" original="components/ProfileSettingScreen.brs" source-language="en-US" target-language="de-DE">
+        <body>
+            
+        <trans-unit id="0">
+           <source>Are you sure you want to logout from this device?</source>
+           <target>Möchten Sie sich wirklich von diesem Gerät abmelden?</target>
+        </trans-unit>  
+        </body>
+    </file>
+   
+    
+</xliff>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="RegistredDeviceItemComponent" extends="Group"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+  <script type="text/brightscript" uri="pkg:/components/ProfileSettingScreen/RegistredDeviceItemComponent/RegistredDeviceItemComponent.brs" />
+  <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+  <interface >
+
+    <field id = "itemContent" type = "node" onChange = "showcontent"/>
+    <field id="width" type="float" onChange="updateLayout"/>
+    <field id="height" type="float" onChange="updateLayout"/>
+    <field id = "focusPercent" type = "float" onChange = "showfocus"/>
+    <!-- <field id = "itemHasFocus" type = "boolean" onChange = "setfcous"/> -->
+
+  </interface>
+
+
+
+  <children >
+    <!-- image of the device  -->
+
+        <!-- personal device name text -->
+        <!-- <LayoutGroup
+          itemSpacings = "[0]"
+          layoutDirection = "vert">
+          <Label id = "personal_device_name_lable" text = "Personal Devoice Name" height = "50"/>
+          <Label id = "personal_device_name" translation = "[ 0, 0 ]" height="50"/>
+        </LayoutGroup> -->
+
+        <Poster id="itemCursor" height="250" width="320" uri="pkg:/images/Login/createAccountunFocus.png" drawFocusFeedback="false">
+          <Poster id="device_image" height="180" width="180" loadSync="false" translation = "[70, 35]" />
+          <Poster      
+          id = "currentfocus" 
+          translation = "[ 5, 5 ]"
+          width  = "310"
+          height = "240"
+          opacity="0.0"
+          uri="pkg:/images/delet_login_focus.jpg"    
+          loadDisplayMode = "scaleToFill">
+          <Group translation = "[20, 180]" opacity="1" id="text_group_constainer">
+          <LayoutGroup 
+            id = "main_layout_group_register_device"
+            translation = "[0, 0]">
+    
+            <!-- device id text  -->
+            <LayoutGroup
+              itemSpacings = "[2]"
+              layoutDirection = "horiz">
+               <Label id = "device_id_lable" height="20" text="Device Name : " /> 
+              <Label id = "device_name_per" height="10" width = "150" />
+            </LayoutGroup>
+    
+            <!-- device name txt -->
+            <LayoutGroup
+              itemSpacings = "[2]"
+              layoutDirection = "horiz"
+              translation = "[0, 25]">
+              <Label id = "device_name_lable" text = "Device Type : " height = "20"/>
+              <Label id = "device_type" height = "10" />
+            </LayoutGroup> 
+            <LayoutGroup
+              itemSpacings = "[2]"
+              layoutDirection = "horiz"
+              translation = "[0, 25]">
+              <Label id = "room_number_lable" text = "Room Number : " height = "20" />
+              <Label id = "room_number" height = "10" />
+            </LayoutGroup> 
+          </LayoutGroup>
+        </Group>
+      </Poster> 
+        </Poster>
+        <Group translation = "[0, 270]" opacity="1" id="text_group_constainer">
+          <LayoutGroup 
+            id = "main_layout_group_register_device"
+            translation = "[60, 0]">
+    
+            <!-- device id text  -->
+            <LayoutGroup>
+              <!-- <Label id = "device_id_lable" height="30" text="Device Name :" /> -->
+              <Label id = "device_name" height="50" width="200" horizAlign = "center"/>
+            </LayoutGroup>
+    
+            <!-- device name txt -->
+            <!-- <LayoutGroup
+              itemSpacings = "[2]"
+              layoutDirection = "vert">
+              <Label id = "device_name_lable" text = "Device Type : " height = "30"/>
+              <Label id = "device_type" height = "30" />
+            </LayoutGroup> -->
+          </LayoutGroup>
+        </Group>
+  </children>
+
+</component>
