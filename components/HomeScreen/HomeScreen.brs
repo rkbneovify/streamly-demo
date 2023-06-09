@@ -1353,63 +1353,6 @@ sub channelFocused(event as object)
                 if getVideoid().toInt() >= 21 and getVideoid().toInt() <= 34 then
                     m.timeGride.jumpToChannel = getVideoid().toInt() - 2
                     deleteVideoscreen()
-                else if getVideoid().toInt() >= 36 and getVideoid().toInt() <= 39 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 3
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 41 and getVideoid().toInt() <= 44 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 4
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 46 and getVideoid().toInt() <= 53 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 5
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 56 and getVideoid().toInt() <= 59 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 7
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 61 and getVideoid().toInt() <= 64 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 8
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 66 and getVideoid().toInt() <= 66 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 9
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 69 and getVideoid().toInt() <= 82 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 11
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 84 and getVideoid().toInt() <= 85 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 12
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 93 and getVideoid().toInt() <= 93 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 19
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 97 and getVideoid().toInt() <= 100 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 22
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 102 and getVideoid().toInt() <= 102 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 23
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 104 and getVideoid().toInt() <= 105 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 24
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 107 and getVideoid().toInt() <= 108 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 25
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 110 and getVideoid().toInt() <= 113 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 26
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 116 and getVideoid().toInt() <= 116 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 28
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 118 and getVideoid().toInt() <= 119 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 29
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 128 and getVideoid().toInt() <= 129 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 37
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 131 and getVideoid().toInt() <= 132 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 38
-                    deleteVideoscreen()
-                else
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 1
-                    deleteVideoscreen()
                 end if
 
             else
@@ -1698,7 +1641,8 @@ end sub
 
 ' This function use for any common api alert.
 function errorDialogShow(event as object)
-    if event.getData().responseCode = 401 or event.getData().responseCode = 429 or event.getData().responseCode = 404
+    if event.getData().responseCode = 429 or event.getData().responseCode = 404
+        ' event.getData().responseCode = 401 or
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "loginScreen")
         m.DialogButton.setFocus(true)
@@ -1723,9 +1667,9 @@ function errorDialogSession(event as object)
 
     if event.getData().responseCode = 401
         ' Session message
-        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
-        m.DialogButton.setFocus(true)
+        ' m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
+        ' m.DialogButton.observeField("buttonSelected", "loginScreen")
+        ' m.DialogButton.setFocus(true)
     else
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "loginScreen")
@@ -2578,33 +2522,7 @@ sub channel_drawyer(chann_num1, chann_num2)
         if videoId >= 1 and videoId <= chann_num1[i]
             m.relatedChannelMarkupList.jumpToItem = videoId + jump
             m.relatedChannelMarkupList.animateToItem = videoId - animate
-            exit for
-        else if videoId >= chann_num1[i] and videoId <= chann_num1[i + 1]
-            if chann_num2[i] = 2 and videoId < 60
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 1))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 1))
-            else if chann_num2[i] = 3 and videoId < 60
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump)
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 2))
-            else if chann_num2[i] = 2 and videoId >= 60 and videoId < 80
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 2))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 2))
-            else if videoId >= 60 and videoId < 90
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 3))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 3))
-            else if chann_num2[i] = 8 and videoId >= 90
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 9))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 9))
-            else if chann_num2[i - 1] >= 2 and videoId >= 90 and videoId < 111
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 11))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 11))
-            else if videoId >= 111 and videoId < 117
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 12))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 12))
-            else if videoId >= 118
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 13))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 12))
-            end if
+        
             exit for
         end if
     end for
