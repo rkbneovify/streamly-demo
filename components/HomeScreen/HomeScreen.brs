@@ -128,39 +128,39 @@ sub init()
     m.PosterIconLabel = m.PosterliveIcon.createChild("Label")
     m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
 
-    if getVide_val() <> ""
-        if getVide_val() = "video"
-            videoId = getVideoid().toInt()
-            setVideoscreen("home_refresh")
-            if videoId < 96
-                m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
-                m.LoaderBackground.visible = false
-                m.PosterliveIcon.setFocus(false)
-                m.timeGride = m.top.findNode("timeGrid")
-                m.timeGride.observeField("channelFocused", "channelFocused")
-                m.timeGride.setFocus(false)
-                for i = 0 to LoadVideo_id().count() - 1
-                    if LoadVideo_id()[i] = videoId then
-                        setVideourl(LoadVideo_back()[i].URL)
-                        playVideo(LoadVideo_back()[i])
-                        exit for
-                    end if
-                end for
+    ' if getVide_val() <> ""
+    '     if getVide_val() = "video"
+    '         videoId = getVideoid().toInt()
+    '         setVideoscreen("home_refresh")
+    '         if videoId < 96
+    '             m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
+    '             m.LoaderBackground.visible = false
+    '             m.PosterliveIcon.setFocus(false)
+    '             m.timeGride = m.top.findNode("timeGrid")
+    '             m.timeGride.observeField("channelFocused", "channelFocused")
+    '             m.timeGride.setFocus(false)
+    '             for i = 0 to LoadVideo_id().count() - 1
+    '                 if LoadVideo_id()[i] = videoId then
+    '                     setVideourl(LoadVideo_back()[i].URL)
+    '                     playVideo(LoadVideo_back()[i])
+    '                     exit for
+    '                 end if
+    '             end for
 
-                m.ChannelsGroup.visible = false
-                m.video.visible = true
-                m.video.setFocus(true)
-                m.top.signalBeacon("VODStartComplete")
-            else
-                ' Loading Timegrid data if video was not played before exit app
-                load_TimegridData()
+    '             m.ChannelsGroup.visible = false
+    '             m.video.visible = true
+    '             m.video.setFocus(true)
+    '             m.top.signalBeacon("VODStartComplete")
+    '         else
+    '             ' Loading Timegrid data if video was not played before exit app
+    '             load_TimegridData()
 
-            end if
-        end if
-    else
+    '         end if
+    '     end if
+    ' else
         ' Loading Home screen data
         Home_screenTimegridData()
-    end if
+    ' end if
 
 end sub
 
@@ -2554,7 +2554,7 @@ sub allChannelApiResponse(event as object)
         chann_num2 = getDifferences(m.channelsId)[2]
 
         ' Function for Related channels drawyer
-        channel_drawyer(chann_num1, chann_num2)
+        ' channel_drawyer(chann_num1, chann_num2)
     end if
 end sub
 
