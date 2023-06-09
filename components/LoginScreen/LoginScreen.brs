@@ -2081,10 +2081,12 @@ sub LoginResponse()
                         end if
                     end if
                 else
+                    ?"homescreen switching "
                     setUserHomeScreenMode("Home")
                     m.loginsuccess = true
                     buttons = []
                     buttons.Push("OK")
+                    openHomeView()
                     m.top.signalBeacon("AppDialogComplete")
                 end if
             else
@@ -2111,6 +2113,12 @@ sub LoginResponse()
             showDialogDevice("Login Error", true, false, "Invalid credentials")
         end if
     end if
+end sub
+
+sub openHomeView()
+    ? "openHomeView"
+    m.screen = showHomeScreen()
+    m.screen.observeField("ExitView", "openLoginView")
 end sub
 
 sub showDialogDevice(dialogView as string, show as boolean, focus as boolean, message as string)

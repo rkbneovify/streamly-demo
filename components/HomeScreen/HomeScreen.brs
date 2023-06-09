@@ -1714,18 +1714,40 @@ function showLogin1Screen() as object
 end function
 
 function loginScreen()
-    setAccountToken("")
-    setThePersonalDeviceName("")
-    setPersonaldeviceid("")
-    m.logout = true
-    m.top.logout = true
-    ' m.ProfileCategory.setFocus(false)
-    showLogin1Screen()
+    ApiCallFor("Sign out", "POST")
 
     setLogin("login")
 end function
 
+sub ApiCallFor(callto as string, callType as string)
+    ?"ProfileSetting::ApiCallFor: "
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
+    m.LoginBusySpinner.visible = true
+    '     ApiCallFor(callto,"GET")
+    m.ProfileTask.callto = callto
+    m.ProfileTask.callType = callType
 
+    m.ProfileTask.observeField("response", "responseAPI")
+    m.ProfileTask.observeField("errorMessage", "errorDialogShow")
+
+    '     m.ProfileTask.observeField("response","responseAPI")
+    m.ProfileTask.control = "RUN" 'Run the task node
+    ' m.top.ExitView = true
+
+end sub
+
+sub responseAPI(event as object)
+     if m.ProfileTask.callto = "Sign out"
+        ' ?"Profile::responseData.message:";m.responseData.message
+        setAccountToken("")
+        setThePersonalDeviceName("")
+        setPersonaldeviceid("")
+        m.logout = true
+        m.top.logout = true
+        ' m.ProfileCategory.setFocus(false)
+        showLogin1Screen()
+    end if
+end sub
 
 function closeScreen1()
     ?"closeScreen"

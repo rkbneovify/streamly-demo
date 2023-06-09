@@ -158,8 +158,8 @@ sub init()
     '         end if
     '     end if
     ' else
-        ' Loading Home screen data
-        Home_screenTimegridData()
+    ' Loading Home screen data
+    Home_screenTimegridData()
     ' end if
 
 end sub
@@ -1701,10 +1701,53 @@ sub showLoginPage(event as object)
     m.top.ExitView = true
 end sub
 
+function showLogin1Screen() as object
+    ? "showLoginScreen"
+    if m.screen <> invalid then m.top.removeChild(m.screen)
+    setProfilescreen("login_screen")
+    LoginScreen1 = m.top.createChild("LoginScreen")
+    LoginScreen1.observeField("dialog", "showDialog")
+    LoginScreen1.observeField("ExitView", "openHomeView")
+    LoginScreen1.observeField("showPersonalDeviceName", "showPersonalDeviceNameScreen")
+    LoginScreen1.setFocus(true)
+    return LoginScreen1
+end function
+
 function loginScreen()
-    m.top.ExitView = true
+    ApiCallFor("Sign out", "POST")
+
     setLogin("login")
 end function
+
+sub ApiCallFor(callto as string, callType as string)
+    ?"ProfileSetting::ApiCallFor: "
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
+    m.LoginBusySpinner.visible = true
+    '     ApiCallFor(callto,"GET")
+    m.ProfileTask.callto = callto
+    m.ProfileTask.callType = callType
+
+    m.ProfileTask.observeField("response", "responseAPI")
+    m.ProfileTask.observeField("errorMessage", "errorDialogShow")
+
+    '     m.ProfileTask.observeField("response","responseAPI")
+    m.ProfileTask.control = "RUN" 'Run the task node
+    ' m.top.ExitView = true
+
+end sub
+
+sub responseAPI(event as object)
+     if m.ProfileTask.callto = "Sign out"
+        ' ?"Profile::responseData.message:";m.responseData.message
+        setAccountToken("")
+        setThePersonalDeviceName("")
+        setPersonaldeviceid("")
+        m.logout = true
+        m.top.logout = true
+        ' m.ProfileCategory.setFocus(false)
+        showLogin1Screen()
+    end if
+end sub
 
 function closeScreen1()
     ?"closeScreen"
@@ -2545,8 +2588,8 @@ sub allChannelApiResponse(event as object)
         m.chan_id1 = []
         for each channel in event.getData().data
 
-            
-                m.chan_id1.push(channel.id)
+
+            m.chan_id1.push(channel.id)
             SaveVideo_id_drawyer(m.chan_id1)
 
 
@@ -2681,6 +2724,8 @@ end function
 ' Handle remote key press and manage actions.
 function onKeyEvent(key as string, press as boolean) as boolean
     ? "HomeScreen::key: "; key
+    ?m.timeGride.hasFocus()
+
     result = false
 
     if press
