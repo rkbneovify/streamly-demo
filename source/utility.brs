@@ -168,6 +168,35 @@ sub SaveVideo_iditem(key as string, value as string)
     ' sec.Flush()
 end sub
 
+sub SaveVideo_id_drawyer(settings as object)
+    SaveVideo_iditem_drawyer("Video_id", FormatJSON({ settings: settings }, 1))
+end sub
+
+function LoadVideo_id_drawyer() as dynamic
+    json = GetVideo_iditem_drawyer("Video_id")
+    if json <> ""
+        obj = ParseJSON(json)
+        if obj <> invalid
+            return obj.settings
+        end if
+    end if
+    return invalid
+end function
+
+function GetVideo_iditem_drawyer(key as string, default = "") as string
+    sec = CreateObject("roRegistrySection", "Backitem")
+    if sec.Exists(key)
+        return sec.Read(key)
+    end if
+    return default
+end function
+
+sub SaveVideo_iditem_drawyer(key as string, value as string)
+    sec = CreateObject("roRegistrySection", "Backitem")
+    sec.Write(key, value)
+    ' sec.Flush()
+end sub
+
 ''Home Timezone
 function getHomeTimezone() as dynamic
     sec = CreateObject("roRegistrySection", "HomeTimezone")
@@ -344,6 +373,11 @@ end function
 function getDataMode() as dynamic
     sec = CreateObject("roRegistrySection", "LanuchDataType")
     return sec.Read("LanuchDataType")
+end function
+
+function deleteDataMode() as dynamic
+    sec = CreateObject("roRegistrySection", "LanuchDataType")
+    return sec.Delete("LanuchDataType")
 end function
 
 function setControlMode(control as string)

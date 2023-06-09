@@ -70,8 +70,10 @@ sub ChannnlePaginationAPI()
   ' ?"API End call";
   if programData.responseCode = 200
     ?"programmData: JesonResponse"; programData.jsonResponse
-    ChannelList = programData.jsonResponse.data
-    m.top.ChannelList = ChannelList
+    if programData.jsonResponse <> invalid
+      ChannelList = programData.jsonResponse.data
+      m.top.ChannelList = ChannelList
+    end if
   else
     m.top.errorResponse = programData
   end if

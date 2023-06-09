@@ -128,39 +128,39 @@ sub init()
     m.PosterIconLabel = m.PosterliveIcon.createChild("Label")
     m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
 
-    if getVide_val() <> ""
-        if getVide_val() = "video"
-            videoId = getVideoid().toInt()
-            setVideoscreen("home_refresh")
-            if videoId < 96
-                m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
-                m.LoaderBackground.visible = false
-                m.PosterliveIcon.setFocus(false)
-                m.timeGride = m.top.findNode("timeGrid")
-                m.timeGride.observeField("channelFocused", "channelFocused")
-                m.timeGride.setFocus(false)
-                for i = 0 to LoadVideo_id().count() - 1
-                    if LoadVideo_id()[i] = videoId then
-                        setVideourl(LoadVideo_back()[i].URL)
-                        playVideo(LoadVideo_back()[i])
-                        exit for
-                    end if
-                end for
+    ' if getVide_val() <> ""
+    '     if getVide_val() = "video"
+    '         videoId = getVideoid().toInt()
+    '         setVideoscreen("home_refresh")
+    '         if videoId < 96
+    '             m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
+    '             m.LoaderBackground.visible = false
+    '             m.PosterliveIcon.setFocus(false)
+    '             m.timeGride = m.top.findNode("timeGrid")
+    '             m.timeGride.observeField("channelFocused", "channelFocused")
+    '             m.timeGride.setFocus(false)
+    '             for i = 0 to LoadVideo_id().count() - 1
+    '                 if LoadVideo_id()[i] = videoId then
+    '                     setVideourl(LoadVideo_back()[i].URL)
+    '                     playVideo(LoadVideo_back()[i])
+    '                     exit for
+    '                 end if
+    '             end for
 
-                m.ChannelsGroup.visible = false
-                m.video.visible = true
-                m.video.setFocus(true)
-                m.top.signalBeacon("VODStartComplete")
-            else
-                ' Loading Timegrid data if video was not played before exit app
-                load_TimegridData()
+    '             m.ChannelsGroup.visible = false
+    '             m.video.visible = true
+    '             m.video.setFocus(true)
+    '             m.top.signalBeacon("VODStartComplete")
+    '         else
+    '             ' Loading Timegrid data if video was not played before exit app
+    '             load_TimegridData()
 
-            end if
-        end if
-    else
+    '         end if
+    '     end if
+    ' else
         ' Loading Home screen data
         Home_screenTimegridData()
-    end if
+    ' end if
 
 end sub
 
@@ -632,9 +632,11 @@ sub closeTryAgain()
     deleteVide_val()
     ?"videoId = getVideoid().toInt() "getVideoid().toInt()
     if RegRead("search_video")
+        RegDelete("search_video")
         m.Close.setFocus(false)
         showDialogDevice("", false, true, "")
         m.video.control = "stop"
+        m.video.visible = false
         SearchScreen = m.top.createChild("SearchScreen")
         SearchScreen.id = "SearchScreen"
         SearchScreen.observeField("exitView", "closeSearchScreen")
@@ -750,12 +752,12 @@ end sub
 
 sub Try_again()
     ?"try again"
-    ?"m.channelsId "m.channelsId
+    ' ?"m.channelsId "m.channelsId
     videoId = getVideoid().toInt()
     m.Tryagain.setFocus(false)
     showDialogDevice("", false, true, "")
-    for each i in m.channelsId
-        if m.channelsId[i] = videoId then
+    for each i in LoadVideo_id()
+        if LoadVideo_id()[i] = videoId then
             playVideo(m.channels[0][i])
             exit for
         end if
@@ -1195,8 +1197,8 @@ sub forPrevious()
         timer1()
         id = 0
 
-        for i = 0 to m.channelsId.count() - 1
-            if m.channelsId[i] = getVideoid().toInt() then
+        for i = 0 to LoadVideo_id().count() - 1
+            if LoadVideo_id()[i] = getVideoid().toInt() then
                 playVideo(m.channels[0][i - 1])
                 exit for
             end if
@@ -1216,9 +1218,12 @@ sub forNext()
         forSeekBar()
         timer1()
         id = 0
-        for i = 0 to m.channelsId.count() - 1
-            if m.channelsId[i] = getVideoid().toInt() then
-                playVideo(m.channels[0][i + 1])
+        for i = 0 to LoadVideo_id().count() - 1
+            if LoadVideo_id()[i] = getVideoid().toInt() then
+                if m.channels.Count() <> 0
+                    playVideo(m.channels[0][i + 1])
+                end if
+
                 exit for
             end if
         end for
@@ -1346,72 +1351,18 @@ sub RestartLazyLoadingTimer()
 end sub
 
 sub channelFocused(event as object)
-
     if m.timeGride.content <> invalid
         if m.timeGride.content.getChild(m.timeGride.channelFocused) <> invalid
             if getVideoscreen() = "home_refresh"
-                if getVideoid().toInt() >= 21 and getVideoid().toInt() <= 34 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 2
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 36 and getVideoid().toInt() <= 39 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 3
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 41 and getVideoid().toInt() <= 44 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 4
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 46 and getVideoid().toInt() <= 53 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 5
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 56 and getVideoid().toInt() <= 59 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 7
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 61 and getVideoid().toInt() <= 64 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 8
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 66 and getVideoid().toInt() <= 66 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 9
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 69 and getVideoid().toInt() <= 82 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 11
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 84 and getVideoid().toInt() <= 85 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 12
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 93 and getVideoid().toInt() <= 93 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 19
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 97 and getVideoid().toInt() <= 100 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 22
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 102 and getVideoid().toInt() <= 102 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 23
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 104 and getVideoid().toInt() <= 105 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 24
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 107 and getVideoid().toInt() <= 108 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 25
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 110 and getVideoid().toInt() <= 113 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 26
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 116 and getVideoid().toInt() <= 116 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 28
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 118 and getVideoid().toInt() <= 119 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 29
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 128 and getVideoid().toInt() <= 129 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 37
-                    deleteVideoscreen()
-                else if getVideoid().toInt() >= 131 and getVideoid().toInt() <= 132 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 38
-                    deleteVideoscreen()
-                else
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 1
-                    deleteVideoscreen()
-                end if
-
+                for i = 0 to LoadVideo_id().count() - 1
+                    if LoadVideo_id()[i] = getVideoid().toInt() then
+                        if m.channels.Count() <> 0
+                            m.timeGride.jumpToChannel = m.channels[0][i + 1]
+                            deleteVideoscreen()
+                        end if
+                        exit for
+                    end if
+                end for
             else
                 m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
                 m.ConcertChannel.text = m.timeGride.content.getChild(m.timeGride.channelFocused).TITLE
@@ -1698,7 +1649,8 @@ end sub
 
 ' This function use for any common api alert.
 function errorDialogShow(event as object)
-    if event.getData().responseCode = 401 or event.getData().responseCode = 429 or event.getData().responseCode = 404
+    if event.getData().responseCode = 429 or event.getData().responseCode = 404
+        ' event.getData().responseCode = 401 or
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "loginScreen")
         m.DialogButton.setFocus(true)
@@ -1723,9 +1675,9 @@ function errorDialogSession(event as object)
 
     if event.getData().responseCode = 401
         ' Session message
-        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
-        m.DialogButton.setFocus(true)
+        ' m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
+        ' m.DialogButton.observeField("buttonSelected", "loginScreen")
+        ' m.DialogButton.setFocus(true)
     else
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "loginScreen")
@@ -1834,57 +1786,59 @@ function playVideo(liveStreamData) as void
     m.playerLoader.translation = [centerx, centery]
     m.playerLoader.visible = true
     m.top.signalBeacon("VODStartInitiate")
-    if liveStreamData.id <> invalid
-        m.ApiCall = CreateObject("roSGNode", "ApiCall")
-        m.ApiCall.bodyData = { "channelids": liveStreamData.id }
-        m.ApiCall.callType = "POST"
-        m.ApiCall.url = addRecentUrl()
-        m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
-        m.ApiCall.observeField("errorMessage", "errorDialogShow")
-        m.ApiCall.control = "RUN"
+
+    if liveStreamData <> invalid
+        if liveStreamData.id <> invalid
+            m.ApiCall = CreateObject("roSGNode", "ApiCall")
+            m.ApiCall.bodyData = { "channelids": liveStreamData.id }
+            m.ApiCall.callType = "POST"
+            m.ApiCall.url = addRecentUrl()
+            m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
+            m.ApiCall.observeField("errorMessage", "errorDialogShow")
+            m.ApiCall.control = "RUN"
+        end if
+
+        vidContent = CreateObject("RoSGNode", "ContentNode")
+        ' drmParams = {
+        '     keySystem: "Widevine"
+        '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
+        ' }
+        drmParams = {
+            keySystem: "Playready"
+            licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
+        }
+
+        vidContent.streamformat = "smooth"
+        vidContent.drmParams = drmParams
+        m.backitem = LoadVideo_back()
+
+        ' originalUrlLength = Len(liveStreamData.url)
+        ' trimLength = originalUrlLength - Len(".isml/manifest")
+        ' trimmedUrl = Left(liveStreamData.url, trimLength)
+        ' newUrl = trimmedUrl + "/index.mpd"
+
+        setVideourl(liveStreamData.url)
+        setVideoid(liveStreamData.id.toStr())
+        vidContent.url = liveStreamData.url
+
+        m.searchPoster.visible = true
+        m.video.enableUI = false
+
+        vidContent.live = true
+        m.video.content = vidContent
+        m.video.setFocus(true)
+        m.streamlyview.visible = true
+        m.navtoRelatedCHannels.visible = true
+        m.video.control = "play"
+
+        ' Bitmovin player
+
+        ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
+        ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
+        ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
+        ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
+
     end if
-
-    vidContent = CreateObject("RoSGNode", "ContentNode")
-    ' drmParams = {
-    '     keySystem: "Widevine"
-    '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
-    ' }
-    drmParams = {
-        keySystem: "Playready"
-        licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
-    }
-
-    vidContent.streamformat = "smooth"
-    vidContent.drmParams = drmParams
-    m.backitem = LoadVideo_back()
-
-    ' originalUrlLength = Len(liveStreamData.url)
-    ' trimLength = originalUrlLength - Len(".isml/manifest")
-    ' trimmedUrl = Left(liveStreamData.url, trimLength)
-    ' newUrl = trimmedUrl + "/index.mpd"
-
-    setVideourl(liveStreamData.url)
-    setVideoid(liveStreamData.id.toStr())
-    vidContent.url = liveStreamData.url
-
-    m.searchPoster.visible = true
-    m.video.enableUI = false
-
-    vidContent.live = true
-    m.video.content = vidContent
-    m.video.setFocus(true)
-    m.streamlyview.visible = true
-    m.navtoRelatedCHannels.visible = true
-    m.video.control = "play"
-
-    ' Bitmovin player
-
-    ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
-    ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
-    ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
-    ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
-
-
 
 end function
 
@@ -2570,41 +2524,14 @@ function unique(arr as object)
     return res
 end function
 
-sub channel_drawyer(chann_num1, chann_num2)
-    animate = 1
-    jump = 5
-    videoId = getVideoid().toInt()
-    for i = 0 to chann_num1.count() - 1
-        if videoId >= 1 and videoId <= chann_num1[i]
-            m.relatedChannelMarkupList.jumpToItem = videoId + jump
-            m.relatedChannelMarkupList.animateToItem = videoId - animate
-            exit for
-        else if videoId >= chann_num1[i] and videoId <= chann_num1[i + 1]
-            if chann_num2[i] = 2 and videoId < 60
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 1))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 1))
-            else if chann_num2[i] = 3 and videoId < 60
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump)
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 2))
-            else if chann_num2[i] = 2 and videoId >= 60 and videoId < 80
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 2))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 2))
-            else if videoId >= 60 and videoId < 90
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 3))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 3))
-            else if chann_num2[i] = 8 and videoId >= 90
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 9))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 9))
-            else if chann_num2[i - 1] >= 2 and videoId >= 90 and videoId < 111
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 11))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 11))
-            else if videoId >= 111 and videoId < 117
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 12))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 12))
-            else if videoId >= 118
-                m.relatedChannelMarkupList.jumpToItem = videoId + (jump - (i + 13))
-                m.relatedChannelMarkupList.animateToItem = videoId - (animate + (i + 12))
-            end if
+sub channel_drawyer()
+    ?"LoadVideo_id()[i] channel"i
+    for i = 0 to LoadVideo_id_drawyer().count() - 1
+
+        if LoadVideo_id_drawyer()[i] = getVideoid().toInt() then
+            ?"LoadVideo_id()[i] channel"i
+            m.relatedChannelMarkupList.jumpToItem = i
+            ' m.relatedChannelMarkupList.animateToItem = i - 3
             exit for
         end if
     end for
@@ -2615,8 +2542,14 @@ sub allChannelApiResponse(event as object)
         m.AllChannelApiResponse = event.getData()
         m.labelContent = createObject("roSGNode", "ContentNode")
         m.channels.push(event.getData().data)
+        m.chan_id1 = []
         for each channel in event.getData().data
-            m.channelsId.push(channel.id)
+
+            
+                m.chan_id1.push(channel.id)
+            SaveVideo_id_drawyer(m.chan_id1)
+
+
             channelDetail = m.labelContent.createChild("ContentNode")
             if channel.callSign <> invalid
                 channelDetail.title = channel.stationName
@@ -2628,15 +2561,10 @@ sub allChannelApiResponse(event as object)
             if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
             if channel.callSign <> invalid then channelDetail.title = channel.stationName
         end for
-
+        ?"channel.id" channel.id
         m.relatedChannelMarkupList.content = m.labelContent
-        chann_num1 = unique(getDifferences(m.channelsId)[0])
-        chann_num1.push(131)
-        chann_num1.push(132)
-        chann_num2 = getDifferences(m.channelsId)[2]
-
         ' Function for Related channels drawyer
-        channel_drawyer(chann_num1, chann_num2)
+        channel_drawyer()
     end if
 end sub
 
@@ -2948,6 +2876,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Tryagain.setFocus(true)
             return true
         else if (m.deviceView.visible and key = "back")
+
             closeTryAgain()
             return true
         else if m.searchPoster.hasFocus() and key = "right"

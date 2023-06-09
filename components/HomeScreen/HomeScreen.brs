@@ -158,8 +158,8 @@ sub init()
     '         end if
     '     end if
     ' else
-    ' Loading Home screen data
-    Home_screenTimegridData()
+        ' Loading Home screen data
+        Home_screenTimegridData()
     ' end if
 
 end sub
@@ -752,12 +752,12 @@ end sub
 
 sub Try_again()
     ?"try again"
-    ?"m.channelsId "m.channelsId
+    ' ?"m.channelsId "m.channelsId
     videoId = getVideoid().toInt()
     m.Tryagain.setFocus(false)
     showDialogDevice("", false, true, "")
-    for each i in m.channelsId
-        if m.channelsId[i] = videoId then
+    for each i in LoadVideo_id()
+        if LoadVideo_id()[i] = videoId then
             playVideo(m.channels[0][i])
             exit for
         end if
@@ -1197,8 +1197,8 @@ sub forPrevious()
         timer1()
         id = 0
 
-        for i = 0 to m.channelsId.count() - 1
-            if m.channelsId[i] = getVideoid().toInt() then
+        for i = 0 to LoadVideo_id().count() - 1
+            if LoadVideo_id()[i] = getVideoid().toInt() then
                 playVideo(m.channels[0][i - 1])
                 exit for
             end if
@@ -1218,9 +1218,12 @@ sub forNext()
         forSeekBar()
         timer1()
         id = 0
-        for i = 0 to m.channelsId.count() - 1
-            if m.channelsId[i] = getVideoid().toInt() then
-                playVideo(m.channels[0][i + 1])
+        for i = 0 to LoadVideo_id().count() - 1
+            if LoadVideo_id()[i] = getVideoid().toInt() then
+                if m.channels.Count() <> 0
+                    playVideo(m.channels[0][i + 1])
+                end if
+
                 exit for
             end if
         end for
@@ -1348,15 +1351,18 @@ sub RestartLazyLoadingTimer()
 end sub
 
 sub channelFocused(event as object)
-
     if m.timeGride.content <> invalid
         if m.timeGride.content.getChild(m.timeGride.channelFocused) <> invalid
             if getVideoscreen() = "home_refresh"
-                if getVideoid().toInt() >= 21 and getVideoid().toInt() <= 34 then
-                    m.timeGride.jumpToChannel = getVideoid().toInt() - 2
-                    deleteVideoscreen()
-                end if
-
+                for i = 0 to LoadVideo_id().count() - 1
+                    if LoadVideo_id()[i] = getVideoid().toInt() then
+                        if m.channels.Count() <> 0
+                            m.timeGride.jumpToChannel = m.channels[0][i + 1]
+                            deleteVideoscreen()
+                        end if
+                        exit for
+                    end if
+                end for
             else
                 m.PosterchannleIcon.uri = m.timeGride.content.getChild(m.timeGride.channelFocused).HDSMALLICONURL
                 m.ConcertChannel.text = m.timeGride.content.getChild(m.timeGride.channelFocused).TITLE
@@ -1780,6 +1786,7 @@ function playVideo(liveStreamData) as void
     m.playerLoader.translation = [centerx, centery]
     m.playerLoader.visible = true
     m.top.signalBeacon("VODStartInitiate")
+
     if liveStreamData <> invalid
         if liveStreamData.id <> invalid
             m.ApiCall = CreateObject("roSGNode", "ApiCall")
@@ -2517,9 +2524,12 @@ function unique(arr as object)
     return res
 end function
 
-sub channel_drawyer(chann_num1, chann_num2)
-    for i = 0 to LoadVideo_id().count() - 1
-        if LoadVideo_id()[i] = getVideoid().toInt() then
+sub channel_drawyer()
+    ?"LoadVideo_id()[i] channel"i
+    for i = 0 to LoadVideo_id_drawyer().count() - 1
+
+        if LoadVideo_id_drawyer()[i] = getVideoid().toInt() then
+            ?"LoadVideo_id()[i] channel"i
             m.relatedChannelMarkupList.jumpToItem = i
             ' m.relatedChannelMarkupList.animateToItem = i - 3
             exit for
@@ -2532,8 +2542,14 @@ sub allChannelApiResponse(event as object)
         m.AllChannelApiResponse = event.getData()
         m.labelContent = createObject("roSGNode", "ContentNode")
         m.channels.push(event.getData().data)
+        m.chan_id1 = []
         for each channel in event.getData().data
-            m.channelsId.push(channel.id)
+
+            
+                m.chan_id1.push(channel.id)
+            SaveVideo_id_drawyer(m.chan_id1)
+
+
             channelDetail = m.labelContent.createChild("ContentNode")
             if channel.callSign <> invalid
                 channelDetail.title = channel.stationName
@@ -2545,15 +2561,10 @@ sub allChannelApiResponse(event as object)
             if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
             if channel.callSign <> invalid then channelDetail.title = channel.stationName
         end for
-
+        ?"channel.id" channel.id
         m.relatedChannelMarkupList.content = m.labelContent
-        chann_num1 = unique(getDifferences(m.channelsId)[0])
-        chann_num1.push(131)
-        chann_num1.push(132)
-        chann_num2 = getDifferences(m.channelsId)[2]
-
         ' Function for Related channels drawyer
-        ' channel_drawyer(chann_num1, chann_num2)
+        channel_drawyer()
     end if
 end sub
 
@@ -2865,6 +2876,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Tryagain.setFocus(true)
             return true
         else if (m.deviceView.visible and key = "back")
+
             closeTryAgain()
             return true
         else if m.searchPoster.hasFocus() and key = "right"

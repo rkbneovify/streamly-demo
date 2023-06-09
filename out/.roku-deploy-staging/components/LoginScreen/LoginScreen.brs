@@ -4,7 +4,7 @@ sub INIT()
     ' ? "login init()";getPersonaldeviceid()
     login_guide()
     privicyPolicy()
-    
+
     m.image1 = m.top.findNode("image1")
     m.image2 = m.top.findNode("image2")
     m.image3 = m.top.findNode("image3")
@@ -81,7 +81,7 @@ sub INIT()
     m.Privacy.width = 229
     m.Privacy1.height = 147
     m.Privacy1.width = 260
-    m.priv_text.translation = [30,30]
+    m.priv_text.translation = [30, 30]
     m.Privacy.observeField("buttonSelected", "showPrivacy")
     m.Help.observeField("buttonSelected", "showSupportDialog1")
     ?"m.Privacy "m.Privacy.hasFocus()
@@ -270,7 +270,7 @@ sub INIT()
     ' }
     m.checkForBArcodeContinue = false
 
-    
+
 
     if m.launchScreenMode <> invalid and m.roomSelectFlag <> invalid
         if m.roomSelectFlag = "false"
@@ -378,6 +378,8 @@ sub INIT()
 
     ' end if
 
+
+
     m.top.signalBeacon("AppLaunchComplete")
 end sub
 
@@ -464,21 +466,21 @@ sub initSupportDialog1()
     m.SupportDialogCross.height = 60
     m.SupportDialogCross.uri = "pkg:/images/cross_b.png"
     m.SupportDialogCross.translation = [1180, 30]
-    
+
     m.SupportDialogCircle = m.SupportDialog1.createChild("Poster")
     '     m.SupportDialog.visible = false
     m.SupportDialogCircle.width = 520
     m.SupportDialogCircle.height = 320
     m.SupportDialogCircle.uri = "pkg:/images/supports.png"
     m.SupportDialogCircle.translation = [380, 30]
-  
+
     ' m.SupportDialogSupport = m.SupportDialog.createChild("Poster")
     ' '     m.SupportDialog.visible = false
     ' m.SupportDialogSupport.width = 280
     ' m.SupportDialogSupport.height = 230
     ' m.SupportDialogSupport.uri = "pkg:/images/profile/support.png"
     ' m.SupportDialogSupport.translation = [830, 200]
-  
+
     m.SupportDialogEmail = m.SupportDialog1.createChild("Poster")
     '     m.SupportDialog.visible = false
     m.SupportDialogEmail.width = 380
@@ -486,32 +488,32 @@ sub initSupportDialog1()
     m.SupportDialogEmail.uri = "pkg:/images/profile/dialogBackground.png"
     m.SupportDialogEmail.blendColor = "#b0c4de"
     m.SupportDialogEmail.translation = [220, 550]
-  
-  
-  
+
+
+
     m.SupportDialogMail = m.SupportDialog1.createChild("Poster")
     '     m.SupportDialog.visible = false
     m.SupportDialogMail.width = 50
     m.SupportDialogMail.height = 60
     m.SupportDialogMail.uri = "pkg:/images/mail_b.png"
-    
+
     m.SupportDialogMail.translation = [380, 565]
-  
+
     ' m.SupportDialogEmail = m.SupportDialog.createChild("Poster")
     ' '     m.SupportDialog.visible = false
     ' m.SupportDialogEmail.width = 320
     ' m.SupportDialogEmail.height = 250
     ' m.SupportDialogEmail.uri = "pkg:/images/profile/dialogBackground.png"
     ' m.SupportDialogEmail.translation = [650 , 600]
-  
-  
+
+
     ' m.SupportDialogPhone = m.SupportDialogEmail.createChild("Poster")
     ' '     m.SupportDialog.visible = false
     ' m.SupportDialogPhone.width = 250
     ' m.SupportDialogPhone.height = 200
     ' m.SupportDialogPhone.uri = "pkg:/images/profile/mobile.png"
     ' m.SupportDialogPhone.translation = [250 , 520]
-  
+
     m.SupportDialogNumber = m.SupportDialog1.createChild("Poster")
     '     m.SupportDialog.visible = false
     m.SupportDialogNumber.width = 380
@@ -519,45 +521,45 @@ sub initSupportDialog1()
     m.SupportDialogNumber.uri = "pkg:/images/profile/dialogBackground.png"
     m.SupportDialogNumber.blendColor = "#b0c4de"
     m.SupportDialogNumber.translation = [710, 550]
-  
-    
-  
+
+
+
     m.SupportDialogPhone = m.SupportDialog1.createChild("Poster")
     '     m.SupportDialog.visible = false
     m.SupportDialogPhone.width = 50
     m.SupportDialogPhone.height = 50
     m.SupportDialogPhone.uri = "pkg:/images/mobile_b.png"
-    
+
     m.SupportDialogPhone.translation = [875, 575]
-  
+
     ' m.SupportDialogNumber = m.SupportDialog.createChild("Poster")
     ' '     m.SupportDialog.visible = false
     ' m.SupportDialogNumber.width = 320
     ' m.SupportDialogNumber.height = 250
     ' m.SupportDialogNumber.uri = "pkg:/images/profile/dialogBackground.png"
     ' m.SupportDialogNumber.translation = [1000 , 600]
-  
+
     m.LayoutGroup = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroup.translation = [100, 400]
     m.LayoutGroup.layoutDirection = "vert"
     m.LayoutGroup.itemSpacings = [10]
-    
+
     m.LayoutGroup1 = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroup1.translation = [30, 460]
     m.LayoutGroup1.layoutDirection = "vert"
     m.LayoutGroup1.itemSpacings = [10]
-  
+
     m.LayoutGroupEmail = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroupEmail.translation = [-60, 620]
     m.LayoutGroupEmail.layoutDirection = "vert"
-  
+
     m.LayoutGroupEmail.itemSpacings = [10]
-  
+
     m.LayoutGroupNumber = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroupNumber.translation = [330, 620]
     m.LayoutGroupNumber.layoutDirection = "vert"
     m.LayoutGroupNumber.itemSpacings = [10]
-  
+
     '     m.LayoutGroup .horizAlignment ="vert"
     '      m.LayoutGroup .vertAlignment ="center"
     m.TextLabel2 = m.LayoutGroup.createChild("Label")
@@ -569,7 +571,7 @@ sub initSupportDialog1()
     m.TextLabel2.text = "For Help and Support You can mail us on below Contact."
     m.TextLabel2.color = "#004E92"
     m.TextLabel2.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
-  
+
     m.TextLabel1 = m.LayoutGroup1.createChild("Label")
     '     m.TextLabel.translation = [0, 87]
     m.TextLabel1.width = 2023
@@ -579,39 +581,39 @@ sub initSupportDialog1()
     m.TextLabel1.text = "For Help and Support You can mail us on below Contact."
     m.TextLabel1.color = "#004E92"
     m.TextLabel1.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
-  
-  
-  
+
+
+
     m.contactNumber1 = m.LayoutGroupEmail.createChild("ScrollableText")
     m.contactNumber1.width = 1020
     m.contactNumber1.height = 100
     m.contactNumber1.color = "#004E92"
-  
+
     ' m.contactNumber.translation = [0, 350]
     m.contactNumber1.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.contactNumber1.horizAlign = "Center"
     m.contactNumber1.vertAlign = "Center"
-  
-  
-  
+
+
+
     m.contactNumbers = m.LayoutGroupNumber.createChild("ScrollableText")
     m.contactNumbers.width = 1220
     m.contactNumbers.height = 100
     m.contactNumbers.color = "#004E92"
-  
+
     ' m.contactNumber.translation = [0, 350]
     m.contactNumbers.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.contactNumbers.horizAlign = "Center"
     m.contactNumbers.vertAlign = "Center"
-  
-  
+
+
     '    m.contactNumber.text ="Shahjad.305@gmail.com"
     '    m.contactNumber.translation = [500,0]
-  
-  
+
+
     ' m.HelpButton = m.SupportDialog.createChild("Button")
     ' m.HelpButton.observeField("buttonSelected", "closeOkDialog")
-  
+
     ' '                 m.OkButton.translation= [466,429]
     ' m.HelpButton.minWidth = "280"
     ' m.HelpButton.maxWidth = "280"
@@ -630,7 +632,7 @@ sub initSupportDialog1()
     ' font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
     ' okLabel.font = font
     ' m.HelpButton.translation = [600 ,600]
-  end sub
+end sub
 
 
 sub showSupportDialog1()
@@ -774,7 +776,7 @@ sub responseAPIPrivacy(event as object)
 
             m.TextLabel2.text = "Our team is available 24*7. We'll do our best to respond to your inquiries as soon as possible."
             m.TextLabel1.text = "Need help or have a question? Our support team is here to assist you. You can reach us at the following:"
-      
+
             '         contactText = ""
             '         for each contacNo in responseData.data
             '              contactText = contactText +contacNo+chr(10)
@@ -871,29 +873,54 @@ function showLoginScreen() as object
 
         end if
 
+        if getDataMode() <> ""
+            deleteDataMode()
+            ApiCallFor("Sign out", "POST")
+            m.sign.setFocus(false)
+            m.UsernamEditText.setFocus(true)
+            m.UsernamEditText.active = true
+            m.Front_View.visible = false
+            m.LoginView.visible = true
+            m.LoginBackgroundImage.visible = true
+            m.logo.visible = true
 
+            if m.roomSelectFlag <> "false"
+                ' m.rfiType = "None"
+                m.store = CreateObject("roSGNode", "ChannelStore")
+                m.store.ObserveField("userData", "onGetUserData")
 
-        m.sign.setFocus(false)
-        m.UsernamEditText.setFocus(true)
-        m.UsernamEditText.active = true
-        m.Front_View.visible = false
-        m.LoginView.visible = true
-        m.LoginBackgroundImage.visible = true
-        m.logo.visible = true
+                m.rfiType = "signin"
+                ' Set sign-in context for RFI screen
+                info = CreateObject("roSGNode", "ContentNode")
+                info.addFields({ context: "signin" })
+                m.store.requestedUserDataInfo = info
 
-        if m.roomSelectFlag <> "false"
-            ' m.rfiType = "None"
-            m.store = CreateObject("roSGNode", "ChannelStore")
-            m.store.ObserveField("userData", "onGetUserData")
-    
-            m.rfiType = "signin"
-    ' Set sign-in context for RFI screen
-    info = CreateObject("roSGNode", "ContentNode")
-    info.addFields({context: "signin"})
-    m.store.requestedUserDataInfo = info
+                m.store.requestedUserData = "email"
+                m.store.command = "getUserData"
+            end if
+        else
+            m.sign.setFocus(false)
+            m.UsernamEditText.setFocus(true)
+            m.UsernamEditText.active = true
+            m.Front_View.visible = false
+            m.LoginView.visible = true
+            m.LoginBackgroundImage.visible = true
+            m.logo.visible = true
 
-    m.store.requestedUserData = "email"
-    m.store.command = "getUserData"
+            if m.roomSelectFlag <> "false"
+                ' m.rfiType = "None"
+                m.store = CreateObject("roSGNode", "ChannelStore")
+                m.store.ObserveField("userData", "onGetUserData")
+
+                m.rfiType = "signin"
+                ' Set sign-in context for RFI screen
+                info = CreateObject("roSGNode", "ContentNode")
+                info.addFields({ context: "signin" })
+                m.store.requestedUserDataInfo = info
+
+                m.store.requestedUserData = "email"
+                m.store.command = "getUserData"
+            end if
         end if
     end if
 end function
@@ -989,8 +1016,8 @@ function displaySignInScreen(email as string)
     if email <> ""
         m.UsernamEditText.text = email
         m.UsernamEditText.setFocus(false)
-            m.PasswordEditText.setFocus(true)
-            onTextBoxActive("password")
+        m.PasswordEditText.setFocus(true)
+        onTextBoxActive("password")
     end if
     'signinScreen.findNode("signinKeyboard").setFocus(true)
 end function
@@ -1473,6 +1500,16 @@ sub responseAPI(event as object)
             m.top.appendChild(m.SupportDialog)
             m.HelpButton.setFocus(true)
         end if
+    else if m.ProfileTask.callto = "Sign out"
+        ?"Profile::responseData.message:";m.responseData.message
+        setAccountToken("")
+        setThePersonalDeviceName("")
+        setPersonaldeviceid("")
+        m.logout = true
+        m.top.logout = true
+        m.ProfileCategory.setFocus(false)
+
+
 
     else if responseData.response_code = true
 
@@ -1777,7 +1814,7 @@ sub rememberMe()
     contentNode.Title = "Remember me"
     m.remenberCheckList.content = checklistNode
     m.remenberCheckList.ObserveField("checkedState", "remeberMeUpdate")
-?"getLogoutMode() "getLogoutMode()
+    ?"getLogoutMode() "getLogoutMode()
     if getUserName() <> invalid and getUserPassword() <> invalid and getUserName() <> "" and getUserPassword() <> "" and getLogoutMode() <> "logout"
         m.rememberFlag = true
 
@@ -1820,10 +1857,19 @@ end sub
 sub LoginValidation()
     deleteLogin()
     ? "LoginValidation: ";
+    ?"getdata "getDataMode()
 
-    ' m.UsernamEditText.text = "roku@yopmail.com"
+    m.UsernamEditText.text = "roku@yopmail.com"
     ' m.UsernamEditText.text = "jmheil@gmail.com"
-    ' m.PasswordEditText.text = "123456789"
+    m.PasswordEditText.text = "123456789"
+
+
+
+    ' m.device_connected.visible = true
+    ' m.device_connected.text = ConnectedDevices0
+    ' m.registredDevicesMarkup.visible = true
+    ' m.registredDevicesMarkup.content = marupContent
+    m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice1")
 
     if m.password_show.visible = true
         ?"password show"
@@ -1896,10 +1942,28 @@ sub LoginProcess()
 
 end sub
 
+sub ApiCallFor_session(callto as string, callType as string)
+    ?"ProfileSetting::ApiCallFor: ";callto ;callType
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
+    m.LoginBusySpinner.visible = true
+    '     ApiCallFor(callto,"GET")
+    m.ProfileTask.callto = callto
+    m.ProfileTask.callType = callType
+
+    m.ProfileTask.observeField("response", "responseAPI")
+    m.ProfileTask.observeField("errorMessage", "errorDialogShow")
+
+    '     m.ProfileTask.observeField("response","responseAPI")
+    m.ProfileTask.control = "RUN" 'Run the task node
+
+end sub
+
+
 sub LoginResponse()
 
 
     ? "LoginResponse :m.LoginTask: user"; m.LoginTask.response
+
 
     if m.LoginTask.response.response_code = 200
         setDataMode(m.LoginTask.response.sessionid)
@@ -2740,7 +2804,7 @@ sub closePrivicyPolicy()
     m.Privacy.width = 233
     m.Privacy1.height = 151
     m.Privacy1.width = 264
-    m.priv_text.translation = [30,30]
+    m.priv_text.translation = [30, 30]
 end sub
 
 sub closeOkDialog()
@@ -2755,7 +2819,7 @@ sub closeOkDialog()
     m.Help.width = 233
     m.help1.height = 151
     m.help1.width = 264
-    m.help_text.translation = [30,30]
+    m.help_text.translation = [30, 30]
     ' else
 
     ' end if
@@ -2793,14 +2857,14 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Privacy.width = 225
             m.Privacy1.height = 140
             m.Privacy1.width = 256
-            m.priv_text.translation = [25,25]
+            m.priv_text.translation = [25, 25]
             m.Help.setFocus(true)
 
             m.Help.height = 116
             m.Help.width = 233
             m.help1.height = 151
             m.help1.width = 264
-            m.help_text.translation = [30,30]
+            m.help_text.translation = [30, 30]
             return true
         else if m.Help.hasFocus() and key = "left"
             m.Help.setFocus(false)
@@ -2809,14 +2873,14 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Help.width = 225
             m.help1.height = 140
             m.help1.width = 256
-            m.help_text.translation = [25,25]
+            m.help_text.translation = [25, 25]
 
             m.Privacy.setFocus(true)
             m.Privacy.height = 116
             m.Privacy.width = 233
             m.Privacy1.height = 151
             m.Privacy1.width = 264
-            m.priv_text.translation = [30,30]
+            m.priv_text.translation = [30, 30]
             return true
         else if m.Privacy.hasFocus() and key = "left"
 
@@ -2825,7 +2889,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Privacy.width = 233
             m.Privacy1.height = 151
             m.Privacy1.width = 264
-            m.priv_text.translation = [25,25]
+            m.priv_text.translation = [25, 25]
             return true
         else if (m.contactNumber1.hasFocus()) and key = "back"
             ?"yes"
@@ -2840,7 +2904,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Help.width = 233
             m.help1.height = 151
             m.help1.width = 264
-            m.help_text.translation = [30,30]
+            m.help_text.translation = [30, 30]
             return true
         else if m.Help.hasFocus() and key = "right"
 
@@ -2850,7 +2914,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Help.width = 233
             m.help1.height = 151
             m.help1.width = 264
-            m.help_text.translation = [30,30]
+            m.help_text.translation = [30, 30]
             return true
         else if m.Help.hasFocus() or m.Privacy.hasFocus() and key = "down"
             m.Help.setFocus(false)
@@ -2865,7 +2929,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Privacy.width = 225
             m.Privacy1.height = 140
             m.Privacy1.width = 256
-            m.priv_text.translation = [25,25]
+            m.priv_text.translation = [25, 25]
             return true
 
         else if m.dontshow.hasFocus() and key = "up"
@@ -2875,7 +2939,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.Privacy.width = 233
             m.Privacy1.height = 151
             m.Privacy1.width = 264
-            m.priv_text.translation = [30,30]
+            m.priv_text.translation = [30, 30]
             m.dontshow.setFocus(false)
             ?"m.dontshow.checkedState "m.dontshow.checkedState[0]
             return true
@@ -2887,7 +2951,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.sign1.width = 708
             m.sign1.height = 108
             m.sign.setFocus(true)
-            m.sign_text.translation=[250,15]
+            m.sign_text.translation = [250, 15]
             return true
         else if m.sign.hasFocus() and key = "up"
 
@@ -2897,7 +2961,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.sign1.width = 700
             m.sign1.height = 100
             m.sign.setFocus(false)
-            m.sign_text.translation=[250,10]
+            m.sign_text.translation = [250, 10]
             return true
         else if m.sign.hasFocus() and key = "down"
 
@@ -2907,7 +2971,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.sign1.width = 708
             m.sign1.height = 108
             m.sign.setFocus(true)
-            m.sign_text.translation=[250,15]
+            m.sign_text.translation = [250, 15]
             return true
 
         else if m.Privacy.hasFocus() and key = "OK"
@@ -3629,6 +3693,74 @@ sub initDialogDevice(event as object)
     '     showDialogRemove("Registered Devices", true, false)
     ' end if
     showDialogRemove("Registered Devices", true, false)
+    ' closeDevice()
+    m.Noremove.setFocus(true)
+    ' m.dialogOptions.visible = false
+    ' m.registredDevicesMarkup.visible = false
+    ' if event.getData() = 0
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 1
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' m.NoButton.setFocus(true)
+    '   ' showDialog("Sign out", true, false)
+
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' else if event.getData() = 2
+
+    '   if m.settingsBox = "Support"
+    '     m.ProfileCategory.setFocus(false)
+    '     ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    '   else if m.settingsBox = "Sign out"
+    '     m.ProfileCategory.setFocus(false)
+    '     m.NoButton.setFocus(true)
+    '     showDialog("Sign out", true, false)
+    '   end if
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 3
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    '   '    privicyPolicy()
+    '   '    m.ProfileTask.setField("callType","GET")
+    '   '    m.ProfileTask.setField("callFor","Privacy & Policy")
+
+    ' else if event.getData() = 4 'Logout api call
+    '   m.ProfileCategory.setFocus(false)
+    '   m.NoButton.setFocus(true)
+    '   showDialog("Sign out", true, false)
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' '     m.top.appendChild(m.DialogNode)
+    '   ' '     m.OkButton.setFocus(true)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' end if
+
+end sub
+
+sub initDialogDevice1(event as object)
+    ' showDevice("Registered Devices", true, false)
+    sessionId = event.getRoSGNode().content.getChild(event.getData()).session_id
+    setSessionDeviceLogout(sessionId)
+    ' m.registredDevicesMarkup.setFocus(false)
+    ' m.Yesremove.observeField("buttonSelected", "LogInAfterLogout")
+    ?"Device: event pos device: ";event.getData()
+    ?"Device.content: "event.getRoSGNode().content.getChild(event.getData()).session_id
+    ?"Device Name: "event.getRoSGNode().content.getChild(event.getData()).device_name
+    ?"Device Type: "event.getRoSGNode().content.getChild(event.getData()).device_type
+    m.settingsBox = event.getRoSGNode().content.getChild(event.getData()).text
+    ?"getDataMode() "getDataMode()
+    ' if getDataMode() <> event.getRoSGNode().content.getChild(event.getData()).session_id
+    '     showDialogRemove("Registered Devices", true, false)
+    ' end if
+    ' showDialogRemove("Registered Devices", true, false)
     ' closeDevice()
     m.Noremove.setFocus(true)
     ' m.dialogOptions.visible = false

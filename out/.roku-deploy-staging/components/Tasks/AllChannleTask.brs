@@ -5,7 +5,7 @@ end sub
 
 sub call_all_channle_api()
     jsonResponse = APICall(getBaseUrl() + getChannelListUrl(), m.top.callType, m.top.data, m.top.headerData)
-    ?"call_all_channle_api: ";jsonResponse
+    ?"call_all_channle_api: ";jsonResponse.jsonResponse
     m.top.response = jsonResponse.jsonResponse
 
 end sub

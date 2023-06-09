@@ -466,8 +466,8 @@ function errorDialogShow(event as object)
 
   m.logout = true
 
-  if event.getData().responseCode = 401 or event.getData().responseCode = 429 or event.getData().responseCode = 404
-
+  if event.getData().responseCode = 429 or event.getData().responseCode = 404
+    ' event.getData().responseCode = 401 or 
     ' m.DialogButton = popupDialog(m.top, "Error ", event.getData().Failure)
     m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
     m.DialogButton.observeField("buttonSelected", "showLoginScreen")
