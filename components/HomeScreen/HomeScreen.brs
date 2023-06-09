@@ -158,8 +158,8 @@ sub init()
     '         end if
     '     end if
     ' else
-        ' Loading Home screen data
-        Home_screenTimegridData()
+    ' Loading Home screen data
+    Home_screenTimegridData()
     ' end if
 
 end sub
@@ -1701,10 +1701,31 @@ sub showLoginPage(event as object)
     m.top.ExitView = true
 end sub
 
+function showLogin1Screen() as object
+    ? "showLoginScreen"
+    if m.screen <> invalid then m.top.removeChild(m.screen)
+    setProfilescreen("login_screen")
+    LoginScreen1 = m.top.createChild("LoginScreen")
+    LoginScreen1.observeField("dialog", "showDialog")
+    LoginScreen1.observeField("ExitView", "openHomeView")
+    LoginScreen1.observeField("showPersonalDeviceName", "showPersonalDeviceNameScreen")
+    LoginScreen1.setFocus(true)
+    return LoginScreen1
+end function
+
 function loginScreen()
-    m.top.ExitView = true
+    setAccountToken("")
+    setThePersonalDeviceName("")
+    setPersonaldeviceid("")
+    m.logout = true
+    m.top.logout = true
+    ' m.ProfileCategory.setFocus(false)
+    showLogin1Screen()
+
     setLogin("login")
 end function
+
+
 
 function closeScreen1()
     ?"closeScreen"
@@ -2545,8 +2566,8 @@ sub allChannelApiResponse(event as object)
         m.chan_id1 = []
         for each channel in event.getData().data
 
-            
-                m.chan_id1.push(channel.id)
+
+            m.chan_id1.push(channel.id)
             SaveVideo_id_drawyer(m.chan_id1)
 
 
@@ -2681,6 +2702,8 @@ end function
 ' Handle remote key press and manage actions.
 function onKeyEvent(key as string, press as boolean) as boolean
     ? "HomeScreen::key: "; key
+    ?m.timeGride.hasFocus()
+
     result = false
 
     if press
