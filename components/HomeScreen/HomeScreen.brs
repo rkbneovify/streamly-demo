@@ -158,8 +158,8 @@ sub init()
     '         end if
     '     end if
     ' else
-        ' Loading Home screen data
-        Home_screenTimegridData()
+    ' Loading Home screen data
+    Home_screenTimegridData()
     ' end if
 
 end sub
@@ -1780,57 +1780,58 @@ function playVideo(liveStreamData) as void
     m.playerLoader.translation = [centerx, centery]
     m.playerLoader.visible = true
     m.top.signalBeacon("VODStartInitiate")
-    if liveStreamData.id <> invalid
-        m.ApiCall = CreateObject("roSGNode", "ApiCall")
-        m.ApiCall.bodyData = { "channelids": liveStreamData.id }
-        m.ApiCall.callType = "POST"
-        m.ApiCall.url = addRecentUrl()
-        m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
-        m.ApiCall.observeField("errorMessage", "errorDialogShow")
-        m.ApiCall.control = "RUN"
+    if liveStreamData <> invalid
+        if liveStreamData.id <> invalid
+            m.ApiCall = CreateObject("roSGNode", "ApiCall")
+            m.ApiCall.bodyData = { "channelids": liveStreamData.id }
+            m.ApiCall.callType = "POST"
+            m.ApiCall.url = addRecentUrl()
+            m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
+            m.ApiCall.observeField("errorMessage", "errorDialogShow")
+            m.ApiCall.control = "RUN"
+        end if
+
+        vidContent = CreateObject("RoSGNode", "ContentNode")
+        ' drmParams = {
+        '     keySystem: "Widevine"
+        '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
+        ' }
+        drmParams = {
+            keySystem: "Playready"
+            licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
+        }
+
+        vidContent.streamformat = "smooth"
+        vidContent.drmParams = drmParams
+        m.backitem = LoadVideo_back()
+
+        ' originalUrlLength = Len(liveStreamData.url)
+        ' trimLength = originalUrlLength - Len(".isml/manifest")
+        ' trimmedUrl = Left(liveStreamData.url, trimLength)
+        ' newUrl = trimmedUrl + "/index.mpd"
+
+        setVideourl(liveStreamData.url)
+        setVideoid(liveStreamData.id.toStr())
+        vidContent.url = liveStreamData.url
+
+        m.searchPoster.visible = true
+        m.video.enableUI = false
+
+        vidContent.live = true
+        m.video.content = vidContent
+        m.video.setFocus(true)
+        m.streamlyview.visible = true
+        m.navtoRelatedCHannels.visible = true
+        m.video.control = "play"
+
+        ' Bitmovin player
+
+        ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
+        ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
+        ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
+        ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
+
     end if
-
-    vidContent = CreateObject("RoSGNode", "ContentNode")
-    ' drmParams = {
-    '     keySystem: "Widevine"
-    '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
-    ' }
-    drmParams = {
-        keySystem: "Playready"
-        licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
-    }
-
-    vidContent.streamformat = "smooth"
-    vidContent.drmParams = drmParams
-    m.backitem = LoadVideo_back()
-
-    ' originalUrlLength = Len(liveStreamData.url)
-    ' trimLength = originalUrlLength - Len(".isml/manifest")
-    ' trimmedUrl = Left(liveStreamData.url, trimLength)
-    ' newUrl = trimmedUrl + "/index.mpd"
-
-    setVideourl(liveStreamData.url)
-    setVideoid(liveStreamData.id.toStr())
-    vidContent.url = liveStreamData.url
-
-    m.searchPoster.visible = true
-    m.video.enableUI = false
-
-    vidContent.live = true
-    m.video.content = vidContent
-    m.video.setFocus(true)
-    m.streamlyview.visible = true
-    m.navtoRelatedCHannels.visible = true
-    m.video.control = "play"
-
-    ' Bitmovin player
-
-    ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
-    ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
-    ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
-    ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
-
-
 
 end function
 
@@ -2517,7 +2518,7 @@ function unique(arr as object)
 end function
 
 sub channel_drawyer(chann_num1, chann_num2)
-   for i = 0 to LoadVideo_id().count() - 1
+    for i = 0 to LoadVideo_id().count() - 1
         if LoadVideo_id()[i] = getVideoid().toInt() then
             m.relatedChannelMarkupList.jumpToItem = i
             ' m.relatedChannelMarkupList.animateToItem = i - 3
