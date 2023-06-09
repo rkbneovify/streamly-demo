@@ -2515,14 +2515,10 @@ function unique(arr as object)
 end function
 
 sub channel_drawyer(chann_num1, chann_num2)
-    animate = 1
-    jump = 5
-    videoId = getVideoid().toInt()
-    for i = 0 to chann_num1.count() - 1
-        if videoId >= 1 and videoId <= chann_num1[i]
-            m.relatedChannelMarkupList.jumpToItem = videoId + jump
-            m.relatedChannelMarkupList.animateToItem = videoId - animate
-        
+   for i = 0 to LoadVideo_id().count() - 1
+        if LoadVideo_id()[i] = getVideoid().toInt() then
+            m.relatedChannelMarkupList.jumpToItem = i
+            ' m.relatedChannelMarkupList.animateToItem = i - 3
             exit for
         end if
     end for
