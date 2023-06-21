@@ -49,7 +49,7 @@ sub init()
     m.LoginBusySpinner = m.LoaderBackground.createChild("BusySpinner")
     m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
     centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
-    centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
+    centery = (1000 - m.LoginBusySpinner.poster.bitmapHeight) / 2
     m.LoginBusySpinner.translation = [900, centery]
 
     m.video = m.top.findNode("livePlayer")
@@ -655,7 +655,7 @@ sub closeTryAgain()
         m.ChannelsGroup.visible = true
         m.video.visible = false
         currentTime = CreateObject("roDateTime") ' roDateTime is initialized
-        m.PosterliveIcon.uri = "pkg:/images/red.png"
+        m.PosterliveIcon.uri = "pkg:/images/red1.png"
         m.PosterIconLabel.text = "Live"
         m.PosterIconLabel.translation = [35, 2]
 
@@ -1018,13 +1018,13 @@ sub programFocusedDetails(params as object)
 
             if timeString >= episode.PLAYSTART and timeString <= episode.PLAYSTART + episode.PLAYDURATION
 
-                m.PosterliveIcon.uri = "pkg:/images/red.png"
+                m.PosterliveIcon.uri = "pkg:/images/red1.png"
                 m.PosterIconLabel.text = "Live"
                 m.PosterIconLabel.translation = [35, 2]
             else
                 m.PosterIconLabel.text = ""
                 m.PosterliveIcon.uri = ""
-                m.PosterliveIcon.uri = "pkg:/images/profile/markupitemcomponentBackground.png"
+                m.PosterliveIcon.uri = "pkg:/images/grey.png"
                 m.PosterIconLabel.text = "Go Live"
                 m.PosterIconLabel.translation = [10, 2]
             end if
@@ -1075,6 +1075,7 @@ sub onStateChange()
     retryCount = 0
     if m.Video <> invalid and m.video.state <> "error"
         if m.Video.state = "buffering"
+            ?"m.video.control"
             centerx = (1920 - m.playerLoader.poster.bitmapWidth) / 2
             centery = (1080 - m.playerLoader.poster.bitmapHeight) / 2
             m.playerLoader.translation = [centerx, centery]
@@ -1424,6 +1425,7 @@ end sub
 sub getUsersRecentAndFavouriteData()
     m.commonAPITask = CreateObject("roSGNode", "CommonAPI")
     if m.channelNameString = "Recent"
+        m.timeGride.visible = false
         m.commonAPITask.observeField("RecentChannelData", "recentChannelAPIResponse")
     else
         m.commonAPITask.observeField("MyChannelData", "myChannelAPIResponse")
@@ -1435,10 +1437,11 @@ end sub
 
 ' Get Response from Recent Channel API.
 sub recentChannelAPIResponse(event as object)
+    m.timeGride.visible = false
     m.timegridMessage.visible = false
     m.epg_des_layout_group.visible = true
     m.epg_detail_info.visible = true
-    m.timeGride.visible = true
+    ' m.timeGride.visible = true
     m.recentChannelList = event.getData()
     m.channelListData = m.recentChannelList.Count()
     if m.recentChannelList.Count() = 1
@@ -1564,7 +1567,7 @@ sub CategoriesChannelList()
 
         channelId = channel.id.toStr()
 
-        ' Check if the channel has already been encountered
+        ' Check if the channel has already been encountered1
         if uniqueChannels[channelId] = invalid then
             ' Add the channel to the unique channels collection
             uniqueChannels[channelId] = channel
@@ -1649,21 +1652,29 @@ end sub
 
 ' This function use for any common api alert.
 function errorDialogShow(event as object)
-    if event.getData().responseCode = 429 or event.getData().responseCode = 404
+    ?"event.getData().responseCode "event.getData()
+    m.controllers.visible = false
+    if event.getData().responseCode = 429
+        ' or event.getData().responseCode = 404
         ' event.getData().responseCode = 401 or
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
+        m.DialogButton.observeField("buttonSelected", "showLogin1Screen")
+        setLogin("login")
         m.DialogButton.setFocus(true)
+        setSession("error")
     else if event.getData().responseCode = 500
+
         ' Session message
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
+        m.DialogButton.observeField("buttonSelected", "showLogin1Screen")
         setLogin("login")
+
+        m.timeGride.setFocus(false)
         m.DialogButton.setFocus(true)
     else if event.getData().responseCode = 402
         ' Session message
         m.DialogButton = popupDialog(m.top, "Error ", "User account is deactivated")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
+        m.DialogButton.observeField("buttonSelected", "showLogin1Screen")
         setLogin("login")
         m.DialogButton.setFocus(true)
     end if
@@ -1675,14 +1686,17 @@ function errorDialogSession(event as object)
 
     if event.getData().responseCode = 401
         ' Session message
-        ' m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        ' m.DialogButton.observeField("buttonSelected", "loginScreen")
-        ' m.DialogButton.setFocus(true)
+        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
+        m.DialogButton.observeField("buttonSelected", "showLogin1Screen")
+        m.video.control = "stop"
+        m.controllers.visible = false
+        m.DialogButton.setFocus(true)
+        setLogin("login")
     else
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
-        m.DialogButton.observeField("buttonSelected", "loginScreen")
+        m.DialogButton.observeField("buttonSelected", "showLogin1Screen")
         m.DialogButton.setFocus(true)
-
+        setLogin("login")
     end if
 
 end function
@@ -1737,7 +1751,7 @@ sub ApiCallFor(callto as string, callType as string)
 end sub
 
 sub responseAPI(event as object)
-     if m.ProfileTask.callto = "Sign out"
+    if m.ProfileTask.callto = "Sign out"
         ' ?"Profile::responseData.message:";m.responseData.message
         setAccountToken("")
         setThePersonalDeviceName("")
@@ -1745,7 +1759,8 @@ sub responseAPI(event as object)
         m.logout = true
         m.top.logout = true
         ' m.ProfileCategory.setFocus(false)
-        showLogin1Screen()
+        loginScreen()
+        ' showLogin1Screen()
     end if
 end sub
 
@@ -1791,96 +1806,106 @@ end sub
 
 ' For use play video of any channel
 function playVideo(liveStreamData) as void
-    m.allChannel = CreateObject("roSGNode", "AllChannleTask")
-    m.allChannel.callType = "GET"
-    m.allChannel.observeField("response", "allChannelApiResponse")
-    m.allChannel.control = "RUN"
+    ?"getSession() "getSession()
+    if getSession() <> "session"
 
-    setVide_val("video")
+        m.allChannel = CreateObject("roSGNode", "AllChannleTask")
+        m.allChannel.callType = "GET"
+        m.allChannel.observeField("response", "allChannelApiResponse")
+        m.allChannel.control = "RUN"
 
-    m.play.uri = "pkg:/images/pause.png"
-    m.controllers.visible = true
+        setVide_val("video")
 
-    m.previous.width = "38"
-    m.previous.height = "35"
+        m.play.uri = "pkg:/images/pause.png"
+        m.controllers.visible = true
 
-    m.rewine.width = "35"
-    m.rewine.height = "32"
+        m.previous.width = "38"
+        m.previous.height = "35"
 
-    m.next.width = "38"
-    m.next.height = "35"
+        m.rewine.width = "35"
+        m.rewine.height = "32"
 
-    m.forward.width = "35"
-    m.forward.height = "32"
+        m.next.width = "38"
+        m.next.height = "35"
 
-    m.button_focus.translation = [810, -30]
-    m.play.width = "42"
-    m.play.height = "48"
-    if getControlMode() = "pause"
-        deleteControlMode()
-    end if
-    horesAndMinute()
-    forSeekBar()
-    timer1()
-    reqApiSession()
+        m.forward.width = "35"
+        m.forward.height = "32"
 
-    centerx = (1920 - m.playerLoader.poster.bitmapWidth) / 2
-    centery = (1080 - m.playerLoader.poster.bitmapHeight) / 2
-    m.playerLoader.translation = [centerx, centery]
-    m.playerLoader.visible = true
-    m.top.signalBeacon("VODStartInitiate")
-
-    if liveStreamData <> invalid
-        if liveStreamData.id <> invalid
-            m.ApiCall = CreateObject("roSGNode", "ApiCall")
-            m.ApiCall.bodyData = { "channelids": liveStreamData.id }
-            m.ApiCall.callType = "POST"
-            m.ApiCall.url = addRecentUrl()
-            m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
-            m.ApiCall.observeField("errorMessage", "errorDialogShow")
-            m.ApiCall.control = "RUN"
+        m.button_focus.translation = [810, -30]
+        m.play.width = "42"
+        m.play.height = "48"
+        if getControlMode() = "pause"
+            deleteControlMode()
         end if
+        horesAndMinute()
+        forSeekBar()
+        timer1()
+        reqApiSession()
 
-        vidContent = CreateObject("RoSGNode", "ContentNode")
-        ' drmParams = {
-        '     keySystem: "Widevine"
-        '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
-        ' }
-        drmParams = {
-            keySystem: "Playready"
-            licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
-        }
+        centerx = (1920 - m.playerLoader.poster.bitmapWidth) / 2
+        centery = (1080 - m.playerLoader.poster.bitmapHeight) / 2
+        m.playerLoader.translation = [centerx, centery]
+        m.playerLoader.visible = true
+        m.top.signalBeacon("VODStartInitiate")
 
-        vidContent.streamformat = "smooth"
-        vidContent.drmParams = drmParams
-        m.backitem = LoadVideo_back()
+        if liveStreamData <> invalid
+            if liveStreamData.id <> invalid
+                m.ApiCall = CreateObject("roSGNode", "ApiCall")
+                m.ApiCall.bodyData = { "channelids": liveStreamData.id }
+                m.ApiCall.callType = "POST"
+                m.ApiCall.url = addRecentUrl()
+                m.ApiCall.observeField("apiResponseData", "apiResponseforRecent")
+                m.ApiCall.observeField("errorMessage", "errorDialogShow")
+                m.ApiCall.control = "RUN"
+            end if
 
-        ' originalUrlLength = Len(liveStreamData.url)
-        ' trimLength = originalUrlLength - Len(".isml/manifest")
-        ' trimmedUrl = Left(liveStreamData.url, trimLength)
-        ' newUrl = trimmedUrl + "/index.mpd"
+            vidContent = CreateObject("RoSGNode", "ContentNode")
+            ' drmParams = {
+            '     keySystem: "Widevine"
+            '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
+            ' }
+            drmParams = {
+                keySystem: "Playready"
+                licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
+            }
 
-        setVideourl(liveStreamData.url)
-        setVideoid(liveStreamData.id.toStr())
-        vidContent.url = liveStreamData.url
+            vidContent.streamformat = "smooth"
+            vidContent.drmParams = drmParams
+            m.backitem = LoadVideo_back()
 
-        m.searchPoster.visible = true
-        m.video.enableUI = false
+            ' originalUrlLength = Len(liveStreamData.url)
+            ' trimLength = originalUrlLength - Len(".isml/manifest")
+            ' trimmedUrl = Left(liveStreamData.url, trimLength)
+            ' newUrl = trimmedUrl + "/index.mpd"
 
-        vidContent.live = true
-        m.video.content = vidContent
-        m.video.setFocus(true)
-        m.streamlyview.visible = true
-        m.navtoRelatedCHannels.visible = true
-        m.video.control = "play"
+            setVideourl(liveStreamData.url)
+            setVideoid(liveStreamData.id.toStr())
+            vidContent.url = liveStreamData.url
 
-        ' Bitmovin player
+            m.searchPoster.visible = true
+            m.video.enableUI = false
 
-        ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
-        ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
-        ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
-        ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
+            vidContent.live = true
+            m.video.content = vidContent
+            m.video.setFocus(true)
+            m.streamlyview.visible = true
+            m.navtoRelatedCHannels.visible = true
+            m.video.control = "play"
 
+            ' Bitmovin player
+
+            ' m.bitmovinPlayerSDK = CreateObject("roSGNode", "ComponentLibrary")
+            ' m.bitmovinPlayerSDK.id = "BitmovinPlayerSDK"
+            ' m.bitmovinPlayerSDK.uri = "https://cdn.bitmovin.com/player/roku/1/bitmovinplayer.zip"
+            ' m.bitmovinPlayerSDK.observeField("loadStatus", "onLoadStatusChanged")
+
+        end if
+    else
+        deleteSession()
+        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
+        m.DialogButton.observeField("buttonSelected", "loginScreen")
+
+        m.DialogButton.setFocus(true)
     end if
 
 end function
@@ -1897,7 +1922,7 @@ sub onLoadStatusChanged()
                 muted: false
             },
 
-            key: "84e0eb02-57d1-40a6-931e-106cbe60e5a6" ' The license key is only required here if it wasn't added in the manifest
+            key: "84e0eb02-57d1-40a6-931e-106cbe60e5a6" ' The license key is only required1 here if it wasn't added in the manifest
         }
 
 
@@ -1998,7 +2023,7 @@ end sub
 ' When select any category from list
 sub categorySelcted(event as object)
     currentTime = CreateObject("roDateTime") ' roDateTime is initialized
-    m.PosterliveIcon.uri = "pkg:/images/red.png"
+    m.PosterliveIcon.uri = "pkg:/images/red1.png"
     m.PosterIconLabel.text = "Live"
     m.PosterIconLabel.translation = [35, 2]
 
@@ -2056,6 +2081,9 @@ sub categorySelcted(event as object)
     m.channelNameString = event.getRoSGNode().content.getChild(event.getData()).TITLE
 
     if m.channelNameString = "All"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
             m.PosterHeighlightRecentLabel.text = ""
@@ -2106,6 +2134,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightAll.translation = [45, 0]
         m.PosterHeighlightAllLabel.translation = [40, 10]
     else if m.channelNameString = "Recent"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("All")
             m.focusHeighlightAll.uri = ""
             m.PosterHeighlightAllLabel.text = ""
@@ -2156,6 +2187,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightRecent.translation = [185, 0]
         m.PosterHeighlightRecentLabel.translation = [40, 10]
     else if m.channelNameString = "Others"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
             m.PosterHeighlightRecentLabel.text = ""
@@ -2206,6 +2240,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightOthers.translation = [360, 0]
         m.PosterHeighlightOthersLabel.translation = [40, 10]
     else if m.channelNameString = "Sports"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
             m.PosterHeighlightRecentLabel.text = ""
@@ -2256,6 +2293,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightSports.translation = [545, 0]
         m.PosterHeighlightSportsLabel.translation = [40, 10]
     else if m.channelNameString = "Movies"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
             m.PosterHeighlightRecentLabel.text = ""
@@ -2305,6 +2345,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightMovies.translation = [720, 0]
         m.PosterHeighlightMoviesLabel.translation = [40, 10]
     else if m.channelNameString = "Family"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
 
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
@@ -2355,6 +2398,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightFamily.translation = [895, 0]
         m.PosterHeighlightFamilyLabel.translation = [40, 10]
     else if m.channelNameString = "Kids"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
 
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
@@ -2405,6 +2451,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightKids.translation = [1100, 0]
         m.PosterHeighlightKidsLabel.translation = [40, 10]
     else if m.channelNameString = "News"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
 
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
@@ -2455,6 +2504,9 @@ sub categorySelcted(event as object)
         m.focusHeighlightNews.translation = [1275, 0]
         m.PosterHeighlightNewsLabel.translation = [40, 10]
     else if m.channelNameString = "Comedy"
+        m.timeGride.visible = false
+        m.LoginBusySpinner.visible = true
+        m.LoaderBackground.visible = true
         if RegRead("Recent")
             m.focusHeighlightRecent.uri = ""
             m.PosterHeighlightRecentLabel.text = ""
@@ -2729,7 +2781,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
     result = false
 
     if press
-        if (key = "left" and m.navtoRelatedCHannels.hasFocus())
+        if (key = "OK" and m.navtoRelatedCHannels.hasFocus())
             if m.controllers.visible = false
                 m.relatedChannelMarkupList.setfocus(true)
                 m.navtoRelatedCHannels.visible = false
@@ -2901,10 +2953,16 @@ function onKeyEvent(key as string, press as boolean) as boolean
         else if m.searchPoster.hasFocus() and key = "OK"
             m.searchPoster.setFocus(false)
             m.focusPoster.uri = ""
-            SearchScreen = m.top.createChild("SearchScreen")
-            SearchScreen.id = "SearchScreen"
-            SearchScreen.observeField("exitView", "closeSearchScreen")
-            SearchScreen.observeField("playChannel", "playSearchChannelUrl")
+            if m.top.findNode("SearchScreen") = invalid
+                SearchScreen = m.top.createChild("SearchScreen")
+                SearchScreen.id = "SearchScreen"
+                SearchScreen.observeField("exitView", "closeSearchScreen")
+                SearchScreen.observeField("playChannel", "playSearchChannelUrl")
+            else
+                ' SearchScreen already exists, retrieve the reference
+                SearchScreen = m.top.findNode("SearchScreen")
+            end if
+
             SearchScreen.setFocus(true)
             result = true
         else if m.ChannelCategoryMarkuGrid.hasFocus() and key = "left"
@@ -2930,21 +2988,62 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.focusPoster.uri = ""
             result = true
         else if m.timeGride.hasFocus() and key = "up"
-            m.PosterliveIcon.uri = "pkg:/images/red.png"
+            if m.PosterIconLabel.text = "Go Live"
+                m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 50
+                m.PosterliveIcon.width = 130
+                m.PosterIconLabel.font = getFont(28, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                ' m.PosterIconLabel.translation = [35, 4]
+            else
+                ' m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 50
+                m.PosterliveIcon.width = 130
+                m.PosterIconLabel.font = getFont(28, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                m.PosterIconLabel.translation = [35, 4]
+            end if
+            m.PosterliveIcon.uri = "pkg:/images/red1.png"
             m.PosterliveIcon.setFocus(true)
             m.timeGride.setFocus(false)
             m.video.setFocus(false)
             result = true
         else if m.PosterliveIcon.hasFocus() and key = "up"
             if m.PosterIconLabel.text <> "Live"
-                m.PosterliveIcon.uri = "pkg:/images/profile/markupitemcomponentBackground.png"
+                m.PosterliveIcon.uri = "pkg:/images/grey.png"
             end if
+
+            if m.PosterIconLabel.text = "Go Live"
+                m.PosterIconLabel.translation = [10, 2]
+                m.PosterliveIcon.height = 40
+                m.PosterliveIcon.width = 120
+                m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                ' m.PosterIconLabel.translation = [35, 2]
+            else
+                ' m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 40
+                m.PosterliveIcon.width = 120
+                m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                m.PosterIconLabel.translation = [35, 2]
+            end if
+            
             m.PosterliveIcon.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(true)
             m.video.setFocus(false)
             result = true
         else if m.ChannelCategoryMarkuGrid.hasFocus() and key = "down"
-            m.PosterliveIcon.uri = "pkg:/images/red.png"
+            if m.PosterIconLabel.text = "Go Live"
+                m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 50
+                m.PosterliveIcon.width = 130
+                m.PosterIconLabel.font = getFont(28, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                ' m.PosterIconLabel.translation = [35, 2]
+            else
+                ' m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 50
+                m.PosterliveIcon.width = 130
+                m.PosterIconLabel.font = getFont(28, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                m.PosterIconLabel.translation = [35, 4]
+            end if
+            m.PosterliveIcon.uri = "pkg:/images/red1.png"
             m.PosterliveIcon.setFocus(true)
             m.ChannelCategoryMarkuGrid.setFocus(false)
             m.video.setFocus(false)
@@ -2955,8 +3054,22 @@ function onKeyEvent(key as string, press as boolean) as boolean
             result = true
         else if m.PosterliveIcon.hasFocus() and key = "down"
             if m.PosterIconLabel.text <> "Live"
-                m.PosterliveIcon.uri = "pkg:/images/profile/markupitemcomponentBackground.png"
+                m.PosterliveIcon.uri = "pkg:/images/grey.png"
             end if
+            if m.PosterIconLabel.text = "Go Live"
+                m.PosterIconLabel.translation = [10, 2]
+                m.PosterliveIcon.height = 40
+                m.PosterliveIcon.width = 120
+                m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                ' m.PosterIconLabel.translation = [35, 2]
+            else
+                ' m.PosterIconLabel.translation = [10, 4]
+                m.PosterliveIcon.height = 40
+                m.PosterliveIcon.width = 120
+                m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+                m.PosterIconLabel.translation = [35, 2]
+            end if
+            
             m.PosterliveIcon.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(false)
             m.video.setFocus(false)
@@ -2996,7 +3109,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             return true
         else if m.PosterliveIcon.hasFocus() and key = "OK"
             currentTime = CreateObject("roDateTime") ' roDateTime is initialized
-            m.PosterliveIcon.uri = "pkg:/images/red.png"
+            m.PosterliveIcon.uri = "pkg:/images/red1.png"
             m.PosterIconLabel.text = "Live"
             m.PosterIconLabel.translation = [35, 2]
 

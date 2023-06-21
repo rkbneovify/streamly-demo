@@ -94,16 +94,15 @@
           <Video id="livePlayer" width="1920" height="1080" translation="[0,0]" visible="false"/>
           <Poster id = "navtoRelatedCHannels1"
                   width = "45" height = "45" translation="[40,520]" visible="false"                  
-                  uri ="pkg:/images/videoplayer/arrow_circle.png"  
-                  opacity =".5">
-               <Poster id = "navtoRelatedCHannels1"
+                  uri ="pkg:/images/videoplayer/focus_arrow.png"  >
+               <!-- <Poster id = "navtoRelatedCHannels1"
                   width = "13" height = "20" translation="[14,12]"                
-                  uri ="pkg:/images/videoplayer/left_arrow1.png" />
+                  uri ="pkg:/images/videoplayer/left_arrow1.png" /> -->
 
           </Poster>
            <Poster id = "navtoRelatedCHannels"
                   width = "45" height = "45" translation="[40,520]" visible="false"                  
-                  uri ="pkg:/images/home/backNavIcon.png"  
+                  uri ="pkg:/images/videoplayer/unfocus_arrow.png"  
                   >
                <!-- <Poster id = "navtoRelatedCHannels"
                   width = "13" height = "20" translation="[14,12]"                

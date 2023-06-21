@@ -39,6 +39,17 @@ function deleteVideoscreen() as dynamic
     sec.Delete("videoscreen")
 end function
 
+function getVideoid1() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("videoid")
+    ' return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc3RyZWFtbHl0di5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MDczNjIzODcsImV4cCI6MTYwOTk5MDM4NywibmJmIjoxNjA3MzYyMzg3LCJqdGkiOiJpbFdZNkE0MnA1QUVxQjViIiwic3ViIjoxMiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSIsIm5hbWUiOiJzaGFoamFkIiwicm9sZXMiOlt7ImlkIjozLCJuYW1lIjoidXNlciIsImRpc3BsYXlfbmFtZSI6InVzZXIiLCJkZXNjcmlwdGlvbiI6Im5vdCBhZG1pbiBwZXJtaXNpb24iLCJjcmVhdGVkX2F0IjpudWxsLCJ1cGRhdGVkX2F0IjpudWxsLCJwaXZvdCI6eyJ1c2VyX2lkIjoxMiwicm9sZV9pZCI6M319XX0.yAdxTXaoMhBw9NN7zajfUuQZ9_bBgdvwW7hbHgcQF7c"
+end function
+
+function setVideoid1(videoid as string) as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("videoid", videoid)
+end function
+
 function getVideoid() as dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
     return sec.Read("videoid")
@@ -49,6 +60,7 @@ function setVideoid(videoid as string) as dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
     sec.Write("videoid", videoid)
 end function
+
 
 function getnextprev() as dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
@@ -75,6 +87,38 @@ end function
 function deleteLogin() as dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
     sec.Delete("login")
+end function
+
+function getSession() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("session")
+    ' return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc3RyZWFtbHl0di5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MDczNjIzODcsImV4cCI6MTYwOTk5MDM4NywibmJmIjoxNjA3MzYyMzg3LCJqdGkiOiJpbFdZNkE0MnA1QUVxQjViIiwic3ViIjoxMiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSIsIm5hbWUiOiJzaGFoamFkIiwicm9sZXMiOlt7ImlkIjozLCJuYW1lIjoidXNlciIsImRpc3BsYXlfbmFtZSI6InVzZXIiLCJkZXNjcmlwdGlvbiI6Im5vdCBhZG1pbiBwZXJtaXNpb24iLCJjcmVhdGVkX2F0IjpudWxsLCJ1cGRhdGVkX2F0IjpudWxsLCJwaXZvdCI6eyJ1c2VyX2lkIjoxMiwicm9sZV9pZCI6M319XX0.yAdxTXaoMhBw9NN7zajfUuQZ9_bBgdvwW7hbHgcQF7c"
+end function
+
+function setSession(session as string) as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("session", session)
+end function
+
+function deleteSession() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Delete("session")
+end function
+
+function getsearch_channel_num() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("search_channelnum")
+    ' return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc3RyZWFtbHl0di5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MDczNjIzODcsImV4cCI6MTYwOTk5MDM4NywibmJmIjoxNjA3MzYyMzg3LCJqdGkiOiJpbFdZNkE0MnA1QUVxQjViIiwic3ViIjoxMiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSIsIm5hbWUiOiJzaGFoamFkIiwicm9sZXMiOlt7ImlkIjozLCJuYW1lIjoidXNlciIsImRpc3BsYXlfbmFtZSI6InVzZXIiLCJkZXNjcmlwdGlvbiI6Im5vdCBhZG1pbiBwZXJtaXNpb24iLCJjcmVhdGVkX2F0IjpudWxsLCJ1cGRhdGVkX2F0IjpudWxsLCJwaXZvdCI6eyJ1c2VyX2lkIjoxMiwicm9sZV9pZCI6M319XX0.yAdxTXaoMhBw9NN7zajfUuQZ9_bBgdvwW7hbHgcQF7c"
+end function
+
+function setsearch_channel_num(search_channelnum as string) as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("search_channelnum", search_channelnum)
+end function
+
+function deletesearch_channel_num() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Delete("search_channelnum")
 end function
 
 ''Access Token

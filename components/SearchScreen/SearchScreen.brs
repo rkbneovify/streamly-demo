@@ -5,7 +5,7 @@ sub init()
 
   setScreenBackGrndimage()
 
-  searchKeyboard()
+
 
   resultentList()
 
@@ -19,7 +19,7 @@ sub init()
   'spinner
   m.spinner = m.top.CreateChild("BusySpinner")
   m.spinner.visible = false
-  
+
   m.spinner.translation = [960, 516]
   m.spinner.uri = "pkg:/images/busyspinner_hd.png"
 
@@ -43,6 +43,8 @@ sub init()
   '   }
   ' }
   allChannelApiCall()
+
+  searchKeyboard()
 end sub
 
 sub getChannelDAta()
@@ -58,7 +60,7 @@ end sub
 
 
 sub resultentList()
-  ?"resultentList"
+  ?"resultentList" LoadVideo_id()
   m.ChannelsMarkuGrid = m.top.createChild("MarkupGrid")
   m.ChannelsMarkuGrid.id = "ChannelsMarkuGrid"
   m.ChannelsMarkuGrid.vertFocusAnimationStyle = "floatingFocus"
@@ -82,11 +84,14 @@ sub resultentList()
   m.errorResultLabel.text = "Please type some text for search the channels :"
   m.errorResultLabel.translation = [850, 480]
   m.errorResultLabel.visible = false
+  
 end sub
 
 sub setChannelUrl(event as object)
   ?"setChannelUrl:";event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)
   m.top.playChannel = event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)
+  setVideoid1(m.top.playChannel.id.toStr())
+ 
 end sub
 
 sub setHeader()
@@ -113,7 +118,16 @@ sub searchKeyboard()
   m.Searchkeyboard.id = "Searchkeyboard"
   m.Searchkeyboard.translation = "[100,200]"
   m.Searchkeyboard.observeField("text", "channelSearchText")
-  m.Searchkeyboard.setFocus(true)
+
+  if getsearch_channel_num() <> ""
+    m.Searchkeyboard.setFocus(false)
+
+    resultentList()
+    m.ChannelsMarkuGrid.setFocus(true)
+
+  else
+    m.Searchkeyboard.setFocus(true)
+  end if
   m.Searchkeyboard .maxheight = 300
   m.Searchkeyboard .width = 300
 
@@ -166,14 +180,14 @@ sub allChannelApiCall()
   param = CreateObject("roAssociativeArray")
   m.allChannel.callType = "GET"
   ' param = CreateObject("roAssociativeArray")
-   ' param["hoursoffset"] = timezone
-   param["typeurl"] = "manifest"
+  ' param["hoursoffset"] = timezone
+  param["typeurl"] = "manifest"
 
 
-   ' param["hoursoffset"] = "+05:30"
-   ' param["hoursoffset"] = Substitute("{0}:{1}",utcHourOffset,utcMinutesOffset)
-   ?"parameter: "param
-   m.allChannel.parameters = param
+  ' param["hoursoffset"] = "+05:30"
+  ' param["hoursoffset"] = Substitute("{0}:{1}",utcHourOffset,utcMinutesOffset)
+  ?"parameter: "param
+  m.allChannel.parameters = param
 
   m.allChannel.observeField("response", "allChannelApiResponse")
   ' m.TestingTAsk.observeField("errorResponse", "errorDialogShow")
@@ -212,25 +226,38 @@ sub allChannelApiResponse(event as object)
 
       if channel.id = 11
         if channel.url <> invalid then channelDetail.url = channel.url
-      if channel.id <> invalid then channelDetail.id = channel.id
-      if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
-      if channel.callSign <> invalid then channelDetail.title = "Horse Racing"
-    else
+        if channel.id <> invalid then channelDetail.id = channel.id
+        if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
+        if channel.callSign <> invalid then channelDetail.title = "Horse Racing"
+      else
 
-      if channel.url <> invalid then channelDetail.url = channel.url
-      if channel.id <> invalid then channelDetail.id = channel.id
-      if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
-      if channel.callSign <> invalid then channelDetail.title = channel.stationName
-    end if
+        if channel.url <> invalid then channelDetail.url = channel.url
+        if channel.id <> invalid then channelDetail.id = channel.id
+        if channel.logo <> invalid then channelDetail.HDSMALLICONURL = channel.logo
+        if channel.callSign <> invalid then channelDetail.title = channel.stationName
+      end if
 
 
-      
+
     end for
     m.ChannelsMarkuGrid.content = m.labelContent
-    
+
     m.ChannelsMarkuGrid.visible = true
   end if
   m.spinner.visible = false
+
+   for i = 0 to LoadVideo_id().count() - 1
+    ?"getVideoid().toInt() "getVideoid1().toInt()
+      if LoadVideo_id()[i] = getVideoid1().toInt() then
+        ?"LoadVideo_id()[i] search channel"i
+        setsearch_channel_num(i.toStr())
+        m.ChannelsMarkuGrid.jumpToItem = i
+
+        ' m.relatedChannelMarkupList.animateToItem = i - 3
+        exit for
+      end if
+   
+  end for
 end sub
 
 
@@ -338,11 +365,11 @@ function speechRecognizerDidReceiveTranscript(transcript as string)
   ?"speechRecognizerDidReceiveTranscript"
   ?"transcript:"; transcript
   m.spinner.visible = false
-  m.lower = LCase(transcript).Replace(".","")
+  m.lower = LCase(transcript).Replace(".", "")
   m.Searchkeyboard.text = m.lower
   ' m.lower = LCase(transcript)
   ' ?"lower"m.lower
-  showSearchChannelProgram(LCase(transcript).Replace(".",""))
+  showSearchChannelProgram(LCase(transcript).Replace(".", ""))
 
   ' m.infoLb.text = "Hold the OK button to start dictation, release it once you're done."
 

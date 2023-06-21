@@ -1501,13 +1501,15 @@ sub responseAPI(event as object)
             m.HelpButton.setFocus(true)
         end if
     else if m.ProfileTask.callto = "Sign out"
-        ?"Profile::responseData.message:";m.responseData.message
-        setAccountToken("")
-        setThePersonalDeviceName("")
-        setPersonaldeviceid("")
-        m.logout = true
-        m.top.logout = true
-        m.ProfileCategory.setFocus(false)
+        ' ?"Profile::responseData.message:";m.responseData.message
+        if m.ProfileCategory <> invalid
+            setAccountToken("")
+            setThePersonalDeviceName("")
+            setPersonaldeviceid("")
+            m.logout = true
+            m.top.logout = true
+            m.ProfileCategory.setFocus(false)
+        end if
 
 
 
@@ -1590,7 +1592,7 @@ sub dontHaveAccount()
     m.dontHaveAccountLAbel.Font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
     m.version = m.top.findNode("version")
-    m.version.text = "Version : 2.9"
+    m.version.text = "Version : 2.10"
     m.version.translation = [320, 850]
     m.version.color = "#004E92"
     m.version.Font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -1859,9 +1861,9 @@ sub LoginValidation()
     ? "LoginValidation: ";
     ?"getdata "getDataMode()
 
-    m.UsernamEditText.text = "roku@yopmail.com"
+    ' m.UsernamEditText.text = "roku@yopmail.com"
     ' m.UsernamEditText.text = "jmheil@gmail.com"
-    m.PasswordEditText.text = "123456789"
+    ' m.PasswordEditText.text = "123456789"
 
 
 

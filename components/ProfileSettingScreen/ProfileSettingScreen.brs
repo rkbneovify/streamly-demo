@@ -550,7 +550,7 @@ sub responseAPI(event as object)
         marupContent.createChild("ContentNode").addFields({ "Email:": userData.email.ToStr() })
       end if
       if userData.version <> invalid
-        marupContent.createChild("ContentNode").addFields({ "Version:": "2.9" })
+        marupContent.createChild("ContentNode").addFields({ "Version:": "2.10" })
       end if
 
       if userData.created <> invalid
