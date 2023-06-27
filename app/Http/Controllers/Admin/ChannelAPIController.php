@@ -726,41 +726,42 @@ if($request->exists('genre')){
 }else{
     if($dataDays){
         if($isDevice=='roku' || $deviceType=='manifest'){ 
-            // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
+            $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
                 $type='smooth_url';
-                $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-        // });
+                return $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
+        });
         }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8')  {
     
-        // $reco = Cache::remember('channelscheduleappletz',60*60*24, function () {
+        $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
             $type='url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-        // });
+            return $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
+        });
         }else {
     
-        // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
+        $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
             $type='dash_url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-        // });
+            return $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
+        });
         }
     }else{
     if($isDevice=='roku' || $deviceType=='manifest'){ 
-        // $reco= Cache::remember('channelschedulerokutz',60*60*24, function () {
+        $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
             $type='smooth_url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-    // });
+            return $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
+    });
     }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8')  {
 
-    // $reco = Cache::remember('channelscheduleappletz',60*60*24, function () {
+    $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
         $type='url';
-        $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-    // });
+        return $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
+    });
     }else {
-
-    // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
-        $type='dash_url';
-        $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-    // });
+   
+        $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays', 60 * 60 * 24, function () use ($hoursofset) {
+            $type = 'dash_url';
+            return $this->channelDaysScheduleFuncOffsetWithFulldata($type, $hoursofset)->get();
+        });
+        
     }
  } 
 }
