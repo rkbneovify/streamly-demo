@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ChannelSearchTask" extends="Task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+	<script type="text/brightscript" uri="pkg:/components/SearchScreen/ChannelSearchTask/ChannelSearchTask.brs" />
+	
+	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+	<interface>
+
+      <field  id="data"  type="roAssociativeArray" />
+      <field  id="response"  type="roAssociativeArray" /> 
+      <field  id="callto"  type="String" /> 
+      <field  id="callType"  type="String" /> 
+      <field  id="headerData"  type="roAssociativeArray" /> 
+      <field  id="parameters"  type="roAssociativeArray" /> 
+      </interface>
+</component>

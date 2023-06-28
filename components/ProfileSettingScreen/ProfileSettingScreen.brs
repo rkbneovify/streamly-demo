@@ -557,7 +557,7 @@ sub responseAPI(event as object)
         date = CreateObject("roDateTime")
         date.FromISO8601String(userData.created.ToStr())
         ' marupContent.createChild("ContentNode").addFields({ "Build Date:": date.AsDateString("short-date") })
-        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Fri, June 2 2023" })
+        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Wed, June 21 2023" })
       end if
         marupContent.createChild("ContentNode").addFields({ "Home Timezone :": getHomeTimezone() })
 

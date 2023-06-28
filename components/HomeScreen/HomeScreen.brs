@@ -1425,7 +1425,7 @@ end sub
 sub getUsersRecentAndFavouriteData()
     m.commonAPITask = CreateObject("roSGNode", "CommonAPI")
     if m.channelNameString = "Recent"
-        m.timeGride.visible = false
+        ' m.timeGride.visible = false
         m.commonAPITask.observeField("RecentChannelData", "recentChannelAPIResponse")
     else
         m.commonAPITask.observeField("MyChannelData", "myChannelAPIResponse")
@@ -1446,6 +1446,8 @@ sub recentChannelAPIResponse(event as object)
     m.channelListData = m.recentChannelList.Count()
     if m.recentChannelList.Count() = 1
         m.timeGride.numRows = 3
+    ?"recent data"
+
     else if m.recentChannelList.Count() = 0
         m.timegridMessage.visible = true
         m.timegridMessage.text = "Oops! It looks like technical issues have taken our channels offline! We are working on it, and will have the channels backup as soon as possible!"
@@ -1460,6 +1462,7 @@ sub recentChannelAPIResponse(event as object)
 
     else
         m.timeGride.numRows = m.channelListData
+        m.timeGride.visible = false
     end if
     m.top.signalBeacon("EPGLaunchComplete")
     event.getRoSGNode().control = "stop"
@@ -1506,6 +1509,7 @@ sub myChannelAPIResponse(event as object)
 end sub
 
 sub makeListOFRecentChannel()
+    ' m.timeGride.visible = false
     for each channel in m.channelList
         for each recentChannel in m.recentChannelList
             if recentChannel.id = channel.id

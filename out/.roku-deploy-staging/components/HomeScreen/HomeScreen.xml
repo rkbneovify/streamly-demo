@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="HomeScreen" extends="Group"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+     <script type="text/brightscript" uri="pkg:/components/HomeScreen/HomeScreen.brs" />
+     <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+     <script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />
+
+
+     <interface>
+          <field id="openprofilescreen" type = "boolean" alwaysnotify="true" />
+          <field id="profileScreen" type = "boolean" alwaysnotify="true" />
+          <field id="ExitView" type = "boolean" alwaysnotify="true" />
+     </interface>
+     <children>
+
+          <!-- <Group id="playerView">
+
+               <ExtVideoPlayerUI id="myVideo" width="1920" height="1080" />
+
+          </Group> -->
+
+
+          <Group id="ChannelsGroup" visible="false">
+
+               <Poster id="channelBackgroundposter" height="1080" width="1920" loadwidth="1280" loadHeight="720"    
+            loadDisplayMode = "scaleTofill" />
+
+               <Poster id= "searchPoster" />
+               <TimeGrid id="timeGrid" visible = "false"/>
+               <Rectangle id="LoaderBackground" color="0x000000FF" visible="false" opacity="0.65" />
+               <BusySpinner 
+	 
+	    		id = "LoginBusySpinner" 
+		    	visible = "true" />
+               <Label id="timegridMessage"/>
+               <Poster id = "epg_detail_info"
+                uri = "pkg://images/home/homeScreenBckgrndhd.png" 
+                
+                width ="3520" height="300" opacity="1" 
+                translation = "[0,780]" visible = "false"/>
+
+               <!-- <LayoutGroup id ="epg_des_layout_group" layoutDirection="horiz" horizAlignment="top" itemSpacings="[40]" translation = "[70,820]">
+                    <Poster uri="pkg:/images/home/thumbnailimgtesting.png" loadDisplayMode="scaletofill" height="200" width="200" id="thumbnail_poster"/>
+
+                    <LayoutGroup id ="" layoutDirection="vert" horizAlignment="left" itemSpacings="[20,20]">
+
+                         <Label text="Justin Biber Concert" id="episode_name">
+                         </Label>
+                         <Label text="Start at 4:35 PM" id="broadcst_time" font = "pkg://fonts/HelveticaNeueMedium.ttf" />
+                         <Label text="this is a episode broadcasting now " id="episode_detail" font = "pkg://fonts/HelveticaNeueMedium.ttf" />
+
+                    </LayoutGroup>
+
+               </LayoutGroup> -->
+               <LayoutGroup id ="epg_des_layout_group" layoutDirection="horiz" horizAlignment="top" itemSpacings="[40]" translation = "[70,820]" visible = "false">
+                    <Poster loadDisplayMode="scaletofill" height="200" width="200" id="thumbnail_poster" />
+
+                    <LayoutGroup id ="" layoutDirection="vert" horizAlignment="left" itemSpacings="[20,20]">
+
+                         <Label id="episode_name">
+                         </Label>
+                         <Label id="broadcst_time" font = "pkg://fonts/HelveticaNeueMedium.ttf" />
+                         <Label id="episode_detail" font = "pkg://fonts/HelveticaNeueMedium.ttf" />
+
+                    </LayoutGroup>
+
+               </LayoutGroup>
+
+               <!-- translation= "[1417,44]" -->
+               <Poster uri="pkg:/images/home/profileSetting.png" translation= "[1677,58]" loadDisplayMode="scaletofill" height="46" width="46">
+
+                    <Label text="SETTINGS" id="Settings" translation= "[60,5]"/>
+               </Poster>
+
+               <!-- <Poster uri="pkg:/images/home/backNavIcon.png" translation= "[1657,44]" height="56" width="56" loadDisplayMode="scaletofill">
+
+               <Label text="GO Back" id="pressbackLabel" translation= "[70,10]"/>
+               </Poster> -->
+
+               <!-- <Poster id="" uri="pkg:/images/home/searchIcon.png" translation= "[36,40]" height="56" width="56">
+               </Poster>  -->
+
+               <MarkupGrid id = "ChannelCategoryMarkuGrid"
+                 itemComponentName = "ChannelCategoryItemComponent"
+                 itemSpacing = "[ -2, 0 ]" numColumns="9" numRows="1" itemSize="[180,60]" translation= "[70,44]" drawFocusFeedback="false" />
+
+
+               <!-- <MarkupGrid id = "ChannelCategoryGrid"
+                 itemComponentName = "ChannelCategoryComponent"
+                 itemSpacing = "[ -2, 0 ]" numColumns="9" numRows="1" itemSize="[180,60]" translation= "[70,44]" drawFocusFeedback="false" /> -->
+          </Group>
+
+          <Video id="livePlayer" width="1920" height="1080" translation="[0,0]" visible="false"/>
+          <Poster id = "navtoRelatedCHannels1"
+                  width = "45" height = "45" translation="[40,520]" visible="false"                  
+                  uri ="pkg:/images/videoplayer/focus_arrow.png"  >
+               <!-- <Poster id = "navtoRelatedCHannels1"
+                  width = "13" height = "20" translation="[14,12]"                
+                  uri ="pkg:/images/videoplayer/left_arrow1.png" /> -->
+
+          </Poster>
+           <Poster id = "navtoRelatedCHannels"
+                  width = "45" height = "45" translation="[40,520]" visible="false"                  
+                  uri ="pkg:/images/videoplayer/unfocus_arrow.png"  
+                  >
+               <!-- <Poster id = "navtoRelatedCHannels"
+                  width = "13" height = "20" translation="[14,12]"                
+                  uri ="pkg:/images/videoplayer/left_arrow1.png" /> -->
+
+          </Poster>
+          <!-- Controllers  -->
+          <Poster id="controllers" uri="pkg:/images/br_controlles.png" width="1930" height="186" loadDisplayMode="scaleToFit"  visible = "false">
+
+               <!-- <LayoutGroup layoutDirection="horiz" vertAlignment="center" itemSpacings="50" translation="[60,90]">
+                    <LayoutGroup layoutDirection="horiz" vertAlignment="center" itemSpacings="80" translation="[18,102]"> -->
+                    
+                    <Poster id="previous" translation="[470,30]"   uri = "pkg:/images/previous1.png" width="38" height="35" />
+
+               <Poster id="rewine" translation="[670,30]"   uri = "pkg:/images/rewine.png" width="35" height="32" />
+
+               <Poster id="play" translation="[870,30]" blendColor = "#FFFFFF"  uri = "pkg:/images/pause.png" width="41" height="48" />
+
+               <Poster id="button_focus" translation="[810,-25]"   uri = "pkg:/images/button_focus.png" width="168" height="165" />
+
+               <Poster id="forward" translation="[1070,30]"   uri = "pkg:/images/forward.png" width="35" height="32" />
+
+               <Poster id="next" translation="[1270,30]"   uri = "pkg:/images/next.png" width="38" height="35" />
+
+               <!-- </LayoutGroup> -->
+               <Label id="seekTime" horizAlign="left" vertAlign="true"
+             width  = "0" height="0" color="#ffffff" translation="[50,120]" text="00:00:00">
+                    <Font role = "font" uri = "pkg://fonts/HelveticaNeueMedium.ttf" size = "28" />
+               </Label>
+               <Rectangle id="seekUnfocus" color="#BEBEBE" width="1550" height="8" translation="[180,132]">
+
+                    <Rectangle id="seekFocus" color="#ffffff" width="0" height="8" translation="[0,0]" />
+                    <Poster id="circle" translation="[0,-4]"   uri = "pkg:/images/circle.png" width="18" height="18" />
+               </Rectangle>
+
+               <Label id="seekTotalTime" horizAlign="left" vertAlign="true"
+             width  = "0" height="0" color="#ffffff" translation="[1750,120]" text="00:00:00">
+                    <Font role = "font" uri = "pkg://fonts/HelveticaNeueMedium.ttf" size = "28" />
+               </Label>
+
+
+
+
+               <!-- </LayoutGroup> -->
+
+          </Poster>
+          <!-- <Poster id = "logo"
+                  width = "45" height = "45" translation="[40,220]" visible="false"                  
+                  uri ="pkg:/images/streamly_logo.png"  
+                  opacity =".5">
+              
+
+          </Poster> -->
+          <Rectangle id = "RelatedChannlesView" width = "570" 
+                     height = "1080" translation="[0,0]" visible="false" color="#063056" opacity =".4">
+          </Rectangle>
+          <Label id="relatedChannelText" text ="All Channel" translation="[60,40]"/>
+          <MarkupList id="relatedChannelMarkupList" translation="[60,100]" visible ="false" vertFocusAnimationStyle = "floatingFocus"/>
+
+          <Poster id="streamlyview" uri ="pkg://images/streamly_logo.png" width="320" height="100" translation="[100,45]" visible="false" opacity=".8"/>
+
+          <!-- <Rectangle id="streaminfo" color="#000000" opacity=".3" width="1920" height="260" translation="[0,820]" visible = "false" /> -->
+          <Poster id="channelIcon" uri ="pkg://images/streamly_logo.png" width="120" height="120" translation="[100,880]" visible = "false"/>
+          <Poster
+         id = "deviceView" visible="false"
+         width  = "1223"
+         height = "724" uri="pkg:/images/profile/profile_dialog.png"    
+         loadDisplayMode = "scaleToFill">
+               <Label
+         
+             id = "deviceTitle" 
+             text = "StreamlyTV"
+             width  = "1450" horizAlign="center" vertAlign="center"
+             height = "100" 
+             translation = "[0,17]"/>
+
+               <Label
+         
+             id = "deviceText" 
+             text = ""
+             width  = "1550" horizAlign="center" vertAlign="center"
+             height = "100" 
+             translation = "[40,117]"/>
+
+               <Button id="Close" visible="true" translation= "[400,287]"
+                 minWidth  = "275"
+                 maxWidth  = "275" focusedTextColor="#FFFFFF"
+                 height = "84"
+                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                 BitmapUri =               "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
+
+                    <Label id="labelClose" horizAlign="center"
+                        height = "84"
+                        Width  = "275"
+                        vertAlign = "center" text="Close" />
+               </Button>
+               <Button id="Tryagain" visible="true" translation= "[816,287]"
+                minWidth  = "275"
+                maxWidth  = "275" focusedTextColor="#FFFFFF"
+                height = "84"
+                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
+                BitmapUri =               "pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
+                    <Label id="labelTryagain" horizAlign="center"
+                        height = "84"
+                        Width  = "275"
+                        vertAlign = "center" text="Try again" />
+               </Button>
+
+
+          </Poster>
+     </children>
+</component>

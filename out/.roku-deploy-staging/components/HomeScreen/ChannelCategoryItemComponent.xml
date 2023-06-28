@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ChannelCategoryItemComponent" extends="Group"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
+
+  <script type="text/brightscript" uri="pkg:/components/HomeScreen/ChannelCategoryItemComponent.brs" />
+  <script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
+
+  <interface >
+    <field id = "itemContent" type = "node" onChange = "showcontent"/>
+    <field id="width" type="float" onChange="updateLayout"/>
+    <field id="height" type="float" onChange="updateLayout"/>
+    <field id = "focusPercent" type = "float" onChange = "showfocus"/>
+    <field id = "itemHasFocus" type = "boolean" onChange = "setfcous"/>
+    <field id = "rowFocusPercent" type = "float" onChange = "showrowfocus"/>
+    
+
+
+  </interface>
+
+
+
+  <children >
+
+
+
+    <Poster      
+      
+        id = "focus" 
+        translation = "[ 0, 0 ]"
+        width  = "190"
+        height = "60" opacity="0.00"
+        
+        uri = "pkg:/images/unchecking.png"
+        loadDisplayMode = "scaleToFit">
+    </Poster>
+    
+<!-- uri = "pkg:/images/home/borderwhite2.9.png"   -->
+<!-- uri = "pkg:/images/home/buttonFoucs1.9.png"  -->
+    <Label id="labelName"
+            translation = "[ 0, 0 ]" horizAlign="true" vertAlign="true"
+             width  = "0"
+             height = "0" />
+
+  </children>
+
+</component>
+

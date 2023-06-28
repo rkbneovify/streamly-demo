@@ -1861,9 +1861,9 @@ sub LoginValidation()
     ? "LoginValidation: ";
     ?"getdata "getDataMode()
 
-    ' m.UsernamEditText.text = "roku@yopmail.com"
+    m.UsernamEditText.text = "roku@yopmail.com"
     ' m.UsernamEditText.text = "jmheil@gmail.com"
-    ' m.PasswordEditText.text = "123456789"
+    m.PasswordEditText.text = "123456789"
 
 
 
