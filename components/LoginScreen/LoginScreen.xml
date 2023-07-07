@@ -1,486 +1,291 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component name="LoginScreen" extends="Group" initialFocus = "UsernamEditText"
+<component name="LoginScreen" extends="Group" initialFocus="UsernamEditText"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://devtools.web.roku.com/schema/RokuSceneGraph.xsd">
 
+	<!-- Importing scripts -->
 	<script type="text/brightscript" uri="pkg:/components/LoginScreen/LoginScreen.brs" />
-	<script type = "text/brightscript" uri = "pkg:/source/utility.brs" />
-	<script type = "text/brightscript" uri = "pkg:/components/ScreenStack.brs" />
+	<script type="text/brightscript" uri="pkg:/source/utility.brs" />
+	<script type="text/brightscript" uri="pkg:/components/ScreenStack.brs" />
+
+	<!-- Interface definition -->
 	<interface>
-		<function name="speechRecognizerDidReceiveTranscriptEmail"/>
-		<field id="ExitView" type="boolean" alwaysNotify="true"/>
+		<function name="speechRecognizerDidReceiveTranscriptEmail" />
+		<field id="ExitView" type="boolean" alwaysNotify="true" />
 		<field id="showPersonalDeviceName" type="boolean" alwaysNotify="true" />
-		<field id="dialog" type="node" alwaysNotify="true"/>
+		<field id="dialog" type="node" alwaysNotify="true" />
 	</interface>
 
+	<!-- LoginScreen children -->
 	<children>
-		<!-- Frontscreen  -->
-		<Poster id="Front_View" height="1080" width="1920" loadwidth="1280" loadheight="720" uri="pkg:/images/rectangle.png" loadDisplayMode = "scaleTofill">
-
+		<!-- Frontscreen -->
+		<Poster id="Front_View" height="1080" width="1920" loadwidth="1280" loadheight="720" uri="pkg:/images/rectangle.png" loadDisplayMode="scaleTofill">
 			<Group>
+				<!-- Streamly logo -->
+				<Poster id="device" translation="[120,50]" height="100" width="300" uri="pkg:/images/streamly_logo.png" />
 
-				<Poster id = "device" translation= "[120,50]" height="100" width="300" uri="pkg:/images/streamly_logo.png" />
-
-				<Button id="Help" height="110" width="225" maxwidth="225" minwidth="225" iconuri="" focusedIconUri=""
-            
-            focusBitmapUri = "pkg:/images/borderwhite2.9.png" translation= "[1600, 30]"  color = "#ffffff">
-					
-					<Poster id = "help1" height="140" width="256" uri="pkg:/images/guide_buttons.png" translation= "[15, -6]">
-						<Label id="help_text" horizAlign="center" height = "82" Width  = "200" vertAlign = "center" text="Help" size="35" translation= "[25, 25]" color="#004E92">
-							<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "32" />
+				<!-- Help button -->
+				<Button id="Help" height="110" width="225" maxwidth="225" minwidth="225" iconuri="" focusedIconUri="" focusBitmapUri="pkg:/images/borderwhite2.9.png" translation="[1600, 30]" color="#ffffff">
+					<Poster id="help1" height="140" width="256" uri="pkg:/images/guide_buttons.png" translation="[15, -6]">
+						<Label id="help_text" horizAlign="center" height="82" Width="200" vertAlign="center" text="Help" size="35" translation="[25, 25]" color="#004E92">
+							<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="32" />
 						</Label>
 					</Poster>
 				</Button>
-				<Button id="Privacy" height="110" width="225" maxwidth="225" minwidth="225" iconuri="" focusedIconUri=""
-            
-            focusBitmapUri = "pkg:/images/borderwhite2.9.png" translation= "[1350, 30]">
 
-					<Poster id = "privacy1" height="140" width="256" uri="pkg:/images/guide_buttons.png" translation= "[15, -6]">
-						<Label id="priv_text" horizAlign="center" height = "82" Width  = "200" vertAlign = "center" text="Privacy" size="35" translation= "[25, 25]" color="#004E92">
-							<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "32" />
+				<!-- Privacy button -->
+				<Button id="Privacy" height="110" width="225" maxwidth="225" minwidth="225" iconuri="" focusedIconUri="" focusBitmapUri="pkg:/images/borderwhite2.9.png" translation="[1350, 30]">
+					<Poster id="privacy1" height="140" width="256" uri="pkg:/images/guide_buttons.png" translation="[15, -6]">
+						<Label id="priv_text" horizAlign="center" height="82" Width="200" vertAlign="center" text="Privacy" size="35" translation="[25, 25]" color="#004E92">
+							<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="32" />
 						</Label>
 					</Poster>
 				</Button>
-				<Poster id = "image1" translation= "[700,120]" height="400" width="500" uri="" />
-				<Poster id = "image2" translation= "[700,120]" height="400" width="500" uri="" visible = "false"/>
-				<Poster id = "image3" translation= "[700,120]" height="400" width="500" uri="" visible = "false"/>
 
-				<Timer 
-      id = "exampleTimer" 
-      duration = "4" />
+				<!-- Images -->
+				<Poster id="image1" translation="[700,120]" height="400" width="500" uri="" />
+				<Poster id="image2" translation="[700,120]" height="400" width="500" uri="" visible="false" />
+				<Poster id="image3" translation="[700,120]" height="400" width="500" uri="" visible="false" />
 
-				<!-- </LayoutGroup> -->
+				<!-- Timer -->
+				<Timer id="exampleTimer" duration="4" />
+
+				<!-- Loader background -->
 				<Rectangle id="LoaderBackground" color="0x000000FF" visible="false" opacity="0.65" />
-				<BusySpinner 
-	 
-	    		id = "LoginBusySpinner" 
-		    	visible = "false" />
 
+				<!-- Busy spinner -->
+				<BusySpinner id="LoginBusySpinner" visible="false" />
 
+				<!-- Labels -->
 				<Label text='' size="10" height="200" width="7000" color="#ffffff" wrap="true" id="simple_lable_1" translation="[330,550]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "45" visible = "false"/>
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="45" visible="false" />
 				</Label>
 				<Label text='' size="10" height="200" width="7000" color="#ffffff" wrap="true" id="simple_lable_2" translation="[170,550]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "45" visible = "false"/>
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="45" visible="false" />
 				</Label>
 				<Label text='' size="10" height="200" width="7000" color="#ffffff" wrap="true" id="simple_lable_3" translation="[590,550]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "45" visible = "false"/>
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="45" visible="false" />
 				</Label>
 
-
-
-				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id = "simple1" translation="[400,650]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size = "40" visible = "false"/>
+				<!-- Other labels and text boxes -->
+				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id="simple1" translation="[400,650]">
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size="40" visible="false" />
 				</Label>
-				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id = "simple2" translation="[450,650]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size = "40" visible = "false"/>
+				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id="simple2" translation="[450,650]">
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size="40" visible="false" />
 				</Label>
-				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id = "simple3" translation="[730,650]">
-					<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size = "40" visible = "false"/>
+				<Label text='' height="300" width="1300" color="#ffffff" wrap="true" id="simple3" translation="[730,650]">
+					<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Light_22503.ttf" size="40" visible="false" />
 				</Label>
 
-				<Poster id = "circ1" translation= "[890,750]" height="30" width="30" uri="pkg:/images/circ.png" />
-				<Poster id = "circ2" translation= "[940,750]" height="30" width="30" uri="pkg:/images/circ.png" />
-				<Poster id = "circ3" translation= "[990,750]" height="30" width="30" uri="pkg:/images/circ.png" />
-				<CheckList id="dontshow"/>
-				<!-- <Poster id = "sign" translation= "[650,900]" height="80" width="600" uri="pkg:/images/Login/signfocus.png" />    -->
-				<Button id="sign" height="95" width="685" maxwidth="985" minwidth="685" iconuri="" focusedIconUri=""
-            
-            focusBitmapUri = "pkg:/images/borderwhite2.9.png" translation= "[600, 900]">
-					<Poster id = "sign1" height="100" width="700" uri="pkg:/images/guide_buttons1.png" translation= "[-7, -2]">
-					<Label id="sign_text" horizAlign="center" height = "82" Width  = "200" vertAlign = "center" text="Sign in" size="35" translation= "[250, 10]" color="#004E92">
-							<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "32" />
+				<!-- Circles -->
+				<Poster id="circ1" translation="[890,750]" height="30" width="30" uri="pkg:/images/circ.png" />
+				<Poster id="circ2" translation="[940,750]" height="30" width="30" uri="pkg:/images/circ.png" />
+				<Poster id="circ3" translation="[990,750]" height="30" width="30" uri="pkg:/images/circ.png" />
+
+				<!-- CheckList -->
+				<CheckList id="dontshow" />
+
+				<!-- Sign in button -->
+				<Button id="sign" height="95" width="685" maxwidth="985" minwidth="685" iconuri="" focusedIconUri="" focusBitmapUri="pkg:/images/borderwhite2.9.png" translation="[600, 900]">
+					<Poster id="sign1" height="100" width="700" uri="pkg:/images/guide_buttons1.png" translation="[-7, -2]">
+						<Label id="sign_text" horizAlign="center" height="82" Width="200" vertAlign="center" text="Sign in" size="35" translation="[250, 10]" color="#004E92">
+							<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="32" />
 						</Label>
 					</Poster>
 				</Button>
-
-
 			</Group>
-
-
 		</Poster>
 
+		<!-- Full page background -->
+		<Poster id="LoginBackgroundImage" height="1080" width="1920" loadwidth="1280" loadheight="720" uri="pkg:/images/home/homeScreenBckgrndhd.png" loadDisplayMode="scaleTofill" visible="false" />
 
-		<!-- full page background  -->
-		<Poster id="LoginBackgroundImage" height="1080" width="1920" loadwidth="1280" loadheight="720" uri="pkg:/images/home/homeScreenBckgrndhd.png" loadDisplayMode = "scaleTofill" visible = "false"/>
+		<!-- Streamly icon -->
+		<Poster id="logo" translation="[743,20]" height="100" width="380" uri="pkg:/images/streamly_logo.png" visible="false" />
 
-		<!-- this is streamly icon at the top of every screen. -->
-		<Poster id="logo" translation= "[743,20]" height="100" width="380" uri="pkg:/images/streamly_logo.png" visible = "false"/>
+		<!-- Profile category -->
+		<MarkupGrid id="ProfileCategory" itemComponentName="ProfileItemComponent" itemSpacing="[ 50, 0 ]" numColumns="7" numRows="1" itemSize="[280,268]" translation="[120,406]" drawFocusFeedback="false" />
 
-		<MarkupGrid id = "ProfileCategory"
-                 itemComponentName = "ProfileItemComponent"
-                 itemSpacing = "[ 50, 0 ]" numColumns="7" numRows="1" itemSize="[280,268]" translation= "[120,406]" drawFocusFeedback="false"/>
-		<!-- this is simple login view  -->
-		<Poster   
-		              id ="LoginView"
-	                  translation = "[524,140]" height="900" width="873" uri="pkg:/images/Login/backGroundBox.png" 
-					  visible = "false">
+		<!-- Simple login view -->
+		<Poster id="LoginView" translation="[524,140]" height="900" width="873" uri="pkg:/images/Login/backGroundBox.png" visible="false">
 
-			<Label id="SignInLabel" text="Sign In" translation= "[127,40]" height="53" width="0" color="#004E92" />
+			<Label id="SignInLabel" text="Sign In" translation="[127,40]" height="53" width="0" color="#004E92" />
 
-			<Label id="UsernamLable" text="Username" translation= "[127,137]" height="28" width="130" color="#0A0A0A" />
-			<Poster id="UsernamPoster"
-                      translation = "[127,176]" height="94" width="520" uri="pkg:/images/Login/borderof.png">
-				<!-- text = "shahjad@gmail.com" -->
-				<TextEditBox
-	                 id = "UsernamEditText"
-	                
-	                 translation = "[30,5]"	                 
-	                 width = "485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
-				<VoiceTextEditBox
-	                 id = "UsernamVoiceEditText"
-	                
-	                 translation = "[30,5]"	                 
-	                 width = "485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" voiceEnabled = "true" voiceEntryType = "generic"/>
-				<Poster id="SearchBoxPoster"
-					 translation = "[519,0]" height="94" width="100" uri="pkg:/images/Login/buttonFoucsFootprint.png"/>
+			<!-- Username field -->
+			<Label id="UsernamLable" text="Username" translation="[127,137]" height="28" width="130" color="#0A0A0A" />
+			<Poster id="UsernamPoster" translation="[127,176]" height="94" width="520" uri="pkg:/images/Login/borderof.png">
+				<TextEditBox id="UsernamEditText" translation="[30,5]" width="485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
+				<VoiceTextEditBox id="UsernamVoiceEditText" translation="[30,5]" width="485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" voiceEnabled="true" voiceEntryType="generic" />
+				<Poster id="SearchBoxPoster" translation="[519,0]" height="94" width="100" uri="pkg:/images/Login/buttonFoucsFootprint.png" />
 				<Poster id="searchStart" />
 			</Poster>
-			<Label id="PasswordLable" text="Username" translation= "[127,298]" height="28" width="130" color="#0A0A0A" />
-			<!-- fireTrackingEvents -->
-			<Poster id="PasswordPoster"
-                      translation = "[127,337]" height="94" width="520" uri="pkg:/images/Login/borderon.png">
 
-				<!-- text = "123456789" -->
-				<TextEditBox
-	               
-	                 id = "PasswordEditText"
-	                 
-	                 translation = "[30,5]" 
-	                 width = "485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
-
-				<VoiceTextEditBox
-	               
-	                 id = "PasswordVoiceEditText"
-	                 
-	                 translation = "[30,5]" 
-	                 width = "485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
-				<Poster id="PasswordShowPoster"
-                      translation = "[519,0]" height="94" width="100" uri="pkg:/images/Login/buttonFoucsFootprint.png"/>
+			<!-- Password field -->
+			<Label id="PasswordLable" text="Username" translation="[127,298]" height="28" width="130" color="#0A0A0A" />
+			<Poster id="PasswordPoster" translation="[127,337]" height="94" width="520" uri="pkg:/images/Login/borderon.png">
+				<TextEditBox id="PasswordEditText" translation="[30,5]" width="485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
+				<VoiceTextEditBox id="PasswordVoiceEditText" translation="[30,5]" width="485" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
+				<Poster id="PasswordShowPoster" translation="[519,0]" height="94" width="100" uri="pkg:/images/Login/buttonFoucsFootprint.png" />
 				<Poster id="passoword_show" />
-				<Poster id="password_hide"/>
+				<Poster id="password_hide" />
 			</Poster>
-			<CheckList id="rememberCheckList"/>
-			<Button id="needHelpButton"/>
-			<Button id="SignInButton" translation= "[127,528]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri=""
-	                 focusFootprintBitmapUri = "pkg:/images/Login/passcodeFocus.png"
-	                 focusBitmapUri = "pkg:/images/Login/signfootprint1.png" showFocusFootprint="true" />
 
-			<Button id="LoginUsingPassCodeButton" translation= "[127,620]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri=""
-	                 focusFootprintBitmapUri = "pkg:/images/Login/passcodeFocus.png"
-	                 focusBitmapUri = "pkg:/images/Login/passcodefootprint.png" showFocusFootprint="true" visible="true"/>
+			<!-- Remember checkbox -->
+			<CheckList id="rememberCheckList" />
 
-			<Button id="qrLoginBtn" translation= "[127,700]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri=""
-	                 focusFootprintBitmapUri = "pkg:/images/Login/passcodeFocus.png"
-	                 focusBitmapUri = "pkg:/images/Login/qrloginfootprint.png" showFocusFootprint="true" visible="true"/>
-			<Button id ="termConditionButton" visible="true"/>
-			<Label id="registerLabel"/>
-			<Label id="version"/>
+			<!-- Need help button -->
+			<Button id="needHelpButton" />
 
+			<!-- Sign in button -->
+			<Button id="SignInButton" translation="[127,528]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri="" focusFootprintBitmapUri="pkg:/images/Login/passcodeFocus.png" focusBitmapUri="pkg:/images/Login/signfootprint1.png" showFocusFootprint="true" />
+
+			<!-- Login using passcode button -->
+			<Button id="LoginUsingPassCodeButton" translation="[127,620]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri="" focusFootprintBitmapUri="pkg:/images/Login/passcodeFocus.png" focusBitmapUri="pkg:/images/Login/passcodefootprint.png" showFocusFootprint="true" visible="true" />
+
+			<!-- QR Login button -->
+			<Button id="qrLoginBtn" translation="[127,700]" height="64" maxwidth="620" minwidth="620" iconuri="" focusedIconUri="" focusFootprintBitmapUri="pkg:/images/Login/passcodeFocus.png" focusBitmapUri="pkg:/images/Login/qrloginfootprint.png" showFocusFootprint="true" visible="true" />
+
+			<!-- Terms and conditions button -->
+			<Button id="termConditionButton" visible="true" />
+
+			<!-- Register label -->
+			<Label id="registerLabel" />
+
+			<!-- Version label -->
+			<Label id="version" />
 		</Poster>
 
-		<!-- this is for login with passcode  -->
-		<Poster   
-				id ="LoginWithPassCodeView"
-				translation = "[524,327]" height="479" width="873" uri="pkg:/images/Login/backGroundBox.png" 
-				visible ="false">
-			<Label id="LoginUsingPasscodeLabel" text="Login Using PassCode" translation= "[127,40]" height="53" width="0" color="#004E92" />
+		<!-- Login with passcode view -->
+		<Poster id="LoginWithPassCodeView" translation="[524,327]" height="479" width="873" uri="pkg:/images/Login/backGroundBox.png" visible="false">
+			<Label id="LoginUsingPasscodeLabel" text="Login Using PassCode" translation="[127,40]" height="53" width="0" color="#004E92" />
 
-			<Label id="EnterPasscodeLabel" text="Enter your Passcode " translation= "[127,137]" height="28" width="300" color="#0A0A0A" />
-			<Poster id="EnterPasscodePoster"
-                      translation = "[127,176]" height="94" width="620" uri="pkg:/images/Login/borderof.png">
-				<!-- text = "shahjad@gmail.com" -->
-				<TextEditBox
-	                 id = "EnterPasscodeEditText"
-	                 translation = "[30,5]"	                 
-	                 width = "585" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
+			<Label id="EnterPasscodeLabel" text="Enter your Passcode " translation="[127,137]" height="28" width="300" color="#0A0A0A" />
+			<Poster id="EnterPasscodePoster" translation="[127,176]" height="94" width="620" uri="pkg:/images/Login/borderof.png">
+				<TextEditBox id="EnterPasscodeEditText" translation="[30,5]" width="585" textColor="#0A0A0A" backgroundUri="pkg:/images/edittext_transparent.png" clearOnDownKey="false" />
 			</Poster>
-			<Button id="SignInWithPasscodeButton" translation= "[127,300]" height="84" maxwidth="620" minwidth="620" iconuri="" focusedIconUri=""
-	                 focusFootprintBitmapUri = "pkg:/images/Login/signfocus.png"
-	                 focusBitmapUri = "pkg:/images/Login/signfootprint.png" showFocusFootprint="true" />
+			<Button id="SignInWithPasscodeButton" translation="[127,300]" height="84"maxwidth="620" minwidth="620" iconuri="" focusedIconUri="" focusFootprintBitmapUri="pkg:/images/Login/signfocus.png" focusBitmapUri="pkg:/images/Login/signfootprint.png" showFocusFootprint="true" />
 		</Poster>
 
-		<!-- this is for barcode ui  -->
-		<Group id = "barCodeView" visible="false">
-			<LayoutGroup 
-	      		id = "barCodeViewLG"
-	      		itemSpacings = "[30]"
-	      		layoutDirection = "horizontal">
+		<!-- Barcode view -->
+		<Group id="barCodeView" visible="false">
+			<LayoutGroup id="barCodeViewLG" itemSpacings="[30]" layoutDirection="horizontal">
 
-				<Rectangle 
-					color = "0xffffff33" 
-					height = "600"
-					width = "780" id="qrCodeDiscriptionRect">
-					<Rectangle height="400"
-						width = "500"
-						color = "0xffffff100" 
-						translation = "[50, 100]" id="qrCodeDisLableRect">
+				<!-- QR Code description -->
+				<Rectangle color="0xffffff33" height="600" width="780" id="qrCodeDiscriptionRect">
+					<Rectangle height="400" width="500" color="0xffffff100" translation="[50, 100]" id="qrCodeDisLableRect">
 
-						<Label text="QR Login" height="53" width="0" color="#ffffff"  horizAlign = "center" vertAlign = "center" id="qrLoginTextLable"/>
-						<LayoutGroup
-							itemSpacings = "[5]"
-							translation = "[0, 70]"
-							layoutDirection = "vert">
+						<Label text="QR Login" height="53" width="0" color="#ffffff" horizAlign="center" vertAlign="center" id="qrLoginTextLable" />
+						<LayoutGroup itemSpacings="[5]" translation="[0, 70]" layoutDirection="vert">
 							<Label text="You need to be logged in your phone to follow these steps" height="53" width="0" color="#ffffff" />
 							<Label text="&#x2022; Open Streamly on web browser/app on your phone." height="53" width="0" color="#ffffff" />
 							<Label text="&#x2022; Tap navbar and select QR scanner." height="53" width="0" color="#ffffff" />
-							<Label text="&#x2022; Point your phone to this screen to capture the code." height="53" width="0" color="#ffffff" horizAlign = "center" />
+							<Label text="&#x2022; Point your phone to this screen to capture the code." height="53" width="0" color="#ffffff" horizAlign="center" />
 						</LayoutGroup>
 
 					</Rectangle>
 
 				</Rectangle>
 
-				<Rectangle 
-					color = "0xffffff33" 
-					height = "600" 
-					width = "700"
-					id = "qrCodeRect">
+				<!-- QR Code image -->
+				<Rectangle color="0xffffff33" height="600" width="700" id="qrCodeRect">
 
-					<Rectangle 
-						color = "0xffffff" 
-						height = "400" 
-						width = "400"
-						id = "qrCodeImg">
-						<Poster id="qrCodePosterImg" height="350" width="350" loadSync="false" translation = "[25, 25]"/>
+					<Rectangle color="0xffffff" height="400" width="400" id="qrCodeImg">
+						<Poster id="qrCodePosterImg" height="350" width="350" loadSync="false" translation="[25, 25]" />
 					</Rectangle>
 
 				</Rectangle>
 
 			</LayoutGroup>
 		</Group>
-		<Group id="ErrorDialogView" visible = "false">
-
+		<Group id="ErrorDialogView" visible="false">
+			<!-- Background fade -->
 			<Rectangle id="dialogfadeBackground" color="#000000" opacity="0.65" />
-			<Poster id = "backgroungPoster"
-	                   translation = "[ 497, 319 ]" width="923.00" height="500.00" uri="pkg:/images/profile/dialogBackground.png" />
-			<Label  id = "messageBody"
-	                        translation = "[ 643, 408 ]" width="658.00" height="177.00" horizAlign="center" vertAlign="center" />
 
+			<!-- Dialog background -->
+			<Poster id="backgroungPoster" translation="[497, 319]" width="923.00" height="500.00" uri="pkg:/images/profile/dialogBackground.png" />
 
-			<Button id = "buttonClick" visible="true" translation= "[835,672]"
-                      minWidth  = "270"
-                      maxWidth  = "270" focusedTextColor="#FFFFFF"
-                      height = "96"
-                      focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                      BitmapUri =               "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" text="Retry">
+			<!-- Message body -->
+			<Label id="messageBody" translation="[643, 408]" width="658.00" height="177.00" horizAlign="center" vertAlign="center" />
 
+			<!-- Retry button -->
+			<Button id="buttonClick" visible="true" translation="[835, 672]" minWidth="270" maxWidth="270" focusedTextColor="#FFFFFF" height="96" focusFootprintBitmapUri="pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png" BitmapUri="pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" text="Retry">
 			</Button>
 		</Group>
 
-		<!-- this is for Room Screen  -->
-		<Button id="logout" visible="false" height="90" width="200" maxwidth="200" minwidth="200" iconuri="" focusedIconUri=""
-            
-            focusBitmapUri = "pkg:/images/home/borderwhite2.9.png" showFocusFootprint="true" translation= "[1630,30]">
-			<Label horizAlign="center" height = "82" Width  = "200" vertAlign = "center" text="Logout" size="40">
-				<Font role = "font" uri = "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size = "40" />
+		<!-- Room Screen -->
+		<Button id="logout" visible="false" height="90" width="200" maxwidth="200" minwidth="200" iconuri="" focusedIconUri="" focusBitmapUri="pkg:/images/home/borderwhite2.9.png" showFocusFootprint="true" translation="[1630,30]">
+			<Label horizAlign="center" height="82" Width="200" vertAlign="center" text="Logout" size="40">
+				<Font role="font" uri="pkg:/fonts/Helvetica-Neue-Bold_22498.ttf" size="40" />
 			</Label>
 		</Button>
-		<TextEditBox id="roomSearchEditText" textColor="#ffffff" clearOnDownKey="false" active="false" translation="[100,150]" visible="flase" hintText = "Search Rooms"/>
+		<TextEditBox id="roomSearchEditText" textColor="#ffffff" clearOnDownKey="false" active="false" translation="[100,150]" visible="false" hintText="Search Rooms" />
 		<Label id="HotelLoginLableInfo" />
-		<MarkupGrid id ="RoomList" visible ="false" vertFocusAnimationStyle = "floatingFocus"/>
+		<MarkupGrid id="RoomList" visible="false" vertFocusAnimationStyle="floatingFocus" />
 
-
-
-
-
-		<!-- this is key board  -->
-		<Poster id = "KeyboardPoster" translation= "[0,600]" height="779" width="1920" uri="pkg:/images/LoginBackgroundpng.png" visible="false">
-			<DynamicKeyboard id = "KeyboardInput" translation= "[250,0]" showTextEditBox="false" voiceEnabled = "true" />
+		<!-- Keyboard -->
+		<Poster id="KeyboardPoster" translation="[0,600]" height="779" width="1920" uri="pkg:/images/LoginBackgroundpng.png" visible="false">
+			<DynamicKeyboard id="KeyboardInput" translation="[250,0]" showTextEditBox="false" voiceEnabled="true" />
 		</Poster>
 
-		<!-- this is for registered device -->
-		<Poster
-         id = "deviceView" visible="false"
-         width  = "1223"
-         height = "724" uri="pkg:/images/profile/profile_dialog.png"    
-         loadDisplayMode = "scaleToFill">
-			<Label
-         
-             id = "deviceTitle" 
-             text = "Login Error"
-             width  = "1450" horizAlign="center" vertAlign="center"
-             height = "100" 
-             translation = "[0,17]"/>
+		<!-- Registered device -->
+		<Poster id="deviceView" visible="false" width="1223" height="724" uri="pkg:/images/profile/profile_dialog.png" loadDisplayMode="scaleToFill">
+			<Label id="deviceTitle" text="Login Error" width="1450" horizAlign="center" vertAlign="center" height="100" translation="[0,17]" />
+			<Label id="deviceText" text="" width="1550" horizAlign="center" vertAlign="center" height="100" translation="[40,117]" />
 
-			<Label
-         
-             id = "deviceText" 
-             text = ""
-             width  = "1550" horizAlign="center" vertAlign="center"
-             height = "100" 
-             translation = "[40,117]"/>
-
-			<Button id="Nodevice" visible="true" translation= "[375,287]"
-                 minWidth  = "275"
-                 maxWidth  = "275" focusedTextColor="#FFFFFF"
-                 height = "84"
-                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                 BitmapUri =               "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
-
-				<Label id="labelNodevice" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="No" />
-			</Button>
-			<Button id="Yesdevice" visible="true" translation= "[769,287]"
-                minWidth  = "275"
-                maxWidth  = "275" focusedTextColor="#FFFFFF"
-                height = "84"
-                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri =               "pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
-				<Label id="labelYesdevice" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="Yes" />
+			<!-- No device button -->
+			<Button id="Nodevice" visible="true" translation="[375,287]" minWidth="275" maxWidth="275" focusedTextColor="#FFFFFF" height="84" focusFootprintBitmapUri="pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png" BitmapUri="pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
+				<Label id="labelNodevice" horizAlign="center" height="84" Width="275" vertAlign="center" text="No" />
 			</Button>
 
-
+			<!-- Yes device button -->
+			<Button id="Yesdevice" visible="true" translation="[769,287]" minWidth="275" maxWidth="275" focusedTextColor="#FFFFFF" height="84" focusFootprintBitmapUri="pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png" BitmapUri="pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
+				<Label id="labelYesdevice" horizAlign="center" height="84" Width="275" vertAlign="center" text="Yes" />
+			</Button>
 		</Poster>
 
+		<!-- Profile View -->
+		<Poster id="profileView" visible="false" height="1080" width="1920" loadwidth="1920" loadheight="1080" uri="pkg:/images/home/homeScreenBckgrndhd.png" loadDisplayMode="scaleToFill">
 
-		<Poster id="profileView" visible="false" height="1080" width="1920" loadwidth="1920" loadheight="1080" uri="pkg:/images/home/homeScreenBckgrndhd.png" 
-			loadDisplayMode = "scaleTofill">
+			<!-- Streamly logo -->
+			<Poster id="logo" height="100" width="474" horizOrigin="left" vertOrigin="baseline" translation="[750,40]" uri="pkg:/images/streamly_logo.png" />
 
-			<Poster id="logo" height="100" width="474" 
-				horizOrigin = "left"
-				vertOrigin = "baseline" translation="[750,40]" uri="pkg:/images/streamly_logo.png" />
+			<!-- Registed Devices label -->
+			<Label height="30" text="Registed Devices" horizOrigin="left" vertOrigin="baseline" translation="[840,160]" />
 
-			<Label height="30" text="Registed Devices" 
-				horizOrigin = "left"
-				vertOrigin = "baseline" translation="[840,160]"/>
-
-			<LayoutGroup
-				itemSpacings = "[0]" translation="[750,210]"
-				layoutDirection = "horiz">
-				<Label height="80" text="Total Connected Device : " 
-					horizOrigin = "left"
-					vertOrigin = "baseline"/>
-				<Label id = "device_connected" height="80"/>
+			<!-- Total connected devices -->
+			<LayoutGroup itemSpacings="[0]" translation="[750,210]" layoutDirection="horiz">
+				<Label height="80" text="Total Connected Device : " horizOrigin="left" vertOrigin="baseline" />
+				<Label id="device_connected" height="80" />
 			</LayoutGroup>
 
-			<!-- <MarkupList id = "dialogOptions"
-                 itemComponentName = "dialogOptionsItemComponent"
-                 itemSpacing = "[ 0, 50 ]" numRows="4" itemSize="[1920,52]" translation= "[203,93]" drawFocusFeedback="false"/>  -->
+			<!-- Search Device -->
+			<TextEditBox id="deviceSearchEditText" textColor="#ffffff" clearOnDownKey="false" active="false" width="1440" translation="[230,250]" visible="false" hintText="Search Device" />
 
-			<TextEditBox id="deviceSearchEditText" textColor="#ffffff" clearOnDownKey="false" active="false" width="1440" translation="[230,250]" visible="flase" hintText = "Search Device"/>
+			<!-- Registered devices grid -->
+			<MarkupGrid id="registredDevicesMarkup" itemComponentName="RegistredDeviceItemComponent" itemSpacing="[50, 50]" numColumns="4" numRows="2" itemSize="[320,320]" translation="[240,340]" vertFocusAnimationStyle="floatingFocus" drawFocusFeedback="false" />
 
-			<MarkupGrid id = "registredDevicesMarkup"
-                 itemComponentName = "RegistredDeviceItemComponent" 
-                 itemSpacing = "[ 50, 50 ]" numColumns="4" numRows="2" itemSize="[320,320]" translation= "[240,340]" vertFocusAnimationStyle="floatingFocus" drawFocusFeedback="false"/>
-
-			<!-- <Button id="ok" visible="true" translation= "[471,589]"
-                minWidth  = "275"
-                maxWidth  = "275" focusedTextColor="#FFFFFF"
-                height = "84"
-                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri = "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
-				<Label id="Lbaelok" horizAlign="center"
-          			height = "84"
-          			Width  = "275"
-          			vertAlign = "center" text="OK" />
-			</Button> -->
-
-			<Poster
-         id = "removeView" visible="false"
-         width  = "1223"
-         height = "724" uri="pkg:/images/profile/profile_dialog.png"    
-         loadDisplayMode = "scaleToFill">
-				<Label
-         
-             id = "removeTitle" 
-             text = "Sign out"
-             width  = "1450" horizAlign="center" vertAlign="center"
-             height = "100" 
-             translation = "[0,17]"/>
-
-				<Label
-         
-             id = "removeText" 
-             text = ""
-             width  = "1450" horizAlign="center" vertAlign="center"
-             height = "100" 
-             translation = "[0,117]"/>
-
-				<Button id="Noremove" visible="true" translation= "[375,287]"
-                 minWidth  = "275"
-                 maxWidth  = "275" focusedTextColor="#FFFFFF"
-                 height = "84"
-                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                 BitmapUri =               "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
-
-					<Label id="labelNoremove" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="No" />
-				</Button>
-				<Button id="Yesremove" visible="true" translation= "[769,287]"
-                minWidth  = "275"
-                maxWidth  = "275" focusedTextColor="#FFFFFF"
-                height = "84"
-                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri =               "pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
-					<Label id="labelYesremove" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="Yes" />
-				</Button>
-
-
+			<!-- Keyboard for device view -->
+			<Poster id="KeyboardPosterDevice" translation="[0,670]" height="779" width="1920" uri="pkg:/images/LoginBackgroundpng.png" visible="false">
+				<Keyboard id="KeyboardInputDevice" translation="[250,0]" showTextEditBox="false" />
 			</Poster>
-
-
-
-			<Poster id = "KeyboardPosterDevice" translation= "[0,670]" height="779" width="1920" uri="pkg:/images/LoginBackgroundpng.png" visible="false">
-				<Keyboard id = "KeyboardInputDevice" translation= "[250,0]" showTextEditBox="false" />
-			</Poster>
-
 		</Poster>
 
+		<!-- Logout View -->
+		<Poster id="logoutView" visible="false" width="1223" height="724" uri="pkg:/images/profile/profile_dialog.png" loadDisplayMode="scaleToFill">
+			<Label id="logoutText" text="" width="1450" horizAlign="center" vertAlign="center" height="100" translation="[0,117]" />
 
-		<Poster
-         id = "logoutView" visible="false"
-         width  = "1223"
-         height = "724" uri="pkg:/images/profile/profile_dialog.png"    
-         loadDisplayMode = "scaleToFill">
-
-			<Label
-         
-             id = "logoutText" 
-             text = ""
-             width  = "1450" horizAlign="center" vertAlign="center"
-             height = "100" 
-             translation = "[0,117]"/>
-
-			<Button id="NoButton" visible="true" translation= "[275,287]"
-                 minWidth  = "275"
-                 maxWidth  = "275" focusedTextColor="#FFFFFF"
-                 height = "84"
-                 focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                 BitmapUri =               "pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
-
-				<Label id="labelNo" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="No" />
-			</Button>
-			<Button id="YesButton" visible="true" translation= "[669,287]"
-                minWidth  = "275"
-                maxWidth  = "275" focusedTextColor="#FFFFFF"
-                height = "84"
-                focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png"
-                BitmapUri =               "pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
-				<Label id="labelYes" horizAlign="center"
-                        height = "84"
-                        Width  = "275"
-                        vertAlign = "center" text="Yes" />
+			<!-- No button -->
+			<Button id="NoButton" visible="true" translation="[275,287]" minWidth="275" maxWidth="275" focusedTextColor="#FFFFFF" height="84" focusFootprintBitmapUri="pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png" BitmapUri="pkg:/images/profile/button1focus.png" showFocusFootprint="true" iconUri="" focusedIconUri="" horizAlign="center">
+				<Label id="labelNo" horizAlign="center" height="84" Width="275" vertAlign="center" text="No" />
 			</Button>
 
-
+			<!-- Yes button -->
+			<Button id="YesButton" visible="true" translation="[669,287]" minWidth="275" maxWidth="275" focusedTextColor="#FFFFFF" height="84" focusFootprintBitmapUri="pkg:/images/home/borderwhite3.png" focusBitmapUri="pkg:/images/Login/buttonFoucs.png" BitmapUri="pkg:/images/profile/button1focus.png" iconUri="" focusedIconUri="" showFocusFootprint="true" horizAlign="center">
+				<Label id="labelYes" horizAlign="center" height="84" Width="275" vertAlign="center" text="Yes" />
+			</Button>
 		</Poster>
+
+		<!-- Loader -->
 		<Rectangle id="LoaderBackground" color="0x000000FF" visible="false" opacity="0.65" />
-		<BusySpinner 
-	 
-	    		id = "LoginBusySpinner" 
-		    	visible = "false" />
+		<BusySpinner id="LoginBusySpinner" visible="false" />
 	</children>
 </component>

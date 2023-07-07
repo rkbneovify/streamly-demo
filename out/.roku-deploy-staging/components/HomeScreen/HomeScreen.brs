@@ -198,7 +198,7 @@ sub onTimer()
     end if
 end sub
 
-
+' Function for channels
 sub channelItems()
     ContentNodeChannel = CreateObject("roSgNode", "ContentNode")
 
@@ -259,6 +259,7 @@ sub channelItems()
     m.relatedChannelMarkupList.content = ContentNodeChannel
 end sub
 
+' Function to show timegrid
 sub Home_screenTimegridData()
     ?"videoId = getVideoid().toInt() "getVideoid().toInt()
     m.LoaderBackground.visible = true
@@ -428,6 +429,7 @@ sub Home_screenTimegridData()
     m.relatedChannelText.visible = false
 end sub
 
+' Function to show timegrid when back from video screen
 sub load_TimegridData()
     m.LoaderBackground.visible = true
     m.timeGride = m.top.findNode("timeGrid")
@@ -579,6 +581,7 @@ sub load_TimegridData()
     m.relatedChannelText.visible = false
 end sub
 
+' Function to delete selectedcategories
 sub delete_channelSelectedValue()
     if RegRead("Recent")
         RegDelete("Recent")
@@ -626,6 +629,7 @@ function height() as integer
     return h
 end function
 
+' Function to close try again dialog
 sub closeTryAgain()
     m.navtoRelatedCHannels1.visible = false
     m.controllers.visible = false
@@ -750,6 +754,7 @@ sub closeTryAgain()
     end if
 end sub
 
+' Function to show try again dialog when any error comes in video screen
 sub Try_again()
     ?"try again"
     ' ?"m.channelsId "m.channelsId
@@ -787,6 +792,7 @@ function contains(arr as object, value as string) as boolean
     end for
     return false
 end function
+
 
 sub initSupportDialog()
     m.dialogHeight = 400
@@ -851,7 +857,7 @@ sub initSupportDialog()
 
 end sub
 
-
+' Function to perform task when channel selected from timegrid
 sub selectedChannelplay(event as object)
     ?"getVideoid().toInt()"getVideoid().toInt()
     ?"event.getData()"event.getData()
@@ -863,6 +869,8 @@ sub selectedChannelplay(event as object)
         playfromchnnelguide(event.getRoSGNode().content.getChild(event.getData()))
     end if
 end sub
+
+' Function to play video when channel selected
 sub playfromchnnelguide(streamNode as object)
     closeRelatedchnnelView()
     setVideourl(streamNode.URL)
@@ -873,6 +881,7 @@ sub playfromchnnelguide(streamNode as object)
     m.top.signalBeacon("VODStartComplete")
 end sub
 
+' Function to get location of user
 sub LocationInfo()
     location = CreateObject("roSgNode", "Location")
     location.callType = "GET"
@@ -881,6 +890,7 @@ sub LocationInfo()
     location.control = "RUN"
 end sub
 
+' Function to get location response from user
 sub locationresponse(event as object)
     event.getRoSGNode().control = "Stop"
     m.inside_geofence = true
@@ -896,6 +906,7 @@ sub locationresponse(event as object)
     end if
 end sub
 
+' Function to show dialog
 sub showDialogDevice(dialogView as string, show as boolean, focus as boolean, message as string)
     m.navtoRelatedCHannels1.visible = false
     m.navtoRelatedCHannels.visible = false
@@ -921,6 +932,7 @@ sub showDialog(title as string, message as string, optionsDialog as boolean, but
     end if
 end sub
 
+' Function to show loader before data displays on screen
 sub showspinner(event as object)
     m.LoaderBackground.visible = event
     if event
@@ -930,6 +942,7 @@ sub showspinner(event as object)
     end if
 end sub
 
+' Function to back user from video scree to home or search screen according to user selection when any error comes in video screen
 sub closeDialogNext()
     if m.needHelpText = "location"
         m.SupportDialog.visible = false
@@ -971,6 +984,7 @@ sub closeDialogNext()
     m.needHelpText = ""
 end sub
 
+' Function to show loader in video screen
 sub VideoLiveLoader()
     m.playerLoader = m.top.createChild("BusySpinner")
     m.playerLoader.visible = false
@@ -978,6 +992,7 @@ sub VideoLiveLoader()
     m.playerLoader.poster.uri = "pkg:/images/videoplayer/loader96.png"
 end sub
 
+' Function for unfocused program in timegrid
 sub programUnfocused(params as object)
     channelNode = m.timeGride.programUnfocused
 end sub
@@ -993,7 +1008,7 @@ function elementExists(arr as object, element as integer) as boolean
 end function
 
 
-
+' Function for focused program in timegrid
 sub programFocusedDetails(params as object)
 
     channelNode = params.getRosgNode().content.getChild(params.getData().focusChannelIndex)
@@ -1035,7 +1050,7 @@ sub programFocusedDetails(params as object)
 
 end sub
 
-
+' Function to off the visibility of every item displays in video screen
 sub closeStreamInfo()
     m.streaminfoTimer.control = "stop"
     m.streamlyview.visible = false
@@ -1045,6 +1060,7 @@ sub closeStreamInfo()
     m.fire = true
 end sub
 
+' Function to setup video player
 sub SetupVideoPlayer()
     m.video.observeField("state", "onStateChange")
     m.video.observeField("position", "onPositionChange")
@@ -1065,12 +1081,14 @@ sub SetupVideoPlayer()
     m.position = 0
 end sub
 
+' Function to show buffering status in video screen
 sub percentage(event as object)
     if (event <> invalid and event.getData() <> invalid)
         ?" buffering ";event.getData().percentage
     end if
 end sub
 
+' Function to perform some action when video state change
 sub onStateChange()
     retryCount = 0
     if m.Video <> invalid and m.video.state <> "error"
@@ -1162,6 +1180,7 @@ sub onStateChange()
     end if
 end sub
 
+' Function for replay progress bar
 sub forReplaySeekbar()
     if m.data.playingPosition <> 0
         ps = (m.data.playingPosition / m.duration) * 100
@@ -1173,6 +1192,7 @@ sub forReplaySeekbar()
     end if
 end sub
 
+' Function to show progress bar with timings in video screen
 sub forSeekBar()
     if m.Video.position <> 0 and m.duration <> 0
         ps = (m.Video.position / m.duration) * 100
@@ -1184,11 +1204,13 @@ sub forSeekBar()
     end if
 end sub
 
+' Function to rewine video
 sub forRewine()
     m.Video.seek = m.Video.position - 10.0
     onStateChange()
 end sub
 
+' Function to go to the previous channel from the current channel from video screen
 sub forPrevious()
     if getVideoid().toInt() > 1
         m.video.control = "stop"
@@ -1211,6 +1233,7 @@ sub forPrevious()
     m.top.signalBeacon("VODStartComplete")
 end sub
 
+' Function to go the next channel from current channel from video screen
 sub forNext()
     if getVideoid().toInt() < 132
         m.video.control = "stop"
@@ -1235,11 +1258,13 @@ sub forNext()
     m.top.signalBeacon("VODStartComplete")
 end sub
 
+' Function to forward video by 10 sec in video screen
 sub forForward()
     m.Video.seek = m.Video.position + 10.0
     onStateChange()
 end sub
 
+' Function to define focus color for all the item present in video screen
 sub focusColor()
     m.play.blendColor = "#FFFFFF"
     m.rewine.blendColor = "#FFFFFF"
@@ -1253,7 +1278,7 @@ sub focusColor()
     end if
 end sub
 
-
+' Function to calculate accurate time of video to show progress in video screen
 sub horesAndMinute()
     min = (m.duration / 60) mod 60
     hours = (m.duration / 60) / 60
@@ -1262,6 +1287,7 @@ sub horesAndMinute()
     m.seekTotalTime.text = getNumber(n) + ":" + getNumber(min) + ":" + getNumber(seconds)
 end sub
 
+' Function to calculate accurate time of video with video position to show progress in video screen
 sub horesAndMinute1()
     d = m.Video.position
     min = (d / 60) mod 60
@@ -1271,6 +1297,7 @@ sub horesAndMinute1()
     m.seekTimeStart.text = getNumber(n) + ":" + getNumber(min) + ":" + getNumber(seconds)
 end sub
 
+' Function to get hour , minutes and seconds for videos
 function getNumber(h as integer) as string
     if h = 0
         return "00"
@@ -1281,6 +1308,7 @@ function getNumber(h as integer) as string
     end if
 end function
 
+' Function to show and hide the visibility progress bar
 sub hideAndShow(isV as boolean)
     m.time = 0
     if m.video.state = "playing"
@@ -1288,6 +1316,7 @@ sub hideAndShow(isV as boolean)
     end if
 end sub
 
+' Function to add timer to update progress bar in video screen
 sub timer1()
     m.timer = CreateObject("roSgnode", "Timer")
     m.timer.observeField("fire", "seekbarUpdate")
@@ -1296,6 +1325,7 @@ sub timer1()
     m.timer.control = "start"
 end sub
 
+' Function to update progress bar in video screen
 sub seekbarUpdate()
     m.time = m.time + 1
     if m.time = 5
@@ -1306,6 +1336,7 @@ sub seekbarUpdate()
     forSeekBar()
 end sub
 
+' Function calls when user get any error in video screen
 function videoerror()
     closeErrorDialogShow(m.top)
     closeRelatedchnnelView()
@@ -1319,6 +1350,7 @@ function videoerror()
     m.timeGride.setFocus(true)
 end function
 
+' Function calls when video position change
 sub onPositionChange()
     if m.video.duration > 0 then
 
@@ -1351,6 +1383,7 @@ sub RestartLazyLoadingTimer()
     m.lazyLoadingTimer.control = "start"
 end sub
 
+' Function calls when program gets focused in timegrid
 sub channelFocused(event as object)
     if m.timeGride.content <> invalid
         if m.timeGride.content.getChild(m.timeGride.channelFocused) <> invalid
@@ -1446,7 +1479,7 @@ sub recentChannelAPIResponse(event as object)
     m.channelListData = m.recentChannelList.Count()
     if m.recentChannelList.Count() = 1
         m.timeGride.numRows = 3
-    ?"recent data"
+        ?"recent data"
 
     else if m.recentChannelList.Count() = 0
         m.timegridMessage.visible = true
@@ -1508,6 +1541,7 @@ sub myChannelAPIResponse(event as object)
     m.ChannelCategoryMarkuGrid.setFocus(true)
 end sub
 
+' This method return list of recent channels
 sub makeListOFRecentChannel()
     ' m.timeGride.visible = false
     for each channel in m.channelList
@@ -1530,6 +1564,7 @@ sub makeListOFRecentChannel()
     end for
 end sub
 
+' THis method return list of mychannels
 sub makeListMyChannel()
     for each channel in m.channelList
         for each myChannel in m.myChannelList
@@ -1551,6 +1586,7 @@ sub makeListMyChannel()
     end for
 end sub
 
+' THis method is used to add programs with the respective channels in timegrid
 sub CategoriesChannelList()
     m.timegridMessage.visible = false
     m.epg_des_layout_group.visible = true
@@ -1646,6 +1682,7 @@ sub reqApiCAll()
     m.ChannelEpisodeTask.control = "RUN"
 end sub
 
+' THis function is used to play deeplinking video
 sub playVideoFromDeepLinking (node as dynamic)
     closeRelatedchnnelView()
     playVideo(node)
@@ -1685,6 +1722,7 @@ function errorDialogShow(event as object)
 
 end function
 
+' THis function is used to show session expired dialog
 function errorDialogSession(event as object)
     ?"errorDialogShow: ";event.getData()
 
@@ -1705,6 +1743,7 @@ function errorDialogSession(event as object)
 
 end function
 
+' Function to get all data related to channels
 sub reqApiSession()
     m.ChannelEpisodeTask = CreateObject("roSGNode", "ChannelEpisodeTask")
     m.ChannelEpisodeTask.observeField("errorMessage", "errorDialogSession")
@@ -1719,6 +1758,7 @@ sub showLoginPage(event as object)
     m.top.ExitView = true
 end sub
 
+' Function to call Login screen
 function showLogin1Screen() as object
     ? "showLoginScreen"
     if m.screen <> invalid then m.top.removeChild(m.screen)
@@ -2031,53 +2071,6 @@ sub categorySelcted(event as object)
     m.PosterIconLabel.text = "Live"
     m.PosterIconLabel.translation = [35, 2]
 
-    ' t = currentTime.AsSeconds()
-    ' t = t - (t mod 1800) ' RDE-2665 - TimeGrid works best when contentStartTime is set to a 30m mark
-
-    ' datetime = CreateObject("roDateTime")
-    ' datetime.FromSeconds(m.timeGride.contentStartTime)
-
-    ' currentdate = (datetime.GetDayOfMonth() + 1).ToStr()
-
-    ' if datetime.GetHours() > 12 and datetime.GetHours() < 23 and datetime.GetMinutes() < 59
-    '     if currentTime.GetDayOfMonth().ToStr() = currentdate
-
-    '         m.timeGride.leftEdgeTargetTime = t
-    '         m.timeGride.maxDays = 2
-
-    '         m.timeGride.setFields({
-    '             showPastTimeScreen: true
-    '             channelInfoComponentName: "ChannelItemComponent"
-    '         })
-    '         m.PosterliveIcon.setFocus(false)
-    '         m.timeGride.setFocus(true)
-    '     else
-    '         m.timeGride.leftEdgeTargetTime = t
-    '         m.timeGride.maxDays = 2
-    '         m.timeGride.setFields({
-    '             showPastTimeScreen: true
-    '             channelInfoComponentName: "ChannelItemComponent"
-    '         })
-    '         m.PosterliveIcon.setFocus(false)
-    '         m.timeGride.setFocus(true)
-    '     end if
-    ' else
-
-    '     if currentTime.GetDayOfMonth().ToStr() = currentdate
-    '         m.timeGride.leftEdgeTargetTime = t
-    '         m.timeGride.maxDays = 2
-
-    '         m.timeGride.setFields({
-    '             showPastTimeScreen: true
-    '             channelInfoComponentName: "ChannelItemComponent"
-    '         })
-    '         m.PosterliveIcon.setFocus(false)
-    '         m.timeGride.setFocus(true)
-    '     else
-    '         m.screen = showHomeScreen()
-    '         m.screen.observeField("ExitView", "openLoginView")
-    '     end if
-    ' end if
     RegWrite("selected", "selected")
 
     m.highlight = event.getRoSGNode().content.getChild(event.getData())
@@ -2623,6 +2616,7 @@ function unique(arr as object)
     return res
 end function
 
+' Function for sidebar present in video screen
 sub channel_drawyer()
     ?"LoadVideo_id()[i] channel"i
     for i = 0 to LoadVideo_id_drawyer().count() - 1
@@ -2636,6 +2630,7 @@ sub channel_drawyer()
     end for
 end sub
 
+' Function return api response for sidebar menu present in video screen
 sub allChannelApiResponse(event as object)
     if(event.getData().success = true and event.getData().response_code = 200)
         m.AllChannelApiResponse = event.getData()
@@ -2697,6 +2692,7 @@ sub VideoControl(event as object)
     video = event.getRoSGNode()
 end sub
 
+' Function to close search screen and back to home screen
 sub closeSearchScreen(event as object)
     ? "closeSearchScreen; "
     searchScreen = event.getRoSGNode()
@@ -2718,7 +2714,7 @@ sub closeSearchScreen(event as object)
     end if
 end sub
 
-
+' Function to close profile screen and back to home screen
 sub closeProfileScreen(event as object)
     if getProfilescreen() = "login_screen"
         setLogin("login")
@@ -2735,7 +2731,7 @@ sub closeProfileScreen(event as object)
     end if
 end sub
 
-
+' Function to play video of selected channel from search screen
 sub playSearchChannelUrl(event as object)
     ? "playSearchChannelUrl:"; event.getData()
     showDialogDevice("", false, false, "")
@@ -2752,6 +2748,7 @@ sub playSearchChannelUrl(event as object)
     playVideo(event.getData())
 end sub
 
+' Function to close side bar present in video screen
 sub closeRelatedchnnelView()
     ?"closeRelatedchnnelView"
     if m.fire = false
@@ -2769,6 +2766,7 @@ sub closeRelatedchnnelView()
     m.navtoRelatedCHannels.setFocus(true)
 end sub
 
+' Function to show home screen
 function showHomeScreen() as object
     ? "showHomeScreen"
     if m.screen <> invalid then m.top.removeChild(m.screen)
@@ -3028,7 +3026,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
                 m.PosterIconLabel.translation = [35, 2]
             end if
-            
+
             m.PosterliveIcon.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(true)
             m.video.setFocus(false)
@@ -3073,7 +3071,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
                 m.PosterIconLabel.translation = [35, 2]
             end if
-            
+
             m.PosterliveIcon.setFocus(false)
             m.ChannelCategoryMarkuGrid.setFocus(false)
             m.video.setFocus(false)
@@ -3208,6 +3206,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
     return result
 end function
 
+' Function to close player and back to home screen
 sub closePlayer()
     m.controllers.visible = false
     ?"close player:";m.video.control
@@ -3233,6 +3232,7 @@ sub closePlayer()
     m.timeGride.setFocus(true)
 end sub
 
+' Function to get timezone from device current time
 function GetDurationStringStandard(TotalSeconds = 0 as integer) as string
     datetime = CreateObject("roDateTime")
     datetime.FromSeconds(TotalSeconds)
@@ -3256,7 +3256,7 @@ function GetDurationStringStandard(TotalSeconds = 0 as integer) as string
     end if
 end function
 
-
+' Function to get timezone from device current time in AMPM
 function getDurationIn12HrFormate(TotalSeconds = 0 as integer) as string
     datetime = CreateObject("roDateTime")
     datetime.FromSeconds(TotalSeconds)
