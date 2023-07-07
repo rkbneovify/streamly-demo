@@ -1,4 +1,4 @@
-title=Streamly
+title=Streamly 
 major_version=2
 minor_version=10
 build_version=0
@@ -12,7 +12,7 @@ splash_color=#121212
 ui_resolutions=FHD
 splash_rsg_optimization=1
 host=192.168.43.172
-port=54321
+port=54321 
 requires_widevine_drm=1
 requires_widevine_version=1.0
 supports_input_launch=1
