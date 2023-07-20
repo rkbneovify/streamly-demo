@@ -1,7 +1,8 @@
 <?php 
 use Laravel\Cashier\Cashier;
 use Carbon\Carbon;
-$plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal']; 
+// $plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal']; 
+$plandetailsFirst=$plandetails->tiers[0]['flat_amount_decimal']; 
 
   $interval = $plandetails->interval;
   $interval_count = $plandetails->interval_count;
@@ -154,12 +155,21 @@ $plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal'];
         <div class="text-center">
             <h2 class="section-heading">Add Your Billing Details</h2>
 
-            @if(auth()->user()->subscribed('main'))
+			@if(auth()->user()->subscription('main')->trial_ends_at)
+												<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
+												<p class="font-bold mb-2">Thanks for Subscribing!</p>
+													<p>Your FREE TRIAL PERIOD is now active for tier user plan.</p>
+													<p>The trial period will end on {{ auth()->user()->subscription('main')->trial_ends_at }}</p>
+													<p>After the trial period ends, your credit card will be billed the monthly subscription amount.</p>
+																				<p>You may now start watching StreamlyTV by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
+																				<p>You can also view on a web browser by visiting {{env('FRONTEND_URL')}}, login, and following the link to the Channel Guide in the menu at the top.</p>
+												</div>
+            @elseif(auth()->user()->subscribed('main'))
 			<div class="my-auto" style="width: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
                        
 			<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
                             <p class="font-bold mb-2">Thanks for Subscribing!</p>
-                            <p>Your subscription is now active.</p>
+                            <p>Your tier user subscription is now active.</p>
                             <p>Start watching StreamlyTV right here by visiting the link to the Channel Guide above, 
 
 or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
@@ -181,7 +191,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 									<span  class="totalprice3">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}
 									</span>  per device/ per month</div>
 								<div class="col-4"><button class="increment-btn  increment-subtract     " disabled> - </button>
-									<input type="number" class="quantity-input  text-center" style="width:30%;" id="quantity-input-premium" min="1" value="1" />
+									<input type="number" class="quantity-input  text-center" style="width:30%;" id="quantity-input-premium" min="50" value="50" />
 									<button class="increment-btn  increment-add     "> + </button>
 									</div>
 								<hr>
@@ -193,7 +203,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 								</div>
 								<div class="col-6">
 
-								<span class='devicequantity'>1</span> X device(s) 
+								<span class='devicequantity'>50</span> X device(s) 
 								
 										<div class='form-group cvc required'>
 											{{-- <label class='control-label'>Coupon Code</label> --}}
@@ -260,7 +270,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
                     </div>
                 </div>
 				<div class="col-md-8">
-				<div class="my-auto" style="height: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
+				<div class="my-auto" style="height: 90%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
                         <div class="container">
                             <div class="row" style="padding-top: 2rem;margin-left: 2rem;margin-right: 2rem;">
                                 <div class="col-md-4" style="padding: 2rem;background: #FFFFFF 0% 0% no-repeat padding-box;border: 1px solid #004E92;border-radius: 4px;"> <img src="{{ asset('frontend/img/noun_credit_card.svg') }}"> <span style="display: block;">Credit Card</span> </div>
@@ -349,7 +359,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 								<!-- Stripe Elements Placeholder -->
 								<div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
 								<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
-								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span class='devicequantity'>1</span> device</div>
+								<div class='form-group'><span><strong>Final amount</strong> </span> <span  id="totalprice2">{{Cashier::formatAmount($plandetailsFirst??'0', $plandetails->currency??'USD')}}</span> for <span class='devicequantity'>50</span> device</div>
 						</div> @if (empty($frontendjson['billingdetailspage'])) <span class="remove-p-a-r">
 													you will be charged ${{$plandetails->amount/100}}/ {{$plandetails->interval_count}} {{$plandetails->interval}} plus applicable taxes on a recurring basis. If you do not cancel a service during its free trial period, you will be charged. Your subscription will continue until you cancel. To cancel, login to your streamly account and follow the instructions. By selecting 'SUBMIT,' you agree to the above terms.
 												</span> @else <span class="remove-p-a-r">
@@ -359,12 +369,12 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
 							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> 
-								@if($plandetails->trial_period_days)
-								<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
-								@else
-								<span style="width: 100%;">SUBMIT</span>
-								@endif	
-							</button>
+							@if($plandetails->trial_period_days)
+										<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
+										@else
+										<span style="width: 100%;">SUBMIT</span>
+										@endif
+						</button>
 						</div> {!! csrf_field() !!} </form>
                         
                     </div>
@@ -498,8 +508,8 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 		}
 	});
 });
-const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
-// console.log(stripe);
+const stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
+// console.log(stripe3);
 const elements = stripe.elements();
 const cardElement = elements.create('card', {
 	hidePostalCode: true

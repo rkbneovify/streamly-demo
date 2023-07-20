@@ -155,12 +155,15 @@ $Genrekey=$pagechannel->keys();
         $user = auth()->user();
         $trial_days=$request->trial_days;
         // dump($request->tier);
-        // dump($request->quantity);
+        // dd($request->tier);
+        // die();
         // dump($request->tiers_modes);volumegraduated
         // dump($request->billing_scheme);per_unit tiered
         // dump($request->quantity);
         if($StripeplanId == 't3MAAaea8LOa'){
             $quantity= 10;
+        }elseif($request->tier == 'tiered' && $request->quantity == null){
+            $quantity= 50;
         }else{
             $quantity=$request->quantity??1;
         }

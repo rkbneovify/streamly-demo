@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Models\Channel;
 use App\Models\Gracenotechannel;
+use Illuminate\Support\Facades\DB;
 use App\Models\Subscription;
 class AdminController extends Controller
 {
@@ -27,11 +28,16 @@ class AdminController extends Controller
      */
     public function index()
     {
+      $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
       $Activeusers = User::where([
         ['is_active', '=', '1'],
+        ['mode', '=', $mode],
          ])->count();
          $channel=Gracenotechannel::count();
          $Subscription=Subscription::count();
+         $Subscription = Subscription::with('user')->whereHas('user', function ($query) use ($mode) {
+          $query->where('mode', $mode);
+         })->count();
          $Links = Channel::where([
           ['status', '=', '1'],
            ])->count();

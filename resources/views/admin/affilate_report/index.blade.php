@@ -43,23 +43,38 @@
               </tr>
             </thead>
             <tbody> 
-              @foreach ($affiliate as $key => $aff)
-                @php ( $subscription = \Stripe\Subscription::retrieve($aff->stripe_subscription_id))
-                @php ($invoices_id = $subscription->latest_invoice)
-                @php ($invoices_retrive = \Stripe\Invoice::retrieve($invoices_id))
-                @php ($plans_name = $invoices_retrive->lines->data[0]->plan->nickname)
-                @php ($amount = $invoices_retrive->subtotal)
-                <tr>
-                  <td>{{ ++$key }}</td>
-                  <td>{{ $aff->name }}</td>
-                  <td>{{ $aff->email }}</td>
-                  <td>{{ $plans_name }}</td>
-                  <td>${{ $amount/100 }}</td>
-                  <td>{{ $aff->affiliate_source }}</td>
-                  <td>{{ date('Y-m-d h:i:s', $aff->create_date)}}</td>
-                  <td><button class="btn btn-primary">Pay</button></td>
-                </tr>
-              @endforeach
+            @foreach ($affiliate as $key => $aff)
+    @php
+        try {
+            $subscription = \Stripe\Subscription::retrieve($aff->stripe_subscription_id);
+            $invoices_id = $subscription->latest_invoice;
+            $invoices_retrive = \Stripe\Invoice::retrieve($invoices_id);
+            $plans_name = $invoices_retrive->lines->data[0]->plan->nickname;
+            $amount = $invoices_retrive->subtotal;
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Handle the exception here
+            // For example, you can log the error or display a message to the user
+            $plans_name = 'N/A';
+            $amount = 'N/A';
+        }
+    @endphp
+    <tr>
+        <td>{{ ++$key }}</td>
+        <td>{{ $aff->name }}</td>
+        <td>{{ $aff->email }}</td>
+        <td>{{ $plans_name }}</td>
+        <td>
+            @if (is_numeric($amount))
+                ${{ $amount/100 }}
+            @else
+                N/A
+            @endif
+        </td>
+        <td>{{ $aff->affiliate_source }}</td>
+        <td>{{ date('Y-m-d h:i:s', $aff->create_date)}}</td>
+        <td><button class="btn btn-primary">Pay</button></td>
+    </tr>
+@endforeach
             </tbody>
           </table>
         </div>      
