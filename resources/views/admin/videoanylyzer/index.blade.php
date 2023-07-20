@@ -38,7 +38,8 @@
               <i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="card-body p-0">
+        <!-- <div class="card-body p-0"> -->
+        <div class="table-responsive">
 <table class="table table-striped projects">
   <thead>
       <tr>
