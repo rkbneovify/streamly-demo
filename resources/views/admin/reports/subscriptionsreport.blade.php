@@ -569,9 +569,9 @@ function myFunctionSort() {
   var input = document.getElementById("myInputsort");
   //console.log(input.value);
   if(input.value == 'asc'){
-    window.location = "/admin/report/transactionreport/ASC"
+    window.location = "/admin/report/subscriptionsreport/ASC"
   }else{
-    window.location = "/admin/report/transactionreport/DESC"
+    window.location = "/admin/report/subscriptionsreport/DESC"
   }
 }
 function funcSearch(){

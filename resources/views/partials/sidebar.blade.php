@@ -174,7 +174,8 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Allowed Zipcode</p>
                 </a>
-              </li><li class="nav-item {{ (request()->is('admin/zipcode/map')) ? 'activeElement' : '' }}">
+              </li>
+              <!-- <li class="nav-item {{ (request()->is('admin/zipcode/map')) ? 'activeElement' : '' }}">
                 <a href=" {{ url('/admin/zipcode/map') }}" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Allowed Zipcode on map</p>
@@ -185,7 +186,7 @@
                       <i class="far fa-circle nav-icon"></i>
                       <p>Check coordinate on map</p>
                     </a>
-                  </li>
+                  </li> -->
             </ul>
             <li class="nav-item has-treeview {{ (request()->is('admin/report/usersdetails')) ? 'menu-open' : '' }}{{ (request()->is('admin/report/zipcode')) ? 'menu-open' : '' }}{{ (request()->is('admin/report/subscriptionsreport/DESC')) ? 'menu-open' : '' }}{{ (request()->is('admin/report/transactionsreport')) ? 'menu-open' : '' }}{{ (request()->is('admin/report/demographic')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">

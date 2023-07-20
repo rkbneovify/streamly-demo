@@ -149,7 +149,6 @@ class Setting extends Controller
          ])->orderBy('connected_devices', 'asc')->get();
          $currentMonth = date('m');
          $subscription=Auth::user()->subscriptions()->first();
-        //  dd($subscription);
         //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
         //  dd($status);
          if(!$userinfo->subscribed('main')){
@@ -168,7 +167,11 @@ class Setting extends Controller
             // ch_1HSfl3LqTwOy7LECVmOdkimy
         //  dd($invoices);
          }
+         if($subscription){
          $renewaldatetime = $this->getRenewalDateTime($subscription, $userinfo);
+         }else{
+            $renewaldatetime = '';
+         }
          
          $allCards = getAllCards($userinfo);
          
@@ -192,7 +195,7 @@ curl_close($curl);
 
 $slideUpdate = DB::table('customer_card')->select('payment_method','default_value')->where('customer_id', $userinfo->stripe_id)->get();
 $allCards = []; 
-if($allCards){
+if($subscription){
 foreach ($allCard->data as $cards) {
     // dd($cards);
     // die();

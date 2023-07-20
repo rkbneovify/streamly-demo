@@ -39,7 +39,10 @@ class SubscriptionController extends Controller
      */
     public function index()
     {    
-        $subscriptions = Subscription::with('user')->get();
+        $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+        $subscriptions = Subscription::with('user')->whereHas('user', function ($query) use ($mode) {
+            $query->where('mode', $mode);
+           })->get();
          $availablePlanidinDB=$subscriptions->pluck('stripe_plan')->unique();
         $plans = \Stripe\Plan::all();
         // dd($plans);
