@@ -312,6 +312,152 @@ $numofdevice=$prevConnectDevicecount->count();
 
 }
 
+function checkHoteluserLoginLimit($user_id,$token,$deviceDetails){
+  $login_limit =  GetLimitForUser($user_id);
+//find all by user_id and and status=active
+$active_session = App\SessionTable::where([
+['status', '=', '1'],
+['users_id', '=', $user_id],
+])->get()->toArray();
+  //check if there's no entry by this used id
+  if ((count($active_session)==0)) {
+   //new entry of sessionTable
+   hotelusersessionTable($user_id,$token,$deviceDetails,$connected_devices=1);
+} else if (count($active_session) > 0 && count($active_session) < $login_limit) {
+    //check if device id is same
+    if(hoteluserduplicateDeviceId($user_id,$deviceDetails)==false){
+   //new entry of sessionTable
+   //and get the number of last connected device
+   $prevConnectDevicecount = App\SessionTable::select('connected_devices')
+    ->where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+     ])->orderBy('connected_devices', 'desc')
+     ->first();
+     
+  $device=number_format($prevConnectDevicecount['connected_devices']); 
+  //the number of device previously connected + 1
+  hotelusersessionTable($user_id,$token,$deviceDetails,$connected_devices=$device+1);
+  }
+
+} //after iteration we check if the count of logins is still greater than the limit
+if (count($active_session) >= $login_limit) {
+
+  $userEmailID = $user_id;
+   $uid = $userEmailID;
+   $user= User::find($uid);
+
+   //and get the number of last connected device
+   $userRole=  $user->roles->first()->name;
+   
+   if($userRole=='tieruser'){
+   $prevConnectDevicecount = SessionTable::with(['hotel:id,hotel_room,session_id','pdname'=> function($q) use($uid) {
+       // Query the name field in status table
+       $q->select('id','personal_devicename','device_id','user_id')->where('user_id', '=', $uid);
+   }])
+   ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+   ->where([
+   ['status', '=', '1'],
+   ['users_id', '=', $uid],
+    ])->orderBy('connected_devices', 'asc');
+   $s='';
+   $numofdevice='';
+$s=$prevConnectDevicecount->get()->makeHidden('pdname')
+->map(function ($address)  {
+   
+   $address['session_id'] = HashUserID($address['id']);
+   if(is_null($address->hotel)){
+       $address['hotel_room'] = null;
+   }else{
+       $address['hotel_room'] = $address->hotel->hotel_room;
+
+
+   }
+
+   $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+   $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+   unset($address['hotel']);
+   unset($address['device']);
+   unset($address['id']);
+   unset($address['pdname']);
+  
+     return $address;
+               
+               });
+           }else{
+               $prevConnectDevicecount = SessionTable::with(['pdname'=> function($q) use($uid) {
+                   // Query the name field in status table
+                       $q->select('id','personal_devicename','device_id','user_id')
+                       ->where('user_id', '=', $uid); 
+               }])
+               ->where([
+               ['status', '=', '1'],
+               ['users_id', '=', $uid],
+               ])
+               ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+               ->orderBy('connected_devices', 'asc');
+   $s='';
+   $numofdevice='';
+   $s=$prevConnectDevicecount->get()->makeHidden('pdname')
+   ->map(function ($address)  {
+   
+   $address['session_id'] = HashUserID($address['id']);
+
+   $address['personaldevicename']=$address->pdname?$address->pdname->personal_devicename:$address['device']['personaldevicename']??'empty';
+   $address['personaldeviceid'] = HashUserID($address->pdname?$address->pdname->id:$address['id']);
+   unset($address->pdname);
+   unset($address['device']);
+   unset($address['id']);
+     return $address;
+               
+               });
+
+           }
+$numofdevice=$prevConnectDevicecount->count();
+
+//  dd($s);
+    $response = array('numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
+    //return response()->json($response, 200);
+
+  
+  return response()->json([
+      'success' => false,
+      'response_code'=>479,
+      'logindevicelimit' => $login_limit,
+      'message'=>'Your hotel user account is in use on '.$login_limit .' devices. please stop playing on other devices to continue',
+      'loggedindeviceinfolist'=>$response,
+    ],479)->send();
+
+}
+
+}
+
+function hotelusersessionTable($user_id,$token,$deviceDetails,$connected_devices){
+    $userInfo = JWTAuth::setToken($token)->toUser();
+    $user= User::find($user_id);
+    $id= Auth::user()->id;
+      
+    $passcode = HashUserID($id);
+  
+   $Saved=sessionTableStore($user_id,$token,$deviceDetails,$connected_devices);
+   $personal_device_data = personaldeviceTableStore($user_id,$deviceDetails);
+ 
+    if($Saved['result'] && $personal_device_data['result']){
+    
+      return response()->json([
+    
+        'success' => true,
+        'message'=>'logged in successfully ',
+        'response_code'=>200,
+        // 'sessionid'=>HashUserID($Saved['LastInsertId']),
+        // 'personaldeviceid'=>HashUserID($personal_device_data['lastDeviceId']),
+        'device_type'=>'non-web',
+        // 'personaldevicename_popup'=>$personal_device_data['show_popup'],
+        'passcode'=> $passcode,   
+      ],200)->send();}
+  
+}
+
 function automaticLogoutWithInterval($user_id){
   $login_limit = 5;
   //find all by user_id and and status=active
@@ -767,6 +913,7 @@ function duplicateDeviceId($user_id,$deviceDetails){
     ['users_id', '=', $user_id],
     ['mac_address', '=', $deviceDetails],
   ]);
+
   if ($checkDeviceDetails->exists()) {
       $explodedstring= explode("#~",$deviceDetails);
        return response()->json([
@@ -778,6 +925,30 @@ function duplicateDeviceId($user_id,$deviceDetails){
         'access_token'=>$checkDeviceDetails->get('access_token')[0]->access_token
         //'loggedindeviceinfointheseId'=>$myarr,
       ],429)->send();
+    // exists
+} else{
+  return false;
+}
+}
+
+function hoteluserduplicateDeviceId($user_id,$deviceDetails){
+  $checkDeviceDetails=App\SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $user_id],
+    ['mac_address', '=', $deviceDetails],
+  ]);
+  $id= Auth::user()->id;
+      
+  $passcode = HashUserID($id);
+  if ($checkDeviceDetails->exists()) {
+      $explodedstring= explode("#~",$deviceDetails);
+       return response()->json([
+        'success' => true,
+        "message"=> "logged in successfully ",
+        'response_code'=>200,
+        "device_type" => "non-web",
+        'passcode' => $passcode,
+      ],200)->send();
     // exists
 } else{
   return false;
