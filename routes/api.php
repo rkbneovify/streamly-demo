@@ -46,6 +46,7 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 Route::group(['prefix' => 'auth'], function ($router) {
     
     Route::post('login', 'Auth\AuthController@login');
+    Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
     Route::post('authtokenrefresh', 'Auth\AuthController@authRefesh');

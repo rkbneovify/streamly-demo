@@ -173,7 +173,7 @@ class Setting extends Controller
             $renewaldatetime = '';
          }
          
-         $allCards = getAllCards($userinfo);
+        // $allCards = getAllCards($userinfo);
          
 $curl = curl_init();
 
