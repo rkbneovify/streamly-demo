@@ -197,6 +197,7 @@ end sub
 
 ' creating a function for All Channel Api call response
 sub allChannelApiResponse(event as object)
+
   ' response success type
   ' {
   ' "success": true,
@@ -211,6 +212,10 @@ sub allChannelApiResponse(event as object)
   '     ],
   '     "logo": "http://127.0.0.1:8000/uploads/channellogo/CNBC.png"
   '   }]
+  videoIdInt = getVideoid1().toInt()
+  videoIds = LoadVideo_id()
+
+
   ?"all Channel Data -> ": event.getData()
   if(event.getData().success = true and event.getData().response_code = 200)
     m.AllChannelApiResponse = event.getData()
@@ -246,9 +251,9 @@ sub allChannelApiResponse(event as object)
   end if
   m.spinner.visible = false
 
-   for i = 0 to LoadVideo_id().count() - 1
-    ?"getVideoid().toInt() "getVideoid1().toInt()
-      if LoadVideo_id()[i] = getVideoid1().toInt() then
+   for i = 0 to videoIds.count() - 1
+    ?"getVideoid().toInt() "videoIdInt
+      if videoIds[i] = videoIdInt then
         ?"LoadVideo_id()[i] search channel"i
         setsearch_channel_num(i.toStr())
         m.ChannelsMarkuGrid.jumpToItem = i

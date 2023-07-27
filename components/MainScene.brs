@@ -212,10 +212,11 @@ sub setHomeScreenAccordingMode() as object
     if m.launcScreenMode <> invalid
 
         if m.launcScreenMode = "Home"
-            if getLogin() = "login"
-                ' deleteLogin()
-                return openLoginView()
-            else if getSettingMode() = "setting"
+            ' if getLogin() = "login"
+            '     deleteLogin()
+            '     return openLoginView()
+            ' else
+            if getSettingMode() = "setting"
                 ?"get setting"
                 return openSettingView()
             else

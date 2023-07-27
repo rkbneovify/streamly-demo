@@ -1,10 +1,10 @@
 sub init()
 
   m.ProfileCategory = m.top.findNode("ProfileCategory")
- 
-    
-    deleteRegister()
- 
+
+
+  deleteRegister()
+
   '  m.Dialog = m.top.findNode("Dialog")
   ' m.ProfileSettingScreen = CreateObject("roSGNode", "ProfileSettingScreen")
 
@@ -38,24 +38,24 @@ sub init()
 
   m.remenberCheckList = m.top.findNode("rememberCheckList")
   m.simple3 = m.top.findNode("simple3")
-    m.remenberCheckList.translation = [650,660]
-    ' m.remenberCheckList.itemSize = [250, 10]
-    m.remenberCheckList.checkedIconUri = "pkg:/images/toggleon.png"
-    m.remenberCheckList.uncheckedIconUri = "pkg:/images/toggleoff1.png"
-    m.remenberCheckList.focusedCheckedIconUri = "pkg:/images/toggleon.png"
-    m.remenberCheckList.focusedUncheckedIconUri = "pkg:/images/toggleoff1.png"
-    m.remenberCheckList.focusBitmapUri = ""
-    m.remenberCheckList.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
-    m.remenberCheckList.color = "#ffffff"
-    m.remenberCheckList.focusedColor = "#0db5ba"
-    m.simple3.Font = getFont(32, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
-    m.simple3.focusedFont = getFont(34, "pkg:/fonts/Helvetica-Neue-Bold_22503.ttf")
-    
-    checklistNode = CreateObject("roSGNode", "ContentNode")
-    contentNode = checklistNode.createChild("ContentNode")
-    ' contentNode.Title = "Help View"
-    m.remenberCheckList.content = checklistNode
-    m.remenberCheckList.ObserveField("checkedState", "checkUpdate")
+  m.remenberCheckList.translation = [650, 660]
+  ' m.remenberCheckList.itemSize = [250, 10]
+  m.remenberCheckList.checkedIconUri = "pkg:/images/toggleon.png"
+  m.remenberCheckList.uncheckedIconUri = "pkg:/images/toggleoff1.png"
+  m.remenberCheckList.focusedCheckedIconUri = "pkg:/images/toggleon.png"
+  m.remenberCheckList.focusedUncheckedIconUri = "pkg:/images/toggleoff1.png"
+  m.remenberCheckList.focusBitmapUri = ""
+  m.remenberCheckList.focusFootprintBitmapUri = "pkg:/images/transparentimg.png"
+  m.remenberCheckList.color = "#ffffff"
+  m.remenberCheckList.focusedColor = "#0db5ba"
+  m.simple3.Font = getFont(32, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
+  m.simple3.focusedFont = getFont(34, "pkg:/fonts/Helvetica-Neue-Bold_22503.ttf")
+
+  checklistNode = CreateObject("roSGNode", "ContentNode")
+  contentNode = checklistNode.createChild("ContentNode")
+  ' contentNode.Title = "Help View"
+  m.remenberCheckList.content = checklistNode
+  m.remenberCheckList.ObserveField("checkedState", "checkUpdate")
 
   font = getFont(36, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
   m.Lbaelok.font = font
@@ -73,8 +73,8 @@ sub init()
 
   'Search Keyboard
   m.KeyboardPosterDevice = m.top.findNode("KeyboardPosterDevice")
-    m.KeyboardInputDevice = m.top.findNode("KeyboardInputDevice")
-    m.KeyboardInputDevice.observeField("text", "FieldText")
+  m.KeyboardInputDevice = m.top.findNode("KeyboardInputDevice")
+  m.KeyboardInputDevice.observeField("text", "FieldText")
 
 
   '  dialog error
@@ -168,7 +168,7 @@ sub qrLogResponse()
   ' data2.id = "foo"
   data.SDPosterUrl = "pkg:/images/profile/devicesicon.png"
   ?"hello2"
- 
+
 
 
 
@@ -179,7 +179,7 @@ sub qrLogResponse()
   data = marupContent.createChild("ContentNode")
   data.text = "Privacy & Policy"
   data.SDPosterUrl = "pkg:/images/profile/privicypolicyicon.png"
-  
+
 
   data = marupContent.createChild("ContentNode")
   data.text = "Sign out"
@@ -199,10 +199,10 @@ sub checkUpdate(event as object)
   ? "checkUpdate: "; event.getData()[0]
   m.rememberFlag = event.getData()[0]
   if event.getData()[0] = true
-      setHelpMode("true")
-      deleteCheckMode()
-  else 
-      setHelpMode("false")
+    setHelpMode("true")
+    deleteCheckMode()
+  else
+    setHelpMode("false")
   end if
 end sub
 
@@ -253,8 +253,8 @@ end sub
 
 sub DeleteResponse()
   ? "openLoginView"
-  
-    m.screen = showLogin1Screen()
+
+  m.screen = showLogin1Screen()
 end sub
 
 sub logoutApiCall()
@@ -327,66 +327,66 @@ end sub
 sub FieldText(event as object)
   ? "event: "; event.getData()
   if m.TextField = "searchDevice"
-      ? "event: "; event.getData()
-      m.deviceSearchEditText.text = event.getData()
-      m.deviceSearchEditText.active = true
-      m.deviceSearchEditText.cursorPosition = m.KeyboardInputDevice.textEditBox.cursorPosition + 1
-      SearchDevice(event.getData())
+    ? "event: "; event.getData()
+    m.deviceSearchEditText.text = event.getData()
+    m.deviceSearchEditText.active = true
+    m.deviceSearchEditText.cursorPosition = m.KeyboardInputDevice.textEditBox.cursorPosition + 1
+    SearchDevice(event.getData())
   end if
 end sub
 
 sub SearchDevice(searchName as string)
 
 
-    ? "responseData profile: ";m.responseData.data
-      ' showDialogDevice("LoginError", true, false)
-      ConnectedDevices0 = m.responseData.numofdevice
-      ConnectedDevices = m.responseData.data
-      
-      marupContent = createObject("roSGNode", "ContentNode")
-      for each data in ConnectedDevices
-          ' ?"data: "data.session_id
-          ' ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
-          m.device_name = data["device_name"]
-          m.device_type = data["device_type"]
-          if(data["personaldevicename"] <> invalid)
-            m.device_name_per = data["personaldevicename"]
-          else
-            m.device_name_per = "unknown"
-          end if
-          if(data["hotel_room"] <> invalid)
-            m.room_number = data["hotel_room"]
-          else
-            m.room_number = "unknown"
-          end if
-          ?"m.device_name "Lcase(m.device_name)
-          ?"m.device_name_per " ; data
+  ? "responseData profile: ";m.responseData.data
+  ' showDialogDevice("LoginError", true, false)
+  ConnectedDevices0 = m.responseData.numofdevice
+  ConnectedDevices = m.responseData.data
 
-          if (Instr(1, Lcase(m.device_name_per), searchName) > 0 or Instr(1, Lcase(m.device_type), searchName) or Instr(1, Lcase(m.room_number), searchName))
-              marupContent.createChild("ContentNode").addFields(data)
-              ' roomDetail.addFields(itemKey)
-          end if
-          ' marupContent.createChild("ContentNode").addFields(data)
-      end for
-      m.deviceSearchEditText.active = true
-          m.KeyboardPosterDevice.visible = true
-          m.KeyboardInputDevice.setFocus(true)
-          m.KeyboardInputDevice.textEditBox.text = m.deviceSearchEditText.text
-          m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
-          m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
-          m.TextField = "searchDevice"
-      ' m.registredDevicesMarkup.setFocus(true)
-      m.registredDevicesMarkup.visible = true
-      m.registredDevicesMarkup.content = marupContent
-      m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
-      ' showDevice("Registered Devices", true, false)
+  marupContent = createObject("roSGNode", "ContentNode")
+  for each data in ConnectedDevices
+    ' ?"data: "data.session_id
+    ' ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
+    m.device_name = data["device_name"]
+    m.device_type = data["device_type"]
+    if(data["personaldevicename"] <> invalid)
+      m.device_name_per = data["personaldevicename"]
+    else
+      m.device_name_per = "unknown"
+    end if
+    if(data["hotel_room"] <> invalid)
+      m.room_number = data["hotel_room"]
+    else
+      m.room_number = "unknown"
+    end if
+    ?"m.device_name "Lcase(m.device_name)
+    ?"m.device_name_per " ; data
 
-      ' m.DeviceLogout.callType = "POST"
-      ' '   data =  "email="+email+"&password="+password+deviceid
-      ' ? "device: "; data
-      ' m.DeviceLogout.data = data
-      ' m.DeviceLogout.control = "RUN"
- 
+    if (Instr(1, Lcase(m.device_name_per), searchName) > 0 or Instr(1, Lcase(m.device_type), searchName) or Instr(1, Lcase(m.room_number), searchName))
+      marupContent.createChild("ContentNode").addFields(data)
+      ' roomDetail.addFields(itemKey)
+    end if
+    ' marupContent.createChild("ContentNode").addFields(data)
+  end for
+  m.deviceSearchEditText.active = true
+  m.KeyboardPosterDevice.visible = true
+  m.KeyboardInputDevice.setFocus(true)
+  m.KeyboardInputDevice.textEditBox.text = m.deviceSearchEditText.text
+  m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
+  m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
+  m.TextField = "searchDevice"
+  ' m.registredDevicesMarkup.setFocus(true)
+  m.registredDevicesMarkup.visible = true
+  m.registredDevicesMarkup.content = marupContent
+  m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+  ' showDevice("Registered Devices", true, false)
+
+  ' m.DeviceLogout.callType = "POST"
+  ' '   data =  "email="+email+"&password="+password+deviceid
+  ' ? "device: "; data
+  ' m.DeviceLogout.data = data
+  ' m.DeviceLogout.control = "RUN"
+
 end sub
 
 
@@ -459,7 +459,7 @@ sub ApiCallFor(callto as string, callType as string)
   '     m.ProfileTask.observeField("response","responseAPI")
   m.ProfileTask.control = "RUN" 'Run the task node
 
-end sub 
+end sub
 
 
 function errorDialogShow(event as object)
@@ -467,7 +467,7 @@ function errorDialogShow(event as object)
   m.logout = true
 
   if event.getData().responseCode = 429 or event.getData().responseCode = 404
-    ' event.getData().responseCode = 401 or 
+    ' event.getData().responseCode = 401 or
     ' m.DialogButton = popupDialog(m.top, "Error ", event.getData().Failure)
     m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
     m.DialogButton.observeField("buttonSelected", "showLoginScreen")
@@ -521,18 +521,22 @@ function closedilogScreen()
 
 end function
 
-function RemoveStringBeforeSlash(inputString as String) as String
+function RemoveStringBeforeSlash(inputString as string) as string
   stringArray = inputString.Split("/")
   if stringArray.Count() > 1 then
-      return stringArray[1]  ' Get the portion after the "/"
+    standard = stringArray[1].Split(" ") ' Get the portion after the "/"
+    if standard.Count() > 1 then
+      return standard[0]
+    end if
+    return stringArray[1]
   end if
-  return inputString  ' Return the original string if no "/" is found
+  return inputString ' Return the original string if no "/" is found
 end function
 
 sub responseAPI(event as object)
   m.responseData = event.getData()
   ?"ProfileScreen::responseAPI: event: ";m.responseData.data
-?"getHomeTimezone() "getHomeTimezone()
+  ?"getHomeTimezone() "getHomeTimezone()
   m.LoginBusySpinner.visible = false
   m.ProfileTask.control = "STOP"
   '  m.ProfileCategory.setFocus(true)
@@ -550,20 +554,21 @@ sub responseAPI(event as object)
         marupContent.createChild("ContentNode").addFields({ "Email:": userData.email.ToStr() })
       end if
       if userData.version <> invalid
-        marupContent.createChild("ContentNode").addFields({ "Version:": "2.10" })
+        marupContent.createChild("ContentNode").addFields({ "Version:": "2.13" })
       end if
 
       if userData.created <> invalid
         date = CreateObject("roDateTime")
         date.FromISO8601String(userData.created.ToStr())
         ' marupContent.createChild("ContentNode").addFields({ "Build Date:": date.AsDateString("short-date") })
-        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Wed, June 21 2023" })
+        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Wed, July 26 2023" })
       end if
-        marupContent.createChild("ContentNode").addFields({ "Home Timezone :": getHomeTimezone() })
+      marupContent.createChild("ContentNode").addFields({ "Home Timezone :": getHomeTimezone() })
 
-        ?"getCurrentTimezone() "getCurrentTimezone()
-        di = CreateObject("roDeviceInfo")
-        marupContent.createChild("ContentNode").addFields({ "Current Timezone :": RemoveStringBeforeSlash(di.getTimeZone())+" Standard Time  " })
+
+      di = CreateObject("roDeviceInfo")
+      ?"getCurrentTimezone() "di.getTimeZone()
+      marupContent.createChild("ContentNode").addFields({ "Current Timezone :": RemoveStringBeforeSlash(di.getTimeZone()) + " Standard Time  " })
 
       m.dialogOptions.itemSize = [900, 52]
 
@@ -580,7 +585,7 @@ sub responseAPI(event as object)
       m.logout = true
       m.top.logout = true
       m.ProfileCategory.setFocus(false)
-      
+
       showLogin1Screen()
     else if m.ProfileTask.callto = "Registered Devices"
       ' Here we have to show the list of the device. --------------------------------------------------------------------------------------------------------------------------
@@ -591,18 +596,18 @@ sub responseAPI(event as object)
       ?"getdata mode "getDataMode()
       marupContent = createObject("roSGNode", "ContentNode")
       marupContent = createObject("roSGNode", "ContentNode")
-        for each data in ConnectedDevices
-            ?"data: "data.session_id
-            ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"] ;data["hotel_room"]
-            marupContent.createChild("ContentNode").addFields(data)
+      for each data in ConnectedDevices
+        ?"data: "data.session_id
+        ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"] ;data["hotel_room"]
+        marupContent.createChild("ContentNode").addFields(data)
       end for
 
-        m.device_connected.visible = true
-        m.device_connected.text = ConnectedDevices0
-        m.registredDevicesMarkup.visible = true
-        m.registredDevicesMarkup.content = marupContent
-        m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
-        showDialog("Registered Devices", true, false)
+      m.device_connected.visible = true
+      m.device_connected.text = ConnectedDevices0
+      m.registredDevicesMarkup.visible = true
+      m.registredDevicesMarkup.content = marupContent
+      m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+      showDialog("Registered Devices", true, false)
 
     else if m.ProfileTask.callto = "Support"
       RegWrite("back", "back")
@@ -645,7 +650,7 @@ end sub
 
 sub responseAPI2(event as object)
   setSessionDeviceLogout("")
-  ApiCallFor("Registered Devices","GET")
+  ApiCallFor("Registered Devices", "GET")
 end sub
 
 sub privicyPolicy()
@@ -732,7 +737,7 @@ sub initSupportDialog()
   m.SupportDialog = createObject("roSGNode", "Poster")
   '     m.SupportDialog.visible = false
   m.SupportDialog.width = 1320
-    m.SupportDialog.height = 750
+  m.SupportDialog.height = 750
   m.SupportDialog.uri = "pkg:/images/homeRound.png"
   m.SupportDialog.translation = [(1920 - m.SupportDialog.boundingRect().width) / 2, (1080 - m.SupportDialog.boundingRect().height) / 2]
 
@@ -742,13 +747,13 @@ sub initSupportDialog()
   m.SupportDialogCross.height = 60
   m.SupportDialogCross.uri = "pkg:/images/cross.png"
   m.SupportDialogCross.translation = [1180, 30]
-  
+
   m.SupportDialogCircle = m.SupportDialog.createChild("Poster")
-    '     m.SupportDialog.visible = false
-    m.SupportDialogCircle.width = 520
-    m.SupportDialogCircle.height = 320
-    m.SupportDialogCircle.uri = "pkg:/images/supports.png"
-    m.SupportDialogCircle.translation = [380, 30]
+  '     m.SupportDialog.visible = false
+  m.SupportDialogCircle.width = 520
+  m.SupportDialogCircle.height = 320
+  m.SupportDialogCircle.uri = "pkg:/images/supports.png"
+  m.SupportDialogCircle.translation = [380, 30]
 
   ' m.SupportDialogSupport = m.SupportDialog.createChild("Poster")
   ' '     m.SupportDialog.visible = false
@@ -794,10 +799,10 @@ sub initSupportDialog()
   m.SupportDialogNumber.width = 380
   m.SupportDialogNumber.height = 160
   m.SupportDialogNumber.uri = "pkg:/images/profile/markupitemcomponentBackground.png"
-  
+
   m.SupportDialogNumber.translation = [710, 550]
 
-  
+
 
   m.SupportDialogPhone = m.SupportDialog.createChild("Poster")
   '     m.SupportDialog.visible = false
@@ -818,7 +823,7 @@ sub initSupportDialog()
   m.LayoutGroup.translation = [100, 400]
   m.LayoutGroup.layoutDirection = "vert"
   m.LayoutGroup.itemSpacings = [10]
-  
+
   m.LayoutGroup1 = m.SupportDialog.createChild("LayoutGroup")
   m.LayoutGroup1.translation = [30, 460]
   m.LayoutGroup1.layoutDirection = "vert"
@@ -1003,15 +1008,15 @@ sub showDialog(dialogView as string, show as boolean, focus as boolean)
     else if dialogView = "Registered Devices"
 
       m.registerDeviceView.width = 1920
-            m.registerDeviceView.height = 1080
+      m.registerDeviceView.height = 1080
 
-            m.registerDeviceView.visible = show
-            'm.profileView.translation = [(1920 - m.profileView.boundingRect().width) / 2, (1080 - m.profileView.boundingRect().height) / 2]
-            ' m.Dialog.visible = show
-            m.registredDevicesMarkup.setFocus(true)
-            ' ragisterMargkupListTranslationX = (m.profileView.width - 1150) / 2
-            ' m.registredDevicesMarkup.translation = [ragisterMargkupListTranslationX, 10]
-            ' m.ok.translation = [471, 590]
+      m.registerDeviceView.visible = show
+      'm.profileView.translation = [(1920 - m.profileView.boundingRect().width) / 2, (1080 - m.profileView.boundingRect().height) / 2]
+      ' m.Dialog.visible = show
+      m.registredDevicesMarkup.setFocus(true)
+      ' ragisterMargkupListTranslationX = (m.profileView.width - 1150) / 2
+      ' m.registredDevicesMarkup.translation = [ragisterMargkupListTranslationX, 10]
+      ' m.ok.translation = [471, 590]
     else if dialogView = ""
 
     end if
@@ -1083,7 +1088,7 @@ sub initDialogDevice(event as object)
   sessionId = event.getRoSGNode().content.getChild(event.getData()).session_id
   setSessionDeviceLogout(sessionId)
   m.registredDevicesMarkup.setFocus(false)
-  m.YesRemove.observeField("buttonSelected","logOutRegDevice")
+  m.YesRemove.observeField("buttonSelected", "logOutRegDevice")
   ?"Device: event pos device: ";event.getData()
   ?"Device.content: "event.getRoSGNode().content.getChild(event.getData()).session_id
   if getDataMode() <> event.getRoSGNode().content.getChild(event.getData()).session_id
@@ -1096,19 +1101,19 @@ sub logOutRegDevice()
   m.deviceSearchEditText.text = ""
   m.registredDevicesMarkup.setFocus(false)
   showDialogRemove("", false, false)
-  showDialog("",false,false)
+  showDialog("", false, false)
   m.LoginBusySpinner.visible = true
   sessionId = getSessionDeviceLogout()
   m.DeviceLogout = CreateObject("roSGNode", "DeviceLogout")
-  
-   m.DeviceLogout.callType = "POST"
-   data = {}
-   data["id"] = sessionId
-      '   data =  "email="+email+"&password="+password+deviceid
-      ? "device: "; data
-      m.DeviceLogout.data = data
-      m.DeviceLogout.observeField("response", "responseAPI2")
-    m.DeviceLogout.control = "RUN"
+
+  m.DeviceLogout.callType = "POST"
+  data = {}
+  data["id"] = sessionId
+  '   data =  "email="+email+"&password="+password+deviceid
+  ? "device: "; data
+  m.DeviceLogout.data = data
+  m.DeviceLogout.observeField("response", "responseAPI2")
+  m.DeviceLogout.control = "RUN"
 
   'm.settingsBox = event.getRoSGNode().content.getChild(event.getData()).text
 end sub
@@ -1121,12 +1126,12 @@ sub showDialogRemove(dialogView as string, show as boolean, focus as boolean)
   m.removeView.visible = false
 
   if show
-      m.removeText.text = tr("Are you sure you want to logout from this device?")
-      m.removeView.width = 1450
-      m.removeView.height = 488
-      m.removeView.visible = show
-      ' m.Dialog.visible = show
-      m.removeView.translation = [(1920 - m.removeView.boundingRect().width) / 2, (1080 - m.removeView.boundingRect().height) / 2]
+    m.removeText.text = tr("Are you sure you want to logout from this device?")
+    m.removeView.width = 1450
+    m.removeView.height = 488
+    m.removeView.visible = show
+    ' m.Dialog.visible = show
+    m.removeView.translation = [(1920 - m.removeView.boundingRect().width) / 2, (1080 - m.removeView.boundingRect().height) / 2]
   end if
 
 end sub
@@ -1157,45 +1162,45 @@ function onKeyEvent(key as string, press as boolean) as boolean
     if m.ScrolableText.hasFocus() and (key = "down" or key = "OK")
       m.OkButton1.setFocus(true)
       return true
-    ' else if m.Ok.hasFocus() and key = "up" and m.ProfileTask.callto = "Registered Devices"
-    '   ?"Ragister Device Focuse UP"
-    '   m.registredDevicesMarkup.setFocus(true)
-    '   m.Ok.setFocus(false)
-    '   return true
-    ' else if m.registredDevicesMarkup.hasFocus() and key = "down" and m.ProfileTask.callto = "Registered Devices"
-    '   ?""
-    '   m.registredDevicesMarkup.setFocus(false)
-    '   m.Ok.setFocus(true)
-    '   return true
+      ' else if m.Ok.hasFocus() and key = "up" and m.ProfileTask.callto = "Registered Devices"
+      '   ?"Ragister Device Focuse UP"
+      '   m.registredDevicesMarkup.setFocus(true)
+      '   m.Ok.setFocus(false)
+      '   return true
+      ' else if m.registredDevicesMarkup.hasFocus() and key = "down" and m.ProfileTask.callto = "Registered Devices"
+      '   ?""
+      '   m.registredDevicesMarkup.setFocus(false)
+      '   m.Ok.setFocus(true)
+      '   return true
     else if m.registredDevicesMarkup.hasFocus() and key = "up"
-        ?"Ragister Device Focuse UP"
-        ' m.registredDevicesMarkup.setFocus(false)
-        m.deviceSearchEditText.setFocus(true)
-        m.deviceSearchEditText.active = true
-        m.KeyboardPosterDevice.visible = true
-        m.KeyboardInputDevice.setFocus(true)
-        m.KeyboardInputDevice.textEditBox.text = m.deviceSearchEditText.text
-        m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
-        m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
-        m.TextField = "searchDevice"
-        ' m.profileView.visible = false
-        ' m.registredDevicesMarkup.visible = false
-        ' m.TextField = "searchRoom"
-        ' ?"m.KeyboardPoster"m.KeyboardPoster
-        return true
+      ?"Ragister Device Focuse UP"
+      ' m.registredDevicesMarkup.setFocus(false)
+      m.deviceSearchEditText.setFocus(true)
+      m.deviceSearchEditText.active = true
+      m.KeyboardPosterDevice.visible = true
+      m.KeyboardInputDevice.setFocus(true)
+      m.KeyboardInputDevice.textEditBox.text = m.deviceSearchEditText.text
+      m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
+      m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
+      m.TextField = "searchDevice"
+      ' m.profileView.visible = false
+      ' m.registredDevicesMarkup.visible = false
+      ' m.TextField = "searchRoom"
+      ' ?"m.KeyboardPoster"m.KeyboardPoster
+      return true
     else if (m.KeyboardPosterDevice.visible = true or m.KeyboardInputDevice.hasFocus()) and key = "up"
-        ?"in keyboard close"
-        m.KeyboardPosterDevice.visible = false
-        m.KeyboardInputDevice.setFocus(false)
-        m.deviceSearchEditText.setFocus(true)
-        m.deviceSearchEditText.active = true
-        return true
+      ?"in keyboard close"
+      m.KeyboardPosterDevice.visible = false
+      m.KeyboardInputDevice.setFocus(false)
+      m.deviceSearchEditText.setFocus(true)
+      m.deviceSearchEditText.active = true
+      return true
     else if m.deviceSearchEditText.hasFocus() and key = "down"
-        m.deviceSearchEditText.active = false
-        m.registredDevicesMarkup.setFocus(true)
-        m.KeyboardPosterDevice.visible = false
-        m.KeyboardInputDevice.setFocus(false)
-        return true
+      m.deviceSearchEditText.active = false
+      m.registredDevicesMarkup.setFocus(true)
+      m.KeyboardPosterDevice.visible = false
+      m.KeyboardInputDevice.setFocus(false)
+      return true
     else if m.registredDevicesMarkup.hasFocus() and key = "back"
       ?""
       m.deviceSearchEditText.text = ""
@@ -1297,30 +1302,30 @@ function onKeyEvent(key as string, press as boolean) as boolean
       return true
     else if key = "back"
       if m.deviceSearchEditText.hasFocus()
-            ?"yes"
+        ?"yes"
         m.deviceSearchEditText.active = false
         m.registredDevicesMarkup.setFocus(true)
         m.KeyboardPosterDevice.visible = false
         m.KeyboardInputDevice.setFocus(false)
         return true
-      ' else if getRegister() = "register" and m.deviceSearchEditText.hasFocus() = false
-      '   ?"getRegister() work: "getRegister()
-      '   deleteRegister()
-      '   if m.screen <> invalid then m.top.removeChild(m.screen)
-      '   ProfileSettingScreen = m.top.createChild("ProfileSettingScreen")
-      '   ProfileSettingScreen.setFocus(true)
-      ' else if getRegister() = "" 
-      '   ?"getRegister(): "getRegister()
-      '   ' if m.screen <> invalid then m.top.removeChild(m.screen)
-      '   ' ShowScreen("HomeScreen")
-      '   HomeScreen = m.top.createChild("HomeScreen")
-      '   HomeScreen.setFocus(true)
+        ' else if getRegister() = "register" and m.deviceSearchEditText.hasFocus() = false
+        '   ?"getRegister() work: "getRegister()
+        '   deleteRegister()
+        '   if m.screen <> invalid then m.top.removeChild(m.screen)
+        '   ProfileSettingScreen = m.top.createChild("ProfileSettingScreen")
+        '   ProfileSettingScreen.setFocus(true)
+        ' else if getRegister() = ""
+        '   ?"getRegister(): "getRegister()
+        '   ' if m.screen <> invalid then m.top.removeChild(m.screen)
+        '   ' ShowScreen("HomeScreen")
+        '   HomeScreen = m.top.createChild("HomeScreen")
+        '   HomeScreen.setFocus(true)
       else
         deleteSettingMode()
         m.top.exitView = true
-        
+
       end if
-      
+
 
     end if
 

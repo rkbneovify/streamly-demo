@@ -1,82 +1,33 @@
 
 sub INIT()
-    ' Front screen initialization
+    ' Front screen
+    ' ? "login init()";getPersonaldeviceid()
     login_guide()
     privicyPolicy()
 
-    ' Find and assign nodes
     m.image1 = m.top.findNode("image1")
     m.image2 = m.top.findNode("image2")
     m.image3 = m.top.findNode("image3")
     m.circ1 = m.top.findNode("circ1")
     m.circ2 = m.top.findNode("circ2")
     m.circ3 = m.top.findNode("circ3")
+    m.circ1.uri = "pkg:/images/green.png"
     m.simple_lable_1 = m.top.findNode("simple_lable_1")
     m.simple_lable_2 = m.top.findNode("simple_lable_2")
     m.simple_lable_3 = m.top.findNode("simple_lable_3")
     m.simple1 = m.top.findNode("simple1")
     m.simple2 = m.top.findNode("simple2")
     m.simple3 = m.top.findNode("simple3")
-    m.sign = m.top.findNode("sign")
-    m.sign1 = m.top.findNode("sign1")
-    m.sign_text = m.top.findNode("sign_text")
-    m.dontshow = m.top.findNode("dontshow")
-    m.Privacy = m.top.findNode("Privacy")
-    m.priv_text = m.top.findNode("priv_text")
-    m.help_text = m.top.findNode("help_text")
-    m.Privacy1 = m.top.findNode("privacy1")
-    m.Help = m.top.findNode("Help")
-    m.help1 = m.top.findNode("help1")
-    m.Front_View = m.top.findNode("Front_View")
-    m.LoginBackgroundImage = m.top.findNode("LoginBackgroundImage")
-    m.logo = m.top.findNode("logo")
-    m.timer = m.top.findNode("exampleTimer")
-    m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
-    m.LoaderBackground = m.top.findNode("LoaderBackground")
-    m.UsernamEditText = m.top.findNode("UsernamEditText")
-    m.PasswordEditText = m.top.findNode("PasswordEditText")
-    m.PasswordShowPoster = m.top.findnode("PasswordShowPoster")
-    m.SignInButton = m.top.findNode("SignInButton")
-    m.SignInButtonLabel = m.SignInButton.createChild("Label")
-    m.UsernamPoster = m.top.findNode("UsernamPoster")
-    m.PasswordPoster = m.top.findNode("PasswordPoster")
-    m.SearchBoxPoster = m.top.findNode("SearchBoxPoster")
-    m.searchStart = m.top.findNode("searchStart")
-    m.password_show = m.top.findNode("passoword_show")
-    m.password_hide = m.top.findNode("password_hide")
-    m.KeyboardPoster = m.top.findNode("KeyboardPoster")
-    m.KeyboardInput = m.top.findNode("KeyboardInput")
-    m.KeyboardPosterDevice = m.top.findNode("KeyboardPosterDevice")
-    m.KeyboardInputDevice = m.top.findNode("KeyboardInputDevice")
-    m.registredDevicesMarkup = m.top.findNode("registredDevicesMarkup")
-    m.device_connected = m.top.findNode("device_connected")
-    m.deviceSearchEditText = m.top.findNode("deviceSearchEditText")
-    m.roomSearchEditText = m.top.findNode("roomSearchEditText")
-    m.logout = m.top.findNode("logout")
-    m.searchStart.uri = "pkg:/images/Search/mic.png"
-    m.password_hide.visible = false
-    m.password_show.visible = true
-    m.SignInButtonLabel.width = 654
-
-    ' Other variable initializations
-    m.textchange = false
-    m.time = 0
-    m.rememberFlag = false
-    m.launchScreenMode = getUserHomeScreenMode()
-    m.roomSelectFlag = getRoomSelectionFlag()
-    m.showRoomView = false
-    m.logoutPassCode = false
-    m.needHelpText = ""
-    m.checkForBArcodeContinue = false
-
-    ' Set properties and observers
-    m.circ1.uri = "pkg:/images/green.png"
     m.simple_lable_1.visible = true
     m.simple_lable_2.visible = false
     m.simple_lable_3.visible = false
     m.simple1.visible = true
     m.simple2.visible = false
     m.simple3.visible = false
+    m.sign = m.top.findNode("sign")
+    m.sign1 = m.top.findNode("sign1")
+    m.sign_text = m.top.findNode("sign_text")
+    m.dontshow = m.top.findNode("dontshow")
     m.dontshow.translation = [760, 790]
     m.dontshow.itemSize = [400, 100]
     m.dontshow.checkedIconUri = "pkg:/images/unchecke.png"
@@ -94,6 +45,37 @@ sub INIT()
     contentNode.Title = "Don't show again"
     m.dontshow.content = checklistNode
     m.dontshow.ObserveField("checkedState", "checkUpdate")
+    m.Privacy = m.top.findNode("Privacy")
+    m.priv_text = m.top.findNode("priv_text")
+    m.help_text = m.top.findNode("help_text")
+    m.Privacy1 = m.top.findNode("privacy1")
+    m.Help = m.top.findNode("Help")
+    m.help1 = m.top.findNode("help1")
+    m.Front_View = m.top.findNode("Front_View")
+    m.LoginBackgroundImage = m.top.findNode("LoginBackgroundImage")
+    m.logo = m.top.findNode("logo")
+    m.time = 0
+    initSupportDialog1()
+    ' Help
+
+
+    m.textchange = false
+    m.timer = m.top.findNode("exampleTimer")
+    m.timer.ObserveField("fire", "changetext")
+    m.timer.control = "start"
+    m.sign.observeField("buttonSelected", "showLoginScreen")
+    m.top.signalBeacon("AppLaunchComplete")
+    m.rememberFlag = false
+    ' m.remenberCheckList.checkedState = false
+
+    m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
+    m.LoaderBackground = m.top.findNode("LoaderBackground")
+    m.LoginBusySpinner.observeField("visible", "showspinner")
+    m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+    m.LoginBusySpinner.visible = false
+
+    ' Privacy Policy
+
     m.Privacy.setFocus(true)
     m.Privacy.height = 114
     m.Privacy.width = 229
@@ -102,101 +84,319 @@ sub INIT()
     m.priv_text.translation = [30, 30]
     m.Privacy.observeField("buttonSelected", "showPrivacy")
     m.Help.observeField("buttonSelected", "showSupportDialog1")
+    ?"m.Privacy "m.Privacy.hasFocus()
+
+
+
+
+
+
+    ' calculate the display size and set the Search edit text width according to screeen size
+
+
+
+    deleteFront()
+
+    di = CreateObject("roDeviceInfo")
+    ?"di.GetDisplaySize()";di.GetDisplaySize().w
+
+    m.screenWidth = di.GetDisplaySize().w
+
+
+
+    ? "login init()"
+
+    m.SignInLabel = m.top.findNode("SignInLabel")
+    m.isSubscribe = true
+    ' m.SignInLabel.ali
+    m.UsernamEditText = m.top.findNode("UsernamEditText")
+    m.UsernamEditText.setFocus(false)
+    m.UsernamEditText.active = false
+    m.PasswordEditText = m.top.findNode("PasswordEditText")
+    m.PasswordShowPoster = m.top.findnode("PasswordShowPoster")
+    m.PasswordShowPoster.visible = true
+    m.SignInButton = m.top.findNode("SignInButton")
+    m.SignInButtonLabel = m.SignInButton.createChild("Label")
+    m.SignInButtonLabel.width = 654
+    ' m.LoginUsingPassCodeLabel.height = 54
+    m.SignInButtonLabel.translation = [0, 5]
+    m.SignInButtonLabel.text = "Sign In"
+    m.SignInButtonLabel.color = "#ffffff"
+    m.SignInButtonLabel.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.SignInButtonLabel.height = 50
+    m.SignInButtonLabel.horizAlign = "Center"
+    m.SignInButtonLabel.vertAlign = "Center"
+
+    m.UsernamPoster = m.top.findNode("UsernamPoster")
+    m.PasswordPoster = m.top.findNode("PasswordPoster")
+    m.SearchBoxPoster = m.top.findNode("SearchBoxPoster")
+    m.searchStart = m.top.findNode("searchStart")
+    m.password_show = m.top.findNode("passoword_show")
+    m.password_hide = m.top.findNode("password_hide")
+
+    m.KeyboardPoster = m.top.findNode("KeyboardPoster")
+    m.KeyboardInput = m.top.findNode("KeyboardInput")
+    m.KeyboardInput.observeField("text", "FieldText")
+
+    m.KeyboardPosterDevice = m.top.findNode("KeyboardPosterDevice")
+    m.KeyboardInputDevice = m.top.findNode("KeyboardInputDevice")
+    m.KeyboardInputDevice.observeField("text", "FieldText")
+
+    m.registredDevicesMarkup = m.top.findNode("registredDevicesMarkup")
+    m.registredDevicesMarkup.visible = false
+    m.device_connected = m.top.findNode("device_connected")
+    m.device_connected.visible = false
+    m.deviceSearchEditText = m.top.findNode("deviceSearchEditText")
+
+
+    ' m.ProfileCategory = m.top.findNode("ProfileCategory")
+    ' marupContent = createObject("roSGNode", "ContentNode")
+    ' data = marupContent.createChild("ContentNode")
+    ' data.text = "Registered Devices"
+    ' ' data2.id = "foo"
+    ' data.SDPosterUrl = "pkg:/images/profile/devicesicon.png"
+    ' ?"hello2"
+    ' m.ProfileCategory.content = marupContent
+    ' ' m.ProfileCategory.translation = [720,400]
+
+    ' m.ProfileCategory.observeField("itemSelected", "initDialogMrkupWithData")
+    '   m.LoginView.visible = false
+
+    ' m.searchEditTextPoster = m.top.findNode("search_edit_text_poster")
+    m.roomSearchEditText = m.top.findNode("roomSearchEditText")
+    m.logout = m.top.findNode("logout")
+
+
+    ' m.searchStart.focusfootprintBitmapUri ="pkg:/images/Search/mic_focus_icon.png"
+    m.searchStart.uri = "pkg:/images/Search/mic.png"
     m.searchStart.translation = [540, 20]
+    m.searchStart.visible = true
     m.searchStart.height = 60
     m.searchStart.width = 60
+
     m.password_hide.translation = [540, 20]
+    m.password_hide.uri = "pkg:/images/password_hide.png"
     m.password_hide.height = 60
     m.password_hide.width = 60
+    m.password_hide.visible = false
+
     m.password_show.translation = [540, 20]
+    m.password_show.uri = "pkg:/images/password_show.png"
     m.password_show.height = 60
     m.password_show.width = 60
+    m.password_show.visible = true
+
     m.SignInButton.observeField("buttonSelected", "LoginValidation")
-    m.KeyboardInput.observeField("text", "FieldText")
-    m.KeyboardInputDevice.observeField("text", "FieldText")
+    m.KeyboardInput.textEditBox.observeField("cursorPosition", "cursorPosition")
+
+    m.KeyboardPoster.visible = false
+    m.KeyboardInput.setFocus(false)
+    m.TextField = ""
+
+    signInFont = getFont(44, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
+    m.SignInLabel.text = "Sign In"
+    m.SignInLabel.font = signInFont
+
+    ' Specify RFI type when handling userData'
+
+
+    m.PasswordEditText.secureMode = "true"
+
+
+
+    loginWithPassCodeLabelSet()
+    EnterPassCodeLableSet()
+    enterPasscodeEditText()
+    signInPassCodeButton()
+    RoomListUI()
+    m.LoginView = m.top.findNode("LoginView")
+    m.LoginWithPassCodeView = m.top.findNode("LoginWithPassCodeView")
+    m.mainLoginView = m.top.findNode("LoginView")
+    m.mainBarcodeView = m.top.findNode("barCodeView")
+    ' m.LoginView.visible = false
+    m.showRoomView = false
+
+    m.UsernamLable = m.top.findNode("UsernamLable")
+    m.PasswordLable = m.top.findNode("PasswordLable")
+
+    m.UsernamLable.text = "Username"
+    m.PasswordLable.text = "Password"
+
+    UsernameFont = getFont(24, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.UsernamLable.font = UsernameFont
+    m.PasswordLable.font = UsernameFont
+    m.launchScreenMode = getUserHomeScreenMode()
+    m.roomSelectFlag = getRoomSelectionFlag()
+    loginWithPassCode()
+    loginWithQrCode()
+    initSupportDialog()
+    needHelp()
+    rememberMe()
+    dontHaveAccount()
+    termCondition()
+    termConditionUI()
+
+    m.logoutPassCode = false
+
     m.top.observeField("focusedChild", "OnFocusChildChange")
 
-    ' Set loader properties
+    m.setFocus = false
+
+    initApi()
+
+    ' loader
+    m.LoaderBackground = m.top.createChild("Rectangle")
     m.LoaderBackground.color = "0x000000FF"
     m.LoaderBackground.visible = false
     m.LoaderBackground.opacity = "0.65"
     m.LoaderBackground.width = 1920
     m.LoaderBackground.height = 1080
+
+    m.LoginBusySpinner = m.LoaderBackground.createChild("BusySpinner")
+    m.LoginBusySpinner.observeField("visible", "showspinner")
     m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+
     centerx = (1920 - m.LoginBusySpinner.poster.bitmapWidth) / 2
     centery = (1080 - m.LoginBusySpinner.poster.bitmapHeight) / 2
     m.LoginBusySpinner.translation = [900, centery]
+    m.needHelpText = ""
     m.top.signalBeacon("AppDialogInitiate")
-    m.ErrorDialogView = m.top.findNode("ErrorDialogView")
-    m.buttonClick = m.top.findNode("buttonClick")
 
-    ' Check launch and room selection modes
+    ' m.global.RSG_analytics.trackEvent = {
+    '     google: {
+    '         ec: "login_screen",
+    '         ea: "launch_complete"
+    '     }
+    ' }
+    m.checkForBArcodeContinue = false
+
+
+
     if m.launchScreenMode <> invalid and m.roomSelectFlag <> invalid
         if m.roomSelectFlag = "false"
             setHomeScreenAccordingMode()
         end if
     end if
 
-    ' Set search edit text width
+
+    ' set the width of search edit text
+    ' m.searchEditTextPoster.width = m.screenWidth - 200
     m.roomSearchEditText.width = 1720
     m.roomSearchEditText.visible = false
     m.logout.visible = false
 
-    ' Assign logout dialog nodes
     m.logoutText = m.top.findNode("logoutText")
     m.logoutView = m.top.findNode("logoutView")
     m.NoButton = m.top.findNode("NoButton")
     m.YesButton = m.top.findNode("YesButton")
+    m.YesButton.observeField("buttonSelected", "logoutApiCall")
     m.NoButton.observeField("buttonSelected", "closeDialogLogout")
 
-    ' Assign device dialog nodes
     m.deviceText = m.top.findNode("deviceText")
     m.deviceView = m.top.findNode("deviceView")
     m.Nodevice = m.top.findNode("Nodevice")
     m.Yesdevice = m.top.findNode("Yesdevice")
+    m.profileView = m.top.findNode("profileView")
     m.Yesdevice.observeField("buttonSelected", "deviceScreen")
     m.Nodevice.observeField("buttonSelected", "closeDialogDevice")
     m.deviceSearchEditText = m.top.findNode("deviceSearchEditText")
-
-    ' Assign remove dialog nodes
     m.removeText = m.top.findNode("removeText")
     m.removeView = m.top.findNode("removeView")
     m.Noremove = m.top.findNode("Noremove")
     m.Yesremove = m.top.findNode("Yesremove")
     m.Noremove.observeField("buttonSelected", "closeDialogRemove")
 
-    ' Create qrlogintask object
+
     m.qrlogintask = CreateObject("roSGNode", "qrlogintask")
+
+
+
     m.qrlogintask.callType = "GET"
+    '   data =  "email="+email+"&password="+password+deviceid
+    ? "data: "; data
+    ' m.qrlogintask.data = data
     m.qrlogintask.control = "RUN"
     m.qrlogintask.observeField("response", "qrLoginResponse")
 
-    ' Set loader properties
-    m.LoginBusySpinner.observeField("visible", "showspinner")
-    m.LoginBusySpinner.visible = false
 
-    ' Set initial focus and signal beacon
-    m.sign.setFocus(true)
+    ' m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
+    ' m.LoaderBackground = m.top.findNode("LoaderBackground")
+    ' m.LoginBusySpinner.observeField("visible", "showspinner")
+    ' m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+    ' m.LoginBusySpinner.visible = false
+    ' m.logout = false
+    m.ErrorDialogView = m.top.findNode("ErrorDialogView")
+    m.buttonClick = m.top.findNode("buttonClick")
+    m.buttonClick.horizAlign = "center"
+    m.buttonClick.vertAlign = "center"
+
+    ' if RegRead("personalDevice")
+    '     ' Open a Room screen for selection
+    '     GetRoomsmAPicall()
+    '     m.SupportDialog.visible = false
+    '     m.roomSearchEditText.visible = true
+    '     ' m.searchEditTextPoster.visible = true
+    '     m.RoomListMarkuGrid.visible = true
+    '     m.RoomListMarkuGrid.setFocus(false)
+    '     m.logout.visible = true
+    '     m.LoginView.visible = false
+    '     m.LoginWithPassCodeView.visible = false
+    '     RegDelete("personalDevice")
+    ' end if
+
+
+    ?"getGuideMode() "getGuideMode()
+    ?"getCheckMode() "getCheckMode()
+    if getHelpMode() = "true"
+        deleteHelpMode()
+
+        m.sign.setFocus(true)
+        m.UsernamEditText.setFocus(false)
+        m.UsernamEditText.active = false
+        m.Front_View.visible = true
+        m.LoginView.visible = false
+        m.LoginBackgroundImage.visible = false
+        m.logo.visible = false
+        ' showLoginScreen()
+    else if getCheckMode() = "true"
+        ' deleteCheckMode()
+        m.sign.setFocus(false)
+        m.Privacy.setFocus(false)
+        m.UsernamEditText.setFocus(true)
+        m.UsernamEditText.active = true
+        m.Front_View.visible = false
+        m.LoginView.visible = true
+        m.LoginBackgroundImage.visible = true
+        m.logo.visible = true
+
+        ' showLoginScreen()
+
+    end if
+    ' if getGuideMode() = "true"
+    '     ' ?"m.remenberCheckList.checkedState "m.remenberCheckList.checkedState
+    '
+
+    ' end if
+
+
+
     m.top.signalBeacon("AppLaunchComplete")
 end sub
 
-' Handles the login guide functionality
+' Frontscreen
 sub login_guide()
-    ' Create FrontApi object
     m.personalDeviceName = CreateObject("roSGNode", "FrontApi")
     m.personalDeviceName.callType = "POST"
     m.personalDeviceName.control = "RUN"
     m.personalDeviceName.observeField("response", "loginguide_response")
 end sub
 
-' Handles the response from login_guide
 sub loginguide_response(param as object)
     ? " personal Device name response param data"; param.getData().slide_interval_seconds
     m.time = param.getData().slide_interval_seconds
-
     ? "persona device name response :" m.personalDeviceName.response.data
     for each data in m.personalDeviceName.response.data
-        ? "data: "data
+        ?"data: "data
         m.image1.uri = m.personalDeviceName.response.data[0].image
         m.image2.uri = m.personalDeviceName.response.data[1].image
         m.image3.uri = m.personalDeviceName.response.data[2].image
@@ -209,31 +409,23 @@ sub loginguide_response(param as object)
     end for
 end sub
 
-' Shows the privacy policy dialog
 sub privicyPolicy()
-    ? "privicyPolicy"
-
-    ' Create DialogNodePoster object
-    m.DialogNodePoster = CreateObject("roSGNode", "Poster")
-
-    ' Set properties of DialogNodePoster
+    ?"privicyPolicy"
+    m.DialogNodePoster = createObject("roSGNode", "Poster")
+    '    m.DialogNodePoster.visible =false
     m.DialogNodePoster.width = 1223
     m.DialogNodePoster.height = 714
     m.DialogNodePoster.uri = "pkg:/images/profile/profile_dialog.png"
     m.DialogNodePoster.translation = [349, 224]
-
-    ' Create ScrollableText object
-    m.ScrolableText = m.DialogNodePoster.CreateChild("ScrollableText")
+    m.ScrolableText = m.DialogNodePoster.createChild("ScrollableText")
     m.ScrolableText.width = 1183
     m.ScrolableText.height = 500
     m.ScrolableText.translation = [50, 60]
-    m.ScrolableText.font = GetFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    m.ScrolableText.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.ScrolableText.text = ""
     m.ScrolableText.horizAlign = "left"
     m.ScrolableText.vertAlign = "top"
-
-    ' Create OkButton object
-    m.OkButton1 = m.DialogNodePoster.CreateChild("Button")
+    m.OkButton1 = m.DialogNodePoster.createChild("Button")
     m.OkButton1.observeField("buttonSelected", "closePrivicyPolicy")
     m.OkButton1.translation = [466, 592]
     m.OkButton1.minWidth = "270"
@@ -245,210 +437,379 @@ sub privicyPolicy()
     m.OkButton1.iconUri = ""
     m.OkButton1.focusedIconUri = ""
     m.OkButton1.focusFootprintBitmapUri = "pkg:/images/home/borderwhite3.png"
-
-    ' Create Label for OkButton
-    okLabel = m.OkButton1.CreateChild("Label")
+    '                 m.OkButton.horizAlign="center"
+    okLabel = m.OkButton1.createChild("Label")
     okLabel.horizAlign = "center"
     okLabel.height = "84"
     okLabel.width = "270"
     okLabel.vertAlign = "center"
     okLabel.text = "OK"
-    font = GetFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
     okLabel.font = font
+
 end sub
 
-
 sub initSupportDialog1()
-    ' Creates SupportDialog1 object
+
     m.SupportDialog1 = createObject("roSGNode", "Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialog1.width = 1320
     m.SupportDialog1.height = 750
     m.SupportDialog1.uri = "pkg:/images/profile/dialogBackground.png"
     m.SupportDialog1.translation = [(1920 - m.SupportDialog1.boundingRect().width) / 2, (1080 - m.SupportDialog1.boundingRect().height) / 2]
     m.SupportDialog1.blendColor = "#f5f5f5"
 
-    ' Creates SupportDialogCross object
+
     m.SupportDialogCross = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogCross.width = 80
     m.SupportDialogCross.height = 60
     m.SupportDialogCross.uri = "pkg:/images/cross_b.png"
     m.SupportDialogCross.translation = [1180, 30]
 
-    ' Creates SupportDialogCircle object
     m.SupportDialogCircle = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogCircle.width = 520
     m.SupportDialogCircle.height = 320
     m.SupportDialogCircle.uri = "pkg:/images/supports.png"
     m.SupportDialogCircle.translation = [380, 30]
 
-    ' Creates SupportDialogEmail object
+    ' m.SupportDialogSupport = m.SupportDialog.createChild("Poster")
+    ' '     m.SupportDialog.visible = false
+    ' m.SupportDialogSupport.width = 280
+    ' m.SupportDialogSupport.height = 230
+    ' m.SupportDialogSupport.uri = "pkg:/images/profile/support.png"
+    ' m.SupportDialogSupport.translation = [830, 200]
+
     m.SupportDialogEmail = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogEmail.width = 380
     m.SupportDialogEmail.height = 160
     m.SupportDialogEmail.uri = "pkg:/images/profile/dialogBackground.png"
     m.SupportDialogEmail.blendColor = "#b0c4de"
     m.SupportDialogEmail.translation = [220, 550]
 
-    ' Creates SupportDialogMail object
+
+
     m.SupportDialogMail = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogMail.width = 50
     m.SupportDialogMail.height = 60
     m.SupportDialogMail.uri = "pkg:/images/mail_b.png"
+
     m.SupportDialogMail.translation = [380, 565]
 
-    ' Creates SupportDialogNumber object
+    ' m.SupportDialogEmail = m.SupportDialog.createChild("Poster")
+    ' '     m.SupportDialog.visible = false
+    ' m.SupportDialogEmail.width = 320
+    ' m.SupportDialogEmail.height = 250
+    ' m.SupportDialogEmail.uri = "pkg:/images/profile/dialogBackground.png"
+    ' m.SupportDialogEmail.translation = [650 , 600]
+
+
+    ' m.SupportDialogPhone = m.SupportDialogEmail.createChild("Poster")
+    ' '     m.SupportDialog.visible = false
+    ' m.SupportDialogPhone.width = 250
+    ' m.SupportDialogPhone.height = 200
+    ' m.SupportDialogPhone.uri = "pkg:/images/profile/mobile.png"
+    ' m.SupportDialogPhone.translation = [250 , 520]
+
     m.SupportDialogNumber = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogNumber.width = 380
     m.SupportDialogNumber.height = 160
     m.SupportDialogNumber.uri = "pkg:/images/profile/dialogBackground.png"
     m.SupportDialogNumber.blendColor = "#b0c4de"
     m.SupportDialogNumber.translation = [710, 550]
 
-    ' Creates SupportDialogPhone object
+
+
     m.SupportDialogPhone = m.SupportDialog1.createChild("Poster")
+    '     m.SupportDialog.visible = false
     m.SupportDialogPhone.width = 50
     m.SupportDialogPhone.height = 50
     m.SupportDialogPhone.uri = "pkg:/images/mobile_b.png"
+
     m.SupportDialogPhone.translation = [875, 575]
 
-    ' Creates LayoutGroup object for SupportDialog1
+    ' m.SupportDialogNumber = m.SupportDialog.createChild("Poster")
+    ' '     m.SupportDialog.visible = false
+    ' m.SupportDialogNumber.width = 320
+    ' m.SupportDialogNumber.height = 250
+    ' m.SupportDialogNumber.uri = "pkg:/images/profile/dialogBackground.png"
+    ' m.SupportDialogNumber.translation = [1000 , 600]
+
     m.LayoutGroup = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroup.translation = [100, 400]
     m.LayoutGroup.layoutDirection = "vert"
     m.LayoutGroup.itemSpacings = [10]
 
-    ' Creates LayoutGroup1 object for SupportDialog1
     m.LayoutGroup1 = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroup1.translation = [30, 460]
     m.LayoutGroup1.layoutDirection = "vert"
     m.LayoutGroup1.itemSpacings = [10]
 
-    ' Creates LayoutGroupEmail object for SupportDialog1
     m.LayoutGroupEmail = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroupEmail.translation = [-60, 620]
     m.LayoutGroupEmail.layoutDirection = "vert"
+
     m.LayoutGroupEmail.itemSpacings = [10]
 
-    ' Creates LayoutGroupNumber object for SupportDialog1
     m.LayoutGroupNumber = m.SupportDialog1.createChild("LayoutGroup")
     m.LayoutGroupNumber.translation = [330, 620]
     m.LayoutGroupNumber.layoutDirection = "vert"
     m.LayoutGroupNumber.itemSpacings = [10]
 
-    ' Creates TextLabel2 object for SupportDialog1
+    '     m.LayoutGroup .horizAlignment ="vert"
+    '      m.LayoutGroup .vertAlignment ="center"
     m.TextLabel2 = m.LayoutGroup.createChild("Label")
+    '     m.TextLabel.translation = [0, 87]
     m.TextLabel2.width = 2023
     m.TextLabel2.height = 0
+    ' m.TextLabel.horizAlign = "Center"
+    ' m.TextLabel.vertAlign = "Center"
     m.TextLabel2.text = "For Help and Support You can mail us on below Contact."
     m.TextLabel2.color = "#004E92"
     m.TextLabel2.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ' Creates TextLabel1 object for SupportDialog1
     m.TextLabel1 = m.LayoutGroup1.createChild("Label")
+    '     m.TextLabel.translation = [0, 87]
     m.TextLabel1.width = 2023
     m.TextLabel1.height = 0
+    ' m.TextLabel.horizAlign = "Center"
+    ' m.TextLabel.vertAlign = "Center"
     m.TextLabel1.text = "For Help and Support You can mail us on below Contact."
     m.TextLabel1.color = "#004E92"
     m.TextLabel1.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ' Creates contactNumber1 object for SupportDialog1
+
+
     m.contactNumber1 = m.LayoutGroupEmail.createChild("ScrollableText")
     m.contactNumber1.width = 1020
     m.contactNumber1.height = 100
     m.contactNumber1.color = "#004E92"
+
+    ' m.contactNumber.translation = [0, 350]
     m.contactNumber1.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.contactNumber1.horizAlign = "Center"
     m.contactNumber1.vertAlign = "Center"
 
-    ' Creates contactNumbers object for SupportDialog1
+
+
     m.contactNumbers = m.LayoutGroupNumber.createChild("ScrollableText")
     m.contactNumbers.width = 1220
     m.contactNumbers.height = 100
     m.contactNumbers.color = "#004E92"
+
+    ' m.contactNumber.translation = [0, 350]
     m.contactNumbers.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.contactNumbers.horizAlign = "Center"
     m.contactNumbers.vertAlign = "Center"
+
+
+    '    m.contactNumber.text ="Shahjad.305@gmail.com"
+    '    m.contactNumber.translation = [500,0]
+
+
+    ' m.HelpButton = m.SupportDialog.createChild("Button")
+    ' m.HelpButton.observeField("buttonSelected", "closeOkDialog")
+
+    ' '                 m.OkButton.translation= [466,429]
+    ' m.HelpButton.minWidth = "280"
+    ' m.HelpButton.maxWidth = "280"
+    ' m.HelpButton.focusedTextColor = "#FFFFFF"
+    ' m.HelpButton.height = "84"
+    ' m.HelpButton.focusBitmapUri = "pkg:/images/Login/buttonFoucs.png"
+    ' m.HelpButton.showFocusFootprint = "true"
+    ' m.HelpButton.iconUri = ""
+    ' m.HelpButton.focusedIconUri = ""
+    ' okLabel = m.HelpButton.createChild("Label")
+    ' okLabel.horizAlign = "center"
+    ' okLabel.height = "84"
+    ' okLabel.width = "280"
+    ' okLabel.vertAlign = "center"
+    ' okLabel.text = "OK"
+    ' font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
+    ' okLabel.font = font
+    ' m.HelpButton.translation = [600 ,600]
 end sub
+
 
 sub showSupportDialog1()
+
+    showspinner(true)
     ? "showSupportDialog"
+    '      m.top.appendChild( m.LoaderBackground )
     ApiCallFor1("Support", "GET")
+    ' showspinner(true)
+    ' m.logout.setFocus(false)
 end sub
 
-' Function to show privacy dialog
 sub showPrivacy()
-    ' Show a spinner to indicate loading
-    showSpinner(true)
-
-    ' Make an API call to retrieve privacy policy
+    showspinner(true)
+    ?"m.loginview "m.LoginView.visible
+    ?"privacy"
     ApiCallFor1("Privacy & Policy", "GET")
 end sub
 
-' Function to get response for privacy from API
 sub ApiCallFor1(callto as string, callType as string)
-    ' Create a profile task node for API call
-    m.ProfileTask = CreateObject("roSGNode", "ProfileTask")
+    ?"ProfileSetting::ApiCallFor: "
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
     m.LoginBusySpinner.visible = true
-
-    ' Set API call parameters
+    '     ApiCallFor(callto,"GET")
     m.ProfileTask.callto = callto
     m.ProfileTask.callType = callType
 
-    ' Observe response and error fields
     m.ProfileTask.observeField("response", "responseAPIPrivacy")
     m.ProfileTask.observeField("errorMessage", "errorDialogShow")
 
-    ' Run the task node
-    m.ProfileTask.control = "RUN"
+    '     m.ProfileTask.observeField("response","responseAPI")
+    m.ProfileTask.control = "RUN" 'Run the task node
+    ' m.top.ExitView = true
+
 end sub
+
+' function errorDialogShow(event as object)
+'     if event.getData().responseCode = 401 or event.getData().responseCode = 429 or event.getData().responseCode = 404
+'         setAccountToken("")
+'         setThePersonalDeviceName("")
+'         setPersonaldeviceid("")
+'     end if
+' end function
 
 sub responseAPIPrivacy(event as object)
-    ' Store the response data
     m.responseData = event.getData()
-    showSpinner(false)
+    ?"ProfileScreen::responseAPI: event: ";m.responseData.data
+    ?"getHomeTimezone() "getHomeTimezone()
+    showspinner(false)
+    ' m.LoginBusySpinner.visible = false
     m.ProfileTask.control = "STOP"
-
-    ' Check if API call was successful
+    '  m.ProfileCategory.setFocus(true)
     if m.responseData.response_code = true
-        if m.ProfileTask.callto = "Privacy & Policy"
-            ' Create a content node for displaying privacy policy
-            marupContent = createObject("roSGNode", "ContentNode")
 
-            ' Extract necessary data from the response
-            privacyData = m.responseData.data
-            if privacyData.name <> invalid
-                marupContent.createChild("ContentNode").addFields({ "Name:": privacyData.name.ToStr() })
+        if m.ProfileTask.callto = "Account"
+            marupContent = createObject("roSGNode", "ContentNode")
+            userData = m.responseData.data
+
+            if userData.name <> invalid
+
+                marupContent.createChild("ContentNode").addFields({ "Username:": userData.name.ToStr() })
             end if
-            if privacyData.email <> invalid
-                marupContent.createChild("ContentNode").addFields({ "Email:": privacyData.email.ToStr() })
+            if userData.email <> invalid
+                marupContent.createChild("ContentNode").addFields({ "Email:": userData.email.ToStr() })
             end if
-            if privacyData.version <> invalid
+            if userData.version <> invalid
                 marupContent.createChild("ContentNode").addFields({ "Version:": "1.18" })
             end if
-            if privacyData.created <> invalid
+
+            if userData.created <> invalid
                 date = CreateObject("roDateTime")
-                date.FromISO8601String(privacyData.created.ToStr())
+                date.FromISO8601String(userData.created.ToStr())
+                ' marupContent.createChild("ContentNode").addFields({ "Build Date:": date.AsDateString("short-date") })
                 marupContent.createChild("ContentNode").addFields({ "Build Date:": "26-12-2022" })
             end if
+            marupContent.createChild("ContentNode").addFields({ "Home Timezone :": "Indian Standard Time " })
 
-            marupContent.createChild("ContentNode").addFields({ "Home Timezone:": "Indian Standard Time" })
-            marupContent.createChild("ContentNode").addFields({ "Current Timezone:": "Your Current Timezone GMT " + getCurrentTimezone() })
+            ?"getCurrentTimezone() "getCurrentTimezone()
+            if getCurrentTimezone() = "-06:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Central Standard Time " })
+            else if getCurrentTimezone() = "-05:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Eastern Standard Time " })
+            else if getCurrentTimezone() = "-07:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Mountain Standard Time " })
+            else if getCurrentTimezone() = "-08:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Pacific Standard Time " })
+            else if getCurrentTimezone() = "-09:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Alaska Standard Time" })
+            else if getCurrentTimezone() = "-10:00"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Hawaii Standard Time " })
+            else if getCurrentTimezone() = "+05:30"
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Indian Standard Time " })
+            else
+                marupContent.createChild("ContentNode").addFields({ "Current Timezone :": "Your Current Timezone GMT " + getCurrentTimezone() })
+            end if
 
-            ' Show a dialog with privacy policy content
+
             m.dialogOptions.itemSize = [900, 52]
+
+            '         marupContent.createChild("ContentNode").addFields(assoArray)
             m.dialogOptions.visible = true
             m.dialogOptions.content = marupContent
+            ' showDialog("Account", true, false)
+        else if m.ProfileTask.callto = "Sign out"
+            ?"Profile::responseData.message:";m.responseData.message
+            setAccountToken("")
+            setThePersonalDeviceName("")
+            setPersonaldeviceid("")
+            m.logout = true
+            m.top.logout = true
+            Screen = m.top.createChild("LoginScreen")
+            Screen.setFocus(true)
+        else if m.ProfileTask.callto = "Registered Devices"
+            ' Here we have to show the list of the device. --------------------------------------------------------------------------------------------------------------------------
+            setRegister("register")
+            ConnectedDevices0 = m.responseData.numofdevice
+            ConnectedDevices = m.responseData.data
+            ?"Profile::responseData.message:";ConnectedDevices0
+            marupContent = createObject("roSGNode", "ContentNode")
+            marupContent = createObject("roSGNode", "ContentNode")
+            for each data in ConnectedDevices
+                ?"data: "data.session_id
+                ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"] ;data["hotel_room"]
+                marupContent.createChild("ContentNode").addFields(data)
+            end for
+
+            m.device_connected.visible = true
+            m.device_connected.text = ConnectedDevices0
+            m.registredDevicesMarkup.visible = true
+            m.registredDevicesMarkup.content = marupContent
+            m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+            '   showDialog("Registered Devices", true, false)
+
+        else if m.ProfileTask.callto = "Support"
+            m.SupportDialog1.visible = true
+            ' m.Front_View.visible = false
+            ' RegWrite("back", "back")
+            ?"Profile::responseData.message:";m.responseData.data
+            ?"Profile::responseData.message:";m.responseData.message
+            '            "message": "For help and support call the numbers below"
+
+            m.TextLabel2.text = "Our team is available 24*7. We'll do our best to respond to your inquiries as soon as possible."
+            m.TextLabel1.text = "Need help or have a question? Our support team is here to assist you. You can reach us at the following:"
+
+            '         contactText = ""
+            '         for each contacNo in responseData.data
+            '              contactText = contactText +contacNo+chr(10)
+            '         end for
+
+            if m.responseData.data.email <> invalid
+                m.contactNumber1.text = "contact1@streamlytv.com"
+                m.contactNumbers.text = m.responseData.data.num1
+                m.top.appendChild(m.SupportDialog1)
+                m.contactNumber.setFocus(true)
+                ' m.HelpButton.setFocus(true)
+            end if
+
+
+
+        else if m.ProfileTask.callto = "Privacy & Policy"
+            ?"Profile::responseData.message:";m.responseData
+            '        name, email,created_at
+            m.ScrolableText.text = m.responseData.data.Replace("\n", chr(10))
+            m.top.appendChild(m.DialogNodePoster)
+            m.ScrolableText.setFocus(true)
         end if
     else
-        ' Show error dialog if API call failed
+        ?"error dialog to show the error:";m.responseData
+        '    showDialog("",false,false)
+
         showDialogError(true, m.responseData.Failure, "Ok")
     end if
-end sub
 
+end sub
 
 
 sub changetext()
-    ' Change visibility of images and labels based on the current state
     if m.image1.visible then
         m.image1.visible = false
         m.image2.visible = true
@@ -461,6 +822,7 @@ sub changetext()
         m.simple3.visible = false
         m.circ1.uri = "pkg:/images/circ.png"
         m.circ2.uri = "pkg:/images/green.png"
+        ' ?"m.image2.visible "m.image2.visible
         m.timer.control = "start"
         m.timer.duration = m.time
     else if m.image2.visible then
@@ -476,6 +838,7 @@ sub changetext()
         m.circ1.uri = "pkg:/images/circ.png"
         m.circ2.uri = "pkg:/images/circ.png"
         m.circ3.uri = "pkg:/images/green.png"
+
         m.timer.control = "start"
         m.timer.duration = m.time
     else if m.image3.visible then
@@ -491,24 +854,28 @@ sub changetext()
         m.circ1.uri = "pkg:/images/green.png"
         m.circ2.uri = "pkg:/images/circ.png"
         m.circ3.uri = "pkg:/images/circ.png"
+
         m.timer.control = "start"
         m.timer.duration = m.time
     end if
 end sub
 
 function showLoginScreen() as object
-    ' Display the login screen
+    ? "LoginScreen"
     if m.remenberCheckList <> invalid
         if m.remenberCheckList.checkedState[0] = true
+
             setGuideMode("true")
+
         else if m.remenberCheckList.checkedState[0] = false
+
             setGuideMode("false")
+
         end if
 
         if getDataMode() <> ""
             deleteDataMode()
             ApiCallFor("Sign out", "POST")
-            ' Set focus and visibility for login screen elements
             m.sign.setFocus(false)
             m.UsernamEditText.setFocus(true)
             m.UsernamEditText.active = true
@@ -518,11 +885,16 @@ function showLoginScreen() as object
             m.logo.visible = true
 
             if m.roomSelectFlag <> "false"
-                ' Perform actions for room selection
+                ' m.rfiType = "None"
+                m.store = CreateObject("roSGNode", "ChannelStore")
+                m.store.ObserveField("userData", "onGetUserData")
+
                 m.rfiType = "signin"
+                ' Set sign-in context for RFI screen
                 info = CreateObject("roSGNode", "ContentNode")
                 info.addFields({ context: "signin" })
                 m.store.requestedUserDataInfo = info
+
                 m.store.requestedUserData = "email"
                 m.store.command = "getUserData"
             end if
@@ -536,11 +908,16 @@ function showLoginScreen() as object
             m.logo.visible = true
 
             if m.roomSelectFlag <> "false"
-                ' Perform actions for room selection
+                ' m.rfiType = "None"
+                m.store = CreateObject("roSGNode", "ChannelStore")
+                m.store.ObserveField("userData", "onGetUserData")
+
                 m.rfiType = "signin"
+                ' Set sign-in context for RFI screen
                 info = CreateObject("roSGNode", "ContentNode")
                 info.addFields({ context: "signin" })
                 m.store.requestedUserDataInfo = info
+
                 m.store.requestedUserData = "email"
                 m.store.command = "getUserData"
             end if
@@ -549,30 +926,35 @@ function showLoginScreen() as object
 end function
 
 sub reqApiSession()
-    ' Make an API call for session
     m.ChannelEpisodeTask = CreateObject("roSGNode", "ChannelEpisodeTask")
+    ' m.ChannelEpisodeTask.observeField("CategoriesList", "CategoryResponseData")
     m.ChannelEpisodeTask.observeField("errorMessage", "errorDialogSession")
     m.ChannelEpisodeTask.control = "RUN"
 end sub
 
 function errorDialogSession(event as object)
-    ' Handle error response for session API call
+    ?"errorDialogShow: ";event.getData()
+
     if event.getData().responseCode = 401
-        ' Session expired message
-        m.DialogButton = popupDialog(m.top, "Error", "Your session has expired. You have to log in again to proceed further.")
+        ' Session message
+        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "closeSession")
         m.DialogButton.setFocus(true)
     else
-        m.DialogButton = popupDialog(m.top, "Error", "Your session has expired. You have to log in again to proceed further.")
+        m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "closeSession")
         m.DialogButton.setFocus(true)
+
     end if
+
 end function
 
 sub closeSession()
-    ' Close the session and display the login screen
+    ?"close for -> login screen ";
+    ' m.logout = false
     m.buttonClick.setFocus(false)
     m.ErrorDialogView.visible = false
+
     m.SupportDialog.visible = false
     m.RoomListMarkuGrid.visible = false
     m.roomSearchEditText.visible = false
@@ -584,6 +966,8 @@ sub closeSession()
     setRoomSelectionFlag(false)
     m.UsernamEditText.text = ""
     m.PasswordEditText.text = ""
+
+
     m.UsernamEditText.setFocus(false)
     m.UsernamEditText.active = true
     onTextBoxActive("username")
@@ -593,14 +977,25 @@ sub closeSession()
     m.KeyboardPoster.visible = true
     m.KeyboardInput.setFocus(true)
     setUserHomeScreenMode("Login")
+
 end sub
+
 
 sub qrLoginResponse()
-    ' Handle QR login response
-    ' ...
+    ' ? "LoginResponse :m.qrLoginTask: "; m.qrlogintask.response.visible
+    ' if m.qrlogintask.response.visible = false
+    '     ?"hello"
+    '     m.LoginUsingPassCodeButton.visible = true
+    '     m.qrLoginBtn.visible = true
+    '     m.termConditionButton.visible = true
+    ' else
+    '     m.LoginUsingPassCodeButton.visible = false
+    '     m.qrLoginBtn.visible = false
+    '     m.termConditionButton.visible = false
+    ' end if
 end sub
 
-' This is the function that handles the RFI result
+' This is the function that handles the RFI result'
 function onGetUserData()
     if m.rfiType = "signin"
         if (m.store.userData <> invalid)
@@ -616,7 +1011,6 @@ function onGetUserData()
 end function
 
 function displaySignInScreen(email as string)
-    ' Display the sign-in screen with the provided email
     print "Sign in screen - email= "; email
 
     if email <> ""
@@ -628,26 +1022,32 @@ function displaySignInScreen(email as string)
     'signinScreen.findNode("signinKeyboard").setFocus(true)
 end function
 
+
+
 sub signInPassCodeButton()
-    ' Observe the button selected event for sign-in with passcode
     m.SignInWithPasscodeButton = m.top.findNode("SignInWithPasscodeButton")
     m.SignInWithPasscodeButton.observeField("buttonSelected", "PassCodeValidation")
+
+
 end sub
 
 sub setHomeScreenAccordingMode()
-    ' Set the home screen based on the launch screen mode
     if m.launchScreenMode = "Login"
-        ' Open the Login screen
+        '  Open Login screen here
+        ' m.showRoomView = true
         m.logout.visible = false
         m.LoginView.visible = true
         m.LoginWithPassCodeView.visible = false
+
     else if m.launchScreenMode = "Room"
+
         if m.roomSelectFlag = "false"
             reqApiSession()
             ' Open a Room screen for selection
             GetRoomsmAPicall()
             m.SupportDialog.visible = false
             m.roomSearchEditText.visible = true
+            ' m.searchEditTextPoster.visible = true
             m.RoomListMarkuGrid.visible = true
             m.RoomListMarkuGrid.setFocus(true)
             m.logout.visible = true
@@ -659,18 +1059,18 @@ sub setHomeScreenAccordingMode()
 end sub
 
 sub PassCodeValidation()
-    ' Validate the passcode entered for sign-in
     ?"Passcode validation"
+    ' m.EnterPasscodeEditText.text = "wP5JzL174M"
     if m.EnterPasscodeEditText.text <> ""
         loginWithPassCodeAPicall()
     else
         showDialog("Error", "Please fill the Pass code first", true, "", "")
         m.needHelpText = "passcodeUI"
+
     end if
 end sub
 
 sub loginWithPassCodeAPicall()
-    ' Make an API call for sign-in with passcode
     ?"loginWithPassCodeAPicall"
     showspinner(true)
     m.LoginPasscodeTask = CreateObject("roSGNode", "LoginPasscodeTask")
@@ -684,6 +1084,7 @@ sub loginWithPassCodeAPicall()
     data["deviceid"] = deviceInfo.GetChannelClientId()
 
     m.LoginPasscodeTask.callType = "POST"
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
     m.LoginPasscodeTask.data = data
     m.LoginPasscodeTask.control = "RUN"
@@ -691,17 +1092,21 @@ sub loginWithPassCodeAPicall()
 end sub
 
 sub logOutPassCodeAPicall()
-    ' Make an API call for log out with passcode
     ?"logOutPassCodeAPicall"
     showspinner(true)
 
     m.LogoutPassCodeTask = CreateObject("roSGNode", "LogoutPassCode")
 
+    ' passcode = (m.EnterPasscodeEditText.text).Trim()
     data = {}
 
+    ' deviceInfo = getDeviceInfo() ' GetDeviceUniqueId()
+
     data["id"] = m.LogoutCode
+    ' data["deviceid"] = deviceInfo.GetChannelClientId()
 
     m.LogoutPassCodeTask.callType = "POST"
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
     m.LogoutPassCodeTask.data = data
     m.LogoutPassCodeTask.control = "RUN"
@@ -709,12 +1114,14 @@ sub logOutPassCodeAPicall()
 end sub
 
 sub LogOutPasscodeResponse(response as object)
-    ' Handle the response for log out with passcode
     ?"LogOutPasscodeResponse;"response.getData()
     responseData = response.getData()
     showspinner(false)
 
     if responseData <> invalid and responseData.response_code = 200
+        ' m.needHelpText = "passcodeUI"
+        ' m.logoutPassCode = true
+        ' closeDialog()
         if(m.EnterPasscodeEditText.text <> "")
             loginWithPassCodeAPicall()
         else if(m.UsernamEditText.text <> "")
@@ -722,39 +1129,44 @@ sub LogOutPasscodeResponse(response as object)
         else if(m.qrCodeImageKey <> "")
             qr_login()
         end if
+        ' showDialog("Success", responseData.message, true, "", "")
+
     end if
+
 
     m.logoutPassCode = false
 end sub
 
+
+
+
 sub LoginPasscodeResponse(params as object)
-    ' Handle the response for login with passcode
     responseData = params.getData()
     ?"LoginPasscodeResponse:"; responseData
     showspinner(false)
     m.isSubscribe = true
-
     if responseData <> invalid and responseData.response_code = 404
         showDialog("Error", responseData.message, true, "", "")
         m.needHelpText = "passcodeUI"
-
     else if responseData <> invalid and responseData.response_code = 401
         showDialog("Error", responseData.message, true, "", "")
         setLogin("login")
         m.needHelpText = "passcodeUI"
         m.isSubscribe = false
-
     else if responseData <> invalid and responseData.response_code = 429 and responseData.data = invalid
+        ' m.ButtonLabelText.text = "Logout"
+        ' m.LogoutCode = responseData.data
         m.needHelpText = "passcodeUI"
         m.logoutPassCode = false
         showDialog("Error", responseData.message, true, "", "")
-
     else if responseData <> invalid and responseData.response_code = 429 and responseData.data <> invalid
+        ' m.ButtonLabelText.text = "Logout"
         m.LogoutCode = responseData.data
         m.needHelpText = "passcodeUI"
         m.logoutPassCode = true
         closeDialog()
-
+        ' showDialog("Error", "responseData.message", true, "", "")
+        ' showDialog("Error", "Already logged in with this device, press 'OK' for logout and login again", true, "", "")
     else if responseData <> invalid and responseData.response_code = 479
         setDeviceMode("device")
         showspinner(false)
@@ -771,6 +1183,7 @@ sub LoginPasscodeResponse(params as object)
         end for
 
     else if responseData <> invalid and responseData.response_code = 200
+        ' showDialog("Success", responseData.message, true, "", "")
         ? "subscribed :"responseData.subscribed
         if responseData.subscribed = true
             setAccountToken(responseData.access_token)
@@ -780,15 +1193,16 @@ sub LoginPasscodeResponse(params as object)
             setPersonaldevicename_popup(responseData.personaldevicename_popup)
             setHomeTimezone(responseData.timezone)
             m.needHelpText = "passcodeUI"
-
             if responseData.personaldevicename_popup = true
+                ' ?"m.LoginTask.response.personaldevicename_popup: "m.LoginTask.response.personaldevicename_popup
+                ' show personal device name
                 RegWrite("personalDevice", "personalDevice")
                 setPersonaldevicename_popup(true)
                 setUserHomeScreenMode("personalDeviceName")
                 setUserPersonalScreenMode("popup")
                 m.top.showPersonalDeviceName = true
-
             else if responseData.userrole = "tieruser"
+                ?"getDeviceMode()"getDeviceMode()
                 if getDeviceMode() = "device"
                     setUserHomeScreenMode("Home")
                     m.loginsuccess = true
@@ -799,19 +1213,26 @@ sub LoginPasscodeResponse(params as object)
                     setUserHomeScreenMode("Room")
                     setRoomSelectionFlag(false)
                     m.roomContent = createObject("roSGNode", "ContentNode")
-
                     if responseData.rooms[0] <> invalid
+                        ' ?"responseData.rooms[0]:";m.LoginTask.response.rooms[0]
+                        ' stringid = (m.LoginTask.response.rooms[0].user_id).toStr()
+                        ' setUserCredential(stringid)
+                        ?"responseData.rooms[0].user:";responseData.rooms[0].user_id
                         for each item in responseData.rooms
+
                             roomDetail = m.roomContent.createChild("ContentNode")
+                            ' itemKey = {}
                             roomDetail.title = item.hotel_room
                             roomDetail.id = item.id
                             roomDetail.HDSMALLICONURL = "pkg:/images/profile/room.png"
+                            ' roomDetail.addFields(itemKey)
                         end for
                         m.needHelpText = "roomSelectUI"
                         m.RoomListMarkuGrid.content = m.roomContent
                         m.showRoomView = true
                         m.loginsuccess = false
                         closeDialog()
+                        ' showDialog(m.LoginTask.response.message, "Please select a room to start streaming", false, "", "")
                         return
                     else
                         setUserHomeScreenMode("Home")
@@ -834,6 +1255,7 @@ sub LoginPasscodeResponse(params as object)
                 showdialogTermCondition(responseData.message, responseData.connected_device, false, "", "dialogButtonResponse")
             else
                 closeDialog()
+                ' showDialog(responseData.message, responseData.connected_device, false, "", "dialogButtonResponse")
             end if
         else
             setUserHomeScreenMode("Login")
@@ -846,30 +1268,27 @@ sub LoginPasscodeResponse(params as object)
 end sub
 
 sub enterPasscodeEditText()
-    ' Initialize EnterPasscodeEditText and EnterPasscodePoster nodes
     m.EnterPasscodeEditText = m.top.findNode("EnterPasscodeEditText")
     m.EnterPasscodePoster = m.top.findNode("EnterPasscodePoster")
 end sub
 
 sub EnterPassCodeLableSet()
-    ' Set properties for EnterPasscodeLabel
     m.EnterPasscodeLabel = m.top.findNode("EnterPasscodeLabel")
     m.EnterPasscodeLabel.font = getFont(24, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.EnterPasscodeLabel.text = "Enter your Passcode"
 end sub
 
 sub loginWithPassCodeLabelSet()
-    ' Set properties for LoginUsingPasscodeLabel
     m.LoginUsingPasscodeLabel = m.top.findNode("LoginUsingPasscodeLabel")
     m.LoginUsingPasscodeLabel.text = "Login Using PassCode"
     m.LoginUsingPasscodeLabel.font = getFont(44, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
 end sub
 
 sub loginWithPassCode()
-    ' Create LoginUsingPassCodeButton and LoginUsingPassCodeLabel nodes
     m.LoginUsingPassCodeButton = m.top.findNode("LoginUsingPassCodeButton")
     m.LoginUsingPassCodeLabel = m.LoginUsingPassCodeButton.createChild("Label")
     m.LoginUsingPassCodeLabel.width = 654
+    ' m.LoginUsingPassCodeLabel.height = 54
     m.LoginUsingPassCodeLabel.translation = [0, 5]
     m.LoginUsingPassCodeLabel.text = "Login with pass code"
     m.LoginUsingPassCodeLabel.color = "#ffffff"
@@ -882,10 +1301,10 @@ sub loginWithPassCode()
 end sub
 
 sub loginWithQrCode()
-    ' Create qrLoginBtn and qrLoginBtnLable nodes
     m.qrLoginBtn = m.top.findNode("qrLoginBtn")
     m.qrLoginBtnLable = m.qrLoginBtn.createChild("Label")
     m.qrLoginBtnLable.width = 654
+    ' m.LoginUsingPassCodeLabel.height = 54
     m.qrLoginBtnLable.translation = [0, 5]
     m.qrLoginBtnLable.text = "QR Login"
     m.qrLoginBtnLable.color = "#ffffff"
@@ -898,27 +1317,33 @@ sub loginWithQrCode()
 end sub
 
 sub CallQrCodeFromNetwork()
-    ' Make a network call to load qr code in the view
     m.GetQrCode = CreateObject("roSGNode", "GetQrCode")
     m.GetQrCode.callType = "POST"
     m.GetQrCode.control = "RUN"
     m.GetQrCode.observeField("response", "GetQrCodeResponse")
 end sub
 
+
 sub qrLoginBtnClick()
-    ' Handle the QR Login button click
+    ' m.qrLoginBtn.setFocus(false)
+    ?"m.RoomListMarkuGrid "m.RoomListMarkuGrid.hasFocus()
+    ?"m.RoomListMarkuGrid"m.logout.hasFocus()
     m.logout.setFocus(false)
     m.RoomListMarkuGrid.setFocus(false)
-
     if m.mainBarcodeView.visible = true
+        ' m.mainBarcodeView.visible = true
         showspinner(false)
     else
         showspinner(true)
 
-        ' Make API call to load qr code in the view
+        ' first api call to load qr code in the view
+        ' https://streamlytv.com/api/login/create/qrcode
         CallQrCodeFromNetwork()
+        ' second screen calculation
+        ' m.LoginWithPassCodeView = m.top.findNode("LoginWithPassCodeView")
+        ' m.mainLoginView = m.top.findNode("LoginView")
+        ' m.mainBarcodeView = m.top.findNode("barCodeView")
 
-        ' Calculate screen layout
         examplerect = m.mainBarcodeView.boundingRect()
         centerx = (1920 - examplerect.width) / 2
         centery = 200
@@ -926,6 +1351,7 @@ sub qrLoginBtnClick()
 
         m.qrCodeDiscriptionRect = m.top.findNode("qrCodeDiscriptionRect")
         m.qrCodeRect = m.top.findNode("qrCodeRect")
+
         m.qrCodeDiscriptionRect.width = examplerect.width * 4 / 6
         m.qrCodeRect.width = examplerect.width * 2 / 6
 
@@ -936,6 +1362,7 @@ sub qrLoginBtnClick()
         ltransCenterx = (((examplerect.width * 4 / 6) - 100) - m.qrLoginTextLable.width) / 2
         m.qrLoginTextLable.translation = [ltransCenterx, 0]
 
+        ' working in qr code layout set to center of the parent view
         m.qrCodeImagePster = m.top.findNode("qrCodeImg")
         qrCodeCenterX = ((examplerect.width * 2 / 6) - m.qrCodeImagePster.width) / 2
         qrCodeCentery = 100
@@ -963,18 +1390,19 @@ end sub
 sub LoginUsingPassCodeButtonClick(params as object)
     ?"LoginUsingPassCodeButtonClick: ";params.getRoSgnode()
 
-    ' Switch to LoginWithPassCodeView
     m.LoginWithPassCodeView = m.top.findNode("LoginWithPassCodeView")
     m.LoginView.visible = false
     m.LoginWithPassCodeView.visible = true
 
     m.EnterPasscodeEditText.setFocus(true)
+
     onTextBoxActive("passcode")
     m.TextField = ""
-end sub
 
+end sub
 sub termConditionUI()
-    ' Create Term and Conditions dialog
+    ? "termConditionUI";
+
     m.dialogHeight = 730
     m.dialogWidth = 1250
 
@@ -986,6 +1414,7 @@ sub termConditionUI()
     m.termConditionbackgrd.visible = false
 
     m.termCondition = m.termConditionbackgrd.createChild("Poster")
+
     m.termCondition.width = m.dialogWidth
     m.termCondition.height = m.dialogHeight
     m.termCondition.uri = "pkg:/images/Login/backGroundBox.png"
@@ -994,7 +1423,7 @@ sub termConditionUI()
     LayoutGroup = m.termCondition.createChild("LayoutGroup")
     LayoutGroup.translation = [40, 40]
     LayoutGroup.layoutDirection = "vert"
-
+    '    LayoutGroup.itemSpacings = [20]
     m.termConditionTitle = LayoutGroup.createChild("Label")
     m.termConditionTitle.width = m.dialogWidth - 40
     m.termConditionTitle.text = "Term of uses"
@@ -1005,15 +1434,20 @@ sub termConditionUI()
     m.termConditionTitle.vertAlign = "Center"
 
     m.termConditionScrollText = LayoutGroup.createChild("ScrollableText")
+
+    '    m.termConditionScrollText.translation = [0, 0]
     m.termConditionScrollText.width = m.dialogWidth - 40
     m.termConditionScrollText.height = m.dialogHeight * (70 / 100)
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.termConditionScrollText.horizAlign = "Left"
     m.termConditionScrollText.vertAlign = "top"
     m.termConditionScrollText.font = getFont(36, "pkg:/fonts/Helvetica-Neue-Light_22503.ttf")
     m.termConditionScrollText.color = "#000000"
-
     m.termConditionDialogButton = m.termCondition.createChild("Button")
     m.termConditionDialogButton.observeField("buttonSelected", "closeDialog")
+
+    '                 m.OkButton.translation= [466,429]
     m.termConditionDialogButton.minWidth = "260"
     m.termConditionDialogButton.maxWidth = "260"
     m.termConditionDialogButton.focusedTextColor = "#FFFFFF"
@@ -1035,23 +1469,26 @@ sub termConditionUI()
 end sub
 
 sub initApi()
-    ' Initialize ProfileTask for API calls
     ? ""
-    m.ProfileTask = CreateObject("roSGNode", "ProfileTask")
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") ' Create XML Parsing task node
+    '     ApiCallFor(callto,"GET")
     m.ProfileTask.callType = "GET"
+
     m.ProfileTask.observeField("response", "responseAPI")
 end sub
-
 sub responseAPI(event as object)
     responseData = event.getData()
     ? "ProfileScreen::responseAPI: event: "; responseData
     showspinner(false)
-
-    ' Handle different API responses based on callto value
     if m.ProfileTask.callto = "termofuse"
         m.needHelpText = "termofuse"
+        ? "termofuse:"; responseData
         m.termConditionbackgrd.visible = true
         m.termConditionScrollText.text = responseData.data
+
+        ' m.termofUsesDialog = CreateObject("rosgnode","dialog")
+        ' m.termofUsesDialog.appendChild(m.termCondition)
+        ' m.top.getScene().dialog = m.termofUsesDialog
         m.termConditionScrollText.setFocus(true)
     else if m.ProfileTask.callto = "Support"
         m.SupportDialog.visible = true
@@ -1064,6 +1501,7 @@ sub responseAPI(event as object)
             m.HelpButton.setFocus(true)
         end if
     else if m.ProfileTask.callto = "Sign out"
+        ' ?"Profile::responseData.message:";m.responseData.message
         if m.ProfileCategory <> invalid
             setAccountToken("")
             setThePersonalDeviceName("")
@@ -1072,12 +1510,17 @@ sub responseAPI(event as object)
             m.top.logout = true
             m.ProfileCategory.setFocus(false)
         end if
+
+
+
     else if responseData.response_code = true
+
+        ?"Profile::responseData.message:";responseData.message
         setAccountToken("")
         setThePersonalDeviceName("")
         setPersonaldeviceid("")
 
-        ' Hide room selection screen and show login screen
+        ' hide the room selection screen and show the login screen
         m.LoginView.visible = true
         m.LoginWithPassCodeView.visible = false
         m.mainBarcodeView.visible = false
@@ -1087,33 +1530,46 @@ sub responseAPI(event as object)
         m.logout.visible = false
         setUserHomeScreenMode("Login")
         m.UsernamEditText.setFocus(true)
+
+        ' setPersonaldevicename_popup(true)
+        ' setUserHomeScreenMode("personalDeviceName")
+        ' m.top.showPersonalDeviceName = true
     else
-        ' Show error dialog
+        ?"error dialog to show the error:";responseData
+        '    showDialog("",false,false)
+
         showDialogError(true, responseData.Failure, "Ok")
+
     end if
 end sub
 
 sub needHelp()
-    ' Set up the Need Help button
+    ? "needhelp:"
+
     m.needHelpButton = m.top.findNode("needHelpButton")
     m.needHelpButton.translation = [560, 455]
     m.needHelpButton.textFont = getFont(24, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.needHelpButton.focusedTextFont = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.needHelpButton.text = "Need help ?"
+
+    '   m.needHelpButton.observeField("buttonSelected","")
+
     m.needHelpButton.minWidth = "220"
     m.needHelpButton.maxWidth = "220"
     m.needHelpButton.textColor = "#000000"
     m.needHelpButton.focusedTextColor = "#0db5ba"
     m.needHelpButton.height = "45"
     m.needHelpButton.focusBitmapUri = "pkg:/images/transparentimg.png"
+
     m.needHelpButton.iconUri = ""
     m.needHelpButton.focusedIconUri = ""
+
     m.needHelpButton.observeField("buttonSelected", "showSupportDialog")
 end sub
 
 sub showSupportDialog()
-    ' Show the support dialog
     ? "showSupportDialog"
+    '      m.top.appendChild( m.LoaderBackground )
     m.ProfileTask.callto = "Support"
     m.ProfileTask.control = "RUN"
     showspinner(true)
@@ -1121,7 +1577,6 @@ sub showSupportDialog()
 end sub
 
 sub termConditionApiCall()
-    ' Make API call for term and condition
     ? "termConditionApiCall"
     m.ProfileTask.callto = "termofuse"
     m.ProfileTask.control = "RUN"
@@ -1129,47 +1584,49 @@ sub termConditionApiCall()
 end sub
 
 sub dontHaveAccount()
-    ' Set up the "Don't have an account?" label
+
     m.dontHaveAccountLAbel = m.top.findNode("registerLabel")
-    m.dontHaveAccountLAbel.text = "Don't have an account?"
+    m.dontHaveAccountLAbel.text = "Don't have acount ?"
     m.dontHaveAccountLAbel.translation = [280, 780]
     m.dontHaveAccountLAbel.color = "#000000"
     m.dontHaveAccountLAbel.Font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ' Set up the version label
     m.version = m.top.findNode("version")
-    m.version.text = "Version: 2.10"
+    m.version.text = "Version : 2.13"
     m.version.translation = [320, 850]
     m.version.color = "#004E92"
     m.version.Font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
-    ' Set up the "Register Now" button
+
     m.registerNow = m.dontHaveAccountLAbel.createChild("Button")
     m.registerNow.observeField("buttonSelected", "showDialogforCreateAccount")
+    '    m.OkButton.setFocus(true)
     m.registerNow.translation = [260, -5]
     m.registerNow.minWidth = "200"
     m.registerNow.maxWidth = "200"
     m.registerNow.focusedTextColor = "#000000"
     m.registerNow.height = "49"
     m.registerNow.focusBitmapUri = "pkg:/images/Home/categiryNavFocusIcon.png"
+    ' m.registerNow.focusBitmapUri.width = 150
     m.registerNow.showFocusFootprint = "true"
     m.registerNow.iconUri = ""
     m.registerNow.focusedIconUri = ""
     m.registerNow.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
+    '                 m.OkButton.horizAlign="center"
     okLabel = m.registerNow.createChild("Label")
     okLabel.horizAlign = "center"
     okLabel.height = "45"
+    ' okLabel.color = "#004E92"
     okLabel.color = "#004E92"
     okLabel.width = "200"
     okLabel.vertAlign = "center"
     okLabel.text = "Register now"
     okLabel.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 end sub
-
 sub termCondition()
-    ' Set up the "Terms & Conditions" button
     m.termConditionButton = m.top.findNode("termConditionButton")
     m.termConditionButton.observeField("buttonSelected", "termConditionApiCall")
+    '    m.OkButton.setFocus(true)
     m.termConditionButton.translation = [127, 780]
     m.termConditionButton.minWidth = "130"
     m.termConditionButton.maxWidth = "130"
@@ -1180,6 +1637,7 @@ sub termCondition()
     m.termConditionButton.iconUri = ""
     m.termConditionButton.focusedIconUri = ""
     m.termConditionButton.focusFootprintBitmapUri = "pkg:/images/Login/createAccountunFocus.png"
+    '                 m.OkButton.horizAlign="center"
     termConditionButtonLabel = m.termConditionButton.createChild("Label")
     termConditionButtonLabel.horizAlign = "center"
     termConditionButtonLabel.height = "45"
@@ -1189,23 +1647,30 @@ sub termCondition()
     termConditionButtonLabel.text = "T & C"
     termConditionButtonLabel.font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 end sub
-
 sub showDialogforCreateAccount()
-    ' Show the Create Account dialog
+    '    m.top.appendChild(m.DialogNodePoster)
     m.needHelpText = "registerNow"
+
     signup = m.top.createChild("signup")
     signup.observeField("exit", "closesignup")
     signup.setFocus(true)
+
+    ' showDialog("Open the link in a browser", " https://streamlytv.com/ ", true, "", "")
+    '    m.OkButton.setFocus(true)
 end sub
+
+
 
 sub closesignup(event as object)
-    ? "closesignup"
+    ?"closesignup"
     m.top.removeChild(event.getRoSgnode())
     m.registerNow.setFocus(true)
+
 end sub
 
+
+
 sub initSupportDialog()
-    ' Initialize the support dialog
     m.dialogHeight = 400
     m.dialogWidth = 1223
 
@@ -1218,27 +1683,38 @@ sub initSupportDialog()
 
     m.LayoutGroup = m.SupportDialog.createChild("LayoutGroup")
     m.LayoutGroup.translation = [(m.SupportDialog.width) / 2, 50]
+    ' m.LayoutGroup.translation = [(1920 - m.dialogWidth) / 2, 0]
     m.LayoutGroup.layoutDirection = "vert"
+    ' m.LayoutGroup.vertAlignment = "bottom"
     m.LayoutGroup.itemSpacings = [20]
     m.LayoutGroup.horizAlignment = "center"
-
     m.TextLabel = m.LayoutGroup.createChild("Label")
     m.TextLabel.width = m.dialogWidth - 10
+    '     * (83.6/100)
     m.TextLabel.font = getFont(35, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
-    m.TextLabel.height = 70
+    ' m.TextLabel.height = 70
+    ' m.TextLabel.numLines = 3
+    m.TextLabel.maxLines = 3
     m.TextLabel.horizAlign = "Center"
     m.TextLabel.vertAlign = "Center"
 
     m.contactNumber = m.LayoutGroup.createChild("Label")
+
+    ' m.contactNumber.translation = [0, 0]
+    ' m.contactNumber.maxLines = 3
+    ' m.contactNumber.numLines = 3
     m.contactNumber.wrap = true
     m.contactNumber.width = m.dialogWidth
     m.contactNumber.height = m.dialogHeight * (35 / 100)
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.contactNumber.horizAlign = "Center"
     m.contactNumber.vertAlign = "Center"
     m.contactNumber.font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
     m.HelpButton = m.LayoutGroup.createChild("Button")
     m.HelpButton.observeField("buttonSelected", "closeDialog")
+    '                 m.OkButton.translation= [466,429]
     m.HelpButton.minWidth = "280"
     m.HelpButton.maxWidth = "280"
     m.HelpButton.focusedTextColor = "#FFFFFF"
@@ -1274,21 +1750,27 @@ sub initTermDialog()
     m.LayoutGroup.itemSpacings = [0]
     m.TextLabel = m.LayoutGroup.createChild("Label")
     m.TextLabel.width = m.dialogWidth
+    '     * (83.6/100)
     m.TextLabel.font = getFont(35, "pkg:/fonts/FontsFree-Net-HelveticaNeueBold.ttf")
     m.TextLabel.height = 50
     m.TextLabel.horizAlign = "Center"
     m.TextLabel.vertAlign = "Center"
 
     m.termConditionText = m.LayoutGroup.createChild("ScrollableText")
+
     m.termConditionText.translation = [0, 0]
     m.termConditionText.width = m.dialogWidth
     m.termConditionText.height = m.dialogHeight * (25 / 100)
+    '    m.contactNumber.translation = [0, 150]
+    '    m.contactNumber.font = "font:SmallBoldSystemFont"
     m.termConditionText.horizAlign = "Center"
     m.termConditionText.vertAlign = "Center"
     m.termConditionText.font = getFont(36, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
     m.TermButton = m.termDialog.createChild("Button")
     m.TermButton.observeField("buttonSelected", "closeDialog")
+
+    '                 m.OkButton.translation= [466,429]
     m.TermButton.minWidth = "280"
     m.TermButton.maxWidth = "280"
     m.TermButton.focusedTextColor = "#FFFFFF"
@@ -1315,7 +1797,7 @@ sub closeshowDialogforCreateAccoun()
 end sub
 
 sub rememberMe()
-    ' Set up the "Remember me" checkbox
+    
     m.remenberCheckList = m.top.findNode("rememberCheckList")
     m.remenberCheckList.translation = [127, 455]
     m.remenberCheckList.itemSize = [300, 50]
@@ -1334,10 +1816,15 @@ sub rememberMe()
     contentNode.Title = "Remember me"
     m.remenberCheckList.content = checklistNode
     m.remenberCheckList.ObserveField("checkedState", "remeberMeUpdate")
-    ? "getLogoutMode() "getLogoutMode()
-    if getUserName() <> invalid and getUserPassword() <> invalid and getUserName() <> "" and getUserPassword() <> "" and getLogoutMode() <> "logout"
+    ?"getLogoutMode() "getLogoutMode()
+    m.remenberCheckList.checkedState = [true]
+    if getUserName() <> invalid and getUserPassword() <> invalid and getUserName() <> "" and getUserPassword() <> ""
+        ' if getUserName() <> invalid and getUserPassword() <> invalid and getUserName() <> "" and getUserPassword() <> "" and getLogoutMode() <> "logout"
+
         m.rememberFlag = true
+
         m.remenberCheckList.checkedState = [m.rememberFlag]
+
         m.UsernamEditText.text = getUserName()
         m.PasswordEditText.text = getUserPassword()
     else
@@ -1346,6 +1833,7 @@ sub rememberMe()
         m.PasswordEditText.text = ""
         m.rememberFlag = false
     end if
+
 end sub
 
 sub remeberMeUpdate(event as object)
@@ -1363,14 +1851,24 @@ sub checkUpdate(event as object)
     end if
 end sub
 
+' sub OnFocusChildChange()
+'     ? "OnFocusChildChange"
+'     if m.top.hasFocus() and (not m.UsernamEditText.hasFocus() and m.setFocus = false)
+'         m.UsernamEditText.setFocus(true)
+'         m.setFocus = true
+'     end if
+' end sub
+
 sub LoginValidation()
     deleteLogin()
-    ? "LoginValidation: "
-    ? "getdata "getDataMode()
+    ? "LoginValidation: ";
+    ?"getdata "getDataMode()
 
-    m.UsernamEditText.text = "roku@yopmail.com"
+    m.UsernamEditText.text = "streamlydevice07@yopmail.com"
     ' m.UsernamEditText.text = "jmheil@gmail.com"
     m.PasswordEditText.text = "123456789"
+
+
 
     ' m.device_connected.visible = true
     ' m.device_connected.text = ConnectedDevices0
@@ -1379,158 +1877,178 @@ sub LoginValidation()
     m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice1")
 
     if m.password_show.visible = true
-        ? "password show"
-        ? "password text: "m.PasswordEditText.text
+        ?"password show"
+        ?"password text: "m.PasswordEditText.text
     end if
 
     if m.UsernamEditText.text <> ""
         if IsValidEmail(m.UsernamEditText.text)
             if m.PasswordEditText.text <> ""
                 if Len((m.PasswordEditText.text)) < 11
-                    if m.rememberFlag then
+                    ' if m.rememberFlag then
                         setUserName(m.UsernamEditText.text)
                         setUserPassword(m.PasswordEditText.text)
-                    else
-                        setUserName("")
-                        setUserPassword("")
-                    end if
+                    ' else
+                    '     setUserName("")
+                    '     setUserPassword("")
+                    ' end if
+
                     LoginProcess()
                 else
-                    showDialog("Error", "Password length should not be greater than 10", true, "", "")
+                    showDialog("Error", "Password length should not grater than 10", true, "", "")
                 end if
             else
-                showDialog("Error", "Please enter a password", true, "", "")
+                showDialog("Error", "Please enter password", true, "", "")
             end if
         else
-            showDialog("Error", "Please enter a valid email", true, "", "")
+            showDialog("Error", "Please Enter Valid email", true, "", "")
         end if
     else
-        showDialog("Error", "Please enter an email", true, "", "")
+        showDialog("Error", "Please enter email", true, "", "")
     end if
     ' LoginProcess()
 end sub
 
 
+
+
+
 sub LoginProcess()
-    ' Display a log message
     ? "LoginProcess: ";
 
-    ' Show a spinner while processing
     showspinner(true)
 
-    ' Create a LoginTask object
     m.LoginTask = CreateObject("roSGNode", "LoginTask")
+    ' m.LoginPasscodeTask = CreateObject("roSGNode", "LoginPasscodeTask")
 
-    ' Get email and password from user input
+    data = ""
+    ' email = "vikas.saini1@oodles.io"
+    ' password = "123456789"
     email = m.UsernamEditText.text
     password = m.PasswordEditText.text
 
-    ' Prepare data object for login request
+    ' email = (m.UsernamEditText.text).Trim()
+    ' password = (m.PasswordEditText.text).Trim()
     data = {}
-    deviceInfo = getDeviceInfo()
+
+    deviceInfo = getDeviceInfo() ' GetDeviceUniqueId()
+
     data["email"] = email
     data["password"] = password
     data["deviceid"] = deviceInfo.GetChannelClientId()
 
-    ' Set the call type to POST and display data
     m.LoginTask.callType = "POST"
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
 
-    ' Assign data to LoginTask object
     m.LoginTask.data = data
-
-    ' Set control to RUN and observe response field
     m.LoginTask.control = "RUN"
     m.LoginTask.observeField("response", "LoginResponse")
+
 end sub
 
 sub ApiCallFor_session(callto as string, callType as string)
-    ' Display log message with callto and callType
-    ? "ProfileSetting::ApiCallFor: "; callto; callType
-
-    ' Create a ProfileTask object for XML parsing
-    m.ProfileTask = CreateObject("roSGNode", "ProfileTask")
-
-    ' Show login busy spinner
+    ?"ProfileSetting::ApiCallFor: ";callto ;callType
+    m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
     m.LoginBusySpinner.visible = true
-
-    ' Set callto and callType for ProfileTask
+    '     ApiCallFor(callto,"GET")
     m.ProfileTask.callto = callto
     m.ProfileTask.callType = callType
 
-    ' Observe response and errorMessage fields
     m.ProfileTask.observeField("response", "responseAPI")
     m.ProfileTask.observeField("errorMessage", "errorDialogShow")
 
-    ' Run the ProfileTask
-    m.ProfileTask.control = "RUN"
+    '     m.ProfileTask.observeField("response","responseAPI")
+    m.ProfileTask.control = "RUN" 'Run the task node
+
 end sub
 
+
 sub LoginResponse()
-    ' Display login response
+
+
     ? "LoginResponse :m.LoginTask: user"; m.LoginTask.response
 
-    if m.LoginTask.response.response_code = 200 then
+
+    if m.LoginTask.response.response_code = 200
         setDataMode(m.LoginTask.response.sessionid)
-        stringid = m.LoginTask.response.user.id.toStr()
+        stringid = (m.LoginTask.response.user.id).toStr()
         setUserCredential(stringid)
     end if
 
-    if m.LoginTask.response.response_code = 479 then
+
+    if m.LoginTask.response.response_code = 479
         setDeviceMode("device")
         showspinner(false)
         m.Nodevice.setFocus(true)
         showDialogDevice("LoginError", true, false, m.LoginTask.response.message)
         ConnectedDevices0 = m.LoginTask.response.loggedindeviceinfolist.numofdevice
         ConnectedDevices = m.LoginTask.response.loggedindeviceinfolist.data
-        ? "Profile::responseData.message:"; m.LoginTask.response.loggedindeviceinfolist.data
+        ?"Profile::responseData.message:";m.LoginTask.response.loggedindeviceinfolist.data
         marupContent = createObject("roSGNode", "ContentNode")
         for each data in ConnectedDevices
-            ? "data: "data
-            ? "userData[data]: "; data["device_name"] ;data["device_type"] ;data["personaldevicename"]
+            ?"data: "data
+            ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
             marupContent.createChild("ContentNode").addFields(data)
         end for
+
+        ' m.registredDevicesMarkup.visible = true
+        ' m.registredDevicesMarkup.content = marupContent
     else
+
         showspinner(false)
         m.loginsuccess = false
-        if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 404 then
+        if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 404
             showDialog("Error", m.LoginTask.response.message, true, "", "")
             m.needHelpText = "normalLoginUI"
             m.isSubscribe = false
-        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 401 then
+        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 401
             showDialog("Error", m.LoginTask.response.message, true, "", "")
             setLogin("login")
             m.needHelpText = "normalLoginUI"
             m.isSubscribe = false
-        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 429 and m.LoginTask.response.data = invalid then
+        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 429 and m.LoginTask.response.data = invalid
+            ' m.ButtonLabelText.text = "Logout"
+            ' m.LogoutCode = responseData.data
             m.needHelpText = "normalLoginUI"
             m.logoutPassCode = false
             m.isSubscribe = false
             showDialog("Error", m.LoginTask.response.message, true, "", "")
-        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 429 and m.LoginTask.response.data <> invalid then
+        else if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 429 and m.LoginTask.response.data <> invalid
+            ' m.ButtonLabelText.text = "Logout"
             m.LogoutCode = m.LoginTask.response.data
             m.needHelpText = "normalLoginUI"
             m.logoutPassCode = true
             m.isSubscribe = false
+
             closeDialog()
-        else if m.LoginTask.response.response_code = 200 then
+            ' showDialog("Error", "responseData.message", true, "", "")
+            ' showDialog("Error", "Already logged in with this device, press 'OK' for logout and login again", true, "", "")
+        else if m.LoginTask.response.response_code = 200
             m.isSubscribe = true
-            if m.LoginTask.response.subscribed = true then
+            if m.LoginTask.response.subscribed = true
                 setAccountToken(m.LoginTask.response.access_token)
                 setPersonaldeviceid(m.LoginTask.response.personaldeviceid)
                 setDeviceType(m.LoginTask.response.device_type)
                 setUserType(m.LoginTask.response.userrole)
-                ? "setUserType value: "getUserType()
+                ?"setUserType value: "getUserType()
                 setPersonaldevicename_popup(m.LoginTask.response.personaldevicename_popup)
                 setHomeTimezone(m.LoginTask.response.timezone)
-                if m.LoginTask.response.personaldevicename_popup = true then
+                if m.LoginTask.response.personaldevicename_popup = true
+                    ' ?"m.LoginTask.response.personaldevicename_popup: "m.LoginTask.response.personaldevicename_popup
+                    ' show personal device name
                     RegWrite("personalDevice", "personalDevice")
                     setPersonaldevicename_popup(true)
                     setUserHomeScreenMode("personalDeviceName")
                     setUserPersonalScreenMode("popup")
                     m.top.showPersonalDeviceName = true
-                else if m.LoginTask.response.userrole = "tieruser" then
-                    if getDeviceMode() = "device" then
+                else if m.LoginTask.response.userrole = "tieruser"
+                    ' RegWrite("personalDevice","personalDevice")
+                    ' setPersonaldevicename_popup(true)
+                    ' setUserHomeScreenMode("personalDeviceName")
+                    ' m.top.showPersonalDeviceName = true
+                    ?"getDeviceMode()"getDeviceMode()
+                    if getDeviceMode() = "device"
                         setUserHomeScreenMode("Home")
                         m.loginsuccess = true
                         buttons = []
@@ -1540,20 +2058,24 @@ sub LoginResponse()
                         setUserHomeScreenMode("Room")
                         setRoomSelectionFlag(false)
                         m.roomContent = createObject("roSGNode", "ContentNode")
-                        if m.LoginTask.response.rooms[0] <> invalid then
-                            stringid = m.LoginTask.response.rooms[0].user_id.toStr()
+                        if m.LoginTask.response.rooms[0] <> invalid
+                            ?"responseData.rooms[0]:";m.LoginTask.response.rooms[0]
+                            stringid = (m.LoginTask.response.rooms[0].user_id).toStr()
                             setUserCredential(stringid)
                             for each item in m.LoginTask.response.rooms
                                 roomDetail = m.roomContent.createChild("ContentNode")
+                                ' itemKey = {}
                                 roomDetail.title = item.hotel_room
                                 roomDetail.id = item.id
                                 roomDetail.HDSMALLICONURL = "pkg:/images/profile/room.png"
+                                ' roomDetail.addFields(itemKey)
                             end for
                             m.needHelpText = "roomSelectUI"
                             m.RoomListMarkuGrid.content = m.roomContent
                             m.showRoomView = true
                             m.loginsuccess = false
                             closeDialog()
+                            ' showDialog(m.LoginTask.response.message, "Please select a room to start streaming", false, "", "")
                             return
                         else
                             setUserHomeScreenMode("Home")
@@ -1564,6 +2086,7 @@ sub LoginResponse()
                         end if
                     end if
                 else
+                    ?"homescreen switching "
                     setUserHomeScreenMode("Home")
                     m.loginsuccess = true
                     buttons = []
@@ -1572,20 +2095,25 @@ sub LoginResponse()
                     m.top.signalBeacon("AppDialogComplete")
                 end if
             else
+                ' m.needHelpText = "passcodeUI"
                 m.logoutPassCode = true
                 m.isSubscribe = false
                 showDialog("Subscription Error", m.LoginTask.response.subscribedmsgis, true, "", "")
                 return
             end if
 
-            if m.LoginTask.response.termandcondition = true then
+            if m.LoginTask.response.termandcondition = true
                 showdialogTermCondition(m.LoginTask.response.message, m.LoginTask.response.connected_device, false, "", "dialogButtonResponse")
             else
                 closeDialog()
+                ' 4 connected device message removed
+                ' showDialog(m.LoginTask.response.message, "Please select a room to start streaming", false, "", "dialogButtonResponse")
             end if
         else
             buttons = []
             buttons.Push("OK")
+            '        buttons.Push("Cancel")
+            ' showDialog("Login Error", m.LoginTask.response.message, true, buttons, "")
             m.Nodevice.setFocus(true)
             showDialogDevice("Login Error", true, false, "Invalid credentials")
         end if
@@ -1598,59 +2126,57 @@ sub openHomeView()
     m.screen.observeField("ExitView", "openLoginView")
 end sub
 
-
 sub showDialogDevice(dialogView as string, show as boolean, focus as boolean, message as string)
-    ' Display log message
-    ? "ProfileSetting::show"
-
-    ' Hide deviceView initially
+    ?"ProfileSetting::show"
     m.deviceView.visible = false
 
-    if show then
-        ' Set deviceText and deviceView properties
+
+
+    if show
         m.deviceText.text = tr(message)
         m.deviceView.width = 1620
         m.deviceView.height = 488
         m.deviceView.visible = show
+        ' m.Dialog.visible = show
         m.deviceView.translation = [(1920 - m.deviceView.boundingRect().width) / 2, (1080 - m.deviceView.boundingRect().height) / 2]
     end if
+
 end sub
 
 sub showDialogRemove(dialogView as string, show as boolean, focus as boolean)
-    ' Display log message
-    ? "ProfileSetting::showDialog"
-
-    ' Hide removeView initially
+    ?"ProfileSetting::showDialog"
     m.removeView.visible = false
 
-    if show then
-        ' Set removeText and removeView properties
+
+
+    if show
         m.removeText.text = tr("Are you sure you want to logout from this device?")
         m.removeView.width = 1450
         m.removeView.height = 488
         m.removeView.visible = show
+        ' m.Dialog.visible = show
         m.removeView.translation = [(1920 - m.removeView.boundingRect().width) / 2, (1080 - m.removeView.boundingRect().height) / 2]
     end if
+
 end sub
 
-sub dialogButtonResponse()
-    ' Display log message with dialogButtonSelected value
-    ? "dialogButtonResponse: "; m.dialog.buttonSelected
 
-    if m.loginsuccess = true and m.dialog.buttonSelected = 0 then
-        ' Perform actions when login is successful and buttonSelected is 0
+
+sub dialogButtonResponse()
+    ? "dialogButtonResponse: "m.dialog.buttonSelected
+    if m.loginsuccess = true and m.dialog.buttonSelected = 0
+
+        ' CloseScreen(m.top)
+        ' ShowScreen(CreateObject("roSgNode","HomeScreen"))
         m.dialog.close = true
         m.top.visible = false
     end if
 end sub
 
 sub showspinner(event as object)
-    ' Display log message
-    ' ? "showspinner:event : "; event.getData()
-
-    ' Show/hide LoaderBackground and start/stop LoginBusySpinner based on event
+    ' ?"showspinner:event : ";event.getData()
     m.LoaderBackground.visible = event
-    if event then
+    if event
         m.LoginBusySpinner.control = "start"
     else
         m.LoginBusySpinner.control = "stop"
@@ -1658,32 +2184,22 @@ sub showspinner(event as object)
 end sub
 
 sub showDialog(title as string, message as string, optionsDialog as boolean, buttons as object, onserveField as object)
-    ' Display log message with message
     ? "showDialog: message: "; message
-
-    ' Set focus and text properties for elements in the dialog
     m.HelpButton.setFocus(true)
     m.contactNumber.text = message
     m.TextLabel.text = title
     m.SupportDialog.visible = true
-
-    if not m.isSubscribe then
+    if not m.isSubscribe
         m.ButtonLabelText.text = "OK"
     end if
-
-    ' Set focus to SignInButton
     ' m.SignInButton.setFocus(true)
 end sub
 
 sub showdialogTermCondition(title as string, message as string, optionsDialog as boolean, buttons as object, onserveField as object)
-    ' Set dialog height and width
     m.dialogHeight = 800
     m.dialogWidth = 1223
 
-    ' Display log message with message
     ? "showDialog: message: "; message
-
-    ' Set focus and text properties for elements in the dialog
     m.HelpButton.setFocus(true)
     m.contactNumber.text = message
     m.TextLabel.text = title
@@ -1691,29 +2207,27 @@ sub showdialogTermCondition(title as string, message as string, optionsDialog as
 end sub
 
 sub closeDialog()
-    ' Display log message
     ? "closeDialog true"
     ? ""; m.needHelpText
-
-    if m.loginsuccess = true then
-        ' Close the top view
+    if m.loginsuccess = true
+        ' m.top.visible = false
         m.top.ExitView = true
-    else if m.needHelpText = "helpSupport" then
+    else if m.needHelpText = "helpSupport"
         m.SupportDialog.visible = false
         m.HelpButton.setFocus(false)
         m.needHelpButton.setFocus(true)
-    else if m.needHelpText = "registerNow" then
+    else if m.needHelpText = "registerNow"
         m.SupportDialog.visible = false
         m.registerNow.setFocus(true)
-    else if m.needHelpText = "termofuse" then
-        ' Update termConditionButton properties
+    else if m.needHelpText = "termofuse"
+        ? "termofuse:"; responseData
+
         m.okLabel.color = "#000000"
         m.termConditionbackgrd.visible = false
         m.termConditionButton.setFocus(true)
-    else if m.needHelpText = "roomSelectUI" then
-        ' Make API call to get rooms
-        GetRoomsmAPicall()
+    else if m.needHelpText = "roomSelectUI"
 
+        GetRoomsmAPicall()
         m.SupportDialog.visible = false
         m.RoomListMarkuGrid.visible = true
         m.roomSearchEditText.visible = true
@@ -1724,224 +2238,215 @@ sub closeDialog()
         m.mainBarcodeView.visible = false
         setRoomSelectionFlag(false)
         setUserHomeScreenMode("Room")
-    else if m.needHelpText = "passcodeUI" or m.needHelpText = "qrUI" or m.needHelpText = "normalLoginUI" then
-        if m.needHelpText = "passcodeUI" then
+        ' m.LoginWithPassCodeView.visible = false
+    else if m.needHelpText = "passcodeUI" or m.needHelpText = "qrUI" or m.needHelpText = "normalLoginUI"
+        if m.needHelpText = "passcodeUI"
             m.SignInWithPasscodeButton.setFocus(true)
         end if
-
-        ? "passcodeUI focus true"
+        ?"passcodeUI focus true"
         m.ButtonLabelText.text = "Ok"
-
-        if m.logoutPassCode then
+        if m.logoutPassCode
             m.logoutPassCode = false
             logOutPassCodeAPicall()
-
-            if m.needHelpText = "passcodeUI" then
+            if m.needHelpText = "passcodeUI"
                 m.SignInWithPasscodeButton.setFocus(true)
             end if
-
             m.SupportDialog.visible = false
-        else if m.showRoomView then
+
+        else if m.showRoomView
             m.LoginView.visible = false
             m.showRoomView = false
             m.LoginWithPassCodeView.visible = false
             m.mainBarcodeView.visible = false
+            ' m.mainLoginView.visible = false
             m.SupportDialog.visible = false
             m.RoomListMarkuGrid.visible = true
             m.HotelLoginLableInfo.visible = true
             m.RoomListMarkuGrid.setFocus(true)
+
         else
+            ' m.SignInWithPasscodeButton.setFocus(true)
             m.SupportDialog.visible = false
             m.SignInButton.setFocus(true)
         end if
+
+
     else
+
+
         m.HelpButton.setFocus(false)
         m.SupportDialog.visible = false
         m.SignInButton.setFocus(true)
     end if
-
     m.needHelpText = ""
+
+    ' m.dialog.close=true
 end sub
 
-sub RoomListUI()
-    ' Display log message
-    ? "RoomListUI"
 
-    ' Find and set properties for HotelLoginLableInfo
+sub RoomListUI()
+
+    ?"RoomListUI"
     m.HotelLoginLableInfo = m.top.findNode("HotelLoginLableInfo")
     m.HotelLoginLableInfo.font = getFont(28, "pkg:/fonts/HelveticaNeueMedium.ttf")
     m.HotelLoginLableInfo.text = "Hotel Login Streamly On your TV Select Room"
     m.HotelLoginLableInfo.translation = [(1920 - m.HotelLoginLableInfo.boundingRect().width) / 2, 220]
     m.HotelLoginLableInfo.visible = false
 
-    ' Find and set properties for RoomListMarkuGrid
+
     m.RoomListMarkuGrid = m.top.findNode("RoomList")
     m.RoomListMarkuGrid.translation = "[115,250]"
     m.RoomListMarkuGrid.itemComponentName = "ChannellistMarkuGridComponent"
     m.RoomListMarkuGrid.itemSpacing = "[ 20, 20 ]"
+    '  m.ChannelsMarkuGrid.rowSpacings = "[ 200, 200 ]"
+    '  m.ChannelsMarkuGrid.columnSpacings = "[ 200, 0 ]"
+    ' m.ChannelsMarkuGrid.rowHeights =	[ 260, 120, 220 ]
+    '  m.ChannelsMarkuGrid.wrapDividerHeight="200"
+    ' m.itemWidht = (m.screenWidth - 215) / 4 - 20
     m.itemWidht = 406.25
     m.RoomListMarkuGrid.numColumns = "4"
     m.RoomListMarkuGrid.numRows = "3"
     m.RoomListMarkuGrid.itemSize = [m.itemWidht, m.itemWidht - 100]
+
     m.RoomListMarkuGrid.drawFocusFeedback = "true"
     m.RoomListMarkuGrid.visible = false
     m.RoomListMarkuGrid.observeField("itemSelected", "selectRoomCallback")
 
-    ' Display log message with itemWidth value
-    ? "m.itemwidth"; m.itemWidht
+    ?"m.itemwidth" m.itemWidht
+
 end sub
 
 sub selectRoomCallback(event as object)
-    ' Get the selected room data
     selectedData = event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)
-    ? "selectRoomCallback"; selectedData
+    ?"selectRoomCallback";selectedData
+    ' m.top.playChannel = event.getRosgnode().content.getchild(event.getRosgnode().itemSelected)
 
-    ' Perform actions if selectedData is valid
-    if selectedData <> invalid and selectedData.id <> invalid then
+    if selectedData <> invalid and selectedData.id <> invalid
         selectRoomAPicall(selectedData.id)
     end if
+
 end sub
 
 sub selectRoomAPicall(id as object)
-    ' Display log message
-    ? "selectRoomAPicall"
-
-    ' Show spinner while processing
+    ?"selectRoomAPicall"
     showspinner(true)
-
-    ' Create a RoomSelectTask object
     m.RoomSelectTask = CreateObject("roSGNode", "RoomSelectTask")
 
+    ' passcode = (m.EnterPasscodeEditText.text).Trim()
     data = {}
+
+    ' deviceInfo = getDeviceInfo() ' GetDeviceUniqueId()
+
     data["roomid"] = id
+    ' data["deviceid"] = deviceInfo.GetChannelClientId()
 
     m.RoomSelectTask.callType = "POST"
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
     m.RoomSelectTask.data = data
     m.RoomSelectTask.control = "RUN"
     m.RoomSelectTask.observeField("response", "selectRoomResponse")
+    ' m.RoomSelectTask.observeField("errorMessage", "errorDialogShow")
 end sub
 
 function RegRead(key, section = invalid)
-    ' Check if section is invalid and set it to "Default" if so
-    if section = invalid then section = "Default"
-
-    ' Create a roRegistrySection object for the specified section
+    if section = invalid section = "Default"
     sec = CreateObject("roRegistrySection", section)
-
-    ' Check if the key exists in the section
-    if sec.Exists(key) then
+    if sec.Exists(key)
         return true
     end if
-
     return false
 end function
 
 function RegWrite(key, val, section = invalid)
-    ' Check if section is invalid and set it to "Default" if so
-    if section = invalid then section = "Default"
-
-    ' Create a roRegistrySection object for the specified section
+    if section = invalid section = "Default"
     sec = CreateObject("roRegistrySection", section)
-
-    ' Write the value to the specified key in the section
     sec.Write(key, val)
-
-    ' Note: Uncomment the following line if you want to commit the changes immediately
-    ' sec.Flush()
+    ' sec.Flush() 'commit it
 end function
 
 function RegDelete(key, section = invalid)
-    ' Check if section is invalid and set it to "Default" if so
-    if section = invalid then section = "Default"
-
-    ' Create a roRegistrySection object for the specified section
+    if section = invalid section = "Default"
     sec = CreateObject("roRegistrySection", section)
-
-    ' Delete the specified key from the section
     sec.Delete(key)
-
-    ' Commit the changes to the registry
     sec.Flush()
 end function
 
+
 sub selectRoomResponse(params as object)
-    ' Display log message with params data
-    ? "selectRoomResponse;"; params.getData()
-
-    ' Get the response data
+    ?"selectRoomResponse;";params.getData()
     responseData = params.getData()
-
-    ' Hide the spinner
     showspinner(false)
 
-    if responseData.response_code = 409 then
-        ' Handle the case when the room is already taken
+    if responseData.response_code = 409
         m.needHelpText = "roomSelectUI"
         showDialog("Error", "That Room is already taken, Please refresh the list to select again", true, "", "")
         setRoomSelectionFlag(false)
         setUserHomeScreenMode("Room")
-    else if responseData.response_code = 200 then
-        ' Handle the case when room selection is successful
+    else if responseData.response_code = 200
         m.loginsuccess = true
         setRoomSelectionFlag(true)
-
-        ' Check if personalDevice key exists and delete it
-        if RegRead("personalDevice") then
+        if RegRead("personalDevice")
             RegDelete("personalDevice")
             m.screen = showHomeScreen()
         else
             setUserHomeScreenMode("Home")
+
             closeDialog()
         end if
-    else if responseData.response_code = 401 then
-        ' Handle the case when the session has expired
+
+        ' showDialog("Success", responseData.message, true, "", "")
+    else if responseData.response_code = 401
+        ' setUserHomeScreenMode("Login")
+        ' m.needHelpText = "passcodeUI"
+        ' m.logoutPassCode = true
+        ' m.isSubscribe = false
+        ' showDialog("Subscription Error", responseData.subscribedmsgis, true, "", "")
+        ' showDialogRoom("Error", "Your session has expired. You have to log in again to proceed further.", true, "", "")
+        ' m.logout = true
+
+
         m.DialogButton = popupDialog(m.top, "Error ", "Your session has expired. You have to log in again to proceed further.")
         m.DialogButton.observeField("buttonSelected", "closeScreen")
         m.DialogButton.setFocus(true)
         setAccountToken("")
         setThePersonalDeviceName("")
         setPersonaldeviceid("")
+
+
     end if
+
+
 end sub
 
 function showHomeScreen() as object
-    ' Display log message
     ? "showHomeScreen"
-
-    ' Remove the current screen if it exists
     if m.screen <> invalid then m.top.removeChild(m.screen)
-
-    ' Create a new HomeScreen and set focus to it
+    ' ShowScreen("HomeScreen")
     HomeScreen = m.top.createChild("HomeScreen")
     HomeScreen.setFocus(true)
-
-    ' Return the HomeScreen object
     return HomeScreen
 end function
 
 sub closeScreen()
-    ' Display log message
-    ? "close for -> login screen"
-
-    ' Clear focus and hide views/dialogs
+    ?"close for -> login screen ";
+    ' m.logout = false
     m.buttonClick.setFocus(false)
     m.ErrorDialogView.visible = false
+
     m.SupportDialog.visible = false
     m.RoomListMarkuGrid.visible = false
     m.roomSearchEditText.visible = false
     m.logout.visible = false
     m.RoomListMarkuGrid.setFocus(false)
-
-    ' Show the LoginView and hide other views
     m.LoginView.visible = true
     m.LoginWithPassCodeView.visible = false
     m.mainBarcodeView.visible = false
-
-    ' Reset values and set focus on username text input
     setRoomSelectionFlag(false)
     m.UsernamEditText.text = ""
     m.PasswordEditText.text = ""
+
+
     m.UsernamEditText.setFocus(false)
     m.UsernamEditText.active = true
     onTextBoxActive("username")
@@ -1950,108 +2455,100 @@ sub closeScreen()
     m.UsernamEditText.cursorPosition = (m.UsernamEditText.text).Len()
     m.KeyboardPoster.visible = true
     m.KeyboardInput.setFocus(true)
-
-    ' Set user home screen mode to "Login"
     setUserHomeScreenMode("Login")
+
 end sub
 
+
+
+
 sub GetRoomsmAPicall()
-    ' Display log message
-    ? "selectRoomAPicall"
-
-    ' Show spinner while processing
+    ?"selectRoomAPicall"
     showspinner(true)
-
-    ' Create a GetRoomsTask object
     m.GetRoomsTask = CreateObject("roSGNode", "GetRoomsTask")
 
+    ' passcode = (m.EnterPasscodeEditText.text).Trim()
     data = {}
 
+    ' deviceInfo = getDeviceInfo() ' GetDeviceUniqueId()
+
+    ' data["roomid"] = id
+    ' data["deviceid"] = deviceInfo.GetChannelClientId()
+
     m.GetRoomsTask.callType = "POST"
+    '   data =  "email="+email+"&password="+password+deviceid
     ? "data: "; data
     m.GetRoomsTask.data = data
     m.GetRoomsTask.control = "RUN"
     m.GetRoomsTask.observeField("response", "GetRoomsmAPicallResponse")
 end sub
-
 sub GetRoomsmAPicallResponse(params as object)
-    ' Get the response data
     m.roomResponseData = params.getData()
-
-    ' Display log message with responseData
-    ? "GetRoomsmAPicallResponse"; m.roomResponseData
-
-    ' Hide the spinner
+    ?"GetRoomsmAPicallResponse";responseData
     showspinner(false)
-
-    ' Show room search EditText and logout button
     m.roomSearchEditText.visible = true
     m.logout.visible = true
-
-    ' Check if response data is valid and response code is 200
-    if m.roomResponseData <> invalid and m.roomResponseData.response_code = 200 and m.roomResponseData.data <> invalid then
-        ' Create roomContent node
+    if m.roomResponseData <> invalid and m.roomResponseData.response_code = 200 and m.roomResponseData.data <> invalid
+        ' showDialog("Success", responseData.message, true, "", "")
+        ' m.needHelpText = "passcodeUI"
         m.roomContent = createObject("roSGNode", "ContentNode")
-
-        ' Iterate through each room item and add details to roomContent
+        ?"responseData.rooms[0]:";m.roomResponseData.data[0]
+        m.roomContent = createObject("roSGNode", "ContentNode")
         for each item in m.roomResponseData.data
+            ?"item or room" ; item
             roomDetail = m.roomContent.createChild("ContentNode")
+            ' itemKey = {}
             roomDetail.title = item.hotel_room
             roomDetail.id = item.id
             roomDetail.HDSMALLICONURL = "pkg:/images/profile/room.png"
+            ' roomDetail.addFields(itemKey)
         end for
-
-        ' Set the content of RoomListMarkuGrid to roomContent
         m.RoomListMarkuGrid.content = m.roomContent
     end if
 
-    ' Set focus on RoomListMarkuGrid
     m.RoomListMarkuGrid.setFocus(true)
 end sub
 
-
 sub SearchDevice(searchName as string)
-    ' Search for devices based on the provided search name
 
-    ' Check if the login response is valid and the response code is 479
+
+    ?"m.device"m.devices
+
     if m.LoginTask.response <> invalid and m.LoginTask.response.response_code = 479
+
+
         showspinner(false)
         m.Nodevice.setFocus(true)
-
-        ' Get the number of connected devices and the device information
+        ' showDialogDevice("LoginError", true, false)
         ConnectedDevices0 = m.LoginTask.response.loggedindeviceinfolist.numofdevice
         ConnectedDevices = m.LoginTask.response.loggedindeviceinfolist.data
-
-        ' Create a content node to store the matching device information
+        ?"Profile::responseData.message:";m.LoginTask.response.loggedindeviceinfolist.data
         marupContent = createObject("roSGNode", "ContentNode")
-
-        ' Iterate through each connected device
         for each data in ConnectedDevices
+            ' ?"data: "data.session_id
+            ' ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
             m.device_name = data["device_name"]
             m.device_type = data["device_type"]
-
-            ' Set the personal device name if available, otherwise set it as unknown
-            if (data["personaldevicename"] <> invalid)
+            if(data["personaldevicename"] <> invalid)
                 m.device_name_per = data["personaldevicename"]
             else
                 m.device_name_per = "unknown"
             end if
-
-            ' Set the room number if available, otherwise set it as unknown
-            if (data["hotel_room"] <> invalid)
+            if(data["hotel_room"] <> invalid)
                 m.room_number = data["hotel_room"]
             else
                 m.room_number = "unknown"
             end if
+            ?"m.device_name "Lcase(m.device_name)
+            ?"m.device_name_per " ; data
 
-            ' Check if the search name is present in the device name, personal device name, or room number
             if (Instr(1, Lcase(m.device_name_per), searchName) > 0 or Instr(1, Lcase(m.device_type), searchName) or Instr(1, Lcase(m.room_number), searchName))
-                ' Add the matching device information to the content node
                 marupContent.createChild("ContentNode").addFields(data)
+                ' roomDetail.addFields(itemKey)
             end if
+            ' marupContent.createChild("ContentNode").addFields(data)
         end for
-
-        ' Set focus, visibility, and content for device search elements
+        ?"searchediting"
         m.deviceSearchEditText.active = true
         m.KeyboardPosterDevice.visible = true
         m.KeyboardInputDevice.setFocus(true)
@@ -2059,48 +2556,52 @@ sub SearchDevice(searchName as string)
         m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.TextField = "searchDevice"
+        ' m.registredDevicesMarkup.setFocus(true)
         m.registredDevicesMarkup.visible = true
         m.registredDevicesMarkup.content = marupContent
         m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+        ?"m.registredDevicesMarkup"m.registredDevicesMarkup.hasFocus()
+        ' showDevice("Registered Devices", true, false)
 
+        ' m.DeviceLogout.callType = "POST"
+        ' '   data =  "email="+email+"&password="+password+deviceid
+        ' ? "device: "; data
+        ' m.DeviceLogout.data = data
+        ' m.DeviceLogout.control = "RUN"
     else if m.LoginPasscodeTask.response <> invalid and m.LoginPasscodeTask.response.response_code = 479
+
+
         showspinner(false)
         m.Nodevice.setFocus(true)
-
-        ' Get the number of connected devices and the device information
+        ' showDialogDevice("LoginError", true, false)
         ConnectedDevices0 = m.LoginPasscodeTask.response.loggedindeviceinfolist.numofdevice
         ConnectedDevices = m.LoginPasscodeTask.response.loggedindeviceinfolist.data
-
-        ' Create a content node to store the matching device information
+        ?"Profile::responseData.message:";m.LoginPasscodeTask.response.loggedindeviceinfolist.data
         marupContent = createObject("roSGNode", "ContentNode")
-
-        ' Iterate through each connected device
         for each data in ConnectedDevices
+            ' ?"data: "data.session_id
+            ' ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
             m.device_name = data["device_name"]
             m.device_type = data["device_type"]
-
-            ' Set the personal device name if available, otherwise set it as unknown
-            if (data["personaldevicename"] <> invalid)
+            if(data["personaldevicename"] <> invalid)
                 m.device_name_per = data["personaldevicename"]
             else
                 m.device_name_per = "unknown"
             end if
-
-            ' Set the room number if available, otherwise set it as unknown
-            if (data["hotel_room"] <> invalid)
+            if(data["hotel_room"] <> invalid)
                 m.room_number = data["hotel_room"]
             else
                 m.room_number = "unknown"
             end if
+            ?"m.device_name "Lcase(m.device_name)
+            ?"m.device_name_per " ; data
 
-            ' Check if the search name is present in the device name, personal device name, or room number
             if (Instr(1, Lcase(m.device_name_per), searchName) > 0 or Instr(1, Lcase(m.device_type), searchName) or Instr(1, Lcase(m.room_number), searchName))
-                ' Add the matching device information to the content node
                 marupContent.createChild("ContentNode").addFields(data)
+                ' roomDetail.addFields(itemKey)
             end if
+            ' marupContent.createChild("ContentNode").addFields(data)
         end for
-
-        ' Set focus, visibility, and content for device search elements
         m.deviceSearchEditText.active = true
         m.KeyboardPosterDevice.visible = true
         m.KeyboardInputDevice.setFocus(true)
@@ -2108,48 +2609,51 @@ sub SearchDevice(searchName as string)
         m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.TextField = "searchDevice"
+        ' m.registredDevicesMarkup.setFocus(true)
         m.registredDevicesMarkup.visible = true
         m.registredDevicesMarkup.content = marupContent
         m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+        ' showDevice("Registered Devices", true, false)
 
+        ' m.DeviceLogout.callType = "POST"
+        ' '   data =  "email="+email+"&password="+password+deviceid
+        ' ? "device: "; data
+        ' m.DeviceLogout.data = data
+        ' m.DeviceLogout.control = "RUN"
     else if m.qr_login.response <> invalid and m.qr_login.response.response_code = 479
+
         showspinner(false)
         m.Nodevice.setFocus(true)
-
-        ' Get the number of connected devices and the device information
+        ' showDialogDevice("LoginError", true, false)
         ConnectedDevices0 = m.qr_login.response.loggedindeviceinfolist.data
         ConnectedDevices = m.qr_login.response.loggedindeviceinfolist.data
-
-        ' Create a content node to store the matching device information
+        ?"Profile::responseData.message:";m.qr_login.response.loggedindeviceinfolist.data
         marupContent = createObject("roSGNode", "ContentNode")
-
-        ' Iterate through each connected device
         for each data in ConnectedDevices
+            ' ?"data: "data.session_id
+            ' ?"userData[data]: ";data["device_name"] ;data["device_type"] ;data["personaldevicename"]
             m.device_name = data["device_name"]
             m.device_type = data["device_type"]
-
-            ' Set the personal device name if available, otherwise set it as unknown
-            if (data["personaldevicename"] <> invalid)
+            if(data["personaldevicename"] <> invalid)
                 m.device_name_per = data["personaldevicename"]
             else
                 m.device_name_per = "unknown"
             end if
-
-            ' Set the room number if available, otherwise set it as unknown
-            if (data["hotel_room"] <> invalid)
+            if(data["hotel_room"] <> invalid)
                 m.room_number = data["hotel_room"]
             else
                 m.room_number = "unknown"
             end if
+            ?"m.device_name "Lcase(m.device_name)
+            ?"m.device_name_per " ; data
 
-            ' Check if the search name is present in the device name, personal device name, or room number
             if (Instr(1, Lcase(m.device_name_per), searchName) > 0 or Instr(1, Lcase(m.device_type), searchName) or Instr(1, Lcase(m.room_number), searchName))
-                ' Add the matching device information to the content node
                 marupContent.createChild("ContentNode").addFields(data)
+                ' roomDetail.addFields(itemKey)
             end if
+            ' marupContent.createChild("ContentNode").addFields(data)
         end for
-
-        ' Set focus, visibility, and content for device search elements
+        ?"searchediting"
         m.deviceSearchEditText.active = true
         m.KeyboardPosterDevice.visible = true
         m.KeyboardInputDevice.setFocus(true)
@@ -2157,42 +2661,43 @@ sub SearchDevice(searchName as string)
         m.KeyboardInputDevice.textEditBox.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.deviceSearchEditText.cursorPosition = (m.deviceSearchEditText.text).Len()
         m.TextField = "searchDevice"
+        ' m.registredDevicesMarkup.setFocus(true)
         m.registredDevicesMarkup.visible = true
         m.registredDevicesMarkup.content = marupContent
         m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
+        ' showDevice("Registered Devices", true, false)
 
+        ' m.DeviceLogout.callType = "POST"
+        ' '   data =  "email="+email+"&password="+password+deviceid
+        ' ? "device: "; data
+        ' m.DeviceLogout.data = data
+        ' m.DeviceLogout.control = "RUN"
     end if
 end sub
 
-
 sub searchFilter(searchName as string)
-    ' Filter rooms based on the provided search name
-
     if m.roomResponseData <> invalid and m.roomResponseData.response_code = 200 and m.roomResponseData.data <> invalid
+        ' showDialog("Success", responseData.message, true, "", "")
+        ' m.needHelpText = "passcodeUI"
         m.roomContent = createObject("roSGNode", "ContentNode")
-
-        ' Iterate through each room item
+        ?"responseData.rooms[0]:";m.roomResponseData.data[0]
         for each item in m.roomResponseData.data
-            ' Check if the search name is present in the room number or room ID
             if (Instr(1, Lcase(item.hotel_room), searchName) > 0 or Instr(1, item.id.toStr(), searchName))
                 roomDetail = m.roomContent.createChild("ContentNode")
+                ' itemKey = {}
                 roomDetail.title = item.hotel_room
                 roomDetail.id = item.id
                 roomDetail.HDSMALLICONURL = "pkg:/images/profile/room.png"
+                ' roomDetail.addFields(itemKey)
             end if
         end for
-
         m.RoomListMarkuGrid.content = m.roomContent
     end if
 end sub
 
 sub cursorPosition(event as object)
-    ' Handle cursor position change event
-
     ? "cursorPosition: event: "; event.getData()
-    ? "m.TextField: "m.TextField
-
-    ' Set cursor position based on the active text field
+    ?"m.TextField "m.TextField
     if m.TextField = "UsernamEditText"
         m.UsernamEditText.cursorPosition = event.getData()
     else if m.TextField = "PasswordEditText"
@@ -2203,11 +2708,7 @@ sub cursorPosition(event as object)
 end sub
 
 sub FieldText(event as object)
-    ' Handle field text change event
-
     ? "event: "; event.getData()
-
-    ' Update text and set focus based on the active text field
     if m.TextField = "PasswordEditText"
         m.PasswordEditText.text = event.getData()
         m.PasswordEditText.active = true
@@ -2220,6 +2721,7 @@ sub FieldText(event as object)
         m.RoomListMarkuGrid.setFocus(false)
         m.roomSearchEditText.setFocus(false)
         m.roomSearchEditText.active = false
+
 
         ? "event passcode: "; event.getData()
         m.EnterPasscodeEditText.text = event.getData()
@@ -2241,27 +2743,30 @@ sub FieldText(event as object)
 end sub
 
 function onTextBoxActive(field as string) as void
-    ' Handle text box active event
-
+    '  isActive =  event
     m.TextField = ""
     m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
     m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png"
     m.EnterPasscodePoster.Uri = "pkg:/images/Login/borderon.png"
-
-    ' Set active state and update TextField based on the field parameter
+    ' m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png"
     if field = "username"
         m.UsernamPoster.Uri = "pkg:/images/Login/borderof.png"
+        ' m.PasswordPoster.Uri = "pkg:/images/Login/borderon.png"
         m.TextField = "UsernamEditText"
     else if field = "password"
+        ' m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
         m.PasswordPoster.Uri = "pkg:/images/Login/borderof.png"
         m.TextField = "PasswordEditText"
     else if field = "passcode"
+        ' m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
         m.EnterPasscodePoster.Uri = "pkg:/images/Login/borderof.png"
         m.TextField = "passcode"
     else if field = "PasswordShowPoster"
+        ' m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
         m.PasswordShowPoster.Uri = "pkg:/images/Login/borderof.png"
         m.TextField = "PasswordShowPoster"
     else if field = "SearchBoxPoster"
+        ' m.UsernamPoster.Uri = "pkg:/images/Login/borderon.png"
         m.SearchBoxPoster.Uri = "pkg:/images/Login/borderof.png"
         m.TextField = "SearchBoxPoster"
     else
@@ -2271,17 +2776,12 @@ function onTextBoxActive(field as string) as void
     end if
 end function
 
-
 function IsValidEmail(email as string) as boolean
-    ' Check if the email is valid based on a regular expression pattern
-
     regexEmail = "^[A-Za-z0-9_%+-]+(\.[A-Za-z0-9_%+-]+)*@([A-Za-z0-9-]+\.)+[A-Za-z]{2,6}$"
     return CreateObject("roRegex", regexEmail, "i").IsMatch(email)
 end function
 
 function onTextBoxActives(event as boolean) as void
-    ' Handle text box active event
-
     isActive = event
 
     if (isActive)
@@ -2292,8 +2792,6 @@ function onTextBoxActives(event as boolean) as void
 end function
 
 function recognizer()
-    ' Get the speech recognizer object
-
     if m.recognizer = invalid
         m.recognizer = CreateObject("roSGNode", "SpeechRecognizerEmail")
         m.recognizer.delegate = m.top
@@ -2302,17 +2800,14 @@ function recognizer()
 end function
 
 function speechRecognizerDidReceiveTranscriptEmail(transcript as string)
-    ' Handle transcript received from speech recognizer for email input
-
     ?"speechRecognizerDidReceiveTranscript"
     ?"transcript:"; transcript
     m.lower = LCase(transcript).Replace(".", "")
     m.UsernamEditText.text = m.lower
+
 end function
 
 sub closePrivicyPolicy()
-    ' Close the privacy policy dialog
-
     ?"closePrivicyPolicy"
     m.ScrolableText.setFocus(false)
     m.OkButton1.setFocus(false)
@@ -2326,9 +2821,10 @@ sub closePrivicyPolicy()
 end sub
 
 sub closeOkDialog()
-    ' Close the OK dialog
-
     ?"closeOkDialog"
+    ' if m.HelpButton.hasFocus() and m.top.isInFocusChain()
+
+    '     m.HelpButton.setFocus(false)
     m.top.removeChild(m.SupportDialog1)
     m.Front_View.visible = true
     m.Help.setFocus(true)
@@ -2337,8 +2833,10 @@ sub closeOkDialog()
     m.help1.height = 151
     m.help1.width = 264
     m.help_text.translation = [30, 30]
-end sub
+    ' else
 
+    ' end if
+end sub
 
 function onKeyEvent(key as string, press as boolean) as boolean
     ? "Login: key: "; key
@@ -2974,6 +3472,8 @@ sub deviceScreen()
     ' m.DeviceLogout.control = "RUN"
     ' ' m.DeviceLogout.observeField("response", "LoginDevice")
 
+
+
 end sub
 
 sub removeScreen()
@@ -3115,7 +3615,8 @@ sub LoginQrDevice()
 end sub
 
 sub LoginDevice()
-    ' Get the information of login devices
+
+
     ? "LoginResponse :m.LoginTask: "; m.LoginTask.response.response_code
 
     if m.LoginTask.response.response_code = 479
@@ -3146,11 +3647,17 @@ sub LoginDevice()
         m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
         showDevice("Registered Devices", true, false)
 
+        ' m.DeviceLogout.callType = "POST"
+        ' '   data =  "email="+email+"&password="+password+deviceid
+        ' ? "device: "; data
+        ' m.DeviceLogout.data = data
+        ' m.DeviceLogout.control = "RUN"
     end if
 end sub
 
-' Function to remove selected device
 sub removeDevice()
+
+
     ? "LoginResponse :m.LoginTask: "; m.LoginTask.response.response_code
 
     if m.LoginTask.response.response_code = 479
@@ -3173,11 +3680,16 @@ sub removeDevice()
         m.registredDevicesMarkup.visible = true
         m.registredDevicesMarkup.content = marupContent
         m.registredDevicesMarkup.observeField("itemSelected", "initDialogDevice")
-        
+        ' showDevice("Registered Devices", true, false)
+
+        ' m.DeviceLogout.callType = "POST"
+        ' '   data =  "email="+email+"&password="+password+deviceid
+        ' ? "device: "; data
+        ' m.DeviceLogout.data = data
+        ' m.DeviceLogout.control = "RUN"
     end if
 end sub
 
-' Get all connected device details
 sub initDialogDevice(event as object)
     showDevice("Registered Devices", true, false)
     sessionId = event.getRoSGNode().content.getChild(event.getData()).session_id
@@ -3190,9 +3702,60 @@ sub initDialogDevice(event as object)
     ?"Device Type: "event.getRoSGNode().content.getChild(event.getData()).device_type
     m.settingsBox = event.getRoSGNode().content.getChild(event.getData()).text
     ?"getDataMode() "getDataMode()
+    ' if getDataMode() <> event.getRoSGNode().content.getChild(event.getData()).session_id
+    '     showDialogRemove("Registered Devices", true, false)
+    ' end if
     showDialogRemove("Registered Devices", true, false)
     ' closeDevice()
     m.Noremove.setFocus(true)
+    ' m.dialogOptions.visible = false
+    ' m.registredDevicesMarkup.visible = false
+    ' if event.getData() = 0
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 1
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' m.NoButton.setFocus(true)
+    '   ' showDialog("Sign out", true, false)
+
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' else if event.getData() = 2
+
+    '   if m.settingsBox = "Support"
+    '     m.ProfileCategory.setFocus(false)
+    '     ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    '   else if m.settingsBox = "Sign out"
+    '     m.ProfileCategory.setFocus(false)
+    '     m.NoButton.setFocus(true)
+    '     showDialog("Sign out", true, false)
+    '   end if
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 3
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    '   '    privicyPolicy()
+    '   '    m.ProfileTask.setField("callType","GET")
+    '   '    m.ProfileTask.setField("callFor","Privacy & Policy")
+
+    ' else if event.getData() = 4 'Logout api call
+    '   m.ProfileCategory.setFocus(false)
+    '   m.NoButton.setFocus(true)
+    '   showDialog("Sign out", true, false)
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' '     m.top.appendChild(m.DialogNode)
+    '   ' '     m.OkButton.setFocus(true)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' end if
+
 end sub
 
 sub initDialogDevice1(event as object)
@@ -3207,9 +3770,60 @@ sub initDialogDevice1(event as object)
     ?"Device Type: "event.getRoSGNode().content.getChild(event.getData()).device_type
     m.settingsBox = event.getRoSGNode().content.getChild(event.getData()).text
     ?"getDataMode() "getDataMode()
-    
+    ' if getDataMode() <> event.getRoSGNode().content.getChild(event.getData()).session_id
+    '     showDialogRemove("Registered Devices", true, false)
+    ' end if
+    ' showDialogRemove("Registered Devices", true, false)
+    ' closeDevice()
     m.Noremove.setFocus(true)
-   
+    ' m.dialogOptions.visible = false
+    ' m.registredDevicesMarkup.visible = false
+    ' if event.getData() = 0
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 1
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' m.NoButton.setFocus(true)
+    '   ' showDialog("Sign out", true, false)
+
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' else if event.getData() = 2
+
+    '   if m.settingsBox = "Support"
+    '     m.ProfileCategory.setFocus(false)
+    '     ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    '   else if m.settingsBox = "Sign out"
+    '     m.ProfileCategory.setFocus(false)
+    '     m.NoButton.setFocus(true)
+    '     showDialog("Sign out", true, false)
+    '   end if
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    ' else if event.getData() = 3
+    '   m.ProfileCategory.setFocus(false)
+    '   ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+
+    '   '    privicyPolicy()
+    '   '    m.ProfileTask.setField("callType","GET")
+    '   '    m.ProfileTask.setField("callFor","Privacy & Policy")
+
+    ' else if event.getData() = 4 'Logout api call
+    '   m.ProfileCategory.setFocus(false)
+    '   m.NoButton.setFocus(true)
+    '   showDialog("Sign out", true, false)
+
+
+    '   ' m.ProfileCategory.setFocus(false)
+    '   ' '     m.top.appendChild(m.DialogNode)
+    '   ' '     m.OkButton.setFocus(true)
+    '   ' ApiCallFor(event.getRoSGNode().content.getChild(event.getData()).text, "GET")
+    ' end if
+
 end sub
 
 
@@ -3218,11 +3832,15 @@ sub showDevice(dialogView as string, show as boolean, focus as boolean)
     ' m.logoutView.visible = false
     m.profileView.visible = false
 
+
     if show
+
+
         if dialogView = "Registered Devices"
-            ' Show the profile view with registered devices
+
             m.profileView.width = 1920
             m.profileView.height = 1080
+
             m.profileView.visible = show
             'm.profileView.translation = [(1920 - m.profileView.boundingRect().width) / 2, (1080 - m.profileView.boundingRect().height) / 2]
             ' m.Dialog.visible = show
@@ -3231,14 +3849,15 @@ sub showDevice(dialogView as string, show as boolean, focus as boolean)
             ' ragisterMargkupListTranslationX = (m.profileView.width - 1150) / 2
             ' m.registredDevicesMarkup.translation = [ragisterMargkupListTranslationX, 10]
             ' m.ok.translation = [471, 590]
+
         else if dialogView = ""
             ?"else if working "
         end if
     else
-        ' Hide the profile view
         ' m.Dialog.visible = show
         '   m.ProfileCategory.setFocus(focus)
     end if
+
 end sub
 
 sub closeDevice()
@@ -3289,6 +3908,7 @@ sub closeDialogLogout()
     ?"ProfileSetting::else close dialog"
     ' m.ok.setFocus(false)
     m.NoButton.setFocus(false)
+
     showDialogLogout("", false, true)
     m.RoomListMarkuGrid.setFocus(true)
     ' m.device_name_edit_text.setFocus(true)
@@ -3297,6 +3917,7 @@ sub closeDialogLogout()
     ' m.ErrorDialogView.visible = false
     ' m.SignInButton.setFocus(true)
     'm.RoomListMarkuGrid.setFocus(true)
+
 end sub
 
 sub closeDialogDevice()
@@ -3314,6 +3935,7 @@ sub closeDialogDevice()
         ?"ProfileSetting::else close dialog"
         ' m.ok.setFocus(false)
         m.NoButton.setFocus(false)
+
         showDialogDevice("", false, true, "")
         ' m.device_name_edit_text.setFocus(true)
         ' m.device_name_edit_text.active = true
@@ -3347,6 +3969,7 @@ sub closeDialogRemove()
         ' m.ok.setFocus(false)
         m.NoButton.setFocus(false)
         showDialogDevice("", false, false, "")
+
         showDialogRemove("", false, true)
         ' m.device_name_edit_text.setFocus(true)
         ' m.device_name_edit_text.active = true
@@ -3362,6 +3985,7 @@ function on_ok_key_press() as boolean
     ?"logout : focus" m.logout.hasFocus()
     if m.logout.hasFocus()
         'initDialogMrkupWithData()
+
     else if m.YesButton.hasFocus()
         ' m.top.data = {}
         ' jsonResponse = APICall(getBaseUrl() + logoutUrl(), "POST", m.top.data, m.top.parameters)
@@ -3374,6 +3998,7 @@ function on_ok_key_press() as boolean
         m.logoutPassCode = true
         m.isSubscribe = false
         showDialog("Subscription Error", responseData.subscribedmsgis, true, "", "")
+
     end if
     return true
 end function
@@ -3393,7 +4018,6 @@ sub initDialogMrkupWithData() as boolean
     showDialogLogout("Sign out", true, false)
 end sub
 
-
 sub ApiCallFor(callto as string, callType as string)
     ?"ProfileSetting::ApiCallFor: "
     m.ProfileTask = CreateObject("roSGNode", "ProfileTask") 'Create XML Parsing task node
@@ -3411,7 +4035,32 @@ sub ApiCallFor(callto as string, callType as string)
 
 end sub
 
-' Function to show dialog for error 
+' function errorDialogShow(event as object)
+
+'     m.logout = true
+
+'     if event.getData().responseCode = 401 or event.getData().responseCode = 429 or event.getData().responseCode = 404
+
+
+'         setAccountToken("")
+'         setThePersonalDeviceName("")
+'         setPersonaldeviceid("")
+'     end if
+
+' end function
+
+
+
+' function showLoginScreen() as object
+'     ? "showLoginScreen"
+'     m.top.removeChild(m.screen)
+'     LoginScreen = m.top.createChild("LoginScreen")
+'     LoginScreen.observeField("dialog", "showDialog")
+
+'     LoginScreen.setFocus(true)
+'     return LoginScreen
+' end function
+
 sub showDialogError(visible as boolean, text as string, buttontext as string)
     ?"ProfileSetting::showDialogError"
 
@@ -3609,7 +4258,12 @@ function pressUp() as boolean
 
 end function
 
+
+
+
+
 function keybordClose() as boolean
+
 
     ? "keyboard close"
     m.KeyboardPoster.visible = false
@@ -3629,6 +4283,46 @@ function keybordClose() as boolean
 
     return true
 end function
+
+
+' sub get_qr_code_for_login(url as string)
+'     request = CreateObject("roUrlTransfer")
+'     port = CreateObject("roMessagePort")
+'     request.SetMessagePort(port)
+'     request.SetUrl(url)
+'     if (request.AsyncGetToString())
+'         while (true)
+'             msg = wait(2000, port)
+'             if (type(msg) = "roUrlEvent")
+'                 code = msg.GetResponseCode()
+'                 if (code = 200)
+'                     json = ParseJSON(msg.GetString())
+'                     m.qrCodeImageUrl = json.msg
+'                     m.qrCodeImageTocken = json.key
+'                     m.qrCodeImagePster.uri = m.qrCodeImageUrl
+'                     showspinner(false)
+'                 end if
+'             end if
+'             if (msg = invalid)
+'                 request.AsyncCancel()
+'             end if
+'         end while
+'     end if
+' end sub
+
+' sub get_qr_code_for_login(url)
+'     ?"loginWithPassCodeAPicall"
+'     showspinner(true)
+'     m.qrCodeForLogin = CreateObject("roSGNode", "qrCodeForLogin")
+
+'     m.qrCodeForLogin.callType = "POST"
+'     '   data =  "email="+email+"&password="+password+deviceid
+'     ? "data: "; data
+'     m.qrCodeForLogin.data = data
+'     m.qrCodeForLogin.control = "RUN"
+'     m.qrCodeForLogin.observeField("response", "LoginPasscodeResponse")
+' end sub
+
 
 sub check_for_scan_or_not()
     m.checkForBArcodeContinue = true
@@ -3669,7 +4363,6 @@ function showPersonalDeviceNameScreen() as object
     return personal_device_name
 end function
 
-' Function to perform login from QR Code 
 sub qr_login()
     ?"qrLogin start ..."
     showspinner(true)
