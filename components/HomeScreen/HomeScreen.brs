@@ -2654,6 +2654,7 @@ end sub
 
 sub allChannelApiResponse(event as object)
     if(event.getData().success = true and event.getData().response_code = 200)
+        ?"event.getData() ",event.getData()
         m.AllChannelApiResponse = event.getData()
         m.labelContent = createObject("roSGNode", "ContentNode")
         m.channels.push(event.getData().data)
