@@ -129,39 +129,9 @@ sub init()
     m.PosterIconLabel = m.PosterliveIcon.createChild("Label")
     m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
 
-    ' if getVide_val() <> ""
-    '     if getVide_val() = "video"
-    '         videoId = getVideoid().toInt()
-    '         setVideoscreen("home_refresh")
-    '         if videoId < 96
-    '             m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
-    '             m.LoaderBackground.visible = false
-    '             m.PosterliveIcon.setFocus(false)
-    '             m.timeGride = m.top.findNode("timeGrid")
-    '             m.timeGride.observeField("channelFocused", "channelFocused")
-    '             m.timeGride.setFocus(false)
-    '             for i = 0 to LoadVideo_id().count() - 1
-    '                 if LoadVideo_id()[i] = videoId then
-    '                     setVideourl(LoadVideo_back()[i].URL)
-    '                     playVideo(LoadVideo_back()[i])
-    '                     exit for
-    '                 end if
-    '             end for
-
-    '             m.ChannelsGroup.visible = false
-    '             m.video.visible = true
-    '             m.video.setFocus(true)
-    '             m.top.signalBeacon("VODStartComplete")
-    '         else
-    '             ' Loading Timegrid data if video was not played before exit app
-    '             load_TimegridData()
-
-    '         end if
-    '     end if
-    ' else
-    ' Loading Home screen data
+   
     Home_screenTimegridData()
-    ' end if
+   
 
 end sub
 
@@ -445,8 +415,7 @@ sub load_TimegridData()
     end if
 
     t = currentTime.AsSeconds() - (36 * 60 * 60)
-    ' m.timer.ObserveField("fire", "onTimer")
-    ' m.timer.Start()
+  
 
     t = t - (t mod 1800) ' RDE-2665 - TimeGrid works best when contentStartTime is set to a 30m mark
     m.timeGride.contentStartTime = t
@@ -1875,10 +1844,7 @@ function playVideo(liveStreamData) as void
             end if
 
             vidContent = CreateObject("RoSGNode", "ContentNode")
-            ' drmParams = {
-            '     keySystem: "Widevine"
-            '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
-            ' }
+           
             drmParams = {
                 keySystem: "Playready"
                 licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
