@@ -1,7 +1,0 @@
-<component name="AppSceneEmail" extends="Group">
-  <interface>
-    <!-- Speech Recognizer callbacks -->
-    <function name="speechRecognizerDidReceiveTranscript"/>
-  </interface>
-  <script type="text/brightscript" uri="pkg:/components/LoginScreen/VoiceSearch/AppSceneEmail.brs"/>
-</component>

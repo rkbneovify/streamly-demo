@@ -1,6 +1,7 @@
 
 sub INIT()
-   
+    ' Front screen
+    ' ? "login init()";getPersonaldeviceid()
     login_guide()
     privicyPolicy()
 
@@ -85,6 +86,15 @@ sub INIT()
     m.Help.observeField("buttonSelected", "showSupportDialog1")
     ?"m.Privacy "m.Privacy.hasFocus()
 
+
+
+
+
+
+    ' calculate the display size and set the Search edit text width according to screeen size
+
+
+
     deleteFront()
 
     di = CreateObject("roDeviceInfo")
@@ -139,6 +149,20 @@ sub INIT()
     m.deviceSearchEditText = m.top.findNode("deviceSearchEditText")
 
 
+    ' m.ProfileCategory = m.top.findNode("ProfileCategory")
+    ' marupContent = createObject("roSGNode", "ContentNode")
+    ' data = marupContent.createChild("ContentNode")
+    ' data.text = "Registered Devices"
+    ' ' data2.id = "foo"
+    ' data.SDPosterUrl = "pkg:/images/profile/devicesicon.png"
+    ' ?"hello2"
+    ' m.ProfileCategory.content = marupContent
+    ' ' m.ProfileCategory.translation = [720,400]
+
+    ' m.ProfileCategory.observeField("itemSelected", "initDialogMrkupWithData")
+    '   m.LoginView.visible = false
+
+    ' m.searchEditTextPoster = m.top.findNode("search_edit_text_poster")
     m.roomSearchEditText = m.top.findNode("roomSearchEditText")
     m.logout = m.top.findNode("logout")
 
@@ -173,7 +197,12 @@ sub INIT()
     m.SignInLabel.text = "Sign In"
     m.SignInLabel.font = signInFont
 
+    ' Specify RFI type when handling userData'
+
+
     m.PasswordEditText.secureMode = "true"
+
+
 
     loginWithPassCodeLabelSet()
     EnterPassCodeLableSet()
@@ -232,7 +261,14 @@ sub INIT()
     m.LoginBusySpinner.translation = [900, centery]
     m.needHelpText = ""
     m.top.signalBeacon("AppDialogInitiate")
-    ForBArcodeContinue = false
+
+    ' m.global.RSG_analytics.trackEvent = {
+    '     google: {
+    '         ec: "login_screen",
+    '         ea: "launch_complete"
+    '     }
+    ' }
+    m.checkForBArcodeContinue = false
 
 
 
@@ -243,7 +279,8 @@ sub INIT()
     end if
 
 
-  
+    ' set the width of search edit text
+    ' m.searchEditTextPoster.width = m.screenWidth - 200
     m.roomSearchEditText.width = 1720
     m.roomSearchEditText.visible = false
     m.logout.visible = false
@@ -282,12 +319,31 @@ sub INIT()
     m.qrlogintask.observeField("response", "qrLoginResponse")
 
 
+    ' m.LoginBusySpinner = m.top.findNode("LoginBusySpinner")
+    ' m.LoaderBackground = m.top.findNode("LoaderBackground")
+    ' m.LoginBusySpinner.observeField("visible", "showspinner")
+    ' m.LoginBusySpinner.poster.uri = "pkg:/images/busyspinner_hd.png"
+    ' m.LoginBusySpinner.visible = false
+    ' m.logout = false
     m.ErrorDialogView = m.top.findNode("ErrorDialogView")
     m.buttonClick = m.top.findNode("buttonClick")
     m.buttonClick.horizAlign = "center"
     m.buttonClick.vertAlign = "center"
 
-   
+    ' if RegRead("personalDevice")
+    '     ' Open a Room screen for selection
+    '     GetRoomsmAPicall()
+    '     m.SupportDialog.visible = false
+    '     m.roomSearchEditText.visible = true
+    '     ' m.searchEditTextPoster.visible = true
+    '     m.RoomListMarkuGrid.visible = true
+    '     m.RoomListMarkuGrid.setFocus(false)
+    '     m.logout.visible = true
+    '     m.LoginView.visible = false
+    '     m.LoginWithPassCodeView.visible = false
+    '     RegDelete("personalDevice")
+    ' end if
+
 
     ?"getGuideMode() "getGuideMode()
     ?"getCheckMode() "getCheckMode()
@@ -1536,7 +1592,7 @@ sub dontHaveAccount()
     m.dontHaveAccountLAbel.Font = getFont(26, "pkg:/fonts/HelveticaNeueMedium.ttf")
 
     m.version = m.top.findNode("version")
-    m.version.text = "Version : 2.13"
+    m.version.text = "Version : 2.14"
     m.version.translation = [320, 850]
     m.version.color = "#004E92"
     m.version.Font = getFont(30, "pkg:/fonts/HelveticaNeueMedium.ttf")
@@ -1808,9 +1864,9 @@ sub LoginValidation()
     ? "LoginValidation: ";
     ?"getdata "getDataMode()
 
-    m.UsernamEditText.text = "streamlydevice07@yopmail.com"
+    ' m.UsernamEditText.text = "pm13426@gmail.com"
     ' m.UsernamEditText.text = "jmheil@gmail.com"
-    m.PasswordEditText.text = "123456789"
+    ' m.PasswordEditText.text = "12345678"
 
 
 

@@ -39,6 +39,22 @@ function deleteVideoscreen() as dynamic
     sec.Delete("videoscreen")
 end function
 
+function getOpacity() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    return sec.Read("opacit")
+    ' return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc3RyZWFtbHl0di5jb21cL2FwaVwvYXV0aFwvbG9naW4iLCJpYXQiOjE2MDczNjIzODcsImV4cCI6MTYwOTk5MDM4NywibmJmIjoxNjA3MzYyMzg3LCJqdGkiOiJpbFdZNkE0MnA1QUVxQjViIiwic3ViIjoxMiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSIsIm5hbWUiOiJzaGFoamFkIiwicm9sZXMiOlt7ImlkIjozLCJuYW1lIjoidXNlciIsImRpc3BsYXlfbmFtZSI6InVzZXIiLCJkZXNjcmlwdGlvbiI6Im5vdCBhZG1pbiBwZXJtaXNpb24iLCJjcmVhdGVkX2F0IjpudWxsLCJ1cGRhdGVkX2F0IjpudWxsLCJwaXZvdCI6eyJ1c2VyX2lkIjoxMiwicm9sZV9pZCI6M319XX0.yAdxTXaoMhBw9NN7zajfUuQZ9_bBgdvwW7hbHgcQF7c"
+end function
+
+function setOpacity(opacit as string) as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Write("opacit", opacit)
+end function
+
+function deleteOpacity() as dynamic
+    sec = CreateObject("roRegistrySection", "Authentication")
+    sec.Delete("opacit")
+end function
+
 function getVideoid1() as dynamic
     sec = CreateObject("roRegistrySection", "Authentication")
     return sec.Read("videoid")

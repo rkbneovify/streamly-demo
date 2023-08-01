@@ -31,13 +31,20 @@
 
     <Poster uri="pkg:/images/home/backNavIcon.png" translation= "[1627,44]" height="56" width="56" loadDisplayMode="scaletofill">
 
+
       <Label text="LIVE TV" id="pressbackLabel" translation= "[70,15]"/>
     </Poster>
+<Poster id="focus_live" uri="pkg:/images/home/borderwhite1.png" translation= "[1587,33]" height="82" width="246" loadDisplayMode="scaletofill" visible="false"></Poster>
+
 
     <!-- changed translation from translation= "[120,406]" to shift the boxes -->
     <MarkupGrid id = "ProfileCategory"
                  itemComponentName = "ProfileItemComponent"
                  itemSpacing = "[ 50, 0 ]" numColumns="7" numRows="1" itemSize="[280,268]" translation= "[120,406]" drawFocusFeedback="false"/>
+
+ <MarkupGrid id = "ProfileCategory_unfocus"
+                 itemComponentName = "ProfileItemunfocus"
+                 itemSpacing = "[ 50, 0 ]" numColumns="7" numRows="1" itemSize="[280,268]" translation= "[120,406]" drawFocusFeedback="false" visible = "false"/>
 
 
     <Poster

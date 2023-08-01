@@ -1,6 +1,7 @@
 sub init()
 
   m.ProfileCategory = m.top.findNode("ProfileCategory")
+  m.ProfileCategory_unfocus = m.top.findNode("ProfileCategory_unfocus")
 
 
   deleteRegister()
@@ -13,6 +14,7 @@ sub init()
   ' m.dialogbackgndUri.uri = "pkg:/images/home/borderwhite3.png"
 
   m.registerDeviceView = m.top.findNode("registerDeviceView")
+  m.focus_live = m.top.findNode("focus_live")
   m.device_connected = m.top.findNode("device_connected")
   m.logoutView = m.top.findNode("logoutView")
   m.profileView = m.top.findNode("profileView")
@@ -190,6 +192,11 @@ sub qrLogResponse()
   ' m.ProfileCategory.translation = [720,400]
 
   m.ProfileCategory.observeField("itemSelected", "initDialogMrkupWithData")
+
+  m.ProfileCategory_unfocus.content = marupContent
+  ' m.ProfileCategory.translation = [720,400]
+
+  m.ProfileCategory_unfocus.observeField("itemSelected", "initDialogMrkupWithData")
 
 
 
@@ -554,14 +561,14 @@ sub responseAPI(event as object)
         marupContent.createChild("ContentNode").addFields({ "Email:": userData.email.ToStr() })
       end if
       if userData.version <> invalid
-        marupContent.createChild("ContentNode").addFields({ "Version:": "2.13" })
+        marupContent.createChild("ContentNode").addFields({ "Version:": "2.14" })
       end if
 
       if userData.created <> invalid
         date = CreateObject("roDateTime")
         date.FromISO8601String(userData.created.ToStr())
         ' marupContent.createChild("ContentNode").addFields({ "Build Date:": date.AsDateString("short-date") })
-        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Wed, July 26 2023" })
+        marupContent.createChild("ContentNode").addFields({ "Build Date:": "Tue, Aug 1 2023" })
       end if
       marupContent.createChild("ContentNode").addFields({ "Home Timezone :": getHomeTimezone() })
 
@@ -1187,6 +1194,30 @@ function onKeyEvent(key as string, press as boolean) as boolean
       ' m.registredDevicesMarkup.visible = false
       ' m.TextField = "searchRoom"
       ' ?"m.KeyboardPoster"m.KeyboardPoster
+      return true
+    else if (m.ProfileCategory.hasFocus() and key = "up")
+      setOpacity("focus")
+      ? "m.ProfileCategory.hasFocus() and key = "
+      m.ProfileCategory.setFocus(false)
+      m.ProfileCategory.visible = false
+      m.ProfileCategory_unfocus.visible = true
+      m.focus_live.setFocus(true)
+      m.focus_live.visible = true
+      ? "m.focus_live.visible " m.focus_live.visible
+      ? "m.ProfileCategory.hasFocus() " m.ProfileCategory.hasFocus()
+      return true
+    else if (m.focus_live.hasFocus() and key = "down")
+      ? "m.focus_live.visible and key = "
+      m.ProfileCategory.setFocus(true)
+      m.ProfileCategory.visible = true
+      m.ProfileCategory_unfocus.visible = false
+      m.focus_live.setFocus(false)
+      m.focus_live.visible = false
+      return true
+    
+    else if (m.focus_live.hasFocus() and key = "OK")
+      deleteSettingMode()
+        m.top.exitView = true
       return true
     else if (m.KeyboardPosterDevice.visible = true or m.KeyboardInputDevice.hasFocus()) and key = "up"
       ?"in keyboard close"

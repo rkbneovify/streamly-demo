@@ -129,9 +129,39 @@ sub init()
     m.PosterIconLabel = m.PosterliveIcon.createChild("Label")
     m.PosterIconLabel.font = getFont(26, "pkg:/fonts/Helvetica-Neue-Bold_22498.ttf")
 
-   
+    ' if getVide_val() <> ""
+    '     if getVide_val() = "video"
+    '         videoId = getVideoid().toInt()
+    '         setVideoscreen("home_refresh")
+    '         if videoId < 96
+    '             m.relatedChannelMarkupList.observeField("ItemSelected", "selectedChannelplay")
+    '             m.LoaderBackground.visible = false
+    '             m.PosterliveIcon.setFocus(false)
+    '             m.timeGride = m.top.findNode("timeGrid")
+    '             m.timeGride.observeField("channelFocused", "channelFocused")
+    '             m.timeGride.setFocus(false)
+    '             for i = 0 to LoadVideo_id().count() - 1
+    '                 if LoadVideo_id()[i] = videoId then
+    '                     setVideourl(LoadVideo_back()[i].URL)
+    '                     playVideo(LoadVideo_back()[i])
+    '                     exit for
+    '                 end if
+    '             end for
+
+    '             m.ChannelsGroup.visible = false
+    '             m.video.visible = true
+    '             m.video.setFocus(true)
+    '             m.top.signalBeacon("VODStartComplete")
+    '         else
+    '             ' Loading Timegrid data if video was not played before exit app
+    '             load_TimegridData()
+
+    '         end if
+    '     end if
+    ' else
+    ' Loading Home screen data
     Home_screenTimegridData()
-   
+    ' end if
 
 end sub
 
@@ -415,7 +445,8 @@ sub load_TimegridData()
     end if
 
     t = currentTime.AsSeconds() - (36 * 60 * 60)
-  
+    ' m.timer.ObserveField("fire", "onTimer")
+    ' m.timer.Start()
 
     t = t - (t mod 1800) ' RDE-2665 - TimeGrid works best when contentStartTime is set to a 30m mark
     m.timeGride.contentStartTime = t
@@ -840,6 +871,7 @@ sub playfromchnnelguide(streamNode as object)
     closeRelatedchnnelView()
     setVideourl(streamNode.URL)
     playVideo(streamNode)
+    m.navtoRelatedCHannels1.visible = false
     m.ChannelsGroup.visible = false
     m.video.visible = true
     m.video.setFocus(true)
@@ -1844,7 +1876,10 @@ function playVideo(liveStreamData) as void
             end if
 
             vidContent = CreateObject("RoSGNode", "ContentNode")
-           
+            ' drmParams = {
+            '     keySystem: "Widevine"
+            '     licenseServerURL: "https://streamlytv.com/api/generic?drm-type=widevine"
+            ' }
             drmParams = {
                 keySystem: "Playready"
                 licenseServerURL: "https://streamlytv.com/api/generic?drm-type=playready"
@@ -2763,6 +2798,8 @@ end function
 ' Handle remote key press and manage actions.
 function onKeyEvent(key as string, press as boolean) as boolean
     ? "HomeScreen::key: "; key
+    ?"(m.controllers.visible = true) and (m.play.width).ToStr()"m.controllers.visible
+    ?"(m.controllers.visible = true) and (m.play.width).ToStr()"m.play.width.ToStr()
     ?m.timeGride.hasFocus()
 
     result = false
@@ -2809,6 +2846,44 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 m.button_focus.translation = [410, -30]
                 m.previous.width = "48"
                 m.previous.height = "45"
+            else if (key = "OK" and m.controllers.visible = true and (m.rewine.width).ToStr() = "45")
+                m.rewine.setFocus(false)
+                m.play.setFocus(false)
+                forRewine()
+                result = true
+            else if (key = "OK" and m.controllers.visible = true and (m.forward.width).ToStr() = "45")
+                m.rewine.setFocus(false)
+                m.play.setFocus(false)
+                forForward()
+                result = true
+            else if (key = "OK" and m.controllers.visible = true and (m.next.width).ToStr() = "48")
+                m.rewine.setFocus(false)
+                m.play.setFocus(false)
+                forNext()
+                result = true
+            else if (key = "OK" and m.controllers.visible = true and (m.previous.width).ToStr() = "48")
+                m.rewine.setFocus(false)
+                m.play.setFocus(false)
+                forPrevious()
+                result = true
+            else if (key = "OK" and (m.controllers.visible = true) and (m.play.width).ToStr() = "42")
+                ?"controller ok "
+            if RegRead("selectedchan") = false
+                ?"controller ok "
+                if m.video.state = "playing"
+                    setControlMode("pause")
+                    m.play.uri = "pkg:/images/play.png"
+                    m.video.control = "pause"
+                else if m.video.state = "paused"
+                    setControlMode("play")
+                    m.video.control = "resume"
+                    onStateChange()
+                    m.play.uri = "pkg:/images/pause.png"
+                end if
+            else
+                RegDelete("selectedchan")
+            end if
+            result = true
             end if
             result = true
         else if (key = "up" and m.controllers.visible = true)
@@ -2817,11 +2892,14 @@ function onKeyEvent(key as string, press as boolean) as boolean
             m.controllers.visible = false
             result = true
         else if (key = "down" and m.navtoRelatedCHannels.hasFocus())
+            ' m.navtoRelatedCHannels.setFocus(false)
             m.navtoRelatedCHannels1.visible = false
             m.controllers.visible = true
             result = true
         else if (key = "OK" and (m.controllers.visible = true) and (m.play.width).ToStr() = "42")
+                ?"controller ok "
             if RegRead("selectedchan") = false
+                ?"controller ok "
                 if m.video.state = "playing"
                     setControlMode("pause")
                     m.play.uri = "pkg:/images/play.png"
@@ -3111,7 +3189,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
             if currentTime.GetHours() >= 12 and currentTime.GetHours() <= 23 and currentTime.GetMinutes() <= 59
                 if currentTime.GetDayOfMonth().ToStr() = currentdate
                     m.timeGride.leftEdgeTargetTime = t
-                    ' m.timeGride.contentStartTime = t
+                    m.timeGride.contentStartTime = t
                     m.timeGride.maxDays = 5
                     m.timeGride.setFields({
                         showPastTimeScreen: true
@@ -3121,7 +3199,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
                     m.timeGride.setFocus(true)
                 else
                     m.timeGride.leftEdgeTargetTime = t
-                    ' m.timeGride.contentStartTime = t
+                    m.timeGride.contentStartTime = t
                     m.timeGride.maxDays = 5
                     m.timeGride.setFields({
                         showPastTimeScreen: true
@@ -3135,7 +3213,7 @@ function onKeyEvent(key as string, press as boolean) as boolean
                 if currentTime.GetDayOfMonth().ToStr() = currentdate
                     m.timeGride.leftEdgeTargetTime = t
                     m.timeGride.maxDays = 5
-                    ' m.timeGride.contentStartTime = t
+                    m.timeGride.contentStartTime = t
                     m.timeGride.setFields({
                         showPastTimeScreen: true
                         channelInfoComponentName: "ChannelItemComponent"

@@ -36,7 +36,7 @@ end sub
                 End If
     End Sub
 sub showfocus()
-     
+     ?"getopacity" getOpacity()
     ?"showfocus:";m.top.focusPercent
       m.currentfocus.opacity = m.top.focusPercent           
 
