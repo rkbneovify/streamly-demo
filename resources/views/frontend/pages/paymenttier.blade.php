@@ -384,7 +384,13 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 @section('stylesheets-bottom') 
 @if(!auth()->user()->subscribed('main'))
 <script src = "https://js.stripe.com/v3/"></script> 
-<script > $(function() {
+<script> 
+if(sessionStorage.getItem("totalprice")){
+				sessionStorage.removeItem('couponoff');
+				sessionStorage.removeItem('totalprice');
+}
+
+$(function() {
 	var totalPrice;
 	addQuantityListeners();
 	var bt = document.getElementById('card-button');
@@ -421,6 +427,8 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 						document.getElementById("totalprice").textContent = formatter.format(totalValue);
 						document.getElementById("totalprice2").textContent =  formatter.format(totalValue);
 						document.getElementById("couponoff").textContent = data.percentoff + '% off';
+						sessionStorage.setItem("couponoff", data.percentoff+'% off');
+			            sessionStorage.setItem("totalprice", formatter.format(totalValue));
 					};
 				},
 				error: function() {
@@ -651,6 +659,13 @@ function ShowUserthePrice(userIn) {
 	});
 	return tierfound;
 } 
+</script>
+@else
+<script>
+if(sessionStorage.getItem("totalprice")){
+	document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
+	document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
+}
 </script>
 @endif
 @endsection

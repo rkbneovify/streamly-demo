@@ -375,6 +375,10 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 @if(auth()->user()->subscription('main')->cancelled())
 <script src = "https://js.stripe.com/v3/" > </script> 
 <script> 
+if(sessionStorage.getItem("totalprice")){
+				sessionStorage.removeItem('couponoff');
+				sessionStorage.removeItem('totalprice');
+}
 
 $(function() {
 	var totalPrice;
@@ -414,6 +418,8 @@ $(function() {
 						document.getElementById("totalprice").textContent = formatter.format(totalValue);
 						document.getElementById("totalprice2").textContent =  formatter.format(totalValue);
 						document.getElementById("couponoff").textContent = data.percentoff + '% off';
+						sessionStorage.setItem("couponoff", data.percentoff+'% off');
+		             	sessionStorage.setItem("totalprice", formatter.format(totalValue));
 					};
 				},
 				error: function() {
@@ -653,6 +659,13 @@ function ShowUserthePrice(userIn) {
 // document.getElementById("cvc-1").type="password";
 //Change cvv type to password end
 
+</script>
+@else
+<script>
+if(sessionStorage.getItem("totalprice")){
+	document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
+	document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
+}
 </script>
 @endif
 @endsection

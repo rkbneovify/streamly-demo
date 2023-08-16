@@ -368,6 +368,11 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
+			if(sessionStorage.getItem("totalprice")){
+				sessionStorage.removeItem('couponoff');
+				sessionStorage.removeItem('totalprice');
+			}
+			
 					       $(function() {
 									var bt = document.getElementById('card-button');
 
@@ -399,12 +404,15 @@ $('body').on('blur','[name="coupon"]',function(){
 			if (data.percentoff != null){
 
 				console.log('percenttoff',data.percentoff);
+				sessionStorage.setItem("percenttoff", data.percentoff);
 				//Calculate the percent.
 
  var totalValue = {{$plandetails->amount/100}} * ( (100-data.percentoff) / 100 )
 			document.getElementById("totalprice").textContent='$ '+totalValue.toFixed(2);
 			document.getElementById("totalprice2").textContent='$ '+totalValue.toFixed(2);
 			document.getElementById("couponoff").textContent=data.percentoff+'% off';
+			sessionStorage.setItem("couponoff", data.percentoff+'% off');
+			sessionStorage.setItem("totalprice", '$ '+totalValue.toFixed(2));
 			
 };
     },
@@ -622,13 +630,18 @@ fetch("/api/auth/sendNotification", requestOptions)
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
 
-</script>
-@endif
-<script>
+
+if(sessionStorage.getItem("totalprice")){
+		document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
+		document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
+		document.getElementById("totalprice2").textContent=sessionStorage.getItem("totalprice");
+}
+
 form.addEventListener('submit', () => {
     if(document.getElementById("cardRem").checked) {
         document.getElementById('cardremHidden').disabled = true;
     }
 })
 </script>
+@endif
 @endsection
