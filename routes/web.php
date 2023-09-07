@@ -346,3 +346,20 @@ Route::post('web/loginws', 'Admin\QRLoginTwoController@loginWS');//Check when pa
 Route::delete('cancelsubscription/{id}','SubscriptionController@subscriptiondestroy');
 
 Route::post('/stripe/webhook', 'StripeController@index');
+
+Route::middleware(['auth','role:superadmin|admin|salesuser'])->prefix('salesuser')->name('salesuser')->group(function(){
+    Route::get('/paymentlink', 'PaymentlinkController@index');
+    Route::post('/payment_links', 'PaymentlinkController@paymentlinks');
+    Route::get('/add_masteruser', 'PaymentlinkController@addmasteruser');
+    Route::post('/create_master_user', 'PaymentlinkController@createmasteruser');
+    Route::get('/masteruserlist', 'PaymentlinkController@masteruserlist');
+    Route::get('/paymentlist', 'PaymentlinkController@paymentlist');
+    Route::get('/resendVerificationEmail/{email}', 'PaymentlinkController@resendVerificationEmail');
+    Route::get('/masteruserpagination', 'PaymentlinkController@masteruserpagination');
+    Route::get('/paymentlistpagination', 'PaymentlinkController@paymentlistpagination');
+});
+
+Route::get('/checkout/{master_id}', 'PaymentlinkController@checkout');
+Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
+Route::get('/success', 'PaymentlinkController@paymentsuccess');
+Route::get('/fail', 'PaymentlinkController@paymentfail');

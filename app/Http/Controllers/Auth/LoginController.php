@@ -37,7 +37,9 @@ class LoginController extends Controller
          
         if( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
             return '/admin';
-        } else{
+        }elseif( @$userRole[0]== 'salesuser' ){
+            return '/salesuser/paymentlink';
+        }else{
             return '/';
         }
     }
