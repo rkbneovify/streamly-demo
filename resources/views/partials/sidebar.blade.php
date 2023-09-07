@@ -29,7 +29,50 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          
+          @role(['salesuser'])
+          <li class="nav-item ">
+            <a href="#"  class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+              Dashboard
+                <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview {{ (request()->is('salesuser/add_masteruser')) ? 'menu-open' : '' }}">
+            <a href=" {{ url('/salesuser/add_masteruser') }}" class="nav-link">
+              <i class="nav-icon fas fa-user-plus"></i>
+              <p>
+                Add Master User
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview {{ (request()->is('salesuser/paymentlink')) ? 'menu-open' : '' }}">
+            <a href=" {{ url('/salesuser/paymentlink') }}" class="nav-link">
+              <i class="nav-icon fas fa-link"></i>
+              <p>
+                Create Payment
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview {{ (request()->is('salesuser/masteruserlist')) ? 'menu-open' : '' }}">
+            <a href=" {{ url('/salesuser/masteruserlist') }}" class="nav-link">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                Master Users
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview {{ (request()->is('salesuser/paymentlist')) ? 'menu-open' : '' }}">
+            <a href=" {{ url('/salesuser/paymentlist') }}" class="nav-link">
+              <i class="nav-icon fas fa-credit-card"></i>
+              <p>
+                Payment Status
+              </p>
+            </a>
+          </li>
+          @endrole
+          @role(['admin', 'superadmin'])
           <li class="nav-item ">
             <a href=" {{ url('/admin') }}"  class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -39,7 +82,6 @@
               </p>
             </a>
           </li>
-          @role(['admin', 'superadmin'])
           <li class="nav-item has-treeview {{ (request()->is('admin/stripekeys')) ? 'menu-open' : '' }}">
             <a href=" {{ url('/admin/stripekeys') }}" class="nav-link">
               <i class="nav-icon fas fa-key"></i>
@@ -358,6 +400,7 @@
               </li>
             </ul>
           </li>
+          @endrole
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">
               <a href=" {{ url('/admin/subscriptionpack') }}" class="nav-link">
@@ -367,7 +410,6 @@
               </li>
             </ul> 
           </li>
-          @endrole
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tree"></i>

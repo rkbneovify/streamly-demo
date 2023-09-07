@@ -80,13 +80,43 @@ class AuthController extends Controller
         The '.env('APP_NAME').' Team!
     </html>';
 
+    $html2='<html>
+        Hi, '.$request['name'].'<br><br>
+
+        Thank you for registering for '.env('APP_NAME').'.<br>
+        Please click the following link to verify your account.
+        <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+        width: 115px;
+        height: 25px;
+        background: #004E92 0% 0% no-repeat padding-box;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        line-height: 25px;">Verify</a><br>
+        Your login credentials<br>
+        Email: '.$request->email.'<br>
+        Password: '.$request->password.'<br><br>
+        Thank you!<br>
+        The '.env('APP_NAME').' Team!
+    </html>';
+
+        if($request->masteruser){
+        Mail::send('emails.general',["html"=>$html2] , function($message) use ($request,$User){
+                $message->to($request->email, $User->name);
+                $message->bcc('piyush.mishra@oodles.io')
+                ->subject(env('APP_NAME').': Account Verification and Signup Details');
+        });
+        }else{
         Mail::send('emails.general',["html"=>$html] , function($message) use ($request,$User){
             $message->to($request->email, $User->name)
             ->subject(env('APP_NAME').': Account Verification');
         });
+        }
 
 
-        $response = array('success' => true,'response_code'=>200,'message'=>'You are registered successfully, check email and click on verification link to activate your account.');
+        $response = array('success' => true,'response_code'=>200,'message'=>'You are registered successfully, check email and click on verification link to activate your account.', 'data'=>$User);
         return response()->json($response, 200);
     }
 
