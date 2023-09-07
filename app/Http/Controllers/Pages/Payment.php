@@ -284,7 +284,7 @@ $Genrekey=$pagechannel->keys();
 
     }
      public function withoutCouponCheckTrialDays($user,$request,$StripeplanId,$quantity,$trial_days){
-
+ 
         //check for trial days
             // Create subscription
             if(!empty($trial_days)){

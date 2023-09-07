@@ -117,98 +117,107 @@ class Setting extends Controller
     }
     
    public function showSettingpage3(){
-        $invoices='1';
-    	if( Auth::check()){
-            $login = true;
-        } else {
-            $login = false;
-            return redirect()->route('home');
-        }
-       $id= Auth::user()->id;
-      
-       $hasid = HashUserID($id);
-    //  dump($hasid);
-    //  dd(UnHashUserID($hasid));
-        $userinfo = User::find($id);
+    $invoices='1';
+    if( Auth::check()){
+        $login = true;
+    } else {
+        $login = false;
+        return redirect()->route('home');
+    }
+   $id= Auth::user()->id;
+  
+   $hasid = HashUserID($id);
+//  dump($hasid);
+//  dd(UnHashUserID($hasid));
+    $userinfo = User::find($id);
 
-        $resultoffset = $userinfo->zipcode;
-      
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $timezone = "Central Standard Time";
-          }else{
-            $timezone = "Eastern Standard Time";
-          }
+    $resultoffset = $userinfo->zipcode;
+  
+      if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+        $timezone = "Mountain Standard Time";
+      }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+        $timezone = "Pacific Standard Time";
+      }else if($resultoffset == "75662"){
+        $timezone = "Central Standard Time";
+      }else{
+        $timezone = "Eastern Standard Time";
+      }
+    
+     $allSession=SessionTable::where([
+    ['status', '=', '1'],
+    ['users_id', '=', $id],
+     ])->orderBy('connected_devices', 'asc')->get();
+     $currentMonth = date('m');
+     $subscription=Auth::user()->subscriptions()->first();
+    //  dd($subscription);
+    //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
+    //  dd($status);
+     if(!$userinfo->subscribed('main')){
+        $plan = (object) ['amount'=>'0'];
+     } else {
         
-         $allSession=SessionTable::where([
-        ['status', '=', '1'],
-        ['users_id', '=', $id],
-         ])->orderBy('connected_devices', 'asc')->get();
-         $currentMonth = date('m');
-         $subscription=Auth::user()->subscriptions()->first();
-        //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
-        //  dd($status);
-         if(!$userinfo->subscribed('main')){
-            $plan = (object) ['amount'=>'0'];
-         } else {
-            
-         
-            $stripe_plan=$subscription->stripe_plan;
-         
-            // $plan = \Stripe\Plan::retrieve($stripe_plan);
+     
+        $stripe_plan=$subscription->stripe_plan;
+        // $plan = \Stripe\Plan::retrieve($stripe_plan);
+        $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->get();
+        if($STRIPE_KEY[0]->type == $userinfo->mode){
             $plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
-        //    dd($plan);
-           $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
-        //    $invoices = Auth::user()->invoicesIncludingPending();
-        //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
-            // ch_1HSfl3LqTwOy7LECVmOdkimy
-        //  dd($invoices);
-         }
-         if($subscription){
-         $renewaldatetime = $this->getRenewalDateTime($subscription, $userinfo);
-         }else{
-            $renewaldatetime = '';
-         }
-         
-        // $allCards = getAllCards($userinfo);
-         
+            $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+        }else{
+            $plan = null;
+            $invoices = '';
+        };
+        //$plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
+    //    dd($plan);
+    //    $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+    //    $invoices = Auth::user()->invoicesIncludingPending();
+    //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
+        // ch_1HSfl3LqTwOy7LECVmOdkimy
+    //  dd($invoices);
+     }
+    if($subscription){
+    if($subscription->ends_at){
+    $renewaldatetime = 'Plan Expired';
+    }else{
+
+$STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.stripe.com/v1/customers/'.$userinfo->stripe_id.'/payment_methods',
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => 'GET',
-  CURLOPT_HTTPHEADER => array(
-    'Content-Type: application/json',
-    'Authorization: Bearer '.env('STRIPE_SECRET').''
-  ),
+CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer='.$userinfo->stripe_id.'',
+CURLOPT_RETURNTRANSFER => true,
+CURLOPT_FOLLOWLOCATION => true,
+CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+CURLOPT_CUSTOMREQUEST => 'GET',
+CURLOPT_HTTPHEADER => array(
+'Content-Type: application/x-www-form-urlencoded',
+'Authorization: Bearer '.$STRIPE_SECRET.''
+),
 ));
 
-$res = curl_exec($curl);
-$allCard = json_decode($res);
+$response = curl_exec($curl);
+$renewalDatestripe = json_decode($response);
 curl_close($curl);
 
-$slideUpdate = DB::table('customer_card')->select('payment_method','default_value')->where('customer_id', $userinfo->stripe_id)->get();
-$allCards = []; 
-if($subscription){
-foreach ($allCard->data as $cards) {
-    // dd($cards);
-    // die();
-    foreach ($slideUpdate as $Getcards) {
-       if($cards->id == $Getcards->payment_method){
-           $cards->default_value = $Getcards->default_value;
-           array_push($allCards, $cards);
-       }
+// dd($userinfo->card_last_four);
+// die();
+
+    // $time = ($subscription->created_at)->format('H:i:s');
+    // $renewsDate = gmdate("Y-m-d", $plan->created);
+    //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
+    //$renewaldatetime = $renewsDate . ' at ' . $time;
+    // if($userinfo->name != 'Admin'){
+    //     $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+    // }else{
+    //      $renewaldatetime = 'No upcoming invoices';
+    // }
+    $renewaldatetime = 'No upcoming invoices';
     }
+    }else{
+    $renewaldatetime = '' ;
     }
-  }
-    	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime', 'allCards'));
+    // return view('frontend.pages.account.setting', compact('login','allSession'));
+    return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
     }
 
     public function getRenewalDateTime($subscription, $userinfo)

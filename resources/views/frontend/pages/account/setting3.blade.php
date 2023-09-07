@@ -405,7 +405,7 @@ use Laravel\Cashier\Cashier;
 					</div>
 				</div>
 				
-				@elseif (Auth::user()->subscribed('main')) 
+				@elseif (Auth::user()->subscribed('main') && $plan !== null)
 @if (!empty($plan->tiers))
 
 <div class="row setting-cards mt-5">

@@ -181,27 +181,31 @@ public function channeljson(Request $request)
     $urlType=$request->get('typeurl');
     $isDevice=isDeviceAppleRokuOthers($ua);
     if($isDevice=='roku' || $urlType=='manifest'){    
-        $record= Cache::rememberForever('channelslistsmooth', function () {
-        $type='smooth_url';
-        return $this->channeljsonFunc($type)->get();});
+        // $record= Cache::rememberForever('channelslistsmooth', function () {
+        // $type='smooth_url';
+        // return $this->channeljsonFunc($type)->get();});
+        $record = $this->channeljsonFunc('smooth_url')->get();
                 
     }else if($isDevice=='apple' || $urlType=='m3u8')  {
-        $record= Cache::rememberForever('channelslistapple', function () {
-        $type='url';
-        return $this->channeljsonFunc($type)->get();});
+        // $record= Cache::rememberForever('channelslistapple', function () {
+        // $type='url';
+        // return $this->channeljsonFunc($type)->get();});
+        $record = $this->channeljsonFunc('url')->get();
                 
     }else if($deviceType=='apple')  {
-    $record= Cache::rememberForever('channelslistapple', function () {
-    $type='url';
-    return $this->channeljsonFunc($type)->get();});
+    // $record= Cache::rememberForever('channelslistapple', function () {
+    // $type='url';
+    // return $this->channeljsonFunc($type)->get();});
+    $record = $this->channeljsonFunc('url')->get();
             
     }
     else{
 
-        $record= Cache::rememberForever('channelslistdash', function () {
-        $type='dash_url';
-        return $this->channeljsonFunc($type)->get();
-    });
+    //     $record= Cache::rememberForever('channelslistdash', function () {
+    //     $type='dash_url';
+    //     return $this->channeljsonFunc($type)->get();
+    // });
+    $record = $this->channeljsonFunc('dash_url')->get();
     }
        
     //JSON_ARRAY
