@@ -61,7 +61,7 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     
     
     Route::post('insertsubscriptionpack','Admin\SubscriptionPackController@store')->name('insertsubscriptionpack');
-    
+
     //subscription 
     Route::resource('subscriptions', 'Admin\SubscriptionController');
      Route::get('/subscriptionsstripe','Admin\SubscriptionController@subscriptionstripe')->name('ss');
@@ -141,6 +141,7 @@ Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
   Route::get('/channelstatus/create', 'Admin\ChannelController@create');//channels Statust
   
 Route::get('/channelstatus', 'Admin\ChannelController@index');//channel
+Route::get('/channelDelete/{channelID}', 'Admin\ChannelController@channelDelete');//channel
 Route::get('/channelstatus2', 'Admin\ChannelController@index2');//channel
 Route::get('/channelstatus/view/{id}', 'Admin\ChannelController@show');//channel
 Route::get('/channelstatus/edit/{id}', 'Admin\ChannelController@edit');//channel
@@ -149,6 +150,13 @@ Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');/
 Route::get('channelstatus/updateall', 'Admin\ChannelController@UpdateAll');
 Route::post('insertchannel','Admin\ChannelController@store')->name('insertchannel');
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
+
+    //Genres
+    Route::get('/allgenre', 'Admin\GenreController@index');//genre
+    Route::get('/addgenre', 'Admin\GenreController@addgenre');//genre
+    Route::post('/creategenre', 'Admin\GenreController@creategenre');//genre
+    Route::get('/deletegenre/{id}', 'Admin\GenreController@deletegenre');//genre
+
     // Zipcode Routes
     Route::get('zipcode2', 'Admin\ZipcodeController@index');
     Route::get('zipcode', 'Admin\ZipcodeController@index2');
@@ -359,7 +367,14 @@ Route::middleware(['auth','role:superadmin|admin|salesuser'])->prefix('salesuser
     Route::get('/paymentlistpagination', 'PaymentlinkController@paymentlistpagination');
 });
 
+Route::middleware(['auth','role:superadmin|admin'])->group(function(){
+ //iptv
+ Route::get('/managed-iptv', 'iptvController@index');
+ Route::post('/managed-iptv/submit_info', 'iptvController@submitInfo');
+});
+
 Route::get('/checkout/{master_id}', 'PaymentlinkController@checkout');
 Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
 Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
+

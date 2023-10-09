@@ -32,7 +32,7 @@ class Channel extends Model
 'url','callSign',
 'dash_url',
 'smooth_url',
-'genre_id','status','genres','image','stationName'];
+'genre_id','status','genres','image','stationName', 'zip_code'];
 // protected $appends = ['logo'];
 
 protected $casts = [
@@ -41,6 +41,7 @@ protected $casts = [
     'Channel' => 'array',
     'events' => 'array','genrename' => 'array',
     'genre_name' => 'string',
+    'zip_code' => 'array'
 ];
     /**
     * Date time columns.

@@ -64,6 +64,14 @@
               <input type="checkbox" class=" custom-control-input" name="toggleswitch" id="customSwitch3">
               <label class="custom-control-label" for="customSwitch3">Turn this on to test smooth links</label>
             </div>
+            <div style="padding: 8px; width: 30%;" class="form-group">
+          <label for="zip-codes-filter">Filter by Availability:</label>
+          <select class="form-control" id="zip-codes-filter">
+          <option value="">All channels</option>
+          <option value="Null">Channels with all zipcodes</option>
+          <option value="Other">Channels with restricted zipcodes</option>
+          </select>
+          </div>
           </div>
           <table id="data-table" class="table table-striped projects">
               <thead>
@@ -93,6 +101,9 @@
                       <th style="width: 20%">
                         dash url
                         </th>
+                        <th style="width: 15%">
+                      Availability
+                      </th>
                       <th style="width: 20%">
                       Action
                       </th>
@@ -277,7 +288,7 @@ $('.select2').select2();
  
 $(function() {
  
-    $('#data-table').DataTable({
+   var dataTable = $('#data-table').DataTable({
       pageLength: 100,
         processing: true,
         serverSide: true,
@@ -293,6 +304,7 @@ $(function() {
             { data: 'image', name: 'logo',orderable: false, searchable: false },
 
             {data: 'dash_url', name: 'dash_url', orderable: false, searchable: false},
+            { data: 'zip_code', name: 'zip_code', orderable: true},
             {data: 'action', name: 'action', orderable: false, searchable: false},
             { data: 'callSign', name: 'callSign',orderable: true },
 
@@ -312,7 +324,22 @@ $(function() {
                     return '<span class="label label-default">unknown</span>';
                 }
              }, "targets": [4]
-        },{       
+        },
+         {
+          "render": function(data, type, row) {
+            if(row.zip_code == 'Null'){
+             return 'All Zipcodes';
+            }else{
+              var zipCodes = row.zip_code.split(',').map(function(item) {
+        return item.trim();
+      });
+      return zipCodes.length.toString().concat(' Zipcodes');
+            }
+          },"targets": [7],
+          "searchable": true,
+          "orderable": true
+        },
+        {       
             "render": function ( data, type, row, meta ) {
       return type === 'display' && data?.trim().length > 15 ?
         '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
@@ -331,12 +358,26 @@ $(function() {
         '<span title="'+data+'">'+data.substr( 0, 12 )+'...</span>' :
         data;
     }
-  } ,  { 'targets': [ 9 ],
+  } ,  { 'targets': [ 10 ],
       'className': "hide_column"
     }
         
         ]
     });
+
+    $('#zip-codes-filter').on('change', function() {
+    var filterValue = $(this).val();
+    
+    // Update the DataTable's search query based on the selected filter
+    if (filterValue === 'Null') {
+      dataTable.column(7).search('Null').draw();
+    } else if(filterValue === 'Other'){
+      dataTable.column(7).search('^(?!Null$)', true, false).draw();
+    } else {
+      dataTable.column(7).search('').draw();
+    }
+    });
+
     $('#data-table').on('click', '.videoplay', function () {
     
         var name = $('td', this).eq(1).text();
