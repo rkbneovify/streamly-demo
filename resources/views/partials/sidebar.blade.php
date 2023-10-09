@@ -196,6 +196,28 @@
                 </a>
               </li>
             </ul>
+            
+            <li class="nav-item has-treeview {{ (request()->is('admin/allgenre')) ? 'menu-open' : '' }}{{ (request()->is('admin/addgenre')) ? 'menu-open' : '' }}">
+                <a href=" {{ url('/admin/allgenre') }}" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Genres
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item {{ (request()->is('admin/addgenre')) ? 'activeElement' : '' }}">
+              <a href=" {{ url('/admin/addgenre') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add Genre</p>
+                </a>
+              </li><li class="nav-item {{ (request()->is('admin/allgenre')) ? 'activeElement' : '' }}">
+              <a href=" {{ url('/admin/allgenre') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>View Genre</p>
+                </a>
+            </ul>
+
           <li class="nav-item has-treeview {{ (request()->is('admin/zipcode')) ? 'menu-open' : '' }}{{ (request()->is('admin/allowedzipcode')) ? 'menu-open' : '' }}{{ (request()->is('admin/zipcode/map')) ? 'menu-open' : '' }}{{ (request()->is('admin/zipcode/checkfenceweb')) ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/zipcode') }}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>

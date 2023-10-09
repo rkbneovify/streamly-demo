@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\OutsideLocationPlay;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
+use App\Models\Channel;
 use JWTAuth;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
@@ -15,7 +17,7 @@ class OutsideLocationPlayController extends Controller
      
     public function __construct()
     {
-        $this->middleware('auth',['except' => ['OLPapi']]);
+        $this->middleware('auth',['except' => ['OLPapi','OZ_api']]);
     }
     /**
      * Display a listing of the resource.
@@ -109,6 +111,29 @@ class OutsideLocationPlayController extends Controller
         })
         ->addIndexColumn()->make(true);
 
+    }
+
+    public function OZ_api(Request $request){ 
+            if(empty(request('zipcode')) || empty(request('callsign'))){
+           return response()->json(['success'=>false,'response_code'=>400,'message' => 'both zipcode and callsign required'], 400);
+       }
+       $zipcode= $request['zipcode'];
+       $callsign = $request['callsign'];
+
+       // Find the channel by callsign
+       $channel = Channel::where('callSign', $callsign)->first();
+
+       if (!$channel) {
+           return response()->json(['message' => 'Channel not found'], 404);
+       }
+
+       $zipcodes = json_decode($channel->zip_code);
+
+       if ($zipcodes === null || in_array($zipcode, $zipcodes)) {
+           return response()->json([ 'success'=>true,'response_code'=>200, 'message' => 'Zipcode matches'], 200);
+       } else {
+           return response()->json(['success'=>false,'response_code'=>400, 'message' => 'Zipcode does not match'], 400);
+       }
     }
 
     public function OLPapi(Request $request)

@@ -709,6 +709,18 @@ $input = $request->all();
             return response()->json($response, 404);
         }
         $hoursofset=$request->get('hoursoffset');
+        $string = $hoursofset; // Replace with your input string
+
+        // Regular expression pattern to match the desired format
+        $pattern = '/^(-?\d{2}:\d{2})$/';
+
+        if (preg_match($pattern, $string, $matches)) {
+            // String matches the format, and $matches[1] contains the matched value
+            $hoursofset = $matches[1];
+        } else {
+            // String does not match the format
+            $hoursofset = '00:00';
+        }
         $deviceType=$request->get('typeurl');
         $dataDays= $request->get('days');
 $isDevice=isDeviceAppleRokuOthers($ua);

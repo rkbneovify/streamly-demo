@@ -6,6 +6,13 @@
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
+<style>
+.warning {
+  font-size: 14px;
+  color: red;
+  margin-top: 10px;
+}
+</style>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
@@ -175,6 +182,20 @@
               @endif
 
             </div>
+
+            <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
+              <label for="zipcode" class="col-md-4 control-label">Zipcode</label>
+              <input type="text" id="zip_codes" class="form-control" name="zip_codes" placeholder="e.g., 12345, 67890">
+              <p class="warning">Please enter a ZIP code if you wish to restrict the display of this channel to a specific area. If you leave the field empty, the channel will be available for viewing in all ZIP codes by default.</p>
+
+              @if ($errors->has('zip_code'))
+              <span class="help-block">
+                <strong>{{ $errors->first('zip_code') }}</strong>
+              </span>
+              @endif
+
+            </div>
+            
             <div class="form-group">
               <label for="exampleInputFile">File input</label>
               <div class="input-group">
@@ -187,6 +208,7 @@
                 </div>
               </div>
             </div>
+
             <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
               <label for="status" class="col-md-4 control-label">Status</label>
               <select name="status" id="status" class="form-control">
@@ -232,6 +254,16 @@
 <script>
 $('.select2').select2();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const zipCodesInput = document.getElementById("zip_codes");
 
+    zipCodesInput.addEventListener("input", function () {
+        const inputValue = zipCodesInput.value.replace(/[^0-9,]/g, ""); // Remove non-numeric and non-comma characters
+        const formattedValue = inputValue.replace(/(\d{5})(?=\d)/g, "$1,"); // Add a comma after every 5 digits
+        zipCodesInput.value = formattedValue;
+    });
+});
+</script>
 
 @stop

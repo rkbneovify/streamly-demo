@@ -93,6 +93,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('addtorecent', 'APIController@addToRecent');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
+ Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);
 
 Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify','subscribed']);
 Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify', 'subscribed']);
