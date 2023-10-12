@@ -530,6 +530,14 @@ public function samedevicelogout(Request $request)
 // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
             // $this->logout()->middleware(['jwt.verify']);
                     $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
+                    App\SessionTable::where([
+                        ['status', '=', '1'],
+                        ['connected_devices', '!=', '1'],
+                         ])
+                ->update([
+                    'connected_devices' => DB::raw('`connected_devices` - 1 ')
+                ]);
+                $error=invalidateToken();
                     if($user){
                         $response = [
                             "response_code" => 200,
@@ -537,7 +545,7 @@ public function samedevicelogout(Request $request)
                             "message" => "logged out successful",
                             "error" => false,
                         ];
-                        return response()->json($response, 200);
+                        return response()->json( 200 );
                    }else{
                     $response = [
             
@@ -546,7 +554,7 @@ public function samedevicelogout(Request $request)
                         'message' => 'id not found.',
                         'response_code'=>404,
                     ];
-                    return response()->json($response, 404);
+                    return $response;
                    }
                 //$this->logout()->middleware(['jwt.verify']);
         } else{

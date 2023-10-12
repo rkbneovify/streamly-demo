@@ -22,7 +22,6 @@ use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\HotelRoomTable;
 use Jenssegers\Agent\Agent;
-use \stdClass;
 class Setting extends Controller
 {   public function __construct()
     {
@@ -115,84 +114,81 @@ class Setting extends Controller
          $currentMonth = date('m');
         return view('frontend.pages.account.setting4', compact('login','allSession'));
     }
-    
-   public function showSettingpage3(){
-    $invoices='1';
-    if( Auth::check()){
-        $login = true;
-    } else {
-        $login = false;
-        return redirect()->route('home');
-    }
-   $id= Auth::user()->id;
-  
-   $hasid = HashUserID($id);
-//  dump($hasid);
-//  dd(UnHashUserID($hasid));
-    $userinfo = User::find($id);
+    public function showSettingpage3(){
+        $invoices='1';
+    	if( Auth::check()){
+            $login = true;
+        } else {
+            $login = false;
+            return redirect()->route('home');
+        }
+       $id= Auth::user()->id;
+      
+       $hasid = HashUserID($id);
+    //  dump($hasid);
+    //  dd(UnHashUserID($hasid));
+        $userinfo = User::find($id);
 
-    $resultoffset = $userinfo->zipcode;
-  
-      if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-        $timezone = "Mountain Standard Time";
-      }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-        $timezone = "Pacific Standard Time";
-      }else if($resultoffset == "75662"){
-        $timezone = "Central Standard Time";
-      }else{
-        $timezone = "Eastern Standard Time";
-      }
-    
-     $allSession=SessionTable::where([
-    ['status', '=', '1'],
-    ['users_id', '=', $id],
-     ])->orderBy('connected_devices', 'asc')->get();
-     $currentMonth = date('m');
-     $subscription=Auth::user()->subscriptions()->first();
-    //  dd($subscription);
-    //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
-    //  dd($status);
-     if(!$userinfo->subscribed('main')){
-        $plan = (object) ['amount'=>'0'];
-     } else {
+        $resultoffset = $userinfo->zipcode;
+      
+          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
+            $timezone = "Mountain Standard Time";
+          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
+            $timezone = "Pacific Standard Time";
+          }else if($resultoffset == "75662"){
+            $timezone = "Central Standard Time";
+          }else{
+            $timezone = "Eastern Standard Time";
+          }
         
-     
-        $stripe_plan=$subscription->stripe_plan;
-        // $plan = \Stripe\Plan::retrieve($stripe_plan);
-        $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->get();
-        if($STRIPE_KEY[0]->type == $userinfo->mode){
-            $plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
-            $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+         $allSession=SessionTable::where([
+        ['status', '=', '1'],
+        ['users_id', '=', $id],
+         ])->orderBy('connected_devices', 'asc')->get();
+         $currentMonth = date('m');
+         $subscription=Auth::user()->subscriptions()->first();
+        //  dd($subscription);
+        //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
+
+         if(!$userinfo->subscribed('main')){
+            $plan = (object) ['amount'=>'0'];
+         } else {
+         
+            $stripe_plan=$subscription->stripe_plan;
+         
+            // $plan = \Stripe\Plan::retrieve($stripe_plan);
+            $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->get();
+            if($STRIPE_KEY[0]->type == $userinfo->mode){
+              $plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
+              $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
+            }else{
+              $plan = null;
+              $invoices = '';
+            };
+        //    dd($plan);
+        //    $invoices = Auth::user()->invoicesIncludingPending();
+        //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
+            // ch_1HSfl3LqTwOy7LECVmOdkimy
+        //  dd($invoices);
+         }
+        if($subscription){
+        if($subscription->ends_at){
+        $renewaldatetime = 'Plan Expired';
         }else{
-            $plan = null;
-            $invoices = '';
-        };
-        //$plan = \Stripe\Plan::retrieve(['id'=>$stripe_plan, 'expand'=>["tiers"]]);
-    //    dd($plan);
-    //    $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
-    //    $invoices = Auth::user()->invoicesIncludingPending();
-    //    https://api.stripe.com/v1/invoices/in_1HSfl2LqTwOy7LECEZruM6OB?expand[]=charge
-        // ch_1HSfl3LqTwOy7LECVmOdkimy
-    //  dd($invoices);
-     }
-    if($subscription){
-    if($subscription->ends_at){
-    $renewaldatetime = 'Plan Expired';
-    }else{
 
 $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer='.$userinfo->stripe_id.'',
-CURLOPT_RETURNTRANSFER => true,
-CURLOPT_FOLLOWLOCATION => true,
-CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-CURLOPT_CUSTOMREQUEST => 'GET',
-CURLOPT_HTTPHEADER => array(
-'Content-Type: application/x-www-form-urlencoded',
-'Authorization: Bearer '.$STRIPE_SECRET.''
-),
+  CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer='.$userinfo->stripe_id.'',
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'GET',
+  CURLOPT_HTTPHEADER => array(
+    'Content-Type: application/x-www-form-urlencoded',
+    'Authorization: Bearer '.$STRIPE_SECRET.''
+  ),
 ));
 
 $response = curl_exec($curl);
@@ -202,55 +198,23 @@ curl_close($curl);
 // dd($userinfo->card_last_four);
 // die();
 
-    // $time = ($subscription->created_at)->format('H:i:s');
-    // $renewsDate = gmdate("Y-m-d", $plan->created);
-    //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
-    //$renewaldatetime = $renewsDate . ' at ' . $time;
-    // if($userinfo->name != 'Admin'){
-    //     $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
-    // }else{
-    //      $renewaldatetime = 'No upcoming invoices';
-    // }
-    $renewaldatetime = 'No upcoming invoices';
+        // $time = ($subscription->created_at)->format('H:i:s');
+        // $renewsDate = gmdate("Y-m-d", $plan->created);
+        //$renewsDate = date("Y-m-d", strtotime("+".$plan->interval_count.$plan->interval));
+        //$renewaldatetime = $renewsDate . ' at ' . $time;
+        // if($userinfo->name != 'Admin'){
+        //     $renewaldatetime = date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
+        // }else{
+        //      $renewaldatetime = 'No upcoming invoices';
+        // }
+        $renewaldatetime = 'No upcoming invoices';
+        }
+        }else{
+        $renewaldatetime = '' ;
+        }
+    	// return view('frontend.pages.account.setting', compact('login','allSession'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
     }
-    }else{
-    $renewaldatetime = '' ;
-    }
-    // return view('frontend.pages.account.setting', compact('login','allSession'));
-    return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
-    }
-
-    public function getRenewalDateTime($subscription, $userinfo)
-{
-    if (!$subscription || $subscription->ends_at) {
-        return 'Plan Expired';
-    }
-
-    if ($userinfo->name == 'Admin') {
-        return 'No upcoming invoices';
-    }
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer=' . $userinfo->stripe_id,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/x-www-form-urlencoded',
-            'Authorization: Bearer ' . env('STRIPE_SECRET'),
-        ),
-    ));
-
-    $response = curl_exec($curl);
-    $renewalDatestripe = json_decode($response);
-    curl_close($curl);
-
-    return date("Y-m-d H:i:s", $renewalDatestripe->next_payment_attempt);
-}
-
     public function showSettingpage4(){
         $invoices='1';
     	if( Auth::check()){
@@ -413,212 +377,13 @@ curl_close($curl);
         $user = User::find($uid);
     
         try{
-            $carddetails=\Stripe\PaymentMethod::all([
-            'customer' => $user->stripe_id,
-            'type' => 'card',
-            'limit' => '100'
-        ]);
-
-        $card_lists = $carddetails->data;
-        foreach($card_lists as $card_list){
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.stripe.com//v1/payment_methods/'.$card_list->id.'/detach',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_HTTPHEADER => array(
-           'Content-Type: application/x-www-form-urlencoded',
-           'Authorization: Bearer '.env('STRIPE_SECRET').''
-       ),
-    ));
-
-    $response = curl_exec($curl);
-    curl_close($curl);
-
-        }
         $user->subscription('main')->skipTrial()->cancelNow();
-        $cardDelete = DB::table('customer_card')->where('customer_id', $user->stripe_id)->delete();
         return redirect('account/settings')->with('message','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }
         
 
         
-    }
-
-    public function removecard($id) 
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.stripe.com//v1/payment_methods/'.$id.'/detach',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_HTTPHEADER => array(
-           'Content-Type: application/x-www-form-urlencoded',
-           'Authorization: Bearer '.env('STRIPE_SECRET').''
-       ),
-    ));
-
-    $response = curl_exec($curl);
-
-    curl_close($curl);
-    if($response){
-        return redirect('account/settings')->with('message','Card Removed Successfully');
-    }else{
-        return redirect('account/settings')->with('message','Technical Error!');
-    }
-
-    }
-
-     public function addcard(Request $request, $id){
-
-       $monthyear = explode('/', $request->expirationdate);
-
-       $user_id = $id;
-       $card_number = $request->cardnumber;
-       $exp_year = $monthyear[1];
-       $exp_month = $monthyear[0];
-       $cvv = $request->securitycode;
-       $set_default_card = $request->defaultValue;
-
-       $response = new stdClass();
-
-       if(isset($card_number) && isset($exp_year) && isset($exp_month)) {
-
-$stripe_customer_id=DB::table('users')->where('id', $id)->value('stripe_id');
-$stripe_subscription_id=DB::table('subscriptions')->where('user_id', $id)->where('stripe_status', 'active')->value('stripe_id');
-
-    try 
-    {
-        $token = \Stripe\Token::create(array(
-            "card" => array(
-                "number" => $card_number,
-                "exp_month" => $exp_month,
-                "exp_year" => $exp_year,
-                "cvc" => $cvv,
-                "currency" => 'usd',
-            )
-        ));
-        
-        $request_tok_id = $token->id;
-        $new_card_fingerprint = $token->card->fingerprint;
-
-        $carddetails=\Stripe\PaymentMethod::all([
-            'customer' => $stripe_customer_id,
-            'type' => 'card',
-        ]);
-        $card_lists = $carddetails->data;
-        
-        foreach($card_lists as $card_list){
-           
-            $fingerprint[] = $card_list->card->fingerprint;          
-        }
-             
-        if (in_array($new_card_fingerprint, $fingerprint))
-        {
-            $response->error = true;
-            $response->error_msg ='Card Already Exists';
-        }   
-        else
-        {
-
-            $createSource = \Stripe\Customer::createSource(
-                $stripe_customer_id,
-                ['source' => $request_tok_id]
-                );
-           
-               
-                $carddetails_1=\Stripe\PaymentMethod::all([
-                    'customer' => $stripe_customer_id,
-                    'type' => 'card',
-                ]);
-                
-                $customer_card_id = $carddetails_1->data;
-                foreach($customer_card_id as $card_new_add){
-                    if($new_card_fingerprint == $card_new_add->card->fingerprint){
-                      
-                        $query = DB::table('customer_card')->insert(
-                                array(
-                                   'user_id' => $id,
-                                   'customer_id' => $stripe_customer_id,
-                                   'payment_method' => $card_new_add->id
-                                )
-                             );
-
-                             if($set_default_card == 1){
-                                $update_payment_method = \Stripe\Customer::update(
-                                    $stripe_customer_id,
-                                    [
-                                        'default_source' => $card_new_add->id
-                                    ]
-                                );
-
-                                $update_set_dafault_card1 = DB::table('customer_card')
-                                ->where('user_id', $id)
-                                ->update(array(
-                                   'default_value' => 0
-                                )); 
-            
-                                $update_set_dafault_card = DB::table('customer_card')
-                                ->where('payment_method', $card_new_add->id)
-                                ->update(array(
-                                   'default_value' => 1
-                                )); 
-                            }
-                    }else{
-                        
-                    }
-                    
-                }
-            
-            $response->error = false;
-            $response->error_msg ='Card Added Sucessfully !';
-            $response->data =$createSource;
-        }
-       
-        
-    }catch(\Stripe\Error\Card $e) {
-        $response = response()->json(['message' => $e->getMessage()], 401);
-        $response->error_msg = $response->original['message'];
-    } 
-    catch (\Stripe\Error\RateLimit $e) {
-        $response = response()->json(['message' => $e->getMessage()], 402);
-        $response->error_msg = $response->original['message'];
-    } catch (\Stripe\Error\InvalidRequest $e) {
-        $response = response()->json(['message' => $e->getMessage()], 403);
-        $response->error_msg = $response->original['message'];
-    } catch (\Stripe\Error\Authentication $e) {
-        $response = response()->json(['message' => $e->getMessage()], 404);
-        $response->error_msg = $response->original['message'];
-    } catch (\Stripe\Error\ApiConnection $e) {
-        $response = response()->json(['message' => $e->getMessage()], 405);
-        $response->error_msg = $response->original['message'];
-    } catch (\Stripe\Error\Base $e) {
-        $response = response()->json(['message' => $e->getMessage()], 406);
-        $response->error_msg = $response->original['message'];
-    } catch (Exception $e) {
-        $response = response()->json(['message' => $e->getMessage()], 407);
-        $response->error_msg = $response->original['message'];
-    }
-    if($response->error_msg == 'Card Added Sucessfully !'){
-        return redirect('account/settings')->with('message', $response->error_msg);
-    }else{
-        return redirect('account/settings')->with('card_message', $response->error_msg);
-    }
-    }
     }
 
     public function BugReportView(){
