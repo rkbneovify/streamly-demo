@@ -233,12 +233,20 @@ $active_session = SessionTable::where([
 
     $ua = request()->server('HTTP_USER_AGENT');
     $isDevice=isDeviceAppleRokuOthers($ua);
+    
+    $zip_Code = DB::table('channels')
+    ->where(function ($query) use ($callSign) {
+        $query->where('callSign', $callSign)
+              ->orWhere('name', $callSign);
+    })
+    ->value('zip_code');
+    $zipValues = json_decode($zip_Code);
     if($isDevice=='chrome'){
         
         $d= $this->dashPlayer($callSign,$genre,$encoded_auth_xml);
 //    dump("bye");
 // return view('frontend.pages.livetvchannel',$d );//dash.js
-return view('frontend.pages.livetvchannelvideoJS',$d );
+return view('frontend.pages.zipcodeChannelerror',$d, compact('zipValues'));
 
 // return view('frontend.pages.forapplelivetvchannel', $d);
     }

@@ -385,6 +385,16 @@ use Laravel\Cashier\Cashier;
   </tbody>
 </table></ul></div></div>
 
+@if ($plan == null)
+<div class="row setting-cards mt-5">
+				<div class="col-centered col-md-8 ">
+				<ul class="setting-card table-responsive " style="
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;">
+  <summary style="text-align: center; color: red; font-weight: bold; padding: 1rem 0px;">Other user details are not visible since your account is a test user account, and our site is operating in live mode.</summary>
+</ul></div></div>
+@endif
+
 
 				@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->cancelled())
 				<div class="row setting-cards mt-5">
@@ -405,7 +415,7 @@ use Laravel\Cashier\Cashier;
 					</div>
 				</div>
 				
-				@elseif (Auth::user()->subscribed('main') && $plan !== null)
+				@elseif (Auth::user()->subscribed('main') && $plan !== null) 
 @if (!empty($plan->tiers))
 
 <div class="row setting-cards mt-5">
