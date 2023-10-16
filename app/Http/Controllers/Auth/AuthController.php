@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Memcached;
+use DB;
 
 class AuthController extends Controller
 {
@@ -568,6 +569,22 @@ public function samedevicelogout(Request $request)
     $validate = Validator::make($request->all(), [
         'id' => 'required'
     ]);
+
+    $authToken = $request->header('Authorization');
+
+    if ($authToken) {
+
+        $tokenExist = SessionTable::where([
+            ['status', '=', '1'],
+            ['access_token', '=', str_replace("Bearer ", "", $authToken)]
+        ]);
+
+        if(!$tokenExist->exists()) {
+            $response = array('success' => false,'response_code'=>400,'message'=>'Invalid auth token','data' => 'Empty');
+            return $response;
+        }
+
+    }
     
     if ($validate->fails()) {
         $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
@@ -592,7 +609,7 @@ public function samedevicelogout(Request $request)
 // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
             // $this->logout()->middleware(['jwt.verify']);
                     $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
-                    App\SessionTable::where([
+                    SessionTable::where([
                         ['status', '=', '1'],
                         ['connected_devices', '!=', '1'],
                          ])
@@ -607,7 +624,7 @@ public function samedevicelogout(Request $request)
                             "message" => "logged out successful",
                             "error" => false,
                         ];
-                        return response()->json( 200 );
+                        return response()->json($response,200 );
                    }else{
                     $response = [
             
