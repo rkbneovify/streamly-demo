@@ -22,6 +22,9 @@ Route::post('/botman', 'MainConversationController@handle');
 Route::get('/', function () {
     return view('auth/login');
 });
+Route::post('/password/login', function () {
+    return redirect('/livetv');
+});
 
 Route::post('/store-token', [NotificationController::class, 'updateDeviceToken'])->name('store.token');
 Route::post('/send-web-notification', [NotificationSendController::class, 'sendNotification'])->name('send.web-notification');
@@ -315,7 +318,7 @@ Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 Route::get('/react', 'Pages\LiveTv@webReact');
 Route::get('/vue', 'EpgController@staticepg');
 Route::get('/vuehtml', 'EpgController@vuehtml');
-Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check');//check coupon
+Route::get('ajax-check', 'r@Admin\SubscriptionControlleajaxCheck')->name('ajax-check');//check coupon
 
 Route::get('address-check', 'HomeController@addressCheck')->name('address-check');
 
