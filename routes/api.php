@@ -54,6 +54,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('same-device-id-logout', 'Auth\AuthController@samedevicelogout')->name('samedeviceidlogout');
+    Route::post('logout-device-session', 'Auth\AuthController@logoutDevice')->name('logoutdeveicesession');
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
