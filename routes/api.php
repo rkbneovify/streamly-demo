@@ -57,6 +57,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('refresh', 'Auth\AuthController@refresh');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('channelgenre', 'APIController@genrename');
+    Route::get('channelgenrehotel', 'APIController@genrenameHotel');
     Route::get('profile', 'Auth\AuthController@profile');
     Route::get('tvprofile', 'Auth\AuthController@tvprofile');
     Route::put('updateprofile','Auth\AuthController@updateprofile');
