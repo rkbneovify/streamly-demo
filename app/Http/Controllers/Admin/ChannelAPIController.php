@@ -20,7 +20,7 @@ class ChannelAPIController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['checkdevice','sortdevice','frontEpgchannelDaysSchedule','frontEpgchannelDaysSchedule2','PacificFrontEpgchannelDaysSchedule']]);
-        $this->middleware('subscribed')->only('channeljson','channelDaysSchedule','channelschedulejson');
+        $this->middleware('subscribed')->only('channeljson','channeljsonHotel','channelDaysSchedule','channelschedulejson');
     }
 
 
@@ -174,84 +174,168 @@ class ChannelAPIController extends Controller
         return $platform. ' ' .$browser . ' ' . $version;
     }
 }
-  
-public function channeljson(Request $request) 
-{   
-    $ua = $request->server('HTTP_USER_AGENT');
-    $deviceType=$request->get('deviceType');
-    $urlType=$request->get('typeurl');
-    $isDevice=isDeviceAppleRokuOthers($ua);
-    if($isDevice=='roku' || $urlType=='manifest'){    
-        // $record= Cache::rememberForever('channelslistsmooth', function () {
-        // $type='smooth_url';
-        // return $this->channeljsonFunc($type)->get();});
-        $record = $this->channeljsonFunc('smooth_url')->get();
-                
-    }else if($isDevice=='apple' || $urlType=='m3u8')  {
-        // $record= Cache::rememberForever('channelslistapple', function () {
-        // $type='url';
-        // return $this->channeljsonFunc($type)->get();});
-        $record = $this->channeljsonFunc('url')->get();
-                
-    }else if($deviceType=='apple')  {
-    // $record= Cache::rememberForever('channelslistapple', function () {
-    // $type='url';
-    // return $this->channeljsonFunc($type)->get();});
-    $record = $this->channeljsonFunc('url')->get();
-            
-    }
-    else{
 
-    //     $record= Cache::rememberForever('channelslistdash', function () {
-    //     $type='dash_url';
-    //     return $this->channeljsonFunc($type)->get();
-    // });
-    $record = $this->channeljsonFunc('dash_url')->get();
-    }
-       
-    //JSON_ARRAY
-    // $pagechannel=$record->get();
+    public function channeljsonHotel(Request $request)
+    {
+        $ua = $request->server('HTTP_USER_AGENT');
+        $deviceType = $request->get('deviceType');
+        $urlType = $request->get('typeurl');
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        if ($isDevice == 'roku' || $urlType == 'manifest') {
+            // $record= Cache::rememberForever('channelslistsmooth', function () {
+            // $type='smooth_url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonHotelFunc('smooth_url')->get();
+        } else if ($isDevice == 'apple' || $urlType == 'm3u8') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonHotelFunc('url')->get();
+        } else if ($deviceType == 'apple') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonHotelFunc('url')->get();
+        } else {
 
-    /*
+            //     $record= Cache::rememberForever('channelslistdash', function () {
+            //     $type='dash_url';
+            //     return $this->channeljsonFunc($type)->get();
+            // });
+            $record = $this->channeljsonHotelFunc('dash_url')->get();
+        }
+
+        //JSON_ARRAY
+        // $pagechannel=$record->get();
+
+        /*
+   $pagechannel=$record->map(function ($message, $key) {
+        $message->genrename = json_decode($message->genrename, true);
+    return $message;
+}); */
+
+
+        //  return response()->json($record->toSql());
+
+        $response = [
+            'success' => true,
+            'data' => $record,
+            // 'count'=>$pagechannel->count(), 
+            'message' => 'Channel with genre successfully fetched',
+            'response_code' => 200,
+        ];
+        // return response()->json($reco);
+        return response()->json($response, 200);
+    }
+
+    public function channeljsonHotelFunc($type)
+    {
+        // select `channels`.`id`, IFNULL(channels.callSign,channels.name) callSign, `channels`.`image`, `channels`.`dash_url` as `url`, 
+        // CONCAT('[',GROUP_CONCAT(QUOTE(IFNULL(genre.name,'Others'))),']') genrename 
+        // from `channels` left join `channels_genre` on `channels`.`id` = `channels_genre`.`channels_id` 
+        // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
+        // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
+        $imagePath = url("/uploads/channellogo/");
+        $second = HotelChannel::select(
+            'hotel_channels.id',
+            DB::raw('IFNULL(hotel_channels.callSign,hotel_channels.name) callSign'),
+            DB::raw('IFNULL(hotel_channels.stationName,hotel_channels.name) stationName'),
+            'hotel_channels.image',
+            "hotel_channels.$type as url",
+            DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+        )
+
+            ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+
+            ->leftJoin('channels_genre', 'hotel_channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+            ->where('hotel_channels.status', '=', '1')
+            ->groupBy('hotel_channels.id')
+            ->orderBy('hotel_channels.id', 'asc');
+        // ->orderBy('channels.name', 'asc');
+        return $second;
+    }
+    public function channeljson(Request $request)
+    {
+        $ua = $request->server('HTTP_USER_AGENT');
+        $deviceType = $request->get('deviceType');
+        $urlType = $request->get('typeurl');
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        if ($isDevice == 'roku' || $urlType == 'manifest') {
+            // $record= Cache::rememberForever('channelslistsmooth', function () {
+            // $type='smooth_url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('smooth_url')->get();
+        } else if ($isDevice == 'apple' || $urlType == 'm3u8') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('url')->get();
+        } else if ($deviceType == 'apple') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('url')->get();
+        } else {
+
+            //     $record= Cache::rememberForever('channelslistdash', function () {
+            //     $type='dash_url';
+            //     return $this->channeljsonFunc($type)->get();
+            // });
+            $record = $this->channeljsonFunc('dash_url')->get();
+        }
+
+        //JSON_ARRAY
+        // $pagechannel=$record->get();
+
+        /*
        $pagechannel=$record->map(function ($message, $key) {
             $message->genrename = json_decode($message->genrename, true);
         return $message;
     }); */
 
 
-    //  return response()->json($record->toSql());
-   
-    $response = [
-        'success' => true,
-        'data'=>$record,
-        // 'count'=>$pagechannel->count(), 
-        'message' => 'Channel with genre successfully fetched',
-        'response_code'=>200,
-    ];
-    // return response()->json($reco);
-    return response()->json($response, 200);
+        //  return response()->json($record->toSql());
+
+        $response = [
+            'success' => true,
+            'data' => $record,
+            // 'count'=>$pagechannel->count(), 
+            'message' => 'Channel with genre successfully fetched',
+            'response_code' => 200,
+        ];
+        // return response()->json($reco);
+        return response()->json($response, 200);
     }
 
-    public function channeljsonFunc($type){
+    public function channeljsonFunc($type)
+    {
         // select `channels`.`id`, IFNULL(channels.callSign,channels.name) callSign, `channels`.`image`, `channels`.`dash_url` as `url`, 
         // CONCAT('[',GROUP_CONCAT(QUOTE(IFNULL(genre.name,'Others'))),']') genrename 
         // from `channels` left join `channels_genre` on `channels`.`id` = `channels_genre`.`channels_id` 
         // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
         // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
-        $imagePath=url("/uploads/channellogo/");
-    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'channels.image',"channels.$type as url",
-    DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo"))
-           
+        $imagePath = url("/uploads/channellogo/");
+        $second = Channel::select(
+            'channels.id',
+            DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+            DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
+            'channels.image',
+            "channels.$type as url",
+            DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+        )
+
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
-           
-           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-    
-    ->where('channels.status','=','1')
-    ->groupBy('channels.id')
-    ->orderBy('channels.id', 'asc');
-    // ->orderBy('channels.name', 'asc');
-    return $second;
+
+        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+        ->where('channels.status', '=', '1')
+        ->groupBy('channels.id')
+        ->orderBy('channels.id', 'asc');
+        // ->orderBy('channels.name', 'asc');
+        return $second;
     }
 
 

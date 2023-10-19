@@ -66,6 +66,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
        //channel api
 
     Route::get('channellist', 'Admin\ChannelAPIController@channeljson');
+    Route::get('channellisthotel', 'Admin\ChannelAPIController@channeljsonHotel');
     Route::get('check', 'Admin\ChannelAPIController@checkdevice');
     Route::get('sort', 'Admin\ChannelAPIController@sortdevice');
     Route::post('channelschdeule', 'Admin\ChannelAPIController@channelschedulejson');
