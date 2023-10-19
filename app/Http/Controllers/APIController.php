@@ -17,9 +17,11 @@ use Mail;
 use Carbon\Carbon;
 use Validator;
 use App\Models\Channel;
+use App\Models\HotelChannel;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Models\RecentChannel;
+use App\Models\HotelRecentChannel;
 use App\Models\FrontendText;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class APIController extends Controller
@@ -31,7 +33,7 @@ class APIController extends Controller
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility','connecteddeviceemail']]);
-        $this->middleware('subscribed')->only('genrename', 'myRecents', 'myFavorites', 'addToRecent', 'connecteddevice');
+        $this->middleware('subscribed')->only('genrename', 'myRecents','hotelmyRecents', 'myFavorites', 'addToRecent','addToRecentHotel', 'connecteddevice');
     }
 
     public function index()
@@ -505,118 +507,234 @@ return $second;
     
     }
 
-    public function addToRecent(Request $request){
+    public function addToRecent(Request $request)
+    {
         $limit = 10;
-        try { $id =JWTAuth::user()->id;
-            $count = RecentChannel::where('user_id','=',$id)->count();
-if($count >=  $limit){
-    RecentChannel::where('user_id','=',$id)->orderBy('created_at','desc')->skip(5)->delete();
-}
-        $now = Carbon::now('utc')->toDateTimeString();
-       
-        $ActiveChannelIds=Channel::toBase()->select('id')->where('status','=','1')->pluck('id')
-         ->toArray();
-        $channelid = $request->input('channelids');
-        $channels= explode(',',$channelid);
+        try {
+            $id = JWTAuth::user()->id;
+            $count = RecentChannel::where('user_id', '=', $id)->count();
+            if ($count >=  $limit) {
+                RecentChannel::where('user_id', '=', $id)->orderBy('created_at', 'desc')->skip(5)->delete();
+            }
+            $now = Carbon::now('utc')->toDateTimeString();
 
-        $channelIDArrByUser= array_unique($channels, SORT_NUMERIC);
-        $channelArr = array_intersect($ActiveChannelIds,$channelIDArrByUser);  
-        $model=new RecentChannel;
-    
-        
+            $ActiveChannelIds = Channel::toBase()->select('id')->where('status', '=', '1')->pluck('id')
+                ->toArray();
+            $channelid = $request->input('channelids');
+            $channels = explode(',', $channelid);
 
-foreach ($channelArr as $value) {
-    $model->updateOrCreate(
-        [
-            'channels_id' => $value,
-            'user_id'  => $id,
-            'updated_at'=> $now
-        ],
-        [
-            'channels_id' => $value,
-            'user_id' => $id,
-            'created_at'=> $now,
-            'updated_at'=> $now
-        ]
-    );
-}
-$ua = $request->server('HTTP_USER_AGENT');
-$isDevice=isDeviceAppleRokuOthers($ua);
-$recentschannel=$this->getRecentsChannelUrlForDevice($isDevice);
+            $channelIDArrByUser = array_unique($channels, SORT_NUMERIC);
+            $channelArr = array_intersect($ActiveChannelIds, $channelIDArrByUser);
+            $model = new RecentChannel;
 
-     $response = [
-        'success' => true,
-        'data' => $recentschannel,
-        'message' => 'Added to recent','response_code'=>200,
-    ];
-     
-     return response()->json($response,200);}
-     catch (Exception $exception) {
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Some Error occured',
-            'error'=>$exception->getMessage(),
-            'response_code'=>500,
-            
-        ], 500);
-    }
 
-    
-}
-public function getRecentsChannelUrlForDevice($isDevice){
-           
-$recentschannel = JWTAuth::user()->recentschannel;
-if($isDevice=='apple')    {
-    $recentschannel->map(function ($address)  {
 
-      unset($address['dash_url']);
-        return $address;
-    
-    });
-}else{
+            foreach ($channelArr as $value) {
+                $model->updateOrCreate(
+                    [
+                        'channels_id' => $value,
+                        'user_id'  => $id,
+                        'updated_at' => $now
+                    ],
+                    [
+                        'channels_id' => $value,
+                        'user_id' => $id,
+                        'created_at' => $now,
+                        'updated_at' => $now
+                    ]
+                );
+            }
+            $ua = $request->server('HTTP_USER_AGENT');
+            $isDevice = isDeviceAppleRokuOthers($ua);
+            $recentschannel = $this->getRecentsChannelUrlForDevice($isDevice);
 
-$recentschannel->map(function ($address)  {
+            $response = [
+                'success' => true,
+                'data' => $recentschannel,
+                'message' => 'Added to recent', 'response_code' => 200,
+            ];
 
-         
-    $address['url'] = $address['dash_url'];
-  unset($address['dash_url']);
-    return $address;
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
 
-});
-}
-return $recentschannel;
-}
-public function myRecents(Request $request)
-    { try { 
-        
-        $ua = $request->server('HTTP_USER_AGENT');
-        $isDevice=isDeviceAppleRokuOthers($ua);
-        
-       
-        $recentschannel=$this->getRecentsChannelUrlForDevice($isDevice);
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error' => $exception->getMessage(),
+                'response_code' => 500,
 
-        foreach($recentschannel as $value){
-            $value['image'] = 'https://streamlytv.com/uploads/channellogo/'.$value->image.'';
+            ], 500);
         }
-        
-        $response = [
-            'success' => true,
-            'data' => $recentschannel,
-            'message' => 'My Recent.','response_code'=>200,
-        ];
-        return response()->json($response, 200);
-    } catch (Exception $exception) {
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Some Error occured',
-            'error'=>$exception->getMessage(),
-            'response_code'=>500,
-            
-        ], 500);
     }
-    
+
+    public function addToRecentHotel(Request $request)
+    {
+        $limit = 10;
+        try {
+            $id = JWTAuth::user()->id;
+            $count = HotelRecentChannel::where('user_id', '=', $id)->count();
+            if ($count >=  $limit) {
+                HotelRecentChannel::where('user_id', '=', $id)->orderBy('created_at', 'desc')->skip(5)->delete();
+            }
+            $now = Carbon::now('utc')->toDateTimeString();
+
+            $ActiveChannelIds = HotelChannel::toBase()->select('id')->where('status', '=', '1')->pluck('id')
+                ->toArray();
+            $channelid = $request->input('channelids');
+            $channels = explode(',', $channelid);
+
+            $channelIDArrByUser = array_unique($channels, SORT_NUMERIC);
+            $channelArr = array_intersect($ActiveChannelIds, $channelIDArrByUser);
+            $model = new HotelRecentChannel;
+
+
+
+            foreach ($channelArr as $value) {
+                $model->updateOrCreate(
+                    [
+                        'channels_id' => $value,
+                        'user_id'  => $id,
+                        'updated_at' => $now
+                    ],
+                    [
+                        'channels_id' => $value,
+                        'user_id' => $id,
+                        'created_at' => $now,
+                        'updated_at' => $now
+                    ]
+                );
+            }
+            $ua = $request->server('HTTP_USER_AGENT');
+            $isDevice = isDeviceAppleRokuOthers($ua);
+            $recentschannel = $this->getRecentsHotelChannelUrlForDevice($isDevice);
+
+            $response = [
+                'success' => true,
+                'data' => $recentschannel,
+                'message' => 'Added to recent', 'response_code' => 200,
+            ];
+
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error' => $exception->getMessage(),
+                'response_code' => 500,
+
+            ], 500);
+        }
+    }
+
+    public function getRecentsChannelUrlForDevice($isDevice)
+    {
+
+        $recentschannel = JWTAuth::user()->recentschannel;
+        if ($isDevice == 'apple') {
+            $recentschannel->map(function ($address) {
+
+                unset($address['dash_url']);
+                return $address;
+            });
+        } else {
+
+            $recentschannel->map(function ($address) {
+
+
+                $address['url'] = $address['dash_url'];
+                unset($address['dash_url']);
+                return $address;
+            });
+        }
+        return $recentschannel;
+    }
+
+    public function getRecentsHotelChannelUrlForDevice($isDevice)
+    {
+
+        $recentschannel = JWTAuth::user()->hotelrecentschannel;
+        if ($isDevice == 'apple') {
+            $recentschannel->map(function ($address) {
+
+                unset($address['dash_url']);
+                return $address;
+            });
+        } else {
+
+            $recentschannel->map(function ($address) {
+
+
+                $address['url'] = $address['dash_url'];
+                unset($address['dash_url']);
+                return $address;
+            });
+        }
+        return $recentschannel;
+    }
+
+    public function myRecents(Request $request)
+    {
+        try {
+
+            $ua = $request->server('HTTP_USER_AGENT');
+            $isDevice = isDeviceAppleRokuOthers($ua);
+
+
+            $recentschannel = $this->getRecentsChannelUrlForDevice($isDevice);
+
+            foreach ($recentschannel as $value) {
+                $value['image'] = 'https://streamlytv.com/uploads/channellogo/' . $value->image . '';
+            }
+
+            $response = [
+                'success' => true,
+                'data' => $recentschannel,
+                'message' => 'My Recent.', 'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error' => $exception->getMessage(),
+                'response_code' => 500,
+
+            ], 500);
+        }
+    }
+
+    public function hotelmyRecents(Request $request)
+    {
+        try {
+
+            $ua = $request->server('HTTP_USER_AGENT');
+            $isDevice = isDeviceAppleRokuOthers($ua);
+
+
+            $recentschannel = $this->getRecentsHotelChannelUrlForDevice($isDevice);
+
+            foreach ($recentschannel as $value) {
+                $value['image'] = 'https://streamlytv.com/uploads/channellogo/' . $value->image . '';
+            }
+
+            $response = [
+                'success' => true,
+                'data' => $recentschannel,
+                'message' => 'My Recent.', 'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error' => $exception->getMessage(),
+                'response_code' => 500,
+
+            ], 500);
+        }
     }
 
     public function qrcodeapi(){

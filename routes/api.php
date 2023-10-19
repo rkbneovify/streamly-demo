@@ -91,7 +91,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('unfavorite/', 'APIController@unFavoriteChannel');
     Route::get('my_favorites', 'APIController@myFavorites');
     Route::get('my_recents', 'APIController@myRecents');
+    Route::get('hotel_my_recents', 'APIController@hotelmyRecents');
     Route::post('addtorecent', 'APIController@addToRecent');
+    Route::post('addToRecentHotel', 'APIController@addToRecentHotel');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
 

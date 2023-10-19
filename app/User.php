@@ -12,7 +12,7 @@ use Validator;
 use DB;
 use Laravel\Cashier\Billable;
 use App\Models\Channel;
-
+use App\Models\HotelChannel;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -110,6 +110,11 @@ class User extends Authenticatable implements JWTSubject
 public function recentschannel()
 {
     return $this->belongsToMany(Channel::class, 'recent_channel', 'user_id', 'channels_id')->where('status','1')->latest()->take(10)->distinct();
+}
+
+public function hotelrecentschannel()
+{
+    return $this->belongsToMany(HotelChannel::class, 'hotel_recent_channel', 'user_id', 'channels_id')->where('status','1')->latest()->take(10)->distinct();
 }
 
     // public function subscriptions()
