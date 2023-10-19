@@ -18,6 +18,9 @@
         .btn-primary:hover {
             background-color: #FF712F!important;
         }
+        #navbarResponsive {
+            display: none!important;
+        }
 </style>
 <section id="requestinfo" class="page-section">
     <div class="container">

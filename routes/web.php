@@ -12,7 +12,6 @@
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\NotificationSendController;
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -22,9 +21,11 @@ Route::post('/botman', 'MainConversationController@handle');
 Route::get('/', function () {
     return view('auth/login');
 });
+Route::post('/password/login', function () {
+    return redirect('/livetv');
+});
 
 Route::post('/store-token', [NotificationController::class, 'updateDeviceToken'])->name('store.token');
-Route::post('/send-web-notification', [NotificationSendController::class, 'sendNotification'])->name('send.web-notification');
 Route::get('push-notification', [NotificationController::class, 'index']);
 Route::post('sendNotification', [NotificationController::class, 'sendNotification'])->name('send.notification');
 
@@ -61,7 +62,7 @@ Route::middleware(['auth','role:superadmin|admin'])->prefix('admin')->name('admi
     
     
     Route::post('insertsubscriptionpack','Admin\SubscriptionPackController@store')->name('insertsubscriptionpack');
-
+    
     //subscription 
     Route::resource('subscriptions', 'Admin\SubscriptionController');
      Route::get('/subscriptionsstripe','Admin\SubscriptionController@subscriptionstripe')->name('ss');
@@ -122,9 +123,8 @@ Route::get('/channels/edit/{id}', 'Admin\GracenoteController@edit');//gracenote
     Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate');//slider piyush
     Route::put('/banner/update/{id}', 'HomescreenBannerController@bannerupdate');//slider piyush
     Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate');//slider piyush
-    //Route::get('/stripekeys', 'Admin\StripekeysController@index');//slider piyush
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
-    Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');//slider piyush
+    Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice');//connected devices
     Route::get('/users/create', 'Admin\UsersController@create');
     Route::post('insertuser','Admin\UsersController@store')->name('insertuser');
@@ -141,7 +141,6 @@ Route::get('users/updateall', 'Admin\UsersController@UpdateAll');
   Route::get('/channelstatus/create', 'Admin\ChannelController@create');//channels Statust
   
 Route::get('/channelstatus', 'Admin\ChannelController@index');//channel
-Route::get('/channelDelete/{channelID}', 'Admin\ChannelController@channelDelete');//channel
 Route::get('/channelstatus2', 'Admin\ChannelController@index2');//channel
 Route::get('/channelstatus/view/{id}', 'Admin\ChannelController@show');//channel
 Route::get('/channelstatus/edit/{id}', 'Admin\ChannelController@edit');//channel
@@ -150,13 +149,13 @@ Route::get('channelstatus/channeldata', 'Admin\ChannelController@channelData');/
 Route::get('channelstatus/updateall', 'Admin\ChannelController@UpdateAll');
 Route::post('insertchannel','Admin\ChannelController@store')->name('insertchannel');
 Route::put('channelupdate/{id}','Admin\ChannelController@update')->name('channelupdate');
-
-    //Genres
+   
+   //Genres
     Route::get('/allgenre', 'Admin\GenreController@index');//genre
     Route::get('/addgenre', 'Admin\GenreController@addgenre');//genre
     Route::post('/creategenre', 'Admin\GenreController@creategenre');//genre
     Route::get('/deletegenre/{id}', 'Admin\GenreController@deletegenre');//genre
-
+    
     // Zipcode Routes
     Route::get('zipcode2', 'Admin\ZipcodeController@index');
     Route::get('zipcode', 'Admin\ZipcodeController@index2');
@@ -205,6 +204,32 @@ Route::get('bugreport/data', 'Admin\BugReportingController@ajaxIndex');
 Route::get('affiliatereport', 'Admin\AffiliateReportController@index')->name('affiliatereport');
 /*End Naresh 15-11-2022*/
 Route::get('/report/zipcodeusers/{zipcode}', 'Admin\ReportController@zipcodeUsers');//all users from zipcode
+/*Admin Category List Naresh-20-03-2023 */
+    Route::get('/chatboat_category', 'Admin\ChatboatCategoryController@index')->name('chatboat_category.index');
+    Route::get('/chatboat_category/create', 'Admin\ChatboatCategoryController@create')->name('chatboat_category.create');
+    Route::post('/chatboat_category/store', 'Admin\ChatboatCategoryController@store')->name('chatboat_category.store');
+    Route::get('/chatboat_category/view/{id}', 'Admin\ChatboatCategoryController@view');
+    Route::get('/chatboat_category/edit/{id}', 'Admin\ChatboatCategoryController@edit')->name('chatboat_category.edit');
+    Route::post('/chatboat_category/update/{id}', 'Admin\ChatboatCategoryController@update')->name('chatboat_category.update');
+    Route::get('/chatboat_category/destroy/{id}', 'Admin\ChatboatCategoryController@destroy')->name('chatboat_category.destroy');
+
+
+    /*Admin FAQ List Naresh-20-03-2023*/
+
+    Route::get('/faq', 'Admin\FaqChatboatController@index')->name('faq.index');
+    Route::get('/faq/create', 'Admin\FaqChatboatController@create')->name('faq.create');
+    Route::post('/faq/store', 'Admin\FaqChatboatController@store')->name('faq.store');
+    Route::get('/faq/view/{id}', 'Admin\FaqChatboatController@view');
+    Route::get('/faq/edit/{id}', 'Admin\FaqChatboatController@edit')->name('faq.edit');
+    Route::post('/faq/update/{id}', 'Admin\FaqChatboatController@update')->name('faq.update');
+    Route::get('/faq/destroy/{id}', 'Admin\FaqChatboatController@destroy')->name('faq.destroy');
+
+    Route::get('/chat-history', 'Admin\ChatHistoryController@index')->name('chat.history');;
+
+    Route::post('/ajax-sendmail', 'Admin\SendMailController@handleRequest')->name('admin.sendmail');
+
+    Route::post('/ajax-reply-data', 'Admin\SendMailController@AnswerHistory');
+
 });
 
 /*Prev Next channel*/
@@ -267,9 +292,6 @@ Route::get('/helpandsupport', 'HomeController@helpandsupp');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->name('user.personaldevicename');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
-Route::get('user/removeCard/{id}','Pages\Account\Setting@removecard')->name('user.removeCard');
-Route::post('user/addCard/{id}','Pages\Account\Setting@addcard')->name('user.addCard');
-Route::get('user/api','Pages\Account\Setting@api')->name('user.removeCard');
 
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
@@ -377,4 +399,3 @@ Route::get('/checkout/{master_id}', 'PaymentlinkController@checkout');
 Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
 Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
-

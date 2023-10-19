@@ -258,7 +258,7 @@
               </div>
           </div>
 						<div class="channel-detail">
-							<!-- <p>ghghg</p> -->
+							<p>ghghg</p>
 						</div>
 					</div>
 					

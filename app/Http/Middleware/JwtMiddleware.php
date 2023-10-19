@@ -24,7 +24,7 @@
         public function handle($request, Closure $next)
         {
             try {
-                JWTAuth::parseToken()->authenticate();
+                $user = JWTAuth::parseToken()->authenticate();
             //     if($request->get('key')){
             //     $user = JWTAuth::parseToken()->authenticate();
             // }else{

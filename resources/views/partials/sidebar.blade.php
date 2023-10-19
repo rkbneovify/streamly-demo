@@ -29,7 +29,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          @role(['salesuser'])
+           @role(['salesuser'])
           <li class="nav-item ">
             <a href="#"  class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -196,7 +196,6 @@
                 </a>
               </li>
             </ul>
-            
             <li class="nav-item has-treeview {{ (request()->is('admin/allgenre')) ? 'menu-open' : '' }}{{ (request()->is('admin/addgenre')) ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/allgenre') }}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -217,7 +216,6 @@
                   <p>View Genre</p>
                 </a>
             </ul>
-
           <li class="nav-item has-treeview {{ (request()->is('admin/zipcode')) ? 'menu-open' : '' }}{{ (request()->is('admin/allowedzipcode')) ? 'menu-open' : '' }}{{ (request()->is('admin/zipcode/map')) ? 'menu-open' : '' }}{{ (request()->is('admin/zipcode/checkfenceweb')) ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/zipcode') }}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -422,7 +420,6 @@
               </li>
             </ul>
           </li>
-          @endrole
             <!-- <ul class="nav nav-treeview">
               <li class="nav-item">
               <a href=" {{ url('/admin/subscriptionpack') }}" class="nav-link">
@@ -432,6 +429,7 @@
               </li>
             </ul> 
           </li>
+          @endrole
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tree"></i>

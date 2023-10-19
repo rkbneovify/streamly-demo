@@ -86,4 +86,3 @@ $(this).toggleClass( "iWO5td" );
 $(this).next().toggleClass( "is-visible" );
     //   console.log($(this));
    });
-

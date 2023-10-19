@@ -149,10 +149,11 @@ class Setting extends Controller
          $subscription=Auth::user()->subscriptions()->first();
         //  dd($subscription);
         //  $status= \Stripe\Subscription::retrieve($subscription->stripe_id);
-
+        //  dd($status);
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
+            
          
             $stripe_plan=$subscription->stripe_plan;
          

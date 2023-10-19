@@ -1,11 +1,11 @@
-<?php 
+<?php
+ 
 namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use JWTAuth;
-//use App\Models\User;
   
 class NotificationController extends Controller
 {
@@ -25,7 +25,7 @@ class NotificationController extends Controller
      * @return response()
      */
 
-     public function updateDeviceToken(Request $request)
+    public function updateDeviceToken(Request $request)
     {
         Auth::user()->device_token =  $request->token;
         $user = JWTAuth::user();
@@ -50,7 +50,7 @@ class NotificationController extends Controller
             "registration_ids" => $firebaseToken,
             "notification" => [
                 "title" => $request->title,
-                "body" => $request->body,  
+                "body" => $request->body. date("Y/m/d H:i:s"),  
             ]
         ];
         $dataString = json_encode($data);
@@ -106,13 +106,11 @@ class NotificationController extends Controller
         $response = curl_exec($ch);
         $result = json_decode($response);
         curl_close($ch);
-
-        return response()->json(['success'=>true,'response_code'=>501,'message' => $result], 501);
     
-        // if($result->success ==  0){
-        //     return response()->json(['success'=>false,'response_code'=>501,'message' => $result->results], 501);
-        // }else{
-        //     return response()->json(['success'=>true,'response_code'=>200,'message' => 'Notification send successfully'], 200);
-        // }   
+        if($result->success ==  0){
+            return response()->json(['success'=>false,'response_code'=>501,'message' => $result->results], 501);
+        }else{
+            return response()->json(['success'=>true,'response_code'=>200,'message' => 'Notification send successfully'], 200);
+        }   
     }
 }

@@ -519,7 +519,7 @@
      width:calc(33.3% - 16px);
     }
     .F4S0Db:nth-of-type(3n) {
-     margin-right:24px;
+     margin-right:0;
     }
    }
    @media (max-width:887px) and (min-width:720px) {

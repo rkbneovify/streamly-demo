@@ -692,7 +692,7 @@ function getKeyOSAuthToken(){
   $certificate = config_path("buydrm/9754e0cfddc682c21216de3eb4d11885.pem");
   try {  // Create authentication XML generator instance.
     $auth_xml_generator = new \KeyOSAuthXMLGenerator($certificate);
-    $auth_xml_generator->AuthXMLExpirationTime('+1 day');
+    $auth_xml_generator->AuthXMLExpirationTime('+7 day');
   
     // Crate Simple PR license
     $pr_lic = $auth_xml_generator->newSimpleLicense();
@@ -913,7 +913,6 @@ function duplicateDeviceId($user_id,$deviceDetails){
     ['users_id', '=', $user_id],
     ['mac_address', '=', $deviceDetails],
   ]);
-
   if ($checkDeviceDetails->exists()) {
       $explodedstring= explode("#~",$deviceDetails);
        return response()->json([
@@ -954,7 +953,6 @@ function hoteluserduplicateDeviceId($user_id,$deviceDetails){
   return false;
 }
 }
-
 
   /**
  * Validates a given coordinate

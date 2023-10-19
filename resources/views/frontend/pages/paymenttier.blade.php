@@ -154,6 +154,7 @@ $plandetailsFirst=$plandetails->tiers[0]['flat_amount_decimal'];
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading">Add Your Billing Details</h2>
+
             @if(auth()->user()->subscribed('main'))
 			<div class="my-auto" style="width: 80%;margin: auto;background: #FFFFFF 0% 0% no-repeat padding-box;box-shadow: 0px 3px 6px #00000029;border-radius: 6px;">
                        
@@ -359,12 +360,12 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 						<input name="previousurl" type="hidden" value="{{url()->current()}}">	
 						<div class="form-group mt-3">
 							<button type="submit" id="card-button" class="btn btn-lg submit-btn" style="margin-left: auto;margin-right: auto;display: flex;text-align: center;" disabled> 
-							@if($plandetails->trial_period_days)
-										<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
-										@else
-										<span style="width: 100%;">SUBMIT</span>
-										@endif
-						</button>
+								@if($plandetails->trial_period_days)
+								<span style="width: 100%;">START YOUR {{$plandetails->trial_period_days}} DAYS TRAIL</span>
+								@else
+								<span style="width: 100%;">SUBMIT</span>
+								@endif	
+							</button>
 						</div> {!! csrf_field() !!} </form>
                         
                     </div>
@@ -384,13 +385,7 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 @section('stylesheets-bottom') 
 @if(!auth()->user()->subscribed('main'))
 <script src = "https://js.stripe.com/v3/"></script> 
-<script> 
-if(sessionStorage.getItem("totalprice")){
-				sessionStorage.removeItem('couponoff');
-				sessionStorage.removeItem('totalprice');
-}
-
-$(function() {
+<script > $(function() {
 	var totalPrice;
 	addQuantityListeners();
 	var bt = document.getElementById('card-button');
@@ -427,8 +422,6 @@ $(function() {
 						document.getElementById("totalprice").textContent = formatter.format(totalValue);
 						document.getElementById("totalprice2").textContent =  formatter.format(totalValue);
 						document.getElementById("couponoff").textContent = data.percentoff + '% off';
-						sessionStorage.setItem("couponoff", data.percentoff+'% off');
-			            sessionStorage.setItem("totalprice", formatter.format(totalValue));
 					};
 				},
 				error: function() {
@@ -506,8 +499,8 @@ $(function() {
 		}
 	});
 });
-const stripe = Stripe('<?php echo env('STRIPE_KEY') ?>');
-// console.log(stripe3);
+const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
+// console.log(stripe);
 const elements = stripe.elements();
 const cardElement = elements.create('card', {
 	hidePostalCode: true
@@ -659,13 +652,6 @@ function ShowUserthePrice(userIn) {
 	});
 	return tierfound;
 } 
-</script>
-@else
-<script>
-if(sessionStorage.getItem("totalprice")){
-	document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
-	document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
-}
 </script>
 @endif
 @endsection

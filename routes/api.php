@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,8 +14,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NotificationController;
 
 Route::get('/', function (Request $request) {
     return 'Working';
@@ -49,7 +49,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
     Route::post('loginCheck', 'Auth\AuthController@loginCheck');
     Route::post('sendNotification', 'NotificationController@sendNotificationApp');
-    Route::post('authtokenrefresh', 'Auth\AuthController@authRefesh');
     Route::post('login-with-passcode', 'Auth\AuthController@loginWithPasscode');
     Route::post('change-password', 'Auth\AuthController@changePassword');
     Route::post('logout', 'Auth\AuthController@logout');
@@ -95,7 +94,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('addtorecent', 'APIController@addToRecent');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
- Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);
 
 Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify','subscribed']);
 Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify', 'subscribed']);

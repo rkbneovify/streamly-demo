@@ -27,7 +27,7 @@ class ChannelController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['index','index2','show','create','edit','update','destroy','store','channelData','UpdateAll', 'channelDelete']]);
+        $this->middleware('jwt.verify', ['except' => ['index','index2','show','create','edit','update','destroy','store','channelData','UpdateAll']]);
     }
     public function index()
     {  
@@ -40,17 +40,6 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
     return view('admin.channels.index', compact('record','encoded_auth_xml'));}
         
     } 
-
-    public function channelDelete($channelID){
-        $DeleteChannel = Channel::where('id', $channelID)->delete();
-
-        if($DeleteChannel){
-            return redirect('admin/channelstatus')->with('success', 'Channel Deleted Successfully');
-        }else{
-        return redirect('admin/channelstatus')->with('error', 'OOPS! Something Went Wrong.');
-        }
-    }
-
     public function index2()
     {  
         $record = Channel::with('genre')->paginate(10);
@@ -134,8 +123,6 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
      */
     public function store(Request $request)
     {
-        // $zipCodes = explode(',', $request->input('zip_codes'));
-        // dd($zipCodes);
         $this->validate($request, [
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
           ]);
@@ -147,12 +134,13 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
             $input['genres'] = $break_value;
         
         }
-       if($request->input('zip_codes')){
+        if($request->input('zip_codes')){
         $zipCodes = explode(',', $request->input('zip_codes'));
         $model->zip_code = $zipCodes;
        }else{
         $model->zip_code = ["Null"];
        }
+
 
     //     $model->image = $request->image;
     //     if($model->image){
@@ -219,13 +207,8 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
             'genre_id'=>'required',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-        $input = $request->only('name', 'stationName', 'url','smooth_url','callSign','dash_url', 'genre_id');
-
-        if ($request->has('stationName')) {
-            // Only update stationName if it is present in the request
-            $input['stationName'] = $request->input('stationName');
-        }
-        
+        $input = $request->only('name', 'url','smooth_url','callSign','dash_url', 'genre_id');
+        // dd($input);
         if ($request->has('toggleswitch')) {
             // $archived="helllo block user on";
              $input['status'] = 0;
@@ -240,15 +223,15 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
             $input['genres'] = $break_value;
         
         } else{$input['genres']='';}
-
         if($request->input('zip_codes')){
             $zipCodes = explode(',', $request->input('zip_codes'));
             $input['zip_code'] = $zipCodes;
            }else{
             $input['zip_code'] = ["Null"];
         }
-       // $allpost= $request->post();
-       // dd($input);  //get all the post data
+        
+    //            $allpost= $request->post();
+    //    dd($input);  //get all the post data
         
         $model = Channel::find($id);
         if ($request->hasFile('image')) {
@@ -259,7 +242,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
             $image->move($destinationPath, $name);
             $model->image = $name;
           }
-        // dd($input);exit;
+       // dd($input);exit;
         if(!$model){
             return redirect('admin/channelstatus')->with('info','Channel with id ' . $id . ' cannot be found.'); 
         }
@@ -296,8 +279,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
 
     public function channelData()
      {   
-        $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),'channels.status',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.image,"notfound.png") image'),
-        DB::raw('IF(channels.zip_code = \'["Null"]\', \'Null\', channels.zip_code) AS zip_code'),"channels.url","channels.dash_url","channels.smooth_url")
+        $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),'channels.status',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.image,"notfound.png") image'),DB::raw('IF(channels.zip_code = \'["Null"]\', \'Null\', channels.zip_code) AS zip_code'),"channels.url","channels.dash_url","channels.smooth_url")
            
         ->selectRaw(" CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') genrename")
            

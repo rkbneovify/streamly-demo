@@ -338,7 +338,7 @@ input[type=number] {
 													<p>The trial period will end on {{ auth()->user()->subscription('main')->trial_ends_at }}</p>
 													<p>After the trial period ends, your credit card will be billed the monthly subscription amount.</p>
 																				<p>You may now start watching StreamlyTV by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
-																				<p>You can also view on a web browser by visiting {{env('FRONTEND_URL')}}, login, and following the link to the Channel Guide in the menu at the top.</p>
+																				<p>You can also view on a web browser by visiting {{env('WEBSITE_STREAMLY_URL')}}, login, and following the link to the Channel Guide in the menu at the top.</p>
 												</div>
                     	@else
                     
@@ -368,11 +368,11 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
         <script src="https://js.stripe.com/v3/"></script>
 
         <script>
-			if(sessionStorage.getItem("totalprice")){
+		if(sessionStorage.getItem("totalprice")){
 				sessionStorage.removeItem('couponoff');
 				sessionStorage.removeItem('totalprice');
 			}
-			
+
 					       $(function() {
 									var bt = document.getElementById('card-button');
 
@@ -404,7 +404,6 @@ $('body').on('blur','[name="coupon"]',function(){
 			if (data.percentoff != null){
 
 				console.log('percenttoff',data.percentoff);
-				sessionStorage.setItem("percenttoff", data.percentoff);
 				//Calculate the percent.
 
  var totalValue = {{$plandetails->amount/100}} * ( (100-data.percentoff) / 100 )
@@ -630,18 +629,18 @@ fetch("/api/auth/sendNotification", requestOptions)
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
 
-
 if(sessionStorage.getItem("totalprice")){
 		document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
 		document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
 		document.getElementById("totalprice2").textContent=sessionStorage.getItem("totalprice");
 }
-
+</script>
+@endif
+<script>
 form.addEventListener('submit', () => {
     if(document.getElementById("cardRem").checked) {
         document.getElementById('cardremHidden').disabled = true;
     }
 })
 </script>
-@endif
 @endsection
