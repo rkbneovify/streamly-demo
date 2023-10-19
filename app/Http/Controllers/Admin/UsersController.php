@@ -29,7 +29,8 @@ class UsersController extends Controller
     public function index()
     {
         $roles = Role::all()->pluck('name', 'id');
-
+        
+          
         return view('admin.users.index',compact('roles'));
     }
 
@@ -177,8 +178,8 @@ class UsersController extends Controller
         //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
         //  return response()->json($response, 200);
          //get the users with there session
-
-        //old query
+         
+         //old query
         //  $allSession=SessionTable::with('user')->selectRaw("users_id , count(id) activesession")->where("status",'1')->groupBy('users_id')->get();// echo $allSession; exit;
 
         //new query
@@ -195,7 +196,7 @@ class UsersController extends Controller
         ->whereIn('users_id', $userIds)
         ->groupBy('users_id')
         ->get();
-
+        
         return view('admin.users.sessions', compact('allSession'));
     }
 
@@ -392,7 +393,7 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->where('email', 'like', '%' .$searchValue . '%')
  ->where('mode', 'like', '%' .$mode . '%' )
- ->orderBy($columnName,$columnSortOrder)
+ ->orderBy($columnName,$columnSortOrder) 
           
           ->skip($start)
           ->take($rowperpage)

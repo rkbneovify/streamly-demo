@@ -25,7 +25,7 @@ class Payment extends Controller
     {
         $this->middleware('auth');
         $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-       // \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+        //\Stripe\Stripe::setApiKey(config('services.stripe.secret'));
         \Stripe\Stripe::setApiKey($STRIPE_SECRET);
     }
     public function showTierPage($stripeplanID){
@@ -143,6 +143,8 @@ $Genrekey=$pagechannel->keys();
 /*End Naresh 15-11-2022*/ 
 
     public function pay(Request $request,$StripeplanId) {
+        // dd($StripeplanId);
+        // die();
         $attributeNames = array(
             'zip' => 'Zip Code',
          );
@@ -155,8 +157,7 @@ $Genrekey=$pagechannel->keys();
         $user = auth()->user();
         $trial_days=$request->trial_days;
         // dump($request->tier);
-        // dd($request->tier);
-        // die();
+        // dump($request->quantity);
         // dump($request->tiers_modes);volumegraduated
         // dump($request->billing_scheme);per_unit tiered
         // dump($request->quantity);
@@ -260,7 +261,7 @@ $Genrekey=$pagechannel->keys();
             ->quantity($quantity)
                 ->withCoupon($coupon)
                 ->create($request->payment_method, ['email' => $user->email]);
-
+                
             //send user email after successfull payment
 
             $website_link = env('APP_URL');
@@ -284,7 +285,7 @@ $Genrekey=$pagechannel->keys();
 
     }
      public function withoutCouponCheckTrialDays($user,$request,$StripeplanId,$quantity,$trial_days){
- 
+
         //check for trial days
             // Create subscription
             if(!empty($trial_days)){
@@ -334,7 +335,8 @@ $Genrekey=$pagechannel->keys();
                 $message->to($user->email, $user->name)
                 ->subject('Thanks for Subscribing! '.env('APP_NAME'));
             });
-                }
+            }
+
     }
     public function persist($user)
     {

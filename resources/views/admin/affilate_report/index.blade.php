@@ -43,7 +43,7 @@
               </tr>
             </thead>
             <tbody> 
-            @foreach ($affiliate as $key => $aff)
+              @foreach ($affiliate as $key => $aff)
     @php
         try {
             $subscription = \Stripe\Subscription::retrieve($aff->stripe_subscription_id);

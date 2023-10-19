@@ -70,20 +70,6 @@
               @endif
 
             </div>
-            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-              <label for="name" class="col-md-4 control-label">Station Name</label>
-
-
-              <input id="display_stationName" type="text" class="form-control" name="stationName" value="{{$channel->stationName}}" autofocus>
-              <p style="font-size: 0.9vw; color: red;">* If the station name is provided, it will be displayed as the channel name on the front. If the station name is empty, the name will be used as the channel name.</p>
-
-              @if ($errors->has('stationName'))
-              <span class="help-block">
-                <strong>{{ $errors->first('stationName') }}</strong>
-              </span>
-              @endif
-
-            </div>
             <div class="form-group{{ $errors->has('callSign') ? ' has-error' : '' }}">
               <label for="callSign" class="col-md-4 control-label">callSign</label>
 
@@ -183,8 +169,7 @@
               @endif
 
             </div>
-
-            <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
+<div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
               <label for="smooth_url" class="col-md-4 control-label">zipcodes for channel</label>
 
 
@@ -198,7 +183,6 @@
               @endif
 
             </div>
-
             <div class="form-group">
               <label for="exampleInputFile">File input</label>
               <div class="input-group">

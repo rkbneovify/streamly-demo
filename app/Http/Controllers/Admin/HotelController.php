@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use App\User;
 use App\HotelRoomTable;
-use Illuminate\Support\Facades\DB;
 use App\SessionTable;
+use Illuminate\Support\Facades\DB;
 use JWTAuth;
 use Illuminate\Support\Facades\Validator;
 class HotelController extends Controller
@@ -130,7 +130,7 @@ class HotelController extends Controller
         //  $response = array('success' =>true ,'response_code'=>200,'numofdevice'=>$numofdevice,'message'=>'Connected device found successfully','data'=>$s);
         //  return response()->json($response, 200);
          //get the users with there session
-         $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+        $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
          $allSession=HotelRoomTable::with('user')
          ->whereHas('user', function ($query) use ($mode) {
             $query->where('mode', $mode);
@@ -138,7 +138,6 @@ class HotelController extends Controller
          ->selectRaw("id,user_id , count(id) activesession")
          ->groupBy('user_id')
          ->get(); 
-        //  echo $allSession; exit;
         //  dd($allSession);
         return view('admin.hotels.sessions', compact('allSession'));
     }

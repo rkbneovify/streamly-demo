@@ -266,7 +266,6 @@ class ZipcodeController extends Controller
 
     public function map()
     {  $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->where('zipcodes.status',1)->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->get();
-
         # Build GeoJSON feature collection array
     $geojson = array(
         'type'      => 'FeatureCollection',
@@ -274,7 +273,6 @@ class ZipcodeController extends Controller
         // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
         'features'  => array()
      );
-     
         if($data->isEmpty()){
             $response = [
                 'success' => false,
@@ -304,7 +302,6 @@ class ZipcodeController extends Controller
         
              array_push($geojson['features'], $feature);
          }
-         
         return view('admin.zipcodes.map', compact('geojson'));
     }
     

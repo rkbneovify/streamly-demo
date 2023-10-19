@@ -395,7 +395,6 @@ use Laravel\Cashier\Cashier;
 </ul></div></div>
 @endif
 
-
 				@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->cancelled())
 				<div class="row setting-cards mt-5">
 					<div class="col-centered col-md-8">

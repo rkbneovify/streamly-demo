@@ -2,8 +2,8 @@
 use Laravel\Cashier\Cashier;
 use Carbon\Carbon;
 // $plandetailsFirst=$plandetails->tiers[0]['unit_amount_decimal']; 
-
 $plandetailsFirst=$plandetails->tiers[0]['flat_amount_decimal']; 
+ //dump($plandetails);
   $interval = $plandetails->interval;
   $interval_count = $plandetails->interval_count;
 //echo "\n";
@@ -345,15 +345,15 @@ input[type=number] {
 							</button>
 						</div> {!! csrf_field() !!} </form>
 						<!-- Otherwise if the user is subscribed, show them a success message -->
-						@elseif(auth()->user()->subscription('main')->trial_ends_at)
-												<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
-												<p class="font-bold mb-2">Thanks for Subscribing!</p>
-													<p>Your FREE TRIAL PERIOD is now active for tier user plan.</p>
+						@elseif(auth()->user()->subscription('main')->stripe_status)
+                        <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
+						<p class="font-bold mb-2">Thanks for Subscribing!</p>
+													<p>Your  FREE TRIAL PERIOD is now active.</p>
 													<p>The trial period will end on {{ auth()->user()->subscription('main')->trial_ends_at }}</p>
 													<p>After the trial period ends, your credit card will be billed the monthly subscription amount.</p>
 																				<p>You may now start watching StreamlyTV by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!</p>
-																				<p>You can also view on a web browser by visiting {{env('FRONTEND_URL')}}, login, and following the link to the Channel Guide in the menu at the top.</p>
-												</div>
+																				<p>You can also view on a web browser by visiting {{env('WEBSITE_STREAMLY_URL')}}, login, and following the link to the Channel Guide in the menu at the top.</p>
+                        </div>
 						@else
 						<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mt-8" role="alert">
 							<p class="font-bold mb-2">Thanks for Subscribing!</p>
@@ -375,10 +375,6 @@ or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, 
 @if(auth()->user()->subscription('main')->cancelled())
 <script src = "https://js.stripe.com/v3/" > </script> 
 <script> 
-if(sessionStorage.getItem("totalprice")){
-				sessionStorage.removeItem('couponoff');
-				sessionStorage.removeItem('totalprice');
-}
 
 $(function() {
 	var totalPrice;
@@ -418,8 +414,6 @@ $(function() {
 						document.getElementById("totalprice").textContent = formatter.format(totalValue);
 						document.getElementById("totalprice2").textContent =  formatter.format(totalValue);
 						document.getElementById("couponoff").textContent = data.percentoff + '% off';
-						sessionStorage.setItem("couponoff", data.percentoff+'% off');
-		             	sessionStorage.setItem("totalprice", formatter.format(totalValue));
 					};
 				},
 				error: function() {
@@ -659,13 +653,6 @@ function ShowUserthePrice(userIn) {
 // document.getElementById("cvc-1").type="password";
 //Change cvv type to password end
 
-</script>
-@else
-<script>
-if(sessionStorage.getItem("totalprice")){
-	document.getElementById("couponoff").textContent=sessionStorage.getItem("couponoff");
-	document.getElementById("totalprice").textContent=sessionStorage.getItem("totalprice");
-}
 </script>
 @endif
 @endsection

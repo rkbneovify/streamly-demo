@@ -515,7 +515,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
         /*add Naresh 15-11-2022*/ 
     //    $this->setCookie($request);
        /*End Naresh 15-11-2022*/
-        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers'], 'product' => 'prod_NV3xdPjVaNDrwn']);
+        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
         // $imagePath=asset("/uploads/channellogo/notfound.png");
    
          if( Auth::check()){

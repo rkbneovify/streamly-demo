@@ -158,7 +158,7 @@
 																<span class="Lw7GHd snByac">
 																<input type='checkbox' class='update_check' id='delcheck_{{$device->id}}'  value='{{$device->id}}'>
 																</span> </span> -->
-											 					@else
+																@else
 																<span jsslot="" class="MhXXcc oJeWuf">
 																<span class="Lw7GHd snByac">
 																<input type='checkbox' class='update_check' id='delcheck_{{$device->id}}'  value='{{$device->id}}'>

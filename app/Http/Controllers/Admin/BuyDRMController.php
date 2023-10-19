@@ -210,8 +210,6 @@ return $la_url;
     }
 public function proxyServer(){
       $payload =  $this->getPayload();
-      dd($payload);
-      die();
 $drm_type =$this->get_drm_type();
   $drm_type = strtolower($drm_type);
 

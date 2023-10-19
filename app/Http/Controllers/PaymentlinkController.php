@@ -98,7 +98,6 @@ class PaymentlinkController extends Controller
         
             return response()->json($response);
         }
-        
 
         public function paymentlist(){
 
@@ -144,7 +143,6 @@ class PaymentlinkController extends Controller
         
             return response()->json($response);
         }
-        
 
         public function paymentlinks(Request $request) {
 
@@ -168,7 +166,7 @@ class PaymentlinkController extends Controller
         //dd($checkEmail);
         if($checkEmail){
             if(!$checkEmail->email_verified_at == Null){
-            $tinyUrl = $this->getTinyUrl('http://127.0.0.1:8000/checkout/'.$checkEmail->user_id.'');
+            $tinyUrl = $this->getTinyUrl('https://streamlytv.com/checkout/'.$checkEmail->user_id.'');
             
             $payment_links = DB::table('payment_links')->insert(
                 array(
@@ -468,7 +466,7 @@ class PaymentlinkController extends Controller
                 'amount' => $request['txthprice'],
                 'currency' => 'usd',
                 'interval' => $request['period'],
-                'product' => $custom_productID,
+                'product' => 'prod_OXSTSTeCyMUx3T',
               ]);
 
              $priceid = $product->id;

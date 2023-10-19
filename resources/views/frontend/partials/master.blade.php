@@ -22,25 +22,41 @@ $genres = Genre::pluck('name', 'id');
 
 	@yield('stylesheets')
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E50Q5Q9J8D"></script>
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-E50Q5Q9J8D"></script> -->
+<script async src=" https://www.googletagmanager.com/gtag/js?id=G-QF3CM7BK31 "></script>
 @if (Auth::check())
 <script>
-  window.dataLayer = window.dataLayer || [];
+//   window.dataLayer = window.dataLayer || [];
+//   function gtag(){dataLayer.push(arguments);}
+//   gtag('js', new Date());
+
+// 	gtag('config', 'G-E50Q5Q9J8D', {
+//   'user_id': {{Auth::user()->id}}
+// });
+//<---1 aug 2023 end--->
+window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-	gtag('config', 'G-E50Q5Q9J8D', {
-  'user_id': {{Auth::user()->id}}
-});
+  gtag('config', 'G-QF3CM7BK31', {
+   'user_id': {{Auth::user()->id}}
+ });
+ //<---1 aug 2023 end--->
 </script>
 @else
 <script>
-  window.dataLayer = window.dataLayer || [];
+  // window.dataLayer = window.dataLayer || [];
+  // function gtag(){dataLayer.push(arguments);}
+  // gtag('js', new Date());
+
+  // gtag('config', 'G-E50Q5Q9J8D');
+  //<---1 aug 2023 end--->
+	window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-E50Q5Q9J8D');
-	
+  gtag('config', 'G-QF3CM7BK31');
+  //<---1 aug 2023 end--->
 </script>
 @endif
 <!-- Google Tag Manager -->

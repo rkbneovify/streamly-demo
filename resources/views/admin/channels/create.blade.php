@@ -182,7 +182,6 @@
               @endif
 
             </div>
-
             <div class="form-group{{ $errors->has('zip_code') ? ' has-error' : '' }}">
               <label for="zipcode" class="col-md-4 control-label">Zipcode</label>
               <input type="text" id="zip_codes" class="form-control" name="zip_codes" placeholder="e.g., 12345, 67890">
@@ -195,7 +194,6 @@
               @endif
 
             </div>
-            
             <div class="form-group">
               <label for="exampleInputFile">File input</label>
               <div class="input-group">
@@ -208,7 +206,6 @@
                 </div>
               </div>
             </div>
-
             <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
               <label for="status" class="col-md-4 control-label">Status</label>
               <select name="status" id="status" class="form-control">

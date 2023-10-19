@@ -28,7 +28,7 @@ class ReportController extends Controller
 
     public function userdetails(){
 
-         $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
+        $mode =DB::table('Stripe_keys')->where('status', 'active')->value('type');
 
          $userIds = DB::table('users')
          ->where('mode', $mode)
@@ -48,7 +48,6 @@ class ReportController extends Controller
    public function TransactionsReports(){
 
     $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -90,34 +89,33 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
     $paymentDescription = 'Subscription Update';
   }
 
-  $userDetails=DB::table('users')->select('email','name')->where('stripe_id', $newdatatrans->data[$x]->customer)->get();
+  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
-    'name' => $userDetails[0]->name,
-    'email' => $userDetails[0]->email,
+    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
+    'email' => $email,
     'type' => $paymentDescription,
     'status' => $status,
-    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->created),
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
     'amount' => $newdatatrans->data[$x]->amount,
     'color' => $color
   ];
 
   array_push($alltransactions, $transaction);
 }
+    
+    //  dd($alltransactions);
+    //  die();
 
     $serial_no = 1;
     $page_no = 2;
     $has_more = $newdatatrans->has_more;
 
-    // dd($alltransactions);
-    // die();
-
     return view('admin.reports.transactionsreport', compact('alltransactions', 'serial_no', 'has_more', 'page_no'));
    }
 
    public function TransactionspagingReports($order, $id, $no, $number){
-
     $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
     $curl = curl_init();
 
@@ -157,15 +155,15 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
    $paymentDescription = 'Subscription Update';
  }
 
- $userDetails=DB::table('users')->select('email','name')->where('stripe_id', $newdatatrans->data[$x]->customer)->get();
+  $email=DB::table('users')->where('stripe_id', $newdatatrans->data[$x]->customer)->value('email');
 
   $transaction = [
     'id' => $newdatatrans->data[$x]->id,
-    'name' => $userDetails[0]->name,
-    'email' => $userDetails[0]->email,
+    'name' => $newdatatrans->data[$x]->charges->data[0]->billing_details->name,
+    'email' => $email,
     'type' => $paymentDescription,
     'status' => $status,
-    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->created),
+    'date' => date("Y-m-d H:i:s", $newdatatrans->data[$x]->charges->data[0]->created),
     'amount' => $newdatatrans->data[$x]->amount,
     'color' => $color
   ];
@@ -183,7 +181,6 @@ for ($x = 0; $x < count($newdatatrans->data); $x++) {
    }
 
    public function Transactionsview($id){
-
     $STRIPE_SECRET=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
     $curl = curl_init();
 
@@ -542,8 +539,7 @@ for ($x = 0; $x < count($newdataplans->data); $x++) {
 
    public function zipcode()
    { 
-    
-     $zipCode=DB::table('zipcodes')
+    $zipCode=DB::table('zipcodes')
      ->select('id','zipcode','city', 'state', 'county_area', 'status')
      ->orderBy('status', 'DESC')
      ->simplePaginate(125);

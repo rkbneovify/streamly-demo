@@ -67,7 +67,7 @@ class StripeController extends Controller
                CURLOPT_POSTFIELDS =>'{
                  "registration_ids": '.json_encode($fcmResults).',
                  "title": "Subscription Cancelled",
-                 "body": "HI '.$user[0]->name.' your subscription is cancelled to renew your subscription please visit http://streamlytv.com/"
+                 "body": "HI '.$user[0]->name.' your subscription is cancelled to renew your subscription please visit http://streamlytv.com"
                 }',
                 CURLOPT_HTTPHEADER => array(
                  'Content-Type: application/json'
@@ -96,7 +96,7 @@ class StripeController extends Controller
                    Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
                    $message->to($user[0]->email, $user[0]->name);
                    $message->bcc('piyush.mishra@oodles.io', 'mina@neovix.com')
-                   ->subject('Your subscription has been canceled. '.env('APP_NAME'));
+                   ->subject('Your subscription has been canceled! '.env('APP_NAME'));
                });
 
               }
@@ -242,8 +242,8 @@ class StripeController extends Controller
                            ->subject('Your Card Expired '.env('APP_NAME'));
                        });
         
-                      }
-                      break;
+                  }
+            break;
     
             case 'customer.subscription.trial_will_end':
                          $paymentIntent = $event->data->object;
@@ -312,7 +312,6 @@ class StripeController extends Controller
                        });
         
                       }
-
                       break;
     
             case 'customer.subscription.updated':

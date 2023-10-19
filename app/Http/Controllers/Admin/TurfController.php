@@ -89,7 +89,7 @@ if($answer['response_code']==403){
 	return response()->json($answer, 403);
 }else{
 return response()->json($answer, 200);}
-}
+ }
 
 
 
@@ -240,14 +240,12 @@ if (empty ( $zip ) ) {
 		return [
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
-		'zipcode' => $postcode??'00000',
 		'response_code' => 403,'popupmsg'=>'You are away from your home zip code:  Click here to continue viewing.',
 		'popupmsgtoggle'=>false
 	];} else{
 	return [
 		'success' => false,
 		'message' => 'Not within zipcode boundary',
-		'zipcode' => $postcode??'00000',
 		'response_code' => 403,
 		'popupmsg'=>'You are away from your home zip code:  Click here to continue viewing.','popupmsgtoggle'=>true
 	];}
