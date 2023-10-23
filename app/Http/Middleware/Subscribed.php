@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
 use Closure;
+use Exception;
 
 class Subscribed
 {
@@ -21,8 +22,22 @@ class Subscribed
     {   $token = $request->bearerToken();//get token from header
         if(empty($token)) { 
             $user=Auth::user();
-        }else{
-        $user=JWTAuth::setToken($token)->toUser();}
+        }else {
+            try {
+                $user=JWTAuth::setToken($token)->toUser();
+            } catch(Exception $e){
+                if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+                    $response = array('status' => false,'success' => false,'message'=>'Token is Invalid','response_code'=>401);
+                    return response()->json($response, 401);
+                }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+                    $response = array('status' => false,'success' => false,'message'=>'Token is Expired','response_code'=>401);
+                    return response()->json($response, 401);
+                }else{
+                    $response = array('status' => false,'success' => false,'message'=>'Your session has expired. You have to log-in again to proceed further.','response_code'=>401);
+                    return response()->json($response, 401);
+                }
+            }
+        }
         
         $userRole= $user->roles->pluck('name');
         // dump(in_array($userRole[0], array("user","tieruser")));
