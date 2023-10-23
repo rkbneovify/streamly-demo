@@ -136,7 +136,7 @@ class AuthController extends Controller
         if(empty(request('deviceid'))){
             return response()->json(['success'=>false,'response_code'=>401,'message' => 'deviceid required'], 401);
         }
-        $expirationInMinutes = 43800;//one month in minutes
+        $expirationInMinutes = 259200;//one month in minutes
         JWTAuth::factory()->setTTL($expirationInMinutes);
 
         if (! $token = JWTAuth::attempt($credentials)) {
@@ -503,67 +503,6 @@ class AuthController extends Controller
     }
 }   
 
-public function logoutDevice(Request $request)
-{   
-    $validate = Validator::make($request->all(), [
-        'id' => 'required'
-    ]);
-    
-    if ($validate->fails()) {
-        $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
-        return response()->json($response, 400);
-    }
-    // dump($request->id);
-    $id=UnHashUserID($request->id);
-        $checkDeviceDetails=SessionTable::where([
-            ['status', '=', '1'],
-            ['id', '=', $id],
-          ]);
-          if ($checkDeviceDetails->exists()) {
-            //   dump($checkDeviceDetails->get());
-            $accesstoken=  $checkDeviceDetails->get('access_token')[0]->access_token;
-            // dd($accesstoken);
-            $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
-            $request->headers->set('Authorization', 'Bearer '.$accesstoken);
-            $request->server->set('HTTP_AUTHORIZATION', 'Bearer '.$accesstoken);
-            // header("Authorization: Bearer" . $accesstoken);
-    //    $request = Request::create(route('api.v1.b.show', ['booking' => 4]), 'GET');
-    //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
-// dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
-            // $this->logout()->middleware(['jwt.verify']);
-                    $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
-                    if($user){
-                        $response = [
-                            "response_code" => 200,
-                            "success" => true,
-                            "message" => "logged out successful",
-                            "error" => false,
-                        ];
-                        return response()->json($response, 200);
-                   }else{
-                    $response = [
-            
-                        'success' => false,
-                        'data' => 'Empty',
-                        'message' => 'id not found.',
-                        'response_code'=>404,
-                    ];
-                    return response()->json($response, 404);
-                   }
-                //$this->logout()->middleware(['jwt.verify']);
-        } else{
-            $response = [
-            
-                'success' => false,
-                'data' => 'Empty',
-                'message' => 'id not found.',
-                'response_code'=>404,
-            ];
-            return response()->json($response, 404);
-        }
-     
-}
-
 public function samedevicelogout(Request $request)
 {   
     $validate = Validator::make($request->all(), [
@@ -649,66 +588,65 @@ public function samedevicelogout(Request $request)
      
 }
 
-public function logoutDevice(Request $request)
-{   
-    $validate = Validator::make($request->all(), [
-        'id' => 'required'
-    ]);
-    
-    if ($validate->fails()) {
-        $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
-        return response()->json($response, 400);
-    }
-    // dump($request->id);
-    $id=UnHashUserID($request->id);
-        $checkDeviceDetails=SessionTable::where([
+    public function logoutDevice(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            $response = array('success' => false, 'response_code' => 400, 'message' => 'Validation error', 'data' => $validate->messages());
+            return response()->json($response, 400);
+        }
+        // dump($request->id);
+        $id = UnHashUserID($request->id);
+        $checkDeviceDetails = SessionTable::where([
             ['status', '=', '1'],
             ['id', '=', $id],
-          ]);
-          if ($checkDeviceDetails->exists()) {
+        ]);
+        if ($checkDeviceDetails->exists()) {
             //   dump($checkDeviceDetails->get());
-            $accesstoken=  $checkDeviceDetails->get('access_token')[0]->access_token;
+            $accesstoken =  $checkDeviceDetails->get('access_token')[0]->access_token;
             // dd($accesstoken);
             $request->headers->set('Content-TypeX-Header-One', 'X-Header-Oneapplication/json');
-            $request->headers->set('Authorization', 'Bearer '.$accesstoken);
-            $request->server->set('HTTP_AUTHORIZATION', 'Bearer '.$accesstoken);
+            $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
+            $request->server->set('HTTP_AUTHORIZATION', 'Bearer ' . $accesstoken);
             // header("Authorization: Bearer" . $accesstoken);
-    //    $request = Request::create(route('api.v1.b.show', ['booking' => 4]), 'GET');
-    //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
-// dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
+            //    $request = Request::create(route('api.v1.b.show', ['booking' => 4]), 'GET');
+            //    $request->headers->set('Authorization', 'Bearer ' . $accesstoken);
+            // dd($request->headers->set('Authorization', 'Bearer ' . $accesstoken));
             // $this->logout()->middleware(['jwt.verify']);
-                    $user= SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
-                    if($user){
-                        $response = [
-                            "response_code" => 200,
-                            "success" => true,
-                            "message" => "logged out successful",
-                            "error" => false,
-                        ];
-                        return response()->json($response, 200);
-                   }else{
-                    $response = [
-            
-                        'success' => false,
-                        'data' => 'Empty',
-                        'message' => 'id not found.',
-                        'response_code'=>404,
-                    ];
-                    return response()->json($response, 404);
-                   }
-                //$this->logout()->middleware(['jwt.verify']);
-        } else{
+            $user = SessionTable::where('id', $id)->update(['status' => 0, 'modified_on' => Carbon::now()]);
+            if ($user) {
+                $response = [
+                    "response_code" => 200,
+                    "success" => true,
+                    "message" => "logged out successful",
+                    "error" => false,
+                ];
+                return response()->json($response, 200);
+            } else {
+                $response = [
+
+                    'success' => false,
+                    'data' => 'Empty',
+                    'message' => 'id not found.',
+                    'response_code' => 404,
+                ];
+                return response()->json($response, 404);
+            }
+            //$this->logout()->middleware(['jwt.verify']);
+        } else {
             $response = [
-            
+
                 'success' => false,
                 'data' => 'Empty',
                 'message' => 'id not found.',
-                'response_code'=>404,
+                'response_code' => 404,
             ];
             return response()->json($response, 404);
         }
-     
-}
+    }
 
 //function incomplete this let user delete sessions
 public function multilogout()

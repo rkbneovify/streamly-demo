@@ -41,7 +41,7 @@
 
 						<div class="form-group {{ $errors->has('devicename') ? ' has-error' : '' }}">
 							<label for="devicename">Device Name</label>
-							<input type="text" class="form-control" name="devicename" id="devicename" maxlength="20">
+							<input required type="text" class="form-control" name="devicename" id="devicename" maxlength="20">
 							<input type="hidden" class="form-control" name="device_type" id="device_type" value="">
 						</div>
 
