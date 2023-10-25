@@ -281,7 +281,7 @@ console.log("cant play");
 					// Init player.
 
 				player = videojs('my-player', {
-		preload: "auto",
+		preload:"auto",
 		autoplay: true,
 		controls: true,
 					responsive: true,
@@ -336,16 +336,15 @@ var overlay = parent.querySelector('.div-over');
 		} else {
 			overlay.style.display='none';
 		}
-		for ($j=0; $j<10; $j++) 
-            {
+
 							// Setup dash + drms
 							var dashdrmplay = {
 									// src: 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8',
 									src: '{{$url[0]->url??"no url found"}}',
 									type: 'application/dash+xml',
 								keySystems: {
-					'com.widevine.alpha': '/api/generic?drm-type=widevine',
-					'com.microsoft.playready': '/api/generic?drm-type=playready'
+					'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+					'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
 				}
 							};
 
@@ -404,9 +403,36 @@ player.on('pause', function() {
 console.log("it's paused bro");
 
 });
-			}
+
+
+
 					});
+
+
+				player.on("error", function(e) 
+			{    
+			  var error = player.error(); 
+			  alert('Error Code:'+error.code);
+			  alert('Error :'+error.message);         
+								var dashdrmplay = {
+												src: '{{$url[0]->url??"no url found"}}',
+												type: 'application/dash+xml',
+												keySystems: {
+								'com.widevine.alpha': 'https://wv-keyos.licensekeyserver.com/',
+								'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
+										}
+													};
+											if(error.code === 4){
+											 alert("Due to some technical reason, channel gets interrupted. Kindly try again later");
+											 window.location = "{{ url('/react') }}";
+											}else{		 
+						player.src(dashdrmplay);
+						//player.autoplay(true);
+						//player.play();
+					   }   
+			  });
 			})();
+
 	$('document').ready(function(){
 		var owl = $('.owl-carousel');
 			owl.owlCarousel({
