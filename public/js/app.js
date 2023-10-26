@@ -83336,7 +83336,7 @@
       }
       //hoursoffset end
       if(resultoffset == "+05:30"){
-        var timezone = "Eastern Standard Time";
+        var timezone = "Indian Standard Time";
       }else if(resultoffset == "-05:00"){
         var timezone = "Eastern Standard Time";
       }else if(resultoffset == "-08:00"){
