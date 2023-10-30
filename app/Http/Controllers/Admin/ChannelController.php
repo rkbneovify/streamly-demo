@@ -151,7 +151,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
         $zipCodes = explode(',', $request->input('zip_codes'));
         $model->zip_code = $zipCodes;
        }else{
-        $model->zip_code = ["Null"];
+        $model->zip_code = ["ALL"];
        }
 
     //     $model->image = $request->image;
