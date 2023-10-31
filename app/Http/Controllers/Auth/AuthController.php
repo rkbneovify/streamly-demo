@@ -567,7 +567,7 @@ public function samedevicelogout(Request $request)
                    }else{
                     $response = [
             
-                        'success' => false,
+                        'success' => true,
                         'data' => 'Empty',
                         'message' => 'id not found.',
                         'response_code'=>404,
@@ -578,7 +578,7 @@ public function samedevicelogout(Request $request)
         } else{
             $response = [
             
-                'success' => false,
+                'success' => true,
                 'data' => 'Empty',
                 'message' => 'id not found.',
                 'response_code'=>404,
