@@ -509,20 +509,23 @@ class AuthController extends Controller
             'id' => 'required'
         ]);
 
-        // $authToken = $request->header('Authorization');
+        $authToken = $request->header('Authorization');
 
-        // if ($authToken) {
+        if ($authToken) {
+            $str = str_replace("Bearer ", "", $authToken);
 
-        //     $tokenExist = SessionTable::where([
-        //         ['status', '=', '1'],
-        //         ['access_token', '=', str_replace("Bearer ", "", $authToken)]
-        //     ]);
+            if($str !== "") {
+                $tokenExist = SessionTable::where([
+                    ['status', '=', '1'],
+                    ['access_token', '=', $str]
+                ]);
 
-        //     if (!$tokenExist->exists()) {
-        //         $response = array('success' => false, 'response_code' => 400, 'message' => 'Invalid auth token', 'data' => 'Empty');
-        //         return $response;
-        //     }
-        // }
+                if (!$tokenExist->exists()) {
+                    $response = array('success' => false, "status" => false, 'response_code' => 401, 'message' => 'Token is Invalid',);
+                    return $response;
+                }
+            }
+        }
 
         if ($validate->fails()) {
             $response = array('success' => false, 'response_code' => 400, 'message' => 'Validation error', 'data' => $validate->messages());
