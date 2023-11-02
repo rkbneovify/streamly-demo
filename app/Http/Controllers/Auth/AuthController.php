@@ -513,7 +513,7 @@ class AuthController extends Controller
 
         if ($authToken) {
             $str = str_replace("Bearer", "", $authToken);
-
+            $str = preg_replace('/\s+/', '', $str);
             if($str !== "") {
                 $tokenExist = SessionTable::where([
                     ['status', '=', '1'],
