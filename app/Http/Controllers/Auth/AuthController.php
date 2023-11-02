@@ -512,7 +512,7 @@ class AuthController extends Controller
         $authToken = $request->header('Authorization');
 
         if ($authToken) {
-            $str = str_replace("Bearer ", "", $authToken);
+            $str = str_replace("Bearer", "", $authToken);
 
             if($str !== "") {
                 $tokenExist = SessionTable::where([
