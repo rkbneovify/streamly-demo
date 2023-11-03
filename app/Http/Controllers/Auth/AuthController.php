@@ -522,8 +522,8 @@ class AuthController extends Controller
                 ]);
 
                 if (!$tokenExist->exists()) {
-                    $response = array('success' => false, "status" => false, 'response_code' => 401, 'message' => 'Token is Invalid',);
-                    return $response;
+                    $response = array('success' => false, "status" => false, 'response_code' => 401, 'message' => 'Token is Invalid');
+                    return response()->json($response, 401);
                 }
             }
         }
