@@ -597,6 +597,16 @@ if (minutes < 10) {minutes = "0"+minutes;}
 return hours + ':' + minutes ;
 }
 const d = new Date();
+const datee = d.toTimeString()
+
+const pattern = /\(([^)]+)\)/;
+
+// Extract the content inside parentheses using match() method
+const matches = datee.match(pattern);
+
+// Extracted timezone value is in matches[1]
+const timezone12 = matches ? matches[1] : null;
+
 let diff = d.getTimezoneOffset();
 var newdiff = String(diff * 60);
 if (newdiff < 0) {
@@ -614,7 +624,7 @@ var resultoffset = "+".concat(newtz)
 	}
 	console.log(resultoffset)
 	//hoursoffset end
-	if(resultoffset == "+05:30"){
+	/* if(resultoffset == "+05:30"){
 		var timezone = "Indian Standard Time";
 	}else if(resultoffset == "-05:00"){
 		var timezone = "Eastern Standard Time";
@@ -634,8 +644,8 @@ var resultoffset = "+".concat(newtz)
 		var timezone = "Newfoundland Time";
 	}else{
 		var timezone = "GMT".concat(resultoffset)
-	}
-	document.getElementById("timezone").innerHTML = timezone;
+	} */
+	document.getElementById("timezone").innerHTML = timezone12;
 	</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>

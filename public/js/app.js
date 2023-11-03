@@ -83319,6 +83319,17 @@
     return hours + ':' + minutes ;
     }
     const d = new Date();
+
+    const datee = d.toTimeString()
+
+    const pattern = /\(([^)]+)\)/;
+    
+    // Extract the content inside parentheses using match() method
+    const matches = datee.match(pattern);
+    
+    // Extracted timezone value is in matches[1]
+    const timezone12 = matches ? matches[1] : null;    
+
     let diff = d.getTimezoneOffset();
     var newdiff = String(diff * 60);
     if (newdiff < 0) {
@@ -83335,27 +83346,27 @@
       var resultoffset = "-".concat(newtz);
       }
       //hoursoffset end
-      if(resultoffset == "+05:30"){
-        var timezone = "Indian Standard Time";
-      }else if(resultoffset == "-05:00"){
-        var timezone = "Eastern Standard Time";
-      }else if(resultoffset == "-08:00"){
-        var timezone = "Pacific Standard Time";
-      }else if(resultoffset == "-06:00"){
-        var timezone = "Central Standard Time";
-      }else if(resultoffset == "-07:00"){
-        var timezone = "Mountain Standard Time";
-      }else if(resultoffset == "-09:00"){
-        var timezone = "Alaska Standard Time";
-      }else if(resultoffset == "-10:00"){
-        var timezone = "Hawaii Standard Time";
-      }else if(resultoffset == "-04:00"){
-        var timezone = "Canada Atlantic Time";
-      }else if(resultoffset == "-03:30"){
-        var timezone = "Newfoundland Time";
-      }else{
-        var timezone = "GMT".concat(resultoffset)
-      }
+      // if(resultoffset == "+05:30"){
+      //   var timezone = "Indian Standard Time";
+      // }else if(resultoffset == "-05:00"){
+      //   var timezone = "Eastern Standard Time";
+      // }else if(resultoffset == "-08:00"){
+      //   var timezone = "Pacific Standard Time";
+      // }else if(resultoffset == "-06:00"){
+      //   var timezone = "Central Standard Time";
+      // }else if(resultoffset == "-07:00"){
+      //   var timezone = "Mountain Standard Time";
+      // }else if(resultoffset == "-09:00"){
+      //   var timezone = "Alaska Standard Time";
+      // }else if(resultoffset == "-10:00"){
+      //   var timezone = "Hawaii Standard Time";
+      // }else if(resultoffset == "-04:00"){
+      //   var timezone = "Canada Atlantic Time";
+      // }else if(resultoffset == "-03:30"){
+      //   var timezone = "Newfoundland Time";
+      // }else{
+      //   var timezone = "GMT".concat(resultoffset)
+      // }
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
@@ -83373,7 +83384,7 @@
               staticClass: "iconTZ",
               attrs: { src: _vm._s("/uploads/icons/tzguide.png") }
             }),
-            _vm._v(timezone)
+            _vm._v(timezone12)
           ]),
         ]),
           _c("label", { attrs: { class: "tzwidth",
