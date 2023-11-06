@@ -4,6 +4,7 @@ use App\SessionTable;
 //use Illuminate\Support\Facades\Http;
 use App\HotelRoomTable;
 use App\Models\Subscription;
+use App\Models\Zipcode;
 use App\Models\PersonalDevice;
 use Jenssegers\Agent\Agent;
 use Hashids\Hashids;
@@ -931,6 +932,49 @@ function duplicateDeviceId($user_id,$deviceDetails){
 }
 }
 
+function fetchHomeTimezoneUsingZip($zipCode) {
+
+  $zipCodeValue = Zipcode::Where("zipcode","=",$zipCode)->first();
+
+  try {
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'http://api.geonames.org/timezoneJSON?lat='.$zipCodeValue->latitude.'&lng='.$zipCodeValue->longitude.'&username=rahulgupta',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    $dataArr =  json_decode($response, true);
+
+    $dateTime = new DateTime('now', new DateTimeZone($dataArr['timezoneId']));
+    // Get the abbreviation using the 'T' format specifier
+    $formattedDate = $dateTime->format('T');
+    $timezone = convertTimeZoneAbbreviation($formattedDate,$zipCode);
+    
+  } catch(Exception $e) {
+    if($zipCode == "86336" || $zipCode == "85023" || $zipCode == "85022"){
+      $timezone = "Mountain Standard Time";
+    }else if($zipCode == "97352" || $zipCode == "92832" || $zipCode == "92831" || $zipCode == "97305" || $zipCode == "97305"){
+      $timezone = "Pacific Standard Time";
+    }else if($zipCode == "75662"){
+      $timezone = "Central Standard Time";
+    }else{
+      $timezone = "Eastern Standard Time";
+    }
+  }
+
+  return $timezone;
+
+}
+
 function hoteluserduplicateDeviceId($user_id,$deviceDetails){
   $checkDeviceDetails=App\SessionTable::where([
     ['status', '=', '1'],
@@ -1576,6 +1620,205 @@ function personaldeviceTableStore($user_id,$deviceDetails){
   }
   return([ "result"=>$result, "lastDeviceId"=>$LastInsertId, "show_popup"=>$show_popup ]);
 }
+
+function convertTimeZoneAbbreviation($abbreviation,$zipCode) {
+  $timezoneAbbreviations = array(
+      // 'ACDT' => 'Australian Central Daylight Time',
+      // 'ACST' => 'Australian Central Standard Time',
+      // 'ACT' => 'Acre Time',
+      'ADT' => 'Atlantic Daylight Time',
+      'AEDT' => 'Australian Eastern Daylight Time',
+      'AEST' => 'Australian Eastern Standard Time',
+      'AFT' => 'Afghanistan Time',
+      'AKDT' => 'Alaska Daylight Time',
+      'AKST' => 'Alaska Standard Time',
+      'AMST' => 'Amazon Summer Time',
+      'AMT' => 'Amazon Time',
+      'ART' => 'Argentina Time',
+      'AST' => 'Atlantic Standard Time',
+      'AWST' => 'Australian Western Standard Time',
+      'AZOST' => 'Azores Summer Time',
+      'AZOT' => 'Azores Time',
+      'AZT' => 'Azerbaijan Time',
+      'BDT' => 'Brunei Time',
+      'BIOT' => 'British Indian Ocean Time',
+      'BIT' => 'Baker Island Time',
+      'BOT' => 'Bolivia Time',
+      'BRST' => 'Brasília Summer Time',
+      'BRT' => 'Brasília Time',
+      'BST' => 'Bangladesh Standard Time',
+      'BTT' => 'Bhutan Time',
+      'CAT' => 'Central Africa Time',
+      'CCT' => 'Cocos Islands Time',
+      'CDT' => 'Central Daylight Time',
+      'CEST' => 'Central European Summer Time',
+      'CET' => 'Central European Time',
+      'CHADT' => 'Chatham Daylight Time',
+      'CHAST' => 'Chatham Standard Time',
+      'CHOT' => 'Choibalsan Time',
+      'CHOST' => 'Choibalsan Summer Time',
+      'CHST' => 'Chamorro Standard Time',
+      'CHUT' => 'Chuuk Time',
+      'CIST' => 'Clipperton Island Standard Time',
+      'CIT' => 'Central Indonesia Time',
+      'CKT' => 'Cook Island Time',
+      'CLST' => 'Chile Summer Time',
+      'CLT' => 'Chile Standard Time',
+      'COST' => 'Colombia Summer Time',
+      'COT' => 'Colombia Time',
+      'CST' => 'Central Standard Time',
+      'CT' => 'China Time',
+      'CVT' => 'Cape Verde Time',
+      'CXT' => 'Christmas Island Time',
+      'DAVT' => 'Davis Time',
+      'DDUT' => 'Dumont d\'Urville Time',
+      'DFT' => 'AIX-specific equivalent of Central European Time',
+      'EASST' => 'Easter Island Summer Time',
+      'EAST' => 'Easter Island Standard Time',
+      'EAT' => 'East Africa Time',
+      'ECT' => 'Ecuador Time',
+      'EDT' => 'Eastern Daylight Time',
+      'EEST' => 'Eastern European Summer Time',
+      'EET' => 'Eastern European Time',
+      'EGST' => 'Eastern Greenland Summer Time',
+      'EGT' => 'Eastern Greenland Time',
+      'EIT' => 'Eastern Indonesian Time',
+      'EST' => 'Eastern Standard Time',
+      'FET' => 'Further Eastern European Time',
+      'FJT' => 'Fiji Time',
+      'FKST' => 'Falkland Islands Summer Time',
+      'FKT' => 'Falkland Islands Time',
+      'FNT' => 'Fernando de Noronha Time',
+      'GALT' => 'Galápagos Time',
+      'GAMT' => 'Gambier Islands Time',
+      'GET' => 'Georgia Standard Time',
+      'GFT' => 'French Guiana Time',
+      'GILT' => 'Gilbert Island Time',
+      'GIT' => 'Gambier Island Time',
+      'GMT' => 'Greenwich Mean Time',
+      'GST' => 'Gulf Standard Time',
+      'GYT' => 'Guyana Time',
+      // 'HDT' => 'Hawaii–Aleutian Daylight Time',
+      // 'HAEC' => 'Heure Avancée d\'Europe Centrale',
+      // 'HST' => 'Hawaii–Aleutian Standard Time',
+      // 'ICT' => 'Indochina Time',
+      'IDLW' => 'International Date Line West',
+      'IDT' => 'Israel Daylight Time',
+      'IOT' => 'Indian Ocean Time',
+      'IRDT' => 'Iran Daylight Time',
+      'IRKT' => 'Irkutsk Time',
+      'IRST' => 'Iran Standard Time',
+      // 'IST' => 'Indian Standard Time',
+      // 'JST' => 'Japan Standard Time',
+      // 'KALT' => 'Kaliningrad Time',
+      // 'KGT' => 'Kyrgyzstan Time',
+      // 'KOST' => 'Kosrae Time',
+      // 'KRAT' => 'Krasnoyarsk Time',
+      // 'KST' => 'Korea Standard Time',
+      // 'LHST' => 'Lord Howe Standard Time',
+      // 'LINT' => 'Line Islands Time',
+      // 'MAGT' => 'Magadan Time',
+      // 'MART' => 'Marquesas Islands Time',
+      'MAWT' => 'Mawson Station Time',
+      'MDT' => 'Mountain Daylight Time',
+      'MET' => 'Middle European Time Same zone as CET',
+      'MEST' => 'Middle European Summer Time Same zone as CEST',
+      'MHT' => 'Marshall Islands Time',
+      'MIST' => 'Macquarie Island Station Time',
+      'MIT' => 'Marquesas Islands Time',
+      'MMT' => 'Myanmar Standard Time',
+      'MSK' => 'Moscow Time',
+      'MST' => 'Mountain Standard Time',
+      // 'MUT' => 'Mauritius Time',
+      // 'MVT' => 'Maldives Time',
+      // 'MYT' => 'Malaysia Time',
+      // 'NCT' => 'New Caledonia Time',
+      // 'NDT' => 'Newfoundland Daylight Time',
+      // 'NFT' => 'Norfolk Time',
+      // 'NOVT' => 'Novosibirsk Time',
+      // 'NPT' => 'Nepal Time',
+      // 'NST' => 'Newfoundland Standard Time',
+      // 'NT' => 'Newfoundland Time',
+      'NUT' => 'Niue Time',
+      // 'NZDT' => 'New Zealand Daylight Time',
+      // 'NZST' => 'New Zealand Standard Time',
+      // 'OMST' => 'Omsk Time',
+      // 'ORAT' => 'Oral Time',
+      'PDT' => 'Pacific Daylight Time',
+      'PET' => 'Peru Time',
+      'PETT' => 'Kamchatka Time',
+      'PGT' => 'Papua New Guinea Time',
+      // 'PHOT' => 'Phoenix Island Time',
+      // 'PKT' => 'Pakistan Standard Time',
+      // 'PMDT' => 'Saint Pierre and Miquelon Daylight Time',
+      // 'PMST' => 'Saint Pierre and Miquelon Standard Time',
+      // 'PONT' => 'Pohnpei Standard Time',
+      'PST' => 'Pacific Standard Time',
+      // 'PYST' => 'Paraguay Summer Time',
+      // 'PYT' => 'Paraguay Time',
+      // 'RET' => 'Réunion Time',
+      // 'ROTT' => 'Rothera Research Station Time',
+      // 'SAKT' => 'Sakhalin Island Time',
+      // 'SAMT' => 'Samara Time',
+      // 'SAST' => 'South African Standard Time',
+      // 'SBT' => 'Solomon Islands Time',
+      // 'SCT' => 'Seychelles Time',
+      // 'SDT' => 'Samoa Daylight Time',
+      // 'SGT' => 'Singapore Time',
+      // 'SLST' => 'Sri Lanka Standard Time',
+      // 'SRET' => 'Srednekolymsk Time',
+      // 'SRT' => 'Suriname Time',
+      // 'SST' => 'Samoa Standard Time',
+      // 'SYOT' => 'Syowa Time',
+      // 'TAHT' => 'Tahiti Time',
+      // 'THA' => 'Thailand Standard Time',
+      // 'TFT' => 'Indian/Kerguelen',
+      // 'TJT' => 'Tajikistan Time',
+      // 'TKT' => 'Tokelau Time',
+      // 'TLT' => 'Timor Leste Time',
+      // 'TMT' => 'Turkmenistan Time',
+      // 'TOT' => 'Tonga Time',
+      // 'TVT' => 'Tuvalu Time',
+      'ULAST' => 'Ulaanbaatar Summer Time',
+      'ULAT' => 'Ulaanbaatar Standard Time',
+      'UTC' => 'Coordinated Universal Time',
+      // 'UYST' => 'Uruguay Summer Time',
+      // 'UYT' => 'Uruguay Standard Time',
+      // 'UZT' => 'Uzbekistan Time',
+      // 'VET' => 'Venezuelan Standard Time',
+      // 'VLAT' => 'Vladivostok Time',
+      // 'VOLT' => 'Volgograd Time',
+      // 'VOST' => 'Vostok Time',
+      // 'VUT' => 'Vanuatu Time',
+      // 'WAKT' => 'Wake Island Time',
+      // 'WARST' => 'Western Argentine Summer Time',
+      // 'WAST' => 'West Africa Summer Time',
+      // 'WAT' => 'West Africa Time',
+      // 'WEST' => 'Western European Summer Time',
+      // 'WET' => 'Western European Time',
+      // 'WIT' => 'Western Indonesian Time',
+      // 'WST' => 'Western Standard Time',
+      // 'YAKT' => 'Yakutsk Time',
+      // 'YEKT' => 'Yekaterinburg Time',
+  );
+
+  // Check if the abbreviation exists in the mapping
+  if (array_key_exists($abbreviation, $timezoneAbbreviations)) {
+      return $timezoneAbbreviations[$abbreviation];
+  } else {
+    if($zipCode == "86336" || $zipCode == "85023" || $zipCode == "85022"){
+      $timezone = "Mountain Standard Time";
+    }else if($zipCode == "97352" || $zipCode == "92832" || $zipCode == "92831" || $zipCode == "97305" || $zipCode == "97305"){
+      $timezone = "Pacific Standard Time";
+    }else if($zipCode == "75662"){
+      $timezone = "Central Standard Time";
+    }else{
+      $timezone = "Eastern Standard Time";
+    }
+    return $timezone;
+  }
+}
+
 /**
  -user bought tiered plan of 10 devices || 10 htoel rooms were created
 -user cancels the tiered plan
