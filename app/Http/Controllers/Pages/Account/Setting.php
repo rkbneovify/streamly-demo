@@ -131,7 +131,9 @@ class Setting extends Controller
         $userinfo = User::find($id);
 
         $resultoffset = $userinfo->zipcode;
-        $timezone = fetchHomeTimezoneUsingZip($resultoffset);
+        $zipcode = $resultoffset;
+        $timezoneData = fetchHomeTimezoneUsingZip($resultoffset);
+        $timezone = $timezoneData[0];
          $allSession=SessionTable::where([
         ['status', '=', '1'],
         ['users_id', '=', $id],
@@ -204,7 +206,7 @@ curl_close($curl);
         $renewaldatetime = '' ;
         }
     	// return view('frontend.pages.account.setting', compact('login','allSession'));
-    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime'));
+    	return view('frontend.pages.account.setting3', compact('login','allSession','subscription','plan','userinfo','invoices','hasid', 'timezone', 'renewaldatetime','zipcode'));
     }
     public function showSettingpage4(){
         $invoices='1';

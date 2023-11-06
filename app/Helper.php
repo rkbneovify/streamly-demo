@@ -132,20 +132,10 @@ use App\User;
           //return response()->json($response, 200);
 
           $resultoffset = $user->zipcode;
+          $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
+          $hrsoffset = $timeZoneData[1];
+          $timezone =$timeZoneData[0];
       
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $hrsoffset = "-07:00";
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $hrsoffset = "-08:00";
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $hrsoffset = "-06:00";
-            $timezone = "Central Standard Time";
-          }else{
-            $hrsoffset = "+05:30";
-            $timezone = "Eastern Standard Time";
-          }
       
         
         return response()->json([
@@ -754,20 +744,9 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
   $userInfo = JWTAuth::setToken($token)->toUser();
   $user= User::find($user_id);
   $resultoffset = $user->zipcode;
-      
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $hrsoffset = "-07:00";
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $hrsoffset = "-08:00";
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $hrsoffset = "-06:00";
-            $timezone = "Central Standard Time";
-          }else{
-            $hrsoffset = "+05:30";
-            $timezone = "Eastern Standard Time";
-          }
+  $timeZoneData = fetchHomeTimezoneUsingZip($resultoffset);
+  $hrsoffset = $timeZoneData[1];
+  $timezone =$timeZoneData[0];
  
   if (App\SessionTable::where('users_id', '=',$user_id)->count()== 0) {
     $termAndCondition=true;
@@ -953,25 +932,42 @@ function fetchHomeTimezoneUsingZip($zipCode) {
 
     curl_close($curl);
     $dataArr =  json_decode($response, true);
+    $dateTimezone = new DateTimeZone($dataArr['timezoneId']);
+    $dateTime = new DateTime('now', $dateTimezone);
 
-    $dateTime = new DateTime('now', new DateTimeZone($dataArr['timezoneId']));
+    $offset = $dateTimezone->getOffset($dateTime); // Offset in seconds
+
+    // Convert the offset to hours and minutes
+    $hours = floor(abs($offset) / 3600);
+    $minutes = floor((abs($offset) % 3600) / 60);
+
+    // Determine the sign of the offset (plus or minus)
+    $sign = ($offset < 0) ? '-' : '+';
+
+    // Output the offset in the format +/-HH:MM
+    $offSet = $sign . sprintf('%02d:%02d', $hours, $minutes);
+
     // Get the abbreviation using the 'T' format specifier
     $formattedDate = $dateTime->format('T');
     $timezone = convertTimeZoneAbbreviation($formattedDate,$zipCode);
     
   } catch(Exception $e) {
     if($zipCode == "86336" || $zipCode == "85023" || $zipCode == "85022"){
+      $offSet = "-07:00";
       $timezone = "Mountain Standard Time";
     }else if($zipCode == "97352" || $zipCode == "92832" || $zipCode == "92831" || $zipCode == "97305" || $zipCode == "97305"){
+      $offSet = "-08:00";
       $timezone = "Pacific Standard Time";
     }else if($zipCode == "75662"){
+      $offSet = "-06:00";
       $timezone = "Central Standard Time";
     }else{
+      $offSet = "+05:30";
       $timezone = "Eastern Standard Time";
     }
   }
 
-  return $timezone;
+  return [$timezone,$offSet];
 
 }
 
