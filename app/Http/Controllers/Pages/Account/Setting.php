@@ -21,6 +21,7 @@ use Mail;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\HotelRoomTable;
+use App\Models\Zipcode;
 use Jenssegers\Agent\Agent;
 class Setting extends Controller
 {   public function __construct()
@@ -130,17 +131,7 @@ class Setting extends Controller
         $userinfo = User::find($id);
 
         $resultoffset = $userinfo->zipcode;
-      
-          if($resultoffset == "86336" || $resultoffset == "85023" || $resultoffset == "85022"){
-            $timezone = "Mountain Standard Time";
-          }else if($resultoffset == "97352" || $resultoffset == "92832" || $resultoffset == "92831" || $resultoffset == "97305" || $resultoffset == "97305"){
-            $timezone = "Pacific Standard Time";
-          }else if($resultoffset == "75662"){
-            $timezone = "Central Standard Time";
-          }else{
-            $timezone = "Eastern Standard Time";
-          }
-        
+        $timezone = fetchHomeTimezoneUsingZip($resultoffset);
          $allSession=SessionTable::where([
         ['status', '=', '1'],
         ['users_id', '=', $id],
