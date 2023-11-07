@@ -499,7 +499,7 @@ background-position: center;
 	       
             <p ><strong>Watch live TV on your iOS or Android, Amazon Fire, Roku, and SmartTV's </strong> </p>
             <p>STREAMLY good channels. STREAMLY flexible terms. STREAMLY fair pricing!</p>
-	        <a class="btn btn-primary btn-xl js-scroll-trigger grow"  href="javascript:void(0);">START TODAY</a>
+	        <a class="btn btn-primary btn-xl js-scroll-trigger grow"  href="#accordion">START TODAY</a>
 	    </div>
 	</header>
 
