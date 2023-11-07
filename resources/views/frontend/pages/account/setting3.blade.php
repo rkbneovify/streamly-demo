@@ -355,6 +355,10 @@ use Laravel\Cashier\Cashier;
     </tr>
   </thead>
   <tbody style="color:#5E5E5E;">
+  	<tr>
+      <td class="text-left text-md-center">Name:</td>
+      <td class="text-left text-md-center text-break" >{{Auth::user()->name}}</td>
+    </tr>
     <tr>
       <td class="text-left text-md-center">Email:</td>
       <td class="text-left text-md-center text-break" >{{Auth::user()->email}}</td>
