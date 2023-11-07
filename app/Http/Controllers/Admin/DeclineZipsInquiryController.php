@@ -72,18 +72,24 @@ public function ajaxIndex(Request $request)
     $search = $request->search;
 
     if($search == ''){
-       $Zipcodes = Zipcode::orderby('zipcode','asc')->select('zipcode as id','city','state')->limit(5)->get();
+       $Zipcodes = Zipcode::orderby('zipcode','asc')->select('zipcode','city','state')->limit(5)->get();
     }else{
-       $Zipcodes = Zipcode::orderby('zipcode','asc')->select('zipcode as id','city','state')
-    //    ->whereRaw('field_name COLLATE utf8mb4_bin = (?)', $search)
-       ->where('zipcode', 'like', '%' .$search . '%')
-    //    ->where('zipcode', 'REGEXP', '%' .$search . '%')
-       ->limit(5)->get();
+    //    $Zipcodes = Zipcode::orderby('zipcode','asc')->select('zipcode as id','city','state')
+    // //    ->whereRaw('field_name COLLATE utf8mb4_bin = (?)', $search)
+    //    ->where('zipcode', 'like', '%' .$search . '%')
+    // //    ->where('zipcode', 'REGEXP', '%' .$search . '%')
+    //    ->limit(5)->get();
+
+    $Zipcodes = Zipcode::orderBy('zipcode', 'asc')
+        ->select('zipcode', 'city', 'state')
+        ->where('zipcode', 'like', '%' . $search . '%')
+        ->limit(5)
+        ->get();
     }
 
     $response = array();
     foreach($Zipcodes as $Zipcode){
-       $response[] = array("value"=>$Zipcode->id,"label"=>$Zipcode->id,"state"=>$Zipcode->state,"city"=>$Zipcode->city);
+       $response[] = array("value"=>$Zipcode->zipcode,"label"=>$Zipcode->zipcode,"state"=>$Zipcode->state,"city"=>$Zipcode->city);
     }
 
     return response()->json($response);
