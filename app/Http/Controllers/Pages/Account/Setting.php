@@ -364,6 +364,28 @@ curl_close($curl);
         
     }
 
+
+    public function updateZipCode(Request $request, $id)
+    {
+        if($request->has('zip')){
+     // dd($archived);
+
+        $data = Zipcode::select('zipcode')->where([
+            ['status', '=', '1'],
+            ['zipcode', '=',$request['zip'] ]
+        ])->get();
+        
+        if(count($data)==0) {
+            return redirect()->back()->with('errormsg','Zipcode is not valid');
+        } else {
+            $user = User::find($id);
+            $user->zipcode = $request['zip'];
+            $user->save();
+            return redirect()->back()->with('message','Zipcode updated');
+        }
+        }
+    }
+
     public function destroy($id)
     {  
         $uid= Auth::user()->id;
