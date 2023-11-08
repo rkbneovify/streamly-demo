@@ -5,6 +5,66 @@ use Laravel\Cashier\Cashier;
 @extends('frontend/partials/master')
 
 @section('stylesheets-bottom')
+<script defer src="{{ asset('frontend/jquery-1.12.1-ui.js') }}" ></script> 
+
+<style>
+.ui-widget.ui-widget-content {
+    border: 1px solid #c5c5c5;
+}
+.ui-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    outline: 0;
+}
+
+.ui-autocomplete {
+    z-index: 2000; /* Set a higher z-index value than the modal */
+}
+
+.ui-widget-content {
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    color: #333333;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+        .alert.alert-position {
+            position: absolute;
+            width: 100%;
+            z-index: 1040;
+        }
+				.ui-menu .ui-menu-item-wrapper {
+    position: relative;
+    padding: 3px 1em 3px .4em;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0;
+    cursor: pointer;
+    list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+}
+
+.ui-menu-item .ui-menu-item-wrapper.ui-state-active {
+    background:#004E92 !important;
+    font-weight: bold !important;
+    color: #ffffff !important;
+} 
+
+    </style>
+
 	<style>
 		nav#mainNav {
 			background-color: #004E92;
@@ -169,12 +229,20 @@ use Laravel\Cashier\Cashier;
 				jQuery('#changePassword').modal('show');
 			});
 
+			jQuery('.change-zipcode').on('click', function(){
+				jQuery('#changeZipcode').modal('show');
+			});
+
 @if ($errors->has('old_password')||$errors->has('password')||$errors->has('password_confirmation'||$errors->has('Error')) )
 		jQuery('#changePassword').modal('show');
 		@endif
 
 		@if(session()->has('message2'))
         jQuery('#changePassword').modal('show');
+		@endif
+
+		@if(session()->has('errormsg'))
+		jQuery('#changeZipcode').modal('show');
 		@endif
 
 		@if(session()->get('message') == 'Password Updated Successfully')
@@ -225,6 +293,48 @@ use Laravel\Cashier\Cashier;
 														</form>
 						{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Yes</a> --}}
 					</div>
+				</div>
+
+			</div>
+	    </div>
+	</div>
+
+	<div class="modal fade" id="changeZipcode">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+
+				@if(session()->has('errormsg'))
+					<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>{{ session()->get('errormsg') }}</strong>
+					</div>
+              @endif
+				<form action="{{ url("/userupdatezip", [Auth::user()->id]) }}" id="my_form" method = "POST" class="login-form mt-3" autocomplete="off">
+				@csrf
+            @method('PUT')
+											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
+													<label for="zip" class="control-label text-center">Enter your zipcode</label>
+													<input type="hidden" name="userid" id = "userid" value="{{Auth::user()->id}}">
+													<input  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
+											</div>
+												<div class="form-group">
+												<label for="City" class="control-label">City</label>
+												<input type="text" id="City" name="City" class="form-control" disabled>
+										</div>			<div class="form-group">
+												<label for="State" class="control-label">State</label>
+												<input type="text" id="State" name="State" class="form-control" disabled>
+										</div>
+											<small id="ziphelp" ></small>
+											<small id="addresshelp" ></small>
+											<div class="form-group " id="fourth-element-introduction" >
+													<button type="submit" class="btn btn-lg login-btn">Submit Zip</button>
+											</div>
+				
+				
+
+											{!! csrf_field() !!}
+									</form>
 				</div>
 
 			</div>
@@ -371,6 +481,17 @@ use Laravel\Cashier\Cashier;
       <td class="text-left text-md-center">Current Timezone</td>
       <td id="timezone" class="text-left text-md-center text-wrap"></td>
     </tr>
+	@if ( Auth::user()->subscribed('main') && Auth::user()->subscription('main')->active()) 
+	<tr>
+      <td class="text-left text-md-center">Zipcode:</td>
+      <td class="text-left text-md-center text-wrap">{{$zipcode}}</td>
+    </tr>
+	@else
+	<tr>
+      <td class="text-left text-md-center">Zipcode:</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-zipcode">{{$zipcode}}</a></td>
+    </tr>
+	@endif
 	<tr>
       <td class="text-left text-md-center">Password:</td>
       <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
@@ -675,4 +796,43 @@ var resultoffset = "+".concat(newtz)
         new Notification(title, options);
     });
 </script>	
+<script>
+$(function() {
+$( "#zip" ).autocomplete({
+        source: function( request, response ) {
+          // Fetch data
+					$.ajaxSetup({
+                  headers: {
+                      
+		'X-CSRF-TOKEN': $("input[name=_token]").val()
+                  }
+              });
+          $.ajax({
+                  url: "{{ url('/getzipcodes') }}",
+            type: 'post',
+            dataType: "json",
+            data: {
+               search: request.term
+            },
+            success: function( data ) {
+               response( data );
+							//  console.log(data);
+            }
+          });
+        },
+        select: function (event, ui) {
+           // Set selection
+           $('#zip').val(ui.item.label); // display the selected text
+          //  $('#employeeid').val(ui.item.value); // save selected id to input
+					$('#City').val(ui.item.city); 
+			$('#State').val(ui.item.state); 
+           return false;
+        },
+				open: function() {
+        $("ul.ui-menu").width( $(this).innerWidth() );
+        
+    }
+      });
+	});
+</script>
 @endsection
