@@ -292,7 +292,7 @@ Route::get('/helpandsupport', 'HomeController@helpandsupp');
 Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy')->name('user.sessiondestroy');
 Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->name('user.personaldevicename');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
-
+Route::put('/userupdatezip/{id}','Pages\Account\Setting@updateZipCode')->name('userupdatezip');
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
 Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');
