@@ -274,8 +274,11 @@
 </div>
 	<section class="page-section">
 		<div class="container">
+			@if($alreadyVerify)
+				<h2 class="section-heading text-center">Account already verified, <a href="javascript:void(0)" onclick="openNav(event)">Please login to continue</a></h2>
+			@else
 				<h2 class="section-heading text-center">Account successfully verified, <a href="javascript:void(0)" onclick="openNav(event)">Click here to Login</a></h2>
-				
+			@endif
 
 				@if ($errors->any())
 				<div class="alert alert-danger">
