@@ -294,14 +294,19 @@ class AuthController extends Controller
         $email_verified_at=Carbon::now();
 
         if($user) {
-            $user->email_verified_at = $email_verified_at;
-            $user->is_active = 1;
-            $user->save();
+
+            if($user->is_active) $alreadyVerify = 1; 
+            else {
+                $alreadyVerify = 0;
+                $user->email_verified_at = $email_verified_at;
+                $user->is_active = 1;
+                $user->save();
+            }
             if($request->wantsJson()){
             $response = array('success' =>true ,'response_code'=>200,'message'=>'Account successfully verified');
             return response()->json($response, 200);}
             else { if( Auth::check()){
-                $login = true;}else{ $login = false; } return view('frontend.verified',compact('login')); }
+                $login = true;}else{ $login = false; } return view('frontend.verified',compact('login','alreadyVerify')); }
 
         }else{
             $response = array('success' =>false ,'response_code'=>401,'message'=>'Invalid verification token');
