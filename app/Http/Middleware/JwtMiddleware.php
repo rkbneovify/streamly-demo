@@ -48,6 +48,21 @@
             // }
             } catch (Exception $e) {
                 if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+
+                    $token = $request->bearerToken();
+                    $acctoken = SessionTable::where([
+                        ['status', '=', '0'],
+                        ['access_token', '=', $token],
+                    ]);
+                    if($acctoken->exists() && $request->getRequestUri()== "/api/auth/logout"){
+                        $response = [
+                            'success' => true,
+                            'data' => 'Empty',
+                            'message' => 'logged out successful',
+                            'response_code' => 200,
+                        ];
+                        return response()->json($response, 200);
+                    }
                     $response = array('status' => false,'success' => false,'message'=>'Token is Invalid','response_code'=>401);
                     return response()->json($response, 401);
                 }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
