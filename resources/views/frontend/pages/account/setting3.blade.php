@@ -498,7 +498,7 @@ input[type=number] {
   	<tr>
       <td class="text-left text-md-center">Name:</td>
       <td class="text-left text-md-center text-break" >{{Auth::user()->name}}</td>
-	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-name">edit</a></td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-name">Edit</a></td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Email:</td>
@@ -521,13 +521,13 @@ input[type=number] {
 	<tr>
       <td class="text-left text-md-center">Zipcode:</td>
 	  <td class="text-left text-md-center text-wrap">{{$zipcode}}</td>
-	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-zipcode">edit</a></td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-zipcode">Edit</a></td>
     </tr>
 	@endif
 	<tr>
       <td class="text-left text-md-center">Password:</td>
       <td class="text-left text-md-center text-wrap">*****</td>
-	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">edit</a></td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Edit</a></td>
     </tr>
 
 							@if ( Auth::user()->subscribed('main'))
