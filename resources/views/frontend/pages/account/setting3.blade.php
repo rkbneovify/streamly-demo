@@ -229,6 +229,10 @@ input[type=number] {
 				jQuery('#changePassword').modal('show');
 			});
 
+			jQuery('.change-name').on('click', function(){
+				jQuery('#changeName').modal('show');
+			});
+
 			jQuery('.change-zipcode').on('click', function(){
 				jQuery('#changeZipcode').modal('show');
 			});
@@ -298,6 +302,33 @@ input[type=number] {
 			</div>
 	    </div>
 	</div>
+	<div class="modal fade" id="changeName">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+
+				@if(session()->has('errormsgname'))
+					<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>{{ session()->get('errormsgname') }}</strong>
+					</div>
+              @endif
+				<form action="{{ url("/userupdatename", [Auth::user()->id]) }}" id="my_form" method = "POST" class="login-form mt-3" autocomplete="off">
+				@csrf
+            @method('PUT')
+						<div class="form-group" id="second-element-introduction" >
+								<label for="name" class="control-label text-center">Name</label>
+								<input  type="text"  id="name" name="name" class="form-control text-center" required>
+						</div>
+						<div class="form-group " id="fourth-element-introduction" >
+								<button type="submit" class="btn btn-lg login-btn">Submit</button>
+						</div>
+						{!! csrf_field() !!}
+				</form>
+				</div>
+			</div>
+	    </div>
+	</div>
 
 	<div class="modal fade" id="changeZipcode">
 	    <div class="modal-dialog">
@@ -313,28 +344,27 @@ input[type=number] {
 				<form action="{{ url("/userupdatezip", [Auth::user()->id]) }}" id="my_form" method = "POST" class="login-form mt-3" autocomplete="off">
 				@csrf
             @method('PUT')
-											<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
-													<label for="zip" class="control-label text-center">Enter your zipcode</label>
-													<input type="hidden" name="userid" id = "userid" value="{{Auth::user()->id}}">
-													<input  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
-											</div>
-												<div class="form-group">
-												<label for="City" class="control-label">City</label>
-												<input type="text" id="City" name="City" class="form-control" disabled>
-										</div>			<div class="form-group">
-												<label for="State" class="control-label">State</label>
-												<input type="text" id="State" name="State" class="form-control" disabled>
-										</div>
-											<small id="ziphelp" ></small>
-											<small id="addresshelp" ></small>
-											<div class="form-group " id="fourth-element-introduction" >
-													<button type="submit" class="btn btn-lg login-btn">Submit Zip</button>
-											</div>
-				
-				
+						<div class="form-group {{ $errors->has('zip') ? ' has-error' : '' }}" id="second-element-introduction" >
+								<label for="zip" class="control-label text-center">Enter your zipcode</label>
+								<input  type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" placeholder="Enter your Zip" id="zip" name="zip" class="form-control text-center"  required><span id="zipanswer"></span>
+						</div>
+							<div class="form-group">
+							<label for="City" class="control-label">City</label>
+							<input type="text" id="City" name="City" class="form-control" disabled>
+					</div>			<div class="form-group">
+							<label for="State" class="control-label">State</label>
+							<input type="text" id="State" name="State" class="form-control" disabled>
+					</div>
+						<small id="ziphelp" ></small>
+						<small id="addresshelp" ></small>
+						<div class="form-group " id="fourth-element-introduction" >
+								<button type="submit" class="btn btn-lg login-btn">Submit Zip</button>
+						</div>
 
-											{!! csrf_field() !!}
-									</form>
+
+
+						{!! csrf_field() !!}
+				</form>
 				</div>
 
 			</div>
@@ -391,7 +421,7 @@ input[type=number] {
 						</div>
 
 						<div class="text-center">
-							<button type="submit" class="btn btn-sm" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">
+							<button type="submit" class="btn btn-lg login-btn">
 								Update
 							</button>
 							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
@@ -460,7 +490,7 @@ input[type=number] {
     color: #FFFFFF;">
 
     <tr>
-      <th scope="col" colspan="2" class="text-left pl-4">Profile Management</th>
+      <th scope="col" colspan="3" class="text-left pl-4">Profile Management</th>
       
     </tr>
   </thead>
@@ -468,6 +498,7 @@ input[type=number] {
   	<tr>
       <td class="text-left text-md-center">Name:</td>
       <td class="text-left text-md-center text-break" >{{Auth::user()->name}}</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-name">edit</a></td>
     </tr>
     <tr>
       <td class="text-left text-md-center">Email:</td>
@@ -489,12 +520,14 @@ input[type=number] {
 	@else
 	<tr>
       <td class="text-left text-md-center">Zipcode:</td>
-	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-zipcode">{{$zipcode}}</a></td>
+	  <td class="text-left text-md-center text-wrap">{{$zipcode}}</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-zipcode">edit</a></td>
     </tr>
 	@endif
 	<tr>
       <td class="text-left text-md-center">Password:</td>
-      <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Change password</a></td>
+      <td class="text-left text-md-center text-wrap">*****</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">edit</a></td>
     </tr>
 
 							@if ( Auth::user()->subscribed('main'))

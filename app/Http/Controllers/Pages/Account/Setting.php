@@ -386,6 +386,20 @@ curl_close($curl);
         }
     }
 
+    public function updateName(Request $request, $id)
+    {
+        if($request->has('name')) {
+            $user = User::find($id);
+            if($user) {
+                $user->name = $request['name'];
+                $user->save();
+                return redirect()->back()->with('message','User name updated');
+            } else {
+                return redirect()->back()->with('errormsgname','User is not available');
+            } 
+        }
+    }
+
     public function destroy($id)
     {  
         $uid= Auth::user()->id;
