@@ -580,7 +580,7 @@ class AuthController extends Controller
                     'message' => 'id not found.',
                     'response_code' => 404,
                 ];
-                return $response;
+                return response()->json($response, 404);
             }
 
             //$this->logout()->middleware(['jwt.verify']);
@@ -592,7 +592,7 @@ class AuthController extends Controller
                 'message' => 'logged out successful',
                 'response_code' => 200,
             ];
-            return $response;
+            return response()->json($response, 200);
         } else {
             $response = [
 
