@@ -469,7 +469,21 @@ class AuthController extends Controller
                 ['access_token', '=', $token],
                  ])->get()->toArray();
         $uid=  $user['id'];
-        if ((count($acctoken)==0)){ 
+
+        $acctoken = SessionTable::where([
+            ['status', '=', '0'],
+            ['access_token', '=', $token],
+        ]);
+
+        if($acctoken->exists()){
+            $response = [
+                'success' => true,
+                'data' => 'Empty',
+                'message' => 'logged out successful',
+                'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        } else if ((count($acctoken)==0)){ 
             $response = [
                 
                 'success' => false,
