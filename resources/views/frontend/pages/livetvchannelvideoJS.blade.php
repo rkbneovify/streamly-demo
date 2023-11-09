@@ -363,6 +363,87 @@ console.log(dashdrmplay);
 							},15000);
 							Addrecent();//save to recents
 });	
+
+document.addEventListener('keydown', function(event) {
+  // Check if the pressed key is the spacebar
+  if (event.code === 'Space') {
+    // Prevent the default action (scrolling the webpage)
+    
+  }
+});
+
+
+
+document.addEventListener("keydown", function (event) {
+	event.preventDefault();
+    switch (event.code) {
+      case "Space":
+		if (overlay.style.display === 'block') {
+			var closeBtn = parent.querySelector('.over-close');
+			closeBtn.click();
+		} else {
+			player.pause();
+		}
+        break;
+      case "ArrowUp":
+        player.volume(player.volume() + 0.1);
+        break;
+      case "ArrowDown":
+        player.volume(player.volume() - 0.1);
+        break;
+      case "KeyM":
+        player.muted(!player.muted());
+        break;
+      case "ArrowRight":
+        player.currentTime(player.currentTime() + 10); // Skip forward 10 seconds
+        break;
+      case "ArrowLeft":
+        player.currentTime(player.currentTime() - 10); // Skip backward 10 seconds
+        break;
+      case "Digit0":
+      case "Digit1":
+      case "Digit2":
+      case "Digit3":
+      case "Digit4":
+      case "Digit5":
+      case "Digit6":
+      case "Digit7":
+      case "Digit8":
+      case "Digit9":
+        var percentage = parseInt(event.key) * 10;
+        player.currentTime(player.duration() * (percentage / 100));
+        break;
+      case "KeyF":
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else {
+			player.requestFullscreen();
+        }
+        break;
+      case "KeyQ":
+        // Open a menu to select different video quality options (if supported by the player)
+        if (player.options_ && player.options_.qualityLevels && player.options_.qualityLevels.length > 1) {
+			player.qualityMenuButton.handleMenuButtonFocus_();
+        }
+        break;
+      case "KeyP":
+        // Toggle Picture-in-Picture mode if supported by the browser
+        if (document.pictureInPictureElement) {
+          if (document.pictureInPictureElement !== player) {
+            player.requestPictureInPicture();
+          } else {
+            document.exitPictureInPicture();
+          }
+        }
+        break;
+      case "KeyR":
+        // Reload the video (refresh)
+        player.src(video.src());
+        player.load();
+        player.play();
+        break;
+    }
+  });
 //    let retries = 0;
 //    player.tech_.on('retryplaylist', () => {
 // 	var executed = false;
