@@ -460,67 +460,65 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
-    {    try {
-        $request = request();
-        $token = $request->bearerToken();//get token from header
-        
-        $user=JWTAuth::parseToken()->authenticate();
-        
-        $userRole= $user->roles->pluck('name');//check users role
-           if($userRole[0]=='user'||'tieruser'){
-               //check if token exist in table
-            $acctoken = SessionTable::where([
-                ['status', '=', '1'],
-                ['access_token', '=', $token],
-                 ])->get()->toArray();
-        $uid=  $user['id'];
+    {
+        try {
+            $request = request();
+            $token = $request->bearerToken(); //get token from header
 
-        $acctoken = SessionTable::where([
-            ['status', '=', '0'],
-            ['access_token', '=', $token],
-        ]);
+            $user = JWTAuth::parseToken()->authenticate();
 
-        if($acctoken->exists()){
-            $response = [
-                'success' => true,
-                'data' => 'Empty',
-                'message' => 'logged out successful',
-                'response_code' => 200,
-            ];
-            return response()->json($response, 200);
-        } else if ((count($acctoken)==0)){ 
-            $response = [
-                
-                'success' => false,
-                'data' => 'Empty',
-                'message' => 'access token not found.',
-                'response_code'=>404,
-            ];
-            return response()->json($response, 404);
+            $userRole = $user->roles->pluck('name'); //check users role
+            if ($userRole[0] == 'user' || 'tieruser') {
+                //check if token exist in table
+                $acctoken = SessionTable::where([
+                    ['status', '=', '1'],
+                    ['access_token', '=', $token],
+                ])->get()->toArray();
+                $uid =  $user['id'];
 
-        }  else {
-    
-            $id=  $acctoken[0]['id'];
-              LogoutandDecrementDevice($id);
-              exit;
-          }
-        
-        
-        
-    } else { 
-        config([
-        'jwt.blacklist_enabled' => true
-    ]);
-         JWTAuth::parseToken()->invalidate();
-        return response()->json(['success'=>true,'response_code'=>200,'message' => 'Successfully logged out'],200); }
-    } catch (Exception $ex) { // Anything that went wrong
-        return response()->json( [
-            'error'   => true,
-            'message' => 'Something went wrong'
+                $acctokenExists = SessionTable::where([
+                    ['status', '=', '0'],
+                    ['access_token', '=', $token],
+                ]);
 
-        ], 500 );
+                if ($acctokenExists->exists()) {
+                    $response = [
+                        'success' => true,
+                        'data' => 'Empty',
+                        'message' => 'logged out successful',
+                        'response_code' => 200,
+                    ];
+                    return response()->json($response, 200);
+                } else if ((count($acctoken) == 0)) {
+                    $response = [
+
+                        'success' => false,
+                        'data' => 'Empty',
+                        'message' => 'access token not found.',
+                        'response_code' => 404,
+                    ];
+                    return response()->json($response, 404);
+                } else {
+
+                    $id =  $acctoken[0]['id'];
+                    LogoutandDecrementDevice($id);
+                    exit;
+                }
+            } else {
+                config([
+                    'jwt.blacklist_enabled' => true
+                ]);
+                JWTAuth::parseToken()->invalidate();
+                return response()->json(['success' => true, 'response_code' => 200, 'message' => 'Successfully logged out'], 200);
+            }
+        } catch (Exception $ex) { // Anything that went wrong
+            return response()->json([
+                'error'   => true,
+                'message' => 'Something went wrong'
+
+            ], 500);
+        }
     }
-}
 
     public function samedevicelogout(Request $request)
     {
