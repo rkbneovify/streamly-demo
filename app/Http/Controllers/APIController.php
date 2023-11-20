@@ -363,33 +363,49 @@ public function unhashid($id){
         return response()->json($response, 200);
     }
 
-public function genrename(Request $request ){ 
-    $ua = $request->server('HTTP_USER_AGENT');
-        $isDevice=isDeviceAppleRokuOthers($ua);
-        if($isDevice=='apple')   {
-            $type='url';
+    public function genrename(Request $request)
+    {
+        $ua = $request->server('HTTP_USER_AGENT');
+        $zipcode = $request->get('zipcode');
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        if ($isDevice == 'apple') {
+            $type = 'url';
             $record = $this->genrenameFunc($type);
-            $data=$record->get()->groupBy('genre_name');
-    } else{
-        $type='dash_url';
-        $record = $this->genrenameFunc($type);
-        $data=$record->get()->groupBy('genre_name'); 
+            $data = $record->get();
+        } else {
+            $type = 'dash_url';
+            $record = $this->genrenameFunc($type);
+            $data = $record->get();
+        }
+
+        if ($zipcode) {
+            foreach ($data  as $key => $res) {
+
+                if ($res->zip_code !== ["All"]) {
+                    $check = in_array($zipcode, $res->zip_code);
+                    if (!$check) {
+                        unset($data[$key]);
+                    }
+                }
+            }
+        }
+        $a = $data->groupBy('genre_name')->keys();
+
+        $response = [
+            'success' => true,
+
+            'allGenre' => $a,
+            'data' => $data,
+            'message' => 'Channel with genre feteched successfully.',
+            'response_code' => 200,
+        ];
+        return response()->json($response, 200);
     }
-      $a=$data->keys();
-      
-      $response = [
-        'success' => true,
-        
-        'allGenre'=>$a,
-        'data' => $data,
-        'message' => 'Channel with genre feteched successfully.',
-        'response_code'=>200,
-    ];
-    return response()->json($response, 200);
-    }
+
+
     public function genrenameFunc($type){
     
-       $second=Channel::select('channels.id',
+       $second=Channel::select('channels.id','channels.zip_code',
 DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
