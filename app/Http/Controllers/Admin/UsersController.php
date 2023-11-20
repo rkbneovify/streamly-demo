@@ -44,23 +44,38 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        $email_verified_at=Carbon::now();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'contact'=>$request->contact??'null',
-            'gender'=>$request->gender??'null',
-            'dob'=>$request->dob??'null',
-            'country'=>$request->country??'null',
-            'address'=>$request->address??'null',
-            'zipcode'=>$request->zipcode,
-            'email_verified_at'=>$email_verified_at
-        ]);
-        $user->roles()->sync($request->input('roles', []));
+        try {
 
-     return redirect('admin/users')->with('info','User Added Successfully');
+            $email_verified_at=Carbon::now();
+
+            $checkExist = User::WHERE('email',"=",$request->email);
+
+            if($checkExist->exists()){
+                $id = $checkExist->first()->id;
+                return redirect()->back()->with('existuser',$id);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'email'=>$request->email,
+                'password'=>Hash::make($request->password),
+                'contact'=>$request->contact??'null',
+                'gender'=>$request->gender??'null',
+                'dob'=>$request->dob??'null',
+                'country'=>$request->country??'null',
+                'address'=>$request->address??'null',
+                'zipcode'=>$request->zipcode,
+                'email_verified_at'=>$email_verified_at
+            ]);
+            $user->roles()->sync($request->input('roles', []));
+
+            return redirect('admin/users')->with('info','User Added Successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('errormsg','Error creating user, please try again.');
+        }
+
+     
     }
     public function update(Request $request, $id)
     {
