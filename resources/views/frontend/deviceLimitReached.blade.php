@@ -158,7 +158,7 @@ $("#my_form").submit(function(event){
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
-							<li>"Your account is in use on {{$login_limit}} devices. Please stop playing on other devices to continue"</li>
+							<li>"Your account is in use on {{$login_limit}} devices."</li>
 							
 								@if($errors->has('email'))
 								 <div class="alert alert-danger alert-dismissible ">
