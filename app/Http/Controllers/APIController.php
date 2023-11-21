@@ -28,6 +28,7 @@ class APIController extends Controller
      * @var bool
      */
     public $loginAfterSignUp = true;
+    public $exculdedUsers = ["qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility','connecteddeviceemail']]);
@@ -365,10 +366,11 @@ public function unhashid($id){
 
     public function genrename(Request $request)
     {
+        $user = JWTAuth::user();
         $ua = $request->server('HTTP_USER_AGENT');
-        $zipcode = $request->get('zipcode');
         $validate = 0;
-        if($zipcode) $validate = 1;
+        $zipcode = $request->get('zipcode');
+        if(!in_array($user->email,$this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         if ($isDevice == 'apple') {
             $type = 'url';
@@ -380,10 +382,8 @@ public function unhashid($id){
             $data = $record->get();
         }
 
-        if ($zipcode) {
-
+        if ($validate) {
             $a = $data->groupBy('genre_name')->keys();
-
             foreach ($data  as $key => $res) {
 
                 if ($res->zip_code !== ["All"]) {
@@ -404,8 +404,6 @@ public function unhashid($id){
             $data = $data->groupBy('genre_name');
             $a = $data->keys();
         }
-
-        
 
         $response = [
             'success' => true,
