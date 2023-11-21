@@ -1301,7 +1301,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
-    $record  = Gracenote::select("sub.callSign as callSign","sub.id","StationName as stationName","$type as url",
+    $record  = Gracenote::select("sub.callSign as callSign","sub.id","sub.zip_code as zip_code","StationName as stationName","$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
         ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start',(UNIX_TIMESTAMP(StartDateTimewithTimezon)),'end',(UNIX_TIMESTAMP(EndDateTimewithTimezon)),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
@@ -1313,7 +1313,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
             DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),
             DB::raw('IFNULL(gracenote.TimeZoneName,"TimeZoneName") TimeZoneName'),
-            'channels.id','channels.status',
+            'channels.id','channels.status',"channels.zip_code",
             DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type",
             DB::raw(" CASE gracenote.TimeZoneName
             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
@@ -1338,11 +1338,11 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             if(!in_array('Others', $q)){
                 $record->whereIn('genre.name', $q )
                 ->orderBy('sub.callSign', 'asc')
-                ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+                ->groupBy('sub.callSign','StationName','image',$type,'sub.id','sub.zip_code');
             }else{
                 $record->whereRaw('`channels_genre`.`channels_id` IS NULL')
                 ->orderBy('sub.callSign', 'asc')
-                ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+                ->groupBy('sub.callSign','StationName','image',$type,'sub.id','sub.zip_code');
             }
         // dd($record->toSql());
         //     ->where('sub.status','=','1')
@@ -1355,7 +1355,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     BETWEEN DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
-    $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id",
+    $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id","channels.zip_code",
         DB::raw('IFNULL(stationName,channels.name) StationName'),"$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
@@ -1367,11 +1367,11 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
         if(!in_array('Others', $q)){
             $b->whereIn('genre.name', $q )
             ->orderBy('callSign', 'asc')
-            ->groupBy('callSign','StationName','image',$type,'channels.id');
+            ->groupBy('callSign','StationName','image',$type,'channels.id','zip_code');
         }else{
             $b->whereRaw('`channels_genre`.`channels_id` IS NULL')
             ->orderBy('callSign', 'asc')
-            ->groupBy('callSign','StationName','image',$type,'channels.id');
+            ->groupBy('callSign','StationName','image',$type,'channels.id','zip_code');
         }
         $b->union($record)->orderBy('id');
     // dd($b->toSql());
