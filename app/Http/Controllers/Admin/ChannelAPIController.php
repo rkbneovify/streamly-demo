@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use JWTAuth;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
@@ -15,6 +15,7 @@ use App\Traits\PaginationTraits;
 class ChannelAPIController extends Controller
 {
     use PaginationTraits;
+    public $exculdedUsers = ["qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
     public function __construct()
     {
@@ -176,12 +177,13 @@ class ChannelAPIController extends Controller
 
     public function channeljson(Request $request)
     {
+        $user = JWTAuth::user();
         $ua = $request->server('HTTP_USER_AGENT');
         $deviceType = $request->get('deviceType');
         $urlType = $request->get('typeurl');
         $zipcode = $request->get('zipcode');
         $validate = 0;
-        if($zipcode) $validate = 1;
+        if(!in_array($user->email,$this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         if ($isDevice == 'roku' || $urlType == 'manifest') {
             // $record= Cache::rememberForever('channelslistsmooth', function () {
@@ -207,7 +209,7 @@ class ChannelAPIController extends Controller
             $record = $this->channeljsonFunc('dash_url',$validate)->get();
         }
 
-        if ($zipcode) {
+        if ($validate) {
             foreach ($record  as $key => $res) {
 
                 if ($res->zip_code !== ["All"]) {
@@ -770,7 +772,10 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
         }
         $deviceType = $request->get('typeurl');
         $dataDays = $request->get('days');
+        $user = JWTAuth::user();
         $zipcode = $request->get('zipcode');
+        $validate = 0;
+        if(!in_array($user->email,$this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         $type = 'smooth_url';
         // $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
@@ -858,7 +863,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
         // $reco=$record->get();
         // dd($reco);
         // dd($this->channelDaysScheduleFunctz('dash_url')->toSql());
-        if($zipcode) {
+        if($validate) {
             foreach($reco  as $key=>$res){
                 if($res->zip_code !== ["All"]){
                     $check = in_array($zipcode, $res->zip_code);
