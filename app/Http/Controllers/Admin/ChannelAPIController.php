@@ -1509,7 +1509,7 @@ public function channelDaysScheduleFunc($type){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
         if($tz == '-08:00'){
-          $st = '+05:30';
+          $st = '+00:00';
         }else{
             $st = '+00:00';
         }
