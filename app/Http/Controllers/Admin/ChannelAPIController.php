@@ -215,6 +215,8 @@ class ChannelAPIController extends Controller
                     }
                 }
             }
+            $record = json_decode(json_encode($record), true);
+            $record = array_values($record);
         }
 
         //JSON_ARRAY
@@ -831,15 +833,15 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
         // dd($this->channelDaysScheduleFunctz('dash_url')->toSql());
         if($zipcode) {
             foreach($reco  as $key=>$res){
-
                 if($res->zip_code !== ["All"]){
                     $check = in_array($zipcode, $res->zip_code);
                     if(!$check){
                         unset($reco[$key]);
                     }
                 }
-    
             }
+            $reco = json_decode(json_encode($reco), true);
+            $reco = array_values($reco);
         }
         
 
@@ -847,7 +849,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             'success' => true,
             'date' => date("Y-m-d"),
             // 'sql'=>$this->channelDaysScheduleFunctz('dash_url')->toSql(),
-            'count' => $reco->count(),
+            'count' => count($reco),
             'data' => $reco,
 
             'message' => 'Schedule data for 1.5 days found',

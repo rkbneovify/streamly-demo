@@ -378,6 +378,8 @@ public function unhashid($id){
             $data = $record->get();
         }
 
+        $a = $data->groupBy('genre_name')->keys();
+
         if ($zipcode) {
             foreach ($data  as $key => $res) {
 
@@ -388,8 +390,10 @@ public function unhashid($id){
                     }
                 }
             }
+            $data = json_decode(json_encode($data), true);
+            $data = array_values($data);
         }
-        $a = $data->groupBy('genre_name')->keys();
+        
 
         $response = [
             'success' => true,
