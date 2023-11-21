@@ -380,9 +380,10 @@ public function unhashid($id){
             $data = $record->get();
         }
 
-        $a = $data->groupBy('genre_name')->keys();
-
         if ($zipcode) {
+
+            $a = $data->groupBy('genre_name')->keys();
+
             foreach ($data  as $key => $res) {
 
                 if ($res->zip_code !== ["All"]) {
@@ -390,7 +391,7 @@ public function unhashid($id){
                     if (!$check) {
                         unset($data[$key]);
                     } else {
-                        unset($record[$key]['zip_code']);
+                        unset($data[$key]['zip_code']);
                     }
                 } else {
                     unset($data[$key]['zip_code']);
@@ -398,7 +399,12 @@ public function unhashid($id){
             }
             $data = json_decode(json_encode($data), true);
             $data = array_values($data);
+            $data = $this->groupBy($data, 'genre_name');
+        } else {
+            $data = $data->groupBy('genre_name');
+            $a = $data->keys();
         }
+
         
 
         $response = [
@@ -412,6 +418,12 @@ public function unhashid($id){
         return response()->json($response, 200);
     }
 
+    public function groupBy($array, $key) {
+        return array_reduce($array, function ($result, $item) use ($key) {
+            $result[$item[$key]][] = $item;
+            return $result;
+        }, []);
+    }
 
     public function genrenameFunc($type,$validate = 0){
         
