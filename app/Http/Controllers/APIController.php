@@ -367,14 +367,16 @@ public function unhashid($id){
     {
         $ua = $request->server('HTTP_USER_AGENT');
         $zipcode = $request->get('zipcode');
+        $validate = 0;
+        if($zipcode) $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         if ($isDevice == 'apple') {
             $type = 'url';
-            $record = $this->genrenameFunc($type);
+            $record = $this->genrenameFunc($type,$validate);
             $data = $record->get();
         } else {
             $type = 'dash_url';
-            $record = $this->genrenameFunc($type);
+            $record = $this->genrenameFunc($type,$validate);
             $data = $record->get();
         }
 
@@ -388,6 +390,8 @@ public function unhashid($id){
                     if (!$check) {
                         unset($data[$key]);
                     }
+                } else {
+                    unset($data[$key]['zip_code']);
                 }
             }
             $data = json_decode(json_encode($data), true);
@@ -407,19 +411,31 @@ public function unhashid($id){
     }
 
 
-    public function genrenameFunc($type){
-    
-       $second=Channel::select('channels.id','channels.zip_code',
-DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
-       ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
-       ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-       ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+    public function genrenameFunc($type,$validate = 0){
+        
+        if(!$validate) {
+            $second=Channel::select('channels.id',
+                DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
+                    ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+                    ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                    ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
-->where('channels.status','=','1')
-->orderBy('channels.StationName', 'asc');
-return $second;
+                ->where('channels.status','=','1')
+                ->orderBy('channels.StationName', 'asc');
+        } else {
+            $second=Channel::select('channels.id','channels.zip_code',
+            DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
+                   ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+                   ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                   ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+            
+            ->where('channels.status','=','1')
+            ->orderBy('channels.StationName', 'asc');
+        }
 
+        return $second;
     }
+
     public function favoriteChannel(Request $request)
     { try { 
         $input = $request->all();
