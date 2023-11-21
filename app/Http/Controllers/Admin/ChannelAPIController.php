@@ -180,29 +180,31 @@ class ChannelAPIController extends Controller
         $deviceType = $request->get('deviceType');
         $urlType = $request->get('typeurl');
         $zipcode = $request->get('zipcode');
+        $validate = 0;
+        if($zipcode) $validate = 1;
         $isDevice = isDeviceAppleRokuOthers($ua);
         if ($isDevice == 'roku' || $urlType == 'manifest') {
             // $record= Cache::rememberForever('channelslistsmooth', function () {
             // $type='smooth_url';
             // return $this->channeljsonFunc($type)->get();});
-            $record = $this->channeljsonFunc('smooth_url')->get();
+            $record = $this->channeljsonFunc('smooth_url',$validate)->get();
         } else if ($isDevice == 'apple' || $urlType == 'm3u8') {
             // $record= Cache::rememberForever('channelslistapple', function () {
             // $type='url';
             // return $this->channeljsonFunc($type)->get();});
-            $record = $this->channeljsonFunc('url')->get();
+            $record = $this->channeljsonFunc('url',$validate)->get();
         } else if ($deviceType == 'apple') {
             // $record= Cache::rememberForever('channelslistapple', function () {
             // $type='url';
             // return $this->channeljsonFunc($type)->get();});
-            $record = $this->channeljsonFunc('url')->get();
+            $record = $this->channeljsonFunc('url',$validate)->get();
         } else {
 
             //     $record= Cache::rememberForever('channelslistdash', function () {
             //     $type='dash_url';
             //     return $this->channeljsonFunc($type)->get();
             // });
-            $record = $this->channeljsonFunc('dash_url')->get();
+            $record = $this->channeljsonFunc('dash_url',$validate)->get();
         }
 
         if ($zipcode) {
@@ -212,7 +214,11 @@ class ChannelAPIController extends Controller
                     $check = in_array($zipcode, $res->zip_code);
                     if (!$check) {
                         unset($record[$key]);
+                    } else {
+                        unset($record[$key]['zip_code']);
                     }
+                } else {
+                    unset($record[$key]['zip_code']);
                 }
             }
             $record = json_decode(json_encode($record), true);
@@ -242,7 +248,7 @@ class ChannelAPIController extends Controller
         return response()->json($response, 200);
     }
 
-    public function channeljsonFunc($type)
+    public function channeljsonFunc($type,$validate = 0)
     {
         // select `channels`.`id`, IFNULL(channels.callSign,channels.name) callSign, `channels`.`image`, `channels`.`dash_url` as `url`, 
         // CONCAT('[',GROUP_CONCAT(QUOTE(IFNULL(genre.name,'Others'))),']') genrename 
@@ -250,24 +256,45 @@ class ChannelAPIController extends Controller
         // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
         // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
         $imagePath = url("/uploads/channellogo/");
-        $second = Channel::select(
-            'channels.id',
-            'channels.zip_code',
-            DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-            DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
-            'channels.image',
-            "channels.$type as url",
-            DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
-        )
+        
+        if(!$validate) {
+            $second = Channel::select(
+                'channels.id',
+                DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
+                'channels.image',
+                "channels.$type as url",
+                DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+            )
 
-        ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+            ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
 
-        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
-        ->where('channels.status', '=', '1')
-        ->groupBy('channels.id')
-        ->orderBy('channels.id', 'asc');
+            ->where('channels.status', '=', '1')
+            ->groupBy('channels.id')
+            ->orderBy('channels.id', 'asc');
+        } else {
+            $second = Channel::select(
+                'channels.id',
+                'channels.zip_code',
+                DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
+                'channels.image',
+                "channels.$type as url",
+                DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+            )
+
+            ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+
+            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+            ->where('channels.status', '=', '1')
+            ->groupBy('channels.id')
+            ->orderBy('channels.id', 'asc');
+        }
         // ->orderBy('channels.name', 'asc');
         return $second;
     }
