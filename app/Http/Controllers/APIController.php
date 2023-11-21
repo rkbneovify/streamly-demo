@@ -389,6 +389,8 @@ public function unhashid($id){
                     $check = in_array($zipcode, $res->zip_code);
                     if (!$check) {
                         unset($data[$key]);
+                    } else {
+                        unset($record[$key]['zip_code']);
                     }
                 } else {
                     unset($data[$key]['zip_code']);
