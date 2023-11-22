@@ -1590,6 +1590,8 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
         $tz = "+".$tz;
         $st = '+00:00';
     }
+
+    $tz = '+00:00';
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
