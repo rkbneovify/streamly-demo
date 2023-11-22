@@ -61,14 +61,14 @@ class ProgramGuideItemView<T> : FrameLayout {
 //        Log.e("PGIV", "::>>>id: " + schedule?.id + "<<>>orgtimes: " + schedule?.originalTimes)
 //        Log.e("PGIV", "::>>>starttime: " + schedule?.startsAtMillis + ":::" + schedule?.endsAtMillis)
 
-        val df: DateFormat = SimpleDateFormat("HH:mm")
+        val df: DateFormat = SimpleDateFormat("h:mm a")
         df.setTimeZone(TimeZone.getTimeZone(TimeZone.getDefault().id));
-        val time_start: String = df.format(schedule?.startsAtMillis)
+        val time_start: String = df.format(schedule?.startsAtMillis).lowercase()
 //        Log.e("PGIV", "::>>>time_start: " + time_start + "<<>>conversion: " )
 
-        val dfend: DateFormat = SimpleDateFormat("HH:mm")
+        val dfend: DateFormat = SimpleDateFormat("h:mm a")
         dfend.setTimeZone(TimeZone.getTimeZone(TimeZone.getDefault().id));
-        val time_end: String = dfend.format(schedule?.endsAtMillis)
+        val time_end: String = dfend.format(schedule?.endsAtMillis).lowercase()
 
         val schedule_time = time_start + "-" + time_end
 
@@ -85,7 +85,13 @@ class ProgramGuideItemView<T> : FrameLayout {
             setBackgroundResource(R.drawable.programguide_item_program_background)
             isClickable = scheduleItem.isClickable
         }
-        title = if (title?.isEmpty() == true) resources.getString(R.string.programguide_title_no_program) else title
+        title = if (title?.isEmpty() == true) {
+            resources.getString(R.string.programguide_title_no_program)
+        } else if(title.equals("TV Guide")){
+            resources.getString(R.string.programguide_title_horse_racing)
+        } else {
+            title
+        }
 
         updateText(title, id)
         initProgress(ProgramGuideUtil.convertMillisToPixel(startMillis = scheduleItem.startsAtMillis, endMillis = scheduleItem.endsAtMillis))
@@ -138,7 +144,18 @@ class ProgramGuideItemView<T> : FrameLayout {
     /** Update programItemView to handle alignments of text. */
     fun updateVisibleArea() {
         val parentView = parent as View
-        layoutVisibleArea(parentView.left + parentView.paddingLeft - left, right - parentView.right)
+        if (layoutDirection == LAYOUT_DIRECTION_LTR) {
+            layoutVisibleArea(
+                parentView.left + parentView.paddingStart - left,
+                right - parentView.right
+            )
+        } else {
+            layoutVisibleArea(
+                parentView.left - left,
+                right - parentView.right + parentView.paddingStart
+            )
+        }
+//        layoutVisibleArea(parentView.left + parentView.paddingLeft - left, right - parentView.right)
     }
 
     /**

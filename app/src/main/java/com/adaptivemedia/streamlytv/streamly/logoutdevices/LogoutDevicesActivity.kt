@@ -20,7 +20,12 @@ import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Loggedindevicein
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse
-import com.adaptivemedia.streamlytv.streamly.utilities.*
+import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility
+import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
+import com.adaptivemedia.streamlytv.streamly.utilities.NetworkKeys
+import com.adaptivemedia.streamlytv.streamly.utilities.gone
+import com.adaptivemedia.streamlytv.streamly.utilities.show
+import com.adaptivemedia.streamlytv.streamly.utilities.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,17 +36,19 @@ class   LogoutDevicesActivity : FragmentActivity() {
     private var model = Data()
     private var logout = 0
     private var logout1 = 0
+    private var  deviceID: String? = null
     private var isLogin = false
     private var loginAdapter: LogoutDevicesAdapter? = null
     val list = mutableListOf<Data?>()
     val searchList = mutableListOf<Data?>()
+    var auth_token:String? = null
     private val context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLogoutDevicesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         isLogin = intent.getBooleanExtra("isLogin", false)
-
+         auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null)
         if (isLogin) {
             val data = intent.getSerializableExtra("list") as Loggedindeviceinfolist
             logout1 = data.numofdevice!!
@@ -56,6 +63,9 @@ class   LogoutDevicesActivity : FragmentActivity() {
         }
         onClickListeners()
         recyclerViewInit()
+
+         deviceID = TokenStorage.readPersonalDeviceID(this, ConstantUtility.PERSONAL_DEVICE_ID, "")
+
     }
 
 
@@ -73,7 +83,14 @@ class   LogoutDevicesActivity : FragmentActivity() {
         binding.apply {
             loginAdapter = LogoutDevicesAdapter() { data, pos ->
                 model = data
-                showDialog()
+                if(model.personaldeviceid.equals(deviceID)){
+                    CommonUtility.showToast(context, "This device")
+
+                }else{
+                    showDialog()
+                }
+                Log.e(TAG, "device_id:----" + model.personaldeviceid)
+                Log.e(TAG, "personal device_id:-" + deviceID)
             }
 
 
@@ -109,50 +126,110 @@ class   LogoutDevicesActivity : FragmentActivity() {
     private fun deviceLogout(deviceId: String) {
         binding.progressBar.show()
         val apiInterface = ApiClient.getClient().create(ApiInterface::class.java)
-        val call = apiInterface.postDeviceLogOutCall(deviceId)
-        call.enqueue(object : retrofit2.Callback<DeviceSignOutResponse> {
-            override fun onResponse(
-                call: Call<DeviceSignOutResponse>,
-                response: Response<DeviceSignOutResponse>
-            ) {
-                binding.progressBar.gone()
-                try {
-                    if (response.isSuccessful && response.body() != null && response.code() == 200) {
-                        if (sessionId.isNotEmpty() && sessionId == deviceId) {
-                            val intent = Intent(context, LogInActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                            startActivity(intent)
-                        } else if (isLogin) {
-                            binding.tvTotalConnectedDevices.text =
-                                "Total Connected Devices ${--logout1}"
-                            toast(response.body()!!.message)
-                            setResult(Activity.RESULT_OK)
-                            finish()
-                        } else {
-                            list.remove(model)
-                            searchList.remove(model)
-                            recyclerViewInit()
-                            noRecord()
+        Log.d(TAG, "deviceLogout: authtoken "+auth_token)
+        if(auth_token!=null && auth_token!=""){
+            val call = apiInterface.postDeviceLogOutCall("Bearer " + auth_token,deviceId)
+            call.enqueue(object : retrofit2.Callback<DeviceSignOutResponse> {
+                override fun onResponse(
+                    call: Call<DeviceSignOutResponse>,
+                    response: Response<DeviceSignOutResponse>
+                ) {
+                    binding.progressBar.gone()
+                    try {
+                        if (response.isSuccessful && response.body() != null && response.code() == 200) {
+                            if (sessionId.isNotEmpty() && sessionId == deviceId) {
+                                val intent = Intent(context, LogInActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                startActivity(intent)
+                            } else if (isLogin) {
+                                binding.tvTotalConnectedDevices.text =
+                                    "Total Connected Devices ${--logout1}"
+                                toast(response.body()!!.message)
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            } else {
+                                list.remove(model)
+                                searchList.remove(model)
+                                recyclerViewInit()
+                                noRecord()
+                            }
+                        } else if (response.code() == 401) {
+                            TokenStorage.clearSharedToken(context)
+                            CommonUtility.showToast(context, ConstantUtility.SESSION_EXPIRED)
+                            context.startActivity(Intent(context, LogInActivity::class.java))
+                            (context as Activity).finish()
+                        }else {
+                            toast(ConstantUtility.SERVER_ISSUE)
                         }
-                    } else {
-                        toast(ConstantUtility.SERVER_ISSUE)
+                    } catch (ex: Exception) {
+                        ex.printStackTrace()
+                        Log.e(TAG, "Exception $ex")
                     }
-                } catch (ex: Exception) {
-                    ex.printStackTrace()
-                    Log.e(TAG, "Exception $ex")
                 }
-            }
 
-            override fun onFailure(call: Call<DeviceSignOutResponse>, t: Throwable) {
-                binding.progressBar.gone()
+                override fun onFailure(call: Call<DeviceSignOutResponse>, t: Throwable) {
+                    binding.progressBar.gone()
 
-                toast(ConstantUtility.SERVER_ISSUE)
-            }
-        })
+                    toast(ConstantUtility.SERVER_ISSUE)
+                }
+            })
+        }else{
+            val call = apiInterface.postDeviceLogOutCall("Bearer ",deviceId)
+            call.enqueue(object : retrofit2.Callback<DeviceSignOutResponse> {
+                override fun onResponse(
+                    call: Call<DeviceSignOutResponse>,
+                    response: Response<DeviceSignOutResponse>
+                ) {
+                    binding.progressBar.gone()
+                    try {
+                        if (response.isSuccessful && response.body() != null && response.code() == 200) {
+                            if (sessionId.isNotEmpty() && sessionId == deviceId) {
+                                Log.d(TAG, "onResponse: 115 ")
+                                val intent = Intent(context, LogInActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                startActivity(intent)
+                            }
+//                            else if (isLogin) {
+//                                Log.d(TAG, "onResponse: 116 ")
+//                                binding.tvTotalConnectedDevices.text =
+//                                    "Total Connected Devices ${--logout1}"
+//                                toast(response.body()!!.message)
+//                                setResult(Activity.RESULT_OK)
+//                                finish()
+//                            }
+                            else {
+                                Log.d(TAG, "onResponse: 117 ")
+                                list.remove(model)
+                                searchList.remove(model)
+                                recyclerViewInit()
+                                noRecord()
+                            }
+                        } else {
+                            Log.d(TAG, "onResponse: 118 ")
+                            toast(ConstantUtility.SERVER_ISSUE)
+                        }
+                    } catch (ex: Exception) {
+                        Log.d(TAG, "onResponse: 119 ")
+                        ex.printStackTrace()
+                        Log.e(TAG, "Exception $ex")
+                    }
+                }
+
+                override fun onFailure(call: Call<DeviceSignOutResponse>, t: Throwable) {
+                    Log.d(TAG, "onResponse: 120 ")
+                    binding.progressBar.gone()
+
+                    toast(ConstantUtility.SERVER_ISSUE)
+                }
+            })
+        }
+
+
     }
 
 
     private fun showDialog() {
+
         val c = CommonDialog(
             "Are you sure you want to logout this device.",
             object : DialogClickListeners {
@@ -191,7 +268,7 @@ class   LogoutDevicesActivity : FragmentActivity() {
 
     var sessionId = ""
     private fun connectedDevice() {
-        val auth_token = TokenStorage.readSharedToken(context, ConstantUtility.AUTH_TOKEN, null)
+
         sessionId = TokenStorage.readSessionId(context, ConstantUtility.SESSION_ID, "")
 
         binding.progressBar.visibility = View.VISIBLE

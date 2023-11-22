@@ -47,6 +47,10 @@ public class NewLogInModel {
     @Expose
     private String houroffset;
 
+    @SerializedName("timezone")
+    @Expose
+    private String timezone;
+
     @SerializedName("personaldevicename_popup")
     @Expose
     private boolean personaldevicename_popup;
@@ -233,5 +237,13 @@ public class NewLogInModel {
 
     public void setHouroffset(String houroffset) {
         this.houroffset = houroffset;
+    }
+
+    public String gettimezone() {
+        return timezone;
+    }
+
+    public void settimezone(String timezones) {
+        this.timezone = timezones;
     }
 }

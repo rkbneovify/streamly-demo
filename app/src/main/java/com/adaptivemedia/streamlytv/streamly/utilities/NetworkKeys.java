@@ -24,6 +24,7 @@ public class NetworkKeys {
     public static final String KEY_APP_JSON="application/json";
     public static final String KEY_SUPPORT="/api/auth/support";
     public static final String KEY_QRVISIBILITY="/api/auth/qrvisibility";
+    public static final String KEY_DAYS="4";
 
 
     void  test(){

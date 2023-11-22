@@ -1,6 +1,6 @@
 package com.adaptivemedia.streamlytv.streamly.settings;
 
-import static com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient.retrofitClient;
+
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,8 +19,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -29,6 +31,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
@@ -37,11 +40,12 @@ import com.adaptivemedia.streamlytv.streamly.dialogs.SelectTimeZoneDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDeviceNewActivity;
 import com.adaptivemedia.streamlytv.streamly.logoutdevices.LogoutDevicesActivity;
 import com.adaptivemedia.streamlytv.streamly.model.GetIp;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLoginErrorResponse;
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.LoginDevicesModel;
-import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
+
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpViewModel;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;
@@ -54,9 +58,18 @@ import com.adaptivemedia.streamlytv.streamly.settings.registerdevice.RegisterDev
 import com.adaptivemedia.streamlytv.streamly.settings.signout.SignOutDialog;
 import com.adaptivemedia.streamlytv.streamly.settings.support.SupportActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.support.SupportDialog;
+import com.adaptivemedia.streamlytv.streamly.splash.SplashActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 import com.vlstr.blurdialog.BlurDialog;
+import com.adaptivemedia.streamlytv.BuildConfig;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,9 +89,12 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
     private BlurDialog blurView;
     private String auth_token;
     private Long id;
+    private Switch switchonoffguide;
     private String userAgent;
     private String finalOffset;
     String authToken, uniqueId;
+    String versionName = BuildConfig.VERSION_NAME;
+    String appBuildDate = String.valueOf(BuildConfig.TIMESTAMP);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +106,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
         authToken = TokenStorage.readSharedToken(SettingsActivity.this, ConstantUtility.AUTH_TOKEN, null);
         userAgent = System.getProperty("http.agent");
         initListeners();
-        getIpAddress();
+//        getIpAddress();
 
 //        account.clearFocus();
 //        account.requestFocus();
@@ -134,7 +150,11 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                         }
                         break;
                     case 401:
-                        CommonUtility.showToast(SettingsActivity.this, ipModel.getReason());
+//                        CommonUtility.showToast(SettingsActivity.this, ipModel.getReason());
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(SettingsActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                         break;
                     case 403:
                         CommonUtility.showToast(SettingsActivity.this, ConstantUtility.SERVER_ISSUE);
@@ -193,6 +213,7 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 viewFocusAccount(view);
                 break;
 
+
             case R.id.register_device:
                 Intent intent = new Intent(SettingsActivity.this, LogoutDevicesActivity.class);
                 intent.putExtra("isLogin", false);
@@ -200,10 +221,10 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                 break;
 
             case R.id.support:
-                /*SupportDialog supportDialog = new SupportDialog(this);
+                SupportDialog supportDialog = new SupportDialog(this);
                 supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                supportDialog.show();*/
-                startActivity(new Intent(SettingsActivity.this, SupportActivity.class));
+                supportDialog.show();
+//                startActivity(new Intent(SettingsActivity.this, SupportActivity.class));
                 break;
 
             case R.id.privacy:
@@ -278,7 +299,32 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             currentTimezone = pDialog.findViewById(R.id.text_current_timezone);
             progressBar = pDialog.findViewById(R.id.progress_bar);
             version = pDialog.findViewById(R.id.text_version);
+            switchonoffguide = pDialog.findViewById(R.id.switchonoffguide);
+            String tour = TokenStorage.readOnboardingtour(SettingsActivity.this, ConstantUtility.BOARDINGTOUR, null);
+            if(tour == null){
+                switchonoffguide.setChecked(true);
+            }else{
+                switchonoffguide.setChecked(false);
 
+            }
+            switchonoffguide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean ischecked) {
+                    if(ischecked){
+                        TokenStorage.savedSharedToken(
+                                SettingsActivity.this,
+                                ConstantUtility.BOARDINGTOUR,
+                                null
+                        );
+                    }else {
+                        TokenStorage.savedSharedToken(
+                                SettingsActivity.this,
+                                ConstantUtility.BOARDINGTOUR,
+                                "1"
+                        );
+                    }
+                }
+            });
 
             CommonUtility.checkInternetConnection(SettingsActivity.this);
             auth_token = TokenStorage.readSharedToken(SettingsActivity.this, ConstantUtility.AUTH_TOKEN, null);
@@ -287,7 +333,11 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
             } else {
                 CommonUtility.showToast(SettingsActivity.this, ConstantUtility.CHECK_INTERNET_CONNECTION);
             }
-            btnOk.setOnClickListener(v -> pDialog.dismiss());
+            btnOk.setOnClickListener(v -> {
+                        pDialog.dismiss();
+                        pDialog.cancel();
+                    });
+
             deleteUser.setOnClickListener(v -> showDialog());
             pDialog.setCancelable(true);
             pDialog.show();
@@ -342,7 +392,8 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
     private void deleteUserAccount() {
         progressBar.setVisibility(View.VISIBLE);
         //  Response<DeviceSignOutResponse> response = retrofitClient().deleteUserApi(id);
-        Call<DeviceSignOutResponse> call = retrofitClient().deleteUserApi(userAgent, "Bearer " + auth_token, id);
+        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
+        Call<DeviceSignOutResponse> call = apiInterface.deleteUserApi(userAgent, "Bearer " + auth_token, id);
         call.enqueue(new Callback<DeviceSignOutResponse>() {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {
@@ -371,8 +422,14 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
 
     //#neovifyissueresolved28sep
     private void getUserProfile() {
-        String home = "Your Home Timezone GMT"+TokenStorage.readHomeTimeZoneOffset(getApplicationContext(),ConstantUtility.HOMETIMEZONE,null);
-        String current = "Your Current Timezone GMT"+TokenStorage.readCurrentTimeZoneOffset(getApplicationContext(),ConstantUtility.CURRENTTIMEZONE,null);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
+                Locale.getDefault());
+        Date currentLocalTime = calendar.getTime();
+
+        DateFormat date = new SimpleDateFormat("ZZZZZ",Locale.getDefault());
+        String localTime = date.format(currentLocalTime);
+        String home = TokenStorage.readHomeTimeZoneOffset(getApplicationContext(),ConstantUtility.HOMETIMEZONE,null);
+        String current =  Calendar.getInstance().getTimeZone().getDisplayName(false, TimeZone.LONG);
         progressBar.setVisibility(View.VISIBLE);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ProfileModel> call = apiInterface.getUserProfile("Bearer " + auth_token);
@@ -385,10 +442,10 @@ public class SettingsActivity extends FragmentActivity implements View.OnClickLi
                         userName.setText(response.body().getData().getName());
                         id = response.body().getData().getId();
                         userEmail.setText(response.body().getData().getEmail());
-                        buildDate.setText(response.body().getData().getUpdatedAt());
+                        buildDate.setText(appBuildDate);
                         homeTimezone.setText(home);
                         currentTimezone.setText(current);
-                        version.setText("1.01");
+                        version.setText(versionName);
 
                     } else if (response.code() == 401) {
                         if (response.errorBody() != null) {

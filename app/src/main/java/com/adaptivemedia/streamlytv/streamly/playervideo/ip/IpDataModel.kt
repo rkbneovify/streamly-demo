@@ -55,6 +55,8 @@ class IpDataModel(
     val ip:String,
     @SerializedName("country")
     val country:String,
+    @SerializedName("postal")
+    val postal:String,
     @SerializedName("utc_offset")
     val utc_offset:String,
     @SerializedName("latitude")

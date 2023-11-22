@@ -129,7 +129,7 @@ Button btn_sign_in_using_passcode;
                             TokenStorage.saveDevicetype(LoginUsingPasscodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(LoginUsingPasscodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            TokenStorage.saveHomeTimeZoneOffset(LoginUsingPasscodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().gettimezone());
                             CommonUtility.showToast(LoginUsingPasscodeActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
@@ -149,7 +149,7 @@ Button btn_sign_in_using_passcode;
                             TokenStorage.saveDevicetype(LoginUsingPasscodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LoginUsingPasscodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LoginUsingPasscodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(LoginUsingPasscodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            TokenStorage.saveHomeTimeZoneOffset(LoginUsingPasscodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().gettimezone());
                             if (personaDeviceNamePopup) {
                                 startActivity(new Intent(LoginUsingPasscodeActivity.this, PersonalDeviceName.class));
                             } else {

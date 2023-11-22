@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 import com.adaptivemedia.streamlytv.R;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage;
-import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.playervideo.zipcode.OutstationLocationModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.zipcode.ZipCodeDialog;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient;

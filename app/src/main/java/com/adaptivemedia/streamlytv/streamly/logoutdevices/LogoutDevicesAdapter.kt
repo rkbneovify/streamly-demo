@@ -1,16 +1,21 @@
 package com.adaptivemedia.streamlytv.streamly.logoutdevices
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.provider.Settings
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.databinding.LogginDevicesRowLayoutBinding
+import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage
 import com.adaptivemedia.streamlytv.streamly.new_log_in.devices.Data
+import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
 import com.adaptivemedia.streamlytv.streamly.utilities.gone
 import com.adaptivemedia.streamlytv.streamly.utilities.inVisible
 import com.adaptivemedia.streamlytv.streamly.utilities.show
@@ -22,6 +27,7 @@ class LogoutDevicesAdapter(
     ListAdapter<Data, LogoutDevicesAdapter.MyViewHolder>(DiffUtilLogin()) {
 
     var index = -1
+    private lateinit var context: Context;
 
     class MyViewHolder(val binding: LogginDevicesRowLayoutBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -48,6 +54,14 @@ class LogoutDevicesAdapter(
             tvDeviceType.text = Html.fromHtml("<b>Device Type : </b> ${model.device_type}")
             // llLayout.requestFocus()
 
+//            var deviceID = TokenStorage.readPersonalDeviceID(this@LogoutDevicesAdapter.context, ConstantUtility.PERSONAL_DEVICE_ID, "")
+//
+//if(model.device_id.equals(deviceID)){
+//    llLayout.visibility = View.GONE
+//}else{
+//    llLayout.visibility = View.VISIBLE
+//
+//}
 
             llLayout.setOnFocusChangeListener { view, b ->
                 if (b) {

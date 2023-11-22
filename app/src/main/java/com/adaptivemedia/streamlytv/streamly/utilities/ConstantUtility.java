@@ -12,6 +12,8 @@ public class ConstantUtility {
     @Nullable
     public static final String CHANNELDAYSSCHEDULE = ApiConfig.BASE_URL + "channeldayschdeule";
     public static final String IPNOTVALID = "IP is not valid for getting coordinate";
+    public static final String PLAYER_ERROR =  "https://streamlytv.com/api/auth/ga/playererror";
+    public static final String LOGINGUIDE =  "https://streamlytv.com/api/loginguide";
 
     private ConstantUtility() {
         throw new IllegalStateException("Utility class");
@@ -21,9 +23,11 @@ public class ConstantUtility {
 //    public static boolean isNetworkConnected = false;
     public static boolean isNetworkConnected = true;
     public static boolean isRemember = false;
+    public static boolean isOnboardingtour = false;
     public static final String PREF_DATA = "pref_data";
     public static final String LOADING = "Loading...";
     public static final String AUTH_TOKEN = "token";
+    public static final String DEVICE_ID = "deviceid";
     public static final String AUTH_TOKEN_PASSCODE = "token_passcode";
     public static final String SESSION_ID = "sessionid";
     public static final String PERSONAL_DEVICE_ID = "personaldeviceid";
@@ -34,9 +38,11 @@ public class ConstantUtility {
     public static final String USER_ROLE = "user_role";
     public static final String PERSONAL_DEVICE_NAME = "personal_device_name";
     public static final String USER_ID = "user_id";
+    public static final String BOARDINGTOUR = "boarding_tour";
     public static final String KEY = "key";
     public static final String ROOM_LIST = "room_list";
     public static final String ROOM = "room";
+    public static final String DATE = "date";
     public final static String INCORRECT_CREDENTIALS = "Incorrect Username or Password";
     public static final String SERVER_ISSUE = "Server issue, try after sometime";
     public static final String FILL_EMAIL = "Fill Email ID";
@@ -50,6 +56,9 @@ public class ConstantUtility {
     public static final String CHECK_INTERNET_CONNECTION = "NO INTERNET, Please Check Your Internet Connection.";
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
     public static final String QRVISIBILITY_KEY_VALUE = "qrvisibility_boolean_value";
+
+
+    public static  final String channelZipCode  =ApiConfig.BASE_URL +"/api/auth/channeldayschdeuletzwithoffset?hoursoffset=";
 }
 
 

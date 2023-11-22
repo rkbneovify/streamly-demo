@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/md_black_1000"
                 android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/helvetica_neue_medium"
+                android:fontFamily="@font/helvetica_neue_regular"
                 android:textAlignment="viewStart"
                 android:padding="@dimen/_8sdp"/>
              </ScrollView>
@@ -60,6 +60,7 @@
         android:textAllCaps="false"
         android:textColor="@color/md_white_1000"
         android:textSize="@dimen/_8ssp"
+        android:focusedByDefault="true"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_8sdp"
         android:padding="@dimen/_2sdp" />

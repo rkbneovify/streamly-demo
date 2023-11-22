@@ -1,11 +1,15 @@
 package com.adaptivemedia.streamlytv.streamly.search_channels;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -17,7 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +43,7 @@ import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,18 +57,28 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
     private RecyclerView rvSearch;
     String authToken;
     private static final int REQUEST_CODE = 1234;
+    private static final int SPEECH_REQUEST_CODE = 0;
 
     List<SearchModel> searchList = new ArrayList<>();
     SearchAdapter searchAdapter;
     private LinearLayout llNoDataFound,layoutSearch,layoutInternet;
     NetworkStateReceiver networkStateReceiver;
-
+    public static final Integer RecordAudioRequestCode = 1;
+    private SpeechRecognizer speechRecognizer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initViews();
         edSearch.setEnabled(false);
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            checkPermission();
+        }
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+
+        final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
@@ -90,8 +108,75 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
                 }
             }
         });
+
+
+        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+//                edSearch.setText("");
+//                edSearch.setHint("Listening...");
+                Toast.makeText(SearchActivity.this,"Listening...",Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onRmsChanged(float v) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] bytes) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int i) {
+
+            }
+
+            @Override
+            public void onResults(Bundle bundle) {
+
+                ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                edSearch.setText(data.get(0));
+            }
+
+            @Override
+            public void onPartialResults(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onEvent(int i, Bundle bundle) {
+
+            }
+        });
+
+        imgVoiceSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                speechRecognizer.startListening(speechRecognizerIntent);
+
+            }
+        });
     }
 
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.RECORD_AUDIO},RecordAudioRequestCode);
+        }
+    }
     private void initViews(){
         llNoDataFound = findViewById(R.id.llNoDataFound);
         edSearch = findViewById(R.id.ed_search);
@@ -110,39 +195,65 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
 //            speak.setText();
         }
 
-        imgVoiceSearch.setOnClickListener(v -> startVoiceRecognitionActivity());
+//        imgVoiceSearch.setOnClickListener(v ->
+//
+//         displaySpeechRecognizer());
+
     }
 
     /**
      * Fire an intent to start the voice recognition activity.
      */
-    private void startVoiceRecognitionActivity() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
-        if(intent.resolveActivity(getPackageManager())!=null)
-        {
-            startActivityForResult(intent, REQUEST_CODE);
-        }
-        else{
-            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-            // Populate the wordsList with the String values the recognition engine thought it heard
-            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            if (!matches.isEmpty()) {
-                String Query = matches.get(0);
-                edSearch.setText(Query.replace(" ",""));
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
+//    private void startVoiceRecognitionActivity() {
+//
+//
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+////        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice searching...");
+//        if(intent.resolveActivity(getPackageManager())!=null)
+//        {
+//            startActivityForResult(intent, REQUEST_CODE);
+//        }
+//        else{
+//            Toast.makeText(this, "Your Device Don't Support Speech Input", Toast.LENGTH_SHORT).show();
+//        }
+//
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        if (requestCode == RESULT_OK && null != data) {
+//            // Populate the wordsList with the String values the recognition engine thought it heard
+//            final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+////            if (!matches.isEmpty()) {
+////                String Query = matches.get(0);
+//                edSearch.setText(matches.get(0));
+////            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
+//    private void displaySpeechRecognizer() {
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//// This starts the activity and populates the intent with the speech text.
+//        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+//    }
+//
+//    // This callback is invoked when the Speech Recognizer returns.
+//// This is where you process the intent and extract the speech text from the intent.
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode,
+//                                    Intent data) {
+//        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+//            List<String> results = data.getStringArrayListExtra(
+//                    RecognizerIntent.EXTRA_RESULTS);
+//            String spokenText = results.get(0);
+//            edSearch.setText(spokenText);
+//            // Do something with spokenText.
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
     //#neovifyissueresolved28sep
     private void getChannelList() {
         layoutSearch.setVisibility(View.VISIBLE);
@@ -166,7 +277,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
 
                             searchList.add(new SearchModel(channelId, channelTitle, channelLogo,videoUrl));
                         }
-                        int rvWidth = getScreenWidth() - dpToPx(20);
+                        int rvWidth = getScreenWidth() - dpToPx(30);
                         searchAdapter = new SearchAdapter(SearchActivity.this, rvWidth ,searchList, SearchActivity.this);
                         rvSearch.setLayoutManager(new GridLayoutManager(SearchActivity.this, 4));
                         rvSearch.setAdapter(searchAdapter);
@@ -222,6 +333,7 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         super.onDestroy();
         networkStateReceiver.removeListener(this);
         this.unregisterReceiver(networkStateReceiver);
+        speechRecognizer.destroy();
     }
 
     @Override
@@ -230,7 +342,14 @@ public class SearchActivity extends FragmentActivity implements NetworkStateRece
         getChannelList();
 
     }
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == RecordAudioRequestCode && grantResults.length > 0 ){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
+        }
+    }
     @Override
     public void networkUnavailable() {
         layoutSearch.setVisibility(View.INVISIBLE);

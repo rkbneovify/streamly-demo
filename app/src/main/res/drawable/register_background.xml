@@ -5,7 +5,7 @@
         android:color="@color/md_white_1000"/> <!-- pressed -->
 
     <item android:state_focused="true"
-        android:drawable="@drawable/rectangle_focus"
+        android:drawable="@drawable/button_press"
         android:color="@color/app_blue_light"/> <!-- focused -->
 
 

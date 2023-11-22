@@ -147,7 +147,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
         searchRoomEd = findViewById(R.id.ed_search_room);
         this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
 
-        authToken = TokenStorage.readSharedToken(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN, null);
+        authToken = TokenStorage.readSharedTokenPasscode(UserRoomActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, null);
 
         Log.i(TAG, "onCreate: UserRoomActivity " + authToken);
         initViews();
@@ -257,7 +257,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
     private void latestRoomList() {
         progressBar.setVisibility(View.VISIBLE);
 //
-
+        Log.e(TAG, "hotelrooms authToken: " + authToken);
         AndroidNetworking.post(BASE_URL_TESTING + "/api/auth/get-hotelrooms")
                 .addHeaders("Authorization", "Bearer " + authToken)
                 .setPriority(Priority.HIGH)
@@ -265,6 +265,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                 .getAsJSONObject(new JSONObjectRequestListener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.e(TAG, "hotelrooms onResponse: " + response);
                         try {
 
                             if (response != null) {
@@ -337,6 +338,7 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
     private void roomListData() {
 
         progressBar.setVisibility(View.VISIBLE);
+        Log.e(TAG, "sync-session-with-room authToken: " + authToken);
 
 
         rvRoom.setLayoutManager(new GridLayoutManager(UserRoomActivity.this, 4));
@@ -359,6 +361,8 @@ public class UserRoomActivity extends FragmentActivity implements NetworkStateRe
                                 .getAsJSONObject(new JSONObjectRequestListener() {
                                     @Override
                                     public void onResponse(JSONObject response) {
+                                        Log.e(TAG, "sync-session-with-room onResponse: " + response);
+
                                         try {
                                             if (response.getInt("response_code") == 200) {
                                                 Log.i(TAG, "onResponse: roomListData 6 ");

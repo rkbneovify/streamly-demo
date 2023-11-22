@@ -90,7 +90,7 @@ public class SignOutDeviceWithQrCodeKeyDialog extends Dialog {
     private void deviceSignOutCall() {
         dialog.show();
         ApiInterface apiInterface= ApiClient.getClientHotelLogin().create(ApiInterface.class);
-        Call<DeviceSignOutResponse> call=apiInterface.postDeviceLogOutCall(deviceId);
+        Call<DeviceSignOutResponse> call=apiInterface.postDeviceLogOutCall("Bearer ",deviceId);
         call.enqueue(new Callback<DeviceSignOutResponse>() {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {

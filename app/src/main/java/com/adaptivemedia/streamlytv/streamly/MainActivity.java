@@ -1,16 +1,21 @@
 package com.adaptivemedia.streamlytv.streamly;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.leanback.widget.GuidedActionAdapter;
@@ -20,18 +25,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.R;
+import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SelectTimeZoneDialog;
 import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity;
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInModel;
 import com.adaptivemedia.streamlytv.streamly.model.GetIp;
-import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
+import com.adaptivemedia.streamlytv.streamly.new_log_in.NewLoginErrorResponse;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.geofence.GeofenceViewModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpDataModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.ip.IpViewModel;
 import com.adaptivemedia.streamlytv.streamly.playervideo.zipcode.ZipCodeDialog;
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiResponse;
+import com.adaptivemedia.streamlytv.streamly.splash.SplashActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.gson.Gson;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.adaptivemedia.streamlytv.streamly.dialogs.NoPlanDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.SessionExpiredDialog;
@@ -46,12 +55,20 @@ import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 
+import org.json.JSONObject;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,7 +89,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //    List<Datum> recentList;
 
     ArrayList<String> genreList = new ArrayList<String>();
-
+    String offset;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,12 +113,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "EPG Channels");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 //        getRecentList();
+        TimeZone tz = TimeZone.getDefault();
+        Calendar cal = GregorianCalendar.getInstance(tz);
+        int offsetInMillis = tz.getOffset(cal.getTimeInMillis());
 
+         offset = String.format("%02d:%02d", Math.abs(offsetInMillis / 3600000), Math.abs((offsetInMillis / 60000) % 60));
+        offset = (offsetInMillis >= 0 ? "+" : "-") + offset;
 
-
+        Log.e(TAG, "offset<<>>> " + offset);
        // getLatLong();
-       // getChannelList();
-        getIpAddress();
+        getChannelList(offset);
+//        getIpAddress();
+
+//        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+//            @Override
+//            public void handleOnBackPressed() {
+//                MainActivity.super.onBackPressed();
+//                // Handle the back button event
+//                Log.e(TAG, "Back");
+//            }
+//        };
+//        MainActivity.this.getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
     private void getIpAddress() {
@@ -117,6 +149,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
             @Override
             public void onFailure(Call<GetIp> call, Throwable t) {
+                String hometimezone = TokenStorage.readHomeTimeZoneOffset(MainActivity.this,ConstantUtility.HOMETIMEZONE,null);
+                getChannelList(hometimezone);
                 //add if fail (home zip)
             }
         });
@@ -178,7 +212,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         }
                         break;
                     case 401:
-                        CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+//                        CommonUtility.showToast(MainActivity.this, ipModel.getReason());
+                        SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(MainActivity.this);
+                        sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+                        sessionExpiredDialog.setCancelable(false);
+                        sessionExpiredDialog.show();
                         break;
                     case 403:
                         CommonUtility.showToast(MainActivity.this, ConstantUtility.SERVER_ISSUE);
@@ -240,7 +278,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 //        });
 //    }
 
-    public void fragment(String type, String offset) {
+    public void fragment(String type) {
 
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ChannelFragment(MainActivity.this, type, offset))
@@ -248,15 +286,66 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
 
     }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
+//        Log.d("debug", "we are here" + TokenStorage.readdate(MainActivity.this,ConstantUtility.DATE,null));
+
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_DPAD_UP:{
+                break;
+            }
+            case KeyEvent.KEYCODE_DPAD_DOWN:{
+                break;
+
+            }
+            case KeyEvent.KEYCODE_DPAD_RIGHT:{
+                break;
+
+            }
+            case KeyEvent.KEYCODE_DPAD_LEFT:{
+                break;
+
+            }
+            case KeyEvent.KEYCODE_BACK:{
+                Log.e(TAG, "Back>>>");
+                finish();
+                break;
+
+            }
+
+            case KeyEvent.KEYCODE_ESCAPE:{
+
+            }
+                Date c = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String reloaddate = df.format(c);
+                String saveddate = TokenStorage.readdate(MainActivity.this,ConstantUtility.DATE,null);
+                Log.d(TAG,
+                        "refresh if>>>" + saveddate
+                );
+                if(!saveddate.equals(reloaddate)){
+                    Log.e("MAX_CHANNEL_END_TIME","refresh >>>elsecurrent>>" + System.currentTimeMillis() );
+                    getChannelList(offset);
+                }else{
+                    Log.d(TAG,
+                            "refresh else>>>" + reloaddate
+                    );
+                }
+                Log.d("OnKey", "key pressed!" +TokenStorage.readdate(MainActivity.this,ConstantUtility.DATE,null));
+        }
+        return false;
+    }
     public void getChannelList(String offset) {
-        Log.e(TAG, "getChannelList: " + authToken);
+        genreList.clear();
+        Log.e(TAG, "getChannelList: >>" + authToken);
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<ChannelGenre> call = apiInterface.getChannelGenre("Bearer " + authToken);
         call.enqueue(new Callback<ChannelGenre>() {
             @Override
             public void onResponse(Call<ChannelGenre> call, Response<ChannelGenre> response) {
                 try {
+//                    Log.e(TAG,"error_msg>>>>>" + response.errorBody().charStream());
 
                     if (response.isSuccessful() && response.body() != null && response.code() != 401) {
 
@@ -268,7 +357,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
                         GenereAdapter adapter = new GenereAdapter(MainActivity.this, genreList,postion);
                         recyclerView.setAdapter(adapter);
-                        fragment(genreList.get(0),offset);
+                        fragment(genreList.get(0));
                     } else if (response.code() == 401) {
 
                         if (response.errorBody() != null) {
@@ -287,15 +376,58 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         String hourOffset = TokenStorage.readHomeTimeZoneOffset(MainActivity.this,ConstantUtility.HOMETIMEZONE,null);
                         getChannelList(hourOffset);
 
-                    } else if (response.code() == 402) {
+                    }
+                    else if (response.code() == 402) {
                         settingText.setVisibility(View.GONE);
                         imageSearch.setVisibility(View.GONE);
                         //CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
-                        NoPlanDialog noPlanDialog = new NoPlanDialog(MainActivity.this);
-                        noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
-                        noPlanDialog.setCancelable(false);
-                        noPlanDialog.show();
+//                        NoPlanDialog noPlanDialog = new NoPlanDialog(MainActivity.this);
+//                        noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+//                        noPlanDialog.setCancelable(false);
+//                        noPlanDialog.show();
+                        String remoteResponse= response.errorBody().string();
+
+                        JSONObject jObjError = new JSONObject(remoteResponse.trim());
+
+                        Log.e(TAG,"error_msg>>>>>" + jObjError.getString("message"));
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage(jObjError.getString("message")).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sigOutCall();
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus();
+                        final AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
                     }
+                    else if (response.code() == 410) {
+                        settingText.setVisibility(View.GONE);
+                        imageSearch.setVisibility(View.GONE);
+                        //CommonUtility.showToast(MainActivity.this, "Payment Required. Kindly buy subscription");
+//                        NoPlanDialog noPlanDialog = new NoPlanDialog(MainActivity.this);
+//                        noPlanDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
+//                        noPlanDialog.setCancelable(false);
+//                        noPlanDialog.show();
+                        String remoteResponse= response.errorBody().string();
+
+                        JSONObject jObjError = new JSONObject(remoteResponse.trim());
+
+                        Log.e(TAG,"error_msg>>>>>" + jObjError.getString("message"));
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage(jObjError.getString("message")).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sigOutCall();
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show().getButton(DialogInterface.BUTTON_POSITIVE).requestFocus();
+                        final AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e(TAG, "Exception " + ex);
@@ -310,6 +442,56 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         });
     }
 
+    private void sigOutCall() {
+        ApiInterface apiInterface= ApiClient.getClient().create(ApiInterface.class);
+        Call<LogInModel> call=apiInterface.postLogOutCall("Bearer "+authToken);
+        call.enqueue(new Callback<LogInModel>() {
+            @Override
+            public void onResponse(Call<LogInModel> call, Response<LogInModel> response) {
+                try{
+
+                    if (response.isSuccessful() && response.body()!=null && response.code()!=401){
+                        CommonUtility.showToast(MainActivity.this,response.body().getMessage());
+                        TokenStorage.clearSharedToken(MainActivity.this);
+                       startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                        finish();
+                    }
+                    else if (response.code()==401){
+                        TokenStorage.clearSharedToken(MainActivity.this);
+                       startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                      finish();
+
+
+                    }else if (response.code()==402){
+                        TokenStorage.clearSharedToken(MainActivity.this);
+                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                        finish();
+                    }
+
+                    else if (response.code()==404){
+                        TokenStorage.clearSharedToken(MainActivity.this);
+                        CommonUtility.showToast(MainActivity.this,ConstantUtility.SESSION_EXPIRED);
+                        startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                        finish();
+                    }
+                    else if (response.code()==500){
+                        CommonUtility.showToast(MainActivity.this,ConstantUtility.SERVER_ISSUE);
+                    }
+
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    Log.e(TAG, "Exception "+ex);
+                }
+                Log.e(TAG,"ResponCode "+response.code()+"");
+            }
+            @Override
+            public void onFailure(Call<LogInModel> call, Throwable t) {
+                Log.e(TAG,"failure: "+call+" "+t.getLocalizedMessage());
+                startActivity(new Intent(MainActivity.this, LogInActivity.class));
+                finish();
+            }
+        });
+    }
 
     private void initViews() {
         imageSearch = findViewById(R.id.image_search);
@@ -429,6 +611,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Log.e(TAG, "Back");
+        super.onBackPressed();
+    }
+
 
 }
 

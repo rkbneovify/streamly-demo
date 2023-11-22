@@ -4,16 +4,16 @@
     android:layout_width="wrap_content">
     <item>
         <shape android:shape="rectangle">
-<!--            <gradient-->
-<!--                android:startColor="#000428"-->
-<!--                android:endColor="#004E92"-->
-<!--                android:angle="45"/>-->
+            <gradient
+                android:startColor="@color/programguide_button_default"
+                android:endColor="@color/programguide_button_default"
+               />
 
-            <corners android:radius="3dp" />
-
+            <corners android:radius="6dp" />
             <stroke
+
                 android:width="2dp"
-                android:color="@color/app_blue_light"
+                android:color="@color/programguide_button_default"
                 />
         </shape>
     </item>

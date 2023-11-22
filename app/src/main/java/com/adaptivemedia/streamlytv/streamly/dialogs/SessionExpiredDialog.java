@@ -90,6 +90,12 @@ public class SessionExpiredDialog extends Dialog {
                         TokenStorage.clearSharedToken(context);
                         context.startActivity(new Intent(context, LogInActivity.class));
                         ((Activity)context).finish();
+
+
+                    }else if (response.code()==402){
+                        TokenStorage.clearSharedToken(context);
+                        context.startActivity(new Intent(context, LogInActivity.class));
+                        ((Activity)context).finish();
                     }
 
                     else if (response.code()==404){

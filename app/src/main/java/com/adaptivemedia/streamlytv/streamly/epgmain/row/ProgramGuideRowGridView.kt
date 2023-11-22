@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.annotation.RequiresApi
@@ -77,7 +78,9 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
             val focusedEntry = (focused as ProgramGuideItemView<*>).schedule
                 ?: return super.focusSearch(focused, direction)
             val fromMillis = programGuideManager.getFromUtcMillis()
+            Log.e("Programguidview","from"+ fromMillis.toString());
             val toMillis = programGuideManager.getToUtcMillis()
+            Log.e("Programguidview","to"+ fromMillis.toString());
 
 
             if (isDirectionStart(direction) || direction == View.FOCUS_BACKWARD) {
@@ -132,6 +135,7 @@ class ProgramGuideRowGridView @JvmOverloads constructor(context: Context, attrs:
             return target
         }catch (e:Exception){
             e.printStackTrace()
+            requestFocus()
         }
         return null
     }

@@ -1,18 +1,18 @@
 package com.adaptivemedia.streamlytv.streamly.epg.channel
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.HomeBean
 import com.adaptivemedia.streamlytv.streamly.ProgramGuideFragment
@@ -24,6 +24,7 @@ import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideSchedule
 import com.adaptivemedia.streamlytv.streamly.epg.ChannellistModel
 import com.adaptivemedia.streamlytv.streamly.epg.Datum
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage
+import com.adaptivemedia.streamlytv.streamly.log_in.LogInActivity
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiClient
 import com.adaptivemedia.streamlytv.streamly.retrofit_clients.ApiInterface
@@ -33,9 +34,10 @@ import com.adaptivemedia.streamlytv.streamly.utilities.NetworkKeys
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.gson.Gson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.programguide_fragment.*
+import org.json.JSONObject
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -52,7 +54,7 @@ import java.util.regex.Pattern
 import kotlin.random.Random
 
 
-class ChannelFragment(context: Context, val genre: String, val timeOff: String) :
+class ChannelFragment(context: Context, val genre: String, var timeOff: String) :
     ProgramGuideFragment<ChannelFragment.SimpleProgram>() {
     //class EpgFragment (context: Context): ProgramGuideFragment<EpgFragment.SimpleProgram>() {
     val eContext = context
@@ -67,6 +69,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
     val channel_showName_list = ArrayList<String>()
     val showName_list = ArrayList<String>()
     var id_matched: Int? = 0
+    var livedate: String? = null
     var verticalBean = VerticalHomeBean()
     var homeBean = HomeBean()
     var homelist = ArrayList<HomeBean>()
@@ -99,7 +102,8 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
     //#neovifyissueresolved28sep
     override fun onScheduleClicked(
         programGuideSchedule: ProgramGuideSchedule<SimpleProgram>,
-        channelId: String
+        channelId: String,
+        position: Int,callSign:String
     ) {
         val innerSchedule = programGuideSchedule.program
         if (innerSchedule == null) {
@@ -108,44 +112,55 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
             return
         }
         if (programGuideSchedule.isCurrentProgram) {
-            Log.e(
-                TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
-                        + "\nid: " + programGuideSchedule.id
-                        + "\ndisplaytitle : " + programGuideSchedule.displayTitle
-                        + "\ndisplaytitle : " + programGuideSchedule.startsAtMillis
-                        + "\ndisplaytitle : " + programGuideSchedule.endsAtMillis
-            )
+          //  Log.e(TAG, "::>>onScheduleClickedInternall: " + programGuideManager.getChannel(position)!!.imageUrl)
+            var name: String? = null
+            try {
+                name = programGuideManager.getChannel(position)!!.name.toString()
+                Log.e(
+                    TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
+                            + "\nid: " + programGuideSchedule.id
+                            + "\ndisplaytitle : " + programGuideSchedule.displayTitle
+                            + "\ndisplaytitle : " + programGuideSchedule.startsAtMillis
+                            + "\ndisplaytitle : " + programGuideSchedule.endsAtMillis
+                )
 
-            /*for (i in 0 until channel_showName_list.size) {
-               for (j in 0 until channels.size) {
-                   if (channel_showName_list[i].equals(channels.get(j).id)) {
+                /*for (i in 0 until channel_showName_list.size) {
+                   for (j in 0 until channels.size) {
+                       if (channel_showName_list[i].equals(channels.get(j).id)) {
 
-                       if (id_matched == 0) {
-                           Log.e(
-                                   TAG, "::::>>>if: \nchannelname: " + channels[j].name
-                                   + "\nid: " + channels[j].id
-                                   + "\nvideourl : " + channels[j].videoUrl
-                                   + "\n\n csl: " + channel_showName_list[i]
-                           )
-                           id_matched = 1
+                           if (id_matched == 0) {
+                               Log.e(
+                                       TAG, "::::>>>if: \nchannelname: " + channels[j].name
+                                       + "\nid: " + channels[j].id
+                                       + "\nvideourl : " + channels[j].videoUrl
+                                       + "\n\n csl: " + channel_showName_list[i]
+                               )
+                               id_matched = 1
 
-                           val intent1 = Intent(activity, PlayerActivity::class.java)
-                           intent1.putExtra("from", channels.get(j).videoUrl)
-                           startActivity(intent1)
+                               val intent1 = Intent(activity, PlayerActivity::class.java)
+                               intent1.putExtra("from", channels.get(j).videoUrl)
+                               startActivity(intent1)
 
+                           }
                        }
                    }
-               }
-           }*/
+               }*/
 
-            val intent1 = Intent(activity, PlayerActivity::class.java)
-            intent1.putExtra("from", innerSchedule.playUrl)
-            intent1.putExtra("id", channelId)
-            startActivity(intent1)
+                val intent1 = Intent(activity, PlayerActivity::class.java)
+                intent1.putExtra("from", innerSchedule.playUrl)
+                intent1.putExtra("id", channelId)
+                intent1.putExtra("callsign", callSign)
+                intent1.putExtra("timeOff", timeOff)
+//                intent1.putExtra("callsign", name)
+                startActivity(intent1)
+            }catch (e:Exception){
+                e.printStackTrace();
+                Log.e(TAG,"Exception: "+e.toString());
+            }
 
             Log.e(
                 TAG, "Open live player " + innerSchedule.metadata + "<<>>" + innerSchedule.playUrl
-                        + "<<>>" + innerSchedule.id
+                        + "<<>>callsign" + name
             )
         } else {
             Log.e(
@@ -156,11 +171,72 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
 
         }
     }
-
+    fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.d("debug", "we are here")
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP,
+            KeyEvent.KEYCODE_DPAD_DOWN,
+            KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_DPAD_LEFT,
+            KeyEvent.KEYCODE_BACK->{
+                                }
+            KeyEvent.KEYCODE_ESCAPE -> {
+                Log.d("OnKey", "key pressed!")
+                return true
+            }
+        }
+        return false
+    }
     override fun onResume() {
         super.onResume()
+        val tz = TimeZone.getDefault()
+        val cal = GregorianCalendar.getInstance(tz)
+        val offsetInMillis = tz.getOffset(cal.timeInMillis)
+
+        var offset = String.format(
+            "%02d:%02d", Math.abs(offsetInMillis / 3600000), Math.abs(
+                offsetInMillis / 60000 % 60
+            )
+        )
+        offset =  (if (offsetInMillis >= 0) "+" else "-") + offset
+//        timezone_count = Preferences.gmt!!.removePrefix("GMT")
+        Log.e(TAG, "reload::>>>" + offset + "timezon_count::>>" + timeOff)
+
+        if(timeOff.equals(offset)){
+            Log.e("test","change>>>>")
+//            requestRefresh()
+        }else{
+            Log.e(TAG, "reload::>>>" + offset + "timezon_count::>>else" + timeOff)
+
+            timeOff = offset
+            TokenStorage.saveCurrentTimeZoneOffset(
+                activity,
+                ConstantUtility.CURRENTTIMEZONE,
+                offset
+            )
+
+            requestRefresh()
+            Log.e("test","change>>>>else")
+        }
+        Log.e("MAX_CHANNEL_END_TIME","MAX_CHANNEL_END_TIME>>>>else" + MAX_CHANNEL_END_TIME + "current>>" + System.currentTimeMillis() + " time>>" + livedate)
+//        val date = "Tue Apr 23 16:08:28 GMT+05:30 2013"
+//        val formatter: DateTimeFormatter =
+//            DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+//        val localDate: LocalDateTime = LocalDateTime.parse(date, formatter)
+        val timeInMilliseconds: Long = MIN_CHANNEL_END_TIME.toInstant().toEpochMilli()
+        val reloaddate= SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        Log.d(TAG,
+            "Date in milli :: FOR API >= 26 >>> $reloaddate"
+        )
+//        if(livedate.equals(reloaddate)){
+//            Log.e("MAX_CHANNEL_END_TIME","MAX_CHANNEL_END_TIME>>>>else" + MAX_CHANNEL_END_TIME + "current>>" + System.currentTimeMillis() + " time>>" + livedate)
+//
+//        }else{
+//            requestRefresh()
+//        }
         id_matched = 0
     }
+
 
     override fun onScheduleSelected(programGuideSchedule: ProgramGuideSchedule<SimpleProgram>?) {
         val titleView = view?.findViewById<TextView>(R.id.programguide_detail_title)
@@ -169,6 +245,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
         metadataView?.text = programGuideSchedule?.program?.metadata
 //        val endTimeMetaDataView = view?.findViewById<TextView>(R.id.programguide_detail_end_time_metadata)
 //        endTimeMetaDataView?.text = programGuideSchedule?.program?.endTimeMetadata
+        Log.e(TAG, "meta data" +programGuideSchedule?.program?.metadata)
         val descriptionView = view?.findViewById<TextView>(R.id.programguide_detail_description)
         descriptionView?.text = programGuideSchedule?.program?.description
         val imageView = view?.findViewById<ImageView>(R.id.programguide_detail_image) ?: return
@@ -215,7 +292,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
             localDate.atStartOfDay().minusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS)
                 .atZone(DISPLAY_TIMEZONE)
         MIN_CHANNEL_END_TIME =
-            localDate.atStartOfDay().plusDays(1).withHour(21).truncatedTo(ChronoUnit.HOURS)
+            localDate.atStartOfDay().plusDays(0).withHour(13).truncatedTo(ChronoUnit.HOURS)
                 .atZone(DISPLAY_TIMEZONE)
         MAX_CHANNEL_END_TIME =
             localDate.atStartOfDay().plusDays(2).withHour(4).truncatedTo(ChronoUnit.HOURS)
@@ -242,10 +319,11 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                 call: Call<ChannellistModel?>,
                 response: Response<ChannellistModel?>
             ) {
+
                 try {
                     if (response.isSuccessful && response.body() != null && response.code() == 200) {
                         recentList = response.body()!!.data
-                        Log.e(TAG, "Data : "+response.body())
+                        Log.e(TAG, "Data : recent "+ Gson().toJson(response.body()))
                         getSecondApi(authToken)
                     } else if (response.code() == 401) {
                         if (response.errorBody() != null) {
@@ -259,17 +337,48 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                         CommonUtility.showToast(requireContext(), ConstantUtility.SESSION_EXPIRED)
                     } else if (response.code() == 500) {
                         CommonUtility.showToast(requireContext(), ConstantUtility.SERVER_ISSUE)
-                    } else if (response.code() == 402) {
-//                        (requireActivity() as MainActivity).settingText.setVisibility(View.GONE)
-//                        imageSearch.setVisibility(View.GONE)
-                        /*CommonUtility.showToast(
-                            requireContext(),
-                            "Payment Required. Kindly buy subscription"
-                        )*/
-                        val noPlanDialog = NoPlanDialog(eContext)
-                        noPlanDialog.window!!.setBackgroundDrawableResource(R.drawable.white_transparent)
-                        noPlanDialog.setCancelable(false)
-                        noPlanDialog.show()
+                    }
+                    else if (response.code() == 402) {
+
+                        val remoteResponse = response.errorBody()!!.string()
+
+                        val jObjError = JSONObject(remoteResponse.trim { it <= ' ' })
+
+                        Log.e(TAG, "error_msg>>>>>" + jObjError.getString("message"))
+                        val builder = AlertDialog.Builder(eContext)
+                        builder.setMessage(jObjError.getString("message")).setCancelable(false)
+                            .setPositiveButton(
+                                "Ok"
+                            ) { dialog, which ->
+                                val intent1 = Intent(activity, LogInActivity::class.java)
+                                startActivity(intent1)
+                                activity!!.finish()
+                                dialog.cancel()
+                            }
+                        val alertDialog = builder.create()
+                        alertDialog.show()
+
+                    }
+                    else if (response.code() == 410) {
+
+                        val remoteResponse = response.errorBody()!!.string()
+
+                        val jObjError = JSONObject(remoteResponse.trim { it <= ' ' })
+
+                        Log.e(TAG, "error_msg>>>>>" + jObjError.getString("message"))
+                        val builder = AlertDialog.Builder(eContext)
+                        builder.setMessage(jObjError.getString("message")).setCancelable(false)
+                            .setPositiveButton(
+                                "Ok"
+                            ) { dialog, which ->
+                                val intent1 = Intent(activity, LogInActivity::class.java)
+                                startActivity(intent1)
+                                activity!!.finish()
+                                dialog.cancel()
+                            }
+                        val alertDialog = builder.create()
+                        alertDialog.show()
+
                     }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -287,15 +396,18 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
     //#neovifyissueresolved28sep
     @SuppressLint("CheckResult")
     private fun getSecondApi(authToken: String) {
+        Log.e(TAG, "offset<<>>>timeOff<<>> $timeOff")
         var dayss: Int? = 1
   //      val timeZoneString = SimpleDateFormat("ZZZZZ").format(System.currentTimeMillis())
 //        val timeZoneString = "-08:00"
         val apiInterface = ApiClient.getClient3().create(ApiInterface::class.java)
-        Log.d("Time", timeOff)
-        Log.d("authTocken", "Bearer $authToken")
+        Log.e("Time", timeOff)
+        Log.e("authTocken", "Bearer $authToken")
         if (genre.lowercase().equals("all") or genre.lowercase().equals("recent")) {
+            homelist.clear()
             apiInterface.getScheduleListWithoutGenre(
                 timeOff,
+                NetworkKeys.KEY_DAYS,
                 NetworkKeys.KEY_APP_JSON,
                 "Bearer $authToken"
             )
@@ -307,7 +419,13 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                         val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
                         Log.e("### episodeData", "Data : " + showNames)
-                        Log.e("### episodeData", it.data.size.toString())
+                        Log.e(TAG,"### episodeData"+ it.data.size.toString())
+                        Log.e(TAG,"### episodeData>>>date"+ it.date.toString())
+                         livedate = it.date.toString()
+                        TokenStorage.saveddate(eContext, ConstantUtility.DATE, it.date.toString())
+
+
+                        Log.e(TAG,"### episodeData>>>livedate"+ livedate.toString())
 
                         //#neovifyissueresolved28sep
                         val p: Pattern = Pattern.compile("\\d+")
@@ -385,6 +503,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
 
                                                 showNames.add(it.title)
                                                 showName_list.add(it.title)
+//                                                endTimesss = homelist.last().end_time
 
                                                 val st =
                                                     Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
@@ -419,7 +538,8 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                                         setState(State.Error)
                                     }
                                 }
-                            } else {
+                            }
+                            else {
                                 verticalBean = VerticalHomeBean()
                                 verticalBean.headerTitle = it.data[i].callSign
                                 verticalBean.channelId = it.data[i].getmId();
@@ -434,7 +554,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
 
                                     showNames.add(it.title)
                                     showName_list.add(it.title)
-
+//
                                     val st =
                                         Instant.ofEpochMilli((it.startTz.toString() + "000").toLong())
                                     val et =
@@ -446,6 +566,9 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                                     homeBean.end_time = et
                                     homelist.add(homeBean)
                                 }
+                                Log.e("### verticalList ", "ee??>>else" + homelist.size)
+
+
 
                                 verticalBean.allItemsInSection = homelist
                                 channel_showName_list.add(it.data[i].getmId().toString())
@@ -486,8 +609,8 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                                         channels.get(k).videoUrl.toString(),
                                         channels.get(k).imageUrl.toString()
                                     )
-                                    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
-                                    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
+                                  //  Log.e(TAG, "getSecondApi: " + channels.get(k).id)
+                                  //  Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
 
 
                                     scheduleList.add(schedule)
@@ -509,7 +632,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
 
 
                         setData(pair.first, pair.second, localDate, dayss!!)
-                        Log.e("###$TAG", "content set ")
+                        Log.e("###$TAG", "content set anand >>" + it.responseCode.toInt())
                         setState(State.Content)
 
                         if (it.responseCode.toInt() == 401) {
@@ -544,9 +667,11 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                     })
         }
         else {
+            homelist.clear()
             apiInterface.getScheduleListWithTimeZone(
                 timeOff,
                 genre,
+                NetworkKeys.KEY_DAYS,
                 NetworkKeys.KEY_APP_JSON,
                 "Bearer $authToken"
             )
@@ -554,10 +679,10 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                 .subscribe(
                     {
                         //success
-                        Log.e(TAG, "GET SECHEDULELIST " + it.message);
+                        Log.e(TAG, "GET SECHEDULELIST >>>.>>>>" + it.message);
                         val showNames = ArrayList<String>()
 //                           for(i in 0..it.data.size-1){
-                        Log.e("### episodeData", it.data.size.toString())
+                        Log.e(TAG,"### episodeData>>>>>>>>>>" + it.data.size.toString())
 
                         //#neovifyissueresolved28sep
                         val p: Pattern = Pattern.compile("\\d+")
@@ -598,6 +723,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                                 val et =
                                     Instant.ofEpochMilli((it.endTz.toString() + "000").toLong())
 
+                                Log.e(TAG,"st et : "+st +" "+et)
                                 homeBean.title = it.title
                                 homeBean.description = it.description
                                 homeBean.start_time = st
@@ -643,8 +769,8 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
                                         channels.get(k).videoUrl.toString(),
                                         channels.get(k).imageUrl.toString()
                                     )
-                                    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
-                                    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
+                                //    Log.e(TAG, "getSecondApi: " + channels.get(k).id)
+                                //    Log.e(TAG, "getSecondApi 2 : " + channels.get(k).name)
 
                                     scheduleList.add(schedule)
                                     nextTime = endTime
@@ -743,8 +869,8 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
     ): ProgramGuideSchedule<SimpleProgram> {
         val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
-        var metadata = getDate(startTime.toEpochMilli(), "HH:mm")
-        val endTimeMetadata = getDate(endTime.toEpochMilli(), "HH:mm")
+        var metadata = getDate(startTime.toEpochMilli(), "h:mm a")!!.lowercase()
+        val endTimeMetadata = getDate(endTime.toEpochMilli(), "h:mm a")!!.lowercase()
         metadata = "Starts at $metadata - End at $endTimeMetadata"
         return ProgramGuideSchedule.createScheduleWithProgram(
             id, startTime, endTime, true, scheduleName,
@@ -771,7 +897,7 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         val calendar: Calendar = Calendar.getInstance()
         calendar.setTimeInMillis(milliSeconds)
-        return formatter.format(calendar.getTime())
+        return formatter.format(calendar.getTime()).lowercase()
     }
 
     private fun randomTimeBetween(min: ZonedDateTime, max: ZonedDateTime): ZonedDateTime {
@@ -786,5 +912,4 @@ class ChannelFragment(context: Context, val genre: String, val timeOff: String) 
         // You can refresh other data here as well.
         requestingProgramGuideFor(currentDate)
     }
-
 }

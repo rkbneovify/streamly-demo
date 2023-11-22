@@ -7,17 +7,31 @@
     tools:context=".streamly.playervideo.PlayerActivity"
     android:keepScreenOn="true">
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black">
 
+<!--        <com.google.android.exoplayer2.ui.PlayerView-->
+<!--            android:id="@+id/playerView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:resize_mode="fixed_width"-->
+<!--            app:show_buffering="when_playing"-->
+<!--            app:show_fastforward_button="true"-->
+<!--            app:show_next_button="false"-->
+<!--            app:show_previous_button="false"-->
+<!--            app:show_rewind_button="true"-->
+<!--            app:show_subtitle_button="true"-->
+<!--            app:use_artwork="true"-->
+<!--            app:use_controller="true" />-->
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/playerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:focusedByDefault="true">
 
 
         </com.google.android.exoplayer2.ui.PlayerView>
@@ -25,11 +39,12 @@
 
         <ImageView
             android:id="@+id/logo"
-
             android:layout_width="120dp"
             android:layout_height="80dp"
             android:alpha="0.5"
+            android:visibility="gone"
             android:padding="15dp"
+            android:focusable="false"
             android:src="@mipmap/streamly_logo" />
         <!--        android:alpha="0.6"-->
 
@@ -43,22 +58,30 @@
             android:background="@drawable/options_states2"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:focusedByDefault="true"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/ic_baseline_keyboard_arrow_left_24"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/load"
             android:layout_width="@dimen/_22sdp"
             android:layout_height="@dimen/_22sdp"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/app_blue_light"
             android:foregroundGravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/exo_quality"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:alpha="0.5"
+            android:backgroundTint="@color/colorAccent"
+            android:focusable="false"
+            android:padding="15dp"
             android:visibility="visible"
-            android:backgroundTint="@color/app_blue_light"/>
-
-
+            app:srcCompat="@drawable/setting_icon"
+            tools:visibility="visible" />
 
     </RelativeLayout>
 
@@ -87,6 +110,7 @@
                 android:textColor="@android:color/white"
                 android:layout_gravity="start"
                 android:textSize="@dimen/_10sdp"
+                android:focusable="false"
                 android:fontFamily="@font/helvetica_neue_medium"
                 android:layout_height="wrap_content"/>
 
@@ -96,7 +120,7 @@
                 android:layout_marginEnd="5dp"
                 android:focusableInTouchMode="true"
                 android:background="@drawable/options_states"
-                android:focusable="true"
+                android:focusable="false"
                 android:layout_alignParentEnd="true"
                 android:layout_width="@dimen/_35sdp"
                 android:src="@drawable/close"

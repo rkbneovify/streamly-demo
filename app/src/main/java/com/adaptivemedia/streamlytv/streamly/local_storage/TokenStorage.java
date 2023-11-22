@@ -25,6 +25,17 @@ public class TokenStorage {
         editor.putString(access_token, access_token_Value);
         editor.apply();
     }
+    public static String readOnboardingtour(Context context, String access_tour, String access_tour_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(access_tour, access_tour_Value);
+    }
+
+public static void savedOnboardingtour(Context context, String access_tour, String access_tour_Value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(access_tour, access_tour_Value);
+        editor.apply();
+    }
 
     public static String readRoom(Context context, String room, String room_value) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
@@ -35,6 +46,19 @@ public class TokenStorage {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(room, room_value);
+        editor.apply();
+    }
+
+
+ public static String readdate(Context context, String date, String date_value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(date, date_value);
+    }
+
+    public static void saveddate(Context context, String date, String date_value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(date, date_value);
         editor.apply();
     }
 

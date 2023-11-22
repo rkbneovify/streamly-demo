@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideChannel
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideSchedule
+import com.adaptivemedia.streamlytv.streamly.epg.channel.ChannelFragment
 import com.adaptivemedia.streamlytv.streamly.local_storage.TokenStorage
 import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility
@@ -80,7 +81,7 @@ class EpgFragment(
     //#neovifyissueresolved28sep
     override fun onScheduleClicked(
         programGuideSchedule: ProgramGuideSchedule<SimpleProgram>,
-        channelId: String
+        channelId: String,position: Int,callSign:String
     ) {
         val innerSchedule = programGuideSchedule.program
         if (innerSchedule == null) {
@@ -89,6 +90,9 @@ class EpgFragment(
             return
         }
         if (programGuideSchedule.isCurrentProgram) {
+            Log.e(TAG, "::>>onScheduleClickedInternall: " + programGuideManager.getChannel(position)!!.imageUrl)
+            var name: String? = null
+            name = programGuideManager.getChannel(position)!!.name.toString()
             Log.e(
                 TAG, "::::>>>if: \nprogramGuideSchedule.program: " + programGuideSchedule.program
                         + "\nid: " + programGuideSchedule.id
@@ -123,12 +127,13 @@ class EpgFragment(
                     channels[programGuideManager.getChannelIndex(it)!!].name
                 }
             }
-            Log.e(TAG, "current_channel:$channel")*/
 
+            Log.e(TAG, "current_channel:$channel")*/
+//           var name = programGuideManager.getChannel(position)!!.name.toString()
             val intent1 = Intent(activity, PlayerActivity::class.java)
             intent1.putExtra("from", innerSchedule.playUrl)
             intent1.putExtra("channel_name", channelId)
-//            intent1.putExtra("callsign", channels[].name)
+            intent1.putExtra("callsign", name)
 //            intent1.putExtra("from", innerSchedule.)
             startActivity(intent1)
 
@@ -454,7 +459,7 @@ class EpgFragment(
     ): ProgramGuideSchedule<SimpleProgram> {
 //        val id = Random.nextLong(100_000L)
 //        val metadata = DateTimeFormatter.ofPattern("'Starts at' HH:mm").format(startTime)
-        val metadata = getDate(startTime.toEpochMilli(), "'Starts at' HH:mm")
+        val metadata = getDate(startTime.toEpochMilli(), "'Starts at' h:mm a")
         return ProgramGuideSchedule.createScheduleWithProgram(
             id,
             startTime,
@@ -500,4 +505,6 @@ class EpgFragment(
         // You can refresh other data here as well.
         requestingProgramGuideFor(currentDate)
     }
+
+
 }

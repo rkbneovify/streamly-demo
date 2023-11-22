@@ -71,7 +71,7 @@
                 android:layout_marginTop="4dp"
                 android:focusable="false"
                 android:fontFamily="@font/helvetica_neue_medium"
-                android:text="Total Connected Devices 5"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/md_white_1000"
                 android:textSize="@dimen/_12ssp"

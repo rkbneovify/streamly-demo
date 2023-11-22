@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Streamly TV</string>
+    <string name="app_name">StreamlyTV</string>
     <string name="sign_in">Sign In</string>
     <string name="signIn">Sign in</string>
     <string name="hotelSignIn">QR Login</string>
@@ -8,9 +8,11 @@
     <string name="password">Password</string>
     <string name="register_account">Don\'t have an account?</string>
     <string name="remember">Remember me</string>
+    <string name="build_ver">Ver : 1.22(52)</string>
     <string name="register_now">Register Now</string>
     <string name="login_using_passcode">Login Using Passcode</string>
     <string name="need_help">Need Help?</string>
+    <string name="dont_show_again">Don\'t show again</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -39,6 +41,7 @@
     <string name="privacy_right">Privacy &amp; Policies</string>
     <string name="policy">Policies</string>
     <string name="sure_signout">Are you sure you want to logout from this device?</string>
+    <string name="this_channel_is_not_available_in_your_location">This Channel is not available in your location.</string>
     <string name="sure_device_signout">Do you want to remove the old Session?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -47,7 +50,8 @@
     <string name="homeTimeZone">Home TimeZone</string>
 
 
-    <string name="programguide_title_no_program">No broadcast</string>
+    <string name="programguide_title_no_program">Loading..</string>
+    <string name="programguide_title_horse_racing">Horse Racing</string>
     <string name="programguide_error_fetching_content">Oops! It looks like technical issues have taken our channels offline! We\'re working on it, and will have the channels back up as soon as possible. </string>
 
     <string name="programguide_day_yesterday">Yesterday</string>
@@ -114,7 +118,7 @@
     <string name="open_link_browser">Open the link in a browser</string>
     <string name="demo_link">streamly.co/tv/562888</string>
     <string name="e_m_enter_device_name">Please Enter the Device Name</string>
-    <string name="a_name_will_help_identify_your_device_when_naccessing_it_from_other_device_like_your_phone_ntable_or_computer">A name will help identify your device when \naccessing it from other device like your phone,\ntable, or computer</string>
+    <string name="a_name_will_help_identify_your_device_when_naccessing_it_from_other_device_like_your_phone_ntable_or_computer">A name will help identify your device when \naccessing it from other device like your phone,\ntablet, or computer</string>
     <string name="choose_a_name_for_your_streamly_ndevice">Choose a name for your Streamly \ndevice</string>
     <string name="room_selection_msg">Are you sure to select this room?</string>
     <string name="logout_message">Are you sure you want to logout?</string>
@@ -128,4 +132,6 @@
     <string name="player_error">"Due to some technical reason, channel gets interrupted. Kindly try again later"</string>
     <string name="registered_devices">Registered Devices</string>
     <string name="delete_account">Delete Account</string>
+    <string name="close">Close</string>
+    <string name="try_again">Try again</string>
 </resources>

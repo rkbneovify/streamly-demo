@@ -1,6 +1,8 @@
 package com.adaptivemedia.streamlytv.streamly
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -24,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideChannel
 import com.adaptivemedia.streamlytv.streamly.entity.ProgramGuideSchedule
+import com.adaptivemedia.streamlytv.streamly.epg.channel.ChannelFragment
 import com.adaptivemedia.streamlytv.streamly.item.ProgramGuideItemView
 import com.adaptivemedia.streamlytv.streamly.row.ProgramGuideRowAdapter
 import com.adaptivemedia.streamlytv.streamly.timeline.ProgramGuideTimeListAdapter
@@ -38,7 +41,9 @@ import org.threeten.bp.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listener, ProgramGuideGridView.ChildFocusListener,
+
+abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listener,
+    ProgramGuideGridView.ChildFocusListener,
     ProgramGuideGridView.ScheduleSelectionListener<T>, ProgramGuideHolder<T> {
 
     companion object {
@@ -79,7 +84,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     protected open val SELECTABLE_DAYS_IN_FUTURE = 7
     protected open val USE_HUMAN_DATES = true
     @Suppress("LeakingThis")
-    protected open val DATE_WITH_DAY_FORMATTER = DateTimeFormatter.ofPattern("EEE d MMM").withLocale(DISPLAY_LOCALE)
+    protected open val DATE_WITH_DAY_FORMATTER = DateTimeFormatter.ofPattern("EEE, MMM d yyyy").withLocale(DISPLAY_LOCALE)
     protected open val DISPLAY_CURRENT_TIME_INDICATOR = true
 
     override val DISPLAY_SHOW_PROGRESS = true
@@ -117,6 +122,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     private var timelineStartMillis = 0L
 
     override val programGuideManager = ProgramGuideManager<T>()
+    val sharedPrefFile = "kotlinsharedpreference"
 
     private var gridWidth = 0
     private var widthPerHour = 0
@@ -133,6 +139,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             with(System.currentTimeMillis()) {
                 updateCurrentTimeIndicator(this)
                 updateCurrentProgramProgress(this)
+//                autoScrollToBestProgramme()
             }
             progressUpdateHandler.postDelayed(this, TIME_INDICATOR_UPDATE_INTERVAL)
         }
@@ -170,7 +177,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * Called when the user has clicked on a schedule.
      * The schedule parameter contains all the info you need for taking an action.
      */
-    abstract fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<T>, channelId: String)
+    abstract fun onScheduleClicked(programGuideSchedule: ProgramGuideSchedule<T>, channelId: String,position: Int,callSign:String)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Overriding the layout ID is also possible, so that if your layout naming follows a specific
@@ -265,9 +272,15 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * the current timestamp.
      */
     private fun setJumpToLiveButtonVisible(visible: Boolean) {
-        jumpToLive?.visibility = if (visible) View.VISIBLE else View.GONE
+//        jumpToLive?.visibility = if (visible) View.VISIBLE else View.GONE
+        jumpToLive?.visibility = View.VISIBLE
+//        jumpToLive?.text = if (visible) "Go Live" else "Now"
+        jumpToLive?.text = if (visible) "Go Live" else "Live"
+        if (visible)
+            jumpToLive?.setBackgroundResource(R.drawable.programguide_button_background)
+        else
+            jumpToLive?.setBackgroundResource(R.drawable.livebutton)
     }
-
 
     /**
      * Sets the selected schedule internally.
@@ -348,7 +361,10 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             timelineRow.recycledViewPool.setMaxRecycledViews(R.layout.programguide_item_time, resources.getInteger(R.integer.programguide_max_recycled_view_pool_time_row_item))
         }
         val jumpToLive = view.findViewById<View>(R.id.programguide_jump_to_live)!!
-        jumpToLive.setOnClickListener { autoScrollToBestProgramme() }
+        jumpToLive.setOnClickListener {
+            updateCurrentProgramProgress()
+            autoScrollToBestProgramme()
+        }
     }
 
     /**
@@ -361,6 +377,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             // Only get data when fragment is created first time, not recreated from backstack.
             // Also when the content was not loaded yet before.
             requestRefresh()
+            Log.e(TAG,"change>>>>else check")
         } else {
             setTopMarginVisibility(isTopMenuVisible())
             timeRow?.alpha = 1f
@@ -409,6 +426,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             while (i < n) {
                 grid.getChildAt(i).findViewById<View>(R.id.row).scrollBy(dx, 0)
                 ++i
+                updateCurrentDateText()
             }
         }
     }
@@ -419,12 +437,15 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      */
     protected fun updateCurrentTimeIndicator(now: Long = System.currentTimeMillis()) {
         // No content, of feature is disabled -> hide
+        updateCurrentDateText()
+
         if (currentState != State.Content || !DISPLAY_CURRENT_TIME_INDICATOR) {
             currentTimeIndicator?.visibility = View.GONE
             return
         }
 
         val offset = ProgramGuideUtil.convertMillisToPixel(timelineStartMillis, now) - (timeRow?.currentScrollOffset ?: 0) - timelineAdjustmentPixels
+        Log.e(TAG, "offset "+offset.toString());
         if (offset < 0) {
             currentTimeIndicator?.visibility = View.GONE
             setJumpToLiveButtonVisible(currentState != State.Loading && (programGuideManager.getStartTime() <= now && now <= programGuideManager.getEndTime()))
@@ -438,12 +459,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             }
 
 
-            currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
-            /* if (currentTimeIndicator?.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+//            currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
+             if (currentTimeIndicator?.layoutDirection == View.LAYOUT_DIRECTION_LTR) {
                  currentTimeIndicator?.translationX = offset - currentTimeIndicatorWidth / 2f
              } else {
                  currentTimeIndicator?.translationX = -offset - currentTimeIndicatorWidth / 2f
-             }*/
+             }
 
             currentTimeIndicator?.visibility = View.VISIBLE
             setJumpToLiveButtonVisible(currentState != State.Loading && offset > gridWidth)
@@ -481,6 +502,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             progressUpdateHandler.removeCallbacks(progressUpdateRunnable)
             progressUpdateHandler.post(progressUpdateRunnable)
         }
+
+        autoScrollToBestProgramme()
     }
 
     /**
@@ -617,7 +640,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
     private fun updateCurrentDateText() {
         // The day might have changed
         val viewportStartTime = Instant.ofEpochMilli(programGuideManager.getFromUtcMillis()).atZone(DISPLAY_TIMEZONE)
-        var dateText = DATE_WITH_DAY_FORMATTER.format(viewportStartTime)
+        var dateText = DATE_WITH_DAY_FORMATTER.format(viewportStartTime).lowercase()
         if (dateText.endsWith(".")) {
             dateText = dateText.dropLast(1)
         }
@@ -705,15 +728,16 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * The gridview calls this method on the fragment when the focus changes on one of their child changes.
      */
     override fun onSelectionChanged(schedule: ProgramGuideSchedule<T>?) {
+        ProgramGuideUtil.lastClickedSchedule = schedule
         setSelectedSchedule(schedule)
     }
 
     /**
      * This method is called from the ProgramGuideListAdapter, when the OnClickListener is triggered.
      */
-    override fun onScheduleClickedInternal(schedule: ProgramGuideSchedule<T>, channelId: String) {
+    override fun onScheduleClickedInternal(schedule: ProgramGuideSchedule<T>, channelId: String,position: Int,callSign:String) {
         ProgramGuideUtil.lastClickedSchedule = schedule
-        onScheduleClicked(schedule, channelId)
+        onScheduleClicked(schedule, channelId,position,callSign)
     }
 
     /**
@@ -744,7 +768,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * @param specificChannelId The specific channel ID to scroll. Will be the first channel in
      * the list of not specified.
      */
-    private fun autoScrollToBestProgramme(useTimeOfDayFilter: Boolean = false, specificChannelId: String? = null) {
+     fun autoScrollToBestProgramme(useTimeOfDayFilter: Boolean = false, specificChannelId: String? = null) {
         val nowMillis = Instant.now().toEpochMilli()
         // If the current time is within the managed frame, jump to it.
         if (!useTimeOfDayFilter && programGuideManager.getStartTime() <= nowMillis && nowMillis <= programGuideManager.getEndTime()) {
@@ -752,22 +776,68 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             if (currentProgram == null) {
                 Log.w(TAG, "Can't scroll to current program because schedule not found.")
             } else {
+                val sharedPreferences: SharedPreferences = activity!!.getSharedPreferences(
+                    sharedPrefFile,
+                    Context.MODE_PRIVATE
+                )
+                var time: String? = ""
+                if (sharedPreferences.contains("current_time")) {
+                    val current_time = sharedPreferences.getString("current_time", "defaultname")
+                    time = current_time!!
+                    Log.e(TAG, "::>>if...current_time: " + current_time + "<<>>time: " + time)
+                    programGuideGrid.requestFocus()
+
+                } else {
+                    Log.e(TAG, "::>>else to go.....")
+                    programGuideGrid.requestFocus()
+                }
                 Log.i(TAG, "Scrolling to ${currentProgram.displayTitle}, started at ${currentProgram.startsAtMillis}")
-                if (!programGuideManager.jumpTo(currentProgram.startsAtMillis)) {
+                val MINIT_IN_MILLIS = HALF_HOUR_IN_MILLIS / 2
+                if (!programGuideManager.jumpTo(nowMillis - HALF_HOUR_IN_MILLIS)) {
                     programGuideGrid?.requestFocus()
                 }
             }
         } else {
-            // The day is not today.
-            // Go to the selected time of day.
-            val timelineDate = Instant.ofEpochMilli((programGuideManager.getStartTime() + programGuideManager.getEndTime()) / 2).atZone(DISPLAY_TIMEZONE)
+            val timelineDate =
+                Instant.ofEpochMilli((programGuideManager.getStartTime() + programGuideManager.getEndTime()) / 2)
+                    .atZone(DISPLAY_TIMEZONE)
             val scrollToHour = when (currentlySelectedTimeOfDayFilterIndex) {
                 0 -> MORNING_STARTS_AT_HOUR
                 1 -> MORNING_UNTIL_HOUR
                 else -> AFTERNOON_UNTIL_HOUR
             }
             val scrollToMillis =
-                timelineDate.withHour(scrollToHour).truncatedTo(ChronoUnit.HOURS).toEpochSecond() * 1000
+                timelineDate.withHour(scrollToHour).truncatedTo(ChronoUnit.HOURS)
+                    .toEpochSecond() * 1000
+            val sharedPreferences: SharedPreferences = activity!!.getSharedPreferences(
+                sharedPrefFile,
+                Context.MODE_PRIVATE
+            )
+            var time: String? = null
+            if (sharedPreferences.contains("current_time")) {
+//                bottom_detail!!.visibility = GONE
+//                programguide_detail_image!!.visibility = GONE
+
+                val current_time = sharedPreferences.getString("current_time", "defaultname")
+                time = current_time!!
+//                Log.e(TAG, "::>>current_time: " + current_time + "<<>>time: " + time)
+            } else {
+//                bottom_detail!!.visibility = GONE
+//                programguide_detail_image!!.visibility = GONE
+
+                time = System.currentTimeMillis().toString()
+//                time = "1600232561"
+            }
+            // The day is not today.
+            // Go to the selected time of day.
+//            val timelineDate = Instant.ofEpochMilli((programGuideManager.getStartTime() + programGuideManager.getEndTime()) / 2).atZone(DISPLAY_TIMEZONE)
+//            val scrollToHour = when (currentlySelectedTimeOfDayFilterIndex) {
+//                0 -> MORNING_STARTS_AT_HOUR
+//                1 -> MORNING_UNTIL_HOUR
+//                else -> AFTERNOON_UNTIL_HOUR
+//            }
+//            val scrollToMillis =
+//                timelineDate.withHour(scrollToHour).truncatedTo(ChronoUnit.HOURS).toEpochSecond() * 1000
             if (programGuideManager.jumpTo(scrollToMillis)) {
                 programGuideGrid?.requestFocus()
             }
@@ -787,5 +857,6 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             autoScrollToBestProgramme(useTimeOfDayFilter = false, specificChannelId = channelId)
         }
     }
+
 }
 

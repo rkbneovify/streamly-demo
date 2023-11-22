@@ -15,11 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
+import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.adaptivemedia.streamlytv.streamly.utilities.CommonUtility;
 import com.adaptivemedia.streamlytv.streamly.utilities.ConstantUtility;
 import com.bumptech.glide.Glide;
 import com.adaptivemedia.streamlytv.R;
-import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 
 import java.util.List;
 
@@ -53,6 +53,10 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
             holder.card.requestFocus();
             holder.card.setSelected(true);
             holder.card.setFocusable(true);
+            holder.card.setBackground(ctx.getResources().getDrawable(R.drawable.option_press3));
+        }else{
+            holder.card.setBackground(ctx.getResources().getDrawable(R.drawable.option_channels2));
+
         }
         holder.textView.setText(channelList.get(position).getId().toString());
         Glide.with(ctx).load(channelList.get(position).getLogo()).into(holder.imageView);
@@ -60,7 +64,7 @@ public class AllChannelAdapter extends RecyclerView.Adapter<AllChannelAdapter.My
         holder.card.setOnClickListener(view -> {
 
             if (ctx instanceof PlayerActivity) {
-                ((PlayerActivity)ctx).playNext(channelList.get(position).getId().toString() , channelList.get(position).getUrl(),channelList.get(position).getId().toString(),position);
+                ((PlayerActivity)ctx).playNext(channelList.get(position).getId().toString() , channelList.get(position).getUrl(),channelList.get(position).getId().toString(),channelList.get(position).getCallSign(),position);
             }
             else{
                 Log.e("playerac" , "no");

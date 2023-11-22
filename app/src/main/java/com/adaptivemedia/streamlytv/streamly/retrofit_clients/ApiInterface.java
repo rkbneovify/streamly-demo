@@ -24,6 +24,7 @@ import com.adaptivemedia.streamlytv.streamly.settings.privacy.PrivacyPolicyModel
 import com.adaptivemedia.streamlytv.streamly.settings.profile.profilemodel.ProfileModel;
 import com.adaptivemedia.streamlytv.streamly.settings.registerdevice.ConnectedDeviceModel;
 import com.adaptivemedia.streamlytv.streamly.settings.support.SupportModel;
+import com.adaptivemedia.streamlytv.streamly.terms.RegisteredDevicesModel;
 import com.adaptivemedia.streamlytv.streamly.termsofuses.TermsModel;
 import com.adaptivemedia.streamlytv.streamly.user_room.select_room_response.SelectedHotelRoomResponse;
 import com.adaptivemedia.streamlytv.streamly.utilities.NetworkKeys;
@@ -78,7 +79,7 @@ public interface ApiInterface {
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @POST("/api/auth/same-device-id-logout")
-    Call<DeviceSignOutResponse> postDeviceLogOutCall(@Query(NetworkKeys.KEY_ID) String deviceid);
+    Call<DeviceSignOutResponse> postDeviceLogOutCall(@Header(NetworkKeys.KEY_AUTH) String authorization_token,@Query(NetworkKeys.KEY_ID) String deviceid);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/profile")
@@ -87,6 +88,9 @@ public interface ApiInterface {
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/connecteddevice")
     Call<Loggedindeviceinfolist> getConnectedDevice(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
+  @Headers(NetworkKeys.KEY_CONTENT_TYPE)
+    @GET("/api/auth/connecteddevice")
+    Call<RegisteredDevicesModel> getConnectedDevicesnew(@Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     @Headers(NetworkKeys.KEY_CONTENT_TYPE)
     @GET("/api/auth/check")
@@ -129,7 +133,7 @@ public interface ApiInterface {
 
     //    @Headers("User-Agent: iphone")
     @GET("/api/auth/channeldayschdeule")
-//api/auth/channeldayschdeule
+     //api/auth/channeldayschdeule
     Observable<com.adaptivemedia.streamlytv.streamly.channelschedule.ChannelScheduleModel> getScheduleList(@Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     /**
@@ -137,14 +141,14 @@ public interface ApiInterface {
      */
     @Headers("Accept: application/json")
     @GET("/api/auth/channeldayschdeuletzwithoffset")
-    Observable<com.adaptivemedia.streamlytv.streamly.channelschedule.ChannelScheduleModel> getScheduleListWithTimeZone(@Query("hoursoffset") String timeZone, @Query("genre") String genre, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
+    Observable<com.adaptivemedia.streamlytv.streamly.channelschedule.ChannelScheduleModel> getScheduleListWithTimeZone(@Query("hoursoffset") String timeZone, @Query("genre") String genre,@Query("days") String days, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     /**
      * this function will run for all channels that's why we call channeldayschdeule api without genre
      */
     @Headers("Accept: application/json")
     @GET("/api/auth/channeldayschdeuletzwithoffset")
-    Observable<ChannelScheduleModel> getScheduleListWithoutGenre(@Query("hoursoffset") String timeZone, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
+    Observable<ChannelScheduleModel> getScheduleListWithoutGenre(@Query("hoursoffset") String timeZone,@Query("days") String days, @Header(NetworkKeys.KEY_ACCEPT) String applicationJson, @Header(NetworkKeys.KEY_AUTH) String authorization_token);
 
     //    @Headers("User-Agent: iphone")
     @GET("/api/auth/channeldayschdeulepaginate")

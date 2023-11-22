@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -34,10 +36,11 @@ public class SupportDialog extends Dialog {
     private Context context;
     private Button btnOk;
     private RecyclerView rvSupport;
-    private ProgressBar progressBar;
     private List<SupportTextType> list=new ArrayList<>();
-    private TextView messageText;
-
+    private TextView messageText, emailText, mobileText,mobileText2;
+    ProgressBar progressBar;
+    LinearLayout support_layout;
+    ImageView iv_support_img,ivclose;
     public SupportDialog(@NonNull Context context) {
         super(context);
         this.context=context;
@@ -51,7 +54,7 @@ public class SupportDialog extends Dialog {
         CommonUtility.checkInternetConnection(context);
         initViews();
 
-        btnOk.requestFocus();
+//        ivclose.requestFocus();
 
         if (ConstantUtility.isNetworkConnected) {
             getSupportDetails();
@@ -60,7 +63,7 @@ public class SupportDialog extends Dialog {
         }
 
 
-        btnOk.setOnClickListener(new View.OnClickListener() {
+        ivclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancel();
@@ -69,10 +72,18 @@ public class SupportDialog extends Dialog {
     }
 
     private void initViews() {
-        btnOk=findViewById(R.id.btn_ok);
-        rvSupport=findViewById(R.id.rv_support);
-        progressBar=findViewById(R.id.progress_bar);
-        messageText=findViewById(R.id.message_text);
+        ivclose=findViewById(R.id.ivclose);
+//        rvSupport=findViewById(R.id.rv_support);
+//        progressBar=findViewById(R.id.progress_bar);
+//        messageText=findViewById(R.id.message_text);
+
+        messageText = findViewById(R.id.support_msg);
+        emailText = findViewById(R.id.support_email);
+        mobileText = findViewById(R.id.support_mobile);
+        mobileText2 = findViewById(R.id.support_mobile2);
+        progressBar = findViewById(R.id.support_progr);
+        support_layout = findViewById(R.id.support_lay);
+        iv_support_img = findViewById(R.id.iv_support_img);
     }
 
     private void getSupportDetails() {
@@ -86,14 +97,24 @@ public class SupportDialog extends Dialog {
                     if (response.isSuccessful() && response.body() != null) {
 
                      Data datalist= response.body().getData();
-                     list.add(new SupportTextType(datalist.getEmail()));
 
+                        emailText.setText(datalist.getEmail());
+                        mobileText.setText(datalist.getNum1() + " / " + datalist.getNum2());
+//                        mobileText2.setText(datalist.getNum2());
                         messageText.setText(response.body().getMessage());
-
-                        SupportAdpater supportAdpater=new SupportAdpater(context,list);
-                        rvSupport.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
-                        rvSupport.setAdapter(supportAdpater);
-                        btnOk.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        support_layout.setVisibility(View.VISIBLE);
+                        iv_support_img.setVisibility(View.VISIBLE);
+                        messageText.setVisibility(View.VISIBLE);
+                        ivclose.setVisibility(View.VISIBLE);
+//                     list.add(new SupportTextType(datalist.getEmail()));
+//
+//                        messageText.setText(response.body().getMessage());
+//
+//                        SupportAdpater supportAdpater=new SupportAdpater(context,list);
+//                        rvSupport.setLayoutManager(new LinearLayoutManager(context, RecyclerView.VERTICAL,false));
+//                        rvSupport.setAdapter(supportAdpater);
+//                        btnOk.setVisibility(View.VISIBLE);
 
                     } else if (response.code() == 401) {
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);
@@ -113,15 +134,17 @@ public class SupportDialog extends Dialog {
                     Log.e(TAG, "Exception "+ex);
                 }
                 Log.e(TAG,"support_numbers "+response.code()+"");
-                progressBar.setVisibility(View.INVISIBLE);
-                btnOk.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+//                btnOk.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(Call<SupportModel> call, Throwable t) {
                 Log.e(TAG, "Throwables  "+t);
-                progressBar.setVisibility(View.INVISIBLE);
-                btnOk.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                CommonUtility.showToast(context, t.getMessage());
+
+//                btnOk.setVisibility(View.VISIBLE);
             }
         });
     }

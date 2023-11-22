@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/_12sdp"
     android:paddingRight="@dimen/_12sdp"
     android:paddingBottom="@dimen/_4sdp"
-    android:background="@drawable/dialog_background">
+    android:background="@drawable/channel_grey_background">
 
     <ScrollView
         android:layout_width="match_parent"

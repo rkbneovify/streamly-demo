@@ -90,6 +90,10 @@ public class NoPlanDialog extends Dialog {
                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                         sessionExpiredDialog.setCancelable(false);
                         sessionExpiredDialog.show();
+                    }else if (response.code()==402){
+                        TokenStorage.clearSharedToken(context);
+                        context.startActivity(new Intent(context, LogInActivity.class));
+                        ((Activity)context).finish();
                     }
 
                     else if (response.code()==404){

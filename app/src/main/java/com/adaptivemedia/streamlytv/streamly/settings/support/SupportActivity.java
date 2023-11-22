@@ -50,6 +50,7 @@ public class SupportActivity extends FragmentActivity {
     private TextView messageText, emailText, mobileText,mobileText2;
     ProgressBar progressBar;
     LinearLayout support_layout;
+    ImageView iv_support_img;
 
 
 
@@ -74,6 +75,7 @@ public class SupportActivity extends FragmentActivity {
         mobileText2 = findViewById(R.id.support_mobile2);
         progressBar = findViewById(R.id.support_progr);
         support_layout = findViewById(R.id.support_lay);
+        iv_support_img = findViewById(R.id.iv_support_img);
     }
 
     private void getSupportDetails() {
@@ -88,11 +90,13 @@ public class SupportActivity extends FragmentActivity {
 
                         Data datalist= response.body().getData();
                         emailText.setText(datalist.getEmail());
-                        mobileText.setText(datalist.getNum1());
-                        mobileText2.setText(datalist.getNum2());
+                        mobileText.setText(datalist.getNum1() + " / " + datalist.getNum2());
+//                        mobileText2.setText(datalist.getNum2());
                         messageText.setText(response.body().getMessage());
                         progressBar.setVisibility(View.GONE);
                         support_layout.setVisibility(View.VISIBLE);
+                        iv_support_img.setVisibility(View.VISIBLE);
+                        messageText.setVisibility(View.VISIBLE);
 
                     } else if (response.code() == 401) {
                         SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(context);

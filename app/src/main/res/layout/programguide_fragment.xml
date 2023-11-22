@@ -26,12 +26,16 @@
 
     <Button
         android:id="@+id/programguide_jump_to_live"
-        style="@style/ProgramGuide.Button.JumpToLive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/programguide_filter_spacing"
         android:text="@string/programguide_button_jump_to_live"
+        android:textSize="13sp"
+        android:textAllCaps="false"
+        android:background="@drawable/programguide_button_background"
         android:visibility="gone"
+        android:minHeight="25dp"
+        android:fontFamily="@font/helvetica_neue_medium"
         app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
         app:layout_constraintLeft_toRightOf="@id/programguide_time_of_day_filter"
         app:layout_constraintTop_toTopOf="@id/programguide_top_margin" />

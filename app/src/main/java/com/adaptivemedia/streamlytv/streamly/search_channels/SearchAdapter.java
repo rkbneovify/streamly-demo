@@ -19,9 +19,9 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 import com.bumptech.glide.Glide;
 import com.adaptivemedia.streamlytv.R;
-import com.adaptivemedia.streamlytv.streamly.playervideo.PlayerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,18 +56,22 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        int holderWidth = rvWidth/4 - dpToPx(20);
+        int holderWidth = rvWidth/4 - dpToPx(40);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.channelLayout.getLayoutParams();
         layoutParams.width = holderWidth;
-        layoutParams.leftMargin = dpToPx(10);
-        layoutParams.rightMargin = dpToPx(10);
+        layoutParams.leftMargin = dpToPx(20);
+        layoutParams.rightMargin = dpToPx(20);
         layoutParams.bottomMargin = dpToPx(10);
         layoutParams.topMargin = dpToPx(10);
         layoutParams.gravity = Gravity.CENTER;
         holder.channelLayout.setLayoutParams(layoutParams);
 
         Glide.with(context).load(list.get(position).getLogoUrl()).into(holder.channelLogo);
-        holder.channelName.setText(list.get(position).channelTitle);
+        if(list.get(position).channelTitle.equals("TV Guide")){
+            holder.channelName.setText(context.getResources().getString(R.string.programguide_title_horse_racing));
+        }else {
+            holder.channelName.setText(list.get(position).channelTitle);
+        }
         holder.channelId.setText(list.get(position).getChannelId().toString());
         holder.channelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +79,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                 Log.e("channel_count", list.get(position).getVideoUrl() + "");
                 Log.e("channel_count", "Pos :"+ list.get(position));
                 context.startActivity(new Intent(context, PlayerActivity.class)
-                        .putExtra("from", list.get(position).getVideoUrl()));
+                        .putExtra("from", list.get(position).getVideoUrl())
+                        .putExtra("callsign", list.get(position).getChannelTitle())
+                        );
             }
         });
 

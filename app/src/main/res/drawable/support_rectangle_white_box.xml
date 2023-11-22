@@ -8,7 +8,7 @@
 
 
 
-    <solid android:color="@color/color_white"
+    <solid android:color="@color/transparent_color1"
         />
     <corners android:radius="6dp" />
 

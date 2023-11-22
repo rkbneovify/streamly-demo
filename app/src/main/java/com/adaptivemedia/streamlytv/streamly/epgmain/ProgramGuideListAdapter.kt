@@ -17,6 +17,7 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
     private val noInfoProgramTitle: String
 
     private var channelId: String = ""
+    private var callSign: String = ""
 
     init {
         setHasStableIds(true)
@@ -33,6 +34,7 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
         val channel = programGuideManager.getChannel(channelIndex)
         if (channel != null) {
             channelId = channel.id
+            callSign= channel.name.toString();
             notifyDataSetChanged()
         }
     }
@@ -52,7 +54,7 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
     override fun onBindViewHolder(holder: ProgramItemViewHolder<T>, position: Int) {
         val programGuideSchedule = programGuideManager.getScheduleForChannelIdAndIndex(channelId, position)
         val gapTitle = noInfoProgramTitle
-        holder.onBind(programGuideSchedule, programGuideFragment, gapTitle,channelId)
+        holder.onBind(programGuideSchedule, programGuideFragment, gapTitle,channelId,callSign)
     }
 
     override fun onViewRecycled(holder: ProgramItemViewHolder<T>) {
@@ -73,13 +75,13 @@ class ProgramGuideListAdapter<T>(res: Resources, private val programGuideFragmen
             itemView.clipToOutline = true
         }
 
-        fun onBind(schedule: ProgramGuideSchedule<R>, programGuideHolder: ProgramGuideHolder<R>, gapTitle: String, channelId: String) {
+        fun onBind(schedule: ProgramGuideSchedule<R>, programGuideHolder: ProgramGuideHolder<R>, gapTitle: String, channelId: String,callSign: String) {
             val programManager = programGuideHolder.programGuideManager
             @Suppress("UNCHECKED_CAST")
             programGuideItemView = itemView as ProgramGuideItemView<R>
 
             programGuideItemView?.setOnClickListener {
-                programGuideHolder.onScheduleClickedInternal(schedule, channelId)
+                programGuideHolder.onScheduleClickedInternal(schedule, channelId,position,callSign)
             }
             programGuideItemView?.setValues(
                     scheduleItem = schedule,

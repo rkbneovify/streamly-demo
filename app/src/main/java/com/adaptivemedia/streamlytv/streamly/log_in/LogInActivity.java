@@ -24,6 +24,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.adaptivemedia.streamlytv.BuildConfig;
 import com.adaptivemedia.streamlytv.streamly.dialogs.CommonDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.CustomDialog;
 import com.adaptivemedia.streamlytv.streamly.dialogs.DialogClickListeners;
@@ -34,6 +35,8 @@ import com.adaptivemedia.streamlytv.streamly.registration.RegistrationActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.SettingsActivity;
 import com.adaptivemedia.streamlytv.streamly.settings.device_signout.DeviceSignOutResponse;
 import com.adaptivemedia.streamlytv.streamly.settings.support.SupportActivity;
+import com.adaptivemedia.streamlytv.streamly.settings.support.SupportDialogOnboard;
+import com.adaptivemedia.streamlytv.streamly.splash.SplashActivity;
 import com.google.gson.Gson;
 import com.adaptivemedia.streamlytv.streamly.HotelQRCode.HotelQRCodeActivity;
 import com.adaptivemedia.streamlytv.streamly.MainActivity;
@@ -58,6 +61,11 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,10 +76,10 @@ public class LogInActivity extends FragmentActivity {
     private String uniqueId;
     private String userAgent;
     private EditText edUserName, edPassword;
-    private TextView txtNeedHelp;
+    private TextView txtNeedHelp, tvBuild_Ver;
     private Button btnSignIn, btnRegisterView, btnTermsUses, btnHotelLogin, btnLoginUsingPasscode;
     private CheckBox rememberMeCheck;
-    private ImageView passwordTog;
+    private CheckBox passwordTog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +90,7 @@ public class LogInActivity extends FragmentActivity {
 
         userAgent = System.getProperty("http.agent");
 //        getUserAgentType();
-        Log.i(TAG, "onResponse: user agent " + userAgent);
+        Log.e(TAG, "onResponse: user agent " + userAgent);
 
         uniqueId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.i(TAG, "onCreate: tv uniqueId " + uniqueId);
@@ -100,14 +108,14 @@ public class LogInActivity extends FragmentActivity {
                 TokenStorage.savedVisible(LogInActivity.this, ConstantUtility.QRVISIBILITY_KEY_VALUE, savedVisibleKey);
 
 
-                if (response.body() != null && response.body().getVisible()) {
+                if (response.body().getVisible()) {
+                    btnTermsUses.setVisibility(View.GONE);
                     btnHotelLogin.setVisibility(View.GONE);
                     btnLoginUsingPasscode.setVisibility(View.GONE);
-                    //  btnTermsUses.setVisibility(View.GONE);
                 } else {
                     btnHotelLogin.setVisibility(View.VISIBLE);
                     btnLoginUsingPasscode.setVisibility(View.VISIBLE);
-                    //   btnTermsUses.setVisibility(View.VISIBLE);
+                    btnTermsUses.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -120,13 +128,13 @@ public class LogInActivity extends FragmentActivity {
         txtNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SupportDialog supportDialog = new SupportDialog(LogInActivity.this);
+                SupportDialogOnboard supportDialog = new SupportDialogOnboard(LogInActivity.this);
                 supportDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                 supportDialog.show();
             }
         });
 
-        //edUserName.setText("vikas.saini1@oodles.io");
+        // edUserName.setText("vikas.saini1@oodles.io");
         // edUserName.setText("kallusingh.rajput@oodles.io");
         //edUserName.setText("aashish.kumar@oodles.io");
         //    edUserName.setText("mina@neovix.com");
@@ -135,9 +143,11 @@ public class LogInActivity extends FragmentActivity {
         //  edUserName.setText("sahil.kumar@oodlestechnologies.com");
         //   edPassword.setText("sahil123456789");
 //        edUserName.setText("sahilkashyap64@gmail.com");
-        //     edUserName.setText("streamly1@yopmail.com");
-        // edPassword.setText("123456789");
-        //edPassword.setText("123456789");
+//             edUserName.setText("streamly_anand@yopmail.com");
+//             edUserName.setText("streamly13@yopmail.com");
+//             edUserName.setText("streamlymtairy@gmail.com");
+        edUserName.setText("streamly13@yopmail.com");
+          edPassword.setText("123456789");
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +175,6 @@ public class LogInActivity extends FragmentActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     // Continue with delete operation
                                     dialog.dismiss();
-
 
                                 }
                             });
@@ -205,19 +214,22 @@ public class LogInActivity extends FragmentActivity {
                 startActivity(new Intent(LogInActivity.this, HotelQRCodeActivity.class));
                 // finish();
 
-
             }
         });
         passwordTog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (edPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
-                    edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_off_24);
-                } else {
-                    edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_24);
-                }
+//                if (edPassword.getTransformationMethod().equals(HideReturnsTransformationMethod.getInstance())) {
+//                    edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+////                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_off_24);
+//                    passwordTog.setText("Show Password");
+//                } else {
+//                    edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+////                    passwordTog.setImageResource(R.drawable.ic_baseline_visibility_24);
+//                    passwordTog.setText("Hide Password");
+//
+//                }
+                pass();
             }
         });
     }
@@ -226,6 +238,15 @@ public class LogInActivity extends FragmentActivity {
     void toastDialog(String message) {
         ToastDialog t = new ToastDialog(message);
         t.show(getSupportFragmentManager(), "Tag");
+    }
+
+    public void pass() {
+        if (passwordTog.isChecked()) {
+            edPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+
+        } else {
+            edPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
     }
 
     private void login() {
@@ -272,6 +293,7 @@ public class LogInActivity extends FragmentActivity {
         edUserName = findViewById(R.id.ed_user_name);
         edPassword = findViewById(R.id.ed_password);
         txtNeedHelp = findViewById(R.id.txt_need_help);
+        tvBuild_Ver = findViewById(R.id.tvBuild_Ver);
         btnSignIn = findViewById(R.id.btn_sign_in);
         btnHotelLogin = findViewById(R.id.btn_hotel_sign_in);
         btnRegisterView = findViewById(R.id.btn_register_view);
@@ -279,6 +301,13 @@ public class LogInActivity extends FragmentActivity {
         btnLoginUsingPasscode = findViewById(R.id.btn_login_using_passcode_uses);
         rememberMeCheck = findViewById(R.id.checkbox_remember);
         passwordTog = findViewById(R.id.password_toggle);
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String reloaddate = df.format(c);
+        TokenStorage.saveddate(LogInActivity.this, ConstantUtility.DATE, reloaddate);
+//        edUserName.setText("streamly13@yopmail.com");
+//        edPassword.setText("123456789");
+        tvBuild_Ver.setText("Ver : " + BuildConfig.VERSION_NAME + "(" + BuildConfig.VERSION_CODE + ")");
     }
 
     private void signInCall() {
@@ -302,8 +331,9 @@ public class LogInActivity extends FragmentActivity {
                         Log.e(TAG, "onResponse222: " + personaDeviceNamePopup);
                         Log.e(TAG, "onResponse222: " + response.body().getUserRole());
                         Log.e(TAG, "onResponse222: " + response.body().getDeviceType());
+                        Log.e(TAG, "onResponse222 personalDeviceId: " + personalDeviceId);
                         Log.e(TAG, "onResponse222: " + uniqueId);
-                                  Log.e(TAG, "onResponse222: " + response.body().getPersonalDeviceId());
+                        Log.e(TAG, "onResponse222: " + response.body().getPersonalDeviceId());
                         if (response.body().getUserRole().equals("tieruser")) {
                             Long userId = response.body().getUser().getId();
 //                        ArrayList<Room> set = new ArrayList<>();
@@ -319,9 +349,9 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
-                            Log.e("HoursOffset","Home : "+response.body().getHouroffset());
-                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
+                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this, ConstantUtility.HOMETIMEZONE, response.body().gettimezone());
+                            Log.e("HoursOffset", "Home : " + response.body().gettimezone());
+//                        CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
                             if (personaDeviceNamePopup) {
@@ -337,7 +367,7 @@ public class LogInActivity extends FragmentActivity {
                                 ConstantUtility.isRemember = true;
                             }
                         } else if (response.body().getUserRole().equals("user")) {
-                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
+//                            CommonUtility.showToast(LogInActivity.this, response.body().getMessage());
                             TokenStorage.savedSharedToken(LogInActivity.this, ConstantUtility.AUTH_TOKEN, access_token);
                             TokenStorage.savedSharedTokenPassCode(LogInActivity.this, ConstantUtility.AUTH_TOKEN_PASSCODE, access_token);
                             TokenStorage.saveSessionId(LogInActivity.this, ConstantUtility.SESSION_ID, sessionid);
@@ -345,7 +375,7 @@ public class LogInActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(LogInActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(LogInActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(LogInActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            TokenStorage.saveHomeTimeZoneOffset(LogInActivity.this, ConstantUtility.HOMETIMEZONE, response.body().gettimezone());
                             if (personaDeviceNamePopup) {
                                 startActivity(new Intent(LogInActivity.this, PersonalDeviceName.class));
                             } else {
@@ -365,9 +395,15 @@ public class LogInActivity extends FragmentActivity {
                             showDialog(loginErrorResponse);
                         }
                     } else if (response.code() == 401) {
-                        Log.i(TAG, "onResponse:401  " + response.isSuccessful());
+
+//                        Log.e(TAG, "onResponse:401  " + response.toString());
                         if (!response.isSuccessful()) {
-                            toastDialog("Invalid credentials");
+                            String remoteResponse = response.errorBody().string();
+
+                            JSONObject jObjError = new JSONObject(remoteResponse.trim());
+
+                            Log.e(TAG, "error_msg>>>>>" + jObjError.getString("message"));
+                            toastDialog(jObjError.getString("message"));
                             // CommonUtility.showToast(LogInActivity.this, "Invalid credentials");
                         }
                         /*SessionExpiredDialog sessionExpiredDialog = new SessionExpiredDialog(LogInActivity.this);
@@ -375,7 +411,7 @@ public class LogInActivity extends FragmentActivity {
                         sessionExpiredDialog.setCancelable(false);
                         sessionExpiredDialog.show();*/
                     } else if (response.code() == 429) {
-                        Log.i(TAG, "onResponse:429  " + response.body());
+                        Log.e(TAG, "onResponse:429  " + response.body());
                         if (response.errorBody() != null) {
                             NewLoginErrorResponse logInModel = new Gson().fromJson(response.errorBody().string(), NewLoginErrorResponse.class);
                             if (logInModel.getData() != null && !logInModel.getData().toString().equals("")) {
@@ -433,7 +469,7 @@ public class LogInActivity extends FragmentActivity {
 
     private void deviceSignOutCall(String deviceId) {
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<DeviceSignOutResponse> call = apiInterface.postDeviceLogOutCall(deviceId);
+        Call<DeviceSignOutResponse> call = apiInterface.postDeviceLogOutCall("Bearer ",deviceId);
         call.enqueue(new Callback<DeviceSignOutResponse>() {
             @Override
             public void onResponse(Call<DeviceSignOutResponse> call, Response<DeviceSignOutResponse> response) {

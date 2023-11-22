@@ -1,6 +1,8 @@
 package com.adaptivemedia.streamlytv.streamly.timeline
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +12,10 @@ import com.adaptivemedia.streamlytv.R
 import com.adaptivemedia.streamlytv.streamly.util.ProgramGuideUtil
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
@@ -26,7 +31,8 @@ class ProgramGuideTimeListAdapter(
     companion object {
         private val TIME_UNIT_MS = TimeUnit.MINUTES.toMillis(15)
         private var rowHeaderOverlapping: Int = 0
-        private val TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm")
+        val TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a")
+
     }
 
     // Nearest half hour at or before the start time.
@@ -47,8 +53,8 @@ class ProgramGuideTimeListAdapter(
     }
 
     override fun getItemCount(): Int {
-        return 193
-//        return Integer.MAX_VALUE
+//        return 193
+        return Integer.MAX_VALUE
     }
 
 
@@ -61,9 +67,11 @@ class ProgramGuideTimeListAdapter(
         val endTime = startTime + TIME_UNIT_MS
 
         val itemView = holder.itemView
-        val timeDate = Instant.ofEpochMilli(startTime).atZone(displayTimezone)
-        val timeString = TIME_FORMATTER.format(timeDate)
+        val timeDate = Instant.ofEpochMilli(startTime).atZone(ZoneOffset.systemDefault())
+        Log.e("Adapter","Timedate "+timeDate)
+        val timeString = TIME_FORMATTER.format(timeDate).lowercase()
         (itemView as TextView).text = timeString
+        Log.e("Adapter","Time"+timeString)
 
         val lp = itemView.layoutParams as RecyclerView.LayoutParams
         lp.width = ProgramGuideUtil.convertMillisToPixel(startTime, endTime)

@@ -98,7 +98,7 @@ public class HotelQRCodeActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().gettimezone());
                             CommonUtility.showToast(HotelQRCodeActivity.this, response.body().getMessage());
 //                        startActivity(new Intent(LoginUsingPasscodeActivity.this, MainActivity.class));
 //                        finish();
@@ -117,7 +117,7 @@ public class HotelQRCodeActivity extends FragmentActivity {
                             TokenStorage.saveDevicetype(HotelQRCodeActivity.this, ConstantUtility.DEVICE_TYPE, deviceType);
                             TokenStorage.savePersonalDeviceNamePopup(HotelQRCodeActivity.this, ConstantUtility.PERSONAL_DEVICE_POPUP, personaDeviceNamePopup);
                             TokenStorage.saveUserRole(HotelQRCodeActivity.this, ConstantUtility.USER_ROLE, response.body().getUserRole());
-                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().getHouroffset());
+                            TokenStorage.saveHomeTimeZoneOffset(HotelQRCodeActivity.this,ConstantUtility.HOMETIMEZONE,response.body().gettimezone());
                             if (personaDeviceNamePopup) {
                                 startActivity(new Intent(HotelQRCodeActivity.this, PersonalDeviceName.class));
                             } else {
@@ -139,8 +139,8 @@ public class HotelQRCodeActivity extends FragmentActivity {
                         sessionExpiredDialog.getWindow().setBackgroundDrawableResource(R.drawable.white_transparent);
                         sessionExpiredDialog.setCancelable(false);
                         sessionExpiredDialog.show();
+//                    CommonUtility.showToast(HotelQRCodeActivity.this,response.body().getMessage());
                     } else if (response.code()==429){
-//                    CommonUtility.showToast(LogInActivity.this,response.body().getMessage());
                         if(response.errorBody() !=null )
                         {
                             NewLoginErrorResponse logInModel=new Gson().fromJson(response.errorBody().string(),NewLoginErrorResponse.class);
