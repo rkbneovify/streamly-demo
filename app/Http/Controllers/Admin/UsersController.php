@@ -396,17 +396,16 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         // Total records
         $totalRecords = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
- })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
+ })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->count();
         $totalRecordswithFilter = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->select('count(*) as allcount')
-        ->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
+        ->where('email', 'like', '%' .$searchValue . '%')->count();
     
         // Fetch records
         $records = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->where('email', 'like', '%' .$searchValue . '%')
- ->where('mode', 'like', '%' .$mode . '%' )
  ->orderBy($columnName,$columnSortOrder)
           
           ->skip($start)
