@@ -8,6 +8,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Crypt;
+use Mail;
 use App\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -66,10 +68,45 @@ class UsersController extends Controller
                 'country'=>$request->country??'null',
                 'address'=>$request->address??'null',
                 'zipcode'=>$request->zipcode,
-                'email_verified_at'=>$email_verified_at
+                'email_verified_at'=>null
             ]);
             $user->roles()->sync($request->input('roles', []));
 
+            $verification_code=Crypt::encrypt($User->email);
+
+            $FRONTEND_URL=env('FRONTEND_URL');
+    
+            $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+    
+            
+        $html2='<html>
+            Hi, '.$request->name.'<br><br>
+    
+            Thank you for registering for '.env('APP_NAME').'.<br>
+            Please click the following link to verify your account.
+            <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+            width: 115px;
+            height: 25px;
+            background: #004E92 0% 0% no-repeat padding-box;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            line-height: 25px;">Verify</a><br>
+            Your login credentials<br>
+            Email: '.$request->email.'<br>
+            Password: '.$request->password.'<br><br>
+            Thank you!<br>
+            The '.env('APP_NAME').' Team!
+        </html>';
+    
+            Mail::send('emails.general',["html"=>$html2] , function($message) use ($request,$user){
+                    $message->to($request->email, $request->name);
+                    $message->bcc('rahul.gupta@oodles.io')
+                    ->subject(env('APP_NAME').': Account Verification and Signup Details');
+            });
+            
             return redirect('admin/users')->with('info','User Added Successfully');
         } catch (Exception $e) {
             return redirect()->back()->with('errormsg','Error creating user, please try again.');
