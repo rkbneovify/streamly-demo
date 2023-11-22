@@ -326,6 +326,16 @@ class AuthController extends Controller
         }
 
         $User=JWTAuth::user();
+
+        if($request->has('oldpassword')) {
+            $credentials = ['email' => $User->email, 'password' => $request->oldpassword];
+            $token = JWTAuth::attempt($credentials);
+            if(!$token){
+                $response = array('success' =>false ,'response_code'=>401,'message'=>'Wrong old password');
+                return response()->json($response, 401);
+            }
+        }
+        
         if($User){
              $User->password=Hash::make($request->password);
              $User->save();
