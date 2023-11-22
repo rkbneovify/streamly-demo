@@ -68,11 +68,12 @@ class UsersController extends Controller
                 'country'=>$request->country??'null',
                 'address'=>$request->address??'null',
                 'zipcode'=>$request->zipcode,
-                'email_verified_at'=>null
+                'email_verified_at'=>null,
+                'is_active' => 0
             ]);
             $user->roles()->sync($request->input('roles', []));
 
-            $verification_code=Crypt::encrypt($User->email);
+            $verification_code=Crypt::encrypt($user->email);
 
             $FRONTEND_URL=env('FRONTEND_URL');
     
