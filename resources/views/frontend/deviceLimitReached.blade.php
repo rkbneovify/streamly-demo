@@ -154,11 +154,11 @@ $("#my_form").submit(function(event){
 @include('frontend.partials.sidenavRegisterAndLogin')
 	<section class="page-section">
 		<div class="container">
-				<h2 class="section-heading text-center">Error while playing video</h2>
+				<h2 class="section-heading text-center">Your account is in use on {{$login_limit}} devices.</h2>
 				<div class="row setting-cards">
 					<div class="col-centered col-md-8">
 						<ul class="setting-card">
-							<li>"Your account is in use on {{$login_limit}} devices."</li>
+							<li style="text-align:center;">"Please stop playing on other devices to continue"</li>
 							
 								@if($errors->has('email'))
 								 <div class="alert alert-danger alert-dismissible ">
