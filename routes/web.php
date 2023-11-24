@@ -282,6 +282,7 @@ Route::get('/account/refresh', 'Pages\Account\Setting@userAskedtoRefreshToken');
 Route::get('/account/settings/bug', 'Pages\Account\Setting@BugReportView');
 Route::post('/sendbugreport', 'Pages\Account\Setting@sendBugReport')->name('sendbugreport');
 Route::get('/verified', 'HomeController@verified');
+Route::get('/update/password','HomeController@updatePassword');
 // Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty');
 Route::get('/checkAvailabilty', 'HomeController@checkAvailabilty2');
 Route::post('/checkAvailabiltyStore', 'Admin\DeclineZipsInquiryController@failedzipinquery');
@@ -294,6 +295,7 @@ Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonal
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
 Route::put('/userupdatezip/{id}','Pages\Account\Setting@updateZipCode')->name('userupdatezip');
 Route::put('/userupdatename/{id}','Pages\Account\Setting@updateName')->name('userupdatename');
+Route::put('userupdatepass/{id}','Pages\Account\Setting@updatePass')->name('userupdatepass');
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
 Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');//send form data here
 Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');

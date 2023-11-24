@@ -324,6 +324,14 @@ return response()->json($resp, 200);
     return response()->json($response, 200); 
  }
 
+
+ public function updatePassword(){
+    $user = Auth::user();
+    $id = $user->id;
+    return view('frontend.pages.updatepassword',compact('user','id'));
+
+}
+
  public function allowedZipcode(Request $request){
     $data = Zipcode::select('zipcodes.*',DB::raw("ST_AsGeoJSON(map.`SHAPE`) shape"))->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
     # Build GeoJSON feature collection array
