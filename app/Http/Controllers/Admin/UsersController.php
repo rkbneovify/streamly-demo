@@ -68,6 +68,7 @@ class UsersController extends Controller
                 'country'=>$request->country??'null',
                 'address'=>$request->address??'null',
                 'zipcode'=>$request->zipcode,
+                'forced_change'=>1,
                 'email_verified_at'=>null,
                 'is_active' => 0
             ]);
@@ -97,7 +98,7 @@ class UsersController extends Controller
             line-height: 25px;">Verify</a><br>
             Your login credentials<br>
             Email: '.$request->email.'<br>
-            Password: '.$request->password.'<br><br>
+            Temp. Password: '.$request->password.'<br><br>
             Thank you!<br>
             The '.env('APP_NAME').' Team!
         </html>';
