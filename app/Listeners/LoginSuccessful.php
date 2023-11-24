@@ -34,10 +34,12 @@ class LoginSuccessful
     {
         $user = Auth::user();
         $userRole= $user->roles->pluck('name');
-         
-        if( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
+        
+        if($user->forced_change == 1) {
+            return '/update/password';
+        } elseif( (@$userRole[0]== 'admin' || @$userRole[0]== 'superadmin')) {
             return '/admin';
-        } else{
+        } else {
 
         $token = JWTAuth::fromUser($user);
 
