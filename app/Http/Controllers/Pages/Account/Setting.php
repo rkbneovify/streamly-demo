@@ -293,6 +293,7 @@ curl_close($curl);
             return redirect()->back()->with('error', 'Your Old Password Cannot Be New Password');
         } else {
             $user = User::find($id);
+            $input['forced_change'] = 0;
             $user->update($input); //update the user info
 
             $userRole = $user->roles->pluck('name');
