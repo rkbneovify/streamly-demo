@@ -18,6 +18,7 @@ use App\Models\BugReporting;
 use App\Models\PersonalDevice;
 use Illuminate\Support\Arr;
 use Mail;
+use App\Http\Controllers\HomeTwoController;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\HotelRoomTable;
@@ -296,13 +297,7 @@ curl_close($curl);
             $input['forced_change'] = 0;
             $user->update($input); //update the user info
 
-            $userRole = $user->roles->pluck('name');
-
-            if ((@$userRole[0] == 'admin' || @$userRole[0] == 'superadmin')) {
-                return redirect('/admin');
-            } else {
-                return redirect('/livetv');
-            }
+            HomeTwoController::logout();
         }
     }
 
