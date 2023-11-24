@@ -68,9 +68,9 @@ class UsersController extends Controller
                 'country'=>$request->country??'null',
                 'address'=>$request->address??'null',
                 'zipcode'=>$request->zipcode,
-                'forced_change'=>1,
                 'email_verified_at'=>null,
-                'is_active' => 0
+                'is_active' => 0,
+                'forced_change'=> 1,
             ]);
             $user->roles()->sync($request->input('roles', []));
 
