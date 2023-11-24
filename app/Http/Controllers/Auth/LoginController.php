@@ -35,7 +35,9 @@ class LoginController extends Controller
         $u=Auth::user();
         $userRole= $u->roles->pluck('name');
          
-        if( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
+        if($u->forced_change == 1) {
+            return '/update/password';
+        } elseif( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
             return '/admin';
         }elseif( @$userRole[0]== 'salesuser' ){
             return '/salesuser/paymentlink';
