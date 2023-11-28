@@ -392,18 +392,11 @@ class AuthController extends Controller
 
         $token = $request->bearerToken();
         $acctoken = SessionTable::where([
-            ['status', '=', '0'],
+            ['status', '=', '1'],
             ['access_token', '=', $token],
         ]);
         if($acctoken->exists()) {
-            $response = [
-                'success' => false,
-                'status' => false,
-                'message' => 'Token is Invalid',
-                'response_code' => 401,
-            ];
-            return response()->json($response, 401);
-        } else {
+            
             $response = [
                 'success' => true,
                 'status' => true,
@@ -411,6 +404,16 @@ class AuthController extends Controller
                 'response_code' => 200,
             ];
             return response()->json($response, 200);
+        } else {
+
+            $response = [
+                'success' => false,
+                'status' => false,
+                'message' => 'Token is Invalid',
+                'response_code' => 401,
+            ];
+            return response()->json($response, 401);
+            
         }
 
     }
