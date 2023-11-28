@@ -433,7 +433,7 @@ public function unhashid($id){
                     ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
                 ->where('channels.status','=','1')
-                ->orderBy('channels.StationName', 'asc');
+                ->orderBy('genre_name', 'asc');
         } else {
             $second=Channel::select('channels.id','channels.zip_code',
             DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) callSign'), 'channels.image',"channels.$type as url",DB::raw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name'))
@@ -442,7 +442,7 @@ public function unhashid($id){
                    ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
             
             ->where('channels.status','=','1')
-            ->orderBy('channels.StationName', 'asc');
+            ->orderBy('genre_name', 'asc');
         }
 
         return $second;
