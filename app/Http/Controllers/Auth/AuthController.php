@@ -387,6 +387,34 @@ class AuthController extends Controller
        // return response()->json($user_data);
     }
 
+
+    public function checkSession(Request $request){
+
+        $token = $request->bearerToken();
+        $acctoken = SessionTable::where([
+            ['status', '=', '0'],
+            ['access_token', '=', $token],
+        ]);
+        if($acctoken->exists()) {
+            $response = [
+                'success' => false,
+                'status' => false,
+                'message' => 'Token is Invalid',
+                'response_code' => 401,
+            ];
+            return response()->json($response, 401);
+        } else {
+            $response = [
+                'success' => true,
+                'status' => true,
+                'message' => 'Ok',
+                'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        }
+
+    }
+
     public function tvprofile()
     {        
         $user=JWTAuth::user();
