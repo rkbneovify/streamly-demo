@@ -9,38 +9,73 @@ use App\Models\Channel;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
+use App\Traits\GetLocation;
 use App\SessionTable;
 
 use App\Models\Gracenotechannel;
 class LiveTv extends Controller
 { 
-    public function showPage(){
+    use GetLocation;
+    public $exculdedUsers = ["qajalaj@yopmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
-    	if( Auth::check()){
+
+    public function showPage()
+    {
+
+        if (Auth::check()) {
             $login = true;
         } else {
             $login = false;
             return redirect()->route('home');
         }
 
-        $second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
-        DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
-               
-               ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
-               ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-               ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+        $user = Auth::user();
+        $validate = 0;
+        if (!in_array($user->email, $this->exculdedUsers)) $validate = 1;
 
-    ->where('channels.status','=','1')
-    ->orderBy('channels.StationName', 'asc');
-    
-    
-       
-      $pagechannel=$second->get()->groupBy('genrenae');
-    
-        
+        $second = Channel::select(
+            'channels.id','channels.zip_code',
+            DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+            DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'),
+            'channels.image',
+            DB::raw('IFNULL(genre.name,"Others") genrenae')
+        )
 
-    	return view('frontend.pages.livetv', compact('login','pagechannel'));
+        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
+        ->where('channels.status', '=', '1')
+        ->orderBy('genrenae', 'asc')->get();
+
+
+        $zipcode = $this->getUserZipCode();
+        if ($validate) {
+            foreach ($second  as $key => $res) {
+
+                if ($res->zip_code !== ["All"]) {
+                    $check = in_array($zipcode, $res->zip_code);
+                    if (!$check) {
+                        unset($second[$key]);
+                    }
+                }
+            }
+            // $second = json_decode(json_encode($second), true);
+            // $second = array_values($second);
+            $pagechannel =  $second->groupBy('genrenae');
+
+        } else {
+            $pagechannel = $second->groupBy('genrenae');
+        }
+        return view('frontend.pages.livetv', compact('login', 'pagechannel'));
+    }
+
+
+    public function groupBy($array, $key) {
+        return array_reduce($array, function ($result, $item) use ($key) {
+            $result[$item[$key]][] = $item;
+            return $result;
+        }, []);
     }
 
     public function showChannel($callSign,$genre){
@@ -292,32 +327,59 @@ return $second;
     }
 
     public function showAllPage()
-    { 
+    {
 
-        if( Auth::check()){
+        if (Auth::check()) {
             $login = true;
         } else {
             $login = false;
             return redirect()->route('home');
         }
 
-    $second=Channel::select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
-    DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
-           
-           ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
-           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+        $user = Auth::user();
+        $validate = 0;
+        if (!in_array($user->email, $this->exculdedUsers)) $validate = 1;
 
-->where('channels.status','=','1')
-->orderBy('channels.StationName', 'asc');
+        $second = Channel::select(
+            'channels.id',
+            'channels.zip_code',
+            DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
+            DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'),
+            'channels.image',
+            DB::raw('IFNULL(genre.name,"Others") genrenae')
+        )
+
+        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
+        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+        ->where('channels.status', '=', '1')
+        ->orderBy('channels.StationName', 'asc')->get();
 
 
-       
-      $pagechannel=$second->get()->unique();
-        
-        return view('frontend.pages.alllivetvchannel', compact('login','pagechannel'));
+        $zipcode = $this->getUserZipCode();
+        if ($validate) {
+            foreach ($second  as $key => $res) {
 
+                if ($res->zip_code !== ["All"]) {
+                    $check = in_array($zipcode, $res->zip_code);
+                    if (!$check) {
+                        unset($second[$key]);
+                    }
+                }
+            }
+            // $second = json_decode(json_encode($second), true);
+            // $second = array_values($second);
+            $pagechannel = $second->unique();
+        } else {
+            $pagechannel = $second->unique();
+        }
+
+
+
+        return view('frontend.pages.alllivetvchannel', compact('login', 'pagechannel'));
     }
+
     public function  videojs(){
         return view('frontend.pages.videojs');
     }

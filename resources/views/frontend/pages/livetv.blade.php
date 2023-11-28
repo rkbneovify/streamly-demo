@@ -255,6 +255,7 @@ $.ajax({
 		<section id="blur" class="page-section">
 			
 		@foreach($pagechannel as $key => $user)
+		
 		<div class="container">
 	
 				<h4 class="section-heading">{{$key}} <a style="font-size:15px" href="/livetv/{{$key}}">show all</a></h4> 
