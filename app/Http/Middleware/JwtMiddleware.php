@@ -24,7 +24,32 @@
         public function handle($request, Closure $next)
         {
             try {
+
                 JWTAuth::parseToken()->authenticate();
+                $token = $request->bearerToken();
+                    $acctoken = SessionTable::where([
+                        ['status', '=', '0'],
+                        ['access_token', '=', $token],
+                    ]);
+                    if($acctoken->exists()) {
+
+                        config([
+                            'jwt.blacklist_enabled' => true
+                        ]);
+                      
+                        JWTAuth::parseToken()->invalidate();
+                        
+                        $response = [
+                            'success' => false,
+                            'status' => false,
+                            'message' => 'Token is Invalid',
+                            'response_code' => 401,
+                        ];
+                        return response()->json($response, 401);
+                    }
+
+
+                
             //     if($request->get('key')){
             //     $user = JWTAuth::parseToken()->authenticate();
             // }else{
