@@ -8,10 +8,15 @@ use App\Models\Genre;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use Validator;
-
+use App\Traits\GetLocation;
 use Illuminate\Support\Facades\Auth;
+
 class EpgController extends Controller
 {
+    use GetLocation;
+
+    public $exculdedUsers = ["qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
+
     protected function setUp()
     {
         parent::setUp();
@@ -20,47 +25,71 @@ class EpgController extends Controller
         );
     }
 
-    public function channellist(Request $request) 
-    { 
+    public function channellist(Request $request)
+    {
         // http://ams-api.astro.com.my/ams/v3/getChannelList
+
+        $user = Auth::user();
+        $validate = 0;
+        if (!in_array($user->email, $this->exculdedUsers)) $validate = 1;
         
-        $type='url';
-$record = $this->channeljsonFunc($type);
-$pagechannel=$record->get()->map(function ($message, $key) {
-        
-    $message->genrename = json_decode($message->genrename, true);
+        $type = 'url';
+        $record = $this->channeljsonFunc($type);
+        $pagechannel = $record->get()->map(function ($message, $key) {
+
+            $message->genrename = json_decode($message->genrename, true);
 
 
-return $message;
-});
- //  return response()->json($record->toSql());
- $response = [
-    'responseMessage' => 'Success',
-    'responseCode'=>'200',
-    'channels'=>$pagechannel, 
-    
-];
-return response()->json($response, 200);
+            return $message;
+        });
+
+        $zipcode = $this->getUserZipCode();
+        if ($validate) {
+            foreach ($pagechannel as $key => $res) {
+
+                if ($res->zip_code !== '["All"]') {
+                    $check = strpos($res->zip_code,$zipcode);
+                    if ($check == false) {
+                        unset($pagechannel[$key]);
+                    }
+                }
+            }
+        }
+
+        //  return response()->json($record->toSql());
+        $response = [
+            'responseMessage' => 'Success',
+            'responseCode' => '200',
+            'channels' => $pagechannel,
+        ];
+        return response()->json($response, 200);
     }
 
-    public function channeljsonFunc($type){
-  
-    $imagePath=url("/uploads/channellogo/");
-    $second=Channel::toBase()->select('channels.id as channelId',DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),'channels.id as channelStbNumber',
-    DB::raw("CONCAT('$imagePath/',channels.image) as epgEventImage"),
-    DB::raw('IFNULL(channels.callSign,channels.name) CallSign'))
-    // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
-           
+    public function channeljsonFunc($type)
+    {
+
+        $imagePath = url("/uploads/channellogo/");
+        $second = Channel::toBase()->select(
+            'channels.id as channelId',
+            'channels.zip_code',
+            DB::raw('IFNULL(channels.stationName,channels.name) channelTitle'),
+            'channels.id as channelStbNumber',
+            DB::raw("CONCAT('$imagePath/',channels.image) as epgEventImage"),
+            DB::raw('IFNULL(channels.callSign,channels.name) CallSign')
+        )
+        // select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'), 'channels.image',"channels.$type as url")
+
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]' ) genrename")
-           
-           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-    
-    ->where('channels.status','=','1')
-    ->groupBy('channels.id')
-    ->orderBy('channels.name', 'asc');
-    return $second;
+
+        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+        ->where('channels.status', '=', '1')
+        ->groupBy('channels.id')
+        ->orderBy('channels.id', 'asc');
+        return $second;
     }
+
     public function programelist(Request $request) {
          $grace= Gracenote::toBase()->select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
          'channels.id as channelId','EventTitle as programmeTitle','StartDateTime as displayDateTime','EventDescription as shortSynopsis')
