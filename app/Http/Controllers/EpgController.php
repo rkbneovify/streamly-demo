@@ -90,6 +90,28 @@ class EpgController extends Controller
         return $second;
     }
 
+    public function removeFav(Request $request)
+    {
+        try {
+            Auth::user()->favorites()->detach();
+            $response = [
+                'success' => true,
+                'data' => 'All favorites channels removed',
+                'message' => 'Successfully removed from favourite channel list', 'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        } catch (Exception $exception) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error occured',
+                'error' => $exception->getMessage(),
+                'response_code' => 500,
+
+            ], 500);
+        }
+    }
+
     public function programelist(Request $request) {
          $grace= Gracenote::toBase()->select('gracenote.StationName as channelTitle',DB::raw("TIMEDIFF(EndDateTime,StartDateTime)AS displayDuration"),'channels.id as channelStbNumber',
          'channels.id as channelId','EventTitle as programmeTitle','StartDateTime as displayDateTime','EventDescription as shortSynopsis')

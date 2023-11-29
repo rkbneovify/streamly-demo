@@ -303,6 +303,7 @@ Route::post('unfavorite/', 'Pages\LiveTv@unFavoriteChannel');
 Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
 
 Route::get('api/vuechannellist', 'EpgController@channellist');
+Route::post('api/vueremovefav', 'EpgController@removeFav');
 Route::get('api/vueprogramlistwithid', 'EpgController@programelistwithid');
 Route::get('api/auth/tizenepg', 'TizenEPGController@channelDaysSchedule')->middleware(['jwt.verify','subscribed']);
 Route::get('api/auth/v2/tizenepg', 'TizenEPGController@channelDaysScheduleV2')->middleware(['jwt.verify','subscribed']);
