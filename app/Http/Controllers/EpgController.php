@@ -54,6 +54,8 @@ class EpgController extends Controller
                     }
                 }
             }
+            $pagechannel = json_decode(json_encode($pagechannel), true);
+            $pagechannel = array_values($pagechannel);
         }
 
         //  return response()->json($record->toSql());
