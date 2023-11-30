@@ -77,10 +77,22 @@ button.channel__nav__left {
     border-right: 2px solid #464646;
 }
 .channel__programme__section {
+    position: relative;
+    overflow-x:hidden!important;
+    scroll-behavior: smooth;
     left: -1px !important;
     float: left !important;
-    position: relative;
     /* left: -40px !important; */
+}
+
+.channel__programme__section::after {
+    content: '';
+    background: red;
+    inset: 0;
+    width:2px;
+    left:var(--_offset,0px);
+    z-index: 999;
+    position: absolute;
 }
 /*.channel__list__section>div[data-v-56b65aa6] {
     min-height: 135px !important;
@@ -127,9 +139,12 @@ button.channel__nav__left {
 }   
 
 .programme__header {
-    height: 60px !important;
+    position: sticky;
+    top:0;
+    height: 64px !important;
 }
 .programme__header .header__time[data-v-56b65aa6] {
+    position: relative;
     box-sizing: border-box!important;
     flex: 0 0 300px;
     padding-left: 10px;
@@ -190,7 +205,7 @@ div#wrap div {
 }*/
 .channel__filter {
     width: 78vw;
-    position: fixed;
+    /* position: fixed; */
     z-index: 9999 !important;
     min-height: 4% !important;
     /* top: 80px !important;
@@ -199,26 +214,29 @@ div#wrap div {
     overflow: hidden;
 }
 .programme__header {
-    margin-top: 102px;
-    position: fixed;
+    /* margin-top: 102px; */
+    /* position: fixed; */
     z-index: 9999;
     max-width: 57.5% !important;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 .channel__header {
-    position: fixed !important;
+    border-left:1px solid white;
+    background-color: #4d5659;
+    position: sticky !important;
+    top:0;
     z-index: 9999 !important;
-    top: 198px;
+    /* top: 199px; */
     overflow: hidden !important;
     /* width: 100% !important; */
     max-width: 15.5vw;
 }
 .programme__timing__section 
 {
-    margin-top: 161px !important;
+    /* margin-top: 161px !important; */
 }
 .channel__list__section {
-    margin-top: 161px !important;
+    /* margin-top: 161px !important; */
 }
 
 span.programme.programme--no__data {
@@ -252,8 +270,9 @@ nav#mainNav {
     color: darkorange !important;
 }*/
 button#navlefthorizontal {
-    position: fixed;
-    top: 197px;
+    /* position: fixed; */
+    /* top: 197px; */
+    width:10px;
     z-index: 99999;
     padding: 41px 14px 23px 1px !important;
     left: 26.4vw;
@@ -301,8 +320,9 @@ button#navlefthorizontal
     color: darkorange !important;
 }*/
 button#navrighthorizontal {
-    position: fixed;
-    top: 197px !important;
+    position: sticky;
+    top:0;
+    /* top: 197px !important; */
     z-index: 99998 !important;
     /* left: 87vw !important; */
     padding: 41px 14px 23px 1px !important;
@@ -325,7 +345,7 @@ button#navrighthorizontal:after {
     content: "" !important;
 }
 #navrighthorizontal {
-    right: 9.32vw;
+    right: -100%;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAgMTUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9IiNGRjhDMDAiIGZpbGw9InRyYW5zcGFyZW50Ij4KICAgIDxwb2x5bGluZSBwb2ludHM9IjEgMSA4IDcuNSAxIDE0Ij48L3BvbHlsaW5lPgogIDwvZz4KPC9zdmc+Cg==);
     background-position-x: 0%;
     background-repeat: no-repeat !important;
@@ -333,11 +353,16 @@ button#navrighthorizontal:after {
     background-size: 32% 58% !important;
 }
 .programme__header {
-    margin-top: 101px;
-    position: fixed;
+    grid-area: 1 / 2 / 2 / 3;
+    display:flex;
+    overflow:hidden;
+    scroll-behavior:smooth;
+    color:white;
+    /* margin-top: 101px; */
+    /* position: fixed; */
     z-index: 9999;
     max-width: 62.65vw !important;
-    overflow: hidden;
+    /* overflow: hidden; */
     /* left: 345px !important; */
 }
 .header__time {
@@ -379,6 +404,9 @@ button:focus {
     border: 1px solid #6894d4 !important;
 }
 button#navrighthorizontal {
+    grid-area: 1 / 2 / 2 / 3;
+    margin-inline-start: auto;
+    width:4px;
     background: #FF712F !important;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAgMTUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9IiNGRkZGRkYiIGZpbGw9InRyYW5zcGFyZW50Ij4KICAgIDxwb2x5bGluZSBwb2ludHM9IjEgMSA4IDcuNSAxIDE0Ij48L3BvbHlsaW5lPgogIDwvZz4KPC9zdmc+Cg==) !important;
     background-repeat: no-repeat !important;
@@ -386,6 +414,11 @@ button#navrighthorizontal {
     background-position: 7px 17px !important;
 }
 button#navlefthorizontal {
+    position: sticky;
+    inset: 0;
+    top:0;
+    width:4px;
+    grid-area: 1 / 2 / 2 / 3;
     background: #FF712F !important;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAgMTUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPGcgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2U9IiNGRkZGRkYiIGZpbGw9InRyYW5zcGFyZW50Ij4KICAgIDxwb2x5bGluZSBwb2ludHM9IjkgMSAyIDcuNSA5IDE0Ij48L3BvbHlsaW5lPgogIDwvZz4KPC9zdmc+Cg==)!important;
     background-repeat: no-repeat !important;
@@ -474,7 +507,7 @@ button#navlefthorizontal {
     padding: 0px 10px !important;
 }
 .programme__timing__section {
-    margin-top: 179px !important;
+    /* margin-top: 179px !important; */
 }
 .programme__header {
     margin-top: 118px!important;
@@ -488,20 +521,20 @@ button#navlefthorizontal {
 }
 @media only screen and (min-width: 500px) and (max-width: 549px) {
     button#navrighthorizontal {
-    left: 87.5vw !important;
-    right: 12.5vw;
+    /* left: 87.5vw !important; */
+    /* right: 12.5vw; */
 }
 }
 @media only screen and (min-width: 440px) and (max-width: 499px) {
     button#navrighthorizontal {
-    left: 87vw !important;
-    right: 12.5vw;
+    /* left: 87vw !important; */
+    /* right: 12.5vw; */
 }
 }
 @media only screen and (min-width: 400px) and (max-width: 439px) {
     button#navrighthorizontal {
-    left: 86.8vw !important;
-    right: 13vw;
+    /* left: 86.8vw !important; */
+    /* right: 13vw; */
 }
 }
 @media only screen and (min-width: 400px) and (max-width: 599px) {
@@ -531,7 +564,7 @@ button#navlefthorizontal {
 }
 @media only screen and (min-width: 600px){
     button#navrighthorizontal {
-    left: 87vw !important;
+    /* left: 87vw !important; */
 }
 }
 @media only screen and (max-width: 399px) {
