@@ -275,8 +275,8 @@ export default {
 /*=============================================== CHANNEL SECTION ===============================================*/
 
 .channel__section {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns:auto auto;
     cursor: pointer;
 }
 
@@ -369,7 +369,7 @@ export default {
 
 /*.channel__programme__section {
   display:block;
-   overflow-x: scroll;
+   overflow-x: hidden;
 }
 
 .channel__programme__section .programme__header{
@@ -389,7 +389,7 @@ export default {
 */
 
 .channel__programme__section {
-    overflow-x: scroll;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
