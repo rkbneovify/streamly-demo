@@ -113,7 +113,7 @@
 
                   <div class="form-group">
                       <label for="user-password" class="control-label">Password</label>
-                      <input type="password" id="user-password" name="user-password" class="form-control" value="{{old('user-password')}}" required>
+                      <input type="password" id="user-password" name="user-password" class="form-control" minlength="6" value="{{old('user-password')}}" required>
                       <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password1"></span>
                     </div>
 

@@ -398,14 +398,14 @@ input[type=number] {
 						@else
 						<div class="form-group {{ $errors->has('old_password') ? ' has-error' : '' }}">
 							<label for="oldpassword">Old Password</label>
-							<input type="password" class="form-control" name="old_password" id="oldpassword">
+							<input type="password" class="form-control" name="old_password" id="oldpassword" required>
 						</div>
 						@endif
 
 						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
 							<label for="newpassword">New Password</label>
 							<div>
-							<input type="password" class="form-control" name="password" id="newpassword">
+							<input type="password" minlength="6" class="form-control" name="password" id="newpassword" required>
 							<span class="bi bi-eye-slash field_icon" id="togglePasswordnew"></span>
 							</div>
 						</div>
@@ -415,7 +415,7 @@ input[type=number] {
 					
 						
 							<div>
-							<input type="password" class="form-control" name="password_confirmation" id="cnewpassword">
+							<input type="password" minlength="6" class="form-control" name="password_confirmation" id="cnewpassword" required>
 							<span class="bi bi-eye-slash field_icon" id="togglePassword"></span>
 							</div>
 						</div>
