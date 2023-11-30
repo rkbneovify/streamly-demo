@@ -51,7 +51,8 @@ class AuthController extends Controller
             'contact'=>$request->contact,
             'gender'=>$request->gender,
             'dob'=>$request->dob,
-            'email_verified_at'=>null
+            'email_verified_at'=>null,
+            'is_active'=> 0
         ]);
 
         $User->roles()->sync($role->id);
