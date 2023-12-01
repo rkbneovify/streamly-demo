@@ -54,7 +54,7 @@
         margin: 20px 00px;
       }
       .period {
-        display: none;
+        display: block;
       }
     </style>
     <!-- Content Header (Page header) -->
@@ -109,10 +109,10 @@
 
             <div class="input-box">
             <label>
-                 <input type="radio" name="payment_type" value="charge" checked="checked" onclick ="periodIntervalNone()" required>Charge
+                 <input type="radio" name="payment_type" checked="checked" value="subscription" onclick ="periodIntervalShow()">Subscription
             </label>
             <label>
-                 <input type="radio" name="payment_type" value="subscription" onclick ="periodIntervalShow()">Subscription
+                 <input type="radio" name="payment_type" value="charge"  onclick ="periodIntervalNone()" required>Charge
             </label>
             </div>
             <div class="period" id="period">
