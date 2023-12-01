@@ -344,7 +344,7 @@ class PaymentlinkController extends Controller
         if($STRIPE_KEY[0]->type == "Live"){
             $custom_productID = 'prod_OXSTSTeCyMUx3T';
         }else{
-            $custom_productID = 'prod_OXWupQNgUjSA4l';
+            $custom_productID = 'prod_P6hdGfBJwYM7wf';
         };
         if($request['paytype'] == "charge"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
@@ -371,7 +371,7 @@ class PaymentlinkController extends Controller
 					            'city' => $request['city'],
 					            'state' => $request['state'],
 					            'postal_code' => '86336',
-					            'country' => $request['country'],
+					            'country' => 'US',
 					        ],
 
 					    ]);
@@ -457,12 +457,11 @@ class PaymentlinkController extends Controller
 					            'city' => $request['city'],
 					            'state' => $request['state'],
 					            'postal_code' => '86336',
-					            'country' => $request['country'],
+					            'country' => 'US',
 					        ],
 
 					    ]);
              $customerId = $customer->id;
-             //exit;
 
              $product = \Stripe\Plan::create([
                 'amount' => $request['txthprice'],
