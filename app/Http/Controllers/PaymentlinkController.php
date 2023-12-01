@@ -168,7 +168,7 @@ class PaymentlinkController extends Controller
         //dd($checkEmail);
         if($checkEmail){
             if(!$checkEmail->email_verified_at == Null){
-            $tinyUrl = $this->getTinyUrl('http://127.0.0.1:8000/checkout/'.$checkEmail->user_id.'');
+            $tinyUrl = $this->getTinyUrl(env("APP_URL").$checkEmail->user_id.'');
             
             $payment_links = DB::table('payment_links')->insert(
                 array(
