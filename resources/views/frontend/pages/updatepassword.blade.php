@@ -62,7 +62,7 @@
 						<div class="form-group">
 							<label for="newpassword">New Password</label>
 							<div>
-							<input type="password" class="form-control" name="password" required id="newpassword">
+							<input type="password" class="form-control" minlength="6" name="password" required id="newpassword">
 							<span class="bi bi-eye-slash field_icon" id="togglePasswordnew"></span>
 							</div>
 						</div>
@@ -72,7 +72,7 @@
 					
 						
 							<div>
-							<input type="password" class="form-control" name="password_confirmation" required id="cnewpassword">
+							<input type="password" class="form-control" minlength="6" name="password_confirmation" required id="cnewpassword">
 							<span class="bi bi-eye-slash field_icon" id="togglePassword"></span>
 							</div>
 						</div>
