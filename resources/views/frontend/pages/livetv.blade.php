@@ -81,7 +81,7 @@ $.ajax({
 	 },
 
 	 success:function(data){
-	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:1.75em">♥</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-remove"><img data-v-56b65aa6="" src="/uploads/devicelogo/heartfill.svg" class="pgGuideiconView1"></span>');
 
 	 }
 
@@ -108,8 +108,7 @@ $.ajax({
 	 },
 
 	 success:function(data){
-
-	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:1.5em" >♡</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-submit" ><img data-v-56b65aa6="" src="/uploads/devicelogo/heart.svg" class="pgGuideiconView1"></span>');
 
 	 }
 
@@ -125,6 +124,11 @@ $.ajax({
 
 		body{
 			background: #F9F9F9 0% 0% no-repeat padding-box;
+		}
+
+		.live-news-item.item{
+			background-color: #4d5659;
+			padding: 0 0;
 		}
 
 		/* .owl-carousel .owl-item img {
@@ -147,13 +151,16 @@ $.ajax({
 		}
 		.channel-id{
 			position: absolute;
-			top: 5px;
+			top: 35px;
 			left: 15px;
+			font-size: 1.5vw;
+			font-weight: bold;
+			color: #d6d9da!important;
 		}
 
 		.channel-fav{
 			position: absolute;
-			top: 0px;
+			top: 35px;
 			right: 15px;
 		}
 		.item {
@@ -278,7 +285,7 @@ $.ajax({
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
 						
-						<div class="live-news-item item" style="width:200px;height:230px">
+						<div class="live-news-item item" style="width:260px;height:180px">
 						<div class="channel-id">{{$channeldet->id}}</div>
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
 								
@@ -286,16 +293,20 @@ $.ajax({
 					
 							@if($channeldet->id == '11')
 								<p  style=" max-width: auto;
-							padding: 0px 10px;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;">TVG: Horse Racing</p>
+								color: #d6d9da;
+								font-size: 1.0vw;
+								padding: 0px 10px;
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;">TVG: Horse Racing</p>
 							@else
 								<p  style=" max-width: auto;
-							padding: 0px 10px;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;">{{  $channeldet->StationName??$channeldet->name}}</p>
+								color: #d6d9da;
+								font-size: 1.0vw;
+								padding: 0px 10px;
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;">{{  $channeldet->StationName??$channeldet->name}}</p>
 							@endif
 						</a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -308,9 +319,9 @@ $.ajax({
 <div class="panel-footer channel-fav" id="{{ $channeldet->id }}">
 		{{-- {{ $channeldet->id }} --}}
 		@if ($channeldet->favorited())	
-		<span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:1.75em">♥</span>
+		<span data-id="{{ $channeldet->id }}" class=" btn-remove"><img data-v-56b65aa6="" src="/uploads/devicelogo/heartfill.svg" class="pgGuideiconView1"></span>
 		@else
-		<span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:1.5em">♡</span>
+		<span data-id="{{ $channeldet->id }}" class=" btn-submit"><img data-v-56b65aa6="" src="/uploads/devicelogo/heart.svg" class="pgGuideiconView1"></span>
 		@endif
 		
 </div>
