@@ -323,7 +323,7 @@ curl_close($curl);
                         }
                     },
                 ],
-                'password' => 'confirmed|string|min:8',
+                'password' => 'confirmed|string|min:6',
             ]);
             // $validatedData = $request->validate([
             //     'old_password' => 'required',
@@ -331,7 +331,7 @@ curl_close($curl);
             // ], [], $attributeNames);
         }else{
             $validator = Validator::make($request->all(), [
-                'password' => 'confirmed|string|min:8',
+                'password' => 'confirmed|string|min:6',
             ]);
         }
         if($validator->fails()) {
