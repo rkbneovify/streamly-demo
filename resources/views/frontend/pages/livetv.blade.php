@@ -81,7 +81,7 @@ $.ajax({
 	 },
 
 	 success:function(data){
-	$('#'+channelid).html('<p>Added to favorites</p> <span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:2em">♥</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:1.75em">♥</span>');
 
 	 }
 
@@ -109,7 +109,7 @@ $.ajax({
 
 	 success:function(data){
 
-	$('#'+channelid).html('<p>Add to favorites</p> <span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:2em" >♡</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:1.5em" >♡</span>');
 
 	 }
 
@@ -137,10 +137,25 @@ $.ajax({
 
 			display: block;
     margin: 0 auto;
+	margin: 1.5em auto;
 			height: 100px;
     width: 100px;
 		}
 
+		.owl-stage-outer.owl-height{
+			height: 300px!important;
+		}
+		.channel-id{
+			position: absolute;
+			top: 5px;
+			left: 15px;
+		}
+
+		.channel-fav{
+			position: absolute;
+			top: 0px;
+			right: 15px;
+		}
 		.item {
 			
 	        background-color: white;
@@ -263,8 +278,8 @@ $.ajax({
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
 						
-						<div class="live-news-item item" style="width:200px;height:280px">
-							
+						<div class="live-news-item item" style="width:200px;height:230px">
+						<div class="channel-id">{{$channeldet->id}}</div>
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
 								
 									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding:1vw' class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
@@ -290,16 +305,16 @@ $.ajax({
                 <input type="hidden" name="channelid" value="{{$channeldet->id}}" class="form-control">
 
 @if (Auth::check())
-<div class="panel-footer" id="{{ $channeldet->id }}">
+<div class="panel-footer channel-fav" id="{{ $channeldet->id }}">
 		{{-- {{ $channeldet->id }} --}}
 		@if ($channeldet->favorited())	
-		<p>Added to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:2em">♥</span>
+		<span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:1.75em">♥</span>
 		@else
-		<p>Add to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:2em">♡</span>
+		<span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:1.5em">♡</span>
 		@endif
 		
 </div>
-@endif
+@endif 
 </form>
 						</div> 
 						@endforeach
