@@ -330,11 +330,11 @@ class PaymentlinkController extends Controller
 
             $masteruserData = User::where('id', $master_id)->first();
             $plandetails_masteruser = DB::table('payment_links')->where('user_id', $master_id)->latest('created_at')->first();
-         
+            $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_key');
             if($plandetails_masteruser->status){
                 return view('alreadydone', compact('masteruserData'));
             }else{
-                return view('checkout', compact('masteruserData', 'plandetails_masteruser'));
+                return view('checkout', compact('masteruserData', 'plandetails_masteruser','STRIPE_KEY'));
             }
         }
 
@@ -349,15 +349,7 @@ class PaymentlinkController extends Controller
         if($request['paytype'] == "charge"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
 
-    		$token = \Stripe\Token::create([
-										        'card' => [
-										            'number' => $request['cardnumber'], // Replace with actual card number
-										            'exp_month' => $request['expmonth'],
-										            'exp_year' => $request['expyear'],
-										            'cvc' => $request['cvv'], // Replace with actual CVC
-										        ],
-										    ]);
-			 $cardToken = $token->id;
+			 $cardToken = $request['payment_method'];
 			 //dd($cardToken);
 
 			 $customer = \Stripe\Customer::create([
@@ -435,15 +427,7 @@ class PaymentlinkController extends Controller
         }elseif($request['paytype'] == "subscription"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
 
-    		$token = \Stripe\Token::create([
-										        'card' => [
-										            'number' => $request['cardnumber'], // Replace with actual card number
-										            'exp_month' => $request['expmonth'],
-										            'exp_year' => $request['expyear'],
-										            'cvc' => $request['cvv'], // Replace with actual CVC
-										        ],
-										    ]);
-			 $cardToken = $token->id;
+    		$cardToken = $request['payment_method'];
 			 //dd($cardToken);
 
 			 $customer = \Stripe\Customer::create([
