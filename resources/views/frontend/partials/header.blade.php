@@ -33,6 +33,21 @@
                             <div id="search_list"></div>  
                         </div> --}}
                     </li>
+                    @if (Auth::user()->subscribed('main')) 
+                    <li class="nav-item dropdown">
+                        <a style="background: " class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="{{ asset('frontend/img/test.png') }}" width="40" height="40"/>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                            {{-- <span class="dropdown-menu-arrow"></span> --}}
+                            <a class="dropdown-item" href="/react">Program Guide</a>
+                            <a class="dropdown-item" href="/livetv/list">All channels</a>
+                            <a class="dropdown-item" href="/livetv">All channels with genre</a>
+                            <a class="dropdown-item" href="/my_favorites">My favorite</a>
+                            <a class="dropdown-item" href="/livetv/recent">My recents</a>
+                        </div>
+                      </li>
+                      @endif
                     <li class="nav-item dropdown">
                         <a style="background: " class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <img src="{{ asset('frontend/img/noun_profile.svg') }}" width="40" height="40" class="rounded-circle" />
@@ -43,20 +58,11 @@
                             <a class="dropdown-item" href="/account/settings">Account Settings</a>
                             <a class="dropdown-item" href="/qrscanner">QR Scanner</a>
                             <a class="dropdown-item" href="/account/devices">Manage Connected device</a>
-                            @if (Auth::user()->subscribed('main')) 
-                            <a class="dropdown-item" href="/react">Program Guide</a>
-                            <a class="dropdown-item" href="/livetv/list">All channels</a>
-                            <a class="dropdown-item" href="/livetv">All channels with genre</a>
-                            <a class="dropdown-item" href="/my_favorites">My favorite</a>
-                            <a class="dropdown-item" href="/livetv/recent">My recents</a>
-                            @endif
                             <a class="dropdown-item" href="/download">Download app</a>
                             <a class="dropdown-item" href="/faq">Help & Support</a>
                             <a class="dropdown-item logouttheuser"  href="javascript:void(0)">Logout</a>
                         </div>
                       </li>
-                    
-
                 @else
 
                     <li class="nav-item"><a class="btn btn-primary  js-scroll-trigger "  href="/checkAvailabilty"><b>Check Availability</b></a></li>

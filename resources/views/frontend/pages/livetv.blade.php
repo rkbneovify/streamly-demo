@@ -28,6 +28,99 @@
 
 		});*/
 		$(document).ready(function() {
+
+			var x = document.getElementById("demo");
+
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition,showLocationError);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+
+  function showLocationError(error){
+
+	if (error.code === 1) {
+                // Permission denied or not yet requested
+		showLocationPermissionPopup();
+	}
+
+  }
+
+  function showLocationPermissionPopup() {
+    // Show a popup/modal asking the user to allow location access
+    // You can use a library like Bootstrap modal or create a custom modal
+    // For simplicity, we're using the built-in window.confirm
+    var allowLocation = window.confirm('Please enable location services to access all channels on Streamly TV. For further information go to Help.');
+
+    if (allowLocation) {
+        // Try to get the user's location again
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+		x.innerHTML = 'Location access denied. Some features may not work.';
+    }
+}
+
+  function showPosition(position) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+  var tokenn =  $("input[name=_token]").val()
+
+  console.log(tokenn);
+
+  var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append('X-CSRF-TOKEN', tokenn);
+
+
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch("<?php echo env("FRONTEND_URL") ?>"+"api/setzipcode", requestOptions)
+  .then(response => console.log(response))
+  .catch(error => console.log('error', error));
+
+// fetch("https://streamlytv.com/api/auth/geofence", requestOptions)
+//   .then(response => response.json())
+//   .then(result => {   
+// 	   if("Not within zipcode boundary" == result.message){
+// 		//console.log("{{session()->get('key1')}}");
+// 		if("{{session()->get('key1')}}"){
+
+// 		}else{
+// 			const targetDiv = document.getElementById("hideElement");
+//      	    targetDiv.style.display = "block";
+//              $('#blur').addClass('mixs');
+// 		}
+
+// 	   }else{
+// 		//    console.log("no");
+// 	   }
+//   })
+//   .catch(error => console.log('error', error));
+
+}
+
+
+function showWarning(){
+
+	<?php session(['key1' => 1]);  ?>
+	const targetDiv = document.getElementById("hideElement");
+
+	targetDiv.style.display = "none";
+
+	$('#blur').addClass('mixm');
+
+}
 		var owl = $('.owl-carousel');
 		$.ajaxSetup({
 
@@ -322,8 +415,7 @@ $.ajax({
 		<span data-id="{{ $channeldet->id }}" class=" btn-remove"><img data-v-56b65aa6="" src="/uploads/devicelogo/heartfill.svg" class="pgGuideiconView1"></span>
 		@else
 		<span data-id="{{ $channeldet->id }}" class=" btn-submit"><img data-v-56b65aa6="" src="/uploads/devicelogo/heart.svg" class="pgGuideiconView1"></span>
-		@endif
-		
+		@endif		
 </div>
 @endif 
 </form>
@@ -365,66 +457,6 @@ $.ajax({
 	)
 })();
 
-var x = document.getElementById("demo");
-
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-
-  function showPosition(position) {
-  var latitude = position.coords.latitude;
-  var longitude = position.coords.longitude;
-
-  var myHeaders = new Headers();
-myHeaders.append("Accept", "application/json");
-myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
-
-var formdata = new FormData();
-formdata.append("latitude", latitude);
-formdata.append("longitude", longitude);
-
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: formdata,
-  redirect: 'follow'
-};
-
-fetch("https://streamlytv.com/api/auth/geofence", requestOptions)
-  .then(response => response.json())
-  .then(result => {   
-	   if("Not within zipcode boundary" == result.message){
-		//console.log("{{session()->get('key1')}}");
-		if("{{session()->get('key1')}}"){
-
-		}else{
-			const targetDiv = document.getElementById("hideElement");
-     	    targetDiv.style.display = "block";
-             $('#blur').addClass('mixs');
-		}
-
-	   }else{
-		//    console.log("no");
-	   }
-  })
-  .catch(error => console.log('error', error));
-
-}
-
-
-function showWarning(){
-
-	<?php session(['key1' => 1]);  ?>
-	const targetDiv = document.getElementById("hideElement");
-
-	targetDiv.style.display = "none";
-
-	$('#blur').addClass('mixm');
-
-}
 </script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
