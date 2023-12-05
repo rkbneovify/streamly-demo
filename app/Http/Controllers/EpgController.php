@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Traits\GetLocation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class EpgController extends Controller
 {
@@ -43,7 +44,10 @@ class EpgController extends Controller
             return $message;
         });
 
-        $zipcode = $this->getUserZipCode();
+        if(Session::has('zipuser'))
+            $zipcode = Session::get('zipuser');
+        else
+            $zipcode = $this->getUserZipCode();
         if ($validate) {
             foreach ($pagechannel as $key => $res) {
 

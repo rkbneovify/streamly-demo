@@ -11,13 +11,20 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Traits\GetLocation;
 use App\SessionTable;
-
+use Illuminate\Support\Facades\Session;
 use App\Models\Gracenotechannel;
 class LiveTv extends Controller
 { 
     use GetLocation;
     public $exculdedUsers = ["qajalaj@yopmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
+    public function setzipcode(Request $request){
+
+        $data = reverseAddressLookup($request->latitude ,$request->longitude);
+        Session::put('zipuser',$data['address']['postcode']);
+        return back();
+
+    }
 
     public function showPage()
     {
@@ -48,8 +55,10 @@ class LiveTv extends Controller
         ->where('channels.status', '=', '1')
         ->orderBy('genrenae', 'asc')->get();
 
-
-        $zipcode = $this->getUserZipCode();
+        if(Session::has('zipuser'))
+            $zipcode = Session::get('zipuser');
+        else
+            $zipcode = $this->getUserZipCode();
         if ($validate) {
             foreach ($second  as $key => $res) {
 
@@ -357,7 +366,10 @@ return $second;
         ->orderBy('channels.StationName', 'asc')->get();
 
 
-        $zipcode = $this->getUserZipCode();
+        if(Session::has('zipuser'))
+            $zipcode = Session::get('zipuser');
+        else
+            $zipcode = $this->getUserZipCode();
         if ($validate) {
             foreach ($second  as $key => $res) {
 
