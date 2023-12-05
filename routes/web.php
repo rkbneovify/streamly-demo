@@ -42,7 +42,7 @@ Route::get('/tags', function() {
     return view('frontend.mydata2');
 });
 Route::get('/tags/find', 'HomeTwoController@find');
-
+Route::post('/api/setzipcode','Pages\LiveTv@setzipcode');
 Route::get('search', 'HomeTwoController@search')->name('search');
 Route::get('mydata', 'HomeTwoController@mydata')->name('mydata');//infinite scroll
 Route::get('search2', 'HomeTwoController@search2')->name('search2');
@@ -301,6 +301,7 @@ Route::post('/insertpay/{StripeplanId}','Pages\Payment@pay')->name('insertpay');
 Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');
 Route::post('unfavorite/', 'Pages\LiveTv@unFavoriteChannel');
 Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
+
 
 Route::get('api/vuechannellist', 'EpgController@channellist');
 Route::post('api/vueremovefav', 'EpgController@removeFav');
