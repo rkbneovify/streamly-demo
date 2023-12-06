@@ -75,7 +75,7 @@
             {
             data: 'amount',
             render: function (data) {
-               return '<span>$ {{ $paylink->amount / 100 }}</span>'
+               return '<span>$ '+data/100+'</span>'
             }
             },
             {

@@ -47,7 +47,7 @@
 
                             <div class="col-md-6">
                             <div>
-                            <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                            <input id="password" minlength="6" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 							<!-- <input type="password" class="form-control" name="password" id="newpassword"> -->
 							<span class="bi bi-eye-slash field_icon" id="togglePasswordnew"></span>
 							</div>
@@ -66,7 +66,7 @@
 
                             <div class="col-md-6">
                                 <div>
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                                <input id="password-confirm" minlength="6" type="password" class="form-control" name="password_confirmation" required>
                                 <!-- <input type="password" class="form-control" name="password_confirmation" id="cnewpassword"> -->
 							    <span class="bi bi-eye-slash field_icon" id="togglePassword"></span>
                                 </div>

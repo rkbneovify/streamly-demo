@@ -276,6 +276,37 @@ curl_close($curl);
         
     }
 
+    public function updatePass(Request $request, $id)
+    {
+        $userinfo = User::find($id);
+        $input = $request->only('old_password', 'password');
+
+        $credentials = ['email' => $userinfo->email, 'password' => $input['old_password']];
+        $token = JWTAuth::attempt($credentials);
+        if (!$token) {
+            return redirect()->back()->with('error', 'Wrong old password');
+        }
+
+        $input['password'] = Hash::make($input['password']); //update the password
+
+        if ($request['password'] == $request['old_password']) {
+            return redirect()->back()->with('error', 'Your Old Password Cannot Be New Password');
+        } else {
+            $user = User::find($id);
+            $input['forced_change'] = 0;
+            $user->update($input); //update the user info
+
+            $userRole = $user->roles->pluck('name');
+
+            if ((@$userRole[0] == 'admin' || @$userRole[0] == 'superadmin')) {
+                return redirect('/admin');
+            } else {
+                return redirect('/livetv');
+            }
+        }
+    }
+
+
     public function update(Request $request, $id)
     { 
         $userinfo = User::find($id);
@@ -292,7 +323,7 @@ curl_close($curl);
                         }
                     },
                 ],
-                'password' => 'confirmed|string|min:8',
+                'password' => 'confirmed|string|min:6',
             ]);
             // $validatedData = $request->validate([
             //     'old_password' => 'required',
@@ -300,7 +331,7 @@ curl_close($curl);
             // ], [], $attributeNames);
         }else{
             $validator = Validator::make($request->all(), [
-                'password' => 'confirmed|string|min:8',
+                'password' => 'confirmed|string|min:6',
             ]);
         }
         if($validator->fails()) {
