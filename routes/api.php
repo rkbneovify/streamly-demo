@@ -52,6 +52,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('authtokenrefresh', 'Auth\AuthController@authRefesh');
     Route::post('login-with-passcode', 'Auth\AuthController@loginWithPasscode');
     Route::post('change-password', 'Auth\AuthController@changePassword');
+    Route::get('check-session', 'Auth\AuthController@checkSession');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('same-device-id-logout', 'Auth\AuthController@samedevicelogout')->name('samedeviceidlogout');
     Route::post('logout-device-session', 'Auth\AuthController@logoutDevice')->name('logoutdeveicesession');

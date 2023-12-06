@@ -254,35 +254,14 @@
               <i class="fa fa-cc-discover" style="color:orange;"></i>
             </div>
             
+            <label for="card-element" class="control-label">Name on Card</label>
+														<input type="text" id="name" name="name" class="form-control" required>
+
+            
             <label for="ccnum">Credit card number</label>
-            <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444" onkeypress="validate(event)" required>
-            <label for="expmonth">Exp Month</label>
-           
-            <select name="expmonth" id="expmonth">
-              <option value="01" selected>January</option>
-              <option value="02">February</option>
-              <option value="03">March</option>
-              <option value="04">April</option>
-              <option value="05">May</option>
-              <option value="06">June</option>
-              <option value="07">July</option>
-              <option value="08">August</option>
-              <option value="09">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-            <div class="row">
-              <div class="col-50">
-                <label for="expyear">Exp Year</label>
-                <input type="text" id="expyear" name="expyear" placeholder="2027" maxlength="4" onkeypress="validate(event)" onblur="isValidExpiryYear(this.value);" required>
-                <p id="errorMessage" style="color: red; display: none; font-size:0.8rem; margin: 0px;">Warning: Card year is not valid</p>
-              </div>
-              <div class="col-50">
-                <label for="cvv">CVV</label>
-                <input type="password" id="cvv" name="cvv" placeholder="123" maxlength="3" onkeypress="validate(event)" required>
-              </div>
-            </div>
+            <div id="card-element" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></div>
+														<div id="card-errors" class="text-red-400 text-bold mt-2 text-sm font-medium"></div>
+
           </div>
 
         </div>
@@ -290,7 +269,7 @@
           <input type="hidden" name="txthprice" id="txthprice" value="<?php echo $plandetails_masteruser->amount; ?>">
           <input type="checkbox" checked="checked" name="sameadr"> Shipping address same as billing
         </label>
-        <input type="submit" value="Proceed To Payment" class="btn">
+        <input type="submit" id="card-button" value="Proceed To Payment" class="btn">
         <div class="loader-container" id="loaderContainer">
           <div class="loader"></div>
         </div>
@@ -364,13 +343,57 @@ $(":input").inputmask();
 $("#ccnum").inputmask({"mask": "9999 9999 9999 9999"});
 
 </script>
+<script src="https://js.stripe.com/v3/"></script>
 <script>
 $(document).ready(function() {
-  $("#frmpayment").submit(function(event) {
+
+  const stripe = Stripe('<?php echo $STRIPE_KEY ?>');
+           // console.log(stripe);
+
+            const elements = stripe.elements();
+            const card = elements.create('card',{hidePostalCode: true});
+
+            card.mount('#card-element');
+
+            const cardHolderName = document.getElementById('name');
+            const cardButton = document.getElementById('card-button');
+            const clientSecret = cardButton.dataset.secret;
+            let validCard = false;
+            const cardError = document.getElementById('card-errors');
+
+            card.addEventListener('change', function(event) {
+                
+                if (event.error) {
+                    validCard = false;
+                    cardError.textContent = event.error.message;
+                } else {
+                    validCard = true;
+                    cardError.textContent = '';
+                }
+            });
+  
+
+  $("#frmpayment").submit(async function(event) {
     event.preventDefault(); // Prevent default form submission
 
-    // Show loader
+    var form = document.getElementById('frmpayment');
     $("#loaderContainer").show();
+
+    const { token, error } = await stripe.createToken(card);
+
+    if (error) {
+        // Display "error.message" to the user...
+        console.log(error);
+    } else {
+        // The card has been verified successfully...
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'payment_method');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+        // Submit the form
+    }
+
 
     // Collect form data
     var formData = $(this).serialize();

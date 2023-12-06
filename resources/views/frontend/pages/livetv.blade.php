@@ -28,6 +28,99 @@
 
 		});*/
 		$(document).ready(function() {
+
+			var x = document.getElementById("demo");
+
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition,showLocationError);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+
+  function showLocationError(error){
+
+	if (error.code === 1) {
+                // Permission denied or not yet requested
+		showLocationPermissionPopup();
+	}
+
+  }
+
+  function showLocationPermissionPopup() {
+    // Show a popup/modal asking the user to allow location access
+    // You can use a library like Bootstrap modal or create a custom modal
+    // For simplicity, we're using the built-in window.confirm
+    var allowLocation = window.confirm('Please enable location services to access all channels on Streamly TV. For further information go to Help.');
+
+    if (allowLocation) {
+        // Try to get the user's location again
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+		x.innerHTML = 'Location access denied. Some features may not work.';
+    }
+}
+
+  function showPosition(position) {
+  var latitude = position.coords.latitude;
+  var longitude = position.coords.longitude;
+  var tokenn =  $("input[name=_token]").val()
+
+  console.log(tokenn);
+
+  var myHeaders = new Headers();
+myHeaders.append("Accept", "application/json");
+myHeaders.append('X-CSRF-TOKEN', tokenn);
+
+
+
+var formdata = new FormData();
+formdata.append("latitude", latitude);
+formdata.append("longitude", longitude);
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: formdata,
+  redirect: 'follow'
+};
+
+fetch("<?php echo env("FRONTEND_URL") ?>"+"api/setzipcode", requestOptions)
+  .then(response => console.log(response))
+  .catch(error => console.log('error', error));
+
+// fetch("https://streamlytv.com/api/auth/geofence", requestOptions)
+//   .then(response => response.json())
+//   .then(result => {   
+// 	   if("Not within zipcode boundary" == result.message){
+// 		//console.log("{{session()->get('key1')}}");
+// 		if("{{session()->get('key1')}}"){
+
+// 		}else{
+// 			const targetDiv = document.getElementById("hideElement");
+//      	    targetDiv.style.display = "block";
+//              $('#blur').addClass('mixs');
+// 		}
+
+// 	   }else{
+// 		//    console.log("no");
+// 	   }
+//   })
+//   .catch(error => console.log('error', error));
+
+}
+
+
+function showWarning(){
+
+	<?php session(['key1' => 1]);  ?>
+	const targetDiv = document.getElementById("hideElement");
+
+	targetDiv.style.display = "none";
+
+	$('#blur').addClass('mixm');
+
+}
 		var owl = $('.owl-carousel');
 		$.ajaxSetup({
 
@@ -81,7 +174,7 @@ $.ajax({
 	 },
 
 	 success:function(data){
-	$('#'+channelid).html('<p>Added to favorites</p> <span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:2em">♥</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-remove"><img data-v-56b65aa6="" src="/uploads/devicelogo/heartfill.svg" class="pgGuideiconView1"></span>');
 
 	 }
 
@@ -108,8 +201,7 @@ $.ajax({
 	 },
 
 	 success:function(data){
-
-	$('#'+channelid).html('<p>Add to favorites</p> <span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:2em" >♡</span>');
+	$('#'+channelid).html('<span data-id='+channelid+' class=" btn-submit" ><img data-v-56b65aa6="" src="/uploads/devicelogo/heart.svg" class="pgGuideiconView1"></span>');
 
 	 }
 
@@ -127,6 +219,11 @@ $.ajax({
 			background: #F9F9F9 0% 0% no-repeat padding-box;
 		}
 
+		.live-news-item.item{
+			background-color: #4d5659;
+			padding: 0 0;
+		}
+
 		/* .owl-carousel .owl-item img {
 		    display: block;
 		    width: auto;
@@ -137,10 +234,28 @@ $.ajax({
 
 			display: block;
     margin: 0 auto;
+	margin: 1.5em auto;
 			height: 100px;
     width: 100px;
 		}
 
+		.owl-stage-outer.owl-height{
+			height: 300px!important;
+		}
+		.channel-id{
+			position: absolute;
+			top: 35px;
+			left: 15px;
+			font-size: 1.5vw;
+			font-weight: bold;
+			color: #d6d9da!important;
+		}
+
+		.channel-fav{
+			position: absolute;
+			top: 35px;
+			right: 15px;
+		}
 		.item {
 			
 	        background-color: white;
@@ -255,6 +370,7 @@ $.ajax({
 		<section id="blur" class="page-section">
 			
 		@foreach($pagechannel as $key => $user)
+		
 		<div class="container">
 	
 				<h4 class="section-heading">{{$key}} <a style="font-size:15px" href="/livetv/{{$key}}">show all</a></h4> 
@@ -262,24 +378,28 @@ $.ajax({
 					<div class="live-news-carousel owl-carousel">
 						@foreach ($user as $channeldet)
 						
-						<div class="live-news-item item" style="width:200px;height:280px">
-							
+						<div class="live-news-item item" style="width:260px;height:180px">
+						<div class="channel-id">{{$channeldet->id}}</div>
 							<a href="{{url('livetv/'.$channeldet->CallSign.'/'.$key)}}">
 								
 									<div class="channelogosame" >	<img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding:1vw' class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
 					
 							@if($channeldet->id == '11')
 								<p  style=" max-width: auto;
-							padding: 0px 10px;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;">TVG: Horse Racing</p>
+								color: #d6d9da;
+								font-size: 1.0vw;
+								padding: 0px 10px;
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;">TVG: Horse Racing</p>
 							@else
 								<p  style=" max-width: auto;
-							padding: 0px 10px;
-							overflow: hidden;
-							white-space: nowrap;
-							text-overflow: ellipsis;">{{  $channeldet->StationName??$channeldet->name}}</p>
+								color: #d6d9da;
+								font-size: 1.0vw;
+								padding: 0px 10px;
+								overflow: hidden;
+								white-space: nowrap;
+								text-overflow: ellipsis;">{{  $channeldet->StationName??$channeldet->name}}</p>
 							@endif
 						</a>
 							<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -289,16 +409,15 @@ $.ajax({
                 <input type="hidden" name="channelid" value="{{$channeldet->id}}" class="form-control">
 
 @if (Auth::check())
-<div class="panel-footer" id="{{ $channeldet->id }}">
+<div class="panel-footer channel-fav" id="{{ $channeldet->id }}">
 		{{-- {{ $channeldet->id }} --}}
 		@if ($channeldet->favorited())	
-		<p>Added to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:2em">♥</span>
+		<span data-id="{{ $channeldet->id }}" class=" btn-remove"><img data-v-56b65aa6="" src="/uploads/devicelogo/heartfill.svg" class="pgGuideiconView1"></span>
 		@else
-		<p>Add to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:2em">♡</span>
-		@endif
-		
+		<span data-id="{{ $channeldet->id }}" class=" btn-submit"><img data-v-56b65aa6="" src="/uploads/devicelogo/heart.svg" class="pgGuideiconView1"></span>
+		@endif		
 </div>
-@endif
+@endif 
 </form>
 						</div> 
 						@endforeach
@@ -338,66 +457,6 @@ $.ajax({
 	)
 })();
 
-var x = document.getElementById("demo");
-
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else { 
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-
-  function showPosition(position) {
-  var latitude = position.coords.latitude;
-  var longitude = position.coords.longitude;
-
-  var myHeaders = new Headers();
-myHeaders.append("Accept", "application/json");
-myHeaders.append("Authorization", "Bearer {{session()->get('jwttoken')}}");
-
-var formdata = new FormData();
-formdata.append("latitude", latitude);
-formdata.append("longitude", longitude);
-
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: formdata,
-  redirect: 'follow'
-};
-
-fetch("https://streamlytv.com/api/auth/geofence", requestOptions)
-  .then(response => response.json())
-  .then(result => {   
-	   if("Not within zipcode boundary" == result.message){
-		//console.log("{{session()->get('key1')}}");
-		if("{{session()->get('key1')}}"){
-
-		}else{
-			const targetDiv = document.getElementById("hideElement");
-     	    targetDiv.style.display = "block";
-             $('#blur').addClass('mixs');
-		}
-
-	   }else{
-		//    console.log("no");
-	   }
-  })
-  .catch(error => console.log('error', error));
-
-}
-
-
-function showWarning(){
-
-	<?php session(['key1' => 1]);  ?>
-	const targetDiv = document.getElementById("hideElement");
-
-	targetDiv.style.display = "none";
-
-	$('#blur').addClass('mixm');
-
-}
 </script>
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

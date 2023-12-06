@@ -67,7 +67,7 @@ class HomeTwoController extends Controller
             }else{
                 $validatedData = $request->validate([
                     'name' => 'required|string|max:255',
-                    'user-password' => 'required|string|min:8',
+                    'user-password' => 'required|string|min:6',
                     'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
                     'zip_code'=>'required|exists:zipcodes,zipcode,status,1',
                     'g-recaptcha-response'=>'required'
@@ -130,7 +130,7 @@ class HomeTwoController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'user-email' => 'required|string|email|max:255|unique:users,email',
-            'user-password' => 'required|string|min:8',
+            'user-password' => 'required|string|min:6',
             'zip_code' => 'required|regex:/^[0-9]{3,7}$/',
             'zip_code'=>'required|exists:zipcodes,zipcode,status,1',
             'g-recaptcha-response'=>'required'
