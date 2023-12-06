@@ -51,7 +51,14 @@ input[type=number] {
 @stop
 @section('content')
 
-
+@if(session()->has('existuser'))
+  <div class="alert alert-danger">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong style= "align-items: center;
+    display: flex;
+    justify-content: center;">User already exist with this email,&nbsp;<a href = "/admin/users/edit/{{ session()->get('existuser') }}">Click here to edit user</a></strong>
+  </div>
+@endif
 
           <!-- Content Wrapper. Contains page content -->
           <div class="content-wrapper">

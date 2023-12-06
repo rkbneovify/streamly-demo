@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use JWTAuth;
 use App\Models\Gracenote;
 use Illuminate\Support\Facades\DB;
 use App\Models\Channel;
@@ -15,6 +15,7 @@ use App\Traits\PaginationTraits;
 class ChannelAPIController extends Controller
 {
     use PaginationTraits;
+    public $exculdedUsers = ["qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
     public function __construct()
     {
@@ -173,84 +174,131 @@ class ChannelAPIController extends Controller
         return $platform. ' ' .$browser . ' ' . $version;
     }
 }
-  
-public function channeljson(Request $request) 
-{   
-    $ua = $request->server('HTTP_USER_AGENT');
-    $deviceType=$request->get('deviceType');
-    $urlType=$request->get('typeurl');
-    $isDevice=isDeviceAppleRokuOthers($ua);
-    if($isDevice=='roku' || $urlType=='manifest'){    
-        // $record= Cache::rememberForever('channelslistsmooth', function () {
-        // $type='smooth_url';
-        // return $this->channeljsonFunc($type)->get();});
-        $record = $this->channeljsonFunc('smooth_url')->get();
-                
-    }else if($isDevice=='apple' || $urlType=='m3u8')  {
-        // $record= Cache::rememberForever('channelslistapple', function () {
-        // $type='url';
-        // return $this->channeljsonFunc($type)->get();});
-        $record = $this->channeljsonFunc('url')->get();
-                
-    }else if($deviceType=='apple')  {
-    // $record= Cache::rememberForever('channelslistapple', function () {
-    // $type='url';
-    // return $this->channeljsonFunc($type)->get();});
-    $record = $this->channeljsonFunc('url')->get();
-            
-    }
-    else{
 
-    //     $record= Cache::rememberForever('channelslistdash', function () {
-    //     $type='dash_url';
-    //     return $this->channeljsonFunc($type)->get();
-    // });
-    $record = $this->channeljsonFunc('dash_url')->get();
-    }
-       
-    //JSON_ARRAY
-    // $pagechannel=$record->get();
+    public function channeljson(Request $request)
+    {
+        $user = JWTAuth::user();
+        $ua = $request->server('HTTP_USER_AGENT');
+        $deviceType = $request->get('deviceType');
+        $urlType = $request->get('typeurl');
+        $zipcode = $request->get('zipcode');
+        $validate = 0;
+        if(!in_array($user->email,$this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        if ($isDevice == 'roku' || $urlType == 'manifest') {
+            // $record= Cache::rememberForever('channelslistsmooth', function () {
+            // $type='smooth_url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('smooth_url',$validate)->get();
+        } else if ($isDevice == 'apple' || $urlType == 'm3u8') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('url',$validate)->get();
+        } else if ($deviceType == 'apple') {
+            // $record= Cache::rememberForever('channelslistapple', function () {
+            // $type='url';
+            // return $this->channeljsonFunc($type)->get();});
+            $record = $this->channeljsonFunc('url',$validate)->get();
+        } else {
 
-    /*
+            //     $record= Cache::rememberForever('channelslistdash', function () {
+            //     $type='dash_url';
+            //     return $this->channeljsonFunc($type)->get();
+            // });
+            $record = $this->channeljsonFunc('dash_url',$validate)->get();
+        }
+
+        if ($validate) {
+            foreach ($record  as $key => $res) {
+
+                if ($res->zip_code !== ["All"]) {
+                    $check = in_array($zipcode, $res->zip_code);
+                    if (!$check) {
+                        unset($record[$key]);
+                    } else {
+                        unset($record[$key]['zip_code']);
+                    }
+                } else {
+                    unset($record[$key]['zip_code']);
+                }
+            }
+            $record = json_decode(json_encode($record), true);
+            $record = array_values($record);
+        }
+
+        //JSON_ARRAY
+        // $pagechannel=$record->get();
+
+        /*
        $pagechannel=$record->map(function ($message, $key) {
             $message->genrename = json_decode($message->genrename, true);
         return $message;
     }); */
 
 
-    //  return response()->json($record->toSql());
-   
-    $response = [
-        'success' => true,
-        'data'=>$record,
-        // 'count'=>$pagechannel->count(), 
-        'message' => 'Channel with genre successfully fetched',
-        'response_code'=>200,
-    ];
-    // return response()->json($reco);
-    return response()->json($response, 200);
+        //  return response()->json($record->toSql());
+
+        $response = [
+            'success' => true,
+            'data' => $record,
+            // 'count'=>$pagechannel->count(), 
+            'message' => 'Channel with genre successfully fetched',
+            'response_code' => 200,
+        ];
+        // return response()->json($reco);
+        return response()->json($response, 200);
     }
 
-    public function channeljsonFunc($type){
+    public function channeljsonFunc($type,$validate = 0)
+    {
         // select `channels`.`id`, IFNULL(channels.callSign,channels.name) callSign, `channels`.`image`, `channels`.`dash_url` as `url`, 
         // CONCAT('[',GROUP_CONCAT(QUOTE(IFNULL(genre.name,'Others'))),']') genrename 
         // from `channels` left join `channels_genre` on `channels`.`id` = `channels_genre`.`channels_id` 
         // left join `genre` on `channels_genre`.`genre_id` = `genre`.`id` 
         // where `channels`.`status` = 1 GROUP BY `channels`.`id` order by `channels`.`callSign` asc
-        $imagePath=url("/uploads/channellogo/");
-    $second=Channel::select('channels.id',DB::raw('IFNULL(channels.callSign,channels.name) callSign'),DB::raw('IFNULL(channels.stationName,channels.name) stationName'), 'channels.image',"channels.$type as url",
-    DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo"))
-           
-        ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
-           
-           ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-    
-    ->where('channels.status','=','1')
-    ->groupBy('channels.id')
-    ->orderBy('channels.id', 'asc');
-    // ->orderBy('channels.name', 'asc');
-    return $second;
+        $imagePath = url("/uploads/channellogo/");
+        
+        if(!$validate) {
+            $second = Channel::select(
+                'channels.id',
+                DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
+                'channels.image',
+                "channels.$type as url",
+                DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+            )
+
+            ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+
+            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+            ->where('channels.status', '=', '1')
+            ->groupBy('channels.id')
+            ->orderBy('channels.id', 'asc');
+        } else {
+            $second = Channel::select(
+                'channels.id',
+                'channels.zip_code',
+                DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
+                DB::raw('IFNULL(channels.stationName,channels.name) stationName'),
+                'channels.image',
+                "channels.$type as url",
+                DB::raw("IFNULL(CONCAT('$imagePath/',`image`),CONCAT('$imagePath/','notfound.png')) logo")
+            )
+
+            ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
+
+            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+
+            ->where('channels.status', '=', '1')
+            ->groupBy('channels.id')
+            ->orderBy('channels.id', 'asc');
+        }
+        // ->orderBy('channels.name', 'asc');
+        return $second;
     }
 
 
@@ -691,11 +739,12 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
     return $reco;
        // return $reco;
 }
-public function channelDaysScheduleoffsettz(Request $request){
-$ua = $request->server('HTTP_USER_AGENT');
-
-$input = $request->all();
-//regex to validate gmt + and - hours
+    public function channelDaysScheduleoffsettz(Request $request)
+    {
+        $ua = $request->server('HTTP_USER_AGENT');
+        
+        $input = $request->all();
+        //regex to validate gmt + and - hours
         $validator = Validator::make($input, [
             'hoursoffset' => ['required']
         ]);
@@ -704,11 +753,11 @@ $input = $request->all();
                 'success' => false,
                 'data' => 'Validation Error.',
                 'message' => $validator->errors(),
-                'response_code'=>404,
+                'response_code' => 404,
             ];
             return response()->json($response, 404);
         }
-        $hoursofset=$request->get('hoursoffset');
+        $hoursofset = $request->get('hoursoffset');
         $string = $hoursofset; // Replace with your input string
 
         // Regular expression pattern to match the desired format
@@ -721,130 +770,148 @@ $input = $request->all();
             // String does not match the format
             $hoursofset = '00:00';
         }
-        $deviceType=$request->get('typeurl');
-        $dataDays= $request->get('days');
-$isDevice=isDeviceAppleRokuOthers($ua);
-$type='smooth_url';
-// $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-// return response()->json($reco);
-if($request->exists('genre')){
-    $arr = explode(',', $request->genre);
-    if($isDevice=='roku' || $deviceType=='manifest'){
-            $type='smooth_url';
-            $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8'){
-            $type='url';
-            $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }else {
-            $type='dash_url';
-            $reco= $this->channelDaysScheduleFuncWithGenreoffsettz($type,$arr,$hoursofset)->get();
-    }
-}else{
-    if($dataDays){
-        if($isDevice=='roku' || $deviceType=='manifest'){ 
-            // $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
-                $type='smooth_url';
-                $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-        // });
-        }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8')  {
-    
-        // $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
-            $type='url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-        // });
-        }else {
-       
-            // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
-                $type='dash_url';
-                $reco= $this->channelDaysScheduleFuncOffsetWithFulldatadays($type,$hoursofset,$dataDays)->get();
-            // });  
+        $deviceType = $request->get('typeurl');
+        $dataDays = $request->get('days');
+        $user = JWTAuth::user();
+        $zipcode = $request->get('zipcode');
+        $validate = 0;
+        if(!in_array($user->email,$this->exculdedUsers) && $request->has('zipcode')) $validate = 1;
+        $isDevice = isDeviceAppleRokuOthers($ua);
+        $type = 'smooth_url';
+        // $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
+        // return response()->json($reco);
+        if ($request->exists('genre')) {
+            $arr = explode(',', $request->genre);
+            if ($isDevice == 'roku' || $deviceType == 'manifest') {
+                $type = 'smooth_url';
+                $reco = $this->channelDaysScheduleFuncWithGenreoffsettz($type, $arr, $hoursofset)->get();
+            } else if ($isDevice == 'apple' || $isDevice == 'appletv' || $deviceType == 'm3u8') {
+                $type = 'url';
+                $reco = $this->channelDaysScheduleFuncWithGenreoffsettz($type, $arr, $hoursofset)->get();
+            } else {
+                $type = 'dash_url';
+                $reco = $this->channelDaysScheduleFuncWithGenreoffsettz($type, $arr, $hoursofset)->get();
+            }
+        } else {
+            if ($dataDays) {
+                if ($isDevice == 'roku' || $deviceType == 'manifest') {
+                    // $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
+                    $type = 'smooth_url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldatadays($type, $hoursofset, $dataDays)->get();
+                    // });
+                } else if ($isDevice == 'apple' || $isDevice == 'appletv' || $deviceType == 'm3u8') {
+
+                    // $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
+                    $type = 'url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldatadays($type, $hoursofset, $dataDays)->get();
+                    // });
+                } else {
+
+                    // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
+                    $type = 'dash_url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldatadays($type, $hoursofset, $dataDays)->get();
+                    // });  
+                }
+            } else {
+                if ($isDevice == 'roku' || $deviceType == 'manifest') {
+                    // $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
+                    $type = 'smooth_url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldata($type, $hoursofset)->get();
+                    // });
+                } else if ($isDevice == 'apple' || $isDevice == 'appletv' || $deviceType == 'm3u8') {
+
+                    // $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
+                    $type = 'url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldata($type, $hoursofset)->get();
+                    // });
+                } else {
+
+                    // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
+                    $type = 'dash_url';
+                    $reco = $this->channelDaysScheduleFuncOffsetWithFulldata($type, $hoursofset)->get();
+                    // });    
+                }
+            }
         }
-    }else{
-    if($isDevice=='roku' || $deviceType=='manifest'){ 
-        // $reco= Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
-            $type='smooth_url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-    // });
-    }else if($isDevice=='apple' || $isDevice=='appletv' || $deviceType=='m3u8')  {
 
-    // $reco = Cache::remember('channelDaysScheduleFuncOffsetWithFulldatadays',60*60*24, function () {
-        $type='url';
-        $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-    // });
-    }else {
-   
-        // $reco= Cache::remember('channelscheduleotherstz',60*60*24, function () {
-            $type='dash_url';
-            $reco= $this->channelDaysScheduleFuncOffsetWithFulldata($type,$hoursofset)->get();
-        // });    
+
+        // SELECT CallSign,StationName,
+        // GROUP_CONCAT(
+        //   JSON_OBJECT('title', EventTitle,
+        //                 'start', StartDateTime,'end', EndDateTime 
+        //   ) SEPARATOR '|'
+        // ) AS programs
+        //     FROM gracenote
+        //     GROUP BY CallSign,StationName
+        // ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
+
+        // $reco=$record->toSql(); echo $reco;exit; 
+
+        // $reco=$record->get(); //echo $reco;exit; 
+        if ($reco->isEmpty()) {
+            $response = [
+                'success' => false,
+                'data' => 'Empty',
+                'message' => 'Channel not found.',
+                'response_code' => 404,
+            ];
+            return response()->json($response, 404);
+        }
+        // return response()->json($record->toSql());
+        // return json_encode($api);
+        //       $record= DB::table('gracenote');
+        // $reco=$record->get();
+        // dd($reco);
+        // dd($this->channelDaysScheduleFunctz('dash_url')->toSql());
+        if($validate) {
+            foreach($reco  as $key=>$res){
+                if($res->zip_code !== ["All"]){
+                    $check = in_array($zipcode, $res->zip_code);
+                    if(!$check){
+                        unset($reco[$key]);
+                    }
+                }
+            }
+            $reco = json_decode(json_encode($reco), true);
+            $reco = array_values($reco);
+        }
+        
+
+        $response = [
+            'success' => true,
+            'date' => date("Y-m-d"),
+            // 'sql'=>$this->channelDaysScheduleFunctz('dash_url')->toSql(),
+            'count' => count($reco),
+            'data' => $reco,
+
+            'message' => 'Schedule data for 1.5 days found',
+            'response_code' => 200,
+        ];
+        $responsejson = json_encode($response);
+        $data = gzencode($responsejson, 9);
+        // $response = [
+        //     'success' => true,
+        //     'date'=>date("Y-m-d"),
+        //   //   'count' => $reco->count(),
+        //     'data' => $data,
+
+        //     'message' => 'Schedule data for 3 days found',
+        //     'response_code'=>200,
+        // ];
+        return response($data)->withHeaders([
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => 'GET',
+            'Content-type' => 'application/json; charset=utf-8',
+            'Content-Length' => strlen($data),
+            'Content-Encoding' => 'gzip'
+        ]);
+
+
+        return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        //  return  response()->json([
+        //     'clients' => $this->transformClientCollection($api)
+        //  ], 200);
     }
- } 
-}
-    
-
-// SELECT CallSign,StationName,
-// GROUP_CONCAT(
-//   JSON_OBJECT('title', EventTitle,
-//                 'start', StartDateTime,'end', EndDateTime 
-//   ) SEPARATOR '|'
-// ) AS programs
-//     FROM gracenote
-//     GROUP BY CallSign,StationName
-// ->whereRaw('`StartDateTime` BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)')->orderBy('CallSign', 'asc');
-  
-// $reco=$record->toSql(); echo $reco;exit; 
-
-// $reco=$record->get(); //echo $reco;exit; 
-   if ($reco->isEmpty()) {
-      $response = [
-          'success' => false,
-          'data' => 'Empty',
-          'message' => 'Channel not found.',
-          'response_code'=>404,
-      ];
-      return response()->json($response, 404);
-  }  
-      // return response()->json($record->toSql());
-      // return json_encode($api);
-//       $record= DB::table('gracenote');
-// $reco=$record->get();
-// dd($reco);
-// dd($this->channelDaysScheduleFunctz('dash_url')->toSql());
-      $response = [
-        'success' => true,
-        'date'=>date("Y-m-d"),
-        // 'sql'=>$this->channelDaysScheduleFunctz('dash_url')->toSql(),
-        'count' => $reco->count(),
-        'data' => $reco,
-       
-        'message' => 'Schedule data for 1.5 days found',
-        'response_code'=>200,
-    ];
-    $responsejson=json_encode($response);
-$data=gzencode($responsejson,9);
-// $response = [
-//     'success' => true,
-//     'date'=>date("Y-m-d"),
-//   //   'count' => $reco->count(),
-//     'data' => $data,
-   
-//     'message' => 'Schedule data for 3 days found',
-//     'response_code'=>200,
-// ];
-return response($data)->withHeaders([
-    'Access-Control-Allow-Origin' => '*',
-    'Access-Control-Allow-Methods'=> 'GET',            
-    'Content-type' => 'application/json; charset=utf-8',
-    'Content-Length'=> strlen($data),
-    'Content-Encoding' => 'gzip'
-]);
-      
-     
-  return response()->json($response, 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-  //  return  response()->json([
-  //     'clients' => $this->transformClientCollection($api)
-  //  ], 200);
-  }
 
   public function channelDaysScheduleoffsettz2(Request $request){
     $ua = $request->server('HTTP_USER_AGENT');
@@ -1231,10 +1298,11 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     {
         $tz = "+".$tz;
     }
+    $tz = "+00:00";
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
-    $record  = Gracenote::select("sub.callSign as callSign","sub.id","StationName as stationName","$type as url",
+    $record  = Gracenote::select("sub.callSign as callSign","sub.id","sub.zip_code as zip_code","StationName as stationName","$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
         ->selectRaw(" concat( '[', group_concat(json_object( 'title', EventTitle,'description', EventDescription,'start',(UNIX_TIMESTAMP(StartDateTimewithTimezon)),'end',(UNIX_TIMESTAMP(EndDateTimewithTimezon)),'TimeZoneName',TimeZoneName ) Order By StartDateTime ), ']') programs")
@@ -1246,7 +1314,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
             DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),
             DB::raw('IFNULL(gracenote.TimeZoneName,"TimeZoneName") TimeZoneName'),
-            'channels.id','channels.status',
+            'channels.id','channels.status',"channels.zip_code",
             DB::raw('IFNULL(channels.image,"notfound.png") image'),"channels.$type",
             DB::raw(" CASE gracenote.TimeZoneName
             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
@@ -1271,11 +1339,11 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             if(!in_array('Others', $q)){
                 $record->whereIn('genre.name', $q )
                 ->orderBy('sub.callSign', 'asc')
-                ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+                ->groupBy('sub.callSign','StationName','image',$type,'sub.id','sub.zip_code');
             }else{
                 $record->whereRaw('`channels_genre`.`channels_id` IS NULL')
                 ->orderBy('sub.callSign', 'asc')
-                ->groupBy('sub.callSign','StationName','image',$type,'sub.id');
+                ->groupBy('sub.callSign','StationName','image',$type,'sub.id','sub.zip_code');
             }
         // dd($record->toSql());
         //     ->where('sub.status','=','1')
@@ -1288,7 +1356,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     BETWEEN DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
-    $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id",
+    $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id","channels.zip_code",
         DB::raw('IFNULL(stationName,channels.name) StationName'),"$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
@@ -1300,11 +1368,11 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
         if(!in_array('Others', $q)){
             $b->whereIn('genre.name', $q )
             ->orderBy('callSign', 'asc')
-            ->groupBy('callSign','StationName','image',$type,'channels.id');
+            ->groupBy('callSign','StationName','image',$type,'channels.id','zip_code');
         }else{
             $b->whereRaw('`channels_genre`.`channels_id` IS NULL')
             ->orderBy('callSign', 'asc')
-            ->groupBy('callSign','StationName','image',$type,'channels.id');
+            ->groupBy('callSign','StationName','image',$type,'channels.id','zip_code');
         }
         $b->union($record)->orderBy('id');
     // dd($b->toSql());
@@ -1442,7 +1510,7 @@ public function channelDaysScheduleFunc($type){
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
         if($tz == '-08:00'){
-          $st = '+05:30';
+          $st = '+00:00';
         }else{
             $st = '+00:00';
         }
@@ -1451,6 +1519,7 @@ public function channelDaysScheduleFunc($type){
         $tz = "+".$tz;
         $st = '+00:00';
     }
+    $tz = '+00:00';
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 
@@ -1512,7 +1581,7 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
     $tz=$timeoffset??'-07:00';
     if (str_contains($tz, '-')) { 
         if($tz == '-08:00'){
-          $st = '+05:30';
+          $st = '+00:00';
         }else{
             $st = '+00:00';
         }
@@ -1521,6 +1590,8 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
         $tz = "+".$tz;
         $st = '+00:00';
     }
+
+    $tz = '+00:00';
     $imagePath=url("/uploads/channellogo/");
     DB::statement(DB::raw('SET SESSION group_concat_max_len = @@max_allowed_packet'));
 

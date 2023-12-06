@@ -168,7 +168,7 @@ class PaymentlinkController extends Controller
         //dd($checkEmail);
         if($checkEmail){
             if(!$checkEmail->email_verified_at == Null){
-            $tinyUrl = $this->getTinyUrl('http://127.0.0.1:8000/checkout/'.$checkEmail->user_id.'');
+            $tinyUrl = $this->getTinyUrl(env("APP_URL").'/checkout/'.$checkEmail->user_id.'');
             
             $payment_links = DB::table('payment_links')->insert(
                 array(
@@ -330,11 +330,11 @@ class PaymentlinkController extends Controller
 
             $masteruserData = User::where('id', $master_id)->first();
             $plandetails_masteruser = DB::table('payment_links')->where('user_id', $master_id)->latest('created_at')->first();
-         
+            $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->value('stripe_key');
             if($plandetails_masteruser->status){
                 return view('alreadydone', compact('masteruserData'));
             }else{
-                return view('checkout', compact('masteruserData', 'plandetails_masteruser'));
+                return view('checkout', compact('masteruserData', 'plandetails_masteruser','STRIPE_KEY'));
             }
         }
 
@@ -344,20 +344,12 @@ class PaymentlinkController extends Controller
         if($STRIPE_KEY[0]->type == "Live"){
             $custom_productID = 'prod_OXSTSTeCyMUx3T';
         }else{
-            $custom_productID = 'prod_OXWupQNgUjSA4l';
+            $custom_productID = 'prod_P6hdGfBJwYM7wf';
         };
         if($request['paytype'] == "charge"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
 
-    		$token = \Stripe\Token::create([
-										        'card' => [
-										            'number' => $request['cardnumber'], // Replace with actual card number
-										            'exp_month' => $request['expmonth'],
-										            'exp_year' => $request['expyear'],
-										            'cvc' => $request['cvv'], // Replace with actual CVC
-										        ],
-										    ]);
-			 $cardToken = $token->id;
+			 $cardToken = $request['payment_method'];
 			 //dd($cardToken);
 
 			 $customer = \Stripe\Customer::create([
@@ -371,7 +363,7 @@ class PaymentlinkController extends Controller
 					            'city' => $request['city'],
 					            'state' => $request['state'],
 					            'postal_code' => '86336',
-					            'country' => $request['country'],
+					            'country' => 'US',
 					        ],
 
 					    ]);
@@ -435,15 +427,7 @@ class PaymentlinkController extends Controller
         }elseif($request['paytype'] == "subscription"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
 
-    		$token = \Stripe\Token::create([
-										        'card' => [
-										            'number' => $request['cardnumber'], // Replace with actual card number
-										            'exp_month' => $request['expmonth'],
-										            'exp_year' => $request['expyear'],
-										            'cvc' => $request['cvv'], // Replace with actual CVC
-										        ],
-										    ]);
-			 $cardToken = $token->id;
+    		$cardToken = $request['payment_method'];
 			 //dd($cardToken);
 
 			 $customer = \Stripe\Customer::create([
@@ -457,12 +441,11 @@ class PaymentlinkController extends Controller
 					            'city' => $request['city'],
 					            'state' => $request['state'],
 					            'postal_code' => '86336',
-					            'country' => $request['country'],
+					            'country' => 'US',
 					        ],
 
 					    ]);
              $customerId = $customer->id;
-             //exit;
 
              $product = \Stripe\Plan::create([
                 'amount' => $request['txthprice'],

@@ -8,6 +8,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Crypt;
+use Mail;
 use App\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -44,23 +46,75 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        $email_verified_at=Carbon::now();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email'=>$request->email,
-            'password'=>Hash::make($request->password),
-            'contact'=>$request->contact??'null',
-            'gender'=>$request->gender??'null',
-            'dob'=>$request->dob??'null',
-            'country'=>$request->country??'null',
-            'address'=>$request->address??'null',
-            'zipcode'=>$request->zipcode,
-            'email_verified_at'=>$email_verified_at
-        ]);
-        $user->roles()->sync($request->input('roles', []));
+        try {
 
-     return redirect('admin/users')->with('info','User Added Successfully');
+            $email_verified_at=Carbon::now();
+
+            $checkExist = User::WHERE('email',"=",$request->email);
+
+            if($checkExist->exists()){
+                $id = $checkExist->first()->id;
+                return redirect()->back()->with('existuser',$id);
+            }
+
+            $user = User::create([
+                'name' => $request->name,
+                'email'=>$request->email,
+                'password'=>Hash::make($request->password),
+                'contact'=>$request->contact??'null',
+                'gender'=>$request->gender??'null',
+                'dob'=>$request->dob??'null',
+                'country'=>$request->country??'null',
+                'address'=>$request->address??'null',
+                'zipcode'=>$request->zipcode,
+                'email_verified_at'=>null,
+                'is_active' => 0,
+                'forced_change'=> 1,
+            ]);
+            $user->roles()->sync($request->input('roles', []));
+
+            $verification_code=Crypt::encrypt($user->email);
+
+            $FRONTEND_URL=env('FRONTEND_URL');
+    
+            $account_verification_link=$FRONTEND_URL.'/api/auth/verify?token='.$verification_code;
+    
+            
+        $html2='<html>
+            Hi, '.$request->name.'<br><br>
+    
+            Thank you for registering for '.env('APP_NAME').'.<br>
+            Please click the following link to verify your account.
+            <br><br><a href="'.$account_verification_link.'" target=_blank style="  display: block;
+            width: 115px;
+            height: 25px;
+            background: #004E92 0% 0% no-repeat padding-box;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            line-height: 25px;">Verify</a><br>
+            Your login credentials<br>
+            Email: '.$request->email.'<br>
+            Temp. Password: '.$request->password.'<br><br>
+            Thank you!<br>
+            The '.env('APP_NAME').' Team!
+        </html>';
+    
+            Mail::send('emails.general',["html"=>$html2] , function($message) use ($request,$user){
+                    $message->to($request->email, $request->name);
+                    $message->bcc('rahul.gupta@oodles.io')
+                    ->subject(env('APP_NAME').': Account Verification and Signup Details');
+            });
+            
+            return redirect('admin/users')->with('info','User Added Successfully');
+        } catch (Exception $e) {
+            return redirect()->back()->with('errormsg','Error creating user, please try again.');
+        }
+
+     
     }
     public function update(Request $request, $id)
     {
@@ -381,17 +435,16 @@ JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($tokenString), $forceFor
         // Total records
         $totalRecords = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
- })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
+ })->select('count(*) as allcount')->where('email', 'like', '%' .$searchValue . '%')->count();
         $totalRecordswithFilter = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->select('count(*) as allcount')
-        ->where('email', 'like', '%' .$searchValue . '%')->where('mode', 'like', '%' .$mode . '%' )->count();
+        ->where('email', 'like', '%' .$searchValue . '%')->count();
     
         // Fetch records
         $records = User::whereHas('roles', function ($query)use ($searchroleValue) {
             $query->where('roles.name','like',  '%' .$searchroleValue. '%' );
  })->where('email', 'like', '%' .$searchValue . '%')
- ->where('mode', 'like', '%' .$mode . '%' )
  ->orderBy($columnName,$columnSortOrder)
           
           ->skip($start)

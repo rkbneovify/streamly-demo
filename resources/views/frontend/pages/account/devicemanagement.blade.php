@@ -217,7 +217,7 @@ use Laravel\Cashier\Cashier; ?>
 					
 
 
-						<div class="row setting-cards mt-5">
+						<div style="display:none;"class="row setting-cards mt-5">
 				<div class="col-centered col-md-8 ">
 				<ul class="setting-card table-responsive " style="
     border-top-right-radius: 6px;

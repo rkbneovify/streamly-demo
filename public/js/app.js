@@ -103325,7 +103325,8 @@ hoursNew = (hoursNew % 12) || 12;
     'CHANNEL_TV_GUIDE': 'api/vueprogramlistwithid',
     'FAVORITE_LIST': 'api/vuefavoritelist',
     'ADD_FAVORITE': 'api/vuefavorite',
-    'REMOVE_FAVORITE': 'api/vueunfavorite'
+    'REMOVE_FAVORITE': 'api/vueunfavorite',
+    'CLEAR_ALL_FAVORITE' : 'api/vueremovefav'
   };
   var API_DATE_FORMAT = "YYYY-MM-DD H:mm"; // Example : "2017-08-17 23:59"
   
@@ -103414,6 +103415,12 @@ hoursNew = (hoursNew % 12) || 12;
     },
     clearFavouriteList: function clearFavouriteList(_ref2) {
       var commit = _ref2.commit;
+      axios__WEBPACK_IMPORTED_MODULE_4___default.a.post("".concat(_config__WEBPACK_IMPORTED_MODULE_3__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_3__["API_ENDPOINTS"].CLEAR_ALL_FAVORITE), {
+      }).then(function (response) {
+        return console.log('Fav removed', response.data);
+      })["catch"](function (response) {
+        return console.log(response.error);
+      });
       commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["MODIFY_FAVOURITES"]);
     },
     toggleFavourites: function toggleFavourites(_ref3, _ref4) {

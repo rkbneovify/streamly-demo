@@ -51,7 +51,8 @@ class AuthController extends Controller
             'contact'=>$request->contact,
             'gender'=>$request->gender,
             'dob'=>$request->dob,
-            'email_verified_at'=>null
+            'email_verified_at'=>null,
+            'is_active'=> 0
         ]);
 
         $User->roles()->sync($role->id);
@@ -326,6 +327,16 @@ class AuthController extends Controller
         }
 
         $User=JWTAuth::user();
+
+        if($request->has('oldpassword')) {
+            $credentials = ['email' => $User->email, 'password' => $request->oldpassword];
+            $token = JWTAuth::attempt($credentials);
+            if(!$token){
+                $response = array('success' =>false ,'response_code'=>401,'message'=>'Wrong old password');
+                return response()->json($response, 401);
+            }
+        }
+        
         if($User){
              $User->password=Hash::make($request->password);
              $User->save();
@@ -375,6 +386,37 @@ class AuthController extends Controller
        // $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
         
        // return response()->json($user_data);
+    }
+
+
+    public function checkSession(Request $request){
+
+        $token = $request->bearerToken();
+        $acctoken = SessionTable::where([
+            ['status', '=', '1'],
+            ['access_token', '=', $token],
+        ]);
+        if($acctoken->exists()) {
+            
+            $response = [
+                'success' => true,
+                'status' => true,
+                'message' => 'Ok',
+                'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        } else {
+
+            $response = [
+                'success' => false,
+                'status' => false,
+                'message' => 'Token is Invalid',
+                'response_code' => 401,
+            ];
+            return response()->json($response, 401);
+            
+        }
+
     }
 
     public function tvprofile()
