@@ -2257,7 +2257,7 @@
         //console.log(date1);
         //console.log(date2)
         var newarray= [];
-        for (let i = 0; i < 24; i++) {
+        for (let i = 0; i < 20; i++) {
           var resultxs = date1.getHours() + i;
           if(resultxs < 24){
             var addtimehours = resultxs;
@@ -2275,12 +2275,12 @@
     }),
     methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapActions"])(['increment', 'sortChannelList', 'getFavouriteList', 'clearFavouriteList', 'setProgrammeDate', 'fetchChannelLogo'])), {}, {
       // ...mapMutations(['INCREMENT'])
-      onChannelClick: function onChannelClick(channel) {
-        this.$store.dispatch({
-          type: 'fetchChannelDetails',
-          channel: channel
-        });
-      },
+      // onChannelClick: function onChannelClick(channel) {
+      //   this.$store.dispatch({
+      //     type: 'fetchChannelDetails',
+      //     channel: channel
+      //   });
+      // },
       onFavouriteClick: function onFavouriteClick(channel) {
         this.$store.dispatch({
           type: 'toggleFavourites',
@@ -7004,7 +7004,7 @@
   
   
   // module
-  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: grid;\n grid-template-columns: auto auto;\n max-height:600px; \n overflow-y:scroll; \n   flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] \n ,channel__header {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n   display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:15%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n  font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n justify-content:center; \n   align-items: center;\n color:white;  height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] { \n     grid-area: 2 / 2 / 3 / 3; \n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n} \n footer .container {\n width: 92%!important; \n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
+  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 80vw;\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n display:none; \n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: grid;\n grid-template-columns: auto auto;\n max-height:600px; \n overflow-y:scroll; \n   flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] \n ,channel__header {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n   display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:30%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n  font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n justify-content:center; \n   align-items: center;\n color:white;  height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] { \n     grid-area: 2 / 2 / 3 / 3; \n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n} \n footer .container {\n width: 92%!important; \n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
   
   // exports
   
@@ -83558,8 +83558,8 @@
                       },
                       on: {
                         click: function($event) {
-                          $event.preventDefault()
-                          return _vm.onChannelClick(channel)
+                          // $event.preventDefault()
+                          // return _vm.onChannelClick(channel)
                         }
                       }
                     },
@@ -83570,12 +83570,12 @@
                           key: channel.CallSign,
                           staticClass: "favourite",
                           attrs: { index: index },
-                          on: {
-                            click: function($event) {
-                              $event.stopPropagation()
-                              return _vm.onClick(channel)
-                            }
-                          }
+                          // on: {
+                          //   click: function($event) {
+                          //     $event.stopPropagation()
+                          //     return _vm.onClick(channel)
+                          //   }
+                          // }
                         },
                         // _c(
                         //     "div",
@@ -83609,39 +83609,53 @@
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
+                        "a",
                         {
-                          key: channel.CallSign + index,
-                          staticClass: "channel__name pgFlexwidth", 
-                          attrs: { index: index }
+                          staticClass: "anchorWidth", 
+                          attrs: {
+                            href:
+                              "/livetv/" +
+                              channel.CallSign +
+                              "/" +
+                              channel.genrename[0]
+                          }
                         },
-                        [
-                          _c("div", { staticClass: "channel__logo", staticStyle: { paddingTop: "0.8vw", paddingBottom: "0.8vw" } }, [
-                            _c("img", {
-                              staticClass: "pgGuideicon",
-                              attrs: { src: _vm._s(channel.epgEventImage) }
-                            })
-                          ]),
-                          _c(
-                            "div",
-                            { staticClass: "overflow newGuidefont", attrs: { index: index } },
-                            [_vm._v(_vm._s('TVG: Horse Racing'))]
-                          ),
-                          _vm._v(" "),
-                          // _c(
-                          //   "div",
-                          //   {
-                          //     staticStyle: {
-                          //       "font-size": "0.8em",
-                          //       "font-weight": "bold",
-                          //       color: "#4085ce"
-                          //     },
-                          //     attrs: { index: index }
-                          //   },
-                          //   [_vm._v(_vm._s(channel.channelStbNumber))]
-                          // )
-                        ]
-                      ),
+                        [_vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            key: channel.CallSign + index,
+                            staticClass: "channel__name margin_change pgFlexwidth", 
+                            attrs: { index: index }
+                          },
+                          [
+                            _c("div", { staticClass: "channel__logo", staticStyle: { paddingTop: "0.8vw", paddingBottom: "0.8vw" } }, [
+                              _c("img", {
+                                staticClass: "pgGuideicon",
+                                attrs: { src: _vm._s(channel.epgEventImage) }
+                              })
+                            ]),
+                            _c(
+                              "div",
+                              { staticClass: "overflow newGuidefont", attrs: { index: index } },
+                              [_vm._v(_vm._s('TVG: Horse Racing'))]
+                            ),
+                            _vm._v(" "),
+                            // _c(
+                            //   "div",
+                            //   {
+                            //     staticStyle: {
+                            //       "font-size": "0.8em",
+                            //       "font-weight": "bold",
+                            //       color: "#4085ce"
+                            //     },
+                            //     attrs: { index: index }
+                            //   },
+                            //   [_vm._v(_vm._s(channel.channelStbNumber))]
+                            // )
+                          ]
+                        )
+                      ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "favourite" , staticStyle: {
                               "text-align" : "right"
@@ -83765,8 +83779,8 @@
                     },
                     on: {
                       click: function($event) {
-                        $event.preventDefault()
-                        return _vm.onChannelClick(channel)
+                        // $event.preventDefault()
+                        // return _vm.onChannelClick(channel)
                       }
                     }
                   },
@@ -83777,12 +83791,12 @@
                         key: channel.CallSign,
                         staticClass: "favourite",
                         attrs: { index: index },
-                        on: {
-                          click: function($event) {
-                            $event.stopPropagation()
-                            return _vm.onClick(channel)
-                          }
-                        }
+                        // on: {
+                        //   click: function($event) {
+                        //     $event.stopPropagation()
+                        //     return _vm.onClick(channel)
+                        //   }
+                        // }
                       },
                       // _c(
                       //     "div",
@@ -83816,39 +83830,53 @@
                     ),
                     _vm._v(" "),
                     _c(
-                      "div",
+                      "a",
                       {
-                        key: channel.CallSign + index,
-                        staticClass: "channel__name pgFlexwidth", 
-                        attrs: { index: index }
+                        staticClass: "anchorWidth", 
+                        attrs: {
+                          href:
+                            "/livetv/" +
+                            channel.CallSign +
+                            "/" +
+                            channel.genrename[0]
+                        }
                       },
-                      [
-                        _c("div", { staticClass: "channel__logo", staticStyle: { paddingTop: "0.8vw", paddingBottom: "0.8vw" } }, [
-                          _c("img", {
-                            staticClass: "pgGuideicon",
-                            attrs: { src: _vm._s(channel.epgEventImage) }
-                          })
-                        ]),
-                        _c(
-                          "div",
-                          { staticClass: "overflow newGuidefont", attrs: { index: index } },
-                          [_vm._v(_vm._s(channel.channelTitle))]
-                        ),
-                        _vm._v(" "),
-                        // _c(
-                        //   "div",
-                        //   {
-                        //     staticStyle: {
-                        //       "font-size": "0.8em",
-                        //       "font-weight": "bold",
-                        //       color: "#4085ce"
-                        //     },
-                        //     attrs: { index: index }
-                        //   },
-                        //   [_vm._v(_vm._s(channel.channelStbNumber))]
-                        // )
-                      ]
-                    ),
+                      [_vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          key: channel.CallSign + index,
+                          staticClass: "channel__name margin_change pgFlexwidth", 
+                          attrs: { index: index }
+                        },
+                        [
+                          _c("div", { staticClass: "channel__logo", staticStyle: { paddingTop: "0.8vw", paddingBottom: "0.8vw" } }, [
+                            _c("img", {
+                              staticClass: "pgGuideicon",
+                              attrs: { src: _vm._s(channel.epgEventImage) }
+                            })
+                          ]),
+                          _c(
+                            "div",
+                            { staticClass: "overflow newGuidefont", attrs: { index: index } },
+                            [_vm._v(_vm._s(channel.channelTitle))]
+                          ),
+                          _vm._v(" "),
+                          // _c(
+                          //   "div",
+                          //   {
+                          //     staticStyle: {
+                          //       "font-size": "0.8em",
+                          //       "font-weight": "bold",
+                          //       color: "#4085ce"
+                          //     },
+                          //     attrs: { index: index }
+                          //   },
+                          //   [_vm._v(_vm._s(channel.channelStbNumber))]
+                          // )
+                        ]
+                      )
+                    ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "favourite" , staticStyle: {
                             "text-align" : "right"
@@ -84297,6 +84325,8 @@ hoursNew = (hoursNew % 12) || 12;
               "div",
               { staticClass: "programme__timing__section" },
               _vm._l(_vm.filteredChannelList, function(channel) {
+                var i = 0
+                var j = 0
                 return _c(
                   "div",
                   {
@@ -84315,67 +84345,186 @@ hoursNew = (hoursNew % 12) || 12;
                     },
                   },
                   [
-                    _c(
-                      "span",
-                      {
-                        directives: [
-                          {
-                            name: "show",
-                            rawName: "v-show",
-                            value: typeof channel.programmes == "undefined",
-                            expression: "typeof channel.programmes == 'undefined'"
-                          }
-                        ],
-                        staticClass: "programme programme--no__data",
-                        style: {
-                          flex:
-                            "0 0 " +
-                            //programme.durationMinutes * _vm.minuteWidthPx +
-                            7200 +
-                            "px"
-                        }
-                      },
-                      [_vm._v("No Data Available or Fetching Data")]
-                    ),
-                    _vm._v(" "),
+                    // _c(
+                    //   "span",
+                    //   {
+                    //     directives: [
+                    //       {
+                    //         name: "show",
+                    //         rawName: "v-show",
+                    //         value: typeof channel.programmes == "undefined",
+                    //         expression: "typeof channel.programmes == 'undefined'"
+                    //       }
+                    //     ],
+                    //     staticClass: "programme programme--no__data",
+                    //     style: {
+                    //       flex:
+                    //         "0 0 " +
+                    //         //programme.durationMinutes * _vm.minuteWidthPx +
+                    //         7200 +
+                    //         "px"
+                    //     }
+                    //   },
+                    //   [_vm._v("No Data Available or Fetching Data")]
+                    // ),
+                    // _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
-                      return _c(
-                        "span",
-                        {
-                          key: programme,
-                          staticClass: "programme",
-                          style: {
-                            flex:
-                              "0 0 " +
-                              //programme.durationMinutes * _vm.minuteWidthPx +
-                              programme.durationMinutes * 5 +
-                              "px"
-                          },
-                          on: {
-                            mouseover: function($event) {
-                              
-                              return _vm.onProgrammeHover(
-                                $event,
-                                programme,
-                                channel
-                              )
+                      var eventsLength = channel?.programmes?.length
+                      if(i == 0) {
+                        j++
+                        var startTime=new Date();
+                        var minutes = startTime.getMinutes();
+                        if(minutes > 30)
+                          startTime.setMinutes(d.getMinutes() - (600 - (60 - minutes)));
+                        else
+                          startTime.setMinutes(d.getMinutes() - (600 - 60 + minutes));
+                        
+                        startTime.setSeconds(0);
+                        if(new Date(programme.displayDateTimeUtc) >= startTime ) {
+
+                          var diff = new Date(programme.displayDateTimeUtc) - startTime
+                          var widthC = Math.round(diff / 60000)
+                          i++
+                          return [
+                            _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: typeof channel.programmes == "undefined",
+                                  expression: "typeof channel.programmes == 'undefined'"
+                                }
+                              ],
+                              staticClass: "programme programme--no__data",
+                              style: {
+                                flex:
+                                  "0 0 " +
+                                  //programme.durationMinutes * _vm.minuteWidthPx +
+                                  widthC* 5 +
+                                "px",
+                              }
                             },
-                            mouseout: _vm.onProgrammeHoverOut
-                          }
-                        },
-                        [
-                          _c("div", { staticClass: "pgFontguidehead" },[
-                            _vm._v(" " + _vm._s(programme.programmeTitle))
-                          ]),
+                            [_vm._v("No Data Available or Fetching Data")]
+                          ),
                           _vm._v(" "),
-                          _c("sup", { staticClass: "pgFontguide" },
-                          [ _vm._v(" " + _vm._s(programme.genre))]),
-                          _vm._v(" "),
-                          _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
-                            _vm._v(_vm._s(programme.durationMinutes) + "mins.")
-                          ])
+                          _c(
+                            "span",
+                            {
+                              key: programme,
+                              staticClass: "programme",
+                              style: {
+                                flex:
+                                  "0 0 " +
+                                  //programme.durationMinutes * _vm.minuteWidthPx +
+                                  programme.durationMinutes * 5 +
+                                  "px"
+                              },
+                              on: {
+                                mouseover: function($event) {
+                                  
+                                  return _vm.onProgrammeHover(
+                                    $event,
+                                    programme,
+                                    channel
+                                  )
+                                },
+                                mouseout: _vm.onProgrammeHoverOut
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(programme.programmeTitle))
+                              ]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" },
+                              [ _vm._v(" " + _vm._s(programme.genre))]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
+                                _vm._v(_vm._s(programme.durationMinutes) + "mins.")
+                              ])
+                            ]
+                          )
                         ]
-                      )
+                        } else {
+                          return _c()
+                        }
+                      // }else if(j === (eventsLength-1)){
+                      //   var startTime=new Date();
+                      //   var minutes = startTime.getMinutes();
+                      //   if(minutes > 30)
+                      //     startTime.setMinutes(d.getMinutes() + (900 + (60 - minutes)));
+                      //   else
+                      //     startTime.setMinutes(d.getMinutes() + (900 - minutes));
+                      
+                      //   if(new Date(programme.displayDateTimeUtc) < startTime ) {
+                      //     var diff = new Date(programme.displayDateTimeUtc) - startTime
+                      //     var widthC = Math.round(diff / 60000)
+                      //     return
+                      //       _c(
+                      //       "span",
+                      //       {
+                      //         directives: [
+                      //           {
+                      //             name: "show",
+                      //             rawName: "v-show",
+                      //             value: typeof channel.programmes == "undefined",
+                      //             expression: "typeof channel.programmes == 'undefined'"
+                      //           }
+                      //         ],
+                      //         staticClass: "programme programme--no__data",
+                      //         style: {
+                      //           flex:
+                      //             "0 0 " +
+                      //             //programme.durationMinutes * _vm.minuteWidthPx +
+                      //             widthC* 5 +
+                      //           "px",
+                      //         }
+                      //       },
+                      //       [_vm._v("No Data Available or Fetching Data")]
+                      //     )
+                      //   }
+                      } else {
+                        j++
+                        return _c(
+                          "span",
+                          {
+                            key: programme,
+                            staticClass: "programme",
+                            style: {
+                              flex:
+                                "0 0 " +
+                                //programme.durationMinutes * _vm.minuteWidthPx +
+                                programme.durationMinutes * 5 +
+                                "px"
+                            },
+                            on: {
+                              mouseover: function($event) {
+                                
+                                return _vm.onProgrammeHover(
+                                  $event,
+                                  programme,
+                                  channel
+                                )
+                              },
+                              mouseout: _vm.onProgrammeHoverOut
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "pgFontguidehead" },[
+                              _vm._v(" " + _vm._s(programme.programmeTitle))
+                            ]),
+                            _vm._v(" "),
+                            _c("sup", { staticClass: "pgFontguide" },
+                            [ _vm._v(" " + _vm._s(programme.genre))]),
+                            _vm._v(" "),
+                            _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
+                              _vm._v(_vm._s(programme.durationMinutes) + "mins.")
+                            ])
+                          ]
+                        )
+                      }
                     })
                   ],
                   2
