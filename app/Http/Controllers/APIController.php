@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Models\RecentChannel;
 use App\Models\FrontendText;
+use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class APIController extends Controller
 {
@@ -902,6 +903,74 @@ public function myRecents(Request $request)
                return response()->json($response, 200);
    
            }else{
+               $response = array('status' => false,'message'=>'User Already Deleted.');             
+               return response()->json($response, 200);
+           }
+        }else{
+            $response = array('status' => false,'message'=>'User with Id: '.$id.' Does Not Exist.','UserID'=>$id);             
+            return response()->json($response, 200);
+        }
+
+    }
+
+    public function userdeletenew(Request $request)
+    {
+        $User=JWTAuth::user();
+
+        if($User){
+            $UserName = $User['name'];
+            $UserEmail = $User['email'];
+            $id = $User->id;
+            if($User['is_active'] == 1) {
+
+                if($request->has('password')) {
+                    $credentials = ['email' => $User->email, 'password' => $request->password];
+                    $token = JWTAuth::attempt($credentials);
+                    if(!$token){
+                        $response = array('success' =>false ,'response_code'=>401,'message'=>'Wrong old password');
+                        return response()->json($response, 401);
+                    }
+
+                    DB::table('users')
+                    ->where('id', $id)
+                    ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
+
+                    $subscribtionCheck = DB::table('subscriptions')
+                    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                    ->get();
+                    
+                    try {
+                        
+                        if(count($subscribtionCheck) > 0){
+                        $User->subscription('main')->skipTrial()->cancelNow();
+                        }
+
+                        DB::table('subscriptions')
+                        ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                        ->update(['stripe_status' => "canceled"]);
+
+
+                    } catch(Exception $e) {
+                        DB::table('subscriptions')
+                        ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                        ->update(['stripe_status' => "canceled"]);
+                    }
+
+                    
+                    DB::table('session_table')
+                    ->where('users_id', $id)
+                    ->where('status', "1")
+                    ->update(['status' => "0"]);
+
+                    $response = array('status' => true,'message'=>'User with account name: '.$UserName.' Is Deleted Sucessfully.','User_email'=>$UserEmail);             
+                    return response()->json($response, 200);
+
+                } else {
+                    return response()->json(['success'=>false,'response_code'=>401,'message' => 'password is required to delete'], 401);
+                }
+            
+   
+           } else { 
                $response = array('status' => false,'message'=>'User Already Deleted.');             
                return response()->json($response, 200);
            }
