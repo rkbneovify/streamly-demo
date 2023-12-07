@@ -109,6 +109,7 @@ button.channel__nav__left {
     background-color: #000;
     color: #fff;
     padding: 0px 8px;
+    color: #dbddde;
 }
 .programme__content {
     margin-top: 8px;
@@ -227,6 +228,8 @@ div#wrap div {
     top:0;
     z-index: 9999 !important;
     /* top: 199px; */
+    font-size: 0.8em;
+    color: #dbddde;
     overflow: hidden !important;
     /* width: 100% !important; */
     max-width: 15.5vw;
@@ -364,6 +367,8 @@ button#navrighthorizontal:after {
     max-width: 62.65vw !important;
     /* overflow: hidden; */
     /* left: 345px !important; */
+    color: #dbddde;
+    font-size: 0.8em;
 }
 .header__time {
     text-align: center !important;
@@ -626,7 +631,7 @@ button#navrighthorizontal {
 }
 @media only screen and (min-width: 600px) {
 .pgGuideheight {
-    height: 7.3vw !important;
+    height: 8.3vw !important;
     width: 15.5vw !important;
 }
 .programme__row {
