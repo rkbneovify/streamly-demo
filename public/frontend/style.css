@@ -10932,7 +10932,7 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
 }
 .pgFlexwidth {
   text-align: center;
-  width: 70%; 
+  width: 100%; 
 }
 .programme__row {
   height: 7vw;
@@ -11017,4 +11017,16 @@ a.dropdown-item.js-scroll-trigger.btn-login:before {
 }
 .google-btn {
   margin-bottom: 10px;
+}
+
+.margin_change{
+  margin: auto;
+}
+
+.anchorWidth{
+  width: 40%;
+}
+
+.programme.programme--no__data{
+  display: flow !important;
 }
