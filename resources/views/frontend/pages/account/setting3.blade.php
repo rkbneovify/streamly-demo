@@ -36,6 +36,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+#hash-id{
+	display: none;
+}
+
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
@@ -227,6 +231,19 @@ input[type=number] {
 
 			jQuery('.change-password').on('click', function(){
 				jQuery('#changePassword').modal('show');
+			});
+
+			jQuery('.show-hide').on('click', function(){
+				var checkStyle = $('#hash-id').css("display");
+				if(checkStyle === "none"){
+					$("#hash-id").css("display", "block");
+					$("#hide-id").css("display", "none");
+					$('.show-hide').text("Hide");
+				} else {
+					$("#hash-id").css("display", "none");
+					$("#hide-id").css("display", "block");
+					$('.show-hide').text("Show");
+				}
 			});
 
 			jQuery('.change-name').on('click', function(){
@@ -530,13 +547,14 @@ input[type=number] {
 	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Edit</a></td>
     </tr>
 
-							@if ( Auth::user()->subscribed('main'))
-				 <tr>
-      <td class="text-left text-md-center text-wrap" colspan="2">
-      <details>
-    <summary>Get PassCode for logging in TV</summary>
-    {{$hasid}}
-</details></td>
+
+
+	@if ( Auth::user()->subscribed('main'))
+	<tr>
+      <td class="text-left text-md-center">PassCode:</td>
+      <td class="text-left text-md-center text-wrap" id="hash-id">{{$hasid}}</td>
+	  <td class="text-left text-md-center text-wrap" id="hide-id">******</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="show-hide">Show</a></td>
     </tr>
 @endif
    
