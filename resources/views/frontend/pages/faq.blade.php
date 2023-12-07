@@ -94,11 +94,11 @@
 		    margin-top: 5px;
 		}
 
-		[data-toggle="collapse"] .fa:before {   
+		[data-toggle="collapse"].collapsed .fa:before {   
 		  content: "\f107";
 		}
 
-		[data-toggle="collapse"].collapsed .fa:before {
+		[data-toggle="collapse"] .fa:before {
 		  content: "\f106";
 		}
 
