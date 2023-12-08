@@ -15,6 +15,7 @@ use App\User;
 use Mail;
 use Illuminate\Support\Facades\Storage;
 use JWTAuth;
+use Exception;
 /*add Naresh 15-11-2022*/ 
 use Cookie;
 //use DB;
@@ -85,7 +86,11 @@ class Payment extends Controller
             return redirect()->route('payment',[Auth::user()->subscription('main')->stripe_plan]);
         } 
         
-        $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+        try {
+            $plans = \Stripe\Plan::all(['active'=>true,'product'=>'prod_NcBvdnH9t6G0GY','expand' => ['data.tiers']]);
+           } catch(Exception $e) {
+            $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+           }
         $imagePath=asset("/uploads/channellogo/notfound.png");
    
 $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
