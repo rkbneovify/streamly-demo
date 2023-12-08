@@ -344,7 +344,7 @@ class PaymentlinkController extends Controller
         if($STRIPE_KEY[0]->type == "Live"){
             $custom_productID = 'prod_OXSTSTeCyMUx3T';
         }else{
-            $custom_productID = 'prod_P6hdGfBJwYM7wf';
+            $custom_productID = 'prod_OXWupQNgUjSA4l';
         };
         if($request['paytype'] == "charge"){
             \Stripe\Stripe::setApiKey($STRIPE_KEY[0]->stripe_secret);
