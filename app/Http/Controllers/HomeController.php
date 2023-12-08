@@ -61,8 +61,13 @@ class HomeController extends Controller
         /*add Naresh 15-11-2022*/ 
        $this->setCookie($request);
        /*End Naresh 15-11-2022*/
+       try {
+        $plans = \Stripe\Plan::all(['active'=>true,'product'=>'prod_NcBvdnH9t6G0GY','expand' => ['data.tiers']]);
+       } catch(Exception $e) {
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
-        $imagePath=asset("/uploads/channellogo/notfound.png");
+       }
+       
+       $imagePath=asset("/uploads/channellogo/notfound.png");
    
 $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
 DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
