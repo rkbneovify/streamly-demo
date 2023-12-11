@@ -84289,11 +84289,20 @@ hoursNew = (hoursNew % 12) || 12;
               attrs: { id: "navrighthorizontal" },
               on: {
                   click: function($event) {
-                  // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
-                  // $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
+                    // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
+                    // $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
                     // console.log($('.channel__programme__section[data-v-56b65aa6]').scrollLeft,document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft);
-                     document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft += 260;
-                     document.querySelector('.programme__header').scrollLeft += 260;
+                    const programTimingHeader = document.querySelector('.programme__header')
+                    const programLists = document.querySelector('.channel__programme__section[data-v-56b65aa6]');
+
+
+                    programTimingHeader.scrollLeft+= 260;
+                    const maxSrollWidth = programTimingHeader.scrollWidth - programTimingHeader.clientWidth;
+                    if(programLists.scrollLeft + 260 > maxSrollWidth) {
+                      programLists.scrollLeft = maxSrollWidth;
+                    } else {
+                      programLists.scrollLeft += 260;
+                    }
                    },
                 }
             },
