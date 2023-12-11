@@ -36,6 +36,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+#hash-id{
+	display: none;
+}
+
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
@@ -229,6 +233,23 @@ input[type=number] {
 				jQuery('#changePassword').modal('show');
 			});
 
+			jQuery('.delete-account').on('click', function(){
+				jQuery('#deleteAccount').modal('show');
+			});
+			
+			jQuery('.show-hide').on('click', function(){
+				var checkStyle = $('#hash-id').css("display");
+				if(checkStyle === "none"){
+					$("#hash-id").css("display", "block");
+					$("#hide-id").css("display", "none");
+					$('.show-hide').text("Hide");
+				} else {
+					$("#hash-id").css("display", "none");
+					$("#hide-id").css("display", "block");
+					$('.show-hide').text("Show");
+				}
+			});
+
 			jQuery('.change-name').on('click', function(){
 				jQuery('#changeName').modal('show');
 			});
@@ -370,6 +391,44 @@ input[type=number] {
 			</div>
 	    </div>
 	</div>
+
+	<div class="modal fade" id="deleteAccount">
+	    <div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+		  		@if(session()->has('message2'))
+					<div class="alert alert-danger">
+					<strong>Whoops!</strong> There were some problems with your input.<br><br>
+					<li>{{ session()->get('message2') }}</li>
+					</div>
+              	@endif
+					 <form action="{{ url("/userdelete", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
+						@csrf
+						@method('PUT')
+						<strong>Are sure you want to permanently delete your account?</strong>
+						<br>
+						<p>* This cannot be Undone</p>
+						<div class="form-group {{ $errors->has('password') ? ' has-error' : '' }}">
+							<label for="password">Password</label>
+							<div>
+							<input type="password" minlength="6" class="form-control" name="passworddelete" id="passworddelete" required>
+							<span class="bi bi-eye-slash field_icon" id="togglePasswordDelete"></span>
+							</div>
+						</div>
+
+						<div class="text-center">
+							<button type="submit" class="btn btn-lg login-btn">
+								Delete Account
+							</button>
+							{{-- <a class="btn btn-sm" href="javascript:void(0)" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;">Change Password</a> --}}
+						</div>
+					</form>
+				</div>
+
+			</div>
+	    </div>
+	</div>
+
 		<div class="modal fade" id="changePassword">
 	    <div class="modal-dialog">
 			<div class="modal-content">
@@ -440,8 +499,8 @@ input[type=number] {
 
         togglePasswordnew.addEventListener("click", function () {
             // toggle the type attribute
-            const type = passwordnew.getAttribute("type") === "password" ? "text" : "password";
-            passwordnew.setAttribute("type", type);
+            const type = newpassword.getAttribute("type") === "password" ? "text" : "password";
+            newpassword.setAttribute("type", type);
             
             // toggle the icon
             this.classList.toggle("bi-eye");
@@ -450,6 +509,15 @@ input[type=number] {
             // toggle the type attribute
             const type = password.getAttribute("type") === "password" ? "text" : "password";
             password.setAttribute("type", type);
+            
+            // toggle the icon
+            this.classList.toggle("bi-eye");
+        });
+
+		togglePasswordDelete.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = passworddelete.getAttribute("type") === "password" ? "text" : "password";
+            passworddelete.setAttribute("type", type);
             
             // toggle the icon
             this.classList.toggle("bi-eye");
@@ -530,16 +598,20 @@ input[type=number] {
 	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="change-password">Edit</a></td>
     </tr>
 
-							@if ( Auth::user()->subscribed('main'))
-				 <tr>
-      <td class="text-left text-md-center text-wrap" colspan="2">
-      <details>
-    <summary>Get PassCode for logging in TV</summary>
-    {{$hasid}}
-</details></td>
+
+
+	@if ( Auth::user()->subscribed('main'))
+	<tr>
+      <td class="text-left text-md-center">PassCode:</td>
+      <td class="text-left text-md-center text-wrap" id="hash-id">{{$hasid}}</td>
+	  <td class="text-left text-md-center text-wrap" id="hide-id">******</td>
+	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="show-hide">Show</a></td>
     </tr>
-@endif
-   
+	@endif
+	<tr>
+	<td class="text-left text-md-center"></td>
+	<td class="text-left text-md-center"><a href="javascript:void(0)" class="delete-account">Delete Account</a> </td>
+	</tr>
   </tbody>
 </table></ul></div></div>
 
