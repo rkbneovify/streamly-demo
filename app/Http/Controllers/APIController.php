@@ -29,7 +29,7 @@ class APIController extends Controller
      * @var bool
      */
     public $loginAfterSignUp = true;
-    public $exculdedUsers = ["qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
+    public $exculdedUsers = ["jmheil@gmail.com","llipschultz@neovix.com","brian_marlin@yahoo.com","qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
     public function __construct()
     {
         $this->middleware('jwt.verify', ['except' => ['login','register','verify','support','privacypol','termofuse','qrcodeapi','unhashid','qrvisibility','connecteddeviceemail']]);
