@@ -84367,7 +84367,7 @@ hoursNew = (hoursNew % 12) || 12;
                     //   },
                     //   [_vm._v("No Data Available or Fetching Data")]
                     // ),
-                    // _vm._v(" "),
+                    _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
                       var eventsLength = channel?.programmes?.length
                       if(i == 0) {
