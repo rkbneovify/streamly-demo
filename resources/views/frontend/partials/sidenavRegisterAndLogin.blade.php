@@ -66,7 +66,7 @@
                   <div class="form-group mt-4 text-center">
                       <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span class="hoverSidenav">LOG IN WITH GOOGLE<span></a>
                       <br>
-                      <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span class="hoverSidenav">LOG IN WITH QR 1<span></a>
+                      <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span class="hoverSidenav">LOG IN WITH QR<span></a>
                        {{-- <button type="submit" class="btn btn-lg login-btn">LOG IN</button> --}}
                   </div>
                   {!! csrf_field() !!}
