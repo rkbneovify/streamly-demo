@@ -41,7 +41,7 @@
                             {{-- <span class="dropdown-menu-arrow"></span> --}}
                             <a class="dropdown-item disabled" href="/account/settings">{{ Auth::user()->name }}</a>
                             <a class="dropdown-item" href="/account/settings">Account Settings</a>
-                            <a class="dropdown-item" href="/qrscanner">QR Scanner</a>
+                            {{-- <a class="dropdown-item" href="/qrscanner">QR Scanner</a> --}}
                             <a class="dropdown-item" href="/account/devices">Manage Connected device</a>
                             @if (Auth::user()->subscribed('main')) 
                             <a class="dropdown-item" href="/react">Program Guide</a>
