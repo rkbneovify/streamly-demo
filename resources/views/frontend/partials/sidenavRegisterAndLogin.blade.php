@@ -19,7 +19,7 @@
 
       <div class="container" style="padding: 0px 50px;">
           <div class="row mt-4">
-              @if($errors->has('email'))
+              @if($errors->has('email') && !$errors->has('passcode'))
       <div class="alert alert-danger alert-dismissible ">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
           <strong>Error!</strong> {{$errors->first()}}
@@ -37,12 +37,12 @@
                       <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password2"></span>
                   </div>
 
-                  <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="remember-me">
-                      <label class="no-font-s form-check-label" for="remember-me">Remember me</label>
-<label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password hoverSidenav">Forgot password?</a></label>
+                  <div class="form-group">
+                      <!-- <input type="checkbox" class="form-check-input" id="remember-me">
+                      <label class="no-font-s form-check-label" for="remember-me">Remember me</label> -->
+                        <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password hoverSidenav">Forgot password?</a></label>
                     </div>
-                 
+                    <div>&nbsp;</div>
                     @if(env('GOOGLE_RECAPTCHA_KEY'))
                     <div class="form-group">
                     <div class="col-md-12 text-right">
@@ -64,6 +64,7 @@
                   </div>
 
                   <div class="form-group mt-4 text-center">
+                      <a class="btn btn-sm google-btn" href="javascript:void(0)" onclick="openNavPasscode(event)">  <span class="hoverSidenav">LOG IN WITH PASSCODE<span></a>
                       <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span class="hoverSidenav">LOG IN WITH GOOGLE<span></a>
                       <br>
                       <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span class="hoverSidenav">LOG IN WITH QR<span></a>
@@ -84,7 +85,7 @@
 
       <div class="container" style="padding: 0px 50px; padding-bottom: 25px;">
           <div class="row mt-4">
-              @if($errors->any()&& !$errors->has('email'))
+              @if($errors->any()&& !$errors->has('passcode') && !$errors->has('email'))
        <div class="alert alert-danger alert-dismissible ">
           <button type="button" class="close" data-dismiss="alert">&times;</button>
           <strong>Error!</strong> @foreach ($errors->all() as $message) 
@@ -151,3 +152,69 @@
       </div>
 
   </div>
+  <div id="mySidenavPasscode" class="sidenav">
+
+    <div style="width: 100%;height: 5%;">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNavPasscode()">&times;</a>
+    </div>
+
+    <div class="container" style="padding: 0px 50px; padding-bottom: 25px;">
+        <div class="row mt-4">
+              @if($errors->has('passcode') && !$errors->has('email'))
+       <div class="alert alert-danger alert-dismissible ">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Error!</strong> @foreach ($errors->all() as $message) 
+              {{$message}}
+          
+          @endforeach
+      </div>
+  @endif
+    @if(session()->has('message'))
+    <div class="alert alert-success alert-dismissible ">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ session()->get('message') }}
+    </div>
+    @endif 
+        <h4 class="login_txt">Log In</h4>    
+        <form action="user/login/passcode" method="post" class="login-form mt-3">
+            <div class="form-group">
+                <label for="user-password" class="control-label">Passcode</label>
+                <input type="password" id="passcode" name="passcode" class="form-control" value="{{old('user-password')}}" required>
+                <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-passcode"></span>
+              </div>
+
+            @if(env('GOOGLE_RECAPTCHA_KEY'))
+            <div class="form-group">
+            <div class="col-md-12 text-right">
+            <div class="g-recaptcha" data-sitekey="{{env('GOOGLE_RECAPTCHA_KEY')}}"></div>
+            </div>
+            </div>
+            @endif
+   
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-lg login-btn">LOG IN</button>
+            </div>
+
+            <span>Don't have an account?</span> <a href="javascript:void(0)" class="hoverSidenav" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a>
+
+            <div class="mt-4">
+                <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
+                <span style="padding: 0 4%;">or</span>
+                <div style="border: 0.5px solid #C4C4C4;display: inline-block;width: 40%;"></div>
+            </div>
+
+            <div class="form-group mt-4 text-center">
+                <a class="btn btn-sm google-btn" href="javascript:void(0)" onclick="openNav(event)">  <span class="hoverSidenav">LOG IN WITH PASSWORD<span></a>
+                <a class="btn btn-sm google-btn" href="{{ route('google.login') }}"> <img class="lazy" src="../uploads/channellogo/notfound.png" data-src="{{ asset('frontend/img/google-login.svg') }}"> <span class="hoverSidenav">LOG IN WITH GOOGLE<span></a>
+                <br>
+                <a class="btn btn-sm google-btn" href="{{ route('qrtesting2') }}">  <span class="hoverSidenav">LOG IN WITH QR<span></a>
+                {{-- <button type="submit" class="btn btn-lg login-btn">LOG IN</button> --}}
+            </div>
+            {!! csrf_field() !!}
+
+        </form>
+    </div>
+    
+</div>
+
+</div>
