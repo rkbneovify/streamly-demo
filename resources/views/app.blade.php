@@ -364,7 +364,7 @@ button#navrighthorizontal:after {
     /* margin-top: 101px; */
     /* position: fixed; */
     z-index: 9999;
-    max-width: 62.65vw !important;
+    max-width: 100% !important;
     /* overflow: hidden; */
     /* left: 345px !important; */
     color: #dbddde;
