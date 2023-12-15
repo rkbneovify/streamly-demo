@@ -76,13 +76,24 @@ $('.navbar-toggler').on('click',function(){
 function openNav(event) {
     event.preventDefault();
     closeNavReg();
+    closeNavPasscode();
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenav").classList.add("show");
     document.getElementById("email").focus();
 }
 
+function openNavPasscode(event) {
+  event.preventDefault();
+  closeNavReg();
+  closeNav();
+  // document.getElementById("mySidenav").style.width = "34%";
+  document.getElementById("mySidenavPasscode").classList.add("show");
+  document.getElementById("passcode").focus();
+}
+
 function openNavReg() {
     closeNav();
+    closeNavPasscode();
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenavRegister").classList.add("show");
     document.getElementById("name").focus();
@@ -100,6 +111,10 @@ function logoutUser() {
 
 function closeNavReg() {
     document.getElementById("mySidenavRegister").classList.remove("show");
+}
+
+function closeNavPasscode() {
+  document.getElementById("mySidenavPasscode").classList.remove("show");
 }
 
 window.setTimeout(function() {

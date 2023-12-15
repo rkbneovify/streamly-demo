@@ -248,6 +248,7 @@ Route::get('/login/google', 'HomeTwoController@rediretToGoogleLogin')->name('goo
 
 Route::get('/google/login', 'HomeTwoController@handleGoogleCallback');
 Route::post('/user/register', 'HomeTwoController@createUser');
+Route::post('/user/login/passcode', 'HomeTwoController@passcodeLogin');
 Route::post('/user/contactformsend', 'HomeTwoController@contactformsend');
 Route::post('/user/checkzipafterlogin', 'HomeTwoController@checkzipAfterGoogleLogin');
 

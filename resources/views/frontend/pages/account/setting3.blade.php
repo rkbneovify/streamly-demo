@@ -608,7 +608,7 @@ input[type=number] {
 	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="show-hide">Show</a></td>
     </tr>
 	@endif
-	<tr>
+	<tr style="display: none;">
 	<td class="text-left text-md-center"></td>
 	<td class="text-left text-md-center"><a href="javascript:void(0)" class="delete-account">Delete Account</a> </td>
 	</tr>
