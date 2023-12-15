@@ -37,12 +37,12 @@
                       <span toggle="#password-field" class="fa fa-fw fa-eye field_icon toggle-password2"></span>
                   </div>
 
-                  <div class="form-check">
+                  <div class="form-group">
                       <!-- <input type="checkbox" class="form-check-input" id="remember-me">
                       <label class="no-font-s form-check-label" for="remember-me">Remember me</label> -->
-<label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password hoverSidenav">Forgot password?</a></label>
+                        <label class="no-font-s float-right"><a href="{{ url('/password/reset') }}" class="forgot-password hoverSidenav">Forgot password?</a></label>
                     </div>
-                 
+                    <div>&nbsp;</div>
                     @if(env('GOOGLE_RECAPTCHA_KEY'))
                     <div class="form-group">
                     <div class="col-md-12 text-right">

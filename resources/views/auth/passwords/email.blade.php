@@ -321,7 +321,7 @@
                                  redirect: 'follow'
                                 };
 
-                                fetch("https://streamlytv.com/api/password/email", requestOptions)
+                                fetch("<?php echo env("FRONTEND_URL") ?>"+"api/password/email", requestOptions)
                                 .then(response => response.json())
                                 .then(result => {
 								document.getElementById("resultEmail").innerHTML = result.message;
