@@ -691,9 +691,36 @@ AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')
         }
     }
 
-   
-    
 
+    public function passcodeLogin(Request $request){
+        
+        $deviceDetails	= getDeviceIdforAPI($request);
+        $passcode= $request->only('passcode');
+        $uid=UnHashUserID($passcode['passcode']);
+        if(!$uid) {
+            return redirect()->back()->withInput()->withErrors(['passcode' => 'User not found']);
+        }
+
+        $user = User::find($uid);
+
+        if($user->email_verified_at==null){
+            return redirect()->back()->withInput()->withErrors(['passcode' => 'Email not verfied, verify your email first.']);
+        }
+
+        if($user->is_active==0){
+            return redirect()->back()->withInput()->withErrors(['passcode' => 'You are deactivated, kindly contact admin.']);
+        }
+
+        Auth::login($user);
+        $userRole= $user->roles->pluck('name');
+        if($user->forced_change == 1) {
+            return redirect('/update/password');
+        } elseif( (@$userRole[0]== 'admin' || @$userRole[0]== 'superadmin')) {
+            return redirect('/admin');
+        } else {
+            return redirect('/');
+        }
+    }
 }
 
 
