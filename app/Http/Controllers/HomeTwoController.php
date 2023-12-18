@@ -330,6 +330,7 @@ try {
             $newUser->email_verified_at = now();
             $newUser->is_active = 1;
             $newUser->avatar            = $userData['avatar'];
+            $newUser->zipcode =  $request->zip_code;
             $newUser->mode            = 'Live';
             // dd($newUser);
             $newUser->save();
