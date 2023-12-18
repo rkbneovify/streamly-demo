@@ -14,6 +14,9 @@
 @if(session()->has('message'))
 document.getElementById("mySidenavRegister").classList.add("show");
 @endif
+@if(session()->has('reseterror'))
+document.getElementById("mySidenavRegister").classList.add("show");
+@endif
 window.onload = function() {
     var $recaptcha = document.querySelector('#g-recaptcha-response');
 

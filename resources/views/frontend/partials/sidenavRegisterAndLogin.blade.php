@@ -100,6 +100,14 @@
           {{ session()->get('message') }}
       </div>
   @endif 
+
+  @if(session()->has('reseterror'))
+       <div class="alert alert-danger alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          {{ session()->get('reseterror') }}
+      </div>
+  @endif 
+
               <h4 class="login_txt">Create Your Account</h4>    
               <form action="user/register" method="post" class="login-form mt-3">
                   <div class="form-group">
