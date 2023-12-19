@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use App\User;
 
 class ResetPasswordController extends Controller
 {
@@ -73,6 +74,34 @@ class ResetPasswordController extends Controller
         // return $response == Password::PASSWORD_RESET
         // ? $this->sendResetResponse($response)
         // : $this->sendResetFailedResponse($request, $response);
+    }
+
+    public function showResetForm(Request $request, $token = null)
+    {
+
+        if($request->has('email')) {
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                return redirect('/')->with('reseterror', 'Password reset token is invalid');
+            }
+
+            $status = $this->broker()->tokenExists($user, $token);
+
+            if (!$status) {
+                // Token is not valid
+                return redirect('/')->with('reseterror', 'Password reset token is invalid');
+            } else {
+                // Token is valid, proceed with your logic
+                // For example, show the password reset for
+
+                return view('auth.passwords.reset')->with(
+                    ['token' => $token, 'email' => $request->email]
+                );
+            }
+        } else {
+            return redirect('/')->with('reseterror', 'Password reset token is invalid');    
+        }
     }
 
     protected function valRules()
