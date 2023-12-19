@@ -122,6 +122,20 @@ width: 100px;
 	
 	
 	});	
+
+	$(document).on('click','.removeFav',function(e){
+		e.preventDefault();
+		$.ajax({
+			type:'POST',
+			url:"<?php  echo env('FRONTEND_URL') ?>"+"/api/vueremovefav",
+			success:function(data){
+				$('.btn-remove').html("♡")
+				$('.btn-remove').removeClass('btn-remove').addClass('btn-submit');
+			}
+		
+		});	
+	});	
+
 	$(document).on('click','.btn-remove',function(e){
 		
 	
@@ -160,8 +174,9 @@ width: 100px;
 <section class="page-section custom-row">
 
 	<div class="container" style="margin-top: 4%;">
-		<div class="page-header">
-		<h3>My Favorite</h3>
+		<div class="page-header" style="display:flex">
+		<h3>My Favorite</h3> 
+		<a href="javascript:void(0)" style="margin:auto" class="removeFav">Clear Favorite</a></td>
 </div>
 		@forelse($myFavorites->chunk(6) as $chunk)
 	<div class="row">
