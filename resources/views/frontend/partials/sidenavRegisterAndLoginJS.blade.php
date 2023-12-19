@@ -8,8 +8,13 @@
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenavRegister").classList.add("show");
 @endif
-
+@if($errors->has('passcode'))
+    document.getElementById("mySidenavPasscode").classList.add("show");
+@endif
 @if(session()->has('message'))
+document.getElementById("mySidenavRegister").classList.add("show");
+@endif
+@if(session()->has('reseterror'))
 document.getElementById("mySidenavRegister").classList.add("show");
 @endif
 window.onload = function() {
@@ -26,6 +31,15 @@ $(this).toggleClass("fa-eye fa-eye-slash");
 var input = $("#user-password");
 input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password');
 });
+
+$(document).on('click', '.toggle-passcode', function() {
+
+$(this).toggleClass("fa-eye fa-eye-slash");
+
+var input = $("#passcode");
+input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password');
+});
+
 $(document).on('click', '.toggle-password2', function() {
 
 $(this).toggleClass("fa-eye fa-eye-slash");
