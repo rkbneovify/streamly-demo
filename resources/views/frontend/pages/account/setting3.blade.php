@@ -262,6 +262,10 @@ input[type=number] {
 		jQuery('#changePassword').modal('show');
 		@endif
 
+		@if(session()->has('deleteerror'))
+        jQuery('#deleteAccount').modal('show');
+		@endif
+		
 		@if(session()->has('message2'))
         jQuery('#changePassword').modal('show');
 		@endif
@@ -396,10 +400,9 @@ input[type=number] {
 	    <div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body text-center">
-		  		@if(session()->has('message2'))
+		  		@if(session()->has('deleteerror'))
 					<div class="alert alert-danger">
-					<strong>Whoops!</strong> There were some problems with your input.<br><br>
-					<li>{{ session()->get('message2') }}</li>
+					<li>{{ session()->get('deleteerror') }}</li>
 					</div>
               	@endif
 					 <form action="{{ url("/userdelete", [Auth::user()->id]) }}" class="text-left" method="POST" enctype="multipart/form-data">
@@ -608,7 +611,7 @@ input[type=number] {
 	  <td class="text-left text-md-center text-wrap"><a href="javascript:void(0)" class="show-hide">Show</a></td>
     </tr>
 	@endif
-	<tr style="display: none;">
+	<tr>
 	<td class="text-left text-md-center"></td>
 	<td class="text-left text-md-center"><a href="javascript:void(0)" class="delete-account">Delete Account</a> </td>
 	</tr>
