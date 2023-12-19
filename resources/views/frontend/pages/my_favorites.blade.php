@@ -129,8 +129,8 @@ width: 100px;
 			type:'POST',
 			url:"<?php  echo env('FRONTEND_URL') ?>"+"/api/vueremovefav",
 			success:function(data){
-				$('.btn-remove').html("♡")
-				$('.btn-remove').removeClass('btn-remove').addClass('btn-submit');
+				$('.removeFav').hide()
+				$('.row').html('<p>You have no favorite posts.</p>')
 			}
 		
 		});	
@@ -176,8 +176,10 @@ width: 100px;
 	<div class="container" style="margin-top: 4%;">
 		<div class="page-header" style="display:flex">
 		<h3>My Favorite</h3> 
-		<a href="javascript:void(0)" style="margin:auto" class="removeFav">Clear Favorite</a></td>
-</div>
+		@if(count($myFavorites) > 0)
+			<a href="javascript:void(0)" style="margin:auto;" class="removeFav">Clear Favorite</a></td>
+		@endif
+		</div>
 		@forelse($myFavorites->chunk(6) as $chunk)
 	<div class="row">
 			@foreach($chunk as $channeldet)
