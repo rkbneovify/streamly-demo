@@ -431,6 +431,62 @@ curl_close($curl);
         }
     }
 
+    public function userDelete(Request $request, $id){
+        
+        $User=Auth::user();
+        $UserName = $User['name'];
+        $UserEmail = $User['email'];
+        if($User['is_active'] == 1) {
+
+            if($request->has('passworddelete')) {
+                $credentials = ['email' => $User->email, 'password' => $request->passworddelete];
+                $token = JWTAuth::attempt($credentials);
+                if(!$token) {
+                    return redirect()->back()->with('deleteerror','Please enter correct password.');
+                }
+
+                DB::table('users')
+                ->where('id', $id)
+                ->update(['is_active' => "0",'deleted_at' => date('Y-m-d H:i:s')]);
+
+                $subscribtionCheck = DB::table('subscriptions')
+                ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                ->get();
+                
+                try {
+                    
+                    if(count($subscribtionCheck) > 0){
+                    $User->subscription('main')->skipTrial()->cancelNow();
+                    }
+
+                    DB::table('subscriptions')
+                    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                    ->update(['stripe_status' => "canceled"]);
+
+
+                } catch(Exception $e) {
+                    DB::table('subscriptions')
+                    ->where(['user_id' => $id, 'stripe_status' => 'active'])
+                    ->update(['stripe_status' => "canceled"]);
+                }
+
+                
+                DB::table('session_table')
+                ->where('users_id', $id)
+                ->where('status', "1")
+                ->update(['status' => "0"]);
+
+                Auth::logout();
+                return redirect('/');
+
+            } else {
+                return redirect()->back()->with('deleteerror','Please enter password.');
+            }
+        } else { 
+            return redirect()->back()->with('deleteerror','User already deleted.');
+        }
+    }
+
     public function destroy($id)
     {  
         $uid= Auth::user()->id;
