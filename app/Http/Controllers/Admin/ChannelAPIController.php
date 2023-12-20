@@ -1796,8 +1796,8 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
             )
             ->from('gracenote')
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
-            ->whereRaw('gracenote.`EndDateTime`
-            BETWEEN DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:01:00") AND DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL')
+            ->whereRaw('gracenote.`EndDateTime` >=
+            DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:01:00")  AND  gracenote.`StartDateTime` <= DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL')
             ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
             ->where('sub.status','=','1')
@@ -1809,8 +1809,8 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
     $distinct_ids = Gracenote::select('channels.id')->distinct()->from('gracenote')
     ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     ->where('channels.status','=',1)
-    ->whereRaw('gracenote.`EndDateTime`
-    BETWEEN DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:01:00") AND DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
+    ->whereRaw('gracenote.`EndDateTime` >=
+    DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00")  AND  gracenote.`StartDateTime` <= DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
     $b = Channel::select(DB::raw('IFNULL(callSign,name) callSign'),"id",
