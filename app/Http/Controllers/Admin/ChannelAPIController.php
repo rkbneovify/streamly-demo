@@ -953,7 +953,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
                 $res = [
                     'id' => $value['channels']['0'],
                     'callSign' => $value['station']['callSign'],
-                    'logo' => $value['station']['preferredImage']['uri'],
+                    'logo' => "http://demo.tmsimg.com/".$value['station']['preferredImage']['uri'],
                     'programs' => [['end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime']),'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>"http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'] ]],
                 ];
 
