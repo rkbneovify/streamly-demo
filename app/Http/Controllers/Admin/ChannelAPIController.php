@@ -921,7 +921,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime=2023-12-20&api_key=fb5rmxx8r3bp7wzby3786tac',
+        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime=2023-12-22T00:00Z&endDateTime=2023-12-22T23:00Z&api_key=fb5rmxx8r3bp7wzby3786tac',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -942,14 +942,19 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             // Check if the key already exists in the grouped data
             if (isset($groupedData[$key])) {
                 // If the key exists, add one more array to the 'programs' key
-                $groupedData[$key]['programs'][] = $value['program'];
+                $res = [
+                    'end' => strtotime($value['endTime']), 
+                    'start' => strtotime($value['startTime']),
+                    'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>" http://demo.tmsimg.com/".$value['program']['preferredImage']['uri']
+                ];
+                $groupedData[$key]['programs'][] = $res;
             } else {
                 // If the key doesn't exist, create a new entry in the grouped data
                 $res = [
                     'id' => $value['channels']['0'],
                     'callSign' => $value['station']['callSign'],
                     'logo' => $value['station']['preferredImage']['uri'],
-                    'programs' => [$value['program'], 'end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime'])],
+                    'programs' => [['end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime']),'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>"http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'] ]],
                 ];
 
                 // Add the new entry to the grouped data
