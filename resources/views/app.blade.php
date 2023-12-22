@@ -635,7 +635,7 @@ button#navrighthorizontal {
     width: 15.5vw !important;
 }
 .programme__row {
-    height: 9.5vw !important;
+    height: 8.5vw !important;
 }
 .channel__list__section>div[data-v-56b65aa6] 
 {
