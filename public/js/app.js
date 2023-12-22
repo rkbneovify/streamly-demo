@@ -2196,12 +2196,9 @@
       this.fetchFavouriteList(); //Caching the programme rows
       const scroll = document.querySelector('.channel__list__section');
       const arr = [...scroll.children].map(el => el.getAttribute('data-channel'))
-      console.log(arr,'asd');
       const chunkSize = 5;
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize);
-
-        console.log(chunk,'chunks');
         this.fetchProgrammes(chunk);
       }
       
@@ -84366,6 +84363,7 @@ hoursNew = (hoursNew % 12) || 12;
               { staticClass: "programme__timing__section" },
               _vm._l(_vm.filteredChannelList, function(channel) {
                 var i = 0;
+                var url = "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
                 return _c(
                   "div",
                   {
@@ -84408,7 +84406,7 @@ hoursNew = (hoursNew % 12) || 12;
                     // ),
                     _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
-                      
+                      programme.url = url
                       var date = _vm.getEndTime(programme.displayDateTimeUtc, programme.displayDuration)
                       var startTime=new Date();
                       var minutes = startTime.getMinutes();
@@ -84730,11 +84728,13 @@ hoursNew = (hoursNew % 12) || 12;
                   attrs: { src: _vm.programmeDetails.epgEventImage }
                 })
               ]),
-              _c("div", { staticClass: "channel__logo" }, [
-                _c("img", {
-                  staticStyle: { width: "25%" },
-                  attrs: { src: _vm.programmeDetails.epgEventImage }
-                })
+              _vm._v(" "),
+              _c("button", { on: {
+                click: function ($event) {
+                  window.location.href = _vm.programmeDetails.url
+                },
+              }, staticClass: "watch-tv-button" }, [
+                _vm._v("Watch TV"),
               ]),
               _vm._v(" "),
               _c("p", { staticClass: "channel_description",staticStyle: { color: "#fff" } }, [
