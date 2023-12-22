@@ -364,7 +364,7 @@ button#navrighthorizontal:after {
     /* margin-top: 101px; */
     /* position: fixed; */
     z-index: 9999;
-    max-width: 62.65vw !important;
+    max-width: 100% !important;
     /* overflow: hidden; */
     /* left: 345px !important; */
     color: #dbddde;
@@ -635,7 +635,7 @@ button#navrighthorizontal {
     width: 15.5vw !important;
 }
 .programme__row {
-    height: 8.5vw !important;
+    height: 9.5vw !important;
 }
 .channel__list__section>div[data-v-56b65aa6] 
 {
