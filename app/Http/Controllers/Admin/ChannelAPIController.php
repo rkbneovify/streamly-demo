@@ -1486,7 +1486,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
             DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
             DB::raw('IFNULL(gracenote.EventDescription,"") EventDescription'),
-            DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
+            DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 HOUR), "%Y-%m-%d %H:%i:%s")) StartDateTime'),
             DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")) EndDateTime'),
             DB::raw('IFNULL(gracenote.TimeZoneName,"TimeZoneName") TimeZoneName'),
             'channels.id','channels.status',"channels.zip_code",
@@ -1495,7 +1495,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
             WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
             WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.StartDateTime,'+00:00','$tz')
-            ELSE CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), ' 00:00:00'),interval -12 hour), '%Y-%m-%d %H:%i:%s'),'+00:00','$tz') end StartDateTimewithTimezon"),
+            ELSE CONVERT_TZ(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 HOUR), '%Y-%m-%d %H:%i:%s'),'+00:00','$tz') end StartDateTimewithTimezon"),
             DB::raw(" CASE gracenote.TimeZoneName
             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','$tz')
             WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','$tz')
@@ -1505,7 +1505,7 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             ->from('gracenote')
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
             ->whereRaw('gracenote.`StartDateTime`
-            BETWEEN DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL')
+            BETWEEN DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 HOUR), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s") or `channels`.`callSign` IS NULL')
             ->orderBy('gracenote.StartDateTime', 'asc');
         }, 'sub')
             ->leftJoin('channels_genre', 'sub.id', '=', 'channels_genre.channels_id')
@@ -1528,14 +1528,14 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
     ->where('channels.status','=',1)
     ->whereRaw('gracenote.`StartDateTime`
-    BETWEEN DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
+    BETWEEN DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 HOUR), "%Y-%m-%d %H:%i:%s") AND DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
     $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id","channels.zip_code",
         DB::raw('IFNULL(stationName,channels.name) StationName'),"$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
-        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,channels.name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURRENT_DATE(), " 00:00:00"),interval -12 hour), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
+        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,channels.name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 HOUR), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
         ->where('channels.status', '=', 1)
         ->whereNotIn('channels.id', $distinct_ids)
         ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
