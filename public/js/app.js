@@ -2239,6 +2239,7 @@
       // Utility
       hoursList: function hoursList() {
         function convertTZ(date, tzString) {
+          console.log(new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString})))
           return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
         }
       
@@ -2248,7 +2249,7 @@
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
         // })
-        date1.setMinutes(date1.getMinutes()-550);
+        date1.setMinutes(date1.getMinutes());
        // var date2 = new Date();
        // date2.setMinutes(date2.getMinutes()+570);
         //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
@@ -2293,6 +2294,20 @@
           sortOrder: this.sortOrder * -1,
           sortOn: sortOn
         });
+      },
+      getEndTime: function getEndTime(originalTime,duration){
+
+        // Convert the original time string to a Date object
+        var originalDate = new Date(originalTime);
+
+        // Parse the duration string into hours, minutes, and seconds
+        var [hours, minutes, seconds] = duration.split(':').map(Number);
+
+        // Add the duration to the date
+        originalDate.setHours(originalDate.getHours() + hours);
+        originalDate.setMinutes(originalDate.getMinutes() + minutes);
+        originalDate.setSeconds(originalDate.getSeconds() + seconds);
+        return originalDate
       },
       onProgrammeHover: function onProgrammeHover(e, programme, channel) {
         this.currentProgramme = programme;
@@ -84334,8 +84349,7 @@ hoursNew = (hoursNew % 12) || 12;
               "div",
               { staticClass: "programme__timing__section" },
               _vm._l(_vm.filteredChannelList, function(channel) {
-                var i = 0
-                var j = 0
+                var i = 0;
                 return _c(
                   "div",
                   {
@@ -84348,9 +84362,9 @@ hoursNew = (hoursNew % 12) || 12;
                         typeof channel.programmes != "undefined"
                     },
                     on: {
-                      click : function($event){
-                        window.location.href =  "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
-                      }
+                      // click : function($event){
+                      //   window.location.href =  "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
+                      // }
                     },
                   },
                   [
@@ -84378,47 +84392,19 @@ hoursNew = (hoursNew % 12) || 12;
                     // ),
                     _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
-                      var eventsLength = channel?.programmes?.length
-                      if(i == 0) {
-                        j++
-                        var startTime=new Date();
-                        var minutes = startTime.getMinutes();
-                        if(minutes > 30)
-                          startTime.setMinutes(d.getMinutes() - (600 - (60 - minutes)));
-                        else
-                          startTime.setMinutes(d.getMinutes() - (600 - 60 + minutes));
+                      
+                      var date = _vm.getEndTime(programme.displayDateTimeUtc, programme.displayDuration)
+                      var startTime=new Date();
+                      var minutes = startTime.getMinutes();
+                      startTime.setMinutes(d.getMinutes() - minutes);
+                      startTime.setSeconds(0);
+                      date.setSeconds(0);
+                      if(date > startTime) {
                         
-                        startTime.setSeconds(0);
-                        if(new Date(programme.displayDateTimeUtc) >= startTime ) {
-
-                          var diff = new Date(programme.displayDateTimeUtc) - startTime
-                          var widthC = Math.round(diff / 60000)
+                        if(i==0) {
+                          let differenceInMinutes = (new Date(date) - new Date(startTime)) / (1000 * 60);
                           i++
-                          return [
-                            _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: typeof channel.programmes == "undefined",
-                                  expression: "typeof channel.programmes == 'undefined'"
-                                }
-                              ],
-                              staticClass: "programme programme--no__data",
-                              style: {
-                                flex:
-                                  "0 0 " +
-                                  //programme.durationMinutes * _vm.minuteWidthPx +
-                                  widthC* 5 +
-                                "px",
-                              }
-                            },
-                            [_vm._v("No Data Available or Fetching Data")]
-                          ),
-                          _vm._v(" "),
-                          _c(
+                          return _c(
                             "span",
                             {
                               key: programme,
@@ -84427,19 +84413,18 @@ hoursNew = (hoursNew % 12) || 12;
                                 flex:
                                   "0 0 " +
                                   //programme.durationMinutes * _vm.minuteWidthPx +
-                                  programme.durationMinutes * 5 +
+                                  differenceInMinutes * 5 +
                                   "px"
                               },
                               on: {
-                                mouseover: function($event) {
-                                  
+                                click: function($event) {
+                                  $event.preventDefault();
                                   return _vm.onProgrammeHover(
                                     $event,
                                     programme,
                                     channel
                                   )
                                 },
-                                mouseout: _vm.onProgrammeHoverOut
                               }
                             },
                             [
@@ -84455,84 +84440,46 @@ hoursNew = (hoursNew % 12) || 12;
                               ])
                             ]
                           )
-                        ]
                         } else {
-                          return _c()
-                        }
-                      // }else if(j === (eventsLength-1)){
-                      //   var startTime=new Date();
-                      //   var minutes = startTime.getMinutes();
-                      //   if(minutes > 30)
-                      //     startTime.setMinutes(d.getMinutes() + (900 + (60 - minutes)));
-                      //   else
-                      //     startTime.setMinutes(d.getMinutes() + (900 - minutes));
-                      
-                      //   if(new Date(programme.displayDateTimeUtc) < startTime ) {
-                      //     var diff = new Date(programme.displayDateTimeUtc) - startTime
-                      //     var widthC = Math.round(diff / 60000)
-                      //     return
-                      //       _c(
-                      //       "span",
-                      //       {
-                      //         directives: [
-                      //           {
-                      //             name: "show",
-                      //             rawName: "v-show",
-                      //             value: typeof channel.programmes == "undefined",
-                      //             expression: "typeof channel.programmes == 'undefined'"
-                      //           }
-                      //         ],
-                      //         staticClass: "programme programme--no__data",
-                      //         style: {
-                      //           flex:
-                      //             "0 0 " +
-                      //             //programme.durationMinutes * _vm.minuteWidthPx +
-                      //             widthC* 5 +
-                      //           "px",
-                      //         }
-                      //       },
-                      //       [_vm._v("No Data Available or Fetching Data")]
-                      //     )
-                      //   }
-                      } else {
-                        j++
-                        return _c(
-                          "span",
-                          {
-                            key: programme,
-                            staticClass: "programme",
-                            style: {
-                              flex:
-                                "0 0 " +
-                                //programme.durationMinutes * _vm.minuteWidthPx +
-                                programme.durationMinutes * 5 +
-                                "px"
-                            },
-                            on: {
-                              mouseover: function($event) {
-                                
-                                return _vm.onProgrammeHover(
-                                  $event,
-                                  programme,
-                                  channel
-                                )
+                          return _c(
+                            "span",
+                            {
+                              key: programme,
+                              staticClass: "programme",
+                              style: {
+                                flex:
+                                  "0 0 " +
+                                  //programme.durationMinutes * _vm.minuteWidthPx +
+                                  programme.durationMinutes * 5 +
+                                  "px"
                               },
-                              mouseout: _vm.onProgrammeHoverOut
-                            }
-                          },
-                          [
-                            _c("div", { staticClass: "pgFontguidehead" },[
-                              _vm._v(" " + _vm._s(programme.programmeTitle))
-                            ]),
-                            _vm._v(" "),
-                            _c("sup", { staticClass: "pgFontguide" },
-                            [ _vm._v(" " + _vm._s(programme.genre))]),
-                            _vm._v(" "),
-                            _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
-                              _vm._v(_vm._s(programme.durationMinutes) + "mins.")
-                            ])
-                          ]
-                        )
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault();
+                                  return _vm.onProgrammeHover(
+                                    $event,
+                                    programme,
+                                    channel
+                                  )
+                                },
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(programme.programmeTitle))
+                              ]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" },
+                              [ _vm._v(" " + _vm._s(programme.genre))]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
+                                _vm._v(_vm._s(programme.durationMinutes) + "mins.")
+                              ])
+                            ]
+                          )
+                        }
+                      } else {
+                        return _c()
                       }
                     })
                   ],
@@ -84761,6 +84708,12 @@ hoursNew = (hoursNew % 12) || 12;
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "programme__content" }, [
+              _c("div", { staticClass: "channel__logo" }, [
+                _c("img", {
+                  staticStyle: { width: "25%" },
+                  attrs: { src: _vm.programmeDetails.epgEventImage }
+                })
+              ]),
               _c("div", { staticClass: "channel__logo" }, [
                 _c("img", {
                   staticStyle: { width: "25%" },
