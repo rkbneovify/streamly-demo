@@ -952,7 +952,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
                 // If the key doesn't exist, create a new entry in the grouped data
                 $res = [
                     'id' => $value['channels']['0'],
-                    'StationName' => "Test",
+                    'StationName' => $value['station']['callSign'],
                      "zip_code" => [
                                " ALL"
                             ],
