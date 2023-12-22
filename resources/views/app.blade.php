@@ -631,7 +631,7 @@ button#navrighthorizontal {
 }
 @media only screen and (min-width: 600px) {
 .pgGuideheight {
-    height: calc(7.2vw + 1.5px) !important;
+    height: 7.3vw !important;
     width: 15.5vw !important;
 }
 .programme__row {
