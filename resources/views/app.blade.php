@@ -276,7 +276,7 @@ button#navlefthorizontal {
     /* position: fixed; */
     /* top: 197px; */
     width:10px;
-    z-index: 99999;
+    z-index: 99998;
     padding: 41px 14px 23px 1px !important;
     left: 26.4vw;
     justify-content: center;
