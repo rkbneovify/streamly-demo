@@ -921,7 +921,7 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime=2023-12-22T00:00Z&endDateTime=2023-12-22T23:00Z&api_key=fb5rmxx8r3bp7wzby3786tac',
+        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime=2023-12-22T10:00Z&endDateTime=2023-12-23T00:00Z&api_key=fb5rmxx8r3bp7wzby3786tac',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -945,7 +945,9 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
                 $res = [
                     'end' => strtotime($value['endTime']), 
                     'start' => strtotime($value['startTime']),
-                    'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>" http://demo.tmsimg.com/".$value['program']['preferredImage']['uri']
+                    'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 
+                    // 'logo'=>" http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'],
+                    'TimeZoneName' => 'Pacific Observing'
                 ];
                 $groupedData[$key]['programs'][] = $res;
             } else {
@@ -959,7 +961,10 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
                     'url' => "https://d36lryb1dm4mg4.cloudfront.net/TNT/index.mpd",
                     'callSign' => $value['station']['callSign'],
                     'logo' => "http://demo.tmsimg.com/".$value['station']['preferredImage']['uri'],
-                    'programs' => [['end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime']),'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>"http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'] ]],
+                    'programs' => [['end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime']),'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"",
+                    //  'logo'=>"http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'] ,
+                        'TimeZoneName' => 'Pacific Observing' ]
+                    ],
                 ];
 
                 // Add the new entry to the grouped data
@@ -976,7 +981,9 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             "success" => true,
             "date" =>  "2023-12-22",
             "count" =>  95,
-            "data" => $res
+            "data" => $res,
+            "message" => "Schedule data for 1.5 days found",
+            "response_code" => 200
         ];
 
         return $newArray;
