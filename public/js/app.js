@@ -2194,26 +2194,41 @@
       // Sorting by default
       this.onChannelSortClick('channelId');
       this.fetchFavouriteList(); //Caching the programme rows
-  
+      const scroll = document.querySelector('.channel__list__section');
+      const arr = [...scroll.children].map(el => el.getAttribute('data-channel'))
+      console.log(arr,'asd');
+      const chunkSize = 5;
+      for (let i = 0; i < arr.length; i += chunkSize) {
+        const chunk = arr.slice(i, i + chunkSize);
+
+        console.log(chunk,'chunks');
+        this.fetchProgrammes(chunk);
+      }
+      
       this.$programmeRows = document.querySelectorAll('.programme__timing__section .programme__row');
     },
     subscriptions: function subscriptions() {
       var _this = this;
   
-      var context = this;
-      this.searchText$ = new rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Subject();
+
+      setTimeout(() => {
+        const scroll = document.querySelector('.channel__section');
+        console.log(scroll);
+        var context = this;
+        this.searchText$ = new rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Subject();
       return {
         searchText: this.searchText$.map(function (e) {
           return e.event.currentTarget.value;
         }).debounce(function (e) {
           return rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Observable.timer(400);
         }),
-        scrollPage: rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Observable.fromEvent(document, 'scroll').debounce(function (e) {
+        scrollPage: rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Observable.fromEvent(scroll, 'scroll').debounce(function (e) {
           return rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Observable.timer(_this.SCROLL_WAIT_MS);
         }).map(function (scrollEvent) {
           context.onViewUpdated();
         }).distinctUntilChanged()
       };
+        })
     },
     computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_1__["mapGetters"])(['channelList', 'sortOrder', 'sortOn', 'favourites', 'ischannelDetailsFetching', 'ischannelDetailsFetched', 'programmeDate'])), {}, {
       favouriteListComputed: function favouriteListComputed() {
@@ -2303,6 +2318,7 @@
         this.currentChannel = null;
       },
       onViewUpdated: function onViewUpdated() {
+        console.log(e,'event firing');
         function isElementInViewport(e) {
           for (var f = e.offsetTop, t = e.offsetLeft, o = e.offsetWidth, n = e.offsetHeight; e.offsetParent;) {
             e = e.offsetParent, f += e.offsetTop, t += e.offsetLeft;
