@@ -2263,7 +2263,7 @@
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
         // })
-        date1.setMinutes(date1.getMinutes()-550);
+        date1.setMinutes(date1.getMinutes());
        // var date2 = new Date();
        // date2.setMinutes(date2.getMinutes()+570);
         //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
