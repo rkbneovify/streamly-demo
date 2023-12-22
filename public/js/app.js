@@ -83779,12 +83779,12 @@
                                   channel.genrename[0]
                               }
                             },
-                            [_vm._v(" "),
-                            _c("img", {
-                              staticClass: "pgGuideiconView",
-                              attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
-                            })
-                          ]
+                          //   [_vm._v(" "),
+                          //   _c("img", {
+                          //     staticClass: "pgGuideiconView",
+                          //     attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
+                          //   })
+                          // ]
                           )
                             ]
                           ),
@@ -84000,12 +84000,12 @@
                                 channel.genrename[0]
                             }
                           },
-                          [_vm._v(" "),
-                          _c("img", {
-                            staticClass: "pgGuideiconView",
-                            attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
-                          })
-                        ]
+                        //   [_vm._v(" "),
+                        //   _c("img", {
+                        //     staticClass: "pgGuideiconView",
+                        //     attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
+                        //   })
+                        // ]
                         )
                           ]
                         ),
