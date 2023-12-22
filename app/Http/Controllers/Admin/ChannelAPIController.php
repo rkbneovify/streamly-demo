@@ -952,6 +952,11 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
                 // If the key doesn't exist, create a new entry in the grouped data
                 $res = [
                     'id' => $value['channels']['0'],
+                    'StationName' => "Test",
+                     "zip_code" => [
+                               " ALL"
+                            ],
+                    'url' => "https://d36lryb1dm4mg4.cloudfront.net/TNT/index.mpd",
                     'callSign' => $value['station']['callSign'],
                     'logo' => "http://demo.tmsimg.com/".$value['station']['preferredImage']['uri'],
                     'programs' => [['end' => strtotime($value['endTime']), 'start' => strtotime($value['startTime']),'title'=> $value['program']['title'], 'description' =>$value['program']['longDescription']??"", 'logo'=>"http://demo.tmsimg.com/".$value['program']['preferredImage']['uri'] ]],
@@ -967,7 +972,14 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
             $res[] = $value;
         }
 
-        return $res;
+        $newArray = [
+            "success" => true,
+            "date" =>  "2023-12-22",
+            "count" =>  95,
+            "data" => $res
+        ];
+
+        return $newArray;
     }
 
     function array_group_by(array $array, $key) {
