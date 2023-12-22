@@ -920,8 +920,10 @@ public function hasSearchChannelDaysScheduleFuncWithGenreoffsettz($request,$isDe
     {
         $curl = curl_init();
 
+        $date = gmdate('Y-m-d\TH:i\Z');
+        $futureDate = gmdate('Y-m-d\TH:i\Z', strtotime($date . ' +22 hours'));
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime=2023-12-22T10:00Z&endDateTime=2023-12-23T00:00Z&api_key=fb5rmxx8r3bp7wzby3786tac',
+        CURLOPT_URL => 'http://data.tmsapi.com/v1.1/programs/newShowAirings?lineupId=USA-TX42500-X&startDateTime='.$date.'&endDateTime='.$futureDate.'&api_key=fb5rmxx8r3bp7wzby3786tac',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
