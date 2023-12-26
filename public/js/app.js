@@ -84247,7 +84247,7 @@ hoursNew = (hoursNew % 12) || 12;
                                                           var two=$('.programme__header .active').position().left;
                                                           $('#livechannel1').position().left=two;
                                                           const percentHour = Math.floor(new Date().getMinutes() * 100/60);
-                                                          const currentMinutesAdded = $('.header__time.active').width()/100 * percentHour
+                                                          const currentMinutesAdded = ($('.header__time.active').width()+20)/100 * percentHour
                                                           $('.channel__programme__section').attr('style',`--_offset:${this.offsetLeft + currentMinutesAdded};`)
                                                            $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two}, 1000);
                                                            $('.programme__header').animate({ scrollLeft: '+='+two}, 1000); 
