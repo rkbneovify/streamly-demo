@@ -173,59 +173,60 @@ $("#checkAvailibiltyModal").on("hide.bs.modal", function () {
 	});
 	
 });
-jQuery('body').on('click','#ajaxSubmit',function(e){
-               e.preventDefault();
-               $.ajaxSetup({
-                  headers: {
-                      
-		'X-CSRF-TOKEN': $("input[name=_token]").val()
-                  }
-              });
-
-			  	let x = document.forms["myForm"]["fname"].value;
-				if (x == "") {
-					document.getElementById("validationEmail").innerHTML = "Email field is required!";
-				return false;
-				} else {
-					let inputValue = document.forms["myForm"]["fname"].value;
-					let stringEmail = String(inputValue);
-					var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					if(!stringEmail.match(mailformat)) {
-						document.getElementById("validationEmail").innerHTML = "You have entered an invalid email address!";
-						return false;
-					}
-				}
+	jQuery('body').on('click','#ajaxSubmit',function(e){
+		e.preventDefault();
+		$.ajaxSetup({
+			headers: {
 				
-               jQuery.ajax({
-                  url: "{{ url('/checkAvailabiltyStore') }}",
-                  method: 'post',
-                  data: {
-										email: jQuery('#email').val(),
-										zip: jQuery('#modalzip').text(),
-										city: jQuery('#citymodal').text(),
-										state: jQuery('#statemodal').text(),
-                  },
-                  success: function(result){
-										
-                  	if(result.errors)
-                  	{ console.log("fail");
-                  		jQuery('.alert-danger').html('');
+			'X-CSRF-TOKEN': $("input[name=_token]").val()
+					}
+				});
+			document.getElementById("validationEmail").innerHTML = ""
+			let x = document.forms["myForm"]["fname"].value;
+			if (x == "") {
+				document.getElementById("validationEmail").innerHTML = "Email field is required!";
+			return false;
+			} else {
+				let inputValue = document.forms["myForm"]["fname"].value;
+				let stringEmail = String(inputValue);
+				var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				if(!stringEmail.match(mailformat)) {
+					document.getElementById("validationEmail").innerHTML = "You have entered an invalid email address!";
+					return false;
+				}
+			}
+			
+		jQuery.ajax({
+			url: "{{ url('/checkAvailabiltyStore') }}",
+			method: 'post',
+			data: {
+									email: jQuery('#email').val(),
+									zip: jQuery('#modalzip').text(),
+									city: jQuery('#citymodal').text(),
+									state: jQuery('#statemodal').text(),
+			},
+			success: function(result){
+									
+				if(result.errors)
+				{ console.log("fail");
+					jQuery('.alert-danger').html('');
 
-                  		jQuery.each(result.errors, function(key, value){
-                  			jQuery('.alert-danger').show();
-                  			jQuery('.alert-danger').append('<li>'+value+'</li>');
-                  		});
-                  	}
-                  	else
-                  	{ 
-						jQuery('.alert-danger').hide();
-						$('#open').hide();
-						$('#checkAvailibiltyModal').modal('hide');
-						document.getElementById("jsonresponse").innerHTML = "Your response is been recorded we will let you know when service is available at your location";
+					jQuery.each(result.errors, function(key, value){
+						jQuery('.alert-danger').show();
+						jQuery('.alert-danger').append('<li>'+value+'</li>');
+					});
+				}
+				else
+				{ 
+					jQuery('.alert-danger').hide();
+					$('#open').hide();
+					$('#checkAvailibiltyModal').modal('hide');
+					document.getElementById("jsonresponse").innerHTML = "Your response is been recorded we will let you know when service is available at your location";
 
-                  	}
-                  }});
-               });
+				}
+			}
+		});
+	});
 
 							 $( "#zip" ).autocomplete({
         source: function( request, response ) {
