@@ -150,6 +150,7 @@ $("#checkAvailibiltyModal").on("hide.bs.modal", function () {
 		},
 		error:function(xhr, status, error){ 
 			if(xhr.status==404) {
+				document.getElementById("validationEmail").innerHTML = ""
 				$("#emailzipquery").show();
 				$('#City').val(xhr.responseJSON.city); 
 				$('#State').val(xhr.responseJSON.state); 
@@ -181,7 +182,6 @@ $("#checkAvailibiltyModal").on("hide.bs.modal", function () {
 			'X-CSRF-TOKEN': $("input[name=_token]").val()
 					}
 				});
-			document.getElementById("validationEmail").innerHTML = ""
 			let x = document.forms["myForm"]["fname"].value;
 			if (x == "") {
 				document.getElementById("validationEmail").innerHTML = "Email field is required!";
