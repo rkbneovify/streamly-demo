@@ -16,7 +16,7 @@ use App\Models\Gracenotechannel;
 class LiveTv extends Controller
 { 
     use GetLocation;
-    public $exculdedUsers = ["jmheil@gmail.com","llipschultz@neovix.com","brian_marlin@yahoo.com","qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
+    public $exculdedUsers = ["jmheil@gmail.com","llipschultz@neovix.com","brian_marlin@yahoo.com","qasuresh@yopmail.com","qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
     public function setzipcode(Request $request){
 
