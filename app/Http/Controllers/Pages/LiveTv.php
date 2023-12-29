@@ -211,7 +211,7 @@ $allchannel=$record->get()->unique();
 
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$Channel= Channel::where([['callSign', $callSign],['status','=',1]])->orWhere('name', '=', $callSign);
 $url=$Channel->get('dash_url as url');
 $channelId=$Channel->get('id');
 $relatedchannel=$record->get()->where('genrenae',$genre);
