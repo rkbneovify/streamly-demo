@@ -2321,6 +2321,30 @@
         originalDate.setSeconds(originalDate.getSeconds() + seconds);
         return originalDate
       },
+
+      getStartEndTime: function getStartEndTime(startTime,duration){
+
+        // Parse the start time
+        const startDate = new Date(startTime);
+
+        // Parse the duration
+        const [hours, minutes, seconds] = duration.split(':');
+        const durationMilliseconds = (parseInt(hours, 10) * 60 * 60 + parseInt(minutes, 10) * 60 + parseInt(seconds, 10)) * 1000;
+
+        // Calculate the end time by adding the duration to the start time
+        const endDate = new Date(startDate.getTime() + durationMilliseconds);
+
+        // Format the time strings
+        const startTimehour = startDate.getHours().toString().padStart(2, '0');
+        const startTimemin = startDate.getMinutes().toString().padStart(2, '0');
+        const endTimehour = endDate.getHours().toString().padStart(2, '0');
+        const endTimemin = endDate.getMinutes().toString().padStart(2, '0');
+        const startTimeString = `${startTimehour}:${startTimemin}`
+        const endTimeString = `${endTimehour}:${endTimemin}`
+        // Return the formatted time range
+        return `${startTimeString}-${endTimeString}`;
+      },
+
       onProgrammeHover: function onProgrammeHover(e, programme, channel) {
         this.currentProgramme = programme;
         this.currentChannel = channel;
@@ -84446,6 +84470,10 @@ hoursNew = (hoursNew % 12) || 12;
                                 _vm._v(" " + _vm._s(programme.programmeTitle))
                               ]),
                               _vm._v(" "),
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
+                              ]),
+                              _vm._v(" "),
                               _c("sup", { staticClass: "pgFontguide" },
                               [ _vm._v(" " + _vm._s(programme.genre))]),
                               _vm._v(" "),
@@ -84481,6 +84509,9 @@ hoursNew = (hoursNew % 12) || 12;
                             [
                               _c("div", { staticClass: "pgFontguidehead" },[
                                 _vm._v(" " + _vm._s(programme.programmeTitle))
+                              ]),
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
                               ]),
                               _vm._v(" "),
                               _c("sup", { staticClass: "pgFontguide" },
