@@ -123,107 +123,110 @@ $("#checkAvailibiltyModal").on("hide.bs.modal", function () {
 
 	$.ajax({
 							 
-							 url:"{{ route('ajax-check') }}",
-					 
-							 type:"GET",
-							 data:{zip: zipnumber.val()},
-							 dataType: 'json',
-							 success: function (data) {
-								 $('#card-button').prop('disabled', false);
-								 $('#City').val(data.city); 
+		url:"{{ route('ajax-check') }}",
+
+		type:"GET",
+		data:{zip: zipnumber.val()},
+		dataType: 'json',
+		success: function (data) {
+			$('#card-button').prop('disabled', false);
+			$('#City').val(data.city); 
 			$('#State').val(data.state); 
-			 $('#citymodal').text(data.city); 
+			$('#citymodal').text(data.city); 
 			$('#statemodal').text(data.state); 
 			$('#modalzip').text(zipnumber.val()); 
 			$('#address-country').val("US"); 
-								//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a></p>');
-								
-								$('.circle').attr('id', 'allowed');
-								$("#emailzipquery").hide();
-								 $('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important;letter-spacing: 1.6px;color: #1BB525 ;'>&#x2705; " +data.message+"</span>");
-								//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start Your Trial Now!</a>");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Subscribe</button>');
-								 
-								 $('#zip').css("color", "#1BB525");
-								 jQuery('#checkAvailibiltyModal').modal('show');
+			//  $('#ziphelp').html('<p style="color:green">'+data.message+' <a href="javascript:void(0)" onclick="openNavReg();"style="padding: 0;">Start Your Trial Now!</a></p>');
+			document.getElementById("validationEmail").innerHTML = ""
+			$('.circle').attr('id', 'allowed');
+			$("#emailzipquery").hide();
+			$('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important;letter-spacing: 1.6px;color: #1BB525 ;'>&#x2705; " +data.message+"</span>");
+		//  $('#zipanswer').html("<strong style='color:#5E5E5E'>Join us:</strong><a href='javascript:void(0)' onclick='openNavReg();'style='padding: 0;'>Click Me! Start Your Trial Now!</a>");
+			$('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" onclick="openNavReg();">Subscribe</button>');
+			
+			$('#zip').css("color", "#1BB525");
+			jQuery('#checkAvailibiltyModal').modal('show');
 
-							 },
-							 error:function(xhr, status, error){ 
-								 if(xhr.status==404) {
-									$('#City').val(xhr.responseJSON.city); 
-			$('#State').val(xhr.responseJSON.state); 
-									$('#citymodal').text(xhr.responseJSON.city); 
-			$('#statemodal').text(xhr.responseJSON.state); 
-			$('#modalzip').text(zipnumber.val()); 
-			$('#address-country').val("US"); 
-									 // alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
-									 $('#card-button').prop('disabled', true);
-								//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
-								$('.circle').attr('id', 'error');
-								 $('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important; letter-spacing: 1.6px; color:#FC243B;'> Unfortunately, the location you have entered is outside of the Streamly service area.<br> Enter your email in the box below to be notified if Streamly comes to your area.</span>");
-								 $('#zip').css("color", "#FC243B");
-								 $('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" id="ajaxSubmit" >Submit</button>');
-							
-								 jQuery('#checkAvailibiltyModal').modal('show');
+		},
+		error:function(xhr, status, error){ 
+			if(xhr.status==404) {
+				document.getElementById("validationEmail").innerHTML = ""
+				$("#emailzipquery").show();
+				$('#City').val(xhr.responseJSON.city); 
+				$('#State').val(xhr.responseJSON.state); 
+				$('#citymodal').text(xhr.responseJSON.city); 
+				$('#statemodal').text(xhr.responseJSON.state); 
+				$('#modalzip').text(zipnumber.val()); 
+				$('#address-country').val("US"); 
+										// alert('status:' + xhr.status + ', status text: ' + xhr.responseText);
+				$('#card-button').prop('disabled', true);
+									//  $('#ziphelp').html('<p style="color:red">'+xhr.responseJSON.message+' Our apologies, your location is outside of the streamly service area. Please call 1111111111 for more information.</p>');
+				$('.circle').attr('id', 'error');
+				$('#zipanswer').html("<span style='text-align: left;font-family: Poppins, sans-serif !important; letter-spacing: 1.6px; color:#FC243B;'> Unfortunately, the location you have entered is outside of the Streamly service area.<br> Enter your email in the box below to be notified if Streamly comes to your area.</span>");
+				$('#zip').css("color", "#FC243B");
+				$('#modalbutton').html('<button type="button" class="btn btn-primary" style="background: #C4C4C4 0% 0% no-repeat padding-box;padding: 0.5rem 1.5rem;" id="ajaxSubmit" >Submit</button>');
+		
+				jQuery('#checkAvailibiltyModal').modal('show');
 
-							 }
-									// coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
-							 }
-					 });
+			}
+				// coupon was invalid, clear input so it doesn't get posted if user doesn't input a new valid coupon
+		}
+	});
 	
 });
-jQuery('body').on('click','#ajaxSubmit',function(e){
-               e.preventDefault();
-               $.ajaxSetup({
-                  headers: {
-                      
-		'X-CSRF-TOKEN': $("input[name=_token]").val()
-                  }
-              });
-               jQuery.ajax({
-                  url: "{{ url('/checkAvailabiltyStore') }}",
-                  method: 'post',
-                  data: {
-										email: jQuery('#email').val(),
-										zip: jQuery('#modalzip').text(),
-										city: jQuery('#citymodal').text(),
-										state: jQuery('#statemodal').text(),
-                  },
-                  success: function(result){
-										
-                  	if(result.errors)
-                  	{ console.log("fail");
-                  		jQuery('.alert-danger').html('');
+	jQuery('body').on('click','#ajaxSubmit',function(e){
+		e.preventDefault();
+		$.ajaxSetup({
+			headers: {
+				
+			'X-CSRF-TOKEN': $("input[name=_token]").val()
+					}
+				});
+			let x = document.forms["myForm"]["fname"].value;
+			if (x == "") {
+				document.getElementById("validationEmail").innerHTML = "Email field is required!";
+			return false;
+			} else {
+				let inputValue = document.forms["myForm"]["fname"].value;
+				let stringEmail = String(inputValue);
+				var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+				if(!stringEmail.match(mailformat)) {
+					document.getElementById("validationEmail").innerHTML = "You have entered an invalid email address!";
+					return false;
+				}
+			}
+			
+		jQuery.ajax({
+			url: "{{ url('/checkAvailabiltyStore') }}",
+			method: 'post',
+			data: {
+									email: jQuery('#email').val(),
+									zip: jQuery('#modalzip').text(),
+									city: jQuery('#citymodal').text(),
+									state: jQuery('#statemodal').text(),
+			},
+			success: function(result){
+									
+				if(result.errors)
+				{ console.log("fail");
+					jQuery('.alert-danger').html('');
 
-                  		jQuery.each(result.errors, function(key, value){
-                  			jQuery('.alert-danger').show();
-                  			jQuery('.alert-danger').append('<li>'+value+'</li>');
-                  		});
-                  	}
-                  	else
-                  	{ 
-						  //console.log("success2");
-						let x = document.forms["myForm"]["fname"].value;
-                        if (x == "") {
-							document.getElementById("validationEmail").innerHTML = "Email field is required!";
-                        return false;
-                        }else{
-							let inputValue = document.forms["myForm"]["fname"].value;
-							let stringEmail = String(inputValue);
-							var mailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-							if(stringEmail.match(mailformat)){
-								jQuery('.alert-danger').hide();
-                  		        $('#open').hide();
-                  		        $('#checkAvailibiltyModal').modal('hide');
-								  document.getElementById("jsonresponse").innerHTML = "Your response is been recorded we will let you know when service is available at your location";
-							}else{
-								document.getElementById("validationEmail").innerHTML = "You have entered an invalid email address!";
-								return false;
-							}
-						}
-                  	}
-                  }});
-               });
+					jQuery.each(result.errors, function(key, value){
+						jQuery('.alert-danger').show();
+						jQuery('.alert-danger').append('<li>'+value+'</li>');
+					});
+				}
+				else
+				{ 
+					jQuery('.alert-danger').hide();
+					$('#open').hide();
+					$('#checkAvailibiltyModal').modal('hide');
+					document.getElementById("jsonresponse").innerHTML = "Your response is been recorded we will let you know when service is available at your location";
+
+				}
+			}
+		});
+	});
 
 							 $( "#zip" ).autocomplete({
         source: function( request, response ) {

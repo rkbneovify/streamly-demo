@@ -16,7 +16,7 @@ use App\Models\Gracenotechannel;
 class LiveTv extends Controller
 { 
     use GetLocation;
-    public $exculdedUsers = ["jmheil@gmail.com","llipschultz@neovix.com","brian_marlin@yahoo.com","qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
+    public $exculdedUsers = ["jmheil@gmail.com","llipschultz@neovix.com","brian_marlin@yahoo.com","qasuresh@yopmail.com","qajalaj@yopmail.com","pm13426@gmail.com","nathan@neovix.com","willis@neovix.com","davea@neovix.com"];
 
     public function setzipcode(Request $request){
 
@@ -211,7 +211,7 @@ $allchannel=$record->get()->unique();
 
 $channelData= Gracenote::where('CallSign', $callSign)->get();
 
-$Channel= Channel::where('callSign', $callSign)->orWhere('name', '=', $callSign);
+$Channel= Channel::where([['callSign', $callSign],['status','=',1]])->orWhere('name', '=', $callSign);
 $url=$Channel->get('dash_url as url');
 $channelId=$Channel->get('id');
 $relatedchannel=$record->get()->where('genrenae',$genre);
