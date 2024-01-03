@@ -83573,6 +83573,11 @@
                 const hour = time.getHours();
                 const till = time.getMinutes() === 30 ? hour+1 : hour
                 const AmOrPm = hour >= 12 ? 'PM' : 'AM';
+                var PmOrAm = AmOrPm
+                if(hour === 11 && time.getMinutes() === 30)
+                  PmOrAm = 'PM';
+                else if(hour === 23 && time.getMinutes() === 30)
+                  PmOrAm = 'AM';
             
                 return _c("div", { key: n, staticClass: "header__time" }, [
                   _vm._v(
@@ -83585,7 +83590,7 @@
                       _vm._s(till % 12 || 12) +
                       ":" +
                       _vm._s((time.getMinutes() + 30) % 60).padStart(2, '0') +
-                      AmOrPm +
+                      PmOrAm +
                       "\n                "
                   )
                 ]);
@@ -84385,6 +84390,7 @@
                       const match = /--_offset:(.*?);/.exec(currentOffsetStyle);
                       const currentOffsetValue = match ? match[1] : 0;
                       const offset = parseInt(currentOffsetValue)+5;
+                      console.log(currentOffsetValue)
                       //const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
                       $('.channel__programme__section').attr('style',`--_offset:${offset};`)
                     },60000)
