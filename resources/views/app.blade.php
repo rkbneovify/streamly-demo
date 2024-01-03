@@ -468,7 +468,12 @@ button#navlefthorizontal {
 @media only screen and (max-width: 599px) {
   .channel__header {
     /* width: 115px!important; */
-    top: 295px!important;
+    top: 0px!important;
+  }
+
+  .programme__details__view{
+    width: 200px !important;
+    height: 200px!important;
   }
   /* button#navlefthorizontal {
     padding: 40px 25px 23px 1px !important;
@@ -476,8 +481,8 @@ button#navlefthorizontal {
     top: 236px;
   } */
   button#navrighthorizontal {
-    padding: 40px 25px 23px 1px !important;
-    top: 291px !important;
+    padding: 40px 15px 23px 1px !important;
+    top: 0 !important;
     z-index: 99998 !important;
   }
   /* .programme__header {
@@ -500,13 +505,14 @@ button#navlefthorizontal {
     top: 65px!important;
   }
   .channel__section {
-    width: 82.5vw!important;
+    width: 100%!important;
   }
+
   .channel__list__section {
-    margin-top: 258px !important;
+    margin-top: 0px !important;
   }
   .channel__programme__section {
-    margin-top: 78px!important;
+    margin-top: 0px!important;
   }
   .pgGuideheight{
     padding: 0px 10px !important;
@@ -515,7 +521,7 @@ button#navlefthorizontal {
     /* margin-top: 179px !important; */
 }
 .programme__header {
-    margin-top: 118px!important;
+    margin-top: 0px!important;
 }
 }
 @media only screen and (min-width: 550px) and (max-width: 599px) {
@@ -554,17 +560,17 @@ button#navlefthorizontal {
     padding: 00px 1.5vw !important;
 }
 .programme__header {
-    width: 56.42vw!important;
+    width: 100%!important;
     max-width: 100% !important;
-    margin-left: -1px;
+    margin-left: 0px;
 }
 .channel__filter{
     padding: 5.4vw 4.6vw!important;
 }
 button#navlefthorizontal {
-    padding: 40px 25px 23px 1px !important;
-    left: 35vw!important;
-    top: 291px;
+    padding: 40px 15px 23px 1px !important;
+    left: 0px!important;
+    top: 0;
 }
 }
 @media only screen and (min-width: 600px){
@@ -584,19 +590,19 @@ button#navlefthorizontal {
     padding: 00px 1.5vw !important;
 }
 .programme__header {
-    width: 48.42vw!important;
+    width: 100%!important;
     max-width: 100% !important;
-    margin-left: -1px;
+    margin-left: 0px;
 }
 .channel__filter {
     padding: 7.4vw 4.6vw!important;
 }
 button#navlefthorizontal {
     right: 56.2vw!important;
-    left: 43vw!important;
+    left: 0!important;
 }
 button#navlefthorizontal {
-    top: 292px!important;
+    top: 0!important;
 }
 #navrighthorizontal {
     right: 16.8vw!important;
