@@ -158,6 +158,11 @@ button.channel__nav__left {
 .programme__row {
     height: 8.5vw !important;
 }
+
+.newstyle{
+    font-weight: 300;
+    margin-top: 05px;
+}
 button#loadmore {
     position: relative;
     z-index: 999 !important;
