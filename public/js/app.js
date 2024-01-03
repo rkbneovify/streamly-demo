@@ -2338,8 +2338,11 @@
         const startTimemin = startDate.getMinutes().toString().padStart(2, '0');
         const endTimehour = endDate.getHours().toString().padStart(2, '0');
         const endTimemin = endDate.getMinutes().toString().padStart(2, '0');
-        const startTimeString = `${startTimehour}:${startTimemin}`
-        const endTimeString = `${endTimehour}:${endTimemin}`
+
+        const AmPm = startTimehour >= 12 ? "PM":"AM" 
+        const AmPmEnd = endTimehour >= 12 ? "PM":"AM" 
+        const startTimeString = `${startTimehour %12 || 12}:${startTimemin} ${AmPm}`
+        const endTimeString = `${endTimehour %12 || 12}:${endTimemin} ${AmPmEnd}`
         // Return the formatted time range
         return `${startTimeString}-${endTimeString}`;
       },
@@ -83584,14 +83587,9 @@
                     "\n                    " +
                       _vm._s(hour % 12 || 12) +
                       ":" +
-                      _vm._s(time.getMinutes()).padStart(2, '0') +
+                      _vm._s(time.getMinutes()).padStart(2, '0') + " "+
                       AmOrPm +
-                      " to " +
-                      _vm._s(till % 12 || 12) +
-                      ":" +
-                      _vm._s((time.getMinutes() + 30) % 60).padStart(2, '0') +
-                      PmOrAm +
-                      "\n                "
+                                            "\n                "
                   )
                 ]);
               }),
@@ -84245,7 +84243,7 @@
                     const AmOrPm = hoursNew >= 12 ? 'PM' : 'AM';
                     hoursNew = (hoursNew % 12) || 12;
                     let minTime = min < 30 ? "00" : "30" 
-                    let hour = hoursNew+':'+minTime +AmOrPm;
+                    let hour = hoursNew+':'+minTime +" "+AmOrPm;
                     hour=hour.trim();
                     // if(hour == "12:00PM"){
                     //   hour = "0:00PM";
@@ -84544,7 +84542,7 @@
                                 _vm._v(" " + _vm._s(programme.programmeTitle))
                               ]),
                               _vm._v(" "),
-                              _c("div", { staticClass: "pgFontguidehead" },[
+                              _c("div", { staticClass: "pgFontguidehead newstyle" },[
                                 _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
                               ]),
                               _vm._v(" "),
@@ -84584,7 +84582,7 @@
                               _c("div", { staticClass: "pgFontguidehead" },[
                                 _vm._v(" " + _vm._s(programme.programmeTitle))
                               ]),
-                              _c("div", { staticClass: "pgFontguidehead" },[
+                              _c("div", { staticClass: "pgFontguidehead newstyle" },[
                                 _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
                               ]),
                               _vm._v(" "),
