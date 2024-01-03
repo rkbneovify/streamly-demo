@@ -604,20 +604,20 @@ button#navlefthorizontal {
 button#navlefthorizontal {
     top: 0!important;
 }
-#navrighthorizontal {
+/* #navrighthorizontal {
     right: 16.8vw!important;
-}
-button#navrighthorizontal {
+} */
+/* button#navrighthorizontal {
     left: 86vw !important;
-}
+} */
 }
 @media only screen and (min-width: 360px) and (max-width: 399px) {
-    #navrighthorizontal {
+    /* #navrighthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
     left: 86vw !important;
-} 
+}  */
 }
 @media only screen and (min-width: 320px) and (max-width: 359px){
     #navrighthorizontal {
@@ -628,12 +628,12 @@ button#navrighthorizontal {
 } 
 }
 @media only screen and (max-width: 319px){
-    #navrighthorizontal {
+    /* #navrighthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
     left: 84.5vw !important;
-} 
+}  */
 }
 @media only screen and (min-width: 600px) {
 .pgGuideheight {
