@@ -84390,6 +84390,8 @@
                       const match = /--_offset:(.*?);/.exec(currentOffsetStyle);
                       const currentOffsetValue = match ? match[1] : 0;
                       const offset = parseInt(currentOffsetValue)+5;
+                      if(offset > 850)
+                        window.location.reload();  
                       console.log(currentOffsetValue)
                       //const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
                       $('.channel__programme__section').attr('style',`--_offset:${offset};`)
