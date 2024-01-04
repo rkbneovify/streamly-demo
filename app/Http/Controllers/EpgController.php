@@ -176,14 +176,11 @@ class EpgController extends Controller
         $thestimeend = $query['periodEnd'];
         $currentTZ = $query['timezone'];
 
-        date_default_timezone_set('Asia/Kolkata');
-        if (date('i') > 30) {
-            $datestart = date("Y-m-d G:i:s", strtotime("-960 minutes"));
-            $dateend = date("Y-m-d G:i:s", strtotime("+1440 minutes"));
-        } else {
-            $datestart = date("Y-m-d G:i:s", strtotime("-930 minutes"));
-            $dateend = date("Y-m-d G:i:s", strtotime("+1440 minutes"));
-        }
+        date_default_timezone_set('UTC');
+
+        $currentDateTime = date('Y-m-d G:i:s');
+        $datestart = date("Y-m-d G:i:s", strtotime($currentDateTime));
+        $dateend = date("Y-m-d G:i:s", strtotime($currentDateTime . "+2 days"));
 
         $ids = [1, 2, 3];
         $validator = Validator::make($query, [
@@ -243,8 +240,10 @@ class EpgController extends Controller
         )
         ->whereRaw('channels.status = ?', '1')
         ->wherein('channels.id', $str_arr)
-        ->whereBetween('gracenote.StartDateTime', [$datestart, $dateend])
+        ->where('gracenote.StartDateTime', '<=', $dateend)
+        ->where('gracenote.EndDateTime', '>=', $datestart) 
         ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
+        ->groupBy('gracenote.CallSign', 'gracenote.StartDateTime', 'gracenote.EndDateTime', 'gracenote.EventID')
         ->get();
         $endTime = microtime(true);
         $executionTime = $endTime - $startTime;
