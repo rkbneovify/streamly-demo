@@ -159,6 +159,12 @@ button.channel__nav__left {
     height: 8.5vw !important;
 }
 
+.pgFontguidehead{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .newstyle{
     font-weight: 300;
     margin-top: 5px;
