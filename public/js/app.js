@@ -2184,7 +2184,8 @@
         minuteWidthPx: window.innerWidth > 600 ? 5 : 3,
         $programmeRows: null,
         SCROLL_WAIT_MS: 500,
-        imageURL: ""
+        imageURL: "",
+        isScrollLeftZero : false
       };
     },
     created: function created() {
@@ -2319,6 +2320,15 @@
         originalDate.setMinutes(originalDate.getMinutes() + minutes);
         originalDate.setSeconds(originalDate.getSeconds() + seconds);
         return originalDate
+      },
+
+      scrollLeft: function scrollLeft(value) {
+        const isScrollLeftZero = value === 0 ? true : false;
+        if(isScrollLeftZero) {
+          $('.nav__left__horizontal').addClass('disableBtn')
+        } else {
+          $('.nav__left__horizontal').removeClass('disableBtn')
+        }
       },
 
       getStartEndTime: function getStartEndTime(startTime,duration){
@@ -84390,7 +84400,6 @@
                       const offset = parseInt(currentOffsetValue)+5;
                       if(offset > 850)
                         window.location.reload();  
-                      console.log(currentOffsetValue)
                       //const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
                       $('.channel__programme__section').attr('style',`--_offset:${offset};`)
                     },60000)
@@ -84413,6 +84422,7 @@
               attrs: { id: "navrighthorizontal" },
               on: {
                   click: function($event) {
+                    
                     // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
                     // $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
                     // console.log($('.channel__programme__section[data-v-56b65aa6]').scrollLeft,document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft);
@@ -84420,13 +84430,14 @@
                     const programLists = document.querySelector('.channel__programme__section[data-v-56b65aa6]');
 
 
-                    programTimingHeader.scrollLeft+= 260;
+                    programTimingHeader.scrollLeft+= 300;
                     const maxSrollWidth = programTimingHeader.scrollWidth - programTimingHeader.clientWidth;
-                    if(programLists.scrollLeft + 260 > maxSrollWidth) {
+                    if(programLists.scrollLeft + 300 > maxSrollWidth) {
                       programLists.scrollLeft = maxSrollWidth;
                     } else {
-                      programLists.scrollLeft += 260;
+                      programLists.scrollLeft += 300;
                     }
+                    _vm.scrollLeft(programTimingHeader.scrollLeft+300)
                    },
                 }
             },
@@ -84437,14 +84448,15 @@
           _c(
             "button",
             {
-              staticClass: "nav__left__horizontal", 
+              staticClass: "nav__left__horizontal disableBtn", 
               attrs: { id: "navlefthorizontal" },
               on: {
                   click: function($event) {
                   // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '-=260' }, 1000);
                   // $('.programme__header').animate( { scrollLeft: '-=260' }, 1000);
-                     document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft -= 260;
-                     document.querySelector('.programme__header').scrollLeft -= 260;
+                     document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft -= 300;
+                     document.querySelector('.programme__header').scrollLeft -= 300;
+                     _vm.scrollLeft(document.querySelector('.programme__header').scrollLeft - 300)
                    },
                 }
             },
