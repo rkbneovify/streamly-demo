@@ -165,6 +165,9 @@ button.channel__nav__left {
     text-overflow: ellipsis;
 }
 
+.disableBtn{
+    display: none;
+}
 .newstyle{
     font-weight: 300;
     margin-top: 5px;
