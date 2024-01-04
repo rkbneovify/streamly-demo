@@ -161,7 +161,7 @@ button.channel__nav__left {
 
 .newstyle{
     font-weight: 300;
-    margin-top: 05px;
+    margin-top: 5px;
 }
 button#loadmore {
     position: relative;
