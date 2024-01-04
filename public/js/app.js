@@ -2344,7 +2344,7 @@
         const startTimeString = `${startTimehour %12 || 12}:${startTimemin} ${AmPm}`
         const endTimeString = `${endTimehour %12 || 12}:${endTimemin} ${AmPmEnd}`
         // Return the formatted time range
-        return `${startTimeString}-${endTimeString}`;
+        return `${startTimeString} - ${endTimeString}`;
       },
 
       onProgrammeHover: function onProgrammeHover(e, programme, channel) {
