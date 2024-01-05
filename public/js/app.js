@@ -2323,7 +2323,7 @@
       },
 
       scrollLeft: function scrollLeft(value) {
-        const isScrollLeftZero = value === 0 ? true : false;
+        const isScrollLeftZero = value <= 0 ? true : false;
         if(isScrollLeftZero) {
           $('.nav__left__horizontal').addClass('disableBtn')
         } else {
