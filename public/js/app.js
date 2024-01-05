@@ -84397,11 +84397,6 @@
                       // Calculate the time until the next 00th or 30th minute
                       let timeUntilNextExecution = (30 - (minutes % 30)) * 60 - seconds;
                     
-                      // If the current minute is in the second half of the hour, adjust for the next hour
-                      if (minutes >= 30) {
-                        timeUntilNextExecution += 30 * 60;
-                      }
-                    
                       // Set an initial timeout to align with the nearest 00th or 30th minute
                       setTimeout(function () {
                         executeCode();
