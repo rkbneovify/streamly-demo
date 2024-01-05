@@ -2342,7 +2342,7 @@
         ];
         
         // Get the day, date, and month
-        const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][originalDate.getUTCDay()];
+        const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][originalDate.getDay()];
         const date = originalDate.getDate();
         const month = monthNames[originalDate.getMonth()];
         
