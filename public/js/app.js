@@ -2185,7 +2185,7 @@
         $programmeRows: null,
         SCROLL_WAIT_MS: 500,
         imageURL: "",
-        isScrollLeftZero : false
+        isScrollLeftZero : false,
       };
     },
     created: function created() {
@@ -2329,6 +2329,25 @@
         } else {
           $('.nav__left__horizontal').removeClass('disableBtn')
         }
+      },
+
+      getFormatedDate : function getFormatedDate(forDate){
+
+        const originalDate = new Date(forDate);
+
+        // Define an array of month names
+        const monthNames = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];
+        
+        // Get the day, date, and month
+        const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][originalDate.getUTCDay()];
+        const date = originalDate.getDate();
+        const month = monthNames[originalDate.getMonth()];
+        
+        // Format the result
+        return `${dayName}, ${date} ${month}`;
       },
 
       getStartEndTime: function getStartEndTime(startTime,duration){
@@ -83501,13 +83520,15 @@
                 {
                   class: { active: _vm.sortOn == "channelId" },
                   on: {
-                    click: function($event) {
-                      return _vm.onChannelSortClick("channelId")
-                    }
+                    // click: function($event) {
+                    //   return _vm.onChannelSortClick("channelId")
+                    // }
                   }
                 },
                 [
-                  _c("span", [_vm._v("Channel Details")]),
+                  _c("span", [
+                    // _vm._v("Channel Details"),
+                   _vm._v(" "), _c("span", {staticClass: "move_header_date", } ,[ _vm._v(_vm.getFormatedDate(new Date()))])]),
                   _vm._v(" "),
                   _c(
                     "span",
@@ -83592,7 +83613,7 @@
                 else if(hour === 23 && time.getMinutes() === 30)
                   PmOrAm = 'AM';
             
-                return _c("div", { key: n, staticClass: "header__time" }, [
+                return _c("div", { key: n, staticClass: "header__time ", attrs: {"date" : time} }, [
                   _vm._v(
                     "\n                    " +
                       _vm._s(hour % 12 || 12) +
@@ -84281,6 +84302,7 @@
                                                           // console.log(this.offsetLeft,'here');
                                                           $(this).prev('div').removeClass('active');
                                                           $(this).addClass('active');
+                                                          $(this).addClass('headertouch');
                                                           $(this).attr('style','background-color: #1b62cc !important;color: #fff5f5 !important;border: 1px solid #6894d4 !important;');
                                                           var index = $(this).index();
                                                           //console.log(index);
@@ -84422,7 +84444,14 @@
               attrs: { id: "navrighthorizontal" },
               on: {
                   click: function($event) {
-                    
+
+                    $('.headertouch').next().next().addClass('removeClass')
+                    $('.removeClass').prev().prev().removeClass('headertouch')
+                    $('.removeClass').addClass('headertouch')
+                    $('.headertouch').removeClass('removeClass')
+                    const x = $('.headertouch').attr('date')
+                    const date = _vm.getFormatedDate(x)
+                    $('.move_header_date').html(date)
                     // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+=260' }, 1000);
                     // $('.programme__header').animate( { scrollLeft: '+=260' }, 1000);
                     // console.log($('.channel__programme__section[data-v-56b65aa6]').scrollLeft,document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft);
@@ -84452,6 +84481,13 @@
               attrs: { id: "navlefthorizontal" },
               on: {
                   click: function($event) {
+                    $('.headertouch').prev().prev().addClass('removeClass')
+                    $('.removeClass').next().next().removeClass('headertouch')
+                    $('.removeClass').addClass('headertouch')
+                    $('.headertouch').removeClass('removeClass')
+                    const x = $('.headertouch').attr('date')
+                    const date = _vm.getFormatedDate(x)
+                    $('.move_header_date').html(date)
                   // $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '-=260' }, 1000);
                   // $('.programme__header').animate( { scrollLeft: '-=260' }, 1000);
                      document.querySelector('.channel__programme__section[data-v-56b65aa6]').scrollLeft -= 300;
