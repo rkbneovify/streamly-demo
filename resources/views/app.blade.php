@@ -232,7 +232,7 @@ div#wrap div {
     color: #dbddde;
     overflow: hidden !important;
     /* width: 100% !important; */
-    max-width: 15.5vw;
+    /* max-width: 15.5vw; */
 }
 .programme__timing__section 
 {
@@ -468,7 +468,7 @@ button#navlefthorizontal {
 @media only screen and (max-width: 599px) {
   .channel__header {
     /* width: 115px!important; */
-    top: 295px!important;
+    /* top: 295px!important; */
   }
   /* button#navlefthorizontal {
     padding: 40px 25px 23px 1px !important;
@@ -476,14 +476,14 @@ button#navlefthorizontal {
     top: 236px;
   } */
   button#navrighthorizontal {
-    padding: 40px 25px 23px 1px !important;
-    top: 291px !important;
-    z-index: 99998 !important;
+    /* padding: 40px 25px 23px 1px !important; */
+    /* top: 291px !important; */
+    /* z-index: 99998 !important; */
   }
   /* .programme__header {
     left: 175px !important;
 } */
-.pgGuideheight {
+/* .pgGuideheight {
     height: 20vw!important;
     width: 60px !important;
 }
@@ -500,8 +500,8 @@ button#navlefthorizontal {
     top: 65px!important;
   }
   .channel__section {
-    width: 82.5vw!important;
-  }
+    /* width: 82.5vw!important; */
+  /* }
   .channel__list__section {
     margin-top: 258px !important;
   }
@@ -510,18 +510,18 @@ button#navlefthorizontal {
   }
   .pgGuideheight{
     padding: 0px 10px !important;
-}
-.programme__timing__section {
+} */
+/* .programme__timing__section { */
     /* margin-top: 179px !important; */
-}
-.programme__header {
-    margin-top: 118px!important;
-}
+/* } */
+/* .programme__header { */
+    /* margin-top: 118px!important; */
+/* } */ */
 }
 @media only screen and (min-width: 550px) and (max-width: 599px) {
-    button#navrighthorizontal {
+    /* button#navrighthorizontal {
     left: 88vw !important;
-    right: 12.5vw;
+    right: 12.5vw; */
 }
 }
 @media only screen and (min-width: 500px) and (max-width: 549px) {
@@ -543,10 +543,10 @@ button#navlefthorizontal {
 }
 }
 @media only screen and (min-width: 400px) and (max-width: 599px) {
-    .channel__header {
-    width: 22vw!important;
-    max-width: 100%!important;
-    padding: 08px 1.5vw !important;
+    /* .channel__header { */
+    /* width: 22vw!important; */
+    /* max-width: 100%!important; */
+    /* padding: 08px 1.5vw !important; */
   }
 .pgGuideheight {
     width: 22vw!important;
@@ -554,7 +554,7 @@ button#navlefthorizontal {
     padding: 00px 1.5vw !important;
 }
 .programme__header {
-    width: 56.42vw!important;
+    /* width: 56.42vw!important; */
     max-width: 100% !important;
     margin-left: -1px;
 }
@@ -562,9 +562,9 @@ button#navlefthorizontal {
     padding: 5.4vw 4.6vw!important;
 }
 button#navlefthorizontal {
-    padding: 40px 25px 23px 1px !important;
+    /* padding: 40px 25px 23px 1px !important;
     left: 35vw!important;
-    top: 291px;
+    top: 291px; */
 }
 }
 @media only screen and (min-width: 600px){
@@ -602,7 +602,7 @@ button#navlefthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
-    left: 86vw !important;
+    /* left: 86vw !important; */
 }
 }
 @media only screen and (min-width: 360px) and (max-width: 399px) {
@@ -610,7 +610,7 @@ button#navrighthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
-    left: 86vw !important;
+    /* left: 86vw !important; */
 } 
 }
 @media only screen and (min-width: 320px) and (max-width: 359px){
@@ -618,7 +618,7 @@ button#navrighthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
-    left: 85vw !important;
+    /* left: 85vw !important; */
 } 
 }
 @media only screen and (max-width: 319px){
@@ -626,7 +626,7 @@ button#navrighthorizontal {
     right: 16.8vw!important;
 }
 button#navrighthorizontal {
-    left: 84.5vw !important;
+    /* left: 84.5vw !important; */
 } 
 }
 @media only screen and (min-width: 600px) {
