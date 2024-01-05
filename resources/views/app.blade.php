@@ -276,7 +276,7 @@ button#navlefthorizontal {
     /* position: fixed; */
     /* top: 197px; */
     width:10px;
-    z-index: 99999;
+    z-index: 99998;
     padding: 41px 14px 23px 1px !important;
     left: 26.4vw;
     justify-content: center;
@@ -631,11 +631,11 @@ button#navrighthorizontal {
 }
 @media only screen and (min-width: 600px) {
 .pgGuideheight {
-    height: calc(7.2vw + 1.5px) !important;
+    height: 7.3vw !important;
     width: 15.5vw !important;
 }
 .programme__row {
-    height: 9.5vw !important;
+    height: 8.5vw !important;
 }
 .channel__list__section>div[data-v-56b65aa6] 
 {

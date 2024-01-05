@@ -2196,12 +2196,9 @@
       this.fetchFavouriteList(); //Caching the programme rows
       const scroll = document.querySelector('.channel__list__section');
       const arr = [...scroll.children].map(el => el.getAttribute('data-channel'))
-      console.log(arr,'asd');
       const chunkSize = 5;
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize);
-
-        console.log(chunk,'chunks');
         this.fetchProgrammes(chunk);
       }
       
@@ -2213,7 +2210,6 @@
 
       setTimeout(() => {
         const scroll = document.querySelector('.channel__section');
-        console.log(scroll);
         var context = this;
         this.searchText$ = new rxjs_Rx__WEBPACK_IMPORTED_MODULE_5___default.a.Subject();
       return {
@@ -2254,6 +2250,7 @@
       // Utility
       hoursList: function hoursList() {
         function convertTZ(date, tzString) {
+          console.log(new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString})))
           return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));   
         }
       
@@ -2263,7 +2260,7 @@
         // var date1 = myDate.toLocaleString("en-US", {
         //   timeZone: "America/Los_Angeles"
         // })
-        date1.setMinutes(date1.getMinutes()-550);
+        date1.setMinutes(date1.getMinutes());
        // var date2 = new Date();
        // date2.setMinutes(date2.getMinutes()+570);
         //let text = "Wed Mar 09 2022 22:02:53 GMT+0530 (India Standard Time)";
@@ -2309,6 +2306,44 @@
           sortOn: sortOn
         });
       },
+      getEndTime: function getEndTime(originalTime,duration){
+
+        // Convert the original time string to a Date object
+        var originalDate = new Date(originalTime);
+
+        // Parse the duration string into hours, minutes, and seconds
+        var [hours, minutes, seconds] = duration.split(':').map(Number);
+
+        // Add the duration to the date
+        originalDate.setHours(originalDate.getHours() + hours);
+        originalDate.setMinutes(originalDate.getMinutes() + minutes);
+        originalDate.setSeconds(originalDate.getSeconds() + seconds);
+        return originalDate
+      },
+
+      getStartEndTime: function getStartEndTime(startTime,duration){
+
+        // Parse the start time
+        const startDate = new Date(startTime);
+
+        // Parse the duration
+        const [hours, minutes, seconds] = duration.split(':');
+        const durationMilliseconds = (parseInt(hours, 10) * 60 * 60 + parseInt(minutes, 10) * 60 + parseInt(seconds, 10)) * 1000;
+
+        // Calculate the end time by adding the duration to the start time
+        const endDate = new Date(startDate.getTime() + durationMilliseconds);
+
+        // Format the time strings
+        const startTimehour = startDate.getHours().toString().padStart(2, '0');
+        const startTimemin = startDate.getMinutes().toString().padStart(2, '0');
+        const endTimehour = endDate.getHours().toString().padStart(2, '0');
+        const endTimemin = endDate.getMinutes().toString().padStart(2, '0');
+        const startTimeString = `${startTimehour}:${startTimemin}`
+        const endTimeString = `${endTimehour}:${endTimemin}`
+        // Return the formatted time range
+        return `${startTimeString}-${endTimeString}`;
+      },
+
       onProgrammeHover: function onProgrammeHover(e, programme, channel) {
         this.currentProgramme = programme;
         this.currentChannel = channel;
@@ -7020,7 +7055,7 @@
   
   
   // module
-  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 100%\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n display:none; \n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: grid;\n grid-template-columns: auto auto;\n max-height:600px; \n overflow-y:scroll; \n   flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] \n ,channel__header {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n   display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:30%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n  font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n justify-content:center; \n   align-items: center;\n color:white;  height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] { \n     grid-area: 2 / 2 / 3 / 3; \n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 300px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n} \n footer .container {\n width: 92%!important; \n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
+  exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n    width: 100%\n    margin: 0 auto;\n    text-align: left;\n    box-sizing: border-box;\n    /*user-select: none;*/\n}\n\n\n/*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter[data-v-56b65aa6] {\n display:none; \n    background-color: #333;\n    color: #fff;\n    padding: 20px;\n    margin-bottom: 20px;\n}\n.channel__filter .btn__clear__favourites[data-v-56b65aa6] {\n    background-color: #1b62cc;\n    color: #fff5f5;\n    border: 1px solid #6894d4;\n    cursor: pointer;\n    padding: 5px 10px;\n}\n.channel__filter input[data-v-56b65aa6] {\n    margin: 0px 10px;\n    outline: none;\n    border-radius: 20px;\n    padding: 3px 15px;\n}\n\n\n/*=============================================== CHANNEL SECTION ===============================================*/\n.channel__section[data-v-56b65aa6] {\n    display: grid;\n grid-template-columns: auto auto;\n max-height:600px; \n overflow-y:scroll; \n   flex-direction: row;\n    cursor: pointer;\n}\n\n\n/*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: column;\n    background-color: #fff;\n    flex: 0 0 200px;\n}\n.channel__list__section>div[data-v-56b65aa6] \n ,channel__header {\n background-color: #4d5659;\n   border: 1px solid #dcdcdc;\n   display: flex;\n    flex-direction: row;\n\n     position: relative;\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.5em;\n    color: rgb(231, 9, 98);\n    text-align: left;\n    width:30%;\n}\n.overflow[data-v-56b65aa6] {\n    max-width: 100%; \n  overflow: hidden;\n  -ms-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.overflow[data-v-56b65aa6]:hover {\n  overflow: visible;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    justify-content: center;\n  font-size: 0.8em;\n    background-color: #4d5659;\n    color: #dbddde;\n}\n.Aligner-item--top[data-v-56b65aa6] {\n padding-right: 0.55vw;\n  align-self: flex-start;\n  right: 0; /* new */\n  top: 0; /* new */\n  position: absolute; /* new */\n  font-size: 1.2em;\n    color: #d6d9da;\n}\n.channel__header .active[data-v-56b65aa6] {\n    font-weight: 400;\n}\n.channel__header>*[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n justify-content:center; \n   align-items: center;\n color:white;  height: 40px;\n}\n.channel__name__box[data-v-56b65aa6] {\n    font-weight: bold;\n    font-size: 0.8em;\n    display: block;\n    width: 200px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n.invert[data-v-56b65aa6] {\n    transform: rotate(180deg);\n}\n\n\n/*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n\n\n/*.channel__programme__section {\n  display:block;\n   overflow-x: scroll;\n}\n\n.channel__programme__section .programme__header{\n      font-size: 0.8em;\n          line-height: 3em;\n    height: 40px;\n    background-color: #000000;\n    color: #4085ce;\n\n        line-height: 3em;\n    padding: 10px;\n    margin: 0;\n    font-size: 1em;\n    width: 100%;\n    display: inline;\n}\n*/\n.channel__programme__section[data-v-56b65aa6] { \n     grid-area: 2 / 2 / 3 / 3; \n    overflow-x: scroll;\n    display: flex;\n    flex-direction: column;\n    flex: 1 1 auto;\n}\n.channel__programme__section .programme__header[data-v-56b65aa6] {\n    font-size: 0.8em;\n    height: 40px;\n    background-color: #333;\n    color: #dbddde;\n    border: 1px solid #909090;\n    line-height: 40px;\n    display: flex;\n    flex-direction: row;\n}\n.programme__header .header__time[data-v-56b65aa6] {\n   box-sizing: border-box!important;\n flex: 0 0 150px;\n    padding-left: 10px;\n padding-right: 10px;\n    box-sizing: border-box;\n    background-color: #4d5659;\n    border-right: 2px solid #464646;\n}\n.programme__row[data-v-56b65aa6] {\n    display: flex;\n    flex-direction: row;\n    height: 7vw;\n    border: 1px solid #dcdcdc;\n    /*padding: 0 10px;*/\n}\n.programme__timing__section[data-v-56b65aa6] {\n    background-color: #e7e7e7;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 300px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    /* line-height: 30px; */\n box-sizing: border-box!important;\n   padding: 8px 10px;\n    font-size: 0.95vw;\n    font-weight: bold;\n    box-sizing: border-box;\n    border: 1px solid #dcdcdc;\n    background-color: #e7e7e7;\n}\n.programme__row .programme--no__data[data-v-56b65aa6] {\n    line-height: 40px;\n    padding: 0 10px;\n    font-size: 0.8em;\n    font-weight: bold;\n    box-sizing: content-box;\n}\n.programme__row sup[data-v-56b65aa6] {\n color: rgb(198, 88, 42);\n    line-height: 8.5vw;\n}\n\n\n/*=============================================== OTHERS  ===============================================*/\n\n\n/*=============================================== MOBILE DEVICE ===============================================*/\n@media screen and (max-width: 600px) {\n    /*=============================================== CONTAINER ===============================================*/\n.channel__guide__view[data-v-56b65aa6] {\n        font-size: 0.8em;\n}\n    /*=============================================== CHANNEL FILTER ===============================================*/\n.channel__filter .btn__clear__favourites[data-v-56b65aa6],\n    .channel__filter input[data-v-56b65aa6] {\n        margin: 10px 0px;\n        width: 100%;\n        padding: 5px;\n}\n.channel__filter input[data-v-56b65aa6] {}\n    /*=============================================== CHANNEL SECTION ===============================================*/\n.channel__list__section[data-v-56b65aa6] {\n        flex: 0 0 60px;\n}\n    /*=============================================== CHANNEL LIST COLUMN ( CHANNEL NAME + FAVOURITE ICON )===============================================*/\n.channel__list__section .channel__name__box[data-v-56b65aa6] {\n        width: 60px;\n        display: inline-block;\n}\n.channel__list__section .channel__header[data-v-56b65aa6] {\n     flex-direction: row;\n        height: 40px !important;\n}\n.channel__list__section>div[data-v-56b65aa6] {\n    flex-direction: column\n}\n.channel__name div[data-v-56b65aa6] {\n        display: block;\n        text-align: center\n}\n.channel__list__section .favourite[data-v-56b65aa6] {\n    font-size: 1.0em !important;\n    color: rgb(231, 9, 98);\n    text-align: center;\n}\n    /*=============================================== EPG TV PROGRAMME TIMING ( PROGRAMME TIME + BUTTON TO MOVE GUIDE )  ===============================================*/\n.programme__header .header__time[data-v-56b65aa6] {\n        flex: 0 0 180px;\n}\n.programme__row .programme[data-v-56b65aa6] {\n    flex: 0 0 180px;\n} \n footer .container {\n width: 92%!important; \n}\n    /*=============================================== OTHERS  ===============================================*/\n}\n", ""]);
   
   // exports
   
@@ -83386,6 +83421,11 @@
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+    const roundedMinutes = (currentMinutes < 30) ? 0 : 30;
+    const startTime = new Date();
+    startTime.setHours(currentHour, roundedMinutes, 0, 0);
     return _c(
       "div",
       { staticClass: "channel__guide__view" },
@@ -83521,35 +83561,34 @@
               //   ]
               // )
             ]),
+            
+            
             _c(
               "div",
               { staticClass: "programme__header" },
-                _vm._l(_vm.hoursList, function(n) {
-                  if(n > 11){
-                    const AmOrPm = n >= 12 ? 'PM' : 'AM';
-                    return _c("div", { key: n, staticClass: "header__time" },[
-                      _vm._v(
-                        "\n                    " +
-          
-                          _vm._s(n - 12) +
-                          ":00"+AmOrPm+" to " +
-                          _vm._s(n - 11) +
-                          ":00"+AmOrPm+"\n                "
-                      )
-                    ])
-                   }else{
-                    const AmOrPm = n >= 12 ? 'PM' : 'AM';
-                    return _c("div", { key: n, staticClass: "header__time", staticValue: "kk" },[
-                      _vm._v(
-                        "\n                    " +
-          
-                          _vm._s(n) +
-                          ":00"+AmOrPm+" to " +
-                          _vm._s(n + 1) +
-                          ":00"+AmOrPm+"\n                "
-                      )
-                    ])
-                   }
+              _vm._l(48, function (n) {
+                const hoursToAdd = Math.floor((n * 30) / 60);
+                const minutes = (n * 30) % 60;
+                const time = new Date(startTime.getTime() + hoursToAdd * 60 * 60 * 1000 + minutes * 60 * 1000 - 30* 60 * 1000);
+                const hour = time.getHours();
+                const till = time.getMinutes() === 30 ? hour+1 : hour
+                const AmOrPm = hour >= 12 ? 'PM' : 'AM';
+            
+                return _c("div", { key: n, staticClass: "header__time" }, [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(hour % 12 || 12) +
+                      ":" +
+                      _vm._s(time.getMinutes()).padStart(2, '0') +
+                      AmOrPm +
+                      " to " +
+                      _vm._s(till % 12 || 12) +
+                      ":" +
+                      _vm._s((time.getMinutes() + 30) % 60).padStart(2, '0') +
+                      AmOrPm +
+                      "\n                "
+                  )
+                ]);
               }),
               0
             ),
@@ -83767,12 +83806,12 @@
                                   channel.genrename[0]
                               }
                             },
-                            [_vm._v(" "),
-                            _c("img", {
-                              staticClass: "pgGuideiconView",
-                              attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
-                            })
-                          ]
+                          //   [_vm._v(" "),
+                          //   _c("img", {
+                          //     staticClass: "pgGuideiconView",
+                          //     attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
+                          //   })
+                          // ]
                           )
                             ]
                           ),
@@ -83988,12 +84027,12 @@
                                 channel.genrename[0]
                             }
                           },
-                          [_vm._v(" "),
-                          _c("img", {
-                            staticClass: "pgGuideiconView",
-                            attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
-                          })
-                        ]
+                        //   [_vm._v(" "),
+                        //   _c("img", {
+                        //     staticClass: "pgGuideiconView",
+                        //     attrs: { src: _vm._s('/uploads/devicelogo/view.svg') }
+                        //   })
+                        // ]
                         )
                           ]
                         ),
@@ -84196,17 +84235,19 @@
                     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     //alert(timezone); // Asia/Karachi
                     const d = new Date();
-let hoursNew = d.getHours() ; 
-const AmOrPm = hoursNew >= 12 ? 'PM' : 'AM';
-hoursNew = (hoursNew % 12) || 12;
-                    let hour = hoursNew+':00'+AmOrPm;
+                    let hoursNew = d.getHours() ; 
+                    let min = d.getMinutes();
+                    const AmOrPm = hoursNew >= 12 ? 'PM' : 'AM';
+                    hoursNew = (hoursNew % 12) || 12;
+                    let minTime = min < 30 ? "00" : "30" 
+                    let hour = hoursNew+':'+minTime +AmOrPm;
                     hour=hour.trim();
-                    if(hour == "12:00PM"){
-                      hour = "0:00PM";
-                    }
-                    if(hour == "12:00AM"){
-                      hour = "0:00AM";
-                    }
+                    // if(hour == "12:00PM"){
+                    //   hour = "0:00PM";
+                    // }
+                    // if(hour == "12:00AM"){
+                    //   hour = "0:00AM";
+                    // }
                     $('.channel__header>div').removeClass('active');
 
 
@@ -84222,8 +84263,8 @@ hoursNew = (hoursNew % 12) || 12;
                                                         let result = html.startsWith(hour);
                                                         if(result==true)
                                                         {
-                                                          console.log($('.channel__programme__section'))  
-                                                          console.log($('.header__time.active'));
+                                                          // console.log($('.channel__programme__section'))  
+                                                          // console.log($('.header__time.active'));
                                                           // console.log(this.offsetLeft,'here');
                                                           $(this).prev('div').removeClass('active');
                                                           $(this).addClass('active');
@@ -84234,12 +84275,13 @@ hoursNew = (hoursNew % 12) || 12;
                                                           var one=$('#livechannel1').position().left;
                                                           var two=$('.programme__header .active').position().left;
                                                           $('#livechannel1').position().left=two;
-                                                          const percentHour = Math.floor(new Date().getMinutes() * 100/60);
-                                                          const currentMinutesAdded = $('.header__time.active').width()/100 * percentHour
+                                                          var percentHour = Math.floor(new Date().getMinutes() * 100/60);
+                                                          percentHour =  percentHour > 50 ?  percentHour - 50 : percentHour
+                                                          const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
                                                           $('.channel__programme__section').attr('style',`--_offset:${this.offsetLeft + currentMinutesAdded};`)
-                                                           $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two}, 1000);
-                                                           $('.programme__header').animate({ scrollLeft: '+='+two}, 1000); 
-                                                    //
+                                                    //        $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two}, 1000);
+                                                    //        $('.programme__header').animate({ scrollLeft: '+='+two}, 1000); 
+                                                    // //
                                                         }
                                                  }   
                                                  window.setInterval(function () 
@@ -84256,38 +84298,98 @@ hoursNew = (hoursNew % 12) || 12;
                                                      }
 
                                                  }, 6000);
+
+                                                
                              
                                        });
-                                                 window.setInterval(function () 
-                                                 {
-                                          //     //
-                                                     const d = new Date();
-                                                     let minutes = d.getMinutes();
-                                                     if(minutes==15)
-                                                     {
-                                                       $('.active').next().addClass('active1');
-                                                       $('.active1').prev('.active').removeClass('active');   
-                                                       $('.active1').prev('div').attr('style','box-sizing: border-box;background-color: #4d5659;border-right: 2px solid #464646;');
-                                                       //$('.programme__header .active:last-child').removeClass('active');
-                                                      //$('.programme__header .active').attr('style','border:1px solid blue !important;background-color:#0000E7 !important;');
-                                                       var index1 = $('.programme__header .active1').index();
-                                                       //console.log(index);
-                                                       //var pos=$(this).position().left;
-                                                       var one1=$('#livechannel1').position().left;
-                                                       var two1=$('.active1').position().left;
-                                                       $('#livechannel1').position().left=two1;  
-                                                       $('#livechannel1').attr('style','left:'+(two1+45)+'px !important');
-                                                       $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two1}, 60000);
-                                                       $('.programme__header').animate({ scrollLeft: '+='+two1}, 60000); 
-                                                       $('.active1').addClass('active');
-                                                       $('.active').removeClass('active1'); 
 
-                                                       //window.location.reload();   
-                                                     }
+                                          //       window.setInterval(function () 
+                                          //        {
+                                          // //     //
+                                          //            const d = new Date();
+                                          //            let minutes = d.getMinutes();
+                                          //            let second = d.getSeconds()
+                                          //            if((minutes==4 && second === 30)||(minutes==60 && second === 0))
+                                          //            {
+                                          //              $('.active').next().addClass('active1');
+                                          //              $('.active1').prev('.active').removeClass('active');   
+                                          //              $('.active1').prev('div').attr('style','box-sizing: border-box;background-color: #4d5659;border-right: 2px solid #464646;');
+                                          //              //$('.programme__header .active:last-child').removeClass('active');
+                                          //             //$('.programme__header .active').attr('style','border:1px solid blue !important;background-color:#0000E7 !important;');
+                                          //              var index1 = $('.programme__header .active1').index();
+                                          //              //console.log(index);
+                                          //              //var pos=$(this).position().left;
+                                          //              var one1=$('#livechannel1').position().left;
+                                          //              var two1=$('.active1').position().left;
+                                          //              $('#livechannel1').position().left=two1;  
+                                          //             //  $('#livechannel1').attr('style','left:'+(two1+150)+'px !important');
+                                          //             //  $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two1}, 3000);
+                                          //             //  $('.programme__header').animate({ scrollLeft: '+='+two1}, 3000);
+                                          //              $('.active1').addClass('active');
+                                          //              $('.active').removeClass('active1'); 
+
+                                          //              //window.location.reload();   
+                                          //            }
                                                     
                                              
-                                                }, 60000);
+                                          //       }, 60000);
                     //alert(hour);
+                    function executeCode() {
+                      $('.active').next().addClass('active1');
+                      $('.active1').prev('.active').removeClass('active');   
+                      $('.active1').prev('div').attr('style','box-sizing: border-box;background-color: #4d5659;border-right: 2px solid #464646;');
+                      //$('.programme__header .active:last-child').removeClass('active');
+                    //$('.programme__header .active').attr('style','border:1px solid blue !important;background-color:#0000E7 !important;');
+                      var index1 = $('.programme__header .active1').index();
+                      //console.log(index);
+                      //var pos=$(this).position().left;
+                      var one1=$('#livechannel1').position().left;
+                      var two1=$('.active1').position().left;
+                      $('#livechannel1').position().left=two1;  
+                    //  $('#livechannel1').attr('style','left:'+(two1+150)+'px !important');
+                    //  $('.channel__programme__section[data-v-56b65aa6]').animate( { scrollLeft: '+='+two1}, 3000);
+                    //  $('.programme__header').animate({ scrollLeft: '+='+two1}, 3000);
+                      $('.active1').addClass('active');
+                      $('.active').removeClass('active1'); 
+
+                    }
+
+                    function scheduleExecution() {
+                      const d = new Date();
+                      let minutes = d.getMinutes();
+                      let seconds = d.getSeconds();
+                      
+                      // Calculate the time until the next 00th or 30th minute
+                      let timeUntilNextExecution = (30 - (minutes % 30)) * 60 - seconds;
+                    
+                      // If the current minute is in the second half of the hour, adjust for the next hour
+                      if (minutes >= 30) {
+                        timeUntilNextExecution += 30 * 60;
+                      }
+                    
+                      // Set an initial timeout to align with the nearest 00th or 30th minute
+                      setTimeout(function () {
+                        executeCode();
+                    
+                        // Set the regular interval to execute every 30 minutes
+                        setInterval(function () {
+                          executeCode();
+                        }, 30 * 60 * 1000);
+                      }, timeUntilNextExecution * 1000);
+                    }
+                    
+                    window.setInterval(function () 
+                    {
+                      //var percentHour = Math.floor(new Date().getMinutes() * 100/60);
+                      const currentOffsetStyle = $('.channel__programme__section').attr('style');
+                      const match = /--_offset:(.*?);/.exec(currentOffsetStyle);
+                      const currentOffsetValue = match ? match[1] : 0;
+                      const offset = parseInt(currentOffsetValue)+5;
+                      //const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
+                      $('.channel__programme__section').attr('style',`--_offset:${offset};`)
+                    },60000)
+
+                    scheduleExecution();
                   }
                   //
                  
@@ -84350,8 +84452,8 @@ hoursNew = (hoursNew % 12) || 12;
               "div",
               { staticClass: "programme__timing__section" },
               _vm._l(_vm.filteredChannelList, function(channel) {
-                var i = 0
-                var j = 0
+                var i = 0;
+                var url = "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
                 return _c(
                   "div",
                   {
@@ -84364,77 +84466,90 @@ hoursNew = (hoursNew % 12) || 12;
                         typeof channel.programmes != "undefined"
                     },
                     on: {
-                      click : function($event){
-                        window.location.href =  "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
-                      }
+                      // click : function($event){
+                      //   window.location.href =  "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
+                      // }
                     },
                   },
                   [
-                    // _c(
-                    //   "span",
-                    //   {
-                    //     directives: [
-                    //       {
-                    //         name: "show",
-                    //         rawName: "v-show",
-                    //         value: typeof channel.programmes == "undefined",
-                    //         expression: "typeof channel.programmes == 'undefined'"
-                    //       }
-                    //     ],
-                    //     staticClass: "programme programme--no__data",
-                    //     style: {
-                    //       flex:
-                    //         "0 0 " +
-                    //         //programme.durationMinutes * _vm.minuteWidthPx +
-                    //         7200 +
-                    //         "px"
-                    //     }
-                    //   },
-                    //   [_vm._v("No Data Available or Fetching Data")]
-                    // ),
+                    _c(
+                      "span",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: typeof channel.programmes == "undefined",
+                            expression: "typeof channel.programmes == 'undefined'"
+                          }
+                        ],
+                        staticClass: "programme programme--no__data",
+                        style: {
+                          flex:
+                            "0 0 " +
+                            //programme.durationMinutes * _vm.minuteWidthPx +
+                            7200 +
+                            "px"
+                        }
+                      },
+                      [_vm._v("No Data Available or Fetching Data")]
+                    ),
                     _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
-                      var eventsLength = channel?.programmes?.length
-                      if(i == 0) {
-                        j++
-                        var startTime=new Date();
-                        var minutes = startTime.getMinutes();
-                        if(minutes > 30)
-                          startTime.setMinutes(d.getMinutes() - (600 - (60 - minutes)));
-                        else
-                          startTime.setMinutes(d.getMinutes() - (600 - 60 + minutes));
+                      programme.url = url
+                      var date = _vm.getEndTime(programme.displayDateTimeUtc, programme.displayDuration)
+                      var startTime=new Date();
+                      var minutes = startTime.getMinutes() > 30 ? 30 : 0
+                      startTime.setMinutes(minutes);
+                      startTime.setSeconds(0);
+                      date.setSeconds(0);
+                      if(date > startTime) {
                         
-                        startTime.setSeconds(0);
-                        if(new Date(programme.displayDateTimeUtc) >= startTime ) {
-
-                          var diff = new Date(programme.displayDateTimeUtc) - startTime
-                          var widthC = Math.round(diff / 60000)
+                        if(i==0) {
+                          let differenceInMinutes = (new Date(date) - new Date(startTime)) / (1000 * 60);
                           i++
-                          return [
-                            _c(
+                          return _c(
                             "span",
                             {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: typeof channel.programmes == "undefined",
-                                  expression: "typeof channel.programmes == 'undefined'"
-                                }
-                              ],
-                              staticClass: "programme programme--no__data",
+                              key: programme,
+                              staticClass: "programme",
                               style: {
                                 flex:
                                   "0 0 " +
                                   //programme.durationMinutes * _vm.minuteWidthPx +
-                                  widthC* 5 +
-                                "px",
+                                  differenceInMinutes * 5 +
+                                  "px"
+                              },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault();
+                                  return _vm.onProgrammeHover(
+                                    $event,
+                                    programme,
+                                    channel
+                                  )
+                                },
                               }
                             },
-                            [_vm._v("No Data Available or Fetching Data")]
-                          ),
-                          _vm._v(" "),
-                          _c(
+                            [
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(programme.programmeTitle))
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
+                              ]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" },
+                              [ _vm._v(" " + _vm._s(programme.genre))]),
+                              _vm._v(" "),
+                              _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
+                                _vm._v(_vm._s(programme.durationMinutes) + "mins.")
+                              ])
+                            ]
+                          )
+                        } else {
+                          return _c(
                             "span",
                             {
                               key: programme,
@@ -84447,20 +84562,22 @@ hoursNew = (hoursNew % 12) || 12;
                                   "px"
                               },
                               on: {
-                                mouseover: function($event) {
-                                  
+                                click: function($event) {
+                                  $event.preventDefault();
                                   return _vm.onProgrammeHover(
                                     $event,
                                     programme,
                                     channel
                                   )
                                 },
-                                mouseout: _vm.onProgrammeHoverOut
                               }
                             },
                             [
                               _c("div", { staticClass: "pgFontguidehead" },[
                                 _vm._v(" " + _vm._s(programme.programmeTitle))
+                              ]),
+                              _c("div", { staticClass: "pgFontguidehead" },[
+                                _vm._v(" " + _vm._s(_vm.getStartEndTime(programme.displayDateTimeUtc, programme.displayDuration)))
                               ]),
                               _vm._v(" "),
                               _c("sup", { staticClass: "pgFontguide" },
@@ -84471,84 +84588,9 @@ hoursNew = (hoursNew % 12) || 12;
                               ])
                             ]
                           )
-                        ]
-                        } else {
-                          return _c()
                         }
-                      // }else if(j === (eventsLength-1)){
-                      //   var startTime=new Date();
-                      //   var minutes = startTime.getMinutes();
-                      //   if(minutes > 30)
-                      //     startTime.setMinutes(d.getMinutes() + (900 + (60 - minutes)));
-                      //   else
-                      //     startTime.setMinutes(d.getMinutes() + (900 - minutes));
-                      
-                      //   if(new Date(programme.displayDateTimeUtc) < startTime ) {
-                      //     var diff = new Date(programme.displayDateTimeUtc) - startTime
-                      //     var widthC = Math.round(diff / 60000)
-                      //     return
-                      //       _c(
-                      //       "span",
-                      //       {
-                      //         directives: [
-                      //           {
-                      //             name: "show",
-                      //             rawName: "v-show",
-                      //             value: typeof channel.programmes == "undefined",
-                      //             expression: "typeof channel.programmes == 'undefined'"
-                      //           }
-                      //         ],
-                      //         staticClass: "programme programme--no__data",
-                      //         style: {
-                      //           flex:
-                      //             "0 0 " +
-                      //             //programme.durationMinutes * _vm.minuteWidthPx +
-                      //             widthC* 5 +
-                      //           "px",
-                      //         }
-                      //       },
-                      //       [_vm._v("No Data Available or Fetching Data")]
-                      //     )
-                      //   }
                       } else {
-                        j++
-                        return _c(
-                          "span",
-                          {
-                            key: programme,
-                            staticClass: "programme",
-                            style: {
-                              flex:
-                                "0 0 " +
-                                //programme.durationMinutes * _vm.minuteWidthPx +
-                                programme.durationMinutes * 5 +
-                                "px"
-                            },
-                            on: {
-                              mouseover: function($event) {
-                                
-                                return _vm.onProgrammeHover(
-                                  $event,
-                                  programme,
-                                  channel
-                                )
-                              },
-                              mouseout: _vm.onProgrammeHoverOut
-                            }
-                          },
-                          [
-                            _c("div", { staticClass: "pgFontguidehead" },[
-                              _vm._v(" " + _vm._s(programme.programmeTitle))
-                            ]),
-                            _vm._v(" "),
-                            _c("sup", { staticClass: "pgFontguide" },
-                            [ _vm._v(" " + _vm._s(programme.genre))]),
-                            _vm._v(" "),
-                            _c("sup", { staticClass: "pgFontguide" ,staticStyle: { float: "right"} }, [
-                              _vm._v(_vm._s(programme.durationMinutes) + "mins.")
-                            ])
-                          ]
-                        )
+                        return _c()
                       }
                     })
                   ],
@@ -84782,6 +84824,14 @@ hoursNew = (hoursNew % 12) || 12;
                   staticStyle: { width: "25%" },
                   attrs: { src: _vm.programmeDetails.epgEventImage }
                 })
+              ]),
+              _vm._v(" "),
+              _c("button", { on: {
+                click: function ($event) {
+                  window.location.href = _vm.programmeDetails.url
+                },
+              }, staticClass: "watch-tv-button" }, [
+                _vm._v("Watch TV"),
               ]),
               _vm._v(" "),
               _c("p", { staticClass: "channel_description",staticStyle: { color: "#fff" } }, [

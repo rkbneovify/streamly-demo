@@ -295,6 +295,7 @@ Route::delete('user/sessiondestroy/{id}', 'Pages\Account\Setting@sessiondestroy'
 Route::put('user/personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->name('user.personaldevicename');
 Route::delete('user/subscriptiondestroy/{id}','Pages\Account\Setting@destroy')->name('user.subscriptiondestroy');
 Route::put('/userupdatezip/{id}','Pages\Account\Setting@updateZipCode')->name('userupdatezip');
+Route::put('/userdelete/{id}','Pages\Account\Setting@userDelete')->name('userdelete');
 Route::put('/userupdatename/{id}','Pages\Account\Setting@updateName')->name('userupdatename');
 Route::put('userupdatepass/{id}','Pages\Account\Setting@updatePass')->name('userupdatepass');
 Route::put('userupdate/{id}','Pages\Account\Setting@update')->name('userupdate');
