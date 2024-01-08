@@ -2307,6 +2307,16 @@
           sortOn: sortOn
         });
       },
+
+      callOnRender : function callOnRender(){
+        $('.header__time.active').removeClass('active')
+        $('.header__time').first().addClass('active')
+        var percentHour = Math.floor(new Date().getMinutes() * 100/60);
+        percentHour =  percentHour > 50 ?  percentHour - 50 : percentHour
+        const currentMinutesAdded = ($('.header__time.active').width()+22)/100 * 2 * percentHour
+        $('.channel__programme__section').attr('style',`--_offset:${currentMinutesAdded};`)
+      },
+
       getEndTime: function getEndTime(originalTime,duration){
 
         // Convert the original time string to a Date object
@@ -84501,6 +84511,7 @@
               "div",
               { staticClass: "programme__timing__section" },
               _vm._l(_vm.filteredChannelList, function(channel) {
+                _vm.callOnRender()
                 var i = 0;
                 var url = "/livetv/" +channel.CallSign +"/" +channel.genrename[0];
                 return _c(
@@ -84571,7 +84582,7 @@
                               },
                               on: {
                                 click: function($event) {
-                                  $event.preventDefault();
+                                  
                                   return _vm.onProgrammeHover(
                                     $event,
                                     programme,
