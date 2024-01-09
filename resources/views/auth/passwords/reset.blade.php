@@ -109,6 +109,16 @@ const togglePasswordnew = document.querySelector("#togglePasswordnew");
             this.classList.toggle("bi-eye");
         });
 
+        document.getElementById('password').addEventListener('input', function (event) {
+			// Remove spaces from the input value
+			event.target.value = event.target.value.replace(/\s/g, '');
+		});
+
+        document.getElementById('password-confirm').addEventListener('input', function (event) {
+			// Remove spaces from the input value
+			event.target.value = event.target.value.replace(/\s/g, '');
+		});
+
         // prevent form submit
         const form = document.querySelector("form");
         form.addEventListener('submit', function (e) {
