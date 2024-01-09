@@ -262,6 +262,10 @@ input[type=number] {
 		jQuery('#changePassword').modal('show');
 		@endif
 
+		@if(session()->has('errormsgname'))
+		jQuery('#changeName').modal('show');
+		@endif
+
 		@if(session()->has('message2'))
         jQuery('#changePassword').modal('show');
 		@endif
@@ -492,6 +496,15 @@ input[type=number] {
 	    </div>
 	</div>
 <script>
+
+		document.getElementById('newpassword').addEventListener('input', function (event) {
+					// Remove spaces from the input value
+					event.target.value = event.target.value.replace(/\s/g, '');
+				});
+		document.getElementById('cnewpassword').addEventListener('input', function (event) {
+			// Remove spaces from the input value
+			event.target.value = event.target.value.replace(/\s/g, '');
+		});
         const togglePasswordnew = document.querySelector("#togglePasswordnew");
         const passwordnew = document.querySelector("#newpassword");
 		const togglePassword = document.querySelector("#togglePassword");

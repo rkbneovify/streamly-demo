@@ -24,6 +24,11 @@ window.onload = function() {
         $recaptcha.setAttribute("required", "required");
     }
 
+    document.getElementById('user-password').addEventListener('input', function (event) {
+			// Remove spaces from the input value
+			event.target.value = event.target.value.replace(/\s/g, '');
+		});
+
 $(document).on('click', '.toggle-password1', function() {
 
 $(this).toggleClass("fa-eye fa-eye-slash");
