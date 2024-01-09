@@ -2197,10 +2197,18 @@
       this.fetchFavouriteList(); //Caching the programme rows
       const scroll = document.querySelector('.channel__list__section');
       const arr = [...scroll.children].map(el => el.getAttribute('data-channel'))
-      const chunkSize = 5;
+      const chunkSize = 10;
+      var round = 1;
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize);
-        this.fetchProgrammes(chunk);
+        if(round === 1)
+          this.fetchProgrammes(chunk);
+        else {
+          setTimeout(()=> {
+            this.fetchProgrammes(chunk);
+          },5000)
+        }
+        round++
       }
       
       this.$programmeRows = document.querySelectorAll('.programme__timing__section .programme__row');
@@ -103478,24 +103486,24 @@
       }
       //hoursoffset end
 
-                api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(resultoffset);
-                _context2.next = 12;
-                return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
+                // api = "".concat(_config__WEBPACK_IMPORTED_MODULE_2__["PATH"]).concat(_config__WEBPACK_IMPORTED_MODULE_2__["API_ENDPOINTS"].CHANNEL_TV_GUIDE, "?channelId=").concat(channelList, "&periodStart=").concat(start_from, "&periodEnd=").concat(end_from, "&timezone=").concat(resultoffset);
+                // _context2.next = 12;
+                // return axios__WEBPACK_IMPORTED_MODULE_5___default.a.get(api);
   
               case 12:
-                response = _context2.sent;
-                _context2.next = 15;
-                return response.data;
+                // response = _context2.sent;
+                // _context2.next = 15;
+                // return response.data;
   
               case 15:
-                data = _context2.sent;
+                // data = _context2.sent;
   
-                if (data.responseCode != "200") {
-                  commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_CHANNEL_LIST_PROGRAMME_ERROR"], data.responseMessage);
-                } else {
-                  // Set Programme Data onto the main Channel List Store
-                  dispatch('setProgrammeTimingList', data.getevent);
-                }
+                // if (data.responseCode != "200") {
+                //   commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["FETCHING_CHANNEL_LIST_PROGRAMME_ERROR"], data.responseMessage);
+                // } else {
+                //   // Set Programme Data onto the main Channel List Store
+                //   dispatch('setProgrammeTimingList', data.getevent);
+                // }
   
               case 17:
               case "end":
