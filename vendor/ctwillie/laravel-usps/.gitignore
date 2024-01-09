@@ -1,0 +1,5 @@
+/vendor
+/.vs
+composer.lock
+index.php
+dev-notes.txt

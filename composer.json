@@ -8,21 +8,37 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.2",
+        "php": "^7.4",
+        "barryvdh/laravel-cors": "^0.11.3",
+        "botman/botman": "^2.6",
+        "botman/driver-web": "^1.5",
+        "cboden/ratchet": "^0.4.3",
+        "ctwillie/laravel-usps": "^0.1.1",
+        "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "garygreen/pretty-routes": "^1.0",
+        "gghughunishvili/entrust": "^2.0",
+        "hashids/hashids": "^4.1",
         "jenssegers/agent": "^2.6",
-        "laravel/framework": "^6.2",
+        "laravel/cashier": "^11.3",
+        "laravel/framework": "^7.0",
+        "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
-        "oscarafdev/migrations-generator": "2.0.18",
-        "tymon/jwt-auth": "dev-develop",
-        "laravel/nova": "*"
+        "league/flysystem-aws-s3-v3": "~1.0",
+        "pbmedia/laravel-ffmpeg": "^7.0",
+        "piwik/device-detector": "^3.12",
+        "simplesoftwareio/simple-qrcode": "^4.1",
+        "tymon/jwt-auth": "1.0.0-rc.5",
+        "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {
-        "facade/ignition": "^1.4",
-        "fzaninotto/faker": "^1.9.1",
+        "barryvdh/laravel-debugbar": "^3.5",
+        "beyondcode/laravel-dump-server": "^1.0",
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
-        "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,
@@ -40,9 +56,10 @@
         },
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "config/buydrm/classes"
         ],
-         "files": [
+        "files": [
 
             "app/Helper.php"
     
@@ -55,12 +72,6 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {     "type": "composer",
-            "url": "https://nova.laravel.com"
-
-        }
-    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

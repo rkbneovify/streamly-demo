@@ -1,0 +1,235 @@
+@extends('frontend/partials/master')
+
+@section('stylesheets-bottom')
+	<style>
+		nav#mainNav {
+			background-color: #004E92;
+		}
+	</style>
+
+	<style>
+
+		body{
+			background: #F9F9F9 0% 0% no-repeat padding-box;
+		}
+
+		.channelogosame{
+
+display: block;
+margin: 0 auto;
+height: 100px;
+width: 100px;
+}
+
+		.full-width {
+			background: #000000 0% 0% no-repeat padding-box;
+		}
+
+		.col-centered {
+		    margin: 0 auto;
+		    position: relative;
+		}
+
+		.channel-detail {
+			position: absolute;
+		    top: 20%;
+		    right: -10%;
+		    color: #ffffff;
+		    padding: 20px;
+		    background: #333333 0% 0% no-repeat padding-box;
+		    box-shadow: 0px 3px 6px #00000029;
+		    opacity: 1;
+		    backdrop-filter: blur(30px);
+		    -webkit-backdrop-filter: blur(30px);
+		}
+
+		.channel-detail:before {
+		    content: '';
+		    width: 0px;
+		    height: 0px;
+		    background-color: transparent;
+		    z-index: 999;
+		    display: block;
+		    left: -20px;
+		    position: absolute;
+		    border-left: 10px solid transparent;
+		    border-top: 10px solid transparent;
+		    border-right: 10px solid #333333;
+		    border-bottom: 10px solid transparent;
+		}
+
+		.live-news-item {
+		    padding: 2rem 0;
+		    text-align: center;
+		    background: #FFFFFF 0% 0% no-repeat padding-box;
+		    box-shadow: 0px 3px 6px #00000029;
+		    border-radius: 8px;
+		}
+
+		.custom-row .row{
+			margin-top: 2rem;
+		}
+
+		/*.live-news-item:after {
+		    content: 'live';
+		    position: absolute;
+		    right: 12px;
+		    top: 12px;
+		    color: white;
+		    background: #E10C26 0% 0% no-repeat padding-box;
+		    border-radius: 4px 0px 0px 4px;
+		    padding: 0px 5px;
+		    line-height: 1;
+		}*/
+	</style>
+		<script>
+		
+			$(document).ready(function() {
+			
+			$.ajaxSetup({
+	
+	headers: {
+	
+			'X-CSRF-TOKEN': $("input[name=_token]").val()
+	
+	}
+	
+	});
+			
+			$(document).on('click','.btn-submit',function(e){
+	
+	
+	e.preventDefault();
+	let channelid = $(this).data('id');
+	
+	
+	$.ajax({
+	
+		 type:'POST',
+	
+		 url:"{{ url('favorite') }}",
+	
+		 data:{channelid:channelid,
+		 },
+	
+		 success:function(data){
+		$('#'+channelid).html('<p>Added to favorites</p> <span data-id='+channelid+' class=" btn-remove" style="color: red;font-size:2em">♥</span>');
+	
+		 }
+	
+	});
+	
+	
+	
+	});	
+	$(document).on('click','.btn-remove',function(e){
+		
+	
+	
+	
+	e.preventDefault();
+	let channelid = $(this).data('id');
+	
+	$.ajax({
+	
+		 type:'POST',
+	
+		 url:"{{ url('unfavorite') }}",
+	
+		 data:{channelid:channelid,
+		 },
+	
+		 success:function(data){
+	
+		$('#'+channelid).html('<p>Add to favorites</p> <span data-id='+channelid+' class=" btn-submit" style="color: red;font-size:2em" >♡</span>');
+	
+		 }
+	
+	});
+	
+	
+	
+	});
+			});
+		</script>
+@endsection
+
+
+@section('content')
+
+<section class="page-section custom-row">
+
+	<div class="container" style="margin-top: 4%;">
+		<div class="page-header">
+		<h3>My Favorite</h3>
+</div>
+		@forelse($myFavorites->chunk(6) as $chunk)
+	<div class="row">
+			@foreach($chunk as $channeldet)
+			{{-- {{$channeldet}} --}}
+			<?php $options = ''; $arrVal=explode(',',$channeldet->genres);  foreach ($genres as $id => $genre) {
+				         if(in_array($id, $arrVal)){
+																 
+				         $options .= ''.$genre.' ';
+				     } else{
+				         $options .= '';}
+								
+						 } 
+						 $genr=$options? $options:'Others'; ?>
+						 
+			<div class="col-md-2 pb-2">
+				
+				<div class="live-news-item">
+					
+						@if (!empty($channeldet->callSign))
+						<a href="{{url('livetv/'.$channeldet->callSign.'/'.$genr)}}">
+							@else
+									<a href="{{url('livetv/'.$channeldet->name.'/'.$genr)}}">
+									@endif
+									<div class="channelogosame"><img style='background-color: #4D5659; height: 100%; width: 100%; object-fit: contain; padding:1vw' src="../uploads/channellogo/notfound.png"  class="lazy" data-src="/uploads/channellogo/{{ $channeldet->image}}" loading="lazy"  alt="{{  $channeldet->name}}"></div>
+					
+									@if($channeldet->id == '11')
+									<p style=" max-width: auto;
+					padding: 0px 10px;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;">TVG: Horse Racing</p>
+							@else
+							<p style=" max-width: auto;
+					padding: 0px 10px;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;">{{  $channeldet->stationName??$channeldet->name}}</p>
+							@endif
+				    </a>
+					<form> <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                
+
+						<input type="hidden" name="channelid" value="{{$channeldet->id}}" class="form-control">
+
+@if (Auth::check())
+<div class="panel-footer" id="{{ $channeldet->id }}">
+{{-- {{ $channeldet->id }} --}}
+@if ($channeldet->favorited())	
+<p>Added to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-remove" style="color: red; font-size:2em">♥</span>
+@else
+<p>Add to favorites</p> <span data-id="{{ $channeldet->id }}" class=" btn-submit" style="color: red; font-size:2em">♡</span>
+@endif
+
+</div>
+@endif
+</form>
+				</div>
+				
+			</div>
+			@endforeach
+	</div>
+	@empty
+	<p>You have no favorite posts.</p>
+@endforelse
+
+</div>
+</div>
+</section>
+@endsection
