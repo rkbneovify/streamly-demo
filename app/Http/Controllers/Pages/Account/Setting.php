@@ -420,6 +420,11 @@ curl_close($curl);
     public function updateName(Request $request, $id)
     {
         if($request->has('name')) {
+
+            if(strlen(trim($request['name'])) <  1 ) {
+                return redirect()->back()->with('errormsgname','Please enter correct name');
+            }
+
             $user = User::find($id);
             if($user) {
                 $user->name = $request['name'];
