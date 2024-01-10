@@ -32,7 +32,7 @@
       </div>
   @endif 
               <h4 class="login_txt">Log In</h4>    
-              <form action="login" method="post" class="login-form mt-3">
+              <form action="/login" method="post" class="login-form mt-3">
                   <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
                       <label for="email" class="control-label">Email</label>
                       <input type="email" id="email" name="email" class="form-control" required>
