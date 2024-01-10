@@ -485,7 +485,7 @@ alt="image of tv guide"
             <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
             </svg></a></div>
               
-              <div><a href="https://www.amazon.in/Adaptive-Media-Inc-StreamlyTV/dp/B09VH3K4WH/ref=sr_1_1?keywords=streamlyTv&qid=1657795043&s=mobile-apps&sr=1-1" target="_blank"><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://www.amazon.com/Adaptive-Media-Inc-StreamlyTV/dp/B09VH3K4WH/ref=sr_1_1?keywords=streamly&qid=1704876672&s=mobile-apps&sr=1-1&qid=1657795043&s=mobile-apps&sr=1-1" target="_blank"><svg class = "circle" id="amazonfiretv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></a></div>
 
