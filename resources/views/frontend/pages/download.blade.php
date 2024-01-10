@@ -493,9 +493,9 @@ alt="image of tv guide"
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
               </svg></a></div>
 
-              <div><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
+              <div><a href="https://apps.apple.com/us/app/streamlytv/id1607812200" target="_blank"><svg class = "circle" id="iostv" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
-              </svg></div>
+              </svg></a></div>
               
               <div><a href="https://play.google.com/store/apps/details?id=com.adaptivemedia.streamlytv&hl=en&gl=US" target="_blank"><svg class = "circle" id="android" expanded = "true" height = "200px" width = "200px" >
               <circle class = "innerCircle" cx = "50%" cy = "50%" r = "5px">
