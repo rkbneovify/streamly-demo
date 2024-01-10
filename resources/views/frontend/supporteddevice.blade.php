@@ -827,9 +827,9 @@ html.compatible-devices .vibrant-divider {
 							<p data-i18n="mvpds-device-description">Now you can switch from live TV to Streamly right from your set-top box. Streamly is available through a growing number of pay TV providers. Ask yours for Streamly if you don’t see it here.</p>
 					</div>
             </div>
-            <div class="device-logos grid-4 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/roku.png)" title="Roku" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
+            <div class="device-logos grid-4 country-visible-in"> <a href="https://www.roku.com/en-gb/" style="background-image: url(../frontend/img/newicon/roku.png)" title="Roku" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Roku</a> <a href="https://www.android.com/intl/en_in/tv/"
                 style="background-image: url(../frontend/img/newicon/andriodtv.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Android</a> 
-                <a href="https://www.microsoft.com/en-us/mobile/phones/all/" style="background-image: url(../frontend/img/newicon/appletv.png)" title="Apple" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Apple</a>
+                <a href="https://www.apple.com/" style="background-image: url(../frontend/img/newicon/appletv.png)" title="Apple" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Apple</a>
                 
                 <a href="https://www.samsung.com/" style="background-image: url(../frontend/img/newicon/smarttv.png)" title="Samsung" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Samsung Smart tv</a>
         
