@@ -30,15 +30,16 @@ class LivetvController extends Controller
     public function index($name)
     {
         $PrevNext=DB::table('channels')->where('name', $name)->value('id');
-        $all=DB::table('channels')->orderBy('id', 'desc')->select('id')->first();
-        $count = $all->id;
+        $all=DB::table('channels')->where('status','=',1)->orderBy('id', 'desc')->select('id')->first();
         $nextChannel = $PrevNext;
         if($PrevNext == 1){
            $PrevNext = 2;
            $nextChannel = 1;
         }
-        if($PrevNext == $all->id -1 ){
-            $PrevNext = $all->id -2 ;
+        // if($PrevNext == $all->id -1 ){
+        //     $PrevNext = $all->id -2 ;
+        // }
+        if($PrevNext == $all->id){
             $nextChannel = $all->id -1;
         }
 
