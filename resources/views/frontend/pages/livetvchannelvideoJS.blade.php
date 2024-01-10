@@ -1044,7 +1044,7 @@ overflow-y: scroll;">
 		</div>
 		
 		<select id='gracenote_data' style="width: 100%; display:block;">
-		<option value='0'>- The schedule -</option>
+		<!-- <option value='0'>- The schedule -</option> -->
 	</select>
 			<h4 class="section-heading">Similar Channels</h4>
 			<div class="row">
