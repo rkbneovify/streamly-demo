@@ -4,6 +4,10 @@
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenav").classList.add("show");
 @endif
+@if (session()->has('reset-success'))
+    // document.getElementById("mySidenav").style.width = "34%";
+    document.getElementById("mySidenav").classList.add("show");
+@endif
 @if ($errors->has('user-email')||$errors->has('user-password')||$errors->has('zip_code')||$errors->has('SMTP-Error')||$errors->has('g-recaptcha-response'))
     // document.getElementById("mySidenav").style.width = "34%";
     document.getElementById("mySidenavRegister").classList.add("show");
