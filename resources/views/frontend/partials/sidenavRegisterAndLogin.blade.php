@@ -25,6 +25,12 @@
           <strong>Error!</strong> {{$errors->first()}}
       </div>
   @endif
+  @if(session()->has('reset-success'))
+       <div class="alert alert-success alert-dismissible ">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          {{ session()->get('reset-success') }}
+      </div>
+  @endif 
               <h4 class="login_txt">Log In</h4>    
               <form action="login" method="post" class="login-form mt-3">
                   <div class="form-group {{ $errors->has('email') ? ' has-error' : '' }}">
