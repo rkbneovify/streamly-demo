@@ -206,7 +206,8 @@ $Channel= Channel::where([['callSign', $callSign],['status','=',1]])->orWhere('n
 $url=$Channel->get('dash_url as url');
 $channelId=$Channel->get('id');
 $relatedchannel=$record->get()->where('genrenae',$genre);
-$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId,'Channel'=>$Channel->get()];
+$last = $allchannel->last()->id;
+$data=['allchannel'=>$allchannel,'login'=>$login,'relatedchannel'=>$relatedchannel,'channelData'=>$channelData,'url'=>$url,'encoded_auth_xml'=>$encoded_auth_xml,'channelId'=>$channelId,'Channel'=>$Channel->get(),'last' => $last];
 return $data;
 // return view('frontend.pages.livetvchannel', );
    
@@ -320,7 +321,7 @@ return view('frontend.pages.livetvchannel',$d );
           ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
 
 ->where('channels.status','=','1')
-->orderBy('channels.StationName', 'asc');
+->orderBy('channels.id', 'asc');
 
 return $second;
 

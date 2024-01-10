@@ -955,7 +955,9 @@ margin: 0 80px!important;
 			<div class="container">
 				<div class="row">
 					<div class="myDIV">
+					@if($Channel[0]->id != 1)	
 					<img class="prevnext" src="/uploads/icons/icon2.png" alt="icon" width="40" height="40" onclick="prevChannel('{{$Channel[0]->name??''}}')">
+					@endif
 					</div>
 					<div class="col-md-8 col-centered" >
 						
@@ -1002,7 +1004,9 @@ overflow-y: scroll;">
 					</div>
 					<!-- <div> -->
 					<div class="myDIV2">
-					<img class="prevnext" src="/uploads/icons/icon1.png" alt="icon" width="40" height="40" onclick="nextChannel('{{$Channel[0]->name??''}}')">
+					@if($Channel[0]->id != $last)	
+						<img class="prevnext" src="/uploads/icons/icon1.png" alt="icon" width="40" height="40" onclick="nextChannel('{{$Channel[0]->name??''}}')">
+					@endif
 					</div>
 				</div>
 				<!-- <div class="row">
