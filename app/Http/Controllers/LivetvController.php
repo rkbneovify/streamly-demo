@@ -32,16 +32,19 @@ class LivetvController extends Controller
         $PrevNext=DB::table('channels')->where('name', $name)->value('id');
         $all=DB::table('channels')->orderBy('id', 'desc')->select('id')->first();
         $count = $all->id;
+        $nextChannel = $PrevNext;
         if($PrevNext == 1){
            $PrevNext = 2;
+           $nextChannel = 1;
         }
         if($PrevNext == $all->id -1 ){
             $PrevNext = $all->id -2 ;
+            $nextChannel = $all->id -1;
         }
 
         $prev = DB::table('channels')->where('id', '<', $PrevNext )->where('status', '1')->max('id');
         $prevChannel = DB::table('channels')->where('id', $prev )->where('status', '1')->select('name', 'genres', 'callSign')->get();
-        $next = DB::table('channels')->where('id', '>', $prev )->where('status', '1')->min('id');
+        $next = DB::table('channels')->where('id', '>', $nextChannel )->where('status', '1')->min('id');
         $nextChannel = DB::table('channels')->where('id', $next )->where('status', '1')->select('name', 'genres', 'callSign')->get();
         
         $prevChannelgenre = DB::table('genre')->where('id', $prevChannel[0]->genres)->value('name');
