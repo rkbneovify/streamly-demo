@@ -754,7 +754,7 @@ html.compatible-devices .vibrant-divider {
 		</div>
 		
 	</section> --}}
-	<section class="shadowed device-slider device-count-3">
+	<section  id="pc_id" class="shadowed device-slider device-count-3">
 		<ul>
 				{{-- <li data-category="media_players" class="active media_players-icon"> <span data-i18n="media_players-device-name" class="device-name">Streaming Media Players</span> </li> --}}
 				{{-- <li data-category="hdtvs" class="hdtvs-icon"> <span data-i18n="hdtvs-device-name" class="device-name">Smart TVs</span> </li> --}}
@@ -827,11 +827,11 @@ html.compatible-devices .vibrant-divider {
 							<p data-i18n="mvpds-device-description">Now you can switch from live TV to Streamly right from your set-top box. Streamly is available through a growing number of pay TV providers. Ask yours for Streamly if you don’t see it here.</p>
 					</div>
             </div>
-            <div class="device-logos grid-4 country-visible-in"> <a href="https://www.roku.com/en-gb/" style="background-image: url(../frontend/img/newicon/roku.png)" title="Roku" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Roku</a> <a href="https://www.android.com/intl/en_in/tv/"
-                style="background-image: url(../frontend/img/newicon/andriodtv.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Android</a> 
-                <a href="https://www.apple.com/" style="background-image: url(../frontend/img/newicon/appletv.png)" title="Apple" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Apple</a>
+            <div class="device-logos grid-4 country-visible-in"> <a href="https://www.roku.com/en-gb/" target="_blank" style="background-image: url(../frontend/img/newicon/roku.png)" title="Roku" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Roku</a> <a href="https://www.android.com/intl/en_in/tv/"
+                style="background-image: url(../frontend/img/newicon/andriodtv.png)" title="Apple iOS" target="_blank"  data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Android</a> 
+                <a href="https://www.apple.com/" style="background-image: url(../frontend/img/newicon/appletv.png)" target="_blank"  title="Apple" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Apple</a>
                 
-                <a href="https://www.samsung.com/" style="background-image: url(../frontend/img/newicon/smarttv.png)" title="Samsung" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Samsung Smart tv</a>
+                <a href="https://www.samsung.com/" style="background-image: url(../frontend/img/newicon/smarttv.png)" target="_blank"  title="Samsung" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Samsung Smart tv</a>
         
 </div>
 	</div>
@@ -859,10 +859,10 @@ html.compatible-devices .vibrant-divider {
 					</div>
 			</div>
 			
-			<div class="device-logos grid-2 country-visible-in"> <a href="https://www.android.com" style="background-image: url(../frontend/img/newicon/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
-                            style="background-image: url(../frontend/images/s/phones-and-tablets/apple_logo_360.png)" title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Apple iOS</a> 
+			<div class="device-logos grid-2 country-visible-in"> <a href="https://www.android.com" target="_blank"  style="background-image: url(../frontend/img/newicon/android.png)" title="Android" data-cms-original-style="background-image: url('./images/phones-and-tablets/android.png')">Android</a> <a href="https://www.apple.com"
+                            style="background-image: url(../frontend/images/s/phones-and-tablets/apple_logo_360.png)" target="_blank"  title="Apple iOS" data-cms-original-style="background-image: url('./images/phones-and-tablets/apple_logo_360.png')">Apple iOS</a> 
                             
-                            {{-- <a href="https://www.microsoft.com/en-us/mobile/phones/all/" style="background-image: url(../frontend/images/s/phones-and-tablets/window.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a> --}}
+                            {{-- <a href="https://www.microsoft.com/en-us/mobile/phones/all/" target="_blank"  style="background-image: url(../frontend/images/s/phones-and-tablets/window.png)" title="Windows" data-cms-original-style="background-image: url('./images/phones-and-tablets/windows-phone.png')">Windows</a> --}}
 					
 			</div>
 	</div>
@@ -876,8 +876,8 @@ html.compatible-devices .vibrant-divider {
 					</div>
 			</div>
 			<div class="device-logos grid-2 country-visible-se"> 
-                <a href="https://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/pc.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
-                <a href="https://www.toshiba.se/laptops/" style="background-image: url(../frontend/images/s/laptop.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+                <a href="#pc_id" style="background-image: url(../frontend/images/s/pc.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
+                <a href="#pc_id" style="background-image: url(../frontend/images/s/laptop.png);" title="Toshiba" data-cms-original-style="background-image: url('./images/hdtvs/toshiba.png')">Toshiba</a>
                	
 			</div>
 	</div>
