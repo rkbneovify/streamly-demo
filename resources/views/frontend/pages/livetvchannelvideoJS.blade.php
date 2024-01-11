@@ -487,8 +487,9 @@ console.log("it's paused bro");
 				player.on("error", function(e) 
 			{    
 			  var error = player.error(); 
-			  alert('Error Code:'+error.code);
-			  alert('Error :'+error.message);         
+			//   alert('Error Code:'+error.code);
+			  alert('Error :'+error.message);     
+			  window.location = "{{ url('/react') }}";    
 								var dashdrmplay = {
 												src: '{{$url[0]->url??"no url found"}}',
 												type: 'application/dash+xml',
