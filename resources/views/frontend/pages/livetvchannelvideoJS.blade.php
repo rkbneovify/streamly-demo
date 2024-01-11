@@ -499,8 +499,8 @@ console.log("it's paused bro");
 										}
 													};
 											if(error.code === 4){
-											 alert("Due to some technical reason, channel gets interrupted. Kindly try again later");
-											 window.location = "{{ url('/react') }}";
+											//  alert("Due to some technical reason, channel gets interrupted. Kindly try again later");
+											//  window.location = "{{ url('/react') }}";
 											}else{		 
 						player.src(dashdrmplay);
 						//player.autoplay(true);
