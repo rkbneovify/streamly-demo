@@ -488,8 +488,8 @@ console.log("it's paused bro");
 			{    
 			  var error = player.error(); 
 			//   alert('Error Code:'+error.code);
-			  alert('Error :'+error.message);     
-			  window.location = "{{ url('/react') }}";    
+			//   alert('Error :'+error.message);     
+			//   window.location = "{{ url('/react') }}";    
 								var dashdrmplay = {
 												src: '{{$url[0]->url??"no url found"}}',
 												type: 'application/dash+xml',
@@ -498,9 +498,9 @@ console.log("it's paused bro");
 								'com.microsoft.playready': 'https://pr-keyos.licensekeyserver.com/core/rightsmanager.asmx'
 										}
 													};
-											if(error.code === 4){
-											//  alert("Due to some technical reason, channel gets interrupted. Kindly try again later");
-											//  window.location = "{{ url('/react') }}";
+											if(error){
+											 alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+											 window.location = "{{ url('/react') }}";
 											}else{		 
 						player.src(dashdrmplay);
 						//player.autoplay(true);
