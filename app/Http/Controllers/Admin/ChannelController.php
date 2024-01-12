@@ -151,7 +151,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
         $zipCodes = explode(',', $request->input('zip_codes'));
         $model->zip_code = $zipCodes;
        }else{
-        $model->zip_code = ["ALL"];
+        $model->zip_code = ["All"];
        }
 
     //     $model->image = $request->image;
@@ -245,7 +245,7 @@ if( $isDevice=='apple') {return view('admin.channels.fairplayindex', compact('re
             $zipCodes = explode(',', $request->input('zip_codes'));
             $input['zip_code'] = $zipCodes;
            }else{
-            $input['zip_code'] = ["Null"];
+            $input['zip_code'] = ["All"];
         }
        // $allpost= $request->post();
        // dd($input);  //get all the post data
