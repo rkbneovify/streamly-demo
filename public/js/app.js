@@ -84547,28 +84547,28 @@
                     },
                   },
                   [
-                    // _c(
-                    //   "span",
-                    //   {
-                    //     directives: [
-                    //       {
-                    //         name: "show",
-                    //         rawName: "v-show",
-                    //         value: typeof channel.programmes == "undefined",
-                    //         expression: "typeof channel.programmes == 'undefined'"
-                    //       }
-                    //     ],
-                    //     staticClass: "programme programme--no__data",
-                    //     style: {
-                    //       flex:
-                    //         "0 0 " +
-                    //         //programme.durationMinutes * _vm.minuteWidthPx +
-                    //         7200 +
-                    //         "px"
-                    //     }
-                    //   },
-                    //   [_vm._v("No Data Available or Fetching Data")]
-                    // ),
+                    _c(
+                      "span",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: typeof channel.programmes == "undefined",
+                            expression: "typeof channel.programmes == 'undefined'"
+                          }
+                        ],
+                        staticClass: "programme programme--no__data",
+                        style: {
+                          flex:
+                            "0 0 " +
+                            //programme.durationMinutes * _vm.minuteWidthPx +
+                            7200 +
+                            "px"
+                        }
+                      },
+                      [_vm._v("No Data Available or Fetching Data")]
+                    ),
                     _vm._v(" "),
                     _vm._l(channel.programmes, function(programme) {
                       programme.url = url
