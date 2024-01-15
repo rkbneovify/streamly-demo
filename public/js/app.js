@@ -84288,7 +84288,7 @@
               on: {
                    load: function($event) {
                    
-                    $('#loadmore').after('<div id="livechannel1" class="channel__live1" style="border:1px solid red !important;"></div>');
+                    $('#loadmore').after('<div id="livechannel1" class="channel__live1" style="border:1px solid red !important;display:none;"></div>');
                     $(this).css('border','1px solid red');
                     $('.pgGuideheight').attr('style','z-index:999 !important');
                     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
