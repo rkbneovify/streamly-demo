@@ -66,8 +66,6 @@
   var longitude = position.coords.longitude;
   var tokenn =  $("input[name=_token]").val()
 
-  console.log(tokenn);
-
   var myHeaders = new Headers();
 myHeaders.append("Accept", "application/json");
 myHeaders.append('X-CSRF-TOKEN', tokenn);
@@ -428,7 +426,7 @@ $.ajax({
 
 		
 	</section>
-	<script>
+	<!-- <script>
 	const div = document.createElement('div');
     div.className = 'row';
     div.innerHTML = `
@@ -440,7 +438,7 @@ $.ajax({
 	   </div>
 	   `;
      document.getElementById('nodeElement').appendChild(div);
-    </script>
+    </script> -->
 	
 @endsection
 
@@ -462,6 +460,7 @@ $.ajax({
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
 <script>
+	$(document).ready(function() {
     var firebaseConfig = {
         apiKey: "AIzaSyDZUPtq5LXm8bbcX5P-z0r-B08V65xq2aw",
     authDomain: "streamly-tv-android.firebaseapp.com",
@@ -480,7 +479,6 @@ $.ajax({
                 return messaging.getToken()
             })
             .then(function (response) {
-                console.log(response);
                 $.ajaxSetup({
                     headers: {
                          'X-CSRF-TOKEN': $("input[name=_token]").val()
@@ -512,5 +510,5 @@ $.ajax({
         new Notification(title, options);
     });
 
-    
+})
 </script>
