@@ -195,8 +195,8 @@ class StripeController extends Controller
                     <br>
                     View your Receipt <a href="' . $recipt . '""><strong>Here</strong></a><br>
                     If you have any questions or if you find an error, please contact us at <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
-                    Thanks,<br>
-                    Team Streamly
+                    <b>Thanks,<br>
+                    Team Streamly<b>
                     </html>';
 
           Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
