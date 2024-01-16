@@ -183,15 +183,17 @@ class StripeController extends Controller
 
 
           $html = '<html>
-                    Hi, ' . $user[0]->name . '<br><br>
-                    We hope you are enjoying streamlyTV,<br>
+                    Hi ' . ucwords($user[0]->name) . ',<br><br>
+                    We hope you are enjoying streamlyTV.<br>
                     As a reminder, your subscription is renewed.<br><br>
                     The details are as follows:<br>
+                    <strong>
                     Email: ' . $user[0]->email . '<br>
                     Next Billing Date: ' . $nextBillingDate . '<br>
                     Amount: $' . $amount . '<br>
+                    </strong>
                     <br>
-                    View your receipt by clicking <a href="' . $recipt . '"">here</a><br>
+                    View your Receipt <a href="' . $recipt . '""><strong>Here</strong></a><br>
                     If you have any questions or if you find an error, please contact us at <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
                     Thanks,<br>
                     Team Streamly
