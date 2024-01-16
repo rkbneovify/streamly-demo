@@ -108,8 +108,12 @@ class StripeController extends Controller
                      if($paymentIntent->object->description != "Subscription creation"){
     
                          $user= DB::table('users')->where('stripe_id', $paymentIntent->object->customer)->get();
-
+                         $amount = $paymentIntent->object->amount/100;
                          $recipt = $paymentIntent->object->charges->data[0]->receipt_url;
+                         $subscriptionId  = $paymentIntent->object->invoice;
+
+                         $subscription = \Stripe\Invoice::retrieve($subscriptionId);
+                         $nextBillingDate = $subscription->next_payment_attempt;
 
                          $fcm_token = DB::table('session_table')
                             ->where('users_id', $user[0]->id)
@@ -157,15 +161,31 @@ class StripeController extends Controller
        
                         $website_link = env('WEBSITE_URL');
        
-                        $html='<html>
-                        Hi, '.$user[0]->name.'<br><br>
-                        We hope you are enjoying streamlyTV,<br>
-                        as a reminder, your subscription is renewed.<br><br>
-                        View your receipt by clicking <a href="'.$recipt.'">here</a><br>
-                        If you have any questions or if you find an error, please contact us at contact@streamlytv.com.<br><br>
-                        Thanks<br>
-                        Team Streamly
+                    //     $html='<html>
+                    //     Hi, '.$user[0]->name.'<br><br>
+                    //     We hope you are enjoying streamlyTV,<br>
+                    //     as a reminder, your subscription is renewed.<br><br>
+                    //     View your receipt by clicking <a href="'.$recipt.'">here</a><br>
+                    //     If you have any questions or if you find an error, please contact us at contact@streamlytv.com.<br><br>
+                    //     Thanks<br>
+                    //     Team Streamly
         
+                    // </html>';
+
+
+                    $html = '<html>
+                    Hi, '.$user[0]->name.'<br><br>
+                    We hope you are enjoying streamlyTV,<br>
+                    As a reminder, your subscription is renewed.<br><br>
+                    The details are as follows:<br>
+                    Email:'.$user[0]->email.'<br>
+                    Next Billing Date: '.$nextBillingDate.'<br>
+                    Amount:'. $amount .'<br>
+                    <br>
+                    View your receipt by clicking <a href="'.$recipt.'"">here</a><br>
+                    If you have any questions or if you find an error, please contact us at <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
+                    Thanks,<br>
+                    Team Streamly
                     </html>';
     
                        Mail::send('emails.general',["html"=>$html] , function($message) use ($request, $user){
