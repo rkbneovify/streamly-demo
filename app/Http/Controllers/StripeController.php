@@ -118,9 +118,11 @@ class StripeController extends Controller
           $subscriptionId  = $paymentIntent->object->invoice;
 
           $subscription = \Stripe\Invoice::retrieve($subscriptionId);
-          $nextBillingDate = date('Y-m-d H:i',  $subscription->period_end);
+          $upcomingInvoice = \Stripe\Invoice::upcoming([
+            'subscription' => $subscription->subscription, // Use the subscription ID
+          ]);
 
-          
+          $nextBillingDate = $upcomingInvoice->next_payment_attempt ?  date('Y-m-d H:i',  $upcomingInvoice->next_payment_attempt) :  'N/A';
 
           $fcm_token = DB::table('session_table')
           ->where('users_id', $user[0]->id)
@@ -187,7 +189,7 @@ class StripeController extends Controller
                     The details are as follows:<br>
                     Email: ' . $user[0]->email . '<br>
                     Next Billing Date: ' . $nextBillingDate . '<br>
-                    Amount: ' . $amount . '<br>
+                    Amount: $' . $amount . '<br>
                     <br>
                     View your receipt by clicking <a href="' . $recipt . '"">here</a><br>
                     If you have any questions or if you find an error, please contact us at <a href="mailto:contact@streamlytv.com">contact@streamlytv.com</a>.<br><br>
