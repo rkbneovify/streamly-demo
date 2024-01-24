@@ -983,6 +983,16 @@ public function myRecents(Request $request)
 
     public function searchOnPlatform(Request $request){
         $q = $request->q;
+
+        if(!$q) {
+            $response = [
+                'success' => false,
+                'data' => "",
+                'message' => 'No data found',
+                'response_code'=>404,
+            ];
+            return response()->json($response, 404);
+        }
         $imagePath = url("/uploads/channellogo/");
         $first = Gracenote::select('EventTitle', "StationName", DB::raw("'event' as type"), "CallSign", DB::raw("null as image "), DB::raw("null as genrename "))
             ->where('EventTitle', 'LIKE', '%' . $q . '%');
@@ -1003,6 +1013,13 @@ public function myRecents(Request $request)
             ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
             ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')->distinct('gracenote.CallSign') 
             ->union($first)->orderByRaw(1)->take(10)->get();
-        return $second; 
+
+        $response = [
+            'success' => true,
+            'data' => $second,
+            'message' => 'Search result',
+            'response_code'=>200,
+        ];
+        return response()->json($response, 200);
     }
 }
