@@ -533,6 +533,7 @@ myPostalCodeField.addEventListener('change', function(event) {
             var form = document.getElementById('signup-form');
 
             form.addEventListener('submit', async (e) => {
+				document.getElementById('card-button').disabled = true;
                 event.preventDefault();
 								var options = {
 									line1: document.getElementById('address-line1').value,
@@ -560,7 +561,6 @@ myPostalCodeField.addEventListener('change', function(event) {
                     // Submit the form
                     form.submit();
                 }
-
             });
         
         </script>
