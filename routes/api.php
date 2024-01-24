@@ -95,6 +95,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('my_favorites', 'APIController@myFavorites');
     Route::get('my_recents', 'APIController@myRecents');
     Route::post('addtorecent', 'APIController@addToRecent');
+    Route::get('searchall', 'APIController@searchOnPlatform');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
  Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
  Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);

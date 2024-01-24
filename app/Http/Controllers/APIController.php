@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Genre;
 use App\Models\RecentChannel;
 use App\Models\FrontendText;
+use App\Models\Gracenote;
 use Exception;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class APIController extends Controller
@@ -978,6 +979,30 @@ public function myRecents(Request $request)
             $response = array('status' => false,'message'=>'User with Id: '.$id.' Does Not Exist.','UserID'=>$id);             
             return response()->json($response, 200);
         }
+    }
 
+    public function searchOnPlatform(Request $request){
+        $q = $request->q;
+        $imagePath = url("/uploads/channellogo/");
+        $first = Gracenote::select('EventTitle', "StationName", DB::raw("'event' as type"), "CallSign", DB::raw("null as image "), DB::raw("null as genrename "))
+            ->where('EventTitle', 'LIKE', '%' . $q . '%');
+        $second = Gracenote::select(
+            DB::raw("null as EventTitle"),
+            DB::raw('IFNULL(gracenote.StationName,channels.name) StationName'),
+            DB::raw("'channel' as type"),
+            DB::raw('IFNULL(gracenote.CallSign,channels.CallSign) CallSign'),
+            DB::raw("CONCAT('$imagePath/',channels.`image`) image"),
+            DB::raw('IFNULL(genre.name,"Others") genre_name'),
+        )
+            ->where('gracenote.StationName', 'LIKE', '%' . $q . '%')
+            ->orWhere('channels.name', 'LIKE', '%' . $q . '%')
+            ->join('channels', function ($q) {
+                $q->on('gracenote.CallSign', '=', 'channels.callSign')
+                    ->where('channels.status', '=', '1'); //second join condition
+            })
+            ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+            ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')->distinct('gracenote.CallSign') 
+            ->union($first)->orderByRaw(1)->take(10)->get();
+        return $second; 
     }
 }
