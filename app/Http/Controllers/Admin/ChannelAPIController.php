@@ -1420,7 +1420,8 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
             DB::raw(" CASE gracenote.TimeZoneName
             WHEN 'Pacific Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','$tz')
             WHEN 'Eastern Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','$tz')
-            WHEN 'Central Observing' THEN CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), ' 23:59:59'),INTERVAL 1 day), '%Y-%m-%d %H:%i:%s'),'+00:00','$tz') end EndDateTimewithTimezon"),
+            WHEN 'Central Observing' THEN CONVERT_TZ(gracenote.EndDateTime,'+00:00','$tz')
+            ELSE CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), ' 23:59:59'),INTERVAL 1 day), '%Y-%m-%d %H:%i:%s'),'+00:00','$tz') end EndDateTimewithTimezon"),
             )
             ->from('gracenote')
             ->rightJoin('channels', 'gracenote.CallSign', '=', 'channels.callSign')
