@@ -12,6 +12,7 @@
 use App\Http\Controllers\BotManController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AngularController;
 
 Route::view('/botman/chat', 'frontend.botman');
 //Route::match(['get', 'post'], '/botman', 'BotManController@handle');
@@ -406,3 +407,5 @@ Route::get('/checkout/{master_id}', 'PaymentlinkController@checkout');
 Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
 Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
+
+Route::any('/index', [AngularController::class, 'index'])->where('index', '^(?!api).*$');
