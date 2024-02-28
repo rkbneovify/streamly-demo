@@ -408,4 +408,4 @@ Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
 Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
 
-Route::any('/index', [AngularController::class, 'index'])->where('index', '^(?!api).*$');
+Route::any('/', [AngularController::class, 'index'])->where('', '^(?!api).*$');
