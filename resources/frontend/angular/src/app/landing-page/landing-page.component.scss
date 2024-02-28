@@ -679,3 +679,7 @@ footer .contain:first-child {
     }
   }
 }
+@keyframes mymove {
+  from {top: 0px;}
+  to {top: 80px;}
+}
