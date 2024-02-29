@@ -46,6 +46,7 @@ button.btn {
   border: 1px solid var(--_border) !important;
   background-color: var(--_bg) !important;
   padding: 0.7em 1.2em;
+  color: black !important;
 
   &.primary {
     position: relative;
@@ -543,7 +544,7 @@ footer .contain:first-child {
 
     a {
       font-size: 0.9rem;
-      font-weight: 600;
+      font-weight: 500;
       text-decoration: none;
       color: var(--clr-100);
     }
@@ -629,7 +630,7 @@ footer .contain:first-child {
 
   animation-name: mymove;
   // animation: mymove 1s linear;
-  animation: mymove ease-in-out 2s infinite alternate;
+  animation: mymove ease-in-out 6s infinite alternate;
 
   // animation-iteration-count: infinite;
   // animation-duration: 5s;
@@ -686,12 +687,18 @@ footer .contain:first-child {
     max-width: 100%;
     object-fit: contain;
     min-width: 0;
+    max-height: 70px;
   }
 }
 
 @media screen and (max-width: 1000px) {
   .brand > div {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media screen and (max-width: 600px) {
+  .brand > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
