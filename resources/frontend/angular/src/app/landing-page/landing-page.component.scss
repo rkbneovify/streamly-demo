@@ -304,7 +304,7 @@ section {
       height: 50px;
     }
 
-    >*+* {
+    > * + * {
       margin-top: 1rem;
     }
 
@@ -341,7 +341,7 @@ section {
     }
   }
 
-  >*+* {
+  > * + * {
     margin-block-start: 3rem;
   }
 
@@ -369,9 +369,11 @@ section {
 
 .channels {
   background-color: #000c25;
-  background-image: radial-gradient(circle at 50% 228%,
+  background-image: radial-gradient(
+      circle at 50% 228%,
       #fff,
-      rgba(1, 78, 146, 0.0549019608) 90%),
+      rgba(1, 78, 146, 0.0549019608) 90%
+    ),
     radial-gradient(circle at 50% 228%, #fff, #00448048 90%);
   //     background: rgb(255,255,255);
   // background: linear-gradient(14deg, rgba(255,255,255,1) 0%, rgba(0,135,251,1) 24%, rgba(0,39,73,1) 75%);
@@ -443,12 +445,14 @@ section {
 
 .devices {
   // background-color: var(--clr-100);
-  background-image: linear-gradient(to left bottom,
-      #0089ff,
-      #81a2ff,
-      #b7bffe,
-      #dfdefe,
-      #ffffff);
+  background-image: linear-gradient(
+    to left bottom,
+    #0089ff,
+    #81a2ff,
+    #b7bffe,
+    #dfdefe,
+    #ffffff
+  );
   color: var(--bg-400);
 
   h2 {
@@ -514,7 +518,7 @@ footer .contain:first-child {
   justify-content: space-evenly;
   gap: 1rem;
 
-  >div {
+  > div {
     flex-basis: 50%;
   }
 
@@ -544,17 +548,18 @@ footer .contain:first-child {
       color: var(--clr-100);
     }
 
-    li+li {
+    li + li {
       margin-top: 0.865rem;
     }
   }
 }
 
-@media screen and (max-width: 980px) {}
+@media screen and (max-width: 980px) {
+}
 
 .watchlist {
   background-color: var(--clr-100);
-  .watchListBlock{
+  .watchListBlock {
     background-image: url("../../assets/dummy-img/addToCartBg.png");
   }
 
@@ -626,7 +631,7 @@ footer .contain:first-child {
   // animation: mymove 1s linear;
   animation-iteration-count: infinite;
   animation-duration: 5s;
-  animation-timing-function: ease-in-out // }
+  animation-timing-function: ease-in-out; // }
 }
 .addtoFav {
   position: absolute;
@@ -634,26 +639,28 @@ footer .contain:first-child {
   // height: 100px;
   // right: -82px;
   bottom: 80px;
-  // left: 10px;
-  animation-name: mymoveFav;
-  animation-iteration-count: infinite;
-  animation-duration: 5s;
-  animation-timing-function: ease-in-out // }
+  left: 0px;
+  animation: mymoveFav ease-in-out 2s infinite alternate;
+  // animation-name: mymoveFav;
+  // animation-iteration-count: alternate;
+  // animation-duration: 5s;
+  // animation-timing-function: ease-in-out; // }
 }
 @keyframes mymoveFav {
-  from {
-    left: 0px;
+  0% {
+    transform: translateX(0);
   }
 
-  to {
-    left: 20px;
+  100% {
+    // left: 20px;
+    transform: translateX(20px);
   }
 }
 // brand
 .brand {
   background-color: var(--clr-100);
 
-  >div {
+  > div {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 2rem;
@@ -681,18 +688,20 @@ footer .contain:first-child {
 }
 
 @media screen and (max-width: 1000px) {
-  .brand>div {
+  .brand > div {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 .footer {
   background: rgb(255, 255, 255);
-  background: linear-gradient(0deg,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(0, 137, 255, 1) 0%,
-      rgba(0, 39, 73, 1) 53%,
-      rgba(3, 28, 50, 1) 92%);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(0, 137, 255, 1) 0%,
+    rgba(0, 39, 73, 1) 53%,
+    rgba(3, 28, 50, 1) 92%
+  );
   border-radius: 2rem 2rem 0 0;
 
   //   position: relative;
@@ -736,11 +745,12 @@ footer .contain:first-child {
 }
 
 @keyframes mymove {
-  from {
+  0%,
+  100% {
     top: 0px;
   }
 
-  to {
+  50% {
     top: 80px;
   }
 }
