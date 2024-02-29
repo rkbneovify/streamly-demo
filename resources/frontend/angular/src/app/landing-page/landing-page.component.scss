@@ -89,9 +89,11 @@ button.btn {
 .clr-100 {
   color: var(--clr-100, white);
 }
+
 .clr-300 {
   color: var(--clr-300);
 }
+
 .clr-400 {
   color: var(--clr-400);
 }
@@ -116,11 +118,13 @@ nav {
 
 .carousel {
   display: grid;
+
   // grid-template-areas: 'prev main next';
   // grid-template-columns: 15% auto 15%;
   .carousel-inner {
     .carousel-item {
       height: 100%;
+
       img {
         height: 100%;
       }
@@ -169,6 +173,7 @@ header {
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
+
 main {
   // background-image: linear-gradient(0deg, #011125 30%, transparent),
   // url("../../assets/dummy-img/bg.png");
@@ -224,9 +229,11 @@ header .tags {
 .pb-6 {
   padding-block-end: 6rem;
 }
+
 .ps-6 {
   padding-block-start: 6rem;
 }
+
 section {
   h2 {
     text-align: center;
@@ -288,15 +295,19 @@ section {
     background: linear-gradient(153deg, #007fed -11.49%, #002749 96.63%);
     overflow: hidden;
     line-height: 1.6;
+
     h3 {
       font-weight: 600;
     }
+
     :first-child {
       height: 50px;
     }
-    > * + * {
+
+    >*+* {
       margin-top: 1rem;
     }
+
     &::after {
       content: "";
       position: absolute;
@@ -306,12 +317,15 @@ section {
       border-radius: 50%;
       border: 2.5rem solid rgba(255, 255, 255, 0.061);
     }
+
     &:nth-child(1)::after {
       transform: translate(30%, 30%);
     }
+
     &:nth-child(2)::after {
       transform: translate(-30%, -50%);
     }
+
     &:nth-child(3)::after {
       transform: translate(30%, -50%);
     }
@@ -327,7 +341,7 @@ section {
     }
   }
 
-  > * + * {
+  >*+* {
     margin-block-start: 3rem;
   }
 
@@ -355,11 +369,9 @@ section {
 
 .channels {
   background-color: #000c25;
-  background-image: radial-gradient(
-      circle at 50% 228%,
+  background-image: radial-gradient(circle at 50% 228%,
       #fff,
-      rgba(1, 78, 146, 0.0549019608) 90%
-    ),
+      rgba(1, 78, 146, 0.0549019608) 90%),
     radial-gradient(circle at 50% 228%, #fff, #00448048 90%);
   //     background: rgb(255,255,255);
   // background: linear-gradient(14deg, rgba(255,255,255,1) 0%, rgba(0,135,251,1) 24%, rgba(0,39,73,1) 75%);
@@ -431,14 +443,12 @@ section {
 
 .devices {
   // background-color: var(--clr-100);
-  background-image: linear-gradient(
-    to left bottom,
-    #0089ff,
-    #81a2ff,
-    #b7bffe,
-    #dfdefe,
-    #ffffff
-  );
+  background-image: linear-gradient(to left bottom,
+      #0089ff,
+      #81a2ff,
+      #b7bffe,
+      #dfdefe,
+      #ffffff);
   color: var(--bg-400);
 
   h2 {
@@ -447,20 +457,24 @@ section {
     font-weight: bold;
     color: var(--bg-400);
   }
+
   .device-p1 {
     font-size: 1.4rem;
     text-align: center;
   }
+
   .device-p2 {
     font-size: 1rem;
     text-align: center;
   }
+
   .device-types {
     li {
       img {
         width: 30px;
         height: 30px;
       }
+
       p {
         margin-top: 0.4rem;
         color: #002749;
@@ -500,7 +514,7 @@ footer .contain:first-child {
   justify-content: space-evenly;
   gap: 1rem;
 
-  > div {
+  >div {
     flex-basis: 50%;
   }
 
@@ -530,21 +544,23 @@ footer .contain:first-child {
       color: var(--clr-100);
     }
 
-    li + li {
+    li+li {
       margin-top: 0.865rem;
     }
   }
 }
 
-@media screen and (max-width: 980px) {
-}
+@media screen and (max-width: 980px) {}
 
 .watchlist {
   background-color: var(--clr-100);
+  .watchListBlock{
+    background-image: url("../../assets/dummy-img/addToCartBg.png");
+  }
 
   .row {
     padding: 2rem;
-    background-color: #007fed;
+    // background-color: #007fed;
     width: 83%;
     margin: 0 auto;
     border-radius: 1rem;
@@ -566,19 +582,24 @@ footer .contain:first-child {
   padding-left: 2rem;
   width: 80%;
   gap: 2.5rem;
+
   h2 {
     font-size: 2.3rem;
     font-weight: bolder;
   }
+
   p {
     text-align: justify;
   }
+
   .w-text-1 {
     font-size: 1.2rem;
+
     span {
       font-weight: bold;
     }
   }
+
   .w-text-3 {
     font-size: 1rem;
   }
@@ -591,15 +612,48 @@ footer .contain:first-child {
 
 .heart-img {
   position: absolute;
-  top: 4rem;
-  right: -3rem;
-}
+  // top: 4rem;
+  // right: -3rem;
+  // div {
+  width: 100px;
+  height: 100px;
+  // background: red;
+  // position: relative;
+  right: -82px;
+  top: 20px;
 
+  animation-name: mymove;
+  // animation: mymove 1s linear;
+  animation-iteration-count: infinite;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out // }
+}
+.addtoFav {
+  position: absolute;
+  // width: 100px;
+  // height: 100px;
+  // right: -82px;
+  bottom: 80px;
+  // left: 10px;
+  animation-name: mymoveFav;
+  animation-iteration-count: infinite;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out // }
+}
+@keyframes mymoveFav {
+  from {
+    left: 0px;
+  }
+
+  to {
+    left: 20px;
+  }
+}
 // brand
 .brand {
   background-color: var(--clr-100);
 
-  > div {
+  >div {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 2rem;
@@ -607,6 +661,7 @@ footer .contain:first-child {
     width: 83%;
     margin: 0 auto;
     border-radius: 1rem;
+
     div {
       gap: 4.5rem;
       // flex-wrap: wrap;
@@ -626,20 +681,18 @@ footer .contain:first-child {
 }
 
 @media screen and (max-width: 1000px) {
-  .brand > div {
+  .brand>div {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 .footer {
   background: rgb(255, 255, 255);
-  background: linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(0, 137, 255, 1) 0%,
-    rgba(0, 39, 73, 1) 53%,
-    rgba(3, 28, 50, 1) 92%
-  );
+  background: linear-gradient(0deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(0, 137, 255, 1) 0%,
+      rgba(0, 39, 73, 1) 53%,
+      rgba(3, 28, 50, 1) 92%);
   border-radius: 2rem 2rem 0 0;
 
   //   position: relative;
@@ -651,6 +704,7 @@ footer .contain:first-child {
       background-repeat: no-repeat;
       background-position: right;
       min-height: 370px;
+
       .text-p1 {
         width: 75%;
         border-bottom: 1px solid hsla(0, 0%, 83%, 0.342);
@@ -661,6 +715,7 @@ footer .contain:first-child {
     }
   }
 }
+
 @media screen and (max-width: 800px) {
   footer .contain {
     flex-wrap: wrap;
@@ -679,7 +734,13 @@ footer .contain:first-child {
     }
   }
 }
+
 @keyframes mymove {
-  from {top: 0px;}
-  to {top: 80px;}
+  from {
+    top: 0px;
+  }
+
+  to {
+    top: 80px;
+  }
 }
