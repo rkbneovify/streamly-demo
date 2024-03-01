@@ -46,13 +46,13 @@ button.btn {
   border: 1px solid var(--_border) !important;
   background-color: var(--_bg) !important;
   padding: 0.7em 1.2em;
-  color: black !important;
 
   &.primary {
     position: relative;
     overflow: hidden;
     --_bg: var(--clr-400);
     --_border: var(--clr-400);
+    color: black !important;
 
     &::after {
       content: "";
@@ -72,9 +72,34 @@ button.btn {
   }
 
   &.secondary {
+    position: relative;
     --_bg: transparent;
     --_border: var(--clr-400);
     color: var(--_border);
+    transition: 1s linear;
+    overflow: hidden;
+    z-index: 1;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(white, transparent),
+        linear-gradient(var(--_border), var(--_border));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 500ms;
+    }
+
+    &:hover {
+      color: black;
+      &::after {
+        opacity: 1;
+      }
+    }
   }
 }
 
@@ -559,34 +584,48 @@ footer .contain:first-child {
 }
 
 .watchlist {
+  position: relative;
+  padding: 2.5rem;
   background-color: var(--clr-100);
-  .watchListBlock {
-    background-image: url("../../assets/dummy-img/addToCartBg.png");
+  border-radius: 1rem;
+  background-image: url("../../assets/dummy-img/addToCartBg.png");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 3.5rem;
+  .thumbnail {
+    flex-basis: 40%;
   }
 
-  .row {
-    padding: 2rem;
-    // background-color: #007fed;
-    width: 83%;
-    margin: 0 auto;
-    border-radius: 1rem;
-    // overflow: hidden;
-    justify-content: center;
-    position: relative;
+  .watchlist-text {
+    flex-basis: 60%;
+  }
 
-    .col-4 {
-      .w-100 {
-        text-align: end;
-        padding-right: 0%;
-      }
-    }
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    right: 0;
+    translate: 50%;
+    top: 30%;
+    background-image: url("../../assets/dummy-img/heart-icon.png");
+    background-repeat: no-repeat;
+    animation: mymove ease-in-out 5s infinite alternate;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .watchlist {
+    flex-direction: column;
   }
 }
 
 .watchlist-text {
   // padding-right: 5rem;
-  padding-left: 2rem;
-  width: 80%;
+  // padding-left: 2rem;
+  max-width: 27rem;
   gap: 2.5rem;
 
   h2 {
