@@ -1,1 +1,131 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+ul,
+p,
+h1,
+h2,
+h3,
+body {
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+ul {
+  padding-left: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+footer,
+header,
+section {
+  font-family: "Poppins", sans-serif;
+  color: var(--clr-100);
+}
+
+/* ---------------------------- Theme Setup --------------------------- */
+
+:root {
+  --clr-400: #ffd84e;
+  --clr-300: #d2eaff;
+  --clr-100: #fff;
+
+  --bg-200: #d6edff;
+  --bg-400: #000c25;
+}
+
+/* ------------------------ Utilities ----------------------------- */
+
+.contain {
+  width: min(1040px, 90%);
+  margin-inline: auto;
+}
+
+button.btn {
+  border: 1px solid var(--_border) !important;
+  background-color: var(--_bg) !important;
+  padding: 0.7em 1.2em;
+
+  &.primary {
+    --_bg: var(--clr-400);
+    --_border: var(--clr-400);
+
+    position: relative;
+    overflow: hidden;
+    color: black !important;
+
+    &:disabled {
+      --_bg: #e0e0e0;
+      color: #828282;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 50%;
+      transform: translate(-50%, -50%);
+      width: 6rem;
+      aspect-ratio: 1;
+      background-color: rgba(255, 255, 255, 0.287);
+      clip-path: circle(0%);
+      transition: clip-path 400ms;
+    }
+
+    &:hover::after {
+      clip-path: circle(50%);
+    }
+  }
+
+  &.secondary {
+    --_bg: transparent;
+    --_border: var(--clr-400);
+    color: var(--_border);
+  }
+
+  &.neutral {
+    --_bg: transparent;
+    --_border: var(--clr-100);
+    color: var(--_border);
+  }
+}
+
+.clr-100 {
+  color: var(--clr-100, white);
+}
+
+.clr-300 {
+  color: var(--clr-300);
+}
+
+.clr-400 {
+  color: var(--clr-400);
+}
+
+/* ---------------- NAVBAR ---------------- */
+
+nav {
+  display: flex;
+  padding: 1rem 5rem;
+
+  .navlinks {
+    display: flex;
+    margin-left: auto;
+    gap: 2rem;
+  }
+
+  .btn {
+    padding: 0.5em 1.2em;
+    white-space: no-wrap;
+  }
+}
