@@ -1452,11 +1452,12 @@ public function channelDaysScheduleFuncWithGenreoffsettz($type,$q,$timeoffset){
     DATE_FORMAT(UTC_TIMESTAMP(), "'.$format.'")  AND  gracenote.`StartDateTime` <= DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
+    // 04 March IFNULL(callSign,name) change to IFNULL(Loading..,name)
     $b = Channel::select(DB::raw('IFNULL(callSign,channels.name) callSign'),"channels.id","channels.zip_code",
         DB::raw('IFNULL(stationName,channels.name) StationName'),"$type as url",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
         ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(DISTINCT IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]')  genrename")
-        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,channels.name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"+00:00","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
+        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL("Loading..",channels.name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"+00:00","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s"),"+00:00","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
         ->where('channels.status', '=', 1)
         ->whereNotIn('channels.id', $distinct_ids)
         ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -1668,10 +1669,11 @@ public function channelDaysScheduleFunc($type){
     DATE_FORMAT(UTC_TIMESTAMP(), "'.$format.'")  AND  gracenote.`StartDateTime` <= DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
 
+    // 04 March IFNULL(callSign,name) change to IFNULL(Loading..,name)
     $b = Channel::select(DB::raw('IFNULL(callSign,name) callSign'),"id",
         DB::raw('IFNULL(stationName,name) StationName'),"$type as url","channels.zip_code",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
-        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"'.$st.'","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"),"'.$st.'","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
+        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL("Loading..",name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"'.$st.'","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(CONCAT(CURDATE(), " 23:59:59"), "%Y-%m-%d %H:%i:%s"),"'.$st.'","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
         ->where('status', '=', 1)
         ->whereNotIn('id', $distinct_ids)
         ->union($record)
@@ -1748,11 +1750,13 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
     ->whereRaw('gracenote.`EndDateTime` >=
     DATE_FORMAT(UTC_TIMESTAMP(), "'.$format.'")  AND  gracenote.`StartDateTime` <= DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s")')->get()->toArray();
     // dd($distinct_ids);
+    
 
+    // 04 March IFNULL(callSign,name) change to IFNULL(Loading..,name)
     $b = Channel::select(DB::raw('IFNULL(callSign,name) callSign'),"id",
         DB::raw('IFNULL(stationName,name) StationName'),"$type as url","channels.zip_code",
         DB::raw("CONCAT('$imagePath/',`image`) logo"))
-        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL(callSign,name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"'.$st.'","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s"),"'.$st.'","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
+        ->selectRaw(' concat( "[",JSON_OBJECT("title", IFNULL("Loading..",name), "description", "","start",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00"),"'.$st.'","'.$tz.'")),"end",UNIX_TIMESTAMP(CONVERT_TZ(DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"),INTERVAL 1 day), "%Y-%m-%d %H:%i:%s"),"'.$st.'","'.$tz.'")),"TimeZoneName","TimeZoneName"), "]") programs')
         ->where('status', '=', 1)
         ->whereNotIn('id', $distinct_ids)
         ->union($record)
