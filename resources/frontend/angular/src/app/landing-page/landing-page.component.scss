@@ -4,6 +4,10 @@ nav {
   display: flex;
   padding: 1rem 5rem 2rem;
 
+  .nav-logo{
+    min-width: 160px;
+  }
+
   .navlinks {
     display: flex;
     margin-left: auto;
@@ -13,9 +17,30 @@ nav {
   .btn {
     padding: 0.5em 1.2em;
     white-space: no-wrap;
+    text-wrap: nowrap;
   }
 }
 
+@media screen and (max-width: 660px) {
+  nav{
+    padding-right: 1rem;
+    padding-left: 1rem;
+
+  }
+}
+@media screen and (max-width: 530px) {
+  nav .nav-logo{
+    min-width: 50px;
+  }
+
+  nav .btn{
+    padding: 0.5rem;
+  }
+
+  nav .navlinks{
+    gap: 1rem;
+  }
+}
 .carousel {
   display: grid;
 
@@ -526,6 +551,14 @@ footer .contain:first-child {
   }
 }
 
+@media screen and (max-width: 825px) {
+  .watchlist::after {
+    right: 48px;
+  }
+}
+
+
+
 .watchlist-text {
   // padding-right: 5rem;
   // padding-left: 2rem;
@@ -699,6 +732,10 @@ footer .contain:first-child {
       flex-basis: 100% !important;
     }
   }
+
+  .channels h2::before{
+    background-position: top;
+  }
 }
 
 @keyframes mymove {
@@ -711,3 +748,17 @@ footer .contain:first-child {
     top: 80px;
   }
 }
+
+@media screen and (max-width: 530px) {
+.arrow-img{
+  left: 0 !important;
+}
+}
+
+@media screen and (max-width: 375px) {
+  .channel-list{
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+}
+
