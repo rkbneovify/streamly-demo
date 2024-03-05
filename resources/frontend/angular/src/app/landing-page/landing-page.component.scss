@@ -1,134 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
-ul,
-p,
-h1,
-h2,
-h3,
-body {
-  margin: 0;
-}
-
-li {
-  list-style: none;
-}
-
-ul {
-  padding-left: 0;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-header {
-  // temp
-  background-color: #030247;
-}
-
-footer,
-header,
-section {
-  font-family: "Poppins", sans-serif;
-  color: var(--clr-100);
-}
-
-// -------------- Utilities --------------------
-
-.contain {
-  width: min(1040px, 90%);
-  margin-inline: auto;
-}
-
-button.btn {
-  --clr-400: #ffd84e;
-  border: 1px solid var(--_border) !important;
-  background-color: var(--_bg) !important;
-  padding: 0.7em 1.2em;
-
-  &.primary {
-    position: relative;
-    overflow: hidden;
-    --_bg: var(--clr-400);
-    --_border: var(--clr-400);
-    color: black !important;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 50%;
-      transform: translate(-50%, -50%);
-      width: 6rem;
-      aspect-ratio: 1;
-      background-color: rgba(255, 255, 255, 0.287);
-      clip-path: circle(0%);
-      transition: clip-path 400ms;
-    }
-
-    &:hover::after {
-      clip-path: circle(50%);
-    }
-  }
-
-  &.secondary {
-    position: relative;
-    --_bg: transparent;
-    --_border: var(--clr-400);
-    color: var(--_border);
-    transition: 1s linear;
-    overflow: hidden;
-    z-index: 1;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: radial-gradient(white, transparent),
-        linear-gradient(var(--_border), var(--_border));
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 500ms;
-    }
-
-    &:hover {
-      color: black;
-      &::after {
-        opacity: 1;
-      }
-    }
-  }
-}
-
-.root {
-  --clr-400: #ffd84e;
-  --clr-300: #d2eaff;
-  --clr-100: #fff;
-
-  --bg-200: #d6edff;
-  --bg-400: #000c25;
-}
-
-.clr-100 {
-  color: var(--clr-100, white);
-}
-
-.clr-300 {
-  color: var(--clr-300);
-}
-
-.clr-400 {
-  color: var(--clr-400);
-}
-
 // ---------------------- Layout ------------------------
 
 nav {
   display: flex;
-  padding: 1rem 4.5rem 2rem;
+  padding: 1rem 5rem 2rem;
 
   .navlinks {
     display: flex;
@@ -214,16 +88,16 @@ header .tags {
   justify-content: center;
   gap: 2rem;
   font-size: 1.25rem;
-  margin-block: 1.5rem;
+  margin-block: 1.5rem; 
+}
+
+.tags li {
+  display: flex;
+  gap: 1rem;
 }
 
 .controls button {
   color: var(--clr-400);
-}
-
-// temp
-.scroller {
-  min-height: 500px;
 }
 
 @media screen and (max-width: 980px) {
@@ -247,6 +121,33 @@ header .tags {
       flex-direction: column;
       align-items: center;
       row-gap: 0.5em;
+    }
+  }
+}
+
+.secondary {
+  position: relative;
+  transition: 100ms linear;
+  overflow: hidden;
+  z-index: 1;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(white, transparent),
+      linear-gradient(var(--_border), var(--_border));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 100ms;
+  }
+
+  &:hover {
+    color: black;
+    &::after {
+      opacity: 1;
     }
   }
 }
@@ -581,6 +482,9 @@ footer .contain:first-child {
 }
 
 @media screen and (max-width: 980px) {
+  footer .contain {
+    row-gap: 3rem !important;
+  }
 }
 
 .watchlist {
@@ -755,7 +659,7 @@ footer .contain:first-child {
   //   position: relative;
   //   overflow: hidden;
   .contain {
-    .footer-left {
+    .left {
       // background-image: url('../../../assets/dummy-img/Polygon\ 8.png');
       background-size: 67% 100%;
       background-repeat: no-repeat;
@@ -763,12 +667,17 @@ footer .contain:first-child {
       min-height: 370px;
 
       .text-p1 {
-        width: 75%;
+        max-width: 40ch;
         border-bottom: 1px solid hsla(0, 0%, 83%, 0.342);
         padding-bottom: 1rem;
         margin-bottom: 1rem;
         text-align: justify;
       }
+    }
+
+    .right {
+      flex-wrap: wrap;
+      row-gap: 3rem;
     }
   }
 }
