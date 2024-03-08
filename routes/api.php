@@ -46,6 +46,7 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 Route::group(['prefix' => 'auth'], function ($router) {
     
     Route::post('getzipcodes', 'Auth\AuthController@getZipcodes');
+    Route::post('checkemail', 'Auth\AuthController@checkEmail');
     Route::post('zipcodeInquery', 'Auth\AuthController@failedzipinquery');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
