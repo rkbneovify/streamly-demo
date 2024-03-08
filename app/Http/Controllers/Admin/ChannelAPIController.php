@@ -1714,7 +1714,7 @@ public function channelDaysScheduleFuncOffsetWithFulldatadays($type,$timeoffset,
         ->fromSub(function ($query) use ($type,$tz,$st,$format) {
             $query->select(DB::raw('DISTINCT IFNULL(gracenote.StationName,channels.name) StationName'),
             DB::raw('IFNULL(channels.callSign,channels.name) callSign'),
-            DB::raw('IFNULL(gracenote.EventTitle,channels.name) EventTitle'),
+            DB::raw('IFNULL(gracenote.EventTitle,"Loading..") EventTitle'),
             DB::raw('IFNULL(gracenote.EventDescription,"") EventDescription'),
             DB::raw('IFNULL(gracenote.StartDateTime,DATE_FORMAT(UTC_TIMESTAMP(), "%Y-%m-%d %H:00:00")) StartDateTime'),
             DB::raw('IFNULL(gracenote.EndDateTime,DATE_FORMAT(DATE_ADD(CONCAT(CURDATE(), " 23:59:59"), INTERVAL 1 day ), "%Y-%m-%d %H:%i:%s")) EndDateTime'),
