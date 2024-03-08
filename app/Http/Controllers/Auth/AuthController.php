@@ -20,6 +20,8 @@ use App\SessionTable;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Memcached;
 use DB;
+use App\Models\Zipcode;
+use App\Models\DeclineZipInquiry;
 
 class AuthController extends Controller
 {
@@ -30,7 +32,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery']]);
     }
 
     public function register(Request $request){
@@ -872,5 +874,59 @@ public function multilogout()
       // Use passcode to login and return the object in reposne or jWT
       // extract memcache and the login var jwt/passcode 
       //use passcode to login and return the jwt
+    }
+
+    /*** Check all available zipcode ****/
+
+    public function getZipcodes(Request $request) {
+        $search = $request->search;
+    
+        $query = Zipcode::orderBy('zipcode', 'asc')
+            ->select('zipcode', 'city', 'state');
+    
+        if ($search) {
+            $query->where('zipcode', 'like', '%' . $search . '%');
+        }
+    
+        $zipcodes = $query->limit(5)->get();
+    
+        $response = $zipcodes->map(function ($zipcode) {
+            return [
+                "value" => $zipcode->zipcode,
+                "label" => $zipcode->zipcode,
+                "state" => $zipcode->state,
+                "city" => $zipcode->city,
+            ];
+        });
+    
+        return response()->json($response);
+    }
+
+    /*** Report zipcodes inquery***/
+
+    public function failedzipinquery(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'nullable|max:255',
+            'zip' => 'required|max:255',
+            'city' => 'required|max:255',
+            'state' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()]);
+        }
+
+        DeclineZipInquiry::updateOrCreate(
+            [
+                'email' =>  $request->input('email'),
+                'zip' => $request->input('zip'),
+                'city' =>  $request->input('city'),
+                'state' => $request->input('state'),
+            ],
+            ['frequency' => \DB::raw('frequency + 1')]
+        );
+
+        return response()->json(['success' => 'Data is successfully added']);
     }
 }
