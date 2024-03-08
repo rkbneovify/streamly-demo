@@ -4,8 +4,9 @@
   </div>
 </nav>
 
-<div class="container">
+<div class="container pt-4">
   <!-- <div class="row"> -->
+  <div class="overflow-auto">
   <div class="progressbar">
     <div class="steps" (click)="selectedTab='Availability'">
       <div class="bullets">
@@ -18,7 +19,7 @@
     <div class="steps" (click)="selectedTab='Verification'">
       <div class="bullets">
         <span>
-          <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+          <img src="../../../assets/dummy-img/verificatoin.svg" alt="" />
         </span>
       </div>
       <p class="text-center">Verification</p>
@@ -26,7 +27,7 @@
     <div class="steps" (click)="selectedTab='Plans'">
       <div class="bullets">
         <span>
-          <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+          <img src="../../../assets/dummy-img/passport.svg" alt="" />
         </span>
       </div>
       <p class="text-center">Plans</p>
@@ -34,7 +35,7 @@
     <div class="steps" (click)="selectedTab='Terms'">
       <div class="bullets">
         <span>
-          <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+          <img src="../../../assets/dummy-img/temsanscond.svg" alt="" />
         </span>
       </div>
       <p class="text-center">T&C</p>
@@ -42,7 +43,7 @@
     <div class="steps" (click)="selectedTab='Payment'">
       <div class="bullets">
         <span>
-          <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+          <img src="../../../assets/dummy-img/payment.svg" alt="" />
         </span>
       </div>
       <p class="text-center">Payment</p>
@@ -50,17 +51,17 @@
     <div class="steps" (click)="selectedTab='Confirmation'">
       <div class="bullets">
         <span>
-          <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+          <img src="../../../assets/dummy-img/congrats.svg" alt="" />
         </span>
       </div>
       <p class="text-center">Confirmation</p>
     </div>
   </div>
+</div>
   <!-- </div> -->
-  <p>{{selectedTab}}</p>
-  <div class="sub-contianer">
+  <div [ngClass]="{'sub-contianer':true,'availability-img':applyclassForAva(),'veryify-img':applyclassForVer()}">
     <div class="row_1" *ngIf="selectedTab=='Availability'">
-      <div class="col_1">
+      <div class="col_1  d-md-block d-none">
         <div class="step1-imgs">
           <img
             class="map"
@@ -87,28 +88,28 @@
       </div>
       <div class="col_2 col_2_1">
         <div class="input_fields">
-            <label for="fName">Full Name <span class="text-danger">*</span></label>
+            <label class="label-p" for="fName">Full Name <span class="text-danger">*</span></label>
             <input id="fName" type="text" placeholder="Enter your name" class="input_field" />
         </div>
         <div class="input_fields">
-            <label for="email">Email<span class="text-danger">*</span></label>
+            <label class="label-p" for="email">Email<span class="text-danger">*</span></label>
             <input id="email" type="text" placeholder="Enter your email" class="input_field" />
         </div>
         <div class="input_fields">
-            <label for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
+            <label class="label-p" for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
             <input id="zipcode" type="text" placeholder="Enter your zipcode" class="input_field" />
         </div>
         <div class="input_fields">
-            <label for="city">City <span class="text-danger">*</span></label>
+            <label class="label-p" for="city">City <span class="text-danger">*</span></label>
             <input id="city" type="text" placeholder="City" class="input_field" />
         </div>
         <div class="input_fields">
-            <label for="state">State <span class="text-danger">*</span></label>
+            <label class="label-p" for="state">State <span class="text-danger">*</span></label>
             <input id="state" type="text" placeholder="State" class="input_field" />
         </div>
         <div class="input_fields">
-            <button>Submit</button>
-            <p>Already have an account? <span>Log In</span></p>
+            <button class="">Submit</button>
+            <p class="label-p">Already have an account? <span class="label-p">Log In</span></p>
         </div>
 
 
@@ -116,10 +117,10 @@
     </div>
 
     <div class="row_1 row_2" *ngIf="selectedTab=='Verification'">
-      <div class="col_1">
-        <div class="step1-imgs">
+      <div class="col_1 d-md-block d-none">
+        <div >
           <img
-            class="map"
+          class="step1-img"
             src="../../../assets/dummy-img/res_step_2.png"
             alt="map"
           />
@@ -154,10 +155,10 @@
     </div>
 
     <div class="row_1 row_2 row_3" *ngIf="selectedTab=='Plans'">
-      <div class="col_1">
+      <div class="col_1 d-md-block d-none">
         <div class="step1-imgs-2">
           <img
-            class="map"
+            class="step1-img"
             src="../../../assets/dummy-img/res-step3.png"
             alt="map"
           />
@@ -201,15 +202,15 @@
         <h1>Terms & Conditions</h1>
         <div class="heading1">
             <h2>Heading 1</h2>
-            <p>Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.</p>
+            <p class="taj">Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.</p>
         </div>
         <div class="heading2">
             <h2>Heading 2</h2>
-            <p>Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.</p>
+            <p class="taj">Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.</p>
         </div>
         <div class="heading3">
             <h2>Heading 3</h2>
-            <p>Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad </p>
+            <p class="taj">Rorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad </p>
         </div>
         <div class="terms">
             <input type="checkbox" name="termsandcondition" id="terms">
@@ -220,8 +221,8 @@
         </div>
     </div>
 
-    <div class="row_5 row py-4" *ngIf="selectedTab=='Payment'">
-      <div class="col-4 d-flex flex-column">
+    <div class="row_5 row py-4 pt-5" *ngIf="selectedTab=='Payment'">
+      <div class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">
             <h2>Cart</h2>
@@ -261,21 +262,21 @@
         </div>
       </div>
 
-      <div class="col-8">
-        <div class="row row1">
-          <div class="col-4 ps-0">
+      <div class="col-12 col-md-8 px-4 carts-details">
+        <div class="row gy-2 row1">
+          <div class="col-6 col-md-4 ps-0">
             <p>Name on Card</p>
             <div class="card-input">
               <input type="text" placeholder="Enter" />
             </div>
           </div>
-          <div class="col-4 ps-0">
+          <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>Card NumberCard</p>
             <div class="card-input">
               <input type="text" placeholder="Enter" />
             </div>
           </div>
-          <div class="col-4 px-0">
+          <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Credit Card Zip</p>
             <div class="card-input">
               <input type="password" placeholder="Enter" />
@@ -284,14 +285,14 @@
           </div>
         </div>
 
-        <div class="row row2">
-          <div class="col-4 ps-0">
+        <div class="row gy-2 row2">
+          <div class="col-6 col-md-4 ps-0">
             <p>Email</p>
             <div class="card-input">
               <input type="email" placeholder="Enter" />
             </div>
           </div>
-          <div class="col-4 ps-0">
+          <div class="col-6 col-md-4 px-0 pe-md-3 ">
             <p>Coupon Code</p>
             <div class="card-input">
               <input type="text" placeholder="Enter Coupon Code" />
@@ -299,7 +300,7 @@
           </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row gy-2 mt-4">
           <div class="col-6 ps-0">
             <p>Address 1</p>
             <div class="card-input">
@@ -314,29 +315,29 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-4 ps-0">
+        <div class="row gy-2">
+          <div class="col-6 col-md-4 ps-0">
             <p>City</p>
             <div class="card-input">
               <input type="text" placeholder="Amherst" />
             </div>
           </div>
-          <div class="col-4 ps-0">
+          <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>State</p>
             <div class="card-input">
               <input type="text" placeholder="Massachusetts" />
             </div>
           </div>
-          <div class="col-4 px-0">
+          <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Country</p>
             <div class="card-input">
               <input type="text" placeholder="USA" />
             </div>
           </div>
         </div>
-        <div class="row justify-content-end">
-          <div class="col-4 px-0 d-flex ">
-            <button>Start your 7 days trial</button>
+        <div class="row gy-2 justify-content-end ">
+          <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
+            <button class="flex-fill">Start your 7 days trial</button>
           </div>
         </div>
       </div>
