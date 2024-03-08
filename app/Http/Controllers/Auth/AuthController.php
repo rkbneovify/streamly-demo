@@ -32,7 +32,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery','checkEmail']]);
     }
 
     public function register(Request $request){
@@ -928,5 +928,17 @@ public function multilogout()
         );
 
         return response()->json(['success' => 'Data is successfully added']);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $email = $request->email;
+
+        $userExists = User::where('email', $email)->exists();
+
+        return response()->json([
+            'message' => $userExists ? 'User already exists' : "User doesn't exist",
+            'exists' => $userExists,
+        ]);
     }
 }
