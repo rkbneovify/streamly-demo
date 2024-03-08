@@ -32,30 +32,151 @@
       </svg>
     </a>
   </nav>
+
   <main>
     <div class="login-container">
-      <header class="text-center">
+      <header class="text-center position-relative">
         <h1>Log In</h1>
-        <p>Enter the neccessary information to Log In</p>
+        <p class="info">Enter the neccessary information to Log In</p>
+        <p class="d-flex">
+          <img src="../../../assets/dummy-img/arrow.svg" alt="" /> Back
+        </p>
       </header>
 
       <div class="form-container">
-        <form class="login-form">
-          <label>
-            <span>Email <span class="text-danger">*</span></span>
-            <input type="text" />
-          </label>
-          <label>
-            Password <span class="text-danger">*</span>
-            <input type="text" />
-          </label>
-        </form>
-        <p class="divider">OR</p>
-        <div class="login-options">
-          <button class="btn neutral">Log In with Passcode</button
-          ><button class="btn neutral">Log In with QR</button
-          ><button class="btn neutral">Log In with Google</button>
+        <!-- left  -->
+        <!-- login with email -->
+        <!-- <form class="login-form d-flex flex-column gap-4">
+          <div class="login-field">
+            <label for="email">
+              <span>Email <span class="text-danger">*</span></span>
+            </label>
+            <input id="email" placeholder="Enter your email" type="email" type="text" />
+          </div>
+
+          <div class="login-field">
+            <label for="password">
+              <span>Password <span class="text-danger">*</span></span>
+            </label>
+            <div class="">
+              <input id="password" placeholder="Enter Password" type="password" type="text" />
+              <img src="../../../assets/dummy-img/eye.svg" alt="">
+            </div>
+            <p class="login-fpass mt-2">Forgot Password ?</p>
+          </div>
+          <div class="login-field">
+            <button class="mb-2" type="submit"  placeholder="">Log In</button>
+            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+          </div>
+        </form> -->
+
+        
+        <!-- right  -->
+        <!-- <div class="divider-container">
+          <div class="line1"></div>
+          <p class="divider">OR</p>
+          <div class="line1 line2"></div>
         </div>
+
+        <div class="login-options">
+          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Passcode</button
+          ><button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button
+          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
+        </div> -->
+
+        <!-- login with passcode -->
+        <!-- <form class="login-form d-flex flex-column gap-4">
+          <div class="login-field">
+            <label for="Passcode">
+              <span>Enter Passcode <span class="text-danger">*</span></span>
+            </label>
+            <div class="">
+              <input id="Passcode" placeholder="Enter Passcode" type="password" />
+              <img src="../../../assets/dummy-img/eye.svg" alt="">
+            </div>
+            <p class="login-fpass mt-2">Forgot Password ?</p>
+          </div>
+          <div class="login-field">
+            <button class="mb-2" type="submit"  placeholder="">Log In</button>
+            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+          </div>
+        </form> -->
+        <!-- right  -->
+        <!-- <div class="divider-container">
+          <div class="line1"></div>
+          <p class="divider">OR</p>
+          <div class="line1 line2"></div>
+        </div>
+        <div class="login-options">
+          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Password</button
+          ><button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button
+          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
+        </div> -->
+
+
+        <!-- login with qr -->
+        <!-- <form class="login-form d-flex flex-column gap-4">
+          <div class="login-field-qrcode">
+            <img src="../../../assets/dummy-img/qr-code.svg" alt="">
+          </div>
+          <div class="login-field">
+            <button class="mb-2" type="submit"  placeholder="">Log In</button>
+            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+          </div>
+        </form> -->    
+        <!-- right  -->
+        <!-- <div class="divider-container">
+          <div class="line1"></div>
+          <p class="divider">OR</p>
+          <div class="line1 line2"></div>
+        </div>
+        <div class="login-options">
+          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/lock.svg" alt=""> Log In with Password</button
+          ><button class="btn neutral bt-61 text-nowrap qr-p-17"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with passcode</button
+          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
+        </div> -->
+
+        
+        <!-- logiin with zipcode -->
+        <form class="login-form d-flex flex-column gap-4">
+          <div class="login-field">
+            <label for="zipcode">
+              <span>Zipcode <span class="text-danger">*</span></span>
+            </label>
+            <input id="zipcode" placeholder="Enter your zipcode"  type="text" />
+          </div>
+          <div class="login-field">
+            <label for="city">
+              <span>City</span>
+            </label>
+            <input id="city" placeholder="Enter your city" type="text" />
+          </div>
+          <div class="login-field">
+            <label for="state">
+              <span>State</span>
+            </label>
+            <div class="">
+              <input id="state" placeholder="Enter state"  type="text" />
+            </div>
+          </div>
+          <div class="login-field">
+            <button class="mb-2" type="submit"  placeholder="">Submit</button>
+          </div>
+        </form>
+        <!-- right  -->
+        <div class="divider-container">
+          <div class="line1"></div>
+          <p class="divider">OR</p>
+          <div class="line1 line2"></div>
+        </div>
+
+        <div class="login-options">
+          <button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/lock.svg" alt=""> Log In with Password</button>
+          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Passcode</button>
+          <button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button>
+        </div>
+
+
       </div>
     </div>
   </main>
