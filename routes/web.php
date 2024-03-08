@@ -19,9 +19,9 @@ Route::view('/botman/chat', 'frontend.botman');
 Route::get('/botman', 'MainConversationController@handle');
 Route::post('/botman', 'MainConversationController@handle');
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+// Route::get('/', function () {
+//     return view('auth/login');
+// });
 Route::post('/password/login', function () {
     return redirect('/livetv');
 });
@@ -36,7 +36,7 @@ Route::get('/cookie/set','HomeController@setCookie');
 /*End Naresh 15-11-2022*/
 
 Route::get('/admin', 'Admin\AdminController@index');
-Route::get('/', 'HomeController@index')->name('home');
+// Route::get('/', 'HomeController@index')->name('home');
 Route::get('/homecache', 'HomeController@indexCache');
 Route::get('/checkzip', 'HomeTwoController@checkzipView');
 Route::get('/tags', function() {
