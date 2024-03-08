@@ -45,13 +45,21 @@
 
       <div class="form-container">
         <!-- left  -->
-        <!-- login with email -->
-        <!-- <form class="login-form d-flex flex-column gap-4">
+        <!-- ===========================login with email start=======================-->
+        <form
+          class="login-form d-flex flex-column gap-4"
+          *ngIf="selectedTab == 'loginwithpassword'"
+        >
           <div class="login-field">
             <label for="email">
               <span>Email <span class="text-danger">*</span></span>
             </label>
-            <input id="email" placeholder="Enter your email" type="email" type="text" />
+            <input
+              id="email"
+              placeholder="Enter your email"
+              type="email"
+              type="text"
+            />
           </div>
 
           <div class="login-field">
@@ -59,91 +67,77 @@
               <span>Password <span class="text-danger">*</span></span>
             </label>
             <div class="">
-              <input id="password" placeholder="Enter Password" type="password" type="text" />
-              <img src="../../../assets/dummy-img/eye.svg" alt="">
+              <input
+                id="password"
+                placeholder="Enter Password"
+                type="password"
+                type="text"
+              />
+              <img src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
             <p class="login-fpass mt-2">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit"  placeholder="">Log In</button>
-            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <p class="login_noac">
+              Don't have an account ?<span> Start Your Trial Now!</span>
+            </p>
           </div>
-        </form> -->
+        </form>
+        <!-- ===========================login with email end=======================-->
 
-        
-        <!-- right  -->
-        <!-- <div class="divider-container">
-          <div class="line1"></div>
-          <p class="divider">OR</p>
-          <div class="line1 line2"></div>
-        </div>
-
-        <div class="login-options">
-          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Passcode</button
-          ><button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button
-          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
-        </div> -->
-
-        <!-- login with passcode -->
-        <!-- <form class="login-form d-flex flex-column gap-4">
+        <!-- ===========================login with passcode start=======================-->
+        <form
+          *ngIf="selectedTab == 'loginwithpasscode'"
+          class="login-form d-flex flex-column gap-4"
+        >
           <div class="login-field">
             <label for="Passcode">
               <span>Enter Passcode <span class="text-danger">*</span></span>
             </label>
             <div class="">
-              <input id="Passcode" placeholder="Enter Passcode" type="password" />
-              <img src="../../../assets/dummy-img/eye.svg" alt="">
+              <input
+                id="Passcode"
+                placeholder="Enter Passcode"
+                type="password"
+              />
+              <img src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
             <p class="login-fpass mt-2">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit"  placeholder="">Log In</button>
-            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <p class="login_noac">
+              Don't have an account ?<span> Start Your Trial Now!</span>
+            </p>
           </div>
-        </form> -->
-        <!-- right  -->
-        <!-- <div class="divider-container">
-          <div class="line1"></div>
-          <p class="divider">OR</p>
-          <div class="line1 line2"></div>
-        </div>
-        <div class="login-options">
-          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Password</button
-          ><button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button
-          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
-        </div> -->
+        </form>
+        <!-- ===========================login with passcode end=======================-->
 
-
-        <!-- login with qr -->
-        <!-- <form class="login-form d-flex flex-column gap-4">
+        <!-- ===========================login with QR start=======================-->
+        <form
+          *ngIf="selectedTab == 'loginwithqr'"
+          class="login-form d-flex flex-column gap-4"
+        >
           <div class="login-field-qrcode">
-            <img src="../../../assets/dummy-img/qr-code.svg" alt="">
+            <img src="../../../assets/dummy-img/qr-code.svg" alt="" />
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit"  placeholder="">Log In</button>
-            <p class="login_noac">Don't have an account ?<span> Start Your Trial Now!</span></p>
+            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <p class="login_noac">
+              Don't have an account ?<span> Start Your Trial Now!</span>
+            </p>
           </div>
-        </form> -->    
-        <!-- right  -->
-        <!-- <div class="divider-container">
-          <div class="line1"></div>
-          <p class="divider">OR</p>
-          <div class="line1 line2"></div>
-        </div>
-        <div class="login-options">
-          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/lock.svg" alt=""> Log In with Password</button
-          ><button class="btn neutral bt-61 text-nowrap qr-p-17"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with passcode</button
-          ><button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/google_logo.svg" alt=""> Log In with Google</button>
-        </div> -->
+        </form>
+        <!-- ===========================login with QR end=======================-->
 
-        
-        <!-- logiin with zipcode -->
-        <form class="login-form d-flex flex-column gap-4">
+        <!-- ===========================login with Zipcode start=======================-->
+        <form *ngIf="selectedTab == 'loginwithzipcode'" class="login-form d-flex flex-column gap-4">
           <div class="login-field">
             <label for="zipcode">
               <span>Zipcode <span class="text-danger">*</span></span>
             </label>
-            <input id="zipcode" placeholder="Enter your zipcode"  type="text" />
+            <input id="zipcode" placeholder="Enter your zipcode" type="text" />
           </div>
           <div class="login-field">
             <label for="city">
@@ -156,14 +150,16 @@
               <span>State</span>
             </label>
             <div class="">
-              <input id="state" placeholder="Enter state"  type="text" />
+              <input id="state" placeholder="Enter state" type="text" />
             </div>
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit"  placeholder="">Submit</button>
+            <button class="mb-2" type="submit" placeholder="">Submit</button>
           </div>
         </form>
-        <!-- right  -->
+        <!-- ===========================login with Zipcode end=======================-->
+        
+        <!--login right side  -->
         <div class="divider-container">
           <div class="line1"></div>
           <p class="divider">OR</p>
@@ -171,12 +167,39 @@
         </div>
 
         <div class="login-options">
-          <button class="btn neutral bt-30 text-nowrap"><img src="../../../assets/dummy-img/lock.svg" alt=""> Log In with Password</button>
-          <button class="btn neutral text-nowrap"><img src="../../../assets/dummy-img/visibility.svg" alt=""> Log In with Passcode</button>
-          <button class="btn neutral bt-61 text-nowrap"><img src="../../../assets/dummy-img/qrcode.svg" alt=""> Log In with QR</button>
+          <button
+            *ngIf="selectedTab !== 'loginwithpassword'"
+            (click)="selectedTab = 'loginwithpassword'"
+            class="btn neutral text-nowrap"
+          >
+            <img src="../../../assets/dummy-img/lock.svg" alt="" /> Log In with
+            Password
+          </button>
+          <button
+            *ngIf="selectedTab !== 'loginwithpasscode'"
+            (click)="selectedTab = 'loginwithpasscode'"
+            class="btn neutral text-nowrap"
+          >
+            <img src="../../../assets/dummy-img/visibility.svg" alt="" /> Log In
+            with Passcode
+          </button>
+          <button
+            *ngIf="selectedTab !== 'loginwithqr'"
+            (click)="selectedTab = 'loginwithqr'"
+            class="btn neutral bt-61 text-nowrap"
+          >
+            <img src="../../../assets/dummy-img/qrcode.svg" alt="" /> Log In
+            with QR
+          </button>
+          <button
+            *ngIf="selectedTab !== 'loginwithzipcode'"
+            (click)="selectedTab = 'loginwithzipcode'"
+            class="btn neutral bt-30 text-nowrap"
+          >
+            <img src="../../../assets/dummy-img/google_logo.svg" alt="" /> Log
+            In with Google
+          </button>
         </div>
-
-
       </div>
     </div>
   </main>
