@@ -32,7 +32,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery','checkEmail']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery','checkEmail','deviceDetail']]);
     }
 
     public function register(Request $request){
@@ -939,6 +939,14 @@ public function multilogout()
         return response()->json([
             'message' => $userExists ? 'User already exists' : "User doesn't exist",
             'exists' => $userExists,
+        ]);
+    }
+
+    public function deviceDetail(Request $request) {
+
+        $deviceId = "web" . session()->getId(); // Use Laravel session ID as a unique identifier
+        return response()->json([
+            'deviceid' => $deviceId
         ]);
     }
 }
