@@ -576,4 +576,33 @@ public function PlanRenews(Request $request)
 
         return view('frontend.pages.subscriptionrenews', compact('login'));
     }
+
+    public function getAllPlans()
+    {
+        try {
+            try {
+                $plans = \Stripe\Plan::all(['active'=>true,'product'=>'prod_NcBvdnH9t6G0GY','expand' => ['data.tiers']]);
+            } catch(Exception $e) {
+                $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
+            }
+
+            // Extract metadata for each plan
+            $formattedPlans = collect($plans->data)->map(function ($plan) {
+                return [
+                    'id' => $plan->id,
+                    'nickname' => $plan->nickname,
+                    'amount' => $plan->amount,
+                    'currency' => $plan->currency,
+                    'interval' => $plan->interval,
+                    'metadata' => $plan->metadata,
+                    'type'=> $plan->billing_scheme,
+                    'tiers' => $plan->billing_scheme == "tiered" ? $plan->tiers : [],
+                ];
+            });
+
+            return response()->json([$formattedPlans], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
