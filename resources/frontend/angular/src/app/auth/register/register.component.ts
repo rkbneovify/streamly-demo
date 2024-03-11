@@ -3,11 +3,12 @@ import { Component,HostListener, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
 import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [NgIf,NgFor,NgClass,FormsModule],
+  imports: [NgIf,NgFor,NgClass,FormsModule,NgSelectModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
