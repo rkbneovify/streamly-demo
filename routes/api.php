@@ -47,6 +47,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     
     Route::post('getzipcodes', 'Auth\AuthController@getZipcodes');
     Route::post('checkemail', 'Auth\AuthController@checkEmail');
+    Route::get('devicedetail', 'Auth\AuthController@deviceDetail');
     Route::post('zipcodeInquery', 'Auth\AuthController@failedzipinquery');
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
