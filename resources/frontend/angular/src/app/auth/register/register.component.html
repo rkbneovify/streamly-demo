@@ -86,34 +86,32 @@
           </p>
         </div>
       </div>
-      <div class="col_2 col_2_1">
+      <form #myForm="ngForm" (ngSubmit)="submitForm(myForm)" class="col_2 col_2_1">
         <div class="input_fields">
             <label class="label-p" for="fName">Full Name <span class="text-danger">*</span></label>
-            <input id="fName" type="text" placeholder="Enter your name" class="input_field" />
+            <input name='fname' id="fName" ngModel type="text" placeholder="Enter your name" class="input_field" />
         </div>
         <div class="input_fields">
             <label class="label-p" for="email">Email<span class="text-danger">*</span></label>
-            <input id="email" type="text" placeholder="Enter your email" class="input_field" />
+            <input name="email" ngModel id="email" type="text" placeholder="Enter your email" class="input_field" />
         </div>
         <div class="input_fields">
             <label class="label-p" for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
-            <input id="zipcode" type="text" placeholder="Enter your zipcode" class="input_field" />
-        </div>
+            <input name="zipcode" #zip ngModel id="zipcode" (keyup)="getZipcode(zip.value)" type="text" placeholder="Enter your zipcode" class="input_field" />
+          </div>
         <div class="input_fields">
             <label class="label-p" for="city">City <span class="text-danger">*</span></label>
-            <input id="city" type="text" placeholder="City" class="input_field" />
+            <input name="city" ngModel id="city" type="text" placeholder="City" class="input_field" />
         </div>
         <div class="input_fields">
             <label class="label-p" for="state">State <span class="text-danger">*</span></label>
-            <input id="state" type="text" placeholder="State" class="input_field" />
+            <input name="state" ngModel id="state" type="text" placeholder="State" class="input_field" />
         </div>
         <div class="input_fields">
             <button class="">Submit</button>
             <p class="label-p">Already have an account? <span class="label-p">Log In</span></p>
         </div>
-
-
-      </div>
+      </form>
     </div>
 
     <div class="row_1 row_2" *ngIf="selectedTab=='Verification'">
