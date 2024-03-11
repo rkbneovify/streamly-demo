@@ -129,3 +129,6 @@ nav {
     white-space: no-wrap;
   }
 }
+.pointer{
+  cursor: pointer;
+}
