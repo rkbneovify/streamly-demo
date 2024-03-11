@@ -1,22 +1,25 @@
 import { NgIf,NgFor } from '@angular/common';
-import { Component,HostListener, OnInit } from '@angular/core';
+import { Component,HostListener, OnInit, Renderer2 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [NgIf,NgFor,NgClass,FormsModule],
+  imports: [NgIf,NgFor,NgClass,FormsModule,RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
   selectedTab: string = 'Availability';
   isWidth767:number=window.innerWidth;
+  userState:string ='';
+  userCity:string = '';
+  userZipcode:string = '';
 
   zipcodedata:any =[];
-  // isUserExist:boolean = false;
   searchZipInput:string='';
 
   constructor(private crud: CrudService){}
@@ -29,6 +32,21 @@ export class RegisterComponent implements OnInit {
     // console.log(this.isWidth767);
   }
 
+  // click to open the login popup
+  showAlreadyUserModal(): void {
+    document.getElementById('btnstaticAlreadyUser')?.click();  
+  }
+  // click to open the correct zipcode popup
+  showCorrectZipcode():void{
+    document.getElementById('btnstaticZipCorrectUser')?.click();  
+  }
+  // click to open the wrong zipcode popup
+  showWrongZipcode():void{
+    document.getElementById('btnstaticZipWrongUser')?.click();
+
+  }
+  
+
   applyclassForAva():boolean{
     // console.log(this.isWidth767 === 767 && this.selectedTab === 'Availability');
       return this.isWidth767 <= 767 && this.selectedTab === 'Availability';
@@ -38,21 +56,7 @@ export class RegisterComponent implements OnInit {
   }
 
   checkZipCodeValid(zipcode:any):boolean{
-    // const searchData = {
-    //   'search':userDetials.zip
-    // };
-    // this.crud.postRequest(`auth/getzipcodes`,searchData).subscribe({
-    //   next:(res)=>{
-    //     console.log(res,'zipcode');
-    //   }
-    //   ,
-    //   error:(err)=>{
-    //     console.log(err,'error Zip')
-    //   }
-    // });
-
     const search = zipcode;
-    // return zipcodedata.some((zipObj) => zipObj.value === targetZip);
     return this.zipcodedata.some((zcode :any)=>{
       console.log(zcode.value,'==========================',search)
       return zcode.value === search
@@ -86,14 +90,16 @@ export class RegisterComponent implements OnInit {
         const message = resp.message;
         if(isUserExist){
           console.log(message);
+          this.showAlreadyUserModal()
         }else{
           console.log('check zip code');
           console.log('value',this.checkZipCodeValid(this.searchZipInput),'zipInput',this.searchZipInput)
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
             console.log('Zip code is valid. Changing selectedTab to "done".');
-            this.selectedTab = 'Verification';
+            this.showCorrectZipcode();
           } else {
+            this.showWrongZipcode();
             console.log('Invalid zip code.');
           }
         }
