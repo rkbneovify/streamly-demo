@@ -41,7 +41,8 @@ Route::post('auth/runquery', 'HomeController@simplequeryrun');
 Route::get('auth/allowed', 'HomeController@allowedZipcode');
 Route::post('auth/geofence', 'Admin\TurfController@index')->middleware(['jwt.verify']);
 Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.verify']);//refactored
-
+//Get all stripe plans
+Route::get('/stripe/plans', 'HomeController@getAllPlans');
 // Authentication Routes
 Route::group(['prefix' => 'auth'], function ($router) {
     
