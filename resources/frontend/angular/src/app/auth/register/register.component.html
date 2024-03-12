@@ -59,31 +59,17 @@
     </div>
   </div>
   <!-- </div> -->
-  <div
-    [ngClass]="{
+  <div [ngClass]="{
       'sub-contianer': true,
       'availability-img': applyclassForAva(),
       'veryify-img': applyclassForVer()
-    }"
-  >
+    }">
     <div class="row_1" *ngIf="selectedTab == 'Availability'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs">
-          <img
-            class="map"
-            src="../../../assets/dummy-img/res-map.png"
-            alt="map"
-          />
-          <img
-            class="search"
-            src="../../../assets/dummy-img/res-se.png"
-            alt=""
-          />
-          <img
-            class="checking"
-            src="../../../assets/dummy-img/res-ch.png"
-            alt=""
-          />
+          <img class="map" src="../../../assets/dummy-img/res-map.png" alt="map" />
+          <img class="search" src="../../../assets/dummy-img/res-se.png" alt="" />
+          <img class="checking" src="../../../assets/dummy-img/res-ch.png" alt="" />
           <p class="col_1-text">
             The information is required to check Streamly availability in your
             area.
@@ -91,89 +77,42 @@
           <p class="col_1-text-2">Your information is safe with us.</p>
         </div>
       </div>
-      <form
-        #myForm="ngForm"
-        (ngSubmit)="submitForm(myForm)"
-        class="col_2 col_2_1"
-      >
+      <form  [formGroup]="availabilityForm" (ngSubmit)="submitForm()" class="col_2 col_2_1">
         <div class="input_fields">
-          <label class="label-p" for="fName"
-            >Full Name <span class="text-danger">*</span></label
-          >
-          <input
-            name="fname"
-            id="fName"
-            ngModel
-            type="text"
-            placeholder="Enter your name"
-            class="input_field"
-          />
+          <label class="label-p" for="fName">Full Name <span class="text-danger">*</span></label>
+          <input name="fname" id="fName" formControlName="fullName" type="text" placeholder="Enter your name" class="input_field" />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="email"
-            >Email<span class="text-danger">*</span></label
-          >
-          <input
-            name="email"
-            ngModel
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            class="input_field"
-            required
-          />
+          <label class="label-p" for="email">Email<span class="text-danger">*</span></label>
+          <input name="email" formControlName="email" id="email" type="email" placeholder="Enter your email" class="input_field"
+            required />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="zipcode"
-            >Enter your zipcode <span class="text-danger">*</span></label
-          >
+          <label class="label-p" for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
           <!-- <input
             name="zipcode"
             #zip
-            ngModel
+            formControlName=""
             id="zipcode"
             (keyup)="getZipcode(zip.value)"
             type="text"
             placeholder="Enter your zipcode"
             class="input_field"
           /> -->
-            <!-- <div class="flex flex-col country-control"> -->
-              <!-- <label class="labels">Company Assigned</label> -->
-              <ng-select
-                class="input_standred select_inputField"
-                placeholder="Enter"
-                [items]="zipcodedata"
-                bindValue="value"
-                bindLabel="label"
-              >
-              </ng-select>
-            <!-- </div> -->
+          <!-- <div class="flex flex-col country-control"> -->
+          <!-- <label class="labels">Company Assigned</label> -->
+          <ng-select class="input_standred select_inputField" formControlName="zipCode" [items]="zipcodedata"
+            bindValue="value" bindLabel="label">
+          </ng-select>
+          <!-- </div> -->
         </div>
         <div class="input_fields">
-          <label class="label-p" for="city"
-            >City <span class="text-danger">*</span></label
-          >
-          <input
-            name="city"
-            ngModel
-            id="city"
-            type="text"
-            placeholder="City"
-            class="input_field"
-          />
+          <label class="label-p" for="city">City <span class="text-danger">*</span></label>
+          <input name="city" formControlName="city" id="city" type="text" autocomplete="off" placeholder="City" class="input_field" />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="state"
-            >State <span class="text-danger">*</span></label
-          >
-          <input
-            name="state"
-            ngModel
-            id="state"
-            type="text"
-            placeholder="State"
-            class="input_field"
-          />
+          <label class="label-p" for="state">State <span class="text-danger">*</span></label>
+          <input name="state" formControlName="state" id="state" type="text" autocomplete="off" placeholder="State" class="input_field" />
         </div>
         <div class="input_fields">
           <button type="submit" class="">Submit</button>
@@ -188,68 +127,23 @@
     <div class="row_1 row_2" *ngIf="selectedTab == 'Verification'">
       <div class="col_1 d-md-block d-none">
         <div>
-          <img
-            class="step1-img"
-            src="../../../assets/dummy-img/res_step_2.png"
-            alt="map"
-          />
+          <img class="step1-img" src="../../../assets/dummy-img/res_step_2.png" alt="map" />
         </div>
       </div>
       <div class="col_2 col_2_1 col_2_2">
         <div class="input_fields">
           <label for="email">Email<span class="text-danger">*</span></label>
-          <input
-            id="email"
-            type="text"
-            placeholder="Enter your email"
-            class="input_field"
-          />
+          <input id="email" type="text" placeholder="Enter your email" class="input_field" />
         </div>
         <div class="input_fields">
           <label for="otp">OTP <span class="text-danger">*</span></label>
           <div class="opt-input">
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
-            <input
-              maxlength="1"
-              id="otp"
-              type="text"
-              placeholder="-"
-              class="input_field input_field2"
-            />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
+            <input maxlength="1" id="otp" type="text" placeholder="-" class="input_field input_field2" />
           </div>
         </div>
         <div class="input_fields">
@@ -262,11 +156,7 @@
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs-2">
-          <img
-            class="step1-img"
-            src="../../../assets/dummy-img/res-step3.png"
-            alt="map"
-          />
+          <img class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
         </div>
       </div>
       <div class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
@@ -347,9 +237,7 @@
       </div>
       <div class="terms">
         <input type="checkbox" name="termsandcondition" id="terms" />
-        <label for="terms"
-          >I agree with all the terms and conditions of Streamly platform</label
-        >
+        <label for="terms">I agree with all the terms and conditions of Streamly platform</label>
       </div>
       <div class="nextbtn">
         <button>Next</button>
@@ -366,10 +254,7 @@
             <div class="row_plans d-flex justify-content-between pt-4 pb-5">
               <p>Basic Plan</p>
               <div>
-                <img
-                  src="../../../assets/dummy-img/shopping-cart-03.svg"
-                  alt=""
-                />
+                <img src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
               </div>
             </div>
             <div class="row_total d-flex justify-content-between py-4">
@@ -424,13 +309,13 @@
           <div class="col-6 col-md-4 ps-0">
             <p>Email</p>
             <div class="card-input">
-              <input type="email" placeholder="Enter" required/>
+              <input type="email" placeholder="Enter" required />
             </div>
           </div>
           <div class="col-6 col-md-4 px-0 pe-md-3">
             <p>Coupon Code</p>
             <div class="card-input">
-              <input type="text" placeholder="Enter Coupon Code"/>
+              <input type="text" placeholder="Enter Coupon Code" />
             </div>
           </div>
         </div>
@@ -439,7 +324,7 @@
           <div class="col-6 ps-0">
             <p>Address 1</p>
             <div class="card-input">
-              <input type="text" placeholder="Enter Address 1"/>
+              <input type="text" placeholder="Enter Address 1" />
             </div>
           </div>
           <div class="col-6 px-0">
@@ -478,10 +363,7 @@
       </div>
     </div>
 
-    <div
-      class="row_6 my-4 d-flex justify-content-center align-item-center"
-      *ngIf="selectedTab == 'Confirmation'"
-    >
+    <div class="row_6 my-4 d-flex justify-content-center align-item-center" *ngIf="selectedTab == 'Confirmation'">
       <div class="row_6_container">
         <div class="">
           <img src="../../../assets/dummy-img/heart-icon.png" alt="" />
@@ -502,35 +384,18 @@
 </div>
 
 <!-- Button trigger modal -->
-<button
-  type="button"
-  class="btn btn-primary d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#staticAlreadyUser"
-  id="btnstaticAlreadyUser"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticAlreadyUser"
+  id="btnstaticAlreadyUser">
 </button>
 <!-- Modal for already User-->
-<div
-  class="modal fade"
-  id="staticAlreadyUser"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticAlreadyUserLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="staticAlreadyUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticAlreadyUserLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
@@ -550,45 +415,25 @@
 </div>
 
 <!-- Modal for zipcode-correct-->
-<button
-type="button"
-class="btn btn-primary d-none"
-data-bs-toggle="modal"
-data-bs-target="#staticZipCorrect"
-id="btnstaticZipCorrectUser"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticZipCorrect"
+  id="btnstaticZipCorrectUser">
 </button>
-<div
-  class="modal fade"
-  id="staticZipCorrect"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="staticZipCorrect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img
-                src="../../../assets/dummy-img/check-circle-broken.svg"
-                alt=""
-              /> </span
-            >Your Zipcode : <span>{{searchZipInput}}</span>
+              <img src="../../../assets/dummy-img/check-circle-broken.svg" alt="" /> </span>Your Zipcode :
+            <span>{{searchZipInput}}</span>
           </h3>
         </div>
         <div class="zip_bottom">
@@ -602,11 +447,7 @@ id="btnstaticZipCorrectUser"
             <p><span>City : </span>{{userCity}}</p>
             <p><span>State :</span>{{userState}}</p>
           </div>
-          <button
-            class="btn_2"
-            (click)="selectedTab = 'Verification'"
-            data-bs-dismiss="modal"
-          >
+          <button class="btn_2" (click)="selectedTab = 'Verification'" data-bs-dismiss="modal">
             Okay
           </button>
         </div>
@@ -617,45 +458,25 @@ id="btnstaticZipCorrectUser"
 
 
 <!-- Modal for zipcode-worng-->
-<button
-type="button"
-class="btn btn-primary d-none"
-data-bs-toggle="modal"
-data-bs-target="#staticZipWorng"
-id="btnstaticZipWrongUser"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticZipWorng"
+  id="btnstaticZipWrongUser">
 </button>
-<div
-  class="modal fade"
-  id="staticZipWorng"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticZipWorngLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="staticZipWorng" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipWorngLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img
-                src="../../../assets/dummy-img/alert-triangle.svg"
-                alt=""
-              /> </span
-            >Your Zipcode : <span>201005</span>
+              <img src="../../../assets/dummy-img/alert-triangle.svg" alt="" /> </span>Your Zipcode :
+            <span>201005</span>
           </h3>
         </div>
         <div class="zip_bottom">
@@ -673,19 +494,12 @@ id="btnstaticZipWrongUser"
           </div>
           <div class="zip_bottom_mail ">
             <form [formGroup]="wrong_zipcodeDetials" (ngSubmit)="submitFormWrong()">
-              <label for="w-email"
-                >Email <span class="text-danger">*</span></label
-              >
-              <input
-                placeholder="Enter"
-                class="input_standred"
-                type="email"
-                id="w-email"
-                formControlName="w_email"
-                required
-              />
-              <small class="text-danger" *ngIf="wrong_zipcodeDetials.get('w_email')?.invalid && wrong_zipcodeDetials.get('w_email')?.touched">
-              Enter Email</small>
+              <label for="w-email">Email <span class="text-danger">*</span></label>
+              <input placeholder="Enter" class="input_standred" type="email" id="w-email" formControlName="w_email"
+                required />
+              <small class="text-danger"
+                *ngIf="wrong_zipcodeDetials.get('w_email')?.invalid && wrong_zipcodeDetials.get('w_email')?.touched">
+                Enter Email</small>
               <button class="btn_hover mt-4" [disabled]="!wrong_zipcodeDetials.valid">Okay</button>
             </form>
           </div>
