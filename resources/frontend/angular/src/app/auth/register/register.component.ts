@@ -2,14 +2,15 @@ import { NgIf,NgFor } from '@angular/common';
 import { Component,HostListener, OnInit, Renderer2 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterLink } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [NgIf,NgFor,NgClass,FormsModule,NgSelectModule,RouterLink],
+  imports: [NgIf,NgFor,NgClass,FormsModule,NgSelectModule,RouterLink,ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -18,13 +19,17 @@ export class RegisterComponent implements OnInit {
   isWidth767:number=window.innerWidth;
   userState:string ='';
   userCity:string = '';
-  userZipcode:string = '';
 
   zipcodedata:any =[];
   searchZipInput:string='';
+  
+  wrong_zipcodeDetials:FormGroup=new FormGroup({});
 
   constructor(private crud: CrudService){}
   ngOnInit(): void {
+    this.wrong_zipcodeDetials = new FormGroup({
+      w_email: new FormControl(null),
+    })
     this.getZipcode('');
   }
   @HostListener('window:resize',['$event'])
@@ -46,7 +51,6 @@ export class RegisterComponent implements OnInit {
     document.getElementById('btnstaticZipWrongUser')?.click();
 
   }
-  
 
   applyclassForAva():boolean{
     // console.log(this.isWidth767 === 767 && this.selectedTab === 'Availability');
@@ -56,6 +60,19 @@ export class RegisterComponent implements OnInit {
       return this.isWidth767 <= 767 && this.selectedTab === 'Verification';
   }
 
+  getZipCodeInvalid(data:any):void{
+    const userDetails = {
+      "email": data.w_email,
+    "zip": this.searchZipInput,
+    "city": this.userCity,
+    "state": this.userState,
+    }
+    console.log(userDetails);
+    this.crud.postRequest('api/auth/zipcodeInquery',userDetails).subscribe({
+    })
+    console.log('this is invalid....')
+  }
+  
   checkZipCodeValid(zipcode:any):boolean{
     const search = zipcode;
     return this.zipcodedata.some((zcode :any)=>{
@@ -116,5 +133,12 @@ export class RegisterComponent implements OnInit {
     const data = formData.value;
     this.checkEmailRegistration(data);
     console.log('form Data :',formData.value);    
+  }
+
+  submitFormWrong(){
+    this.getZipCodeInvalid(this.wrong_zipcodeDetials.value)
+    console.log('00000000000000000',this.wrong_zipcodeDetials);
+    console.log('00000000000000000',this.wrong_zipcodeDetials.value)
+
   }
 }
