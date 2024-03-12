@@ -755,6 +755,52 @@
   width: auto !important;
   max-width: 600px !important;
 }
+
+// .select_inputField{
+//   background: white;
+//   color: black;
+//   margin-left: -11px;
+//   border-radius: 0 0px 7px 6px;
+//   padding: 0.5rem 1rem;
+// }
+
+
+
+// / Custom styles for ng-select /
+// / Styles for the ng-select container /
+// .ng-select {
+//   width: 200px; 
+//   // / Example: set width /
+// }
+
+// / Styles for the dropdown arrow /
+.ng-select-container .ng-arrow {
+  border-color: #333; 
+  // / Example: change arrow color /
+}
+
+// / Styles for the dropdown list /
+.ng-dropdown-panel {
+  background-color: #fff;
+  //  / Example: change dropdown background color /
+  border: 1px solid #ccc;
+  //  / Example: add border /
+}
+
+// / Styles for dropdown options /
+.ng-dropdown-panel .ng-option {
+  padding: 8px 12px;
+  //  / Example: adjust padding /
+  color: #333;
+  //  / Example: change text color /
+}
+
+// / Hover effect for options /
+.ng-dropdown-panel .ng-option:hover {
+  background-color: #f0f0f0; 
+  // / Example: change hover background color /
+}
+
 @media screen and (max-width: 767px) {
   .col_2_1 {
     flex-basis: 80% !important;
