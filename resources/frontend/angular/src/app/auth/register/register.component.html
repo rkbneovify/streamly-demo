@@ -117,9 +117,10 @@
             name="email"
             ngModel
             id="email"
-            type="text"
+            type="email"
             placeholder="Enter your email"
             class="input_field"
+            required
           />
         </div>
         <div class="input_fields">
@@ -139,7 +140,8 @@
             <!-- <div class="flex flex-col country-control"> -->
               <!-- <label class="labels">Company Assigned</label> -->
               <ng-select
-                placeholder="Select Company"
+                class="input_standred select_inputField"
+                placeholder="Enter"
                 [items]="zipcodedata"
                 bindValue="value"
                 bindLabel="label"
@@ -174,7 +176,7 @@
           />
         </div>
         <div class="input_fields">
-          <button class="">Submit</button>
+          <button type="submit" class="">Submit</button>
           <p class="label-p mt-1">
             Already have an account?
             <span class="label-p pointer" routerLink="/auth/login">Log In</span>
@@ -586,7 +588,7 @@ id="btnstaticZipCorrectUser"
                 src="../../../assets/dummy-img/check-circle-broken.svg"
                 alt=""
               /> </span
-            >Your Zipcode : <span>{{userZipcode}}</span>
+            >Your Zipcode : <span>{{searchZipInput}}</span>
           </h3>
         </div>
         <div class="zip_bottom">
@@ -669,8 +671,8 @@ id="btnstaticZipWrongUser"
               to your area.
             </p>
           </div>
-          <div class="zip_bottom_mail pb-4">
-            <form>
+          <div class="zip_bottom_mail ">
+            <form [formGroup]="wrong_zipcodeDetials" (ngSubmit)="submitFormWrong()">
               <label for="w-email"
                 >Email <span class="text-danger">*</span></label
               >
@@ -678,13 +680,15 @@ id="btnstaticZipWrongUser"
                 placeholder="Enter"
                 class="input_standred"
                 type="email"
-                name="email"
                 id="w-email"
+                formControlName="w_email"
                 required
               />
+              <small class="text-danger" *ngIf="wrong_zipcodeDetials.get('w_email')?.invalid && wrong_zipcodeDetials.get('w_email')?.touched">
+              Enter Email</small>
+              <button class="btn_hover mt-4" [disabled]="!wrong_zipcodeDetials.valid">Okay</button>
             </form>
           </div>
-          <button class="btn_hover">Okay</button>
         </div>
       </div>
     </div>
