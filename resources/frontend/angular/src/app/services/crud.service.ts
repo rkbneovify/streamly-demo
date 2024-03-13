@@ -21,4 +21,8 @@ export class CrudService {
   deleteRequest(requestUrl:string){
     return this.http.delete(`${this.baseUrl}/api/${requestUrl}`)
   }
+
+  postRequest1(requestUrl:string,data:any){
+    return this.http.post(`http://127.0.0.1:8000/api/${requestUrl}`,data)
+  }
 }

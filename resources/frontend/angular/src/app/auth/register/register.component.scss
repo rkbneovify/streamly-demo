@@ -1,4 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+// @import "~@ng-select/ng-select/themes/default.theme.css";
+@import "../../../../node_modules/@ng-select/ng-select/scss/default.theme.scss";
 
 .register-nav {
   background: linear-gradient(180deg, #06223c 0%, rgba(35, 75, 105, 0.9) 100%);
@@ -766,39 +768,13 @@
 
 
 
-// / Custom styles for ng-select /
-// / Styles for the ng-select container /
-// .ng-select {
-//   width: 200px; 
-//   // / Example: set width /
-// }
-
-// / Styles for the dropdown arrow /
-.ng-select-container .ng-arrow {
-  border-color: #333; 
-  // / Example: change arrow color /
-}
-
-// / Styles for the dropdown list /
-.ng-dropdown-panel {
-  background-color: #fff;
-  //  / Example: change dropdown background color /
-  border: 1px solid #ccc;
-  //  / Example: add border /
-}
-
-// / Styles for dropdown options /
-.ng-dropdown-panel .ng-option {
-  padding: 8px 12px;
-  //  / Example: adjust padding /
-  color: #333;
-  //  / Example: change text color /
-}
-
-// / Hover effect for options /
-.ng-dropdown-panel .ng-option:hover {
-  background-color: #f0f0f0; 
-  // / Example: change hover background color /
+.input_standred .ng-select-container{
+            background: transparent !important;
+            font-family: Poppins;
+            color: #ffffff !important;
+            border: none !important;
+            outline: none !important;
+            border-radius: 0 !important;
 }
 
 @media screen and (max-width: 767px) {
@@ -848,3 +824,4 @@
     width: 250px;
   }
 }
+

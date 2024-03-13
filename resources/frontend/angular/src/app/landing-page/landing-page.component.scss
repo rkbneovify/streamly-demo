@@ -52,6 +52,7 @@ nav {
 
       img {
         height: 100%;
+        opacity: 0.9;
       }
     }
   }
@@ -85,7 +86,9 @@ nav {
     justify-content: end;
     text-align: center;
     z-index: 1;
-
+    height: fit-content;
+    margin-top: auto;
+    background-color: rgba(0, 0, 0, 0.1);
     p:last-child {
       font-size: 1.25rem;
     }
@@ -311,8 +314,16 @@ section {
     }
 
     h2::after {
-      bottom: 2rem;
-      transform: none;
+      top: -1rem;
+      right: -1rem;
+      // transform: none;
+    }
+  }
+}
+@media screen and (max-width: 668px){
+  .qualities {
+    h2::before{
+      display: none;
     }
   }
 }
@@ -506,11 +517,7 @@ footer .contain:first-child {
   }
 }
 
-@media screen and (max-width: 980px) {
-  footer .contain {
-    row-gap: 3rem !important;
-  }
-}
+
 
 .watchlist {
   position: relative;
@@ -711,14 +718,27 @@ footer .contain:first-child {
     .right {
       flex-wrap: wrap;
       row-gap: 3rem;
+      justify-content: space-between;
     }
   }
 }
-
+@media screen and (max-width: 980px) {
+  footer .contain {
+    row-gap: 3rem;
+  }
+}
 @media screen and (max-width: 800px) {
   footer .contain {
     flex-wrap: wrap;
-
+    .left{
+      height: fit-content;
+      .arrow-img{
+        height: -webkit-fill-available;
+      }
+      p.text-p1{
+        max-width: 100% !important;
+      }
+    }
     .footer-left {
       min-height: 0 !important;
       margin-bottom: 3rem;
@@ -728,15 +748,18 @@ footer .contain:first-child {
       }
     }
 
-    div {
+    div.left,div.right {
       flex-basis: 100% !important;
     }
   }
 
   .channels h2::before{
     background-position: top;
+    right: 0;
   }
 }
+
+
 
 @keyframes mymove {
   0%,
@@ -753,6 +776,9 @@ footer .contain:first-child {
 .arrow-img{
   left: 0 !important;
 }
+.svg_width{
+  width: 250px !important;
+}
 }
 
 @media screen and (max-width: 375px) {
@@ -760,5 +786,37 @@ footer .contain:first-child {
     padding-right: 10px;
     padding-left: 10px;
   }
+  footer {.contain{ .right{
+    justify-content: center !important;
+    div{
+      flex-basis: 100%;
+      text-align: center;
+    }
+  }}}
+  footer .contain:first-child {  
+    > div {
+    }  
+    > :first-child {  
+      ul {
+      }
+    }  
+    > :last-child {
+      margin-top: -1rem;
+    }
+  }
 }
 
+
+@media screen and (min-width:375px) and (max-width: 800px) {
+  footer .contain:first-child {  
+    > div {
+    }  
+    > :first-child {  
+      ul {
+      }
+    }  
+    > :last-child {
+      margin-top: -4rem;
+    }
+  }
+}
