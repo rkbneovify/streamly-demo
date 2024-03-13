@@ -4,5 +4,5 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://new.staging.streamlytv.com/',
+  baseUrl: 'https://new.staging.streamlytv.com',
 };
