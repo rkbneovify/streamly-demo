@@ -41,15 +41,28 @@ Route::post('auth/runquery', 'HomeController@simplequeryrun');
 Route::get('auth/allowed', 'HomeController@allowedZipcode');
 Route::post('auth/geofence', 'Admin\TurfController@index')->middleware(['jwt.verify']);
 Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.verify']);//refactored
+
+/** Angular Frontend APIs code start here */
+
 //Get all stripe plans
 Route::get('/stripe/plans', 'HomeController@getAllPlans');
+
+/** Angular Frontend APIs code ends here */
+
+
 // Authentication Routes
 Route::group(['prefix' => 'auth'], function ($router) {
-    
+
+    /** Angular Frontend APIs code start here */
     Route::post('getzipcodes', 'Auth\AuthController@getZipcodes');
     Route::post('checkemail', 'Auth\AuthController@checkEmail');
     Route::get('devicedetail', 'Auth\AuthController@deviceDetail');
     Route::post('zipcodeInquery', 'Auth\AuthController@failedzipinquery');
+    Route::post('send-otp','Auth\AuthController@sendOtp');
+    Route::post('verify-otp', 'Auth\AuthController@verifyOtp');
+
+    /** Angular Frontend APIs code ends here */
+
     Route::post('login', 'Auth\AuthController@login');
     Route::post('user/delete', 'APIController@userdeletenew');
     Route::post('hoteladminlogin', 'Auth\AuthController@hoteladminlogin');
@@ -116,15 +129,15 @@ Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middlewar
 
 // Superadmin Routes
 Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' => 'sadmin','namespace'=>'Admin'], function($router)
-{	
-  
+{
+
     // User Routes
     Route::post('user','UserAndRoleController@createUser');
     Route::post('user/update', 'UserAndRoleController@updateUser');
     Route::get('users', 'UserAndRoleController@getUsers');
     Route::get('channels', 'GracenoteController@getChannel');
     Route::post('users/dt', 'UserAndRoleController@getDTUsers');
-    Route::get('user/{id}', 'UserAndRoleController@getUser');    
+    Route::get('user/{id}', 'UserAndRoleController@getUser');
     Route::delete('user/{id}/delete', 'UserAndRoleController@deleteUser');
     Route::get('user/{id}/reset-password', 'UserAndRoleController@resetPassword');
 
@@ -139,7 +152,7 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
     Route::get('role/{id}', 'UserAndRoleController@getRole');
     Route::delete('role/{id}/delete', 'UserAndRoleController@deleteRole');
 
-    
+
 });
 
 Route::post('/loginguide', 'LoginGuideController@index');
@@ -152,10 +165,10 @@ Route::get('/category', 'EpgController@category');
 // Route::post('/qrauth', 'Admin\DashboardController@qrauth');
 Route::post('/qrauth', 'WebSocketController@qrauth');
 // Route::post('/login/create/qrcode', 'QRLoginController@CreateQrcodeAction');
-Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR and save it as png 
+Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR and save it as png
 Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction')->middleware(['jwt.verify']);//gets scaned by phone with key passed in header
 Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
-Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned 
+Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned
 Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
 
 // Route::fallback(function(){
