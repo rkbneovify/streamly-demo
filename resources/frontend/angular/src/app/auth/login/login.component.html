@@ -132,7 +132,7 @@
         <!-- ===========================login with QR end=======================-->
 
         <!-- ===========================login with Zipcode start=======================-->
-        <form *ngIf="selectedTab == 'loginwithzipcode'" class="login-form d-flex flex-column gap-4">
+        <!-- <form *ngIf="selectedTab == 'loginwithzipcode'" class="login-form d-flex flex-column gap-4">
           <div class="login-field">
             <label for="zipcode">
               <span>Zipcode <span class="text-danger">*</span></span>
@@ -156,7 +156,7 @@
           <div class="login-field">
             <button class="mb-2" type="submit" placeholder="">Submit</button>
           </div>
-        </form>
+        </form> -->
         <!-- ===========================login with Zipcode end=======================-->
         
         <!--login right side  -->
@@ -191,14 +191,14 @@
             <img src="../../../assets/dummy-img/qrcode.svg" alt="" /> Log In
             with QR
           </button>
-          <button
+          <!-- <button
             *ngIf="selectedTab !== 'loginwithzipcode'"
             (click)="selectedTab = 'loginwithzipcode'"
             class="btn neutral bt-30 text-nowrap"
           >
             <img src="../../../assets/dummy-img/google_logo.svg" alt="" /> Log
             In with Google
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
