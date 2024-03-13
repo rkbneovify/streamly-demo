@@ -145,7 +145,7 @@ use App\User;
             'houroffset' => $hrsoffset,
             'timezone' => $timezone,
             'loggedindeviceinfolist'=>$response,
-          ],479)->send();
+          ],479);
 
     }
     
@@ -805,7 +805,7 @@ function sessionTable($user_id,$token,$deviceDetails,$connected_devices){
         'subscribedmsgis'=>$kindlysubscribemsg
       
       
-    ],200)->send();}
+    ],200);}
 
 }
 
