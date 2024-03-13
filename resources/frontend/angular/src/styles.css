@@ -144,6 +144,27 @@ button.btn_2 {
   color: #333333;
 }
 
+.input_st {
+  width: 100%;
+  height: 48px;
+  padding: 9px 12px 9px 12px;
+  border-radius: 4px;
+  border: none;
+  border-bottom: 1px solid #ffffff99;
+  gap: 10px;
+  background: #1b4974;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #ffffff;
+  &:focus {
+    outline: none;
+  }
+}
+
 .input_standred {
   width: 100%;
   height: 48px;
@@ -186,6 +207,13 @@ button.btn_2 {
   color: var(--clr-400);
 }
 
+.webkit-center{
+  text-align: -webkit-center !important;
+}
+
+.taj{
+  text-align: justify !important;
+}
 /* ---------------- NAVBAR ---------------- */
 
 nav {
@@ -210,4 +238,40 @@ nav {
 /* popup background */
 .popup_bg {
   background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
+}
+
+.res-ngselect .ng-select-container {
+  width: 100% !important;
+  height: 48px !important;
+  border-radius: 4px !important;
+  border: none !important;
+  border-bottom: 1px solid #ffffff99 !important;
+  gap: 10px !important;
+  background: #1b4974 !important;
+  font-family: Poppins !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 21px !important;
+  letter-spacing: 0em !important;
+  text-align: left !important;
+  color: #ffffff !important;
+}
+
+.res-ngselect .ng-select-container::placeholder{
+  font-family: Poppins !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 21px !important;
+  letter-spacing: 0em !important;
+  text-align: left !important;
+  color: #bdbdbd !important;
+}
+.res-ngselect .ng-select-container:focus,.res-ngselect 
+.ng-select .ng-select-container .ng-value-container .ng-input > input:focus {
+  outline: none !important;
+}
+
+ .ng-select .ng-select-container .ng-value-container .ng-input > input {
+  padding: 9px 0 9px 0 !important;
+  color: #ffffff !important;
 }
