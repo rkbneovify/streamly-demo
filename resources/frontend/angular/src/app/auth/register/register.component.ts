@@ -129,6 +129,10 @@ onSelect(selectedValue: any): void {
     console.log('this is invalid....');
   }
 
+  getOtpWithMail(verifiMailDetails:any){
+    this.crud.postRequest('auth/send-otp',verifiMailDetails);
+  }
+
   // check the zipcode is valid or not
   checkZipCodeValid(zipcode: any): boolean {
     const search = zipcode;
@@ -185,6 +189,7 @@ onSelect(selectedValue: any): void {
         if (isUserExist) {
           console.log('register function', message);
           this.showAlreadyUserModal();
+          this.getOtpWithMail(data.email)
         } else {
           console.log('register function', 'check zip code');
           console.log(
@@ -203,6 +208,7 @@ onSelect(selectedValue: any): void {
             );
             // call send otp here
             this.showCorrectZipcode();
+
           } else {
             this.showWrongZipcode();
             console.log('register function', 'Invalid zip code.');
