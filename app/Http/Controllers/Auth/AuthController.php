@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Mail\OtpEmail;
 use JWTAuth;
 use Jenssegers\Agent\Agent;
 use App\Models\JwtToken;
@@ -22,6 +23,8 @@ use Memcached;
 use DB;
 use App\Models\Zipcode;
 use App\Models\DeclineZipInquiry;
+use App\Models\EmailOtp;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -32,12 +35,12 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery','checkEmail','deviceDetail']]);
+        $this->middleware('jwt.verify', ['except' => ['login','register','verify','samedevicelogout','loginWithPasscode','loginEntry', 'loginCheck', 'hoteladminlogin','getZipcodes','failedzipinquery','checkEmail','deviceDetail','sendOtp','verifyOtp']]);
     }
 
     public function register(Request $request){
         $validate=User::validator($request);
-        
+
         if($validate->fails()){
             $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
@@ -149,18 +152,18 @@ class AuthController extends Controller
         $user=JWTAuth::user();
 
         if($user->email_verified_at==null){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'||'tieruser'){
         $uid=  $user['id'];
         checkLoginLimit($uid,$token,$deviceDetails);
         exit;
-        
+
     }
         $this->authenticated($request,$user,$token);
         return $this->respondWithToken($token);
@@ -186,18 +189,18 @@ class AuthController extends Controller
         $user=JWTAuth::user();
 
         if($user->email_verified_at==null){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'||'tieruser'){
         $uid=  $user['id'];
         checkHoteluserLoginLimit($uid,$token,$deviceDetails);
         exit;
-        
+
     }
         $this->authenticated($request,$user,$token);
         return $this->respondWithToken($token);
@@ -223,18 +226,18 @@ class AuthController extends Controller
         $user=JWTAuth::user();
 
         if($user->email_verified_at==null){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);
         }
        $userRole= $user->roles->pluck('name');
        if($userRole[0]=='user'||'tieruser'){
         $uid=  $user['id'];
         checkLoginLimit2($uid,$token,$deviceDetails);
         exit;
-        
+
     }
         $this->authenticated($request,$user,$token);
         return $this->respondWithToken($token);
@@ -245,9 +248,9 @@ class AuthController extends Controller
        $passcode= $request->only('passcode');
        $uid=UnHashUserID($passcode['passcode']);
        if(!$uid){
-          
+
         $response = array('success' =>false ,'response_code'=>404,'message'=>'User not found');
-        return response()->json($response, 404);    
+        return response()->json($response, 404);
        }
        $user = User::find($uid);
         // $user = User::where('email', '=', $email)->first();
@@ -259,31 +262,31 @@ class AuthController extends Controller
         // $user=JWTAuth::user();
 
         if($user->email_verified_at==null){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'Email not verfied, verify your email first.'], 401);
         }
 
         if($user->is_active==0){
-            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);   
+            return response()->json(['success'=>false,'response_code'=>401,'message' => 'You are deactivated, kindly contact admin.','deleted_at' => $user->deleted_at], 401);
         }
        $userRole= $user->roles->pluck('name');
        //todo hotel check
        if($userRole[0]=='user'||'tieruser'){
-        
+
         checkLoginLimit($uid,$token,$deviceDetails);
         exit;
-        
+
     }
         // $user_data=array('name'=>$user->name,'email'=>$user->email,'token'=>$token);
-        
+
         // return response()->json($user_data,200);
     }
     public function verify(Request $request)
     {
-       
+
         $validate = Validator::make($request->all(), [
             'token' => 'required'
         ]);
-        
+
         if ($validate->fails()) {
             $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
@@ -292,13 +295,13 @@ class AuthController extends Controller
         $token = $request->token;
 
         $verification_token = Crypt::decrypt($request->token);
-        
+
         $user = User::where('email',$verification_token)->first();
         $email_verified_at=Carbon::now();
 
         if($user) {
 
-            if($user->is_active) $alreadyVerify = 1; 
+            if($user->is_active) $alreadyVerify = 1;
             else {
                 $alreadyVerify = 0;
                 $user->email_verified_at = $email_verified_at;
@@ -318,11 +321,11 @@ class AuthController extends Controller
     }
 
     public function changePassword(Request $request)
-    {   
+    {
         $validate = Validator::make($request->all(), [
             'password' => 'required'
         ]);
-        
+
         if ($validate->fails()) {
             $response = array('success' => false,'response_code'=>400,'message'=>'Validation error','data'=>$validate->messages());
             return response()->json($response, 400);
@@ -338,12 +341,12 @@ class AuthController extends Controller
                 return response()->json($response, 401);
             }
         }
-        
+
         if($User){
              $User->password=Hash::make($request->password);
              $User->save();
              $response = array('success' =>true ,'response_code'=>200,'message'=>'Password changed successfully.');
-            return response()->json($response, 200);         
+            return response()->json($response, 200);
         }else{
             $response = array('success' =>false ,'response_code'=>404,'message'=>'User not found');
             return response()->json($response, 404);
@@ -356,7 +359,7 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function me()
-    {        
+    {
         $user=JWTAuth::user();
 
 // use Tymon\JWTAuth\Facades\JWTAuth;
@@ -365,28 +368,28 @@ class AuthController extends Controller
 
     // 'payload'=>$apy,
         $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
-        
+
         return response()->json($user_data);
     }
-   
+
     /**
      * Get the profile data.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function profile()
-    {        
+    {
         $user=JWTAuth::user();
         $response = [
             'success' => true,
-            
+
             'data' => $user,
             'message' => 'Users Profile',
             'response_code'=>200,
         ];
         return response()->json($response, 200);
        // $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
-        
+
        // return response()->json($user_data);
     }
 
@@ -399,7 +402,7 @@ class AuthController extends Controller
             ['access_token', '=', $token],
         ]);
         if($acctoken->exists()) {
-            
+
             $response = [
                 'success' => true,
                 'status' => true,
@@ -416,27 +419,27 @@ class AuthController extends Controller
                 'response_code' => 401,
             ];
             return response()->json($response, 401);
-            
+
         }
 
     }
 
     public function tvprofile()
-    {        
+    {
         $user=JWTAuth::user();
        $data=[ "name"=>$user->name,
-       "email"=>$user->email, 
+       "email"=>$user->email,
        "created"=>$user->created_at,"version"=>"1.0.0"];
         $response = [
             'success' => true,
-            
+
             'data' => $data,
             'message' => 'Users Profile',
             'response_code'=>200,
         ];
         return response()->json($response, 200);
        // $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'));
-        
+
        // return response()->json($user_data);
     }
 
@@ -446,7 +449,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updateprofile(Request $request){        
+    public function updateprofile(Request $request){
         $loggedInuserinfo=JWTAuth::user();
        $userid = $loggedInuserinfo->id;
        if($request==''){
@@ -460,21 +463,21 @@ class AuthController extends Controller
         }
  //if email is passed
         if ($request->has('email')) {
-            
+
             if ($input['lastdigit']==2222){
                 $input['email'] =$request->email;
             } else {
                 $response = array('success' => false,'response_code'=>400,'message'=>'Wrong code entered.');
                 return response()->json($response, 400);
             }
-            
+
          }
-    
+
         // $validate=$this->validate($request, [
         //     'name' => 'required|max:255',
         //     'email' => 'required|email|unique:users,email,'.$userid,
-            
-    
+
+
         // ]);
         // if($validate->fails()){
         //     $response = array('status' => false,'message'=>'Validation error','data'=>$validate->messages());
@@ -487,17 +490,17 @@ class AuthController extends Controller
             $input = Arr::except($input,array('password')); //remove password from the input array
         }
         $user= User::find($userid);
-        
+
         if($user){
             $user->update($input);
-            $response = array('success' => true,'response_code'=>200,'message'=>'User updated successfully.','data'=>$user);             
+            $response = array('success' => true,'response_code'=>200,'message'=>'User updated successfully.','data'=>$user);
             return response()->json($response, 200);
         }else{
             $response = array('success' => false,'response_code'=>404,'message'=>'User not found.');
             return response()->json($response, 404);
-            }            
+            }
     }
-   
+
     /**
      * Log the Adminuser out (Invalidate the token).
      *Log the user out and decrement the device(Invalidate the token).
@@ -740,9 +743,9 @@ public function multilogout()
             ['access_token', '=', $token],
              ])->get()->toArray();
     $uid=  $user['id'];
-    if ((count($acctoken)==0)){ 
+    if ((count($acctoken)==0)){
         $response = [
-            
+
             'success' => false,
             'data' => 'Empty',
             'message' => 'access token not found.',
@@ -756,10 +759,10 @@ public function multilogout()
           LogoutandDecrementDevice($id);
           exit;
       }
-    
-    
-    
-} else { 
+
+
+
+} else {
     config([
     'jwt.blacklist_enabled' => true
 ]);
@@ -797,12 +800,12 @@ public function multilogout()
         $uRole=$user->roles->pluck('name');
         $user_data=array('name'=>$user->name,'email'=>$user->email,'roles'=>$user->roles->pluck('name'),'rolename'=>$uRole[0]);
 
-        return response()->json([            
+        return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user'=>$user_data,
-            
+
         ]);
     }
 
@@ -826,30 +829,30 @@ public function multilogout()
         $mobileHeader = $request->header('x_platform');
         if (isset($mobileHeader) && $mobileHeader == 'mobile') {
             JwtToken::where('user_id',$user->id)->where('phone',1)->delete();
-            
+
             $jwtToken->phone = 1;
             $jwtToken->save();
 
         } else {
             JwtToken::where('user_id',$user->id)->where('desktop',1)->delete();
-            
+
             $jwtToken->desktop = 1;
             $jwtToken->save();
-        } 
+        }
     }
 
     public function loginEntry(Request $request)
     {
-      
+
        $key=$request['key'];
        if (empty($key)){
-  
+
        $return = array ('status'=>2,'msg'=>'key not provided' );
        return response()->json($return, 200);
        }
       $mem = new \Memcached();
       $mem->addServer('127.0.0.1',11211);
-      $data = json_decode($mem->get($key),true); 
+      $data = json_decode($mem->get($key),true);
   //     $passcode=$data['login'];
       if (empty($data)){
        $return = array ('status'=>2,'msg'=>'expired' );
@@ -862,8 +865,8 @@ public function multilogout()
         $this->loginWithPasscode($request);
         exit;
         // $user = Auth::loginUsingId($userid, true);
-  
-  
+
+
         //    $return = array ('status'=>1,'msg'=>'success','jwt'=>$data['jwt'],'user'=>$user );
         //    return response()->json($return, 200);
       } else {
@@ -872,7 +875,7 @@ public function multilogout()
       }
   }
       // Use passcode to login and return the object in reposne or jWT
-      // extract memcache and the login var jwt/passcode 
+      // extract memcache and the login var jwt/passcode
       //use passcode to login and return the jwt
     }
 
@@ -880,16 +883,16 @@ public function multilogout()
 
     public function getZipcodes(Request $request) {
         $search = $request->search;
-    
+
         $query = Zipcode::orderBy('zipcode', 'asc')
             ->select('zipcode', 'city', 'state');
-    
+
         if ($search) {
             $query->where('zipcode', 'like', '%' . $search . '%');
         }
-    
+
         $zipcodes = $query->limit(5)->get();
-    
+
         $response = $zipcodes->map(function ($zipcode) {
             return [
                 "value" => $zipcode->zipcode,
@@ -898,7 +901,7 @@ public function multilogout()
                 "city" => $zipcode->city,
             ];
         });
-    
+
         return response()->json($response);
     }
 
@@ -949,4 +952,77 @@ public function multilogout()
             'deviceid' => $deviceId
         ]);
     }
+
+    public function sendOtp(Request $request){
+        $validator = Validator::make($request->all(),[
+            'email' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                    'error' => 'validation_error',
+                    'message' => $validator->errors()
+                ],400);
+        } else {
+           // Generate OTP
+            $otp = random_int(100000, 999999);
+
+            // Save OTP to the database
+            $user = EmailOtp::where('email', $request->email)->first();
+            if(!$user){
+                EmailOtp::create([
+                    'email' => request('email'),
+                    'otp' => $otp,
+                    'otp_expire' => now()->addMinutes(1),
+                ]);
+            }else{
+                EmailOtp::where('email',$request->email)->update(
+                    [
+                        'otp' => $otp,
+                        'otp_expire' => Carbon::now()->addMinutes(1),
+                    ]
+                );
+            }
+            // Send OTP to the email
+            $this->sendOtpEmail(request('email'), $otp);
+
+            return response()->json(['message' => 'OTP sent successfully']);
+        }
+    }
+
+    private function sendOtpEmail($email, $otp)
+    {
+        // Implement your email sending logic here
+        // You can use Laravel's built-in Mail facade or any email service provider
+        // Example using Laravel Mail facade:
+        Mail::to($email)->send(new OtpEmail($otp));
+    }
+
+    public function verifyOtp()
+    {
+        // Validate the request
+        $validator = Validator::make(request()->all(), [
+            'email' => 'required|email',
+            'otp' => 'required|digits:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        // Check if OTP is valid and not expired
+        $otpRecord = EmailOtp::where('email', request('email'))
+            ->where('otp', request('otp'))
+            ->where('otp_expire', '>', now())
+            ->first();
+
+        if ($otpRecord) {
+            // OTP is valid
+            // Implement your further verification logic here
+            return response()->json(['message' => 'OTP verification successful']);
+        }
+
+        // Invalid OTP or expired
+        return response()->json(['error' => 'Invalid OTP or expired'], 401);
+    }
+
 }
