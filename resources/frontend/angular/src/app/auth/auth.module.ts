@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ForgetPasswordComponent } from './forget-password/forget-password.component';
+import { RemoveDeviceComponent } from './remove-device/remove-device.component';
 const routes: Routes = [
   {
     path: 'login',
@@ -12,6 +14,14 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'forget-password',
+    component: ForgetPasswordComponent,
+  },
+  {
+    path: 'remove-device',
+    component: RemoveDeviceComponent,
   },
 ];
 
