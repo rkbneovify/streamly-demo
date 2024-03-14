@@ -35,11 +35,11 @@
       width: 100%;
       flex: 1;
 
-      &:last-child .bullets::after,
-      &:last-child .bullets::before {
+      &:last-child .bullet6::after,
+      &:last-child .bullet6::before {
         display: none;
       }
-      .bullets {
+      .bullet1,.bullet2,.bullet3,.bullet4,.bullet5,.bullet6 {
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -64,7 +64,27 @@
           bottom: 24px;
           right: -80px;
         }
+        
       }
+      // .bullet1::after,.bullet1::before{
+        // background-color: pink;
+      // }
+      // .bullet2::after,.bullet2::before{
+      //   background-color: pink;
+      // }
+      // .bullet3::after,.bullet3::before{
+      //   background-color: pink;
+      // }
+      // .bullet4::after,.bullet4::before{
+      //   background-color: pink;
+      // }
+      // .bullet5::after,.bullet5::before{
+      //   background-color: pink;
+      // }
+      // .bullet6.activeTab,.bullet6.activeTab::before{
+      //   background-color: pink;
+      // }
+      
 
       p {
         color: white;
@@ -186,6 +206,9 @@
             p {
               font-size: 18px;
               line-height: 25px;
+            }
+            .bullet1::after,.bullet1::before{
+              background-color: green !important;
             }
           }
         }
@@ -766,7 +789,12 @@
 //   padding: 0.5rem 1rem;
 // }
 
-
+.activeTab{
+  background: #49AAFF !important;
+}
+.completedTab{
+  background: #1EC666 !important;
+}
 
 .input_standred .ng-select-container{
             background: transparent !important;

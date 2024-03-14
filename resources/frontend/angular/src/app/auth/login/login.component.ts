@@ -15,6 +15,7 @@ import { CrudService } from '../../services/crud.service';
 export class LoginComponent implements OnInit{
   loginFormWithEmail!: FormGroup;
   selectedTab: string = 'loginwithpassword';
+  showPassword: boolean = false;
   userDeviceID!:string;
   constructor(private fb: FormBuilder, private crudService: CrudService) {
     this.loginFormWithEmail = this.fb.group({
@@ -51,4 +52,6 @@ export class LoginComponent implements OnInit{
       error:err=>console.log(err)
     });
   }
+
+
 }
