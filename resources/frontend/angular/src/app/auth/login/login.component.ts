@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
 
@@ -8,7 +8,7 @@ import { CrudService } from '../../services/crud.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink,NgIf,ReactiveFormsModule],
+  imports: [RouterLink,NgIf,ReactiveFormsModule,NgClass],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

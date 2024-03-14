@@ -79,10 +79,10 @@
               />
               <img class="pointer" (click)="showPassword=!showPassword" src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
-            <p class="login-fpass mt-2">Forgot Password ?</p>
+            <p class="login-fpass mt-2 pointer" routerLink="/auth/forget-password">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <button [ngClass]="{'btn_2':true,'mb-2':true,'btn-bg-gold':loginFormWithEmail.valid}" type="submit" placeholder="">Log In</button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer"
@@ -115,7 +115,7 @@
             <p class="login-fpass mt-2">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <button class="mb-2 btn_2" type="submit" placeholder="">Log In</button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer"
@@ -137,7 +137,7 @@
             <img src="../../../assets/dummy-img/qr-code.svg" alt="" />
           </div>
           <div class="login-field">
-            <button class="mb-2" type="submit" placeholder="">Log In</button>
+            <button class="mb-2 btn_2" type="submit" placeholder="">Log In</button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer"
@@ -189,7 +189,7 @@
           <button
             *ngIf="selectedTab !== 'loginwithpassword'"
             (click)="selectedTab = 'loginwithpassword'"
-            class="btn neutral text-nowrap"
+            class="btn btn_2 neutral text-nowrap"
           >
             <img src="../../../assets/dummy-img/lock.svg" alt="" /> Log In with
             Password
@@ -205,7 +205,7 @@
           <button
             *ngIf="selectedTab !== 'loginwithqr'"
             (click)="selectedTab = 'loginwithqr'"
-            class="btn neutral bt-61 text-nowrap"
+            class="btn btn_2 neutral bt-61 text-nowrap"
           >
             <img src="../../../assets/dummy-img/qrcode.svg" alt="" /> Log In
             with QR
