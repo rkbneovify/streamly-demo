@@ -1,5 +1,5 @@
 import { NgIf, NgFor } from '@angular/common';
-import { Component, HostListener, NgModule, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, HostListener, NgModule, OnInit, Renderer2 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
 import {
@@ -36,14 +36,52 @@ export class RegisterComponent implements OnInit {
   isWidth767: number = window.innerWidth;
   userState: string = '';
   userCity: string = '';
-
+  private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
 
+  // forms
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
+  otpVerificationForm!:FormGroup;
 
-  private searchTerms = new Subject<string>();
+  // ======================== constructor ================================
+  constructor(private crud: CrudService, private fb: FormBuilder, private el: ElementRef, private renderer: Renderer2) {
+    this.availabilityForm = this.fb.group({
+      fullName: ['', Validators.required],
+      email: ['', Validators.required],
+      zipcode: [null, Validators.required],
+      city: ['', Validators.required],
+      state: ['', Validators.required],
+    });
+    
+    this.wrong_zipcodeDetials = new FormGroup({
+      w_email: new FormControl(null),
+    });
+
+    this.otpVerificationForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      digit1: ['', Validators.required],
+      digit2: ['', Validators.required],
+      digit3: ['', Validators.required],
+      digit4: ['', Validators.required],
+      digit5: ['', Validators.required],
+      digit6: ['', Validators.required],
+    })
+  }
+
+
+    // ============================== ngOnIt==========================
+    ngOnInit(): void {
+      this.searchTerms.pipe(
+        debounceTime(300), 
+        distinctUntilChanged(), // ignore if next search term is same as previous
+        switchMap((term: string) => this.getZipcode(term))
+      ).subscribe((apiResponse: any) => {
+        this.zipcodedata = [...apiResponse];
+        console.log('API Response:', apiResponse);
+      });
+    }
 
 onSearch(searchTerm: any): void {
   console.log(searchTerm.term);
@@ -54,6 +92,7 @@ onSearch(searchTerm: any): void {
   }
   console.log('zip vlaue on search-->',this.availabilityForm.get('zipcode')?.value)
 }
+
 onSelect(selectedValue: any): void {
   if(selectedValue){
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
@@ -64,28 +103,10 @@ onSelect(selectedValue: any): void {
   }
 }
 
-  constructor(private crud: CrudService, private fb: FormBuilder) {
-    this.availabilityForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', Validators.required],
-      zipcode: [null, Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-    });
-    this.wrong_zipcodeDetials = new FormGroup({
-      w_email: new FormControl(null),
-    });
-  }
-  ngOnInit(): void {
-    this.searchTerms.pipe(
-      debounceTime(300), 
-      distinctUntilChanged(), // ignore if next search term is same as previous
-      switchMap((term: string) => this.getZipcode(term))
-    ).subscribe((apiResponse: any) => {
-      this.zipcodedata = [...apiResponse];
-      console.log('API Response:', apiResponse);
-    });
-  }
+
+
+
+
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.isWidth767 = window.innerWidth;
@@ -98,6 +119,11 @@ onSelect(selectedValue: any): void {
   }
   // click to open the correct zipcode popup
   showCorrectZipcode(): void {
+    const currentEmail= this.availabilityForm.get('email')?.value;
+    console.log('current email-->',currentEmail);
+    if(currentEmail){
+      this.otpVerificationForm.get('email')?.setValue(currentEmail);
+    }
     document.getElementById('btnstaticZipCorrectUser')?.click();
   }
   // click to open the wrong zipcode popup
@@ -129,10 +155,53 @@ onSelect(selectedValue: any): void {
     console.log('this is invalid....');
   }
 
+  // getotp
   getOtpWithMail(verifiMailDetails:any){
-    this.crud.postRequest('auth/send-otp',verifiMailDetails);
+    console.log('hello im here',verifiMailDetails);
+    this.crud.postRequest('auth/send-otp',{'email':verifiMailDetails}).subscribe({
+      next: (data) => console.log('otpdata-->', data),
+      error: (err) => console.log('otp-error-->', err),
+    });
+  }
+  verifyOtpWithMail(verifyDetails:any){
+    this.crud.postRequest('auth/verify-otp',verifyDetails).subscribe({
+      next: (data) => {console.log('otpdata verify-->', data);this.selectedTab='Plans'},
+      error: (err) => console.log('otp-error not verify-->', err),
+    });
   }
 
+  // ============================
+  onInputChange() {
+    // Handle OTP input change if needed
+    const otpValue = this.getOtpValue();
+    console.log('Email:', this.otpVerificationForm.get('email')?.value);
+    console.log('OTP:', otpValue);
+
+    // Move focus to the next input box
+    const currentControlName = this.getCurrentControlName();
+    const currentDigit = parseInt(currentControlName.charAt(currentControlName.length - 1));
+
+    if (currentDigit < 6) {
+      const nextDigit = currentDigit + 1;
+      const nextInput = this.el.nativeElement.querySelector(`#digit${nextDigit}`);
+      nextInput.focus();
+    }
+  }
+
+  // getotpvalue
+  private getOtpValue(): string {
+    return Object.values(this.otpVerificationForm.value)
+      .filter((value, index) => index !== 0) // Exclude email from the array
+      .join('');
+  }
+
+  private getCurrentControlName(): string {
+    const activeElementId = this.el.nativeElement.ownerDocument.activeElement.id;
+    return activeElementId;
+  }
+
+
+ 
   // check the zipcode is valid or not
   checkZipCodeValid(zipcode: any): boolean {
     const search = zipcode;
@@ -141,31 +210,6 @@ onSelect(selectedValue: any): void {
       return zcode.value === search;
     });
   }
-
-  // getZipcode(data: any) {
-  //   this.searchZipInput = data;
-  //   const searchData = {
-  //     search: data,
-  //   };
-
-  //   if (data.length > 0) {
-  //     this.crud
-  //       .postRequest(`auth/getzipcodes`, searchData)
-  //       .subscribe((res: any) => {
-  //         console.log('search input is->', data, res, 'get zip code api');
-  //         this.zipcodedata = [...res];
-  //         console.log('input-->', data, 'data added', this.zipcodedata);
-
-  //         // console.log(this.zipcodedata.length)
-  //         // if (this.zipcodedata.length === 0) {
-  //         //   this.zipcodedata = [...res];
-  //         //   console.log('data added', this.zipcodedata)
-  //         // }
-  //       });
-  //   }else{
-  //     this.zipcodedata = [];
-  //   }
-  // }
 
   // get the zipcode acc. to the input
   getZipcode(searchTerm: string): Observable<any> {
@@ -189,7 +233,6 @@ onSelect(selectedValue: any): void {
         if (isUserExist) {
           console.log('register function', message);
           this.showAlreadyUserModal();
-          this.getOtpWithMail(data.email)
         } else {
           console.log('register function', 'check zip code');
           console.log(
@@ -199,7 +242,6 @@ onSelect(selectedValue: any): void {
             'zipInput',
             this.searchZipInput
           );
-
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
             console.log(
@@ -207,6 +249,9 @@ onSelect(selectedValue: any): void {
               'Zip code is valid. Changing selectedTab to "done".'
             );
             // call send otp here
+            // mailverification
+          console.log('email for getOTP-->',data.email)
+          this.getOtpWithMail(data.email);
             this.showCorrectZipcode();
 
           } else {
@@ -232,5 +277,13 @@ onSelect(selectedValue: any): void {
     this.getZipCodeInvalid(this.wrong_zipcodeDetials.value);
     console.log('00000000000000000', this.wrong_zipcodeDetials);
     console.log('00000000000000000', this.wrong_zipcodeDetials.value);
+  }
+
+  otpVerifySubmit(){
+    const otpAndEmail = {
+      "email":this.otpVerificationForm.get('email')?.value,
+      "otp":this.getOtpValue()
+    };
+    this.verifyOtpWithMail(otpAndEmail);
   }
 }

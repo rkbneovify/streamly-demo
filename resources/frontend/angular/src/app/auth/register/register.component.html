@@ -14,7 +14,7 @@
   <div class="overflow-auto">
     <div class="progressbar">
       <div class="steps" (click)="selectedTab = 'Availability'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}">
           <span>
             <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
           </span>
@@ -22,7 +22,7 @@
         <p class="text-center">Availability</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Verification'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}">
           <span>
             <img src="../../../assets/dummy-img/verificatoin.svg" alt="" />
           </span>
@@ -30,7 +30,7 @@
         <p class="text-center">Verification</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Plans'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans',}">
           <span>
             <img src="../../../assets/dummy-img/passport.svg" alt="" />
           </span>
@@ -38,7 +38,7 @@
         <p class="text-center">Plans</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Terms'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet4':true,'activeTab':selectedTab=='Terms',}">
           <span>
             <img src="../../../assets/dummy-img/temsanscond.svg" alt="" />
           </span>
@@ -46,7 +46,7 @@
         <p class="text-center">T&C</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Payment'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment',}">
           <span>
             <img src="../../../assets/dummy-img/payment.svg" alt="" />
           </span>
@@ -54,7 +54,7 @@
         <p class="text-center">Payment</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Confirmation'">
-        <div class="bullets">
+        <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}">
           <span>
             <img src="../../../assets/dummy-img/congrats.svg" alt="" />
           </span>
@@ -71,7 +71,7 @@
       'veryify-img': applyclassForVer()
     }"
   >
-    <div class="row_1" *ngIf="selectedTab == 'Availability'">
+    <div  class="row_1" *ngIf="selectedTab == 'Availability'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs">
           <img
@@ -212,20 +212,20 @@
           />
         </div>
       </div>
-      <div class="col_2 col_2_1 col_2_2">
+      <form [formGroup]="otpVerificationForm" (ngSubmit)="otpVerifySubmit()" class="col_2 col_2_1 col_2_2">
         <div class="input_fields">
           <label for="email">Email<span class="text-danger">*</span></label>
           <input
-            id="email"
-            type="text"
+            type="email"
             placeholder="Enter your email"
             class="input_field"
+            id="email" formControlName="email" [readonly]="true"
           />
         </div>
         <div class="input_fields">
           <label for="otp">OTP <span class="text-danger">*</span></label>
           <div class="opt-input">
-            <input
+            <!-- <input
               maxlength="1"
               id="otp"
               type="text"
@@ -266,14 +266,20 @@
               type="text"
               placeholder="-"
               class="input_field input_field2"
-            />
+            /> -->
+            <input class="input_field input_field2" type="text" id="digit1" formControlName="digit1" maxlength="1" (input)="onInputChange()">
+            <input class="input_field input_field2" type="text" id="digit2" formControlName="digit2" maxlength="1" (input)="onInputChange()">
+            <input class="input_field input_field2" type="text" id="digit3" formControlName="digit3" maxlength="1" (input)="onInputChange()">
+            <input class="input_field input_field2" type="text" id="digit4" formControlName="digit4" maxlength="1" (input)="onInputChange()">
+            <input class="input_field input_field2" type="text" id="digit5" formControlName="digit5" maxlength="1" (input)="onInputChange()">
+            <input class="input_field input_field2" type="text" id="digit6" formControlName="digit6" maxlength="1" (input)="onInputChange()">
           </div>
         </div>
         <div class="input_fields">
-          <button>Verify</button>
+          <button type="submit">Verify</button>
           <p>Already have an account? <span>Log In</span></p>
         </div>
-      </div>
+      </form>
     </div>
 
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
