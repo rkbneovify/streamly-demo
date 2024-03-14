@@ -145,7 +145,9 @@ use App\User;
             'houroffset' => $hrsoffset,
             'timezone' => $timezone,
             'loggedindeviceinfolist'=>$response,
-          ],479)->send();
+          ],479)->withHeaders([
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
 
     }
     
@@ -884,7 +886,9 @@ if($fcm_token){
         'subscribedmsgis'=>$kindlysubscribemsg
       
       
-    ],200)->send();}
+    ],200)->withHeaders([
+      'Access-Control-Allow-Origin' => '*',
+  ])->send();}
 
 }
 
@@ -905,7 +909,9 @@ function duplicateDeviceId($user_id,$deviceDetails){
         'data'=>HashUserID($checkDeviceDetails->get('id')[0]->id),
         'access_token'=>$checkDeviceDetails->get('access_token')[0]->access_token
         //'loggedindeviceinfointheseId'=>$myarr,
-      ],429)->send();
+      ],429)->withHeaders([
+        'Access-Control-Allow-Origin' => '*',
+    ])->send();
     // exists
 } else{
   return false;
