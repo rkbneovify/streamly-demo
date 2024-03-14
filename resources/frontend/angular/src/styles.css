@@ -140,8 +140,15 @@ button.btn_2 {
   line-height: 24px;
   letter-spacing: 0em;
   text-align: center;
-  background-color: #ffdb4e;
-  color: #333333;
+  background: #616b75;
+  color: #FFFFFF4D;
+  transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+
+}
+
+.btn-bg-gold{
+  color: #333333 !important;
+  background-color: #ffdb4e !important;
 }
 
 .input_st {

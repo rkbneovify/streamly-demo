@@ -108,30 +108,30 @@ main {
       }
     }
 
-    button {
-      border: none;
-      outline: none;
-      width: 100%;
-      min-height: 48px;
-      max-height: min-content;
-      padding: 12px 18px 12px 18px;
-      border-radius: 4px;
-      gap: 10px;
-      font-family: Poppins;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 24px;
-      letter-spacing: 0em;
-      background: #616b75;
-      text-align: center;
-      color: #ffffff4d;
-      transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
+    // button {
+    //   border: none;
+    //   outline: none;
+    //   width: 100%;
+    //   min-height: 48px;
+    //   max-height: min-content;
+    //   padding: 12px 18px 12px 18px;
+    //   border-radius: 4px;
+    //   gap: 10px;
+    //   font-family: Poppins;
+    //   font-size: 16px;
+    //   font-weight: 500;
+    //   line-height: 24px;
+    //   letter-spacing: 0em;
+    //   background: #616b75;
+    //   text-align: center;
+    //   color: #ffffff4d;
+    //   transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
 
-      &:hover {
-        background-color: #ffdb4e;
-        color: #333333;
-      }
-    }
+    //   &:hover {
+    //     background-color: #ffdb4e;
+    //     color: #333333;
+    //   }
+    // }
 
     .login_noac {
       text-align: center;
