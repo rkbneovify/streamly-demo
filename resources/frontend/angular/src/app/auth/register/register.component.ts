@@ -86,22 +86,17 @@ export class RegisterComponent implements OnInit {
 onSearch(searchTerm: any): void {
   console.log(searchTerm.term);
   this.searchTerms.next(searchTerm.term);
-  if(!this.availabilityForm.get('zipcode')?.value){
     this.availabilityForm.get('zipcode')?.setValue(searchTerm.term);
-    this.searchZipInput =searchTerm.term
-  }
-  console.log('zip vlaue on search-->',this.availabilityForm.get('zipcode')?.value)
+    this.searchZipInput =searchTerm.term;
 }
 
 onSelect(selectedValue: any): void {
-  if(selectedValue){
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
     this.availabilityForm.get('state')?.setValue(selectedValue.state);
     this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
     this.searchZipInput = selectedValue.value;
-    console.log('Selected value:', selectedValue);
-  }
 }
+
 
 
 

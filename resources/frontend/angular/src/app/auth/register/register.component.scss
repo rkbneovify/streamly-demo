@@ -67,10 +67,10 @@
         
       }
       // .bullet1::after,.bullet1::before{
-        // background-color: pink;
+      //   background-color: green;
       // }
       // .bullet2::after,.bullet2::before{
-      //   background-color: pink;
+      //   background-color: orange;
       // }
       // .bullet3::after,.bullet3::before{
       //   background-color: pink;
@@ -280,10 +280,10 @@
             margin-top: 1rem;
             transition: background 0.5s ease-in-out, color 0.5s ease-in-out;
 
-            &:hover {
-              background-color: #ffdb4e;
-              color: #333333;
-            }
+            // &:hover {
+            //   background-color: #ffdb4e;
+            //   color: #333333;
+            // }
           }
 
           p {
