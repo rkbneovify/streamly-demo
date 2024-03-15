@@ -158,7 +158,6 @@
             (change)="onSelect($event)"
             placeholder="Search zipcode"
             [searchable]="true"
-            bindValue="value"
             bindLabel="label"
           >
           </ng-select>
@@ -193,7 +192,7 @@
           />
         </div>
         <div class="input_fields">
-          <button type="submit" class="">Submit</button>
+          <button [ngClass]="{'btn-bg-gold':availabilityForm.valid}" [disabled]="!availabilityForm.valid" type="submit" class="">Submit</button>
           <p class="label-p mt-1">
             Already have an account?
             <span class="label-p pointer" routerLink="/auth/login">Log In</span>
@@ -276,7 +275,7 @@
           </div>
         </div>
         <div class="input_fields">
-          <button type="submit">Verify</button>
+          <button [ngClass]="{'btn-bg-gold':otpVerificationForm.valid}"  [disabled]="!otpVerificationForm.valid" type="submit">Verify</button>
           <p>Already have an account? <span>Log In</span></p>
         </div>
       </form>
@@ -682,7 +681,7 @@
                 alt=""
               /> </span
             >Your Zipcode :
-            <span>201005</span>
+            <span>{{ searchZipInput }}</span>
           </h3>
         </div>
         <div class="zip_bottom">
