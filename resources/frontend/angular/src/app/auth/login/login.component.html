@@ -75,6 +75,7 @@
                 placeholder="Enter Password"
                 type="{{ showPassword ? 'text' : 'password' }}"
                 formControlName="password"
+                minlength="6"
                 required
               />
               <img class="pointer" (click)="showPassword=!showPassword" src="../../../assets/dummy-img/eye.svg" alt="" />
@@ -108,9 +109,9 @@
               <input
                 id="Passcode"
                 placeholder="Enter Passcode"
-                type="password"
+                type="{{showPasscode?'text':'password'}}"
               />
-              <img src="../../../assets/dummy-img/eye.svg" alt="" />
+              <img class="pointer" (click)="showPasscode=!showPasscode" src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
             <p class="login-fpass mt-2">Forgot Password ?</p>
           </div>
