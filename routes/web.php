@@ -43,11 +43,7 @@ Route::get('/tags', function () {
     return view('frontend.mydata2');
 });
 Route::get('/tags/find', 'HomeTwoController@find');
-<<<<<<< HEAD
-
-=======
 Route::post('/api/setzipcode', 'Pages\LiveTv@setzipcode');
->>>>>>> f7e13786d... Worked on creating page to show channel store status in admin panel
 Route::get('search', 'HomeTwoController@search')->name('search');
 Route::get('mydata', 'HomeTwoController@mydata')->name('mydata'); //infinite scroll
 Route::get('search2', 'HomeTwoController@search2')->name('search2');
