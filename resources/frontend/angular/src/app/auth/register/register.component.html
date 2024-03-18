@@ -266,12 +266,12 @@
               placeholder="-"
               class="input_field input_field2"
             /> -->
-            <input class="input_field input_field2" type="text" id="digit1" formControlName="digit1" maxlength="1" (input)="onInputChange()">
-            <input class="input_field input_field2" type="text" id="digit2" formControlName="digit2" maxlength="1" (input)="onInputChange()">
-            <input class="input_field input_field2" type="text" id="digit3" formControlName="digit3" maxlength="1" (input)="onInputChange()">
-            <input class="input_field input_field2" type="text" id="digit4" formControlName="digit4" maxlength="1" (input)="onInputChange()">
-            <input class="input_field input_field2" type="text" id="digit5" formControlName="digit5" maxlength="1" (input)="onInputChange()">
-            <input class="input_field input_field2" type="text" id="digit6" formControlName="digit6" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit1" formControlName="digit1" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit2" formControlName="digit2" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit3" formControlName="digit3" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit4" formControlName="digit4" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit5" formControlName="digit5" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit6" formControlName="digit6" maxlength="1" (input)="onInputChange()">
           </div>
         </div>
         <div class="input_fields">
@@ -630,7 +630,7 @@
             <p><span>State :</span>{{ userState }}</p>
           </div>
           <button
-            class="btn_2"
+            class="btn_2 btn-bg-gold"
             (click)="selectedTab = 'Verification'"
             data-bs-dismiss="modal"
           >

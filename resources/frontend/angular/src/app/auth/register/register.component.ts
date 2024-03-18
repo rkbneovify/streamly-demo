@@ -263,9 +263,13 @@ onSelect(selectedValue: any): void {
   }
 
   submitForm() {
-    const data = this.availabilityForm.value;
-    this.checkEmailRegistration(data);
-    console.log('form Data :', this.availabilityForm.value);
+    if(this.availabilityForm.valid){
+      const data = this.availabilityForm.value;
+      this.checkEmailRegistration(data);
+      console.log('form Data :', this.availabilityForm.value);
+    }else{
+      console.log(this.availabilityForm.errors);
+    }
   }
 
   submitFormWrong() {
