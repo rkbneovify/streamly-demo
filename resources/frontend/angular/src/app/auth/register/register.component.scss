@@ -39,7 +39,12 @@
       &:last-child .bullet6::before {
         display: none;
       }
-      .bullet1,.bullet2,.bullet3,.bullet4,.bullet5,.bullet6 {
+      .bullet1,
+      .bullet2,
+      .bullet3,
+      .bullet4,
+      .bullet5,
+      .bullet6 {
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -64,7 +69,6 @@
           bottom: 24px;
           right: -80px;
         }
-        
       }
       // .bullet1::after,.bullet1::before{
       //   background-color: green;
@@ -84,7 +88,6 @@
       // .bullet6.activeTab,.bullet6.activeTab::before{
       //   background-color: pink;
       // }
-      
 
       p {
         color: white;
@@ -207,7 +210,8 @@
               font-size: 18px;
               line-height: 25px;
             }
-            .bullet1::after,.bullet1::before{
+            .bullet1::after,
+            .bullet1::before {
               background-color: green !important;
             }
           }
@@ -321,6 +325,7 @@
         gap: 0.4rem;
         .input_field2 {
           width: 12%;
+          flex: 1;
           text-align: center !important;
           padding-top: 1.2rem !important;
           &::placeholder {
@@ -789,20 +794,20 @@
 //   padding: 0.5rem 1rem;
 // }
 
-.activeTab{
-  background: #49AAFF !important;
+.activeTab {
+  background: #49aaff !important;
 }
-.completedTab{
-  background: #1EC666 !important;
+.completedTab {
+  background: #1ec666 !important;
 }
 
-.input_standred .ng-select-container{
-            background: transparent !important;
-            font-family: Poppins;
-            color: #ffffff !important;
-            border: none !important;
-            outline: none !important;
-            border-radius: 0 !important;
+.input_standred .ng-select-container {
+  background: transparent !important;
+  font-family: Poppins;
+  color: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 0 !important;
 }
 
 @media screen and (max-width: 767px) {
@@ -852,4 +857,3 @@
     width: 250px;
   }
 }
-

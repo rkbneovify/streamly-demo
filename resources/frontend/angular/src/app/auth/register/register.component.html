@@ -175,6 +175,7 @@
             autocomplete="off"
             placeholder="City"
             class="input_field"
+            [readOnly]="city_state_readonly"
           />
         </div>
         <div class="input_fields">
@@ -189,6 +190,7 @@
             autocomplete="off"
             placeholder="State"
             class="input_field"
+            [readOnly]="city_state_readonly"
           />
         </div>
         <div class="input_fields">
@@ -221,7 +223,7 @@
             id="email" formControlName="email" [readonly]="true"
           />
         </div>
-        <div class="input_fields">
+        <div class="input_fields mt-2">
           <label for="otp">OTP <span class="text-danger">*</span></label>
           <div class="opt-input">
             <!-- <input
@@ -266,16 +268,18 @@
               placeholder="-"
               class="input_field input_field2"
             /> -->
-            <input autocomplete="off" class="input_field input_field2" type="text" id="digit1" formControlName="digit1" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit1" formControlName="digit1" maxlength="1" (input)="onInputChange()"  (paste)="onPaste($event)">
             <input autocomplete="off" class="input_field input_field2" type="text" id="digit2" formControlName="digit2" maxlength="1" (input)="onInputChange()">
             <input autocomplete="off" class="input_field input_field2" type="text" id="digit3" formControlName="digit3" maxlength="1" (input)="onInputChange()">
             <input autocomplete="off" class="input_field input_field2" type="text" id="digit4" formControlName="digit4" maxlength="1" (input)="onInputChange()">
             <input autocomplete="off" class="input_field input_field2" type="text" id="digit5" formControlName="digit5" maxlength="1" (input)="onInputChange()">
-            <input autocomplete="off" class="input_field input_field2" type="text" id="digit6" formControlName="digit6" maxlength="1" (input)="onInputChange()">
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit6" formControlName="digit6" maxlength="1" (input)="onInputChange()">  
           </div>
+          <button [ngClass]="{'btn-bg-gold':!resendButtonDisabled}" (click)="resendOtp()" [disabled]="resendButtonDisabled">{{ resendButtonDisabled ? 'Resending in ' + countdown + ' seconds' : 'Resend OTP' }}</button>
         </div>
+
         <div class="input_fields">
-          <button [ngClass]="{'btn-bg-gold':otpVerificationForm.valid}"  [disabled]="!otpVerificationForm.valid" type="submit">Verify</button>
+          <button  [ngClass]="{'btn-bg-gold':otpVerificationForm.valid}"  [disabled]="!otpVerificationForm.valid" type="submit">Verify</button>
           <p>Already have an account? <span>Log In</span></p>
         </div>
       </form>
@@ -564,7 +568,7 @@
             <p>Please login!</p>
           </div>
           <button
-            class="btn_2"
+            class="btn_2 btn-bg-gold"
             routerLink="/auth/login"
             data-bs-dismiss="modal"
           >
@@ -631,7 +635,7 @@
           </div>
           <button
             class="btn_2 btn-bg-gold"
-            (click)="selectedTab = 'Verification'"
+            (click)="resendOtp()"
             data-bs-dismiss="modal"
           >
             Okay

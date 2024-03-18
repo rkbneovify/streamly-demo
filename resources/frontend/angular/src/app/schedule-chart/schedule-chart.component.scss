@@ -55,16 +55,15 @@ main {
   border-radius: 11px;
   margin: 1rem;
   background-color: #ffffff0d;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #ffffff;
   .schedule_heading_container {
-    font-family: Poppins;
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 24px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: #ffffff;
     display: flex;
-    // justify-content: space-between;
     align-items: center;
     background-color: #ffffff0d;
     border-radius: 11px 11px 0px 0px;
@@ -95,6 +94,47 @@ main {
           width: 24px;
           height: 24px;
         }
+      }
+    }
+  }
+
+  .schedule_time_container {
+    display: flex;
+    background-color: #ffffff2e;
+    .schedule_days {
+      width: 168px;
+      height: 40px;
+
+      select {
+        width: 100%;
+        border: none;
+        outline: none;
+        color: #ffffff;
+        padding: 8px 20px 8px 20px;
+        background-color: transparent;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 24px;
+      }
+    }
+
+    .schedule_hours {
+      justify-content: space-between;
+      flex: 1;
+      .schedule_hour {
+        flex: 1;
+        padding: 10px 0px 10px 16px;
+        height: 40px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #e0e0e0;
+      }
+    }
+
+    .schedule_GoLive_container {
+      gap: 1.4rem;
+      .schedule_GoLive {
+        color: #ffdb4e;
       }
     }
   }
