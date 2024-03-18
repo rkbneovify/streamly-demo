@@ -59,9 +59,7 @@ Route::get('/subscriptions/allcust', 'Admin\SubscriptionController@showAllcustom
 Route::get('/subscriptions/syncuser', 'Admin\SubscriptionController@syncStripeUser');
 
 
-
 Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('admin')->group(function () {
-
 
     Route::post('insertsubscriptionpack', 'Admin\SubscriptionPackController@store')->name('insertsubscriptionpack');
 
@@ -409,7 +407,10 @@ Route::get('/checkout/{master_id}', 'PaymentlinkController@checkout');
 Route::post('checkout/backendpayment', 'PaymentlinkController@backendpayment');
 Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
+<<<<<<< HEAD
 
 Route::any('/{any}', [AngularController::class, 'index'])
     ->where('any', '^(?!api|admin).*$')
     ->name('angular');
+=======
+>>>>>>> f7e13786d... Worked on creating page to show channel store status in admin panel
