@@ -39,7 +39,9 @@ export class RegisterComponent implements OnInit {
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
-
+  city_state_readonly:boolean = false;
+  resendButtonDisabled = false;
+  countdown = 60;
   // forms
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
@@ -88,19 +90,16 @@ onSearch(searchTerm: any): void {
   this.searchTerms.next(searchTerm.term);
     this.availabilityForm.get('zipcode')?.setValue(searchTerm.term);
     this.searchZipInput =searchTerm.term;
+    this.city_state_readonly = false;
 }
 
 onSelect(selectedValue: any): void {
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
     this.availabilityForm.get('state')?.setValue(selectedValue.state);
     this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
+    this.city_state_readonly = true;
     this.searchZipInput = selectedValue.value;
 }
-
-
-
-
-
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
@@ -171,9 +170,9 @@ onSelect(selectedValue: any): void {
     const otpValue = this.getOtpValue();
     console.log('Email:', this.otpVerificationForm.get('email')?.value);
     console.log('OTP:', otpValue);
-
     // Move focus to the next input box
     const currentControlName = this.getCurrentControlName();
+    console.log('currentControlName--->',currentControlName);
     const currentDigit = parseInt(currentControlName.charAt(currentControlName.length - 1));
 
     if (currentDigit < 6) {
@@ -193,6 +192,51 @@ onSelect(selectedValue: any): void {
   private getCurrentControlName(): string {
     const activeElementId = this.el.nativeElement.ownerDocument.activeElement.id;
     return activeElementId;
+  }
+
+   // Autofill OTP fields when pasting
+   onPaste(event: ClipboardEvent) {
+    const clipboardData = event.clipboardData;
+    if (clipboardData) {
+      const pastedText = clipboardData.getData('text');
+      if (pastedText.length === 6 && !isNaN(Number(pastedText))) {
+        for (let i = 0; i < pastedText.length; i++) {
+          const control = this.otpVerificationForm.get(`digit${i + 1}`);
+          if (control) {
+            control.setValue(pastedText[i]);
+          }
+        }
+        for (let i = 1; i <= pastedText.length; i++) {
+          const input = this.el.nativeElement.querySelector(`#digit${i}`);
+          if (input) {
+            this.onInputChange();
+          }
+        }
+        event.preventDefault();
+      }
+    }
+  }
+
+  // resent otp 
+  resendOtp() {
+    this.selectedTab = 'Verification';
+    const email = this.otpVerificationForm.get('email')?.value;
+    if (email) {
+      this.getOtpWithMail(email);
+      console.log('Working')
+      this.resendButtonDisabled = true;
+      const timer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;
+        } else {
+          clearInterval(timer);
+          this.resendButtonDisabled = false; 
+          this.countdown=10;
+        }
+      }, 1000);
+    } else {
+      console.log('Email is required.');
+    }
   }
 
 
@@ -239,14 +283,7 @@ onSelect(selectedValue: any): void {
           );
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
-            console.log(
-              'register function',
-              'Zip code is valid. Changing selectedTab to "done".'
-            );
-            // call send otp here
-            // mailverification
-          console.log('email for getOTP-->',data.email)
-          this.getOtpWithMail(data.email);
+            console.log('register function','Zip code is valid. Changing selectedTab to "done".');
             this.showCorrectZipcode();
 
           } else {
@@ -274,8 +311,7 @@ onSelect(selectedValue: any): void {
 
   submitFormWrong() {
     this.getZipCodeInvalid(this.wrong_zipcodeDetials.value);
-    console.log('00000000000000000', this.wrong_zipcodeDetials);
-    console.log('00000000000000000', this.wrong_zipcodeDetials.value);
+    console.log('wrong_zipcode value -->>', this.wrong_zipcodeDetials.value);
   }
 
   otpVerifySubmit(){
