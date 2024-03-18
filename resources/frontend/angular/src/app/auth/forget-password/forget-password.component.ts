@@ -26,7 +26,7 @@ constructor(private fb:FormBuilder,private crudService:CrudService){
 forgetPasswordmail(usermail:any){
   this.crudService.postRequest('password/email',usermail).subscribe({
     next:(res)=>{console.log("data -->",res)},
-    error:(err)=>console.log("error -->",err),
+    error:(err)=>console.log("Message -->",err.error.message),
   });
 }
 
