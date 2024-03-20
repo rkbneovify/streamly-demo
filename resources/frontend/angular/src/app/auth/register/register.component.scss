@@ -338,6 +338,28 @@
 }
 
 // step3
+.row_3{
+  #carouselExampleIndicators{
+    width: 275px;
+    border-radius: 12px;
+  }
+  .carousel-control-next,.carousel-control-prev{
+    background: #ffdb4e !important;
+    border-radius: 50% !important;
+    height: 40px !important;
+    top: 50% !important;
+    span{
+      width: 15px !important;
+    }
+  }
+  .carousel-control-next{
+    right: -3rem !important;
+
+  }
+  .carousel-control-prev{
+    left: -3rem !important;
+  }
+}
 .col_2_s_3 {
   background-image: url("../../../assets/dummy-img/res_s3.png");
   height: 416px;
@@ -352,7 +374,7 @@
     border-bottom: 2px solid #49aaff91;
     div {
       img {
-        width: 66px;
+        min-width: 66px;
         height: 66px;
       }
     }
