@@ -49,22 +49,21 @@ export class LoginComponent implements OnInit{
       const formData = this.loginFormWithEmail.value;
       formData.deviceid =  this.userDeviceID;// Call the function to generate Device ID
       console.log(formData);
-      this.crudService.postRequest('auth/login', formData).subscribe(
-        (response:any) => {
-        console.log('login-->',response);
-        if (response.status === 200) {
-          this.router.navigate(['/']);
-        } else if (response.status === 479) {
-          this.router.navigate(['/remove-device']);
-        } else {
-          // Handle other status codes
-          console.log('error');
-          ;
+      this.crudService.postRequest('auth/login', formData).subscribe({
+        next:(res:any)=>{
+          if (res.status === 200) {
+                this.router.navigate(['/']);
+              }     
+        },
+        error:(err:any)=>{
+          if (err.status == 479) {
+                this.router.navigate(['auth/remove-device']);
+              } else {
+                console.log('error',err);
+                ;
+              }
         }
-        
-      },
-      err=>console.log(err)      
-      );
+      });
     }
   }
 
