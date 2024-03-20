@@ -100,7 +100,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              
+
               <li class="nav-item {{ (request()->is('admin/users')) ? 'activeElement' : '' }}">
                 <a href=" {{ url('/admin/users') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -124,7 +124,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              
+
               <li class="nav-item {{ (request()->is('admin/hotelrooms')) ? 'activeElement' : '' }}">
                 <a href=" {{ url('/admin/hotelrooms') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -145,7 +145,7 @@
                 </li>
             </ul>
           </li>
-          
+
           <li class="nav-item has-treeview {{ (request()->is('admin/subscriptions')) ? 'menu-open' : '' }} {{ (request()->is('admin/subscriptionpack')) ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/subscriptions') }}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -189,14 +189,19 @@
                   <i class="far fa-circle nav-icon"></i>
                   <p>Channel status</p>
                 </a>
-              </li><li class="nav-item {{ (request()->is('admin/hlsmonitor')) ? 'activeElement' : '' }}">
+              </li></li><li class="nav-item {{ (request()->is('admin/channelstore')) ? 'activeElement' : '' }}">
+                <a href=" {{ url('/admin/channelstore') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Channel Store Status</p>
+                  </a>
+                </li><li class="nav-item {{ (request()->is('admin/hlsmonitor')) ? 'activeElement' : '' }}">
               <a href=" {{ url('/admin/hlsmonitor') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>HLS analyzer</p>
                 </a>
               </li>
             </ul>
-            
+
             <li class="nav-item has-treeview {{ (request()->is('admin/allgenre')) ? 'menu-open' : '' }}{{ (request()->is('admin/addgenre')) ? 'menu-open' : '' }}">
                 <a href=" {{ url('/admin/allgenre') }}" class="nav-link">
               <i class="nav-icon fas fa-chart-pie"></i>
@@ -262,7 +267,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              
+
               <!-- <li class="nav-item">
                 <a href=" {{ url('/admin/report/channelanalysis') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -311,7 +316,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              
+
               <li class="nav-item {{ (request()->is('admin/slide/create')) ? 'activeElement' : '' }}">
                 <a href=" {{ url('/admin/slide/create') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -334,7 +339,7 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-              
+
               <li class="nav-item {{ (request()->is('admin/banner/create')) ? 'activeElement' : '' }}">
                 <a href=" {{ url('/admin/banner/create') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -430,7 +435,7 @@
                   <p>Subscriptionpack manage</p>
                 </a>
               </li>
-            </ul> 
+            </ul>
           </li>
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -553,9 +558,9 @@
                   <p>jsGrid</p>
                 </a>
               </li>
-              
+
             </ul> -->
-            
+
             <li class="nav-item ">
             <a href="{{ route('logout') }}"  class="nav-link" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -565,11 +570,11 @@
                                     </form>
               <p>
               Logout
-                
+
               </p>
             </a>
           </li>
-       
+
       </nav>
       <!-- /.sidebar-menu -->
     </div>
