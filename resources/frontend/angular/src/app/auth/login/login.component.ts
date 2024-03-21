@@ -52,12 +52,15 @@ export class LoginComponent implements OnInit{
       this.crudService.postRequest('auth/login', formData).subscribe({
         next:(res:any)=>{
           if (res.status === 200) {
-                this.router.navigate(['/']);
+                // this.router.navigate(['/']);
+                console.log(res);
               }     
         },
         error:(err:any)=>{
           if (err.status == 479) {
+            this.crudService.sendResponse(err);
                 this.router.navigate(['auth/remove-device']);
+                console.log('479-->>',err);
               } else {
                 console.log('error',err);
                 ;
