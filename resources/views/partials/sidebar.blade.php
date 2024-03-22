@@ -306,6 +306,30 @@
                 </li>
             </ul>
           </li>
+          <li class="nav-item has-treeview {{ (request()->is('admin/channel-slider-create')) ? 'menu-open' : '' }}{{ (request()->is('admin/slide/view')) ? 'menu-open' : '' }}">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-sliders-h"></i>
+              <p>
+                Channel Slider
+                <i class="fas fa-angle-left right"></i>
+                <!-- <span class="badge badge-info right">6</span> -->
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+              <li class="nav-item {{ (request()->is('admin/channel-slider-create')) ? 'activeElement' : '' }}">
+                <a href=" {{ url('/admin/channel-slider-create') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Add slide</p>
+                </a>
+              </li><li class="nav-item {{ (request()->is('admin/slide/view')) ? 'activeElement' : '' }}">
+                <a href=" {{ url('/admin/all-channel-sliders') }}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>View all slides</p>
+                  </a>
+                </li>
+            </ul>
+          </li>
           <li class="nav-item has-treeview {{ (request()->is('admin/slide/create')) ? 'menu-open' : '' }}{{ (request()->is('admin/slide/view')) ? 'menu-open' : '' }}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-sliders-h"></i>

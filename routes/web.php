@@ -124,6 +124,15 @@ Route::middleware(['auth', 'role:superadmin|admin'])->prefix('admin')->name('adm
     Route::put('/slide/update/{id}', 'LoginGuideController@slideupdate'); //slider piyush
     Route::put('/banner/update/{id}', 'HomescreenBannerController@bannerupdate'); //slider piyush
     Route::put('/slide/update/seconds/{value}', 'LoginGuideController@intervalUpdate'); //slider piyush
+
+    // channel slider created by Annu
+    Route::get('/channel-slider-create', 'Admin\ChannelSliderController@channelSlideCreate');
+    Route::post('/channel-slider-store', 'Admin\ChannelSliderController@storeChannelSlide');
+    Route::get('/all-channel-sliders', 'Admin\ChannelSliderController@allChannelSliders');
+    Route::delete('/channel-slider-delete/{id}', 'Admin\ChannelSliderController@channelSlideDelete');
+    Route::get('/channel-slider-edit/{id}', 'Admin\ChannelSliderController@channelSlideEdit');
+    Route::put('/channel-slider-edit/{id}', 'Admin\ChannelSliderController@channelSlideUpdate');
+
     Route::get('/stripekeys', 'Admin\StripekeysController@index');
     Route::put('/keysupdate/{status}', 'Admin\StripekeysController@keysupdate');
     Route::get('/users/connected/{id}', 'Admin\UsersController@connecteddevice'); //connected devices
