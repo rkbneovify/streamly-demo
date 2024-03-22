@@ -15,7 +15,7 @@
   <link href="{{ asset('dist/css/ionicons.min.css') }}" rel="stylesheet">
   <!-- Theme style -->
   <link href="{{ asset('dist/css/adminlte.min.css') }}" rel="stylesheet">
-  
+
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
@@ -45,6 +45,8 @@
 <!-- AdminLTE -->
 <script defer type="text/javascript" src="{{ asset('dist/js/adminlte.js') }}"></script>
     @yield('scripts')
+    @stack('scripts')
+
 </body>
 </html>
 <style>
