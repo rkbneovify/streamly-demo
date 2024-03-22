@@ -27,7 +27,7 @@ Route::post('/frontlogout/{id}', 'APIController@logout')->name('frontlogout');
 //QR code visibility API
 Route::get('auth/qrvisibility', 'APIController@qrvisibility');
 Route::post('auth/connecteddevicelist', 'APIController@connecteddeviceemail');
-Route::delete('auth/userdelete/{id}','APIController@userdelete');
+Route::delete('auth/userdelete/{id}', 'APIController@userdelete');
 
 // Registration, confirmations and verification
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
@@ -40,7 +40,7 @@ Route::post('auth/oldgeofence', 'HomeController@oldgeofence');
 Route::post('auth/runquery', 'HomeController@simplequeryrun');
 Route::get('auth/allowed', 'HomeController@allowedZipcode');
 Route::post('auth/geofence', 'Admin\TurfController@index')->middleware(['jwt.verify']);
-Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.verify']);//refactored
+Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.verify']); //refactored
 
 /** Angular Frontend APIs code start here */
 
@@ -58,7 +58,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('checkemail', 'Auth\AuthController@checkEmail');
     Route::get('devicedetail', 'Auth\AuthController@deviceDetail');
     Route::post('zipcodeInquery', 'Auth\AuthController@failedzipinquery');
-    Route::post('send-otp','Auth\AuthController@sendOtp');
+    Route::post('send-otp', 'Auth\AuthController@sendOtp');
     Route::post('verify-otp', 'Auth\AuthController@verifyOtp');
 
     /** Angular Frontend APIs code ends here */
@@ -80,10 +80,10 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('channelgenre', 'APIController@genrename');
     Route::get('profile', 'Auth\AuthController@profile');
     Route::get('tvprofile', 'Auth\AuthController@tvprofile');
-    Route::put('updateprofile','Auth\AuthController@updateprofile');
-       //zipcodes
-       Route::get('zipcode', 'Admin\ZipcodeController@zipjson');
-       //channel api
+    Route::put('updateprofile', 'Auth\AuthController@updateprofile');
+    //zipcodes
+    Route::get('zipcode', 'Admin\ZipcodeController@zipjson');
+    //channel api
 
     Route::get('channellist', 'Admin\ChannelAPIController@channeljson');
     Route::get('check', 'Admin\ChannelAPIController@checkdevice');
@@ -103,9 +103,9 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('timezonefrontendepg', 'Admin\ChannelController@timezoneEpgchannelDaysSchedule');
     Route::post('search', 'Admin\ChannelController@searchapi');
     Route::get('connecteddevice', 'APIController@connecteddevice');
-    Route::match(['put', 'patch','post'],'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
+    Route::match(['put', 'patch', 'post'], 'personaldevicename/{id}', 'Pages\Account\Setting@updatePersonalDeviceName')->middleware(['jwt.verify']);
     Route::get('support', 'APIController@support');
-    Route::get('/homescreenbanner', 'HomescreenBannerController@index');//piyush banner
+    Route::get('/homescreenbanner', 'HomescreenBannerController@index'); //piyush banner
     Route::get('privacypol', 'APIController@privacypol');
     Route::get('termofuse', 'APIController@termofuse');
     Route::post('addtofavorite/', 'APIController@favoriteChannel');
@@ -115,24 +115,26 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('addtorecent', 'APIController@addToRecent');
     Route::get('searchall', 'APIController@searchOnPlatform');
     Route::get('getdrmkey', 'Admin\BuyDRMController@index');
- Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
- Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);
+    Route::post('outsidelocationplay', 'Admin\OutsideLocationPlayController@OLPapi')->middleware(['jwt.verify']);
+    Route::post('outsideZipcode', 'Admin\OutsideLocationPlayController@OZ_api')->middleware(['jwt.verify']);
 
-Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify','subscribed']);
-Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify', 'subscribed']);
-Route::post('/ga/playererror', 'GoogleAnalyticsController@playererror')->middleware(['jwt.verify']);
+    Route::post('/ga', 'GoogleAnalyticsController@index3')->middleware(['jwt.verify', 'subscribed']);
+    Route::post('/ga/duration', 'GoogleAnalyticsController@duration')->middleware(['jwt.verify', 'subscribed']);
+    Route::post('/ga/playererror', 'GoogleAnalyticsController@playererror')->middleware(['jwt.verify']);
 
 
-Route::post('/sync-session-with-room', 'Admin\HotelController@syncSessionWithHotelRoom')->middleware(['jwt.verify']);
-Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
+    Route::post('/sync-session-with-room', 'Admin\HotelController@syncSessionWithHotelRoom')->middleware(['jwt.verify']);
+    Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
+
+    /** Channel SLider API */
+    Route::get('channel-sliders','Api\ChannelSliderApiController@getChannelSliders');
 });
 
 // Superadmin Routes
-Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' => 'sadmin','namespace'=>'Admin'], function($router)
-{
+Route::group(['middleware' => ['jwt.verify', 'role:superadmin|admin'], 'prefix' => 'sadmin', 'namespace' => 'Admin'], function ($router) {
 
     // User Routes
-    Route::post('user','UserAndRoleController@createUser');
+    Route::post('user', 'UserAndRoleController@createUser');
     Route::post('user/update', 'UserAndRoleController@updateUser');
     Route::get('users', 'UserAndRoleController@getUsers');
     Route::get('channels', 'GracenoteController@getChannel');
@@ -151,8 +153,6 @@ Route::group(['middleware' => ['jwt.verify','role:superadmin|admin'],'prefix' =>
     Route::post('roles/dt', 'UserAndRoleController@getDTRoles');
     Route::get('role/{id}', 'UserAndRoleController@getRole');
     Route::delete('role/{id}/delete', 'UserAndRoleController@deleteRole');
-
-
 });
 
 Route::post('/loginguide', 'LoginGuideController@index');
@@ -165,8 +165,8 @@ Route::get('/category', 'EpgController@category');
 // Route::post('/qrauth', 'Admin\DashboardController@qrauth');
 Route::post('/qrauth', 'WebSocketController@qrauth');
 // Route::post('/login/create/qrcode', 'QRLoginController@CreateQrcodeAction');
-Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction');//creates QR and save it as png
-Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction')->middleware(['jwt.verify']);//gets scaned by phone with key passed in header
+Route::post('/login/create/qrcode', 'Admin\QRLoginTwoController@CreateQrcodeAction'); //creates QR and save it as png
+Route::post('/login/mobile/scan/qrcode', 'Admin\QRLoginTwoController@mobileScanQrcodeAction')->middleware(['jwt.verify']); //gets scaned by phone with key passed in header
 Route::post('/login/qrcodedoLogin', 'Admin\QRLoginTwoController@qrcodeDoLoginAction'); //this url is used when qr code is scanned successfully
 Route::post('/login/scan/qrcode', 'Admin\QRLoginTwoController@isScanQrcodeAction'); //Check whether the code has been scanned
 Route::post('/login/entry/login', 'Auth\AuthController@loginEntry');//Check whether the login has been confirmed ,and return the token in response
