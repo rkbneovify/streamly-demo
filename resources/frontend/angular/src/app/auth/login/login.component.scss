@@ -47,7 +47,8 @@ main {
     }
     .d-flex {
       position: absolute;
-      top: 0;
+      top: -16px;
+      left: -22px;
     }
   }
 }
@@ -183,7 +184,7 @@ main {
   .bt-30 {
     padding-right: 30px;
   }
-  .qr-p-17{
+  .qr-p-17 {
     padding-right: 17px;
   }
 
@@ -196,9 +197,9 @@ main {
   }
 }
 
-.login-field-qrcode{
+.login-field-qrcode {
   text-align: -webkit-center;
-  img{
+  img {
     max-width: 190px;
     max-height: 190px;
   }
@@ -220,5 +221,11 @@ main {
     .divider {
       margin: 0 1rem;
     }
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .btn_pd_310{
+    padding-left: 5px;
   }
 }
