@@ -13,3 +13,4 @@ yarn-error.log
 .history
 .vscode
 /public/assets/angular
+/public/uploads/channel_slider
