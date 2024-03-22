@@ -832,12 +832,15 @@
   border-radius: 0 !important;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .col_2_1 {
     flex-basis: 80% !important;
   }
   .label-p {
     color: #494343 !important;
+  }
+  .carousel-indicators{
+    bottom: -35px !important;
   }
 }
 
