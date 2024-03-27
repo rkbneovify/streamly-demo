@@ -15,50 +15,50 @@ class QRLoginTwoController extends Controller
     public  function CreateQrcodeAction(){
       //   ob_start ();
         // echo url()->current();
-  
-        $url = url(''); // Get the current url 
+
+        $url = url(''); // Get the current url
         // dd($url);
-       $http = $url .'/api/login/mobile/scan/qrcode'; // Verify the url method of scanning code 
-       $key = Str::random(30);//$this->getRandom(30); // The key value stored in Memcached, a random 32-bit string 
+       $http = $url .'/api/login/mobile/scan/qrcode'; // Verify the url method of scanning code
+       $key = Str::random(30);//$this->getRandom(30); // The key value stored in Memcached, a random 32-bit string
        $random = mt_rand(1000000000, 9999999999);//random integer
-       $_SESSION['qrcode_name'] = $key ; // Save the key as the name of the picture in the session 
+       $_SESSION['qrcode_name'] = $key ; // Save the key as the name of the picture in the session
        $forhash=substr( $random,0,2);
-       $sgin_data = HashUserID($forhash); // The basic algorithm for generating the sign string 
-       
-       $sgin =strrev(substr($key,0,2)).$sgin_data ; // Intercept the first two digits and reverse them 
-       
-       $value = $http .'?key='. $key .'&type=1'; // Two-dimensional Code content 
+       $sgin_data = HashUserID($forhash); // The basic algorithm for generating the sign string
+
+       $sgin =strrev(substr($key,0,2)).$sgin_data ; // Intercept the first two digits and reverse them
+
+       $value = $http .'?key='. $key .'&type=1'; // Two-dimensional Code content
       $pngImage = QrCode::format('png')
       //  ->merge(public_path('frontend/img/streamly-logo.png'), 0.3, true)
        ->size(300)->errorCorrection('H')
        ->generate($value, public_path('assets/img/qrcodeimg/'. $key .'.png'));
-     
+
         $return = array ('status'=>0,'msg'=>'' );
-        
+
         $qr = public_path('assets/img/qrcodeimg/'. $key .'.png');
       //   $qr = asset('assets/img/qrcodeimg/'. $key .'.png');
       //   dump($qr);
      if (!file_exists($qr)) {
       $return = array ('status'=>0,'msg'=>'' );
-      return response()->json($return, 404); 
+      return response()->json($return, 404);
       //   return "no found qr img";
      }
      $qr = asset('assets/img/qrcodeimg/'. $key .'.png');
-     
+
       $mem = new \Memcached();
       $mem->addServer('127.0.0.1',11211 );
       $res=json_encode(array('sign'=> $sgin ,'type'=>0 ));
-      // store in Memcached, expiration time is three minutes 
-     $mem->set($key,$res ,180);// 180 
+      // store in Memcached, expiration time is three minutes
+     $mem->set($key,$res ,180);// 180
      $return = array('status'=>1,'msg'=> $qr,'key'=>$key);
-       return response()->json($return, 200); 
+       return response()->json($return, 200);
       //  return  $this ->createJsonResponse( $return );
    }
 
    /* *
-     * Check whether the code has been scanned, this checked by polling, 
-     * it looks for the key, the filename, 
-     */ 
+     * Check whether the code has been scanned, this checked by polling,
+     * it looks for the key, the filename,
+     */
     public  function isScanQrcodeAction(Request $request){
 
       $key = $request['key'];
@@ -75,11 +75,11 @@ class QRLoginTwoController extends Controller
                $return = array ('status'=>0,'msg'=>'' );
           }
       }
-      return response()->json($return, 200); 
+      return response()->json($return, 200);
       // return  $this->createJsonResponse( $return );
   }
 
-  // Mobile device scan code 
+  // Mobile device scan code
   public function mobileScanQrcodeAction(Request $request ){
    $key = $_GET['key'];
    $url =url('');
@@ -90,21 +90,21 @@ class QRLoginTwoController extends Controller
   //  $headerpasscode = $request->header('userpasscode');
   //  if (!(strpos($agent,'MicroMessenger') === false )) {
   //      // Get the version number
-  //     //preg_match('/.*?(MicroMessenger\/([0-9.]+))\s*/', $agent, $matches); 
+  //     //preg_match('/.*?(MicroMessenger\/([0-9.]+))\s*/', $agent, $matches);
   //     $app_url =' http : //club.risecenter.com/ wap_app.html' ;
-  //      // WeChat browser, jump to the download APP page (you can judge that non-designated app browsers will jump to this page) 
+  //      // WeChat browser, jump to the download APP page (you can judge that non-designated app browsers will jump to this page)
   //     return  $this ->redirect( $app_url );
   // }
-  $http = $url .'/api/login/qrcodedoLogin'; // Return to confirm the login link 
+  $http = $url .'/api/login/qrcodedoLogin'; // Return to confirm the login link
   $mem = new \Memcached();
    $mem->addServer('127.0.0.1',11211);
    $data = json_decode($mem->get($key), true);
-   
+
    if (empty($data)){
     $return = array ('status'=>2,'msg'=>'expired' );
     return response()->json($return, 200);
-} 
-   $data['type']=1; // Increase the type value to determine whether the code has been scanned 
+}
+   $data['type']=1; // Increase the type value to determine whether the code has been scanned
   $res = json_encode($data);
    $mem->set($key,$res,180);
    $http = $http .'?key='.$key.'&type=scan&login='.$headerpasscode.'&sign='.$data['sign'];
@@ -119,7 +119,7 @@ class QRLoginTwoController extends Controller
      * $key is the key passed in the QR code on the web page
      * $uid The user id sent by scanning the code after the client logs in
      * @return void
-     */ 
+     */
     public  function qrcodeDoLoginAction(Request $request ){
 
       $login=$_GET['login'];//jwt or passcode
@@ -127,7 +127,7 @@ class QRLoginTwoController extends Controller
        $sign = $_GET['sign'];
        $mem = new \Memcached();
        $mem->addServer('127.0.0.1',11211);
-       $data = json_decode($mem->get($key),true); // Remove the value of Memcached 
+       $data = json_decode($mem->get($key),true); // Remove the value of Memcached
        if (empty($data)){
         $return = array ('status'=>2,'msg'=>'expired' );
         return response()->json($return, 200);
@@ -135,7 +135,7 @@ class QRLoginTwoController extends Controller
       if (!isset($data['sign'])){
         $return = array('status'=>0,'msg'=>'Sign notset' );
       }
-      if ($data['sign']!= $sign ){ // Verify delivery Sign 
+      if ($data['sign']!= $sign ){ // Verify delivery Sign
         $return = array('status'=>0,'msg'=>'Verification Error' );
         //  return  $this ->createJsonResponse( $return );
          return response()->json($return, 403);
@@ -159,7 +159,7 @@ class QRLoginTwoController extends Controller
   }
   public function loginEntry(Request $request)
   {
-    
+
      $key=$request['key'];
      if (empty($key)){
 
@@ -168,7 +168,7 @@ class QRLoginTwoController extends Controller
      }
     $mem = new \Memcached();
     $mem->addServer('127.0.0.1',11211);
-    $data = json_decode($mem->get($key),true); 
+    $data = json_decode($mem->get($key),true);
 //     $passcode=$data['login'];
     if (empty($data)){
      $return = array ('status'=>2,'msg'=>'expired' );
@@ -187,7 +187,7 @@ class QRLoginTwoController extends Controller
     }
 }
     // Use passcode to login and return the object in reposne or jWT
-    // extract Memcached and the login var jwt/passcode 
+    // extract Memcached and the login var jwt/passcode
     //use passcode to login and return the jwt
   }
 
@@ -206,19 +206,26 @@ class QRLoginTwoController extends Controller
       $return = array ('status'=>1,'msg'=>'success','jwt'=>1,'user'=>$user );
       return response()->json($return, 200);
     } catch (Exception $exception) {
-        
+
       return response()->json([
         'status'=>2,
           'success' => false,
           'message' => 'Some Error occured',
           'error'=>$exception->getMessage(),
           'response_code'=>200,
-          
+
       ], 200);
   }
-    
 
 
+
+  }
+
+  public function redirectToStreamlyTV(Request $request)
+  {
+      // You can perform any necessary checks or logic here before redirecting
+
+      return redirect()->away('https://streamlytv.com/');
   }
 }
 // Click button to geerate qr code for 3 minutes
