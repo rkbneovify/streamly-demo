@@ -1,0 +1,345 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+main {
+//   background-image: url("../../../assets/dummy-img/404-bg.png");
+  background-image: url("../../../assets/dummy-img/404-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0 1rem;
+
+}
+
+.landing_carousel_container {
+  .landing_carousel_section1 {
+    position: relative;
+    // max-width: 962px;
+    // max-height: 420px;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .landing_carousel_section1_img {
+      img {
+        width: 100%;
+        height: 420px;
+      }
+    }
+
+    .landing_carousel_section1_text_content {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      display: flex;
+      flex-direction: column;
+      height: -webkit-fill-available;
+      justify-content: space-between;
+      padding-bottom: 50px;
+      .landing_carousel_section1_img1 {
+        img {
+          max-width: 227.08px;
+          max-height: 120px;
+        }
+      }
+
+      .landing_carousel_section1_img3 {
+        display: flex;
+        margin-top: 0.7rem;
+
+        .landing_carousel_section1_img2 {
+          margin-bottom: 1rem;
+          img {
+            max-width: 40px;
+            max-height: 40px;
+          }
+        }
+
+        .play_img {
+          gap: 0.8rem;
+          img {
+            max-width: 50px;
+            max-height: 50px;
+          }
+          p {
+            font-family: Poppins;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+            letter-spacing: 0.01em;
+            text-align: left;
+            color: #ffffff;
+          }
+        }
+        .heart_circle,
+        .info_circle {
+          img {
+            max-width: 36px;
+            max-height: 36px;
+          }
+        }
+      }
+    }
+  }
+
+  .landing_carousel_section2 {
+    .landing_carousel_section2_top {
+      font-family: Poppins;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: 0.01em;
+      color: #ffffff;
+
+      span {
+        font-family: Poppins;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: 0.01em;
+        color: #ffdb4e;
+      }
+    }
+
+    // .landing_carousel_section2_bottom {
+    //   flex-basis: 160px;
+    //   gap: 10px;
+    //   overflow-x: auto;
+
+    //   .card_page {
+    //     min-width: 160px;
+    //     width: 160px;
+    //     height: 240px;
+    //     border-radius: 10px;
+    //     position: relative;
+    //     transition: min-width 1s ease;
+
+    //     img {
+    //       max-width: 160px;
+    //       height: 100%;
+    //       transition: border-radius 1s ease;
+    //       border-radius: 10px;
+    //     }
+
+    //     .card_content {
+    //       position: absolute;
+    //       top: 0;
+    //       right: 0;
+    //       width: 266.33px;
+    //       height: 240px;
+    //       padding: 20px 24px 20px 10px;
+    //       gap: 16px;
+    //       opacity: 0px;
+    //       background-color: #001325;
+    //       border-radius: 0 10px 10px 0;
+    //       z-index: -1;
+    //       transition: z-index 0.5s ease-in-out;
+    //       .card_content_text1 {
+    //         .play_img {
+    //           img {
+    //             width: 50px;
+    //             height: 50px;
+    //           }
+    //           p {
+    //             font-family: Poppins;
+    //             font-size: 16px;
+    //             font-weight: 600;
+    //             line-height: 24px;
+    //             color: #ffffff;
+    //           }
+    //         }
+
+    //         .d-flex {
+    //           div {
+    //             img {
+    //               width: 36px;
+    //               height: 36px;
+    //             }
+    //           }
+    //         }
+    //       }
+
+    //       .card_content_text2 {
+    //         font-family: Poppins;
+    //         font-size: 16px;
+    //         font-weight: 600;
+    //         line-height: 24px;
+    //         text-align: left;
+    //         color: #ffffff;
+    //       }
+
+    //       .card_content_text3 {
+    //         font-family: Poppins;
+    //         font-size: 14px;
+    //         font-weight: 500;
+    //         line-height: 21px;
+    //         color: #BDBDBD;
+    //       }
+    //     }
+
+    //     &:hover {
+    //             min-width:426px !important;
+    //             width: 426px !important;
+    //             img{
+    //                 border-radius:10px 0 0 10px;
+    //             }
+    //         .card_content{
+    //             // right: -266px;
+    //             z-index: 1;
+    //         }
+    //     }
+    //   }
+
+    //   &::-webkit-scrollbar {
+    //     width: 0px;
+    //   }
+    // }
+
+    .landing_carousel_section2_bottom {
+      flex-basis: 160px;
+      gap: 10px;
+      overflow-x: auto;
+
+      .card_page {
+        min-width: 160px;
+        width: 160px;
+        height: 240px;
+        border-radius: 10px;
+        position: relative;
+        display: flex;
+        overflow-x: hidden;
+        
+        transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
+
+        img {
+          max-width: 160px;
+          height: 100%;
+        //   border-radius: 10px;
+        //   transition: border-radius 1s ease;
+        }
+
+        .card_content {
+          width: 266.33px;
+          height: 240px;
+          padding: 20px 24px 20px 10px;
+          gap: 16px;
+          opacity: 0px;
+          background-color: #001325;
+          border-radius: 0 10px 10px 0;
+          overflow-y: hidden;
+          &::-webkit-scrollbar {
+            width: 0px;
+          }
+          .card_content_text1 {
+            .play_img {
+              img {
+                width: 50px;
+                height: 50px;
+              }
+              p {
+                font-family: Poppins;
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 24px;
+                color: #ffffff;
+              }
+            }
+
+            .d-flex {
+              div {
+                img {
+                  width: 36px;
+                  height: 36px;
+                }
+              }
+            }
+          }
+
+          .card_content_text2 {
+            font-family: Poppins;
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 24px;
+            text-align: left;
+            color: #ffffff;
+          }
+
+          .card_content_text3 {
+            font-family: Poppins;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 21px;
+            color: #BDBDBD;
+          }
+        }
+
+        &:hover {
+                min-width:426px !important;
+                width: 426px !important;
+                overflow-x:visible !important;
+                cursor: pointer;
+                img{
+                    border-radius:10px 0 0 10px;
+                }
+                .card_content{
+                    margin-left: -1px;
+                }
+        }
+      }
+
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+    }
+  }
+}
+
+.landing_carousel_container {
+  .carousel-indicators {
+    button {
+      width: 10px !important;
+      height: 10px !important;
+      border-radius: 50% !important;
+    }
+  }
+
+  .carousel-indicators {
+    bottom: -46px;
+  }
+
+  .carousel-control-next,
+  .carousel-control-prev {
+    height: fit-content;
+    top: auto;
+    bottom: -22px !important;
+
+    .carousel-control-next-icon,
+    .carousel-control-prev-icon,
+    .visually-hidden {
+      width: 18px;
+      height: 18px;
+      font-weight: 900;
+      color: #fac700;
+      // top: 6.5px;
+      // left: 16.25px;
+      // gap: 0px;
+      // border: 2px 0px 0px 0px;
+      // opacity: 0px;
+      // angle: -180 deg;
+    }
+  }
+
+  .carousel-control-next {
+    justify-content: end !important;
+  }
+  .carousel-control-prev {
+    justify-content: start !important;
+  }
+
+  // padding: 6.5px 0px 6.5px 0px;
+}
