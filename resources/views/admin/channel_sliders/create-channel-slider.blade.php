@@ -83,6 +83,13 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="background_image">Background Image Upload:</label>
+                                <input type="file" name="background_image" class="form-control-file">
+                                @error('background_image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                             <br>
                             <input type="submit" class="btn btn-primary" value="Add Slide">
                         </form>

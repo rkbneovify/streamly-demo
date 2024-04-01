@@ -108,7 +108,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
 
     /** Channel SLider API */
-    Route::get('channel-sliders','Api\ChannelSliderApiController@getChannelSliders');
+    Route::get('channel-sliders','Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes

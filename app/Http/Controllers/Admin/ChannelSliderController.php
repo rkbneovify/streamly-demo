@@ -39,6 +39,8 @@ class ChannelSliderController extends Controller
             'description' => 'required',
             'status' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
@@ -59,7 +61,14 @@ class ChannelSliderController extends Controller
             $slideAdd->description =  $request['description'];
             $slideAdd->status = $request['status'];
             $slideAdd->image = '/uploads/channel_slider/' . $name;
-
+            if ($request->hasFile('background_image')) {
+                $background_image = $request->file('background_image');
+                $name = time() . '.' . $background_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/channel_slider');
+                $imagePath = $destinationPath . "/" .  $name;
+                $background_image->move($destinationPath, $name);
+                $slideAdd->background_image = '/uploads/channel_slider/' . $name;
+            }
             if ($slideAdd->save()) {
                 return redirect('admin/channel-slider-create')->with('info', 'Slide added sucessfully.');
             } else {
@@ -77,7 +86,7 @@ class ChannelSliderController extends Controller
 
     public function channelSlideDelete($id)
     {
-        $slideUpdate = ChannelSlider::find($id);
+        $slideUpdate = ChannelSlider::findOrFail($id);
         $oldImagePath = public_path($slideUpdate->image);
         if (file_exists($oldImagePath)) {
             unlink($oldImagePath);
@@ -118,7 +127,8 @@ class ChannelSliderController extends Controller
             'program_name' => 'required',
             'description' => 'required',
             'status' => 'required',
-            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validator->fails()) {
             return Redirect::back()->withErrors($validator);
@@ -142,6 +152,24 @@ class ChannelSliderController extends Controller
 
                 $slideUpdate->image = $imagePath;
             }
+            if ($request->hasFile('background_image')) {
+                // Remove previous background_image if it exists
+                if ($slideUpdate->background_image) {
+                    $oldImagePath = public_path($slideUpdate->background_image);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                // Upload new image
+                $background_image = $request->file('background_image');
+                $name = time() . '.' .$background_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/channel_slider');
+                $imagePath = '/uploads/channel_slider/' . $name;
+                $background_image->move($destinationPath, $name);
+
+                $slideUpdate->background_image = $imagePath;
+            }
+
             $slideUpdate->channel_id = $request['channel'];
             $slideUpdate->program_name = $request->program_name;
             $slideUpdate->description =  $request['description'];
