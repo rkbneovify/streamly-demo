@@ -1,0 +1,14 @@
+import { CommonModule, NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-user-home',
+  standalone: true,
+  imports: [CommonModule, NgClass,RouterLink],
+  templateUrl: './user-home.component.html',
+  styleUrl: './user-home.component.scss'
+})
+export class UserHomeComponent {
+
+}

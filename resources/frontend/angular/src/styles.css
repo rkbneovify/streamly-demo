@@ -52,6 +52,11 @@ section {
   margin-inline: auto;
 }
 
+.plan_btn{
+  border: none;
+  outline: none;
+}
+
 button.btn {
   border: 1px solid var(--_border) !important;
   background-color: var(--_bg) !important;

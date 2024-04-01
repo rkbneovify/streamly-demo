@@ -1,0 +1,85 @@
+.devices {
+  .contain {
+    h2 {
+      margin-bottom: 0.4em;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      color: #ffffff;
+    }
+  }
+
+  .device-p1 {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .device-p2 {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .device-types {
+    li {
+      img {
+        width: 30px;
+        height: 30px;
+        flex: 1;
+      }
+
+      p {
+        margin-top: 0.4rem;
+        color: #d2eaff;
+        font-size: 16px;
+        flex: 1;
+      }
+    }
+  }
+}
+
+.device-types {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+
+  margin-block: 2rem;
+  text-align: center;
+
+  img {
+    height: 3rem;
+  }
+}
+
+.devices .thumbnail {
+  object-fit: cover;
+  max-width: 100%;
+}
+
+// brand
+.brand-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    overflow-x: auto;
+    &::-webkit-scrollbar{
+        width: 0px;
+    }
+   
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width:140px;
+    height:100px;
+    border-radius: 4px;
+    margin: auto;
+    background: linear-gradient(0deg, #AED9FF, #AED9FF);
+    img {
+        max-width: 80px;
+        height: auto;
+        object-fit: contain;
+      }
+  }
+}
+

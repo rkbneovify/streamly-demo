@@ -1,0 +1,207 @@
+.play_container_top {
+  .playstream_1 {
+    video {
+      width: -webkit-fill-available !important;
+      height: 450.61px;
+    }
+    .vjs-big-play-centered {
+      width: -webkit-fill-available !important;
+      height: 450.61px;
+    }
+  }
+
+  .playstream_2 {
+    height: 450.61px;
+    overflow-y: auto;
+    font-family: Poppins;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+    &::-webkit-scrollbar{
+        width: 0px;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 24px;
+    }
+    p {
+      font-family: Poppins;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+      text-align: left;
+      color: #ffffffe5;
+    }
+
+    .play_btn_container_1 {
+      display: flex;
+      gap: 1rem;
+      .playbtn_time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 77px;
+        height: 35px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+        background-color: #ffffff29;
+        outline: none;
+        border: none;
+        font-family: Poppins;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #ffffff;
+      }
+
+      .playbtn_hd {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 93px;
+        height: 36px;
+        padding: 8px 20px 8px 20px;
+        border-radius: 40px;
+        background-color: #ffdb4e;
+        outline: none;
+        border: none;
+        img {
+          width: 16.67px;
+          height: 15px;
+        }
+        span {
+          font-family: Poppins;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .playstream_desc {
+      color: #ffffffcc;
+      font-size: 14px;
+      text-align: justify;
+    }
+
+    .play_btn_container_2 {
+      span {
+        font-family: Poppins;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: left;
+        color: #ffffff;
+      }
+      .playbtn_genre,
+      .playbtn_aired {
+        background-color: #ffffff29;
+      }
+      .playbtn_genre {
+        display: flex;
+        align-items: center;
+        width: 140px;
+        height: 34px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+        &:first-child {
+          font-weight: 600;
+        }
+      }
+      .playbtn_aired {
+        display: flex;
+        align-items: center;
+        width: 214px;
+        height: 34px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+      }
+    }
+
+    .playstream_onNow_container {
+        h2{
+          border-bottom: 1px solid #FFFFFF66;
+          padding-bottom: 1rem;
+        }
+        margin-top: 30px;
+      .play_stream_now {
+        font-family: Poppins;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 20px;
+        text-align: left;
+        color: #ffffff;
+      }
+      p {
+        font-family: Poppins;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 26px;
+        text-align: left;
+        color: #ffffff;
+      }
+
+      .playstream_bottom_child {
+        h2 {
+          font-family: Poppins;
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 20px;
+          text-align: left;
+          color: #ffffffb2;
+          border-bottom: 1px solid #FFFFFF66;
+        }
+        .playstream_liveTime {
+          div {
+            font-family: Poppins;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 26px;
+            text-align: left;
+            color: #FFFFFFB2;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.landing_carousel_section2 {
+    .landing_carousel_section2_top {
+      font-family: Poppins;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: 0.01em;
+      color: #ffffff;
+    }
+
+    .landing_carousel_section2_bottom {
+      flex-basis: 160px;
+      overflow-x: auto;
+
+      .card_page {
+        min-width: 160px;
+        width: 160px;
+        height: 240px;
+        border-radius: 10px;
+        position: relative;
+        display: flex;
+        overflow-x: hidden;
+        background-color: #FFFFFF;
+        box-shadow: 0px 4px 4px 0px #00000026;
+        img {
+            width: 103px;
+            height: auto;
+            margin: auto;
+        }
+      }
+
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+    }
+  }

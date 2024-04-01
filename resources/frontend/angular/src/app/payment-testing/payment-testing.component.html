@@ -1,0 +1,56 @@
+<!-- <form [formGroup]="paymentForm" (ngSubmit)="submit()">
+    <input type="text" formControlName="name" placeholder="Name">
+    <input type="text" formControlName="email" placeholder="Email">
+    <input type="text" formControlName="amount" placeholder="Amount">
+    <div id="card-element"></div>
+    <button type="submit" [disabled]="!paymentForm.valid">Submit Payment</button>
+  </form> -->
+
+<!-- 
+  <form class="checkout-form" [formGroup]="paymentForm">
+
+    <input type="text" formControlName="name" placeholder="Name"/>
+    <input type="text" formControlName="email" placeholder="Email">
+    <input type="number" formControlName="amount" placeholder="Amount"/> -->
+<!--   
+    <div class="stripe-card" ngxStripeCardGroup [elementsOptions]="elementsOptions">
+      <h4>Enter payment details</h4>
+  
+      <div class="stripe-element">
+        <ngx-stripe-card-number
+          [options]="cardOptions"
+          [elementsOptions]="elementsOptions"
+        ></ngx-stripe-card-number>
+      </div>
+  
+      <div fxLayout="row" fxLayoutGap="10px">
+        <div class="w-full stripe-element">
+          <ngx-stripe-card-expiry
+            [options]="cardOptions"
+          ></ngx-stripe-card-expiry>
+        </div>
+        <div class="w-full stripe-element">
+          <ngx-stripe-card-cvc
+            [options]="cardOptions"
+          ></ngx-stripe-card-cvc>
+        </div>
+      </div>
+    </div>
+  
+    <button type="submit" (click)="pay(payment_method)">Submit Payment</button> -->
+  <!-- </form> -->
+
+  // stripe-payment.component.html
+
+<div class="stripe-payment-container">
+    <div class="stripe-payment-form">
+      <h5>Stripe Payment</h5>
+        <form >
+            <input matInput [(ngModel)]="stripeAmount" type="number" required/>
+            <span matPrefix>$&nbsp;</span>
+        </form>
+        <button mat-raised-button color="primary" type="submit" (click)="checkout()">
+            Checkout
+        </button>
+    </div>
+</div>
