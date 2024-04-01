@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ChannelSlider extends Model
 {
     protected $table = "channel_slider";
-    protected $fillable = ['channel_id', 'description', 'status', 'image']; // Define fillable properties
+    protected $fillable = ['channel_id', 'description', 'status', 'image','background_image']; // Define fillable properties
 
     // Define relationship with Channel model assuming it exists
     public function channel()
