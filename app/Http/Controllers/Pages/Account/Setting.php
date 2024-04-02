@@ -26,9 +26,9 @@ use Jenssegers\Agent\Agent;
 class Setting extends Controller
 {   public function __construct()
     {
-        
+
         \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
-        
+
     }
     public function invoice(){
         $user= Auth::user();
@@ -40,7 +40,7 @@ class Setting extends Controller
     }
     public function invoicePDF (Request $request, $invoiceId) {
         $user= Auth::user();
-        
+
         // return dd(\Stripe\Invoice::all(['customer' => $user->stripe_id]));
         return Auth::user()->downloadInvoice($invoiceId, [
             'vendor' => 'Sahil',
@@ -74,14 +74,14 @@ class Setting extends Controller
         //  ->whereRaw('MONTH(created_at) = ?',[$currentMonth])
         //  ->first();
         $subscription=Auth::user()->subscriptions()->first();
-         
+
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
-            
-         
+
+
             $stripe_plan=$subscription->stripe_plan;
-         
+
             $plan = \Stripe\Plan::retrieve($stripe_plan);
            // dd($plan);
            $invoices=  \Stripe\Invoice::all(['customer' => Auth::user()->stripe_id,'expand'=>['data.charge']]);
@@ -90,7 +90,7 @@ class Setting extends Controller
             // ch_1HSfl3LqTwOy7LECVmOdkimy
         //  dd($invoices);
          }
-         
+
     	return view('frontend.pages.account.setting', compact('login','allSession','subscription','plan','userinfo','invoices'));
     }
     // Account Settings page
@@ -124,7 +124,7 @@ class Setting extends Controller
             return redirect()->route('home');
         }
        $id= Auth::user()->id;
-      
+
        $hasid = HashUserID($id);
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
@@ -146,9 +146,9 @@ class Setting extends Controller
          if(!$userinfo->subscribed('main')){
             $plan = (object) ['amount'=>'0'];
          } else {
-         
+
             $stripe_plan=$subscription->stripe_plan;
-         
+
             // $plan = \Stripe\Plan::retrieve($stripe_plan);
             $STRIPE_KEY=DB::table('Stripe_keys')->where('status', 'active')->get();
             if($STRIPE_KEY[0]->type == $userinfo->mode){
@@ -217,7 +217,7 @@ curl_close($curl);
             return redirect()->route('home');
         }
        $id= Auth::user()->id;
-      
+
        $hasid = HashUserID($id);
     //  dump($hasid);
     //  dd(UnHashUserID($hasid));
@@ -225,7 +225,7 @@ curl_close($curl);
         $allSession=SessionTable::with(['pdname'=> function($q) use($id) {
             // Query the name field in status table
                 $q->select('id','personal_devicename','device_id','user_id')
-                ->where('user_id', '=', $id); 
+                ->where('user_id', '=', $id);
         }])
         ->where([
             ['status', '=', '1'],
@@ -242,13 +242,13 @@ curl_close($curl);
             ->distinct()
             ->get();
         */
-       
+
         $userRole=  $userinfo->roles->first()->name;
          if($userRole=='tieruser'){
             /*$allSession=SessionTable::with('hotel')->where([
                 ['status', '=', '1'],
                 ['users_id', '=', $id],
-            ])->orderBy('connected_devices', 'asc')->get();  
+            ])->orderBy('connected_devices', 'asc')->get();
             */
             $allSession=SessionTable::with(['hotel','pdname'=> function($q) use($id) {
                 // Query the name field in status table
@@ -259,7 +259,7 @@ curl_close($curl);
             ])->orderBy('connected_devices', 'asc')->get();
         }
         // dd($allSession);
-        
+
     	return view('frontend.pages.account.devicemanagement', compact('login','allSession','userinfo','hasid'));
     }
 
@@ -273,7 +273,7 @@ curl_close($curl);
             return redirect()->back()->with('message','Device Session Deleted Successfully');
         }
         return redirect()->back()->with('message','Device Session Not found');
-        
+
     }
 
     public function updatePass(Request $request, $id)
@@ -308,7 +308,7 @@ curl_close($curl);
 
 
     public function update(Request $request, $id)
-    { 
+    {
         $userinfo = User::find($id);
         $attributeNames = array(
             'old_password'=>'Old Password',
@@ -337,14 +337,14 @@ curl_close($curl);
         if($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
-        
+
         $input = $request->only('name', 'email', 'old_password', 'password','dob','gender','country','address','zipcode','contact');
         // $input = $request->only('password','zipcode');
-       
-    
-        
+
+
+
      // dd($archived);
-        
+
         if(!empty($input['password'])){
             $input['password'] = Hash::make($input['password']); //update the password
         }else{
@@ -359,7 +359,7 @@ curl_close($curl);
         $user->update($input); //update the user info
         return redirect()->back()->with('message','Password Updated Successfully');
        }
-             
+
     }
     public function updatePersonalDeviceName(Request $request, $id)
     {  $validator = Validator::make($request->all(), [
@@ -391,8 +391,8 @@ curl_close($curl);
         return response()->json($response, 200);
         }
      return redirect()->back()->with('message','Device name Updated Successfully');
-        
-        
+
+
     }
 
 
@@ -405,7 +405,7 @@ curl_close($curl);
             ['status', '=', '1'],
             ['zipcode', '=',$request['zip'] ]
         ])->get();
-        
+
         if(count($data)==0) {
             return redirect()->back()->with('errormsg','Zipcode is not valid');
         } else {
@@ -432,12 +432,12 @@ curl_close($curl);
                 return redirect()->back()->with('message','User name updated');
             } else {
                 return redirect()->back()->with('errormsgname','User is not available');
-            } 
+            }
         }
     }
 
     public function userDelete(Request $request, $id){
-        
+
         $User=Auth::user();
         $UserName = $User['name'];
         $UserEmail = $User['email'];
@@ -457,9 +457,9 @@ curl_close($curl);
                 $subscribtionCheck = DB::table('subscriptions')
                 ->where(['user_id' => $id, 'stripe_status' => 'active'])
                 ->get();
-                
+
                 try {
-                    
+
                     if(count($subscribtionCheck) > 0){
                     $User->subscription('main')->skipTrial()->cancelNow();
                     }
@@ -475,7 +475,7 @@ curl_close($curl);
                     ->update(['stripe_status' => "canceled"]);
                 }
 
-                
+
                 DB::table('session_table')
                 ->where('users_id', $id)
                 ->where('status', "1")
@@ -487,24 +487,24 @@ curl_close($curl);
             } else {
                 return redirect()->back()->with('deleteerror','Please enter password.');
             }
-        } else { 
+        } else {
             return redirect()->back()->with('deleteerror','User already deleted.');
         }
     }
 
     public function destroy($id)
-    {  
+    {
         $uid= Auth::user()->id;
         $user = User::find($uid);
-    
+
         try{
         $user->subscription('main')->skipTrial()->cancelNow();
         return redirect('account/settings')->with('message','Subscription Cancel Successfully');
     }catch( Exception $e ){
         return redirect('account/settings')->with('error','Error'.json_encode($e->getMessage(), true)); }
-        
 
-        
+
+
     }
 
     public function BugReportView(){
@@ -517,7 +517,7 @@ curl_close($curl);
         return view('frontend.pages.account.bugreport', compact('login'));
     }
     public function sendBugReport(Request $request)
-    {    
+    {
         $FRONTEND_URL=env('FRONTEND_URL');
         $html='<html>
         <br>
@@ -531,18 +531,18 @@ curl_close($curl);
         Details:'.$request['details'].'.<br>
     </html>';
 
-    // check if reCaptcha has been validated by Google      
+    // check if reCaptcha has been validated by Google
     $secret = env('GOOGLE_RECAPTCHA_SECRET');
     $captchaId = $request->input('g-recaptcha-response');
-    
+
     //sends post request to the URL and tranforms response to JSON
     $responseCaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$captchaId));
-    
+
     if($responseCaptcha->success == true){
     try{
         Mail::send('emails.general',["html"=>$html] , function($message) use ($request){
             $message->to(env('MAIL_TO_ADDRESS'), env('APP_NAME'))
-        
+
             ->subject(env('APP_NAME').': Feedback/Bug Report');
             // return redirect()->route('home')->with('message', 'Your account has been successfully registered!,check email and click on verification link to activate your account.');
         });
@@ -554,7 +554,7 @@ curl_close($curl);
                 'platform'=>$request['platform_info'],
                 'message'=>$request['details'],
             ]);
-    
+
     } catch (Exception $ex) {
              //$ex->getMessage();
              return redirect()->back()->with('mailerror', "We've got errors!".json_encode($ex->getMessage(), true));
@@ -562,8 +562,8 @@ curl_close($curl);
         }
         return redirect()->back()->with('mailmessage', "Bug Report Sent!");}else{
             // send back error message
-            
-            
+
+
             return redirect()->back()->with('mailerror', 'Looks like you are a replicant. Sorry but We do not receive emails from non human entities');
             }
     }
@@ -586,7 +586,7 @@ curl_close($curl);
              if(sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices=1)){return redirect()->back();};
          }  else if (count($active_session) > 0 && count($active_session) < $login_limit) {
             //check if device id is same
-            
+
            //new entry of sessionTable
            //and get the number of last connected device
            $prevConnectDevicecount = SessionTable::select('connected_devices')
@@ -595,24 +595,24 @@ curl_close($curl);
             ['users_id', '=', $user_id],
              ])->orderBy('connected_devices', 'desc')
              ->first();
-             
-          $device=number_format($prevConnectDevicecount['connected_devices']); 
+
+          $device=number_format($prevConnectDevicecount['connected_devices']);
           //the number of device previously connected + 1
            if(sessionTableForWeb($user_id,$token,$deviceDetails,$connected_devices=$device+1)){return redirect()->back();
       }else{return redirect()->back();}
-       
-       } 
+
+       }
        if (count($active_session) >= $login_limit) {
         //then return a login error that maximum logins reached
         //echo 'you are not allowed to login as you have breeched the maximum session limit.';
         //exit;
         return redirect()->back();
-        
+
 
 
     }
-      
-        
+
+
     }
 
 }

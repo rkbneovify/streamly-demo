@@ -60,6 +60,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('zipcodeInquery', 'Auth\AuthController@failedzipinquery');
     Route::post('send-otp', 'Auth\AuthController@sendOtp');
     Route::post('verify-otp', 'Auth\AuthController@verifyOtp');
+    Route::post('account-edit', 'Auth\UserController@accountEdit')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 

@@ -36,7 +36,7 @@ class ForgotPasswordController extends Controller
     public function getResetToken(Request $request)
     {
         $this->validate($request, ['email' => 'required|email']);
-        
+
         if ($request->wantsJson()) {
             $user = User::where('email', $request->input('email'))->first();
             if (!$user) {
@@ -45,14 +45,14 @@ class ForgotPasswordController extends Controller
             }
 
             $token = $this->broker()->createToken($user);
-            
+
             $FRONTEND_URL=env('FRONTEND_URL');
 
             $password_reset_link=$FRONTEND_URL.'/password/reset/'.$token.'?email='.$request->email;
 
             $html='<html>
                 Hi, '.$user->name.'<br><br>
-
+cle
                 You have requested to reset password on '.env('APP_NAME').'.
 
                 Here is your Password reset link. Click on below link to reset your password <br><br><a href="'.$password_reset_link.'" target=_blank >'.$password_reset_link.'</a>
@@ -69,17 +69,17 @@ class ForgotPasswordController extends Controller
     }
 
     public function webgetResetToken(Request $request)
-    {  
+    {
         $attributeNames = array(
             'forgotpassword-email' => 'Email',
          );
- 
+
          $validatedData = $request->validate([
-            
+
              'forgotpassword-email'=>'required|exists:users,email,is_active,1'
          ], ['forgotpassword-email.exists'=>'Email not found'], $attributeNames);
-        
-    
+
+
             $user = User::where('email', $request->input('forgotpassword-email'))->first();
         //print_r($user);exit;
         if (!$user) {
@@ -105,7 +105,7 @@ class ForgotPasswordController extends Controller
 
             return redirect('/')->with('message', 'Password reset link sent on your email.');
            // return response()->json($response, 200);
-        
+
     }
-   
+
 }
