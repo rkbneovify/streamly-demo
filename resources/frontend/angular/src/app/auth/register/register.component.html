@@ -388,6 +388,7 @@
     </div>
 
     <div class="row_4 my-4" *ngIf="selectedTab == 'Terms'">
+      <div (click)="backbutton('Plans')" class="pointer position-absolute d-flex justify-content-center align-item-center"><img src="../../../assets/dummy-img/backArrow.svg" alt=""><div class="backbtn ms-2">Back</div></div>
       <h1>Terms & Conditions</h1>
       <div class="heading1">
         <h2>Heading 1</h2>
@@ -438,7 +439,8 @@
       </div>
     </div>
 
-    <div class="row_5 row py-4 pt-5" *ngIf="selectedTab == 'Payment'">
+    <div class="row_5 row py-4 pt-5 position-relative" *ngIf="selectedTab == 'Payment'">
+      <div (click)="backbutton('Terms')" class="pointer payment-back-btn position-absolute d-flex justify-content-start align-item-center"><img src="../../../assets/dummy-img/backArrow.svg" alt=""><div class="backbtn ms-2">Back</div></div>
       <div class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">
