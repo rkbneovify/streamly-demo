@@ -12,6 +12,7 @@ import { AccountsettingsComponent } from './accountsettings/accountsettings.comp
 const routes: Routes = [
   {
     path: '', component: UserComponent, children: [
+      { path: '', component: UserHomeComponent },
       { path: 'home', component: UserHomeComponent },
       { path: 'favorite', component: FavouritesComponent },
       { path: 'playlistschedule', component: PlaylistScheduleComponent },
