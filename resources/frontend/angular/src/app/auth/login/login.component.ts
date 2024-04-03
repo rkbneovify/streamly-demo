@@ -4,6 +4,7 @@ import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
+import { log } from 'console';
 
 @Component({
   selector: 'app-login',
@@ -54,19 +55,20 @@ export class LoginComponent implements OnInit {
       console.log(formData);
       this.crudService.postRequest('auth/login', formData).subscribe({
         next: (res: any) => {
-          if (res.status === 200) {
-            this.ts.success(res.message)
+          if (res.status == 200) {
+            console.log('login resp-->',res);
+            this.ts.success(res?.message)
             let deviceInfo = {
-              access_token : res.access_token,
-              device_info: res.device_info,
-              personaldeviceid: res.personaldeviceid,
-              sessionid: res.sessionid,
-              timezone: res.timezone,
-              token_type: res.token_type,
-              userrole: res.userrole 
+              access_token : res?.access_token,
+              device_info: res?.device_info,
+              personaldeviceid: res?.personaldeviceid,
+              sessionid: res?.sessionid,
+              timezone: res?.timezone,
+              token_type: res?.token_type,
+              userrole: res?.userrole 
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
-            localStorage.setItem('userDetails', JSON.stringify(res.user));
+            localStorage.setItem('userDetails', JSON.stringify(res?.user));
             this.router.navigateByUrl('/user/home');
           }
         },

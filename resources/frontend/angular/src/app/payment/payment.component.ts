@@ -1,3 +1,4 @@
+import { NgFor, NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -6,7 +7,7 @@ declare var Stripe: any;
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule,NgFor,NgIf],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss'
 })

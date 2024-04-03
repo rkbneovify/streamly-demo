@@ -1,11 +1,11 @@
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-playlist-schedule',
   standalone: true,
-  imports: [RouterLink,NgIf],
+  imports: [NgFor,RouterLink,NgIf],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss'
 })
