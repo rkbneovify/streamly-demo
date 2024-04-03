@@ -516,11 +516,6 @@
       border: none;
       background: #616b75;
       color: #ffffff4d;
-
-      &:hover {
-        background: #ffdb4e;
-        color: #333333;
-      }
     }
   }
 }
@@ -840,8 +835,11 @@ text-align: left;
 color: #004480;
 }
 
+.backbtnwhite{
+  color: white;
+}
 .payment-back-btn{
-  top: 0;
+  top: 15px;
   left: 0;
 }
 
