@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit{
   showPasscode:boolean = false;
   userDeviceID!:string;
   userToken!:string;
-  constructor(private fb: FormBuilder, private crudService: CrudService,private router:Router) {
+  constructor(private fb: FormBuilder, private crudService: CrudService,private router:Router,private ts:ToastrService) {
     this.loginFormWithEmail = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -43,6 +43,9 @@ export class LoginComponent implements OnInit{
     }
   }
 
+  showtos(){
+    this.ts.success('hello whow are you')
+  }
 
   onSubmit() {
     if (this.loginFormWithEmail.valid) {
@@ -53,6 +56,7 @@ export class LoginComponent implements OnInit{
         next:(res:any)=>{
           if (res.status === 200) {
                 // this.router.navigate(['/']);
+                this.ts.success(res.message)
                 console.log(res);
               }     
         },
@@ -62,6 +66,7 @@ export class LoginComponent implements OnInit{
                 this.router.navigate(['auth/remove-device']);
                 console.log('479-->>',err);
               } else {
+                this.ts.error(err.error.message)
                 console.log('error',err);
                 ;
               }
