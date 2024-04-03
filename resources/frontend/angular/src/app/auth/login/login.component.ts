@@ -52,10 +52,11 @@ export class LoginComponent implements OnInit {
     if (this.loginFormWithEmail.valid) {
       const formData = this.loginFormWithEmail.value;
       formData.deviceid = this.userDeviceID;// Call the function to generate Device ID
-      console.log(formData);
       this.crudService.postRequest('auth/login', formData).subscribe({
         next: (res: any) => {
-          if (res.status == 200) {
+          console.log(res,'response of login api');
+          
+          if (res.response_code == 200) {
             console.log('login resp-->',res);
             this.ts.success(res?.message)
             let deviceInfo = {
