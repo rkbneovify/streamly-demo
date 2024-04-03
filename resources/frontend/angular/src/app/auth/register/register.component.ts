@@ -63,7 +63,8 @@ export class RegisterComponent implements OnInit {
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
-
+  selectedPlan:any;
+  acceptTerm: boolean = false;
   // ======================== constructor ================================
   constructor(
     private crud: CrudService,
@@ -166,13 +167,7 @@ export class RegisterComponent implements OnInit {
           console.log('Plans data --> ', this.all_Plans);
 
           this.all_Plans[0].forEach((el: any) => {
-            console.log(
-              el.id,
-              'name',
-              el.amount,
-              'nikename',
-              el.nickname,
-              el.metadata
+            console.log( el.id, 'name', el.amount, 'nikename', el.nickname, el.metadata
             );
           });
         }
@@ -191,10 +186,11 @@ export class RegisterComponent implements OnInit {
     };
     console.log(userDetails);
     this.crud.postRequest('auth/zipcodeInquery', userDetails).subscribe({
-      next: (data) => console.log('data-->', data),
-      error: (err) => console.log('error-->', err),
+      next: (data:any) => {this.ts.success(data.success);
+      document.getElementById('closeWrongZipForm')?.click();
+    },
+      error: (err) => this.ts.error(err.error),
     });
-    console.log('this is invalid....');
   }
 
   // getotp
@@ -220,7 +216,8 @@ export class RegisterComponent implements OnInit {
         },1000);
         
       },
-      error: (err) => {this.ts.error(err.message);console.log('otp-error not verify-->', err)},
+      error: (err) => {this.ts.error(err.error.error)
+      this.otpVerificationForm.reset()},
     });
   }
 
@@ -337,19 +334,9 @@ export class RegisterComponent implements OnInit {
           this.showAlreadyUserModal();
         } else {
           console.log('register function', 'check zip code');
-          console.log(
-            'register function',
-            'value',
-            this.checkZipCodeValid(this.searchZipInput),
-            'zipInput',
-            this.searchZipInput
-          );
+          console.log( 'register function', 'value', this.checkZipCodeValid(this.searchZipInput), 'zipInput', this.searchZipInput );
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
-            console.log(
-              'register function',
-              'Zip code is valid. Changing selectedTab to "done".'
-            );
             this.showCorrectZipcode();
           } else {
             this.showWrongZipcode();
