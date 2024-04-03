@@ -12,30 +12,30 @@ declare var Stripe: any;
 })
 export class PaymentComponent {
   
-  // @ViewChild('cardInfo', { static: false }) cardInfo!: ElementRef;
+  @ViewChild('cardInfo', { static: false }) cardInfo!: ElementRef;
 
-  // stripe:any;
-  // loading = false;
-  // confirmation:any;
+  stripe:any;
+  loading = false;
+  confirmation:any;
 
-  // card: any;
-  // cardHandler = this.onChange.bind(this);
-  // error:any;
-  stripe = Stripe('pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3');
-  sessionId: any;
+  card: any;
+  cardHandler = this.onChange.bind(this);
+  error:any;
+  // stripe = Stripe('pk_test_51BTUDGJAJfZb9HEBwDg86TN1KNprHjkfipXmEDMb0gSCassK5T3ZfxsAbcgKVmAIXF7oZ6ItlZZbXO6idTHE67IM007EwQ4uN3');
+  // sessionId: any;
   constructor(private cd: ChangeDetectorRef, private stripeService: AngularStripeService, private http: HttpClient) {
     // this.initialize();
 
   }
 
 
-  async initiateCheckout() {
-    const id  = await this.http.post('/create-checkout-session', {})
-    this.sessionId = id;
-    console.log(this.sessionId,'session id');
+  // async initiateCheckout() {
+  //   const id  = await this.http.post('/create-checkout-session', {})
+  //   this.sessionId = id;
+  //   console.log(this.sessionId,'session id');
     
-    this.stripe.redirectToCheckout({ sessionId: this.sessionId });
-  }
+  //   this.stripe.redirectToCheckout({ sessionId: this.sessionId });
+  // }
   // async initialize() {
   //   const fetchClientSecret = async () => {
   //     const response = await fetch("/create-checkout-session", {
@@ -69,38 +69,38 @@ export class PaymentComponent {
 
 
   
-  // ngAfterViewInit() {
-  //   this.stripeService.setPublishableKey('pk_test_51OzBloSA7waI3emKqFtc5EwG8do6KT1gbLAgAy3x4tpoRCjscvMnAf5UHsLpBMAJPfKVw8U0XpRCV2De6fonkom600TWicawcL').then(
-  //     (stripe:any)=> {
-  //       this.stripe = stripe;
-  //   const elements = stripe.elements();    
-  //   this.card = elements.create('card');
-  //   this.card.mount(this.cardInfo.nativeElement);
-  //   this.card.addEventListener('change', this.cardHandler);
-  //   });
-  // }
+  ngAfterViewInit() {
+    this.stripeService.setPublishableKey('pk_test_51OzBloSA7waI3emKqFtc5EwG8do6KT1gbLAgAy3x4tpoRCjscvMnAf5UHsLpBMAJPfKVw8U0XpRCV2De6fonkom600TWicawcL').then(
+      (stripe:any)=> {
+        this.stripe = stripe;
+    const elements = stripe.elements();    
+    this.card = elements.create('card');
+    this.card.mount(this.cardInfo.nativeElement);
+    this.card.addEventListener('change', this.cardHandler);
+    });
+  }
 
-  // ngOnDestroy() {
-  //   this.card.removeEventListener('change', this.cardHandler);
-  //   this.card.destroy();
-  // }
+  ngOnDestroy() {
+    this.card.removeEventListener('change', this.cardHandler);
+    this.card.destroy();
+  }
 
-  // onChange( error :any) {
-  //   if (error) {
-  //     this.error = error.message;
-  //   } else {
-  //     this.error = null;
-  //   }
-  //   this.cd.detectChanges();
-  // }
+  onChange( error :any) {
+    if (error) {
+      this.error = error.message;
+    } else {
+      this.error = null;
+    }
+    this.cd.detectChanges();
+  }
 
-  // async onSubmit(form: NgForm) {
-  //   const { token, error } = await this.stripe.createToken(this.card);
+  async onSubmit(form: NgForm) {
+    const { token, error } = await this.stripe.createToken(this.card);
 
-  //   if (error) {
-  //     console.log('Error:', error);
-  //   } else {
-  //     console.log('Success!', token);
-  //   }
-  // }
+    if (error) {
+      console.log('Error:', error);
+    } else {
+      console.log('Success!', token);
+    }
+  }
 }
