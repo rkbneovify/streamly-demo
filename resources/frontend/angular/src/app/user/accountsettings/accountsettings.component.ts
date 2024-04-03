@@ -14,8 +14,8 @@ export class AccountsettingsComponent {
     updateuserDetatils!: FormGroup;
     editMode: boolean = false;
     showPassword: boolean = false;
-    usersdetail:any = JSON.parse(localStorage.getItem('userDetails') || '');
-    deviceInfo:any = JSON.parse(localStorage.getItem('deviceInfo') || '');
+    usersdetail: any;
+    deviceInfo: any;
 
     constructor(private fb: FormBuilder) {
         this.updateuserDetatils = this.fb.group({
@@ -24,6 +24,22 @@ export class AccountsettingsComponent {
             password: ['1111111', Validators.required],
             zipcode: ['', Validators.required]
         })
+        const jsonData = localStorage.getItem('userDetails');
+        if (jsonData !== null) {
+            try {
+                this.usersdetail = JSON.parse(localStorage.getItem('userDetails') || '');
+            } catch (error) {
+                console.error('Error parsing JSON data:', error);
+            }
+        }
+        const deviceInfoData = localStorage.getItem('deviceInfo');
+        if (deviceInfoData !== null) {
+            try {
+                this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
+            } catch (error) {
+                console.error('Error parsing JSON data:', error);
+            }
+        }
         this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
         this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
         this.updateuserDetatils.controls['zipcode'].setValue(this.usersdetail?.zipcode);
