@@ -68,7 +68,7 @@ main {
 
 .profileUserMenu {
   width: 220px;
-  height: 127px;
+  height: auto;
   padding: 8px 10px 8px 10px;
   border-radius: 4px;
   background-color: #014e92;
@@ -131,4 +131,19 @@ main {
   &:hover {
     // max-width: ;
   }
+}
+
+
+.sidebar_2{
+  div{
+    height: 56px;
+    width: 88px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.activeTab{
+  border-left: 5px solid #FFFFFF !important;
 }
