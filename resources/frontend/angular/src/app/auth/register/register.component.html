@@ -387,7 +387,12 @@
 
     </div>
 
-    <div class="row_4 my-4" *ngIf="selectedTab == 'Terms'">
+    <div class="row_4 my-4 position-relative" *ngIf="selectedTab == 'Terms'">
+      <div style="top:-10px; left: 12px;" (click)="backbutton('Plans')" class="pointer position-absolute d-flex justify-content-center align-item-center">
+        <img *ngIf="!acceptTerm" src="../../../assets/dummy-img/backArrow.svg" alt="">
+        <img *ngIf="acceptTerm" src="../../../assets/dummy-img/arrow.svg" alt="">
+        <div [ngClass]="{'backbtn ms-2':true,'backbtnwhite':acceptTerm}">Back</div>
+      </div>
       <h1>Terms & Conditions</h1>
       <div class="heading1">
         <h2>Heading 1</h2>
@@ -430,15 +435,16 @@
         </p>
       </div>
       <div class="terms">
-        <input type="checkbox" name="termsandcondition" id="terms" [checked]="acceptTerm" (click)="acceptTerm = !acceptTerm" />
+        <input type="checkbox" name="termsandcondition" id="terms" [checked]="acceptTerm" (change)="acceptTerm = !acceptTerm" />
         <label for="terms">I agree with all the terms and conditions of Streamly platform</label>
       </div>
       <div class="nextbtn">
-        <button [disabled]="!acceptTerm" (click)="selectedTab = 'Payment';">Next</button>
+        <button [ngClass]="{'btn-bg-gold':acceptTerm}" [disabled]="!acceptTerm" (click)="selectedTab = 'Payment';">Next</button>
       </div>
     </div>
 
-    <div class="row_5 row py-4 pt-5" *ngIf="selectedTab == 'Payment'">
+    <div class="row_5 row py-4 pt-5 position-relative" *ngIf="selectedTab == 'Payment'">
+      <div (click)="backbutton('Terms')" class="pointer payment-back-btn backbtnwhiteposition-absolute d-flex justify-content-start align-item-center"><img src="../../../assets/dummy-img/arrow.svg" alt=""><div class="backbtn backbtnwhite ms-2">Back</div></div>
       <div class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">

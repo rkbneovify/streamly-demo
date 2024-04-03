@@ -516,11 +516,6 @@
       border: none;
       background: #616b75;
       color: #ffffff4d;
-
-      &:hover {
-        background: #ffdb4e;
-        color: #333333;
-      }
     }
   }
 }
@@ -830,6 +825,22 @@
   border: none !important;
   outline: none !important;
   border-radius: 0 !important;
+}
+.backbtn{
+  font-family: Poppins;
+font-size: 16px;
+font-weight: 600;
+line-height: 24px;
+text-align: left;
+color: #004480;
+}
+
+.backbtnwhite{
+  color: white;
+}
+.payment-back-btn{
+  top: 15px;
+  left: 0;
 }
 
 @media screen and (max-width: 768px) {

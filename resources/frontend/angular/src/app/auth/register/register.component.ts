@@ -366,6 +366,16 @@ export class RegisterComponent implements OnInit {
     console.log('wrong_zipcode value -->>', this.wrong_zipcodeDetials.value);
   }
 
+  backbutton(data:any){
+    if(data=='Plans'){
+      this.selectedTab='Plans'
+      // this.getAllThePlans();
+    }
+    else{
+      this.selectedTab='Terms'
+    }
+  }
+
   otpVerifySubmit() {
     const otpAndEmail = {
       email: this.otpVerificationForm.get('email')?.value,
