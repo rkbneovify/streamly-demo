@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CrudService } from '../services/crud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,7 +18,8 @@ export class ResetPasswordComponent {
   resetPasswordForm!: FormGroup;
   token: any = this.ar.snapshot.paramMap.get('token');
   email: any =this.ar.queryParams;
-  constructor(private fb: FormBuilder, private ar: ActivatedRoute,private crud:CrudService) {
+  constructor(private fb: FormBuilder, private ar: ActivatedRoute,private crud:CrudService, private router: Router,
+    private toastr: ToastrService) {
     this.resetPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password1: ['', [Validators.required]],
@@ -51,7 +53,12 @@ export class ResetPasswordComponent {
       "password": this.resetPasswordForm.get('password1')?.value,
       "password_confirmation": this.resetPasswordForm.get('password2')?.value
   }
-    this.crud.postRequest('password/reset',data).subscribe((res)=>console.log(res));
+    this.crud.postRequest('password/reset',data).subscribe({
+      next:(res:any)=>{this.toastr.success(res.message)
+        this.router.navigateByUrl('/auth/login');
+      },
+      error:(err)=>{this.toastr.error(err.error.message)},
+    });
   }
 
 }
