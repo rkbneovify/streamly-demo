@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-forget-password',
@@ -17,7 +18,7 @@ showPassword1:boolean=false;
 showPassword2:boolean=false;
 forgetPasswordEmailForm!:FormGroup;
 
-constructor(private fb:FormBuilder,private crudService:CrudService){
+constructor(private fb:FormBuilder,private crudService:CrudService, private toastr: ToastrService){
   this.forgetPasswordEmailForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
   })
@@ -25,8 +26,8 @@ constructor(private fb:FormBuilder,private crudService:CrudService){
 
 forgetPasswordmail(usermail:any){
   this.crudService.postRequest('password/email',usermail).subscribe({
-    next:(res)=>{console.log("data -->",res)},
-    error:(err)=>console.log("Message -->",err.error.message),
+    next:(res:any)=>{this.toastr.success(res.message)},
+    error:(err)=>{this.toastr.error(err.error.message)},
   });
 }
 

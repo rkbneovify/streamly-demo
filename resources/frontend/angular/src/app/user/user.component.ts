@@ -1,6 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { CrudService } from '../services/crud.service';
 
 @Component({
   selector: 'app-user',
@@ -12,9 +13,15 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class UserComponent {
 
   submenu:boolean=false;
-
+  constructor( private crud: CrudService){}
   sideBarAnimation (){
     console.log('hello');
     
+  }
+  logoutUser(){
+    
+    this.crud.postRequest(`auth/logout`,``).subscribe((res:any)=>{
+
+    })
   }
 }
