@@ -28,6 +28,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-register',
@@ -67,7 +69,8 @@ export class RegisterComponent implements OnInit {
     private crud: CrudService,
     private fb: FormBuilder,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private ts:ToastrService
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -200,20 +203,24 @@ export class RegisterComponent implements OnInit {
     this.crud
       .postRequest('auth/send-otp', { email: verifiMailDetails })
       .subscribe({
-        next: (data) => console.log('otpdata-->', data),
-        error: (err) => console.log('otp-error-->', err),
+        next: (data:any) => {console.log('otpdata-->', data);this.ts.success(data.message)},
+        error: (err:any) => {this.ts.success(err.message);console.log('otp-error-->', err)},
       });
   }
   verifyOtpWithMail(verifyDetails: any) {
     this.crud.postRequest('auth/verify-otp', verifyDetails).subscribe({
-      next: (data) => {
+      next: (data:any) => {
         console.log('otpdata verify-->', data);
-        if(data){
-          this.getAllThePlans();
-          this.selectedTab = 'Plans';
-        }
+        this.ts.success(data.message);
+        setTimeout(()=>{
+          if(data){
+            this.getAllThePlans();
+            this.selectedTab = 'Plans';
+          }
+        },1000);
+        
       },
-      error: (err) => console.log('otp-error not verify-->', err),
+      error: (err) => {this.ts.error(err.message);console.log('otp-error not verify-->', err)},
     });
   }
 
@@ -289,7 +296,7 @@ export class RegisterComponent implements OnInit {
         } else {
           clearInterval(timer);
           this.resendButtonDisabled = false;
-          this.countdown = 10;
+          this.countdown = 60;
         }
       }, 1000);
     } else {
