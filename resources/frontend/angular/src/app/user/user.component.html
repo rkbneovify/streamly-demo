@@ -1,20 +1,16 @@
 <div class="row gy-0 gx-0 flex-nowrap">
-  <div
-    class="sidebar_container col-1 p-0 d-flex flex-column justify-content-between align-items-center py-3"
-  >
+  <div class="sidebar_container col-1 p-0 d-flex flex-column justify-content-between align-items-center py-3">
     <div class="sidebar_1 pointer" (click)="sideBarAnimation()">
       <img src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
     </div>
-    <div
-      class="sidebar_2 d-flex flex-column justify-content-between align-items-center"
-    >
-      <div routerLink="/user/home" class="submenu1 pointer">
+    <div class="sidebar_2 d-flex flex-column justify-content-between align-items-center">
+      <div (click)="activeTab='home'" routerLink="/user/home" [ngClass]="{'submenu1 pointer':true,'activeTab':activeTab==='home'}" >
         <img src="../../assets/dummy-img/sidemenu1.svg" alt="" />
       </div>
-      <div routerLink="/user/favorite" class="submenu2 pointer my-5">
+      <div (click)="activeTab='fav'" routerLink="/user/favorite" [ngClass]="{'submenu2 pointer my-5':true, 'activeTab':activeTab==='fav'}">
         <img src="../../assets/dummy-img/sidemenu2.svg" alt="" />
       </div>
-      <div routerLink="/user/playlistschedule" class="submenu3 pointer">
+      <div (click)="activeTab='playsh'" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
         <img src="../../assets/dummy-img/side_menu3.svg" alt="" />
       </div>
     </div>
@@ -39,24 +35,24 @@
               </div>
               <div class="position-relative">
                 <div (click)="submenu = !submenu" class="schedule_profile pointer">
-                  <img src="../../assets/dummy-img/user-circle.svg" alt="" />
+                  <img class="userProfileImage" src="../../assets/dummy-img/user-circle.svg" alt="" />
                 </div>
 
                 <div  *ngIf="submenu" class="profileUserMenu position-absolute">
                   <div routerLink="user-settings">
-                    <img src="../../assets/dummy-img/download.svg" alt="" />
+                    <img src="../../assets/dummy-img/user.svg" alt="" />
                     <p>Account Settings</p>
                   </div>
                   <div routerLink="user-settings">
-                    <img src="../../assets/dummy-img/download.svg" alt="" />
+                    <img src="../../assets/dummy-img/devices.svg" alt="" />
                     <p>Connected Devices</p>
                   </div>
                   <div routerLink="downloadapp">
                     <img src="../../assets/dummy-img/download.svg" alt="" />
                     <p>Download App</p>
                   </div>
-                  <div (click)="logoutUser()">
-                    <img src="../../assets/dummy-img/download.svg" alt="" />
+                  <div class="justify-content-center" (click)="logoutUser()">
+                    <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
                     <p>Log out</p>
                   </div>
                 </div>
