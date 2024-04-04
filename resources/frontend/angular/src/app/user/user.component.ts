@@ -42,16 +42,16 @@ export class UserComponent {
       try {
         this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
         const tokenData = this.access_Token?.access_token;
-        const headers1 = new HttpHeaders({
-          'Authorization': `Bearer ${tokenData}`, // Replace 'your_token_here' with your actual token
-          'Accept': 'application/json'
-        });
+        // const headers1 = new HttpHeaders({
+        //   'Authorization': `Bearer ${tokenData}`,
+        //   'Accept': 'application/json'
+        // });
         console.log(tokenData);
-        this.crud.postRequest(`auth/logout`, {}, { headers: headers1 }).subscribe((res: any) => {
-          console.log('Log Out');
+        this.crud.postRequest(`auth/logout`, tokenData).subscribe((res: any) => {
+          console.log('Log Out',res);
         });
       } catch (error) {
-          console.error('Error parsing JSON data:', error);
+          console.error('Error parsing JSON data:--->>>', error);
       }
   }
   }
