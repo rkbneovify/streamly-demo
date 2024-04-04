@@ -28,6 +28,8 @@ import {
   of,
   switchMap,
 } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-register',
@@ -61,13 +63,15 @@ export class RegisterComponent implements OnInit {
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
-
+  selectedPlan:any;
+  acceptTerm: boolean = false;
   // ======================== constructor ================================
   constructor(
     private crud: CrudService,
     private fb: FormBuilder,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private ts:ToastrService
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -163,13 +167,7 @@ export class RegisterComponent implements OnInit {
           console.log('Plans data --> ', this.all_Plans);
 
           this.all_Plans[0].forEach((el: any) => {
-            console.log(
-              el.id,
-              'name',
-              el.amount,
-              'nikename',
-              el.nickname,
-              el.metadata
+            console.log( el.id, 'name', el.amount, 'nikename', el.nickname, el.metadata
             );
           });
         }
@@ -188,10 +186,11 @@ export class RegisterComponent implements OnInit {
     };
     console.log(userDetails);
     this.crud.postRequest('auth/zipcodeInquery', userDetails).subscribe({
-      next: (data) => console.log('data-->', data),
-      error: (err) => console.log('error-->', err),
+      next: (data:any) => {this.ts.success(data.success);
+      document.getElementById('closeWrongZipForm')?.click();
+    },
+      error: (err) => this.ts.error(err.error),
     });
-    console.log('this is invalid....');
   }
 
   // getotp
@@ -200,20 +199,25 @@ export class RegisterComponent implements OnInit {
     this.crud
       .postRequest('auth/send-otp', { email: verifiMailDetails })
       .subscribe({
-        next: (data) => console.log('otpdata-->', data),
-        error: (err) => console.log('otp-error-->', err),
+        next: (data:any) => {console.log('otpdata-->', data);this.ts.success(data.message)},
+        error: (err:any) => {this.ts.success(err.message);console.log('otp-error-->', err)},
       });
   }
   verifyOtpWithMail(verifyDetails: any) {
     this.crud.postRequest('auth/verify-otp', verifyDetails).subscribe({
-      next: (data) => {
+      next: (data:any) => {
         console.log('otpdata verify-->', data);
-        if(data){
-          this.getAllThePlans();
-          this.selectedTab = 'Plans';
-        }
+        this.ts.success(data.message);
+        setTimeout(()=>{
+          if(data){
+            this.getAllThePlans();
+            this.selectedTab = 'Plans';
+          }
+        },1000);
+        
       },
-      error: (err) => console.log('otp-error not verify-->', err),
+      error: (err) => {this.ts.error(err.error.error)
+      this.otpVerificationForm.reset()},
     });
   }
 
@@ -289,7 +293,7 @@ export class RegisterComponent implements OnInit {
         } else {
           clearInterval(timer);
           this.resendButtonDisabled = false;
-          this.countdown = 10;
+          this.countdown = 60;
         }
       }, 1000);
     } else {
@@ -330,19 +334,9 @@ export class RegisterComponent implements OnInit {
           this.showAlreadyUserModal();
         } else {
           console.log('register function', 'check zip code');
-          console.log(
-            'register function',
-            'value',
-            this.checkZipCodeValid(this.searchZipInput),
-            'zipInput',
-            this.searchZipInput
-          );
+          console.log( 'register function', 'value', this.checkZipCodeValid(this.searchZipInput), 'zipInput', this.searchZipInput );
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
-            console.log(
-              'register function',
-              'Zip code is valid. Changing selectedTab to "done".'
-            );
             this.showCorrectZipcode();
           } else {
             this.showWrongZipcode();
@@ -370,6 +364,16 @@ export class RegisterComponent implements OnInit {
   submitFormWrong() {
     this.getZipCodeInvalid(this.wrong_zipcodeDetials.value);
     console.log('wrong_zipcode value -->>', this.wrong_zipcodeDetials.value);
+  }
+
+  backbutton(data:any){
+    if(data=='Plans'){
+      this.selectedTab='Plans'
+      // this.getAllThePlans();
+    }
+    else{
+      this.selectedTab='Terms'
+    }
   }
 
   otpVerifySubmit() {
