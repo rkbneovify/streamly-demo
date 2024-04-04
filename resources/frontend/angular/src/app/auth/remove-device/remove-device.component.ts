@@ -39,12 +39,14 @@ export class RemoveDeviceComponent implements OnInit {
   }
 
   removedevice(id: string): void {
+    console.log('---device id ',id);
     this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
       next: (res: any) => {
         if (res.response_code == 200) {
           this.toastr.success('Device removed successfully')
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
           this.response = this.connectedDevice;
+          // console.log('res===> ',t)
           localStorage.setItem('loggedInDeviceDetail', JSON.stringify(this.response));
         }
       },
