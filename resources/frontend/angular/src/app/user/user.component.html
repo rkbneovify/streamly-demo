@@ -39,15 +39,15 @@
                 </div>
 
                 <div  *ngIf="submenu" class="profileUserMenu position-absolute">
-                  <div routerLink="user-settings">
+                  <div (click)="submenu = false" routerLink="user-settings">
                     <img src="../../assets/dummy-img/user.svg" alt="" />
                     <p>Account Settings</p>
                   </div>
-                  <div routerLink="user-settings">
+                  <div (click)="submenu = false" routerLink="user-settings">
                     <img src="../../assets/dummy-img/devices.svg" alt="" />
                     <p>Connected Devices</p>
                   </div>
-                  <div routerLink="downloadapp">
+                  <div (click)="submenu = false" routerLink="downloadapp">
                     <img src="../../assets/dummy-img/download.svg" alt="" />
                     <p>Download App</p>
                   </div>
