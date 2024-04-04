@@ -1,11 +1,6 @@
 <nav class="register-nav">
   <div class="nav-logo">
-    <img
-      class="pointer"
-      src="../../../assets/dummy-img/nav-logo.svg"
-      alt=""
-      routerLink="/"
-    />
+    <img class="pointer" src="../../../assets/dummy-img/nav-logo.svg" alt="" routerLink="/" />
   </div>
 </nav>
 
@@ -14,9 +9,7 @@
   <div class="overflow-auto">
     <div class="progressbar">
       <div class="steps" (click)="selectedTab = 'Availability'">
-        <div
-          [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}"
-        >
+        <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}">
           <span>
             <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
           </span>
@@ -24,9 +17,7 @@
         <p class="text-center">Availability</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Verification'">
-        <div
-          [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}"
-        >
+        <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}">
           <span>
             <img src="../../../assets/dummy-img/verificatoin.svg" alt="" />
           </span>
@@ -58,9 +49,7 @@
         <p class="text-center">Payment</p>
       </div>
       <div class="steps" (click)="selectedTab = 'Confirmation'">
-        <div
-          [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}"
-        >
+        <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}">
           <span>
             <img src="../../../assets/dummy-img/congrats.svg" alt="" />
           </span>
@@ -70,31 +59,17 @@
     </div>
   </div>
   <!-- </div> -->
-  <div
-    [ngClass]="{
+  <div [ngClass]="{
       'sub-contianer': true,
       'availability-img': applyclassForAva(),
       'veryify-img': applyclassForVer()
-    }"
-  >
+    }">
     <div class="row_1" *ngIf="selectedTab == 'Availability'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs">
-          <img
-            class="map"
-            src="../../../assets/dummy-img/res-map.png"
-            alt="map"
-          />
-          <img
-            class="search"
-            src="../../../assets/dummy-img/res-se.png"
-            alt=""
-          />
-          <img
-            class="checking"
-            src="../../../assets/dummy-img/res-ch.png"
-            alt=""
-          />
+          <img class="map" src="../../../assets/dummy-img/res-map.png" alt="map" />
+          <img class="search" src="../../../assets/dummy-img/res-se.png" alt="" />
+          <img class="checking" src="../../../assets/dummy-img/res-ch.png" alt="" />
           <p class="col_1-text">
             The information is required to check Streamly availability in your
             area.
@@ -102,42 +77,19 @@
           <p class="col_1-text-2">Your information is safe with us.</p>
         </div>
       </div>
-      <form
-        [formGroup]="availabilityForm"
-        (ngSubmit)="submitForm()"
-        class="col_2 col_2_1"
-      >
+      <form [formGroup]="availabilityForm" (ngSubmit)="submitForm()" class="col_2 col_2_1">
         <div class="input_fields">
-          <label class="label-p" for="fName"
-            >Full Name <span class="text-danger">*</span></label
-          >
-          <input
-            name="fname"
-            id="fName"
-            formControlName="fullName"
-            type="text"
-            placeholder="Enter your name"
-            class="input_field"
-          />
+          <label class="label-p" for="fName">Full Name <span class="text-danger">*</span></label>
+          <input name="fname" id="fName" formControlName="fullName" type="text" placeholder="Enter your name"
+            class="input_field" />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="email"
-            >Email<span class="text-danger">*</span></label
-          >
-          <input
-            name="email"
-            formControlName="email"
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            class="input_field"
-            required
-          />
+          <label class="label-p" for="email">Email<span class="text-danger">*</span></label>
+          <input name="email" formControlName="email" id="email" type="email" placeholder="Enter your email"
+            class="input_field" required />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="zipcode"
-            >Enter your zipcode <span class="text-danger">*</span></label
-          >
+          <label class="label-p" for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
           <!-- <input
             name="zipcode"
             #zip
@@ -156,56 +108,24 @@
           </div> -->
           <!-- <div class="flex flex-col country-control"> -->
           <!-- <label class="labels">Company Assigned</label> -->
-          <ng-select
-            class="res-ngselect"
-            formControlName="zipcode"
-            [items]="zipcodedata"
-            (search)="onSearch($event)"
-            (change)="onSelect($event)"
-            placeholder="Search zipcode"
-            [searchable]="true"
-            bindLabel="label"
-          >
+          <ng-select class="res-ngselect" formControlName="zipcode" [items]="zipcodedata" (search)="onSearch($event)"
+            (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
           </ng-select>
           <!-- </div> -->
         </div>
         <div class="input_fields">
-          <label class="label-p" for="city"
-            >City <span class="text-danger">*</span></label
-          >
-          <input
-            name="city"
-            formControlName="city"
-            id="city"
-            type="text"
-            autocomplete="off"
-            placeholder="City"
-            class="input_field"
-            [readOnly]="city_state_readonly"
-          />
+          <label class="label-p" for="city">City <span class="text-danger">*</span></label>
+          <input name="city" formControlName="city" id="city" type="text" autocomplete="off" placeholder="City"
+            class="input_field" [readOnly]="city_state_readonly" />
         </div>
         <div class="input_fields">
-          <label class="label-p" for="state"
-            >State <span class="text-danger">*</span></label
-          >
-          <input
-            name="state"
-            formControlName="state"
-            id="state"
-            type="text"
-            autocomplete="off"
-            placeholder="State"
-            class="input_field"
-            [readOnly]="city_state_readonly"
-          />
+          <label class="label-p" for="state">State <span class="text-danger">*</span></label>
+          <input name="state" formControlName="state" id="state" type="text" autocomplete="off" placeholder="State"
+            class="input_field" [readOnly]="city_state_readonly" />
         </div>
         <div class="input_fields">
-          <button
-            [ngClass]="{ 'btn-bg-gold': availabilityForm.valid }"
-            [disabled]="!availabilityForm.valid"
-            type="submit"
-            class=""
-          >
+          <button [ngClass]="{ 'btn-bg-gold': availabilityForm.valid }" [disabled]="!availabilityForm.valid"
+            type="submit" class="">
             Submit
           </button>
           <p class="label-p mt-1">
@@ -219,28 +139,14 @@
     <div class="row_1 row_2" *ngIf="selectedTab == 'Verification'">
       <div class="col_1 d-md-block d-none">
         <div>
-          <img
-            class="step1-img"
-            src="../../../assets/dummy-img/res_step_2.png"
-            alt="map"
-          />
+          <img class="step1-img" src="../../../assets/dummy-img/res_step_2.png" alt="map" />
         </div>
       </div>
-      <form
-        [formGroup]="otpVerificationForm"
-        (ngSubmit)="otpVerifySubmit()"
-        class="col_2 col_2_1 col_2_2"
-      >
+      <form [formGroup]="otpVerificationForm" (ngSubmit)="otpVerifySubmit()" class="col_2 col_2_1 col_2_2">
         <div class="input_fields">
           <label for="email">Email<span class="text-danger">*</span></label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            class="input_field"
-            id="email"
-            formControlName="email"
-            [readonly]="true"
-          />
+          <input type="email" placeholder="Enter your email" class="input_field" id="email" formControlName="email"
+            [readonly]="true" />
         </div>
         <div class="input_fields mt-2">
           <label for="otp">OTP <span class="text-danger">*</span></label>
@@ -287,81 +193,32 @@
               placeholder="-"
               class="input_field input_field2"
             /> -->
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit1"
-              formControlName="digit1"
-              maxlength="1"
-              (input)="onInputChange()"
-              (paste)="onPaste($event)"
-            />
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit2"
-              formControlName="digit2"
-              maxlength="1"
-              (input)="onInputChange()"
-            />
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit3"
-              formControlName="digit3"
-              maxlength="1"
-              (input)="onInputChange()"
-            />
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit4"
-              formControlName="digit4"
-              maxlength="1"
-              (input)="onInputChange()"
-            />
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit5"
-              formControlName="digit5"
-              maxlength="1"
-              (input)="onInputChange()"
-            />
-            <input
-              autocomplete="off"
-              class="input_field input_field2"
-              type="text"
-              id="digit6"
-              formControlName="digit6"
-              maxlength="1"
-              (input)="onInputChange()"
-            />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit1" formControlName="digit1"
+              maxlength="1" (input)="onInputChange()" (paste)="onPaste($event)" />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit2" formControlName="digit2"
+              maxlength="1" (input)="onInputChange()" />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit3" formControlName="digit3"
+              maxlength="1" (input)="onInputChange()" />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit4" formControlName="digit4"
+              maxlength="1" (input)="onInputChange()" />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit5" formControlName="digit5"
+              maxlength="1" (input)="onInputChange()" />
+            <input autocomplete="off" class="input_field input_field2" type="text" id="digit6" formControlName="digit6"
+              maxlength="1" (input)="onInputChange()" />
           </div>
-          <button
-            [ngClass]="{ 'btn-bg-gold': !resendButtonDisabled }"
-            (click)="resendOtp()"
-            [disabled]="resendButtonDisabled"
-          >
+          <button [ngClass]="{ 'btn-bg-gold': !resendButtonDisabled }" (click)="resendOtp()"
+            [disabled]="resendButtonDisabled">
             {{
-              resendButtonDisabled
-                ? "Resending in " + countdown + " seconds"
-                : "Resend OTP"
+            resendButtonDisabled
+            ? "Resending in " + countdown + " seconds"
+            : "Resend OTP"
             }}
           </button>
         </div>
 
         <div class="input_fields">
-          <button
-            [ngClass]="{ 'btn-bg-gold': otpVerificationForm.valid }"
-            [disabled]="!otpVerificationForm.valid"
-            type="submit"
-          >
+          <button [ngClass]="{ 'btn-bg-gold': otpVerificationForm.valid }" [disabled]="!otpVerificationForm.valid"
+            type="submit">
             Verify
           </button>
           <p>Already have an account? <span>Log In</span></p>
@@ -372,31 +229,25 @@
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs-2">
-          <img
-            class="step1-img"
-            src="../../../assets/dummy-img/res-step3.png"
-            alt="map"
-          />
+          <img class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
         </div>
       </div>
 
-      <div id="carouselExampleIndicators"
-        class="carousel slide"
-        data-bs-ride="carousel"
-        data-bs-interval="5000"
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000"
         data-pause=hover>
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+            aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+            aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+            aria-label="Slide 3"></button>
+        </div>
         <div class="carousel-inner">
 
 
           <div *ngFor="let data of all_Plans[0]; let i = index" [ngClass]="{ 'carousel-item': true, active: i === 0 }">
-            <div
-              class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
-            >
+            <div class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
               <div class="col_2_gap d-flex pb-4">
                 <div>
                   <img src="../../../assets/dummy-img/month_plan.svg" alt="" />
@@ -437,7 +288,7 @@
               </div>
 
               <div class="res-step3-btn">
-                <button (click)="getAllThePlans()">Select Plan</button>
+                <button (click)="selectedTab = 'Terms'; selectedPlan = data;">Select Plan</button>
               </div>
             </div>
           </div>
@@ -520,23 +371,15 @@
               </div>
             </div>
           </div>-->
-        
-        </div> 
-        <button
-          class="carousel-control-prev"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev"
-        >
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
         </button>
-        <button
-          class="carousel-control-next"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next"
-        >
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+          data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Next</span>
         </button>
@@ -544,7 +387,12 @@
 
     </div>
 
-    <div class="row_4 my-4" *ngIf="selectedTab == 'Terms'">
+    <div class="row_4 my-4 position-relative" *ngIf="selectedTab == 'Terms'">
+      <div style="top:-10px; left: 12px;" (click)="backbutton('Plans')" class="pointer position-absolute d-flex justify-content-center align-item-center">
+        <img *ngIf="!acceptTerm" src="../../../assets/dummy-img/backArrow.svg" alt="">
+        <img *ngIf="acceptTerm" src="../../../assets/dummy-img/arrow.svg" alt="">
+        <div [ngClass]="{'backbtn ms-2':true,'backbtnwhite':acceptTerm}">Back</div>
+      </div>
       <h1>Terms & Conditions</h1>
       <div class="heading1">
         <h2>Heading 1</h2>
@@ -587,17 +435,16 @@
         </p>
       </div>
       <div class="terms">
-        <input type="checkbox" name="termsandcondition" id="terms" />
-        <label for="terms"
-          >I agree with all the terms and conditions of Streamly platform</label
-        >
+        <input type="checkbox" name="termsandcondition" id="terms" [checked]="acceptTerm" (change)="acceptTerm = !acceptTerm" />
+        <label for="terms">I agree with all the terms and conditions of Streamly platform</label>
       </div>
       <div class="nextbtn">
-        <button>Next</button>
+        <button [ngClass]="{'btn-bg-gold':acceptTerm}" [disabled]="!acceptTerm" (click)="selectedTab = 'Payment';">Next</button>
       </div>
     </div>
 
-    <div class="row_5 row py-4 pt-5" *ngIf="selectedTab == 'Payment'">
+    <div class="row_5 row py-4 pt-5 position-relative" *ngIf="selectedTab == 'Payment'">
+      <div (click)="backbutton('Terms')" class="pointer payment-back-btn backbtnwhiteposition-absolute d-flex justify-content-start align-item-center"><img src="../../../assets/dummy-img/arrow.svg" alt=""><div class="backbtn backbtnwhite ms-2">Back</div></div>
       <div class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">
@@ -607,10 +454,7 @@
             <div class="row_plans d-flex justify-content-between pt-4 pb-5">
               <p>Basic Plan</p>
               <div>
-                <img
-                  src="../../../assets/dummy-img/shopping-cart-03.svg"
-                  alt=""
-                />
+                <img src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
               </div>
             </div>
             <div class="row_total d-flex justify-content-between py-4">
@@ -719,10 +563,7 @@
       </div>
     </div>
 
-    <div
-      class="row_6 my-4 d-flex justify-content-center align-item-center"
-      *ngIf="selectedTab == 'Confirmation'"
-    >
+    <div class="row_6 my-4 d-flex justify-content-center align-item-center" *ngIf="selectedTab == 'Confirmation'">
       <div class="row_6_container">
         <div class="">
           <img src="../../../assets/dummy-img/heart-icon.png" alt="" />
@@ -743,34 +584,17 @@
 </div>
 
 <!-- Button trigger modal -->
-<button
-  type="button"
-  class="btn btn-primary d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#staticAlreadyUser"
-  id="btnstaticAlreadyUser"
-></button>
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticAlreadyUser"
+  id="btnstaticAlreadyUser"></button>
 <!-- Modal for already User-->
-<div
-  class="modal fade"
-  id="staticAlreadyUser"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticAlreadyUserLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="staticAlreadyUser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticAlreadyUserLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
@@ -782,11 +606,7 @@
             <p class="">This email is already in use with another account.</p>
             <p>Please login!</p>
           </div>
-          <button
-            class="btn_2 btn-bg-gold"
-            routerLink="/auth/login"
-            data-bs-dismiss="modal"
-          >
+          <button class="btn_2 btn-bg-gold" routerLink="/auth/login" data-bs-dismiss="modal">
             Log In
           </button>
         </div>
@@ -796,44 +616,23 @@
 </div>
 
 <!-- Modal for zipcode-correct-->
-<button
-  type="button"
-  class="btn btn-primary d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#staticZipCorrect"
-  id="btnstaticZipCorrectUser"
-></button>
-<div
-  class="modal fade"
-  id="staticZipCorrect"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel"
-  aria-hidden="true"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticZipCorrect"
+  id="btnstaticZipCorrectUser"></button>
+<div class="modal fade" id="staticZipCorrect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img
-                src="../../../assets/dummy-img/check-circle-broken.svg"
-                alt=""
-              /> </span
-            >Your Zipcode :
+              <img src="../../../assets/dummy-img/check-circle-broken.svg" alt="" /> </span>Your Zipcode :
             <span>{{ searchZipInput }}</span>
           </h3>
         </div>
@@ -848,11 +647,7 @@
             <p><span>City : </span>{{ userCity }}</p>
             <p><span>State :</span>{{ userState }}</p>
           </div>
-          <button
-            class="btn_2 btn-bg-gold"
-            (click)="resendOtp()"
-            data-bs-dismiss="modal"
-          >
+          <button class="btn_2 btn-bg-gold" (click)="resendOtp()" data-bs-dismiss="modal">
             Okay
           </button>
         </div>
@@ -862,44 +657,23 @@
 </div>
 
 <!-- Modal for zipcode-worng-->
-<button
-  type="button"
-  class="btn btn-primary d-none"
-  data-bs-toggle="modal"
-  data-bs-target="#staticZipWorng"
-  id="btnstaticZipWrongUser"
-></button>
-<div
-  class="modal fade"
-  id="staticZipWorng"
-  data-bs-backdrop="static"
-  data-bs-keyboard="false"
-  tabindex="-1"
-  aria-labelledby="staticZipWorngLabel"
-  aria-hidden="true"
->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticZipWorng"
+  id="btnstaticZipWrongUser"></button>
+<div class="modal fade" id="staticZipWorng" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipWorngLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img
-            class="pointer"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            src="../../../assets/dummy-img/x-circle.svg"
-            alt=""
-          />
+          <img class="pointer" id="closeWrongZipForm" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img
-                src="../../../assets/dummy-img/alert-triangle.svg"
-                alt=""
-              /> </span
-            >Your Zipcode :
+              <img src="../../../assets/dummy-img/alert-triangle.svg" alt="" /> </span>Your Zipcode :
             <span>{{ searchZipInput }}</span>
           </h3>
         </div>
@@ -917,34 +691,16 @@
             </p>
           </div>
           <div class="zip_bottom_mail">
-            <form
-              [formGroup]="wrong_zipcodeDetials"
-              (ngSubmit)="submitFormWrong()"
-            >
-              <label for="w-email"
-                >Email <span class="text-danger">*</span></label
-              >
-              <input
-                placeholder="Enter"
-                class="input_standred"
-                type="email"
-                id="w-email"
-                formControlName="w_email"
-                required
-              />
-              <small
-                class="text-danger"
-                *ngIf="
+            <form [formGroup]="wrong_zipcodeDetials" (ngSubmit)="submitFormWrong()">
+              <label for="w-email">Email <span class="text-danger">*</span></label>
+              <input placeholder="Enter" class="input_standred" type="email" id="w-email" formControlName="w_email"
+                required />
+              <small class="text-danger" *ngIf="
                   wrong_zipcodeDetials.get('w_email')?.invalid &&
                   wrong_zipcodeDetials.get('w_email')?.touched
-                "
-              >
-                Enter Email</small
-              >
-              <button
-                class="btn_hover mt-4"
-                [disabled]="!wrong_zipcodeDetials.valid"
-              >
+                ">
+                Enter Email</small>
+              <button class="btn_hover mt-4" [disabled]="!wrong_zipcodeDetials.valid">
                 Okay
               </button>
             </form>

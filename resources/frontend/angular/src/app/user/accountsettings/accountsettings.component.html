@@ -1,100 +1,160 @@
 <div class="accountSettings_container pb-4">
-    <h1 class="my-2">Account Settings</h1>
-    <div class="account_details_container mb-4">
-        <p class="account-heading mb-4  ">Account Details</p>
-        <div class="accountdetails">
-            <div class="acoount_user_name">
-                <label>Name</label>
-                <p>Deepak Yadav</p>
-            </div>
-            <div class="acoount_user_email my-4">
-                <label>Email</label>
-                <p>deepak12345334gmail.com</p>
-            </div>
-            <div class="acoount_user_password">
-                <label for="">Password</label>
-                <p>**********</p>
-            </div>
-            <div class="acoount_user_timezone my-4">
-                <label for="">Home Timezone</label>
-                <p>Eastern Daylight Time</p>
-            </div>
-            <div class="acoount_user_currtimezone">
-                <label for="">
-                    Current Timezone
-                </label>
-                <p>India Standard Time</p>
-            </div>
-            <div class="acoount_user_zipcode my-4">
-                <label for="">
-                    Zipcode
-                </label>
-                <p>000000</p>
-            </div>
-        </div>
-        <div class="accountbtn_container">
-            <button class="plan_btn btn-delete">Account Delete</button>
-            <button class="plan_btn btn-edit">Edit</button>
-        </div>
+  <h1 class="my-2">Account Settings</h1>
+  <form [formGroup]="updateuserDetatils" class="account_details_container mb-4">
+    <p class="account-heading mb-4">Account Details</p>
+    <div class="accountdetails">
+      <div class="acoount_user_name">
+        <label>Name</label>
+        <ng-container *ngIf="editMode; else displayMode">
+          <input
+            required
+            class="input_standred"
+            formControlName="fullname"
+            type="text"
+          />
+        </ng-container>
+        <ng-template #displayMode>
+          <p>{{ updateuserDetatils.get("fullname")?.value }}</p>
+        </ng-template>
+      </div>
+      <div class="acoount_user_email my-4">
+        <label>Email</label>
+        <!-- <input class="input_plane" formControlName="email" type="text"> -->
+        <ng-container *ngIf="editMode; else displayModeEmail">
+          <input
+            required
+            class="input_standred"
+            formControlName="email"
+            type="email"
+          />
+        </ng-container>
+        <ng-template #displayModeEmail>
+          <p>{{ updateuserDetatils.get("email")?.value }}</p>
+        </ng-template>
+      </div>
+      <div class="acoount_user_password">
+        <label for="">Password</label>
+        <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
+        <ng-container *ngIf="editMode; else displayModePassword">
+          <input
+            required
+            class="input_standred"
+            formControlName="password"
+            type="text"
+          />
+        </ng-container>
+        <ng-template #displayModePassword>
+          <p>*********</p>
+        </ng-template>
+      </div>
+      <div class="acoount_user_timezone my-4">
+        <label for="">Home Timezone</label>
+        <p>Eastern Daylight Time</p>
+      </div>
+      <div class="acoount_user_currtimezone">
+        <label for=""> Current Timezone </label>
+        <p>India Standard Time</p>
+      </div>
+      <div class="acoount_user_zipcode my-4">
+        <label for=""> Zipcode </label>
+        <!-- <input class="input_plane" formControlName="zipcode" type="text" name="" id=""> -->
+        <ng-container *ngIf="editMode; else displayModeZipdcode">
+          <input
+            required
+            class="input_standred"
+            formControlName="zipcode"
+            type="text"
+          />
+        </ng-container>
+        <ng-template #displayModeZipdcode>
+          <p>{{ updateuserDetatils.get("zipcode")?.value }}</p>
+        </ng-template>
+      </div>
     </div>
-
-    <div class="account_details_container account_subscription_container mb-4">
-        <p class="account-heading mb-4  ">Account Details</p>
-        <div class="accountdetails">
-            <div class="acoount_user_name">
-                <label>Current Plan</label>
-                <p>Silver 34fn sd</p>
-            </div>
-            <div class="acoount_user_email my-4">
-                <label>Plan Renewal Date</label>
-                <p>No Upcoming Invoices</p>
-            </div>
-            <div class="acoount_user_password">
-                <label for="">Payment Method</label>
-                <p>Visa 4242</p>
-            </div>
-        </div>
-        <div class="accountbtn_container my-4">
-            <button class="plan_btn btn-delete">Account Delete</button>
-        </div>
+    <div class="accountbtn_container">
+      <button *ngIf="!editMode" class="plan_btn btn-delete">
+        Account Delete
+      </button>
+      <button
+        *ngIf="!editMode"
+        class="plan_btn btn-edit"
+        (click)="toggleEditMode()"
+      >
+        Edit
+      </button>
+      <button
+        *ngIf="editMode"
+        class="plan_btn btn-edit"
+        (click)="saveChanges()"
+      >
+        Save
+      </button>
+      <button
+        *ngIf="editMode"
+        class="plan_btn btn-delete"
+        (click)="toggleEditMode()"
+      >
+        Cancel
+      </button>
     </div>
+  </form>
 
-    <div class="account_details_container account_subscription_container ">
-        <p class="account-heading mb-4  ">Card Details</p>
-        <div class="accountdetails">
-            <div class="acoount_user_name">
-                <label>Card Type</label>
-                <p>Visa</p>
-            </div>
-            <div class="acoount_user_email my-4">
-                <label>Card Number</label>
-                <p>*********4242</p>
-            </div>
-        </div>
-        <div class="accountbtn_container my-4">
-            <button class="plan_btn btn-delete">Account Delete</button>
-        </div>
+  <div class="account_details_container account_subscription_container mb-4">
+    <p class="account-heading mb-4">Account Details</p>
+    <div class="accountdetails">
+      <div class="acoount_user_name">
+        <label>Current Plan</label>
+        <p>Silver 34fn sd</p>
+      </div>
+      <div class="acoount_user_email my-4">
+        <label>Plan Renewal Date</label>
+        <p>No Upcoming Invoices</p>
+      </div>
+      <div class="acoount_user_password">
+        <label for="">Payment Method</label>
+        <p>Visa 4242</p>
+      </div>
     </div>
-
-    <div class="account_details_container  mt-4 account_Invoices_container ">
-        <p class="account-heading  ">Invoices</p>
-        <div class="invoicesdetails_main">
-            <div class="invoicesdetails invoicesdetail_heading">
-                <p>Invoices</p>
-                <p>Date</p>
-                <p>Download</p>
-            </div>
-            <div class="invoicesdetails ">
-                <p>12345678</p>
-                <p>11/03/2024</p>
-                <p class="pointer">Invoice</p>
-            </div>
-            <div class="invoicesdetails">
-                <p>12345678</p>
-                <p>11/03/2024</p>
-                <p class="pointer">Invoice</p>
-            </div>
-        </div>
+    <div class="accountbtn_container my-4">
+      <button class="plan_btn btn-delete">Account Delete</button>
     </div>
+  </div>
 
+  <div class="account_details_container account_subscription_container">
+    <p class="account-heading mb-4">Card Details</p>
+    <div class="accountdetails">
+      <div class="acoount_user_name">
+        <label>Card Type</label>
+        <p>Visa</p>
+      </div>
+      <div class="acoount_user_email my-4">
+        <label>Card Number</label>
+        <p>*********4242</p>
+      </div>
+    </div>
+    <div class="accountbtn_container my-4">
+      <button class="plan_btn btn-delete">Account Delete</button>
+    </div>
+  </div>
+
+  <div class="account_details_container mt-4 account_Invoices_container">
+    <p class="account-heading">Invoices</p>
+    <div class="invoicesdetails_main">
+      <div class="invoicesdetails invoicesdetail_heading">
+        <p>Invoices</p>
+        <p>Date</p>
+        <p>Download</p>
+      </div>
+      <div class="invoicesdetails">
+        <p>12345678</p>
+        <p>11/03/2024</p>
+        <p class="pointer">Invoice</p>
+      </div>
+      <div class="invoicesdetails">
+        <p>12345678</p>
+        <p>11/03/2024</p>
+        <p class="pointer">Invoice</p>
+      </div>
+    </div>
+  </div>
 </div>
