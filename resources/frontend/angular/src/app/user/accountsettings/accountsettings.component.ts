@@ -21,10 +21,11 @@ export class AccountsettingsComponent {
         this.updateuserDetatils = this.fb.group({
             fullname: ['', Validators.required],
             email: ['', [Validators.required, Validators.email]],
-            password: ['1111111', Validators.required],
+            oldPassword:['',Validators.required],
+            password: ['', Validators.required],
             zipcode: ['', Validators.required]
         })
-        const jsonData = localStorage.getItem('userDetails');
+        const jsonData = localStorage.getItem('userDetails');   
         if (jsonData !== null) {
             try {
                 this.usersdetail = JSON.parse(localStorage.getItem('userDetails') || '');
@@ -47,11 +48,18 @@ export class AccountsettingsComponent {
 
     toggleEditMode() {
         this.editMode = !this.editMode;
+        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
+        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
     }
 
+    
+
     saveChanges() {
-        // Implement saving changes here
-        this.toggleEditMode(); // Optionally, you can toggle the edit mode off after saving
+        // saving changes here
+        console.log(this.updateuserDetatils);
+        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
+        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
+        this.toggleEditMode(); 
     }
 
 }

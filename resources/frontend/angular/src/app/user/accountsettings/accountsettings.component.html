@@ -20,17 +20,7 @@
       <div class="acoount_user_email my-4">
         <label>Email</label>
         <!-- <input class="input_plane" formControlName="email" type="text"> -->
-        <ng-container *ngIf="editMode; else displayModeEmail">
-          <input
-            required
-            class="input_standred"
-            formControlName="email"
-            type="email"
-          />
-        </ng-container>
-        <ng-template #displayModeEmail>
           <p>{{ updateuserDetatils.get("email")?.value }}</p>
-        </ng-template>
       </div>
       <div class="acoount_user_password">
         <label for="">Password</label>
@@ -58,17 +48,7 @@
       <div class="acoount_user_zipcode my-4">
         <label for=""> Zipcode </label>
         <!-- <input class="input_plane" formControlName="zipcode" type="text" name="" id=""> -->
-        <ng-container *ngIf="editMode; else displayModeZipdcode">
-          <input
-            required
-            class="input_standred"
-            formControlName="zipcode"
-            type="text"
-          />
-        </ng-container>
-        <ng-template #displayModeZipdcode>
           <p>{{ updateuserDetatils.get("zipcode")?.value }}</p>
-        </ng-template>
       </div>
     </div>
     <div class="accountbtn_container">
