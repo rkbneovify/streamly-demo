@@ -1,6 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { CrudService } from '../services/crud.service';
 
 @Component({
   selector: 'app-user',
@@ -12,9 +13,27 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class UserComponent {
 
   submenu:boolean=false;
+  activeTab:string='home';
+  constructor( private crud: CrudService){}
 
   sideBarAnimation (){
     console.log('hello');
-    
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const isInsideMenu = target.closest('.profileUserMenu') || target.classList.contains('schedule_profile') || target.classList.contains('userProfileImage');
+    if (!isInsideMenu) {
+      console.log('helllo')
+      this.submenu = false; // Close the menu if the click is outside the menu
+    }
+  }
+
+
+
+  logoutUser(){
+    this.crud.postRequest(`auth/logout`,``).subscribe((res:any)=>{
+    })
   }
 }
