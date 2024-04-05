@@ -1,6 +1,6 @@
 import { NgClass, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,7 @@ import { CrudService } from '../../services/crud.service';
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
-export class AccountsettingsComponent {
+export class AccountsettingsComponent implements OnInit {
   updateuserDetatils!: FormGroup;
   editMode: boolean = false;
   showPassword: boolean = false;
@@ -39,7 +39,9 @@ export class AccountsettingsComponent {
       newpassword: ['', Validators.required],
       zipcode: ['', Validators.required],
     });
+  }
 
+  ngOnInit(): void {
     const jsonData = localStorage.getItem('userDetails');
     if (jsonData !== null) {
       try {
@@ -87,24 +89,34 @@ export class AccountsettingsComponent {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
-        console.log('token',headers);
-
-
+        console.log('token', headers);
 
         // if (this.updated_data) {
-            let body={
-                "name": this.updateuserDetatils.value.fullname,
-                "old_password": this.updateuserDetatils.value.oldpassword,
-                "password": this.updateuserDetatils.value.newpassword
-            }
-          console.log('updated values -->>>', body);
-          this.crud
-            .postRequest('auth/account-edit', body, headers)
-            .subscribe((res: any) => {
-              console.log('get all device ->>', res);
-              this.ts.success(res.message)
+        let body = {
+          name: this.updateuserDetatils.value.fullname,
+          old_password: this.updateuserDetatils.value.oldpassword,
+          password: this.updateuserDetatils.value.newpassword,
+        };
+        console.log('updated values -->>>', body);
+        this.crud
+          .postRequest('auth/account-edit', body, headers)
+          .subscribe((res: any) => {
+            console.log('get all device ->>', res);
+            if(res.status == 200){
+                          // Update name in local storage
+            this.usersdetail.name = body.name;
+            console.log(this.usersdetail);
+            localStorage.setItem(
+              'userDetails',
+              JSON.stringify(this.usersdetail)
+              );
               
-            });
+              this.ts.success(res.message);
+            }else{
+              this.ts.error(res.error.message);
+            }
+
+          });
         // }
       } catch (error) {
         console.error('Error parsing JSON data:--->>>', error);
