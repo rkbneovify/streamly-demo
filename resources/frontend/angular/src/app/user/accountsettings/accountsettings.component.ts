@@ -1,57 +1,134 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router } from 'express';
+import { ToastrService } from 'ngx-toastr';
+import { CrudService } from '../../services/crud.service';
 
 @Component({
-    selector: 'app-accountsettings',
-    standalone: true,
-    imports: [ReactiveFormsModule, NgClass, NgIf],
-    templateUrl: './accountsettings.component.html',
-    styleUrl: './accountsettings.component.scss'
+  selector: 'app-accountsettings',
+  standalone: true,
+  imports: [ReactiveFormsModule, NgClass, NgIf],
+  templateUrl: './accountsettings.component.html',
+  styleUrl: './accountsettings.component.scss',
 })
-export class AccountsettingsComponent {
+export class AccountsettingsComponent implements OnInit {
+  updateuserDetatils!: FormGroup;
+  editMode: boolean = false;
+  showPassword: boolean = false;
+  usersdetail: any;
+  deviceInfo: any;
+  access_Token: any;
+  updated_data: any;
 
-    updateuserDetatils!: FormGroup;
-    editMode: boolean = false;
-    showPassword: boolean = false;
-    usersdetail: any;
-    deviceInfo: any;
+  constructor(
+    private fb: FormBuilder,
+    private crud: CrudService,
+    private ts: ToastrService
+  ) {
+    this.updateuserDetatils = this.fb.group({
+      fullname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      oldpassword: ['', Validators.required],
+      newpassword: ['', Validators.required],
+      zipcode: ['', Validators.required],
+    });
+  }
 
-    constructor(private fb: FormBuilder) {
-        this.updateuserDetatils = this.fb.group({
-            fullname: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            password: ['1111111', Validators.required],
-            zipcode: ['', Validators.required]
-        })
-        const jsonData = localStorage.getItem('userDetails');
-        if (jsonData !== null) {
-            try {
-                this.usersdetail = JSON.parse(localStorage.getItem('userDetails') || '');
-            } catch (error) {
-                console.error('Error parsing JSON data:', error);
+  ngOnInit(): void {
+    const jsonData = localStorage.getItem('userDetails');
+    if (jsonData !== null) {
+      try {
+        this.usersdetail = JSON.parse(
+          localStorage.getItem('userDetails') || ''
+        );
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+    const deviceInfoData = localStorage.getItem('deviceInfo');
+    if (deviceInfoData !== null) {
+      try {
+        this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+    this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
+    this.updateuserDetatils.controls['zipcode'].setValue(
+      this.usersdetail?.zipcode
+    );
+  }
+
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+  }
+
+  saveChanges() {
+    // saving changes here
+    const userToken = localStorage.getItem('deviceInfo');
+    if (userToken !== null) {
+      try {
+        this.access_Token = JSON.parse(
+          localStorage.getItem('deviceInfo') || ''
+        );
+        const tokenData = this.access_Token?.access_token;
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${tokenData}`,
+          Accept: 'application/json',
+        });
+        console.log('token', headers);
+
+        // if (this.updated_data) {
+        let body = {
+          name: this.updateuserDetatils.value.fullname,
+          old_password: this.updateuserDetatils.value.oldpassword,
+          password: this.updateuserDetatils.value.newpassword,
+        };
+        console.log('updated values -->>>', body);
+        this.crud
+          .postRequest('auth/account-edit', body, headers)
+          .subscribe((res: any) => {
+            console.log('get all device ->>', res);
+            if(res.status == 200){
+                          // Update name in local storage
+            this.usersdetail.name = body.name;
+            console.log(this.usersdetail);
+            localStorage.setItem(
+              'userDetails',
+              JSON.stringify(this.usersdetail)
+              );
+              
+              this.ts.success(res.message);
+            }else{
+              this.ts.error(res.error.message);
             }
-        }
-        const deviceInfoData = localStorage.getItem('deviceInfo');
-        if (deviceInfoData !== null) {
-            try {
-                this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
-            } catch (error) {
-                console.error('Error parsing JSON data:', error);
-            }
-        }
-        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
-        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
-        this.updateuserDetatils.controls['zipcode'].setValue(this.usersdetail?.zipcode);
+
+          });
+        // }
+      } catch (error) {
+        console.error('Error parsing JSON data:--->>>', error);
+      }
     }
 
-    toggleEditMode() {
-        this.editMode = !this.editMode;
-    }
-
-    saveChanges() {
-        // Implement saving changes here
-        this.toggleEditMode(); // Optionally, you can toggle the edit mode off after saving
-    }
-
+    console.log(this.updateuserDetatils.value);
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+    this.updateuserDetatils.controls['oldpassword'].setValue('');
+    this.updateuserDetatils.controls['newpassword'].setValue('');
+    this.toggleEditMode();
+  }
 }

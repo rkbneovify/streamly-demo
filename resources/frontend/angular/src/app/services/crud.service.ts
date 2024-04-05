@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -15,9 +15,14 @@ export class CrudService {
   getRequest(requestUrl:string,other?:any){
     return this.http.get(`${this.baseUrl}/api/${requestUrl}`,other);
   }
-  postRequest(requestUrl:string,data:any){
-    return this.http.post(`${this.baseUrl}/api/${requestUrl}`,data)
+  // postRequest(requestUrl:string,data:any){
+  //   return this.http.post(`${this.baseUrl}/api/${requestUrl}`,data)
+  // }
+
+  postRequest(requestUrl: string, data: any, headers?: any) {
+    return this.http.post(`${this.baseUrl}/api/${requestUrl}`, data, { headers });
   }
+
   putRequest(requestUrl:string,data:any){
     return this.http.put(`${this.baseUrl}/api/${requestUrl}`,data)
   }
