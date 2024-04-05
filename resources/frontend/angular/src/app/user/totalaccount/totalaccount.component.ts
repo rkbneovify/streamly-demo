@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [],
+  imports: [NgFor],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss'
 })

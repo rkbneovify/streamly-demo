@@ -1,65 +1,122 @@
 import { NgClass, NgIf } from '@angular/common';
+import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Router } from 'express';
+import { ToastrService } from 'ngx-toastr';
+import { CrudService } from '../../services/crud.service';
 
 @Component({
-    selector: 'app-accountsettings',
-    standalone: true,
-    imports: [ReactiveFormsModule, NgClass, NgIf],
-    templateUrl: './accountsettings.component.html',
-    styleUrl: './accountsettings.component.scss'
+  selector: 'app-accountsettings',
+  standalone: true,
+  imports: [ReactiveFormsModule, NgClass, NgIf],
+  templateUrl: './accountsettings.component.html',
+  styleUrl: './accountsettings.component.scss',
 })
 export class AccountsettingsComponent {
+  updateuserDetatils!: FormGroup;
+  editMode: boolean = false;
+  showPassword: boolean = false;
+  usersdetail: any;
+  deviceInfo: any;
+  access_Token: any;
+  updated_data: any;
 
-    updateuserDetatils!: FormGroup;
-    editMode: boolean = false;
-    showPassword: boolean = false;
-    usersdetail: any;
-    deviceInfo: any;
+  constructor(
+    private fb: FormBuilder,
+    private crud: CrudService,
+    private ts: ToastrService
+  ) {
+    this.updateuserDetatils = this.fb.group({
+      fullname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      oldpassword: ['', Validators.required],
+      newpassword: ['', Validators.required],
+      zipcode: ['', Validators.required],
+    });
 
-    constructor(private fb: FormBuilder) {
-        this.updateuserDetatils = this.fb.group({
-            fullname: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            oldPassword:['',Validators.required],
-            password: ['', Validators.required],
-            zipcode: ['', Validators.required]
-        })
-        const jsonData = localStorage.getItem('userDetails');   
-        if (jsonData !== null) {
-            try {
-                this.usersdetail = JSON.parse(localStorage.getItem('userDetails') || '');
-            } catch (error) {
-                console.error('Error parsing JSON data:', error);
+    const jsonData = localStorage.getItem('userDetails');
+    if (jsonData !== null) {
+      try {
+        this.usersdetail = JSON.parse(
+          localStorage.getItem('userDetails') || ''
+        );
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+    const deviceInfoData = localStorage.getItem('deviceInfo');
+    if (deviceInfoData !== null) {
+      try {
+        this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
+      } catch (error) {
+        console.error('Error parsing JSON data:', error);
+      }
+    }
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+    this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
+    this.updateuserDetatils.controls['zipcode'].setValue(
+      this.usersdetail?.zipcode
+    );
+  }
+
+  toggleEditMode() {
+    this.editMode = !this.editMode;
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+  }
+
+  saveChanges() {
+    // saving changes here
+    const userToken = localStorage.getItem('deviceInfo');
+    if (userToken !== null) {
+      try {
+        this.access_Token = JSON.parse(
+          localStorage.getItem('deviceInfo') || ''
+        );
+        const tokenData = this.access_Token?.access_token;
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${tokenData}`,
+          Accept: 'application/json',
+        });
+        console.log('token',headers);
+
+
+
+        // if (this.updated_data) {
+            let body={
+                "name": this.updateuserDetatils.value.fullname,
+                "old_password": this.updateuserDetatils.value.oldpassword,
+                "password": this.updateuserDetatils.value.newpassword
             }
-        }
-        const deviceInfoData = localStorage.getItem('deviceInfo');
-        if (deviceInfoData !== null) {
-            try {
-                this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
-            } catch (error) {
-                console.error('Error parsing JSON data:', error);
-            }
-        }
-        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
-        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
-        this.updateuserDetatils.controls['zipcode'].setValue(this.usersdetail?.zipcode);
+          console.log('updated values -->>>', body);
+          this.crud
+            .postRequest('auth/account-edit', body, headers)
+            .subscribe((res: any) => {
+              console.log('get all device ->>', res);
+              this.ts.success(res.message)
+              
+            });
+        // }
+      } catch (error) {
+        console.error('Error parsing JSON data:--->>>', error);
+      }
     }
 
-    toggleEditMode() {
-        this.editMode = !this.editMode;
-        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
-        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
-    }
-
-    
-
-    saveChanges() {
-        // saving changes here
-        console.log(this.updateuserDetatils);
-        this.updateuserDetatils.controls['fullname'].setValue(this.usersdetail?.name);
-        this.updateuserDetatils.controls['email'].setValue(this.usersdetail?.email);
-        this.toggleEditMode(); 
-    }
-
+    console.log(this.updateuserDetatils.value);
+    this.updateuserDetatils.controls['fullname'].setValue(
+      this.usersdetail?.name
+    );
+    this.updateuserDetatils.controls['oldpassword'].setValue('');
+    this.updateuserDetatils.controls['newpassword'].setValue('');
+    this.toggleEditMode();
+  }
 }

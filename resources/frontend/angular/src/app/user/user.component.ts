@@ -1,8 +1,9 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router,RouterLink, RouterOutlet } from '@angular/router';
 import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user',
@@ -16,10 +17,27 @@ export class UserComponent {
   submenu:boolean=false;
   activeTab:string='home';
   access_Token!:any;
-  constructor( private crud: CrudService){}
+  constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
 
   sideBarAnimation (){
-    console.log('hello');
+    const userToken = localStorage.getItem('deviceInfo');
+    if (userToken !== null) {
+      try {
+        this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
+        const tokenData = this.access_Token?.access_token;
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${tokenData}`,
+          'Accept': 'application/json'
+        });
+        console.log(tokenData,'--------token');
+        this.crud.getRequest('auth/connecteddevice', headers).subscribe((res: any) => {
+          console.log('get all device ->>',res);
+        });
+      } catch (error) {
+          console.error('Error parsing JSON data:--->>>', error);
+      }
+  }
+    // console.log('hello');
   }
 
   @HostListener('document:click', ['$event'])
@@ -42,13 +60,19 @@ export class UserComponent {
       try {
         this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
         const tokenData = this.access_Token?.access_token;
-        // const headers1 = new HttpHeaders({
-        //   'Authorization': `Bearer ${tokenData}`,
-        //   'Accept': 'application/json'
-        // });
+        const headers1 = new HttpHeaders({
+          'Authorization': `Bearer ${tokenData}`,
+          'Accept': 'application/json'
+        });
         console.log(tokenData);
-        this.crud.postRequest(`auth/logout`, tokenData).subscribe((res: any) => {
+        this.crud.postRequest(`auth/logout`,{}, headers1).subscribe((res: any) => {
           console.log('Log Out',res);
+          if(res.response_code == 200){
+            localStorage.removeItem('deviceInfo');
+            localStorage.removeItem('userDetails');
+            this.ts.success(res.message);
+            this.router.navigate(['/']);
+          }
         });
       } catch (error) {
           console.error('Error parsing JSON data:--->>>', error);

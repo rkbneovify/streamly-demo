@@ -34,8 +34,13 @@
     </nav>
   
     <main>
-        <div class="remove_Device-Container">
+        <div class="remove_Device-Container position-relative">
                 <h1>Connected Devices</h1>
+                <ng-container class="position-absolute " *ngIf="connectedDevice.length < 5">
+                  <Button class="btn_2 btn-bg-gold w-auto" routerLink="/auth/login">
+                    Back to Login
+                  </Button>
+                </ng-container>
                 <div class="toatlcheck-device my-4 d-flex gap-3 align-items-center">
                     <input type="checkbox">
                     <p class="d-inline-block">Device 4/5</p>
@@ -44,7 +49,7 @@
                     
                     <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
                         <div class="devi_top">
-                            <input type="button" (click)="removedevice(data.session_id)" value="LogOut">
+                            <input class="input_st w-auto" type="button" (click)="removedevice(data.session_id)" value="LogOut">
                             <img class="dots_v" src={{data.device_img}} alt="dot">
                             <img class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
                             <div class="device_imgpar d-flex justify-content-center align-items-center">
@@ -70,7 +75,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
         </div>
     </main>
