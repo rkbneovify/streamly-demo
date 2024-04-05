@@ -28,8 +28,16 @@
         <ng-container *ngIf="editMode; else displayModePassword">
           <input
             required
+            class="input_standred me-2"
+            formControlName="oldpassword"
+            placeholder="Enter old password"
+            type="text"
+          />
+          <input
+            required
             class="input_standred"
-            formControlName="password"
+            formControlName="newpassword"
+            placeholder="Enter new Password"
             type="text"
           />
         </ng-container>
