@@ -9,6 +9,7 @@ import { PlaystreamComponent } from './playstream/playstream.component';
 import { DownloadappComponent } from './downloadapp/downloadapp.component';
 import { ScheduleDetailComponent } from './playlist-schedule/schedule-detail/schedule-detail.component';
 import { AccountsettingsComponent } from './accountsettings/accountsettings.component';
+import { TotalaccountComponent } from './totalaccount/totalaccount.component';
 const routes: Routes = [
   {
     path: '', component: UserComponent, children: [
@@ -20,6 +21,8 @@ const routes: Routes = [
       { path: 'user-settings', component: AccountsettingsComponent },
       { path: 'playstream', component: PlaystreamComponent },
       { path: 'downloadapp', component: DownloadappComponent },
+      { path: 'connected-device', component: TotalaccountComponent },
+
     ]
   }
 ];

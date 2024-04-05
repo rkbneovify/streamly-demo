@@ -1,0 +1,113 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+.full-height {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  background: linear-gradient(180deg, #06223c 0%, rgba(35, 75, 105, 0.9) 100%);
+}
+
+main {
+  flex-grow: 1;
+  background-image: url("../../../assets/dummy-img/404-bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  display: flex;
+  justify-content: center;
+  color: white;
+}
+
+.remove_Device-Container {
+  --_spacing: 2rem;
+  width: min(1192px, 90%);
+  padding: var(--_spacing);
+  border-radius: 0.75rem;
+  background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0em;
+  font-family: Poppins;
+  input[type="checkbox"],
+  .dots_v {
+    width: 24px;
+    height: 24px;
+  }
+  input[type="checkbox"]{
+    border: 1px solid #ffffff;
+  }
+  input[type="checkbox"]:checked {
+    border: 2px solid #ffffff;
+    
+  }
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 48px;
+    text-align: center;
+  }
+  .toatlcheck-device {
+    p {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 21px;
+      text-align: left;
+    }
+  }
+}
+
+.devices-container {
+  .card_device {
+    width: 350px;
+    height: 260px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    padding: 18px;
+    .devi_top {
+      text-align: -webkit-center;
+      position: relative;
+      input {
+        position: absolute;
+        top: 1rem;
+        left: 0;
+      }
+      .dots_v {
+        position: absolute;
+        top: 1rem;
+        right: 0;
+      }
+      .device_img {
+        width: 169.04px;
+        height: 108px;
+      }
+      .device_imgpar {
+        img {
+          width: 20px;
+          height: 20px;
+        }
+        p {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 21px;
+          text-align: left;
+        }
+      }
+    }
+    .devi_bottom {
+      .remove_dev_con {
+        font-family: Poppins;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 21px;
+        letter-spacing: 0em;
+        text-align: left;
+        .dev_heading{
+        font-weight: 400;
+        }
+      }
+    }
+  }
+}
