@@ -12,8 +12,8 @@ export class CrudService {
   apiResponse$ = this.apiResponseSubject.asObservable();
   constructor(private http: HttpClient) { }
   
-  getRequest(requestUrl:string,other?:any){
-    return this.http.get(`${this.baseUrl}/api/${requestUrl}`,other);
+  getRequest(requestUrl:string,headers?:any){
+    return this.http.get(`${this.baseUrl}/api/${requestUrl}`,{headers});
   }
   // postRequest(requestUrl:string,data:any){
   //   return this.http.post(`${this.baseUrl}/api/${requestUrl}`,data)

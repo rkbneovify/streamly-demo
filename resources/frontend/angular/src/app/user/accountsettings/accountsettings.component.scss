@@ -1,108 +1,118 @@
-
 .accountSettings_container {
   h1 {
-  text-align: center;
-  font-family: Poppins;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 48px;
-  color: #ffffff;
+    text-align: center;
+    font-family: Poppins;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 48px;
+    color: #ffffff;
   }
   .account_details_container {
-  background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
-  height: auto;
-  padding: 40px 100px 40px 100px;
-  border-radius: 12px;
-  .account-heading {
-  font-family: Poppins;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 36px;
-  text-align: center;
-  color: #ffffff;
+    background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
+    height: auto;
+    padding: 40px 100px 40px 100px;
+    border-radius: 12px;
+    .account-heading {
+      font-family: Poppins;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 36px;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .accountdetails {
+      div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 48px;
+        p,
+        input,
+        label {
+          flex: 1;
+          font-family: Poppins;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+          text-align: left;
+          color: #ffffff;
+        }
+        label {
+          font-weight: 700;
+        }
+      }
+    }
+
+    .accountbtn_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      .btn-delete {
+        width: 159px;
+        height: 48px;
+        padding: 12px 18px 12px 18px;
+        gap: 10px;
+        border-radius: 4px;
+        border: 1px solid #eb5757;
+        background-color: transparent;
+        color: #eb5757;
+      }
+      .btn-edit {
+        width: 180px;
+        height: 48px;
+        padding: 12px 18px 12px 18px;
+        gap: 10px;
+        border-radius: 4px;
+        background-color: #ffdb4e;
+      }
+    }
   }
-  
-  .accountdetails {
-  div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 48px; 
-  p,input,
-  label {
-  flex: 1;
-  font-family: Poppins;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  text-align: left;
-  color: #ffffff;
-  }
-  label {
-  font-weight: 700;
-  }
-  }
-  }
-  
-  .accountbtn_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  .btn-delete {
-  width: 159px;
-  height: 48px;
-  padding: 12px 18px 12px 18px;
-  gap: 10px;
-  border-radius: 4px;
-  border: 1px solid #eb5757;
-  background-color: transparent;
-  color: #eb5757;
-  }
-  .btn-edit {
-  width: 180px;
-  height: 48px;
-  padding: 12px 18px 12px 18px;
-  gap: 10px;
-  border-radius: 4px;
-  background-color: #ffdb4e;
-  }
-  }
-  }
-  
+
   .account_subscription_container {
-  height: auto;
+    height: auto;
   }
   .account_Invoices_container {
-  height: 300px;
-  padding-bottom: 1rem;
-  .invoicesdetails_main {
-  margin-top: 1rem;
-  background: #ffffff;
-  .invoicesdetails {
-  height: 56px;
-  padding: 20px 16px 20px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  p {
-  font-family: Roboto;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 16.41px;
-  text-align: left;
+    height: 300px;
+    padding-bottom: 1rem;
+    .invoicesdetails_main {
+      margin-top: 1rem;
+      background: #ffffff;
+      .invoicesdetails {
+        height: 56px;
+        padding: 20px 16px 20px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        p {
+          font-family: Roboto;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 16.41px;
+          text-align: left;
+        }
+
+        &:nth-child(even) {
+          background: #f0f0f0;
+        }
+      }
+      .invoicesdetail_heading {
+        p {
+          font-weight: 600;
+        }
+      }
+    }
   }
-  
-  &:nth-child(even){
-  background: #F0F0F0;
+}
+
+.acoount_user_password {
+  label,
+  div {
+    flex: 1;
   }
-  }
-  .invoicesdetail_heading{
-  p{
-  font-weight: 600;
-  }
-  }
-  }
-  }
-  }
-  
+}
+
+.password-height{
+  height: auto !important;
+}
