@@ -2,20 +2,30 @@
     <div class="remove_Device-Container">
             <h1>Connected Devices</h1>
             <div class="toatlcheck-device my-4 d-flex gap-3 align-items-center">
-                <input type="checkbox">
-                <p class="d-inline-block">Device 4/5</p>
+                <input type="button" value="Log-out Devices" (click)="mutileLogout()">
+                <p class="d-inline-block">Device {{connectedDevice.length}}/5</p>
             </div>
             <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
                 
                 <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
                     <div class="devi_top">
-                        <input type="button" (click)="removedevice(data.session_id)" value="LogOut">
+                        <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
                         <img class="dots_v" src={{data.device_img}} alt="dot">
                         <img class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
-                        <div class="device_imgpar d-flex justify-content-center align-items-center">
-                            <img src="../../../assets/dummy-img/check-circle.svg" alt="">
-                            <p>This Device</p>
-                        </div>
+                        
+                        <ng-container  *ngIf="current_device == data.personaldeviceid; else btnlogOut">
+                            <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                <img src="../../../assets/dummy-img/check-circle.svg" alt="">
+                                <p >This Device</p>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #btnlogOut>
+                            <div class="device_imgpar d-flex justify-content-center align-items-center">
+                                <button class="" (click)="removedevice(data.session_id)" >Log out</button>
+                            </div>
+                        </ng-template>
+
                     </div>
                     <div class="devi_bottom">
                         <div class="remove_dev_con d-flex justify-content-between">

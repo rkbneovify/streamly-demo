@@ -100,22 +100,30 @@ export class AccountsettingsComponent implements OnInit {
         console.log('updated values -->>>', body);
         this.crud
           .postRequest('auth/account-edit', body, headers)
-          .subscribe((res: any) => {
-            console.log('get all device ->>', res);
-            if(res.status == 200){
-                          // Update name in local storage
-            this.usersdetail.name = body.name;
-            console.log(this.usersdetail);
-            localStorage.setItem(
-              'userDetails',
-              JSON.stringify(this.usersdetail)
-              );
-              
-              this.ts.success(res.message);
-            }else{
-              this.ts.error(res.error.message);
+          .subscribe({
+            next:(res: any) => {
+              console.log('->>', res);
+              if(res.response_code == 200){
+                            // Update name in local storage
+              this.usersdetail.name = body.name;
+              console.log(this.usersdetail);
+              localStorage.setItem(
+                'userDetails',
+                JSON.stringify(this.usersdetail)
+                );
+                
+                this.ts.success(res.message);
+                this.toggleEditMode();
+              }else{
+                console.log(res,'123123123');
+                this.ts.error(res.message);
+              }
+  
+            },
+            error:(err:any)=>{
+              console.log(err,'error');
+                this.ts.error(err.error.message);
             }
-
           });
         // }
       } catch (error) {
@@ -129,6 +137,6 @@ export class AccountsettingsComponent implements OnInit {
     );
     this.updateuserDetatils.controls['oldpassword'].setValue('');
     this.updateuserDetatils.controls['newpassword'].setValue('');
-    this.toggleEditMode();
+    
   }
 }

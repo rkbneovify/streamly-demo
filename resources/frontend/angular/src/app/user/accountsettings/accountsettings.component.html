@@ -20,31 +20,49 @@
       <div class="acoount_user_email my-4">
         <label>Email</label>
         <!-- <input class="input_plane" formControlName="email" type="text"> -->
-          <p>{{ updateuserDetatils.get("email")?.value }}</p>
+        <p>{{ updateuserDetatils.get("email")?.value }}</p>
       </div>
-      <div class="acoount_user_password">
+      <div [ngClass]="{'acoount_user_password':true}">
         <label for="">Password</label>
         <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
         <ng-container *ngIf="editMode; else displayModePassword">
-          <input
-            required
-            class="input_standred me-2"
-            formControlName="oldpassword"
-            placeholder="Enter old password"
-            type="text"
-          />
-          <input
-            required
-            class="input_standred"
-            formControlName="newpassword"
-            placeholder="Enter new Password"
-            type="text"
-          />
+          <div
+            *ngIf="editMode"
+            [ngClass]="{'d-flex flex-column  old-password mt-2 gap-2':true,'password-height':editMode}"
+
+          >
+            <input
+              required
+              class="input_standred"
+              formControlName="oldpassword"
+              placeholder="Enter old password"
+              type="text"
+            />
+            <input
+              required
+              class="input_standred"
+              formControlName="newpassword"
+              placeholder="Enter new Password"
+              type="text"
+            />
+          </div>
         </ng-container>
         <ng-template #displayModePassword>
           <p>*********</p>
         </ng-template>
       </div>
+      <!-- <div *ngIf="editMode;" class="d-flex justify-content-end old-password mt-2">
+        <ng-container *ngIf="editMode;" >
+          <input
+          required
+          class="input_standred"
+          formControlName="newpassword"
+          placeholder="Enter new Password"
+          type="text"
+          />
+        </ng-container>
+      </div> -->
+
       <div class="acoount_user_timezone my-4">
         <label for="">Home Timezone</label>
         <p>Eastern Daylight Time</p>
@@ -56,7 +74,7 @@
       <div class="acoount_user_zipcode my-4">
         <label for=""> Zipcode </label>
         <!-- <input class="input_plane" formControlName="zipcode" type="text" name="" id=""> -->
-          <p>{{ updateuserDetatils.get("zipcode")?.value }}</p>
+        <p>{{ updateuserDetatils.get("zipcode")?.value }}</p>
       </div>
     </div>
     <div class="accountbtn_container">
