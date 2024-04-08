@@ -7,9 +7,13 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-// use JWTAuth;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use App\SessionTable;
+use App\HotelRoomTable;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 class UserController extends Controller
 {
     public function accountEdit(Request $request)
@@ -56,4 +60,79 @@ class UserController extends Controller
             }
         }
     }
+
+    public function multiSessionDestroy(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|array',
+            'id.*' => 'required|distinct',
+        ]);
+
+        $session_ids = $request->id;
+        $ids = [];
+        foreach ($session_ids as $id) {
+            $ids[] = UnHashUserID($id);
+        }
+        // dd($ids);
+        $sessions = SessionTable::select('id', 'connected_devices', 'users_id', 'access_token')
+            ->whereIn('id', $ids)
+            ->get();
+
+        $errors = $this->destroyJWTtoken($sessions->toArray());
+        $userId = $sessions->isEmpty() ? null : $sessions->first()->users_id;
+
+        $errorString = "";
+        if (!$errors == 'no error') {
+            $errorCount = count($errors);
+            $errorString = ($errorCount > 0) ? "$errorCount error(s) were found" : '';
+        }
+
+        $sessionRemove = SessionTable::whereIn('id', $ids)
+            ->update(['status' => 0, 'modified_on' => Carbon::now()]);
+
+        SessionTable::where('users_id', $userId)
+            ->where('status', 1)
+            ->where('connected_devices', '!=', 1)
+            ->update(['connected_devices' => DB::raw('connected_devices - 1')]);
+
+        $hotelRoomCount = HotelRoomTable::whereIn('session_id', $ids)->count();
+
+        if ($hotelRoomCount > 0) {
+            HotelRoomTable::whereIn('session_id', $ids)->update(['session_id' => null]);
+        }
+
+        if ($sessionRemove) {
+            return response()->json([
+                'message' => "User Session(s) Deleted Successfully. $errorString",
+                'jwterror' => $errors,
+            ], 200);
+        } else {
+            return response()->json(['message' => "User Session Not found"], 400);
+        }
+    }
+
+
+    private function destroyJWTtoken($jwtValues)
+    {
+        $errors = [];
+
+        foreach ($jwtValues as $value) {
+            try {
+                config(['jwt.blacklist_enabled' => true]);
+                JWTAuth::manager()->invalidate(new \Tymon\JWTAuth\Token($value['access_token']), $forceForever = false);
+            } catch (TokenInvalidException $e) {
+                $value['error'] = $e->getMessage();
+                $errors[] = $value;
+            } catch (TokenExpiredException $e) {
+                $value['error'] = $e->getMessage();
+                $errors[] = $value;
+            } catch (Exception $e) {
+                $value['error'] = $e->getMessage();
+                $errors[] = $value;
+            }
+        }
+
+        return (!empty($errors)) ? $errors : 'no error';
+    }
+
 }
