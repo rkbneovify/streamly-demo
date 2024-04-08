@@ -429,7 +429,9 @@ function hotelusersessionTable($user_id, $token, $deviceDetails, $connected_devi
             'device_type' => 'non-web',
             // 'personaldevicename_popup'=>$personal_device_data['show_popup'],
             'passcode' => $passcode,
-        ], 200)->send();
+        ], 200)->withHeaders([
+            'Access-Control-Allow-Origin' => '*',
+        ])->send();
     }
 }
 
