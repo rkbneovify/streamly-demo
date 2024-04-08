@@ -17,13 +17,15 @@ export class TotalaccountComponent {
   access_Token!:any;
   current_device:any;
   deviceId:Array<string>=[];
-  constructor(private apiService: CrudService, private toastr: ToastrService) { }
+  constructor(private apiService: CrudService, private toastr: ToastrService) { 
+    this.get_all_device();
+  }
 
   ngOnInit() {
-    const jsonData = localStorage.getItem('loggedInDeviceDetail');
+    const jsonData = localStorage.getItem('loggedInDeviceDetails');
     if (jsonData !== null) {
       try {
-        this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
+        this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetails') || '');
       } catch (error) {
         console.error('Error parsing JSON data:', error);
       }
@@ -45,39 +47,74 @@ export class TotalaccountComponent {
    
   }
 
+// get all the devices---
+  // get_all_device(){
+  //   const userToken = localStorage.getItem('deviceInfo');
+  //   if (userToken !== null) {
+  //     try {
+  //       this.access_Token = JSON.parse(
+  //         localStorage.getItem('deviceInfo') || ''
+  //       );
+  //       const tokenData = this.access_Token?.access_token;
+  //       this.current_device = this.access_Token?.personaldeviceid;
+  //       const headers = new HttpHeaders({
+  //         Authorization: `Bearer ${tokenData}`,
+  //         Accept: 'application/json',
+  //       });
+  //       console.log('token', headers);
 
-  get_all_device(){
+  //       // if (this.updated_data) {
+  //       let body = {
+          
+  //       };
+  //       console.log('updated values -->>>', body);
+  //       this.apiService
+  //         .postRequest('auth/', body, headers)
+  //         .subscribe({
+  //           next:(res)=>console.log(res),
+  //           error:(err)=>console.log(err)
+  //         });
+  //       // }
+  //     } catch (error) {
+  //       console.error('Error parsing JSON data:--->>>', error);
+  //     }
+  //   }
+  // }
+
+
+  get_all_device (){
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
-        this.access_Token = JSON.parse(
-          localStorage.getItem('deviceInfo') || ''
-        );
+        this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
         const tokenData = this.access_Token?.access_token;
         this.current_device = this.access_Token?.personaldeviceid;
         const headers = new HttpHeaders({
-          Authorization: `Bearer ${tokenData}`,
-          Accept: 'application/json',
+          'Authorization': `Bearer ${tokenData}`,
+          'Accept': 'application/json'
         });
-        console.log('token', headers);
-
-        // if (this.updated_data) {
-        let body = {
-          
-        };
-        console.log('updated values -->>>', body);
-        this.apiService
-          .postRequest('auth/', body, headers)
-          .subscribe({
-            next:(res)=>console.log(res),
-            error:(err)=>console.log(err)
-          });
-        // }
+        console.log(tokenData,'--------token');
+        this.apiService.getRequest('auth/connecteddevice', headers).subscribe((res: any) => {
+          console.log('get all device ->>',res);
+          if(res.response_code == 200){
+            const data = res.data;
+            this.connectedDevice = data;
+            localStorage.setItem('loggedInDeviceDetails',JSON.stringify(data));
+          }else{
+            this.toastr.error(res.message);
+          }
+        });
       } catch (error) {
-        console.error('Error parsing JSON data:--->>>', error);
+          console.error('Error parsing JSON data:--->>>', error);
       }
-    }
   }
+    // console.log('hello');
+  }
+
+
+
+
+
 
 getDeviceId(event: any, sessionId: string): void {
   if (event.target.checked) {
@@ -97,16 +134,27 @@ mutileLogout(){
 }
 
 removedevices(id: any): void {
-  this.apiService.postRequest('auth/multi-session-destroy', { 'id': id }).subscribe({
+  const userToken = localStorage.getItem('deviceInfo');
+  let headers;
+  if (userToken !== null) {
+      this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
+      const tokenData = this.access_Token?.access_token;
+      this.current_device = this.access_Token?.personaldeviceid;
+      headers = new HttpHeaders({
+        'Authorization': `Bearer ${tokenData}`,
+        'Accept': 'application/json'
+      });
+    }
+  this.apiService.postRequest('auth/multi-session-destroy', { 'id': id },headers).subscribe({
     next: (res: any) => {
-      if (res.response_code == 200) {
-        this.toastr.success('Device removed successfully')
+      if (res.jwterror == 'no error') {
+        this.toastr.success('Devices removed successfully')
         this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
         this.response = this.connectedDevice;
-        localStorage.setItem('loggedInDeviceDetail', JSON.stringify(this.response));
+        localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
       }
     },
-    error: err => this.toastr.error(err.error?.error)
+    error: err =>{ this.toastr.error(err.error?.error); console.log(err)},
 
   });
 }
@@ -118,7 +166,7 @@ removedevices(id: any): void {
           this.toastr.success('Device removed successfully')
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
           this.response = this.connectedDevice;
-          localStorage.setItem('loggedInDeviceDetail', JSON.stringify(this.response));
+          localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
         }
       },
       error: err => this.toastr.error(err.error?.error)

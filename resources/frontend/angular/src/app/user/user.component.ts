@@ -70,6 +70,8 @@ export class UserComponent {
           if(res.response_code == 200){
             localStorage.removeItem('deviceInfo');
             localStorage.removeItem('userDetails');
+            localStorage.removeItem('loggedInDeviceDetail');
+            localStorage.removeItem('loggedInDeviceDetails')
             this.ts.success(res.message);
             this.router.navigate(['/']);
           }
