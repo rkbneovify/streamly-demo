@@ -6,18 +6,21 @@
         id="carouselExampleIndicators"
         class="carousel slide"
         data-bs-ride="carousel">
-  
           <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            <button *ngFor="let index of sldierData; let i = index"
+                    type="button"
+                    [attr.data-bs-target]="'#carouselExampleIndicators'"
+                    [attr.data-bs-slide-to]="i"
+                    [class.active]="i === 0"
+                    [attr.aria-label]="'Slide ' + (i + 1)">
+            </button>
           </div>
+          
           <div class="carousel-inner">
-              <div *ngFor="let data of [1,2,3,4]; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}">
+              <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}">
                   <div class="landing_carousel_section1">
                       <div class="landing_carousel_section1_img">
-                      <img src="../../assets/dummy-img/landing_page_cars.png" alt="" />
+                      <img src={{data.dash_url}} alt="" />
                       </div>
                       <div class="landing_carousel_section1_text_content">
                       <div class="landing_carousel_section1_img1">
