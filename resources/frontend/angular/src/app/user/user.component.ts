@@ -30,8 +30,8 @@ export class UserComponent {
           'Accept': 'application/json'
         });
         console.log(tokenData,'--------token');
-        this.crud.getRequest('auth/connecteddevice', headers).subscribe((res: any) => {
-          console.log('get all device ->>',res);
+        this.crud.getRequest('auth/channel-sliders', headers).subscribe((res: any) => {
+          console.log('get all channel-sliders ->>',res);
         });
       } catch (error) {
           console.error('Error parsing JSON data:--->>>', error);
