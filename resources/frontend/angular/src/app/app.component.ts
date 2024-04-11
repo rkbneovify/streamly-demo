@@ -4,12 +4,13 @@ import { RouterOutlet } from '@angular/router';
 import { loadStripe } from '@stripe/stripe-js';
 import { NgxStripeModule } from 'ngx-stripe';
 import { environment } from '../environments/environment';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,HttpClientModule,NgxStripeModule],
+  imports: [RouterOutlet,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
