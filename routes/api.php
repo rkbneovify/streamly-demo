@@ -46,8 +46,9 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 
 //Get all stripe plans
 Route::get('/stripe/plans', 'HomeController@getAllPlans');
-Route::post('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
-Route::post('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
+Route::get('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
+Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
+Route::post('validate-coupon', 'Api\User\StripeController@validateCoupon');
 
 /** Angular Frontend APIs code ends here */
 
