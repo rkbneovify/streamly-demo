@@ -688,16 +688,16 @@
             <div class="row_plans flex-column-flex justify-content-between pt-2 pb-3">
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">Trial</p>
-                <p>{{ checkoutPlans.trial_period_days ?  checkoutPlans.trial_period_days :'no trials days' }}</p>
+                <p>{{ checkoutPlans.plandetails.trial_period_days ?  checkoutPlans.plandetails.trial_period_days + 'days' :'no trials days' }}</p>
               </div>
               <div class="d-flex justify-content-between ">
                 <p class="fw-bolder">Coupon	</p>
-                <p>$ {{+checkoutPlans.amount/100}}</p>
+                <p>$ {{+checkoutPlans.plandetails.amount/100}}</p>
               </div>
             </div>
             <div class="row_total d-flex justify-content-between py-4">
               <p class="fw-bolder">Total</p>
-              <p class="total">${{+checkoutPlans.amount / 100}}</p>
+              <p class="total">${{+checkoutPlans.plandetails.amount / 100}}</p>
             </div>
           </div>
         </div>
@@ -729,7 +729,7 @@
             <div
               class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column"
             >
-              <p class="text-nowrap">$20.00 per device/ per month</p>
+              <p class="text-nowrap">$ {{getTotalPrice()}} per device/ per month</p>
               <div class="counter d-flex justify-content-center mt-3">
                 <button class="btn-inc btn-count me-2" (click)="decrement()">
                   -
@@ -746,7 +746,7 @@
             >
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">{{device_per_unit}} X device(s)</p>
-                <p>${{20.00 * device_per_unit}}</p>
+                <p>${{getTotalPrice()}}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <input
@@ -776,12 +776,13 @@
                   <div class="h-auto py-3 ">Flat amount</div>
                 </div>
 
-                <div class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
-                  <div>For the first 1 to 10</div>
-                  <div>$20.00</div>
-                  <div>$0.00</div>
+                <div *ngFor="let tPlans of checkoutPlans.plandetails.tiers" class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
+                  <div *ngIf="tPlans.up_to">For the first {{+tPlans.up_to>10?'11':'1'}} to {{tPlans.up_to}}</div>
+                  <div *ngIf="tPlans.up_to == null" >For the rest</div>
+                  <div>${{+tPlans.unit_amount/100}}</div>
+                  <div>${{+tPlans.flat_amount/100}}</div>
                 </div>
-
+<!-- 
                 <div class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
                   <div>For the first 11 to 15</div>
                   <div>$18.00</div>
@@ -792,7 +793,7 @@
                   <div>For the rest</div>
                   <div>$16.00</div>
                   <div>$0.00</div>
-                </div>
+                </div> -->
               </div>
 
               <div>
@@ -801,7 +802,8 @@
 
               <div id="tier__b" class="tier__b pt-2 d-flex justify-content-between align-item-center">
                 <p class="fw-bolder">Total</p>
-                <p class="total">$79</p>
+                <p class="total">${{getTotalPrice()}}</p>
+  
               </div>
             </div>
           </div>
@@ -846,6 +848,12 @@
               <input type="password" placeholder="Enter" />
               <img src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
+          </div>
+
+          <div class="payment-box">
+            <div id="card"></div>
+            <button id="button">pay</button>
+            <div id="card-errors"></div>
           </div>
         </div>
 
