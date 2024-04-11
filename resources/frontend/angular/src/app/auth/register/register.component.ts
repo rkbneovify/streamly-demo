@@ -29,6 +29,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { connect } from 'node:http2';
 
 
 @Component({
@@ -48,10 +49,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit {
-  selectedTab: string = 'Availability';
+  selectedTab: string = 'Payment';
   isWidth767: number = window.innerWidth;
   userState: string = '';
   userCity: string = '';
+  showplansDetails:boolean = false;
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
@@ -59,7 +61,9 @@ export class RegisterComponent implements OnInit {
   resendButtonDisabled = false;
   countdown = 60;
   all_Plans: any = [];
+  device_per_unit:number=1;
   // forms
+  counterControl!: FormControl;
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
@@ -108,6 +112,9 @@ export class RegisterComponent implements OnInit {
         this.zipcodedata = [...apiResponse];
         console.log('API Response:', apiResponse);
       });
+
+      this.counterControl = this.fb.control(1, [Validators.min(1)]);
+      // this.selectedPlanById('plan_P9HdM8mHmthvuR')
   }
 
   onSearch(searchTerm: any): void {
@@ -174,6 +181,30 @@ export class RegisterComponent implements OnInit {
       },
       error: (err) => console.log('Plans error --> ', err),
     });
+  }
+
+  selectedPlanById(){
+    const id = this.selectedPlan;
+    if(this.selectedPlan){
+      console.log('Selected plan',);
+      this.crud.postRequest('get-basic-plan/'+id.id,{}).subscribe({
+        next:(data:any)=>{
+          console.log(data);
+        },
+        error:(err:any)=>{
+          console.log(err);
+        }
+      });
+      // this.crud.postRequest('get-tier-plan/'+data,{}).subscribe({
+      //   next:(data:any)=>{
+      //     console.log(data);
+      //   },
+      //   error:(err:any)=>{
+      //     console.log(err);
+      //   }
+      // });
+    }
+    this.selectedTab = 'Payment'
   }
 
   // if the zipcode is Invalid then send the details
@@ -383,4 +414,21 @@ export class RegisterComponent implements OnInit {
     };
     this.verifyOtpWithMail(otpAndEmail);
   }
+
+  // counter inc
+  increment() {
+    if (this.counterControl.value < 100) {
+      this.counterControl.setValue(this.counterControl.value + 1);
+      this.device_per_unit = Number(this.counterControl.value);
+    }
+  }
+
+  decrement() {
+    if (this.counterControl.value > 1) {
+      this.counterControl.setValue(this.counterControl.value - 1);
+      this.device_per_unit = Number(this.counterControl.value);
+    }
+  }
+
+
 }
