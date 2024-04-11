@@ -31,9 +31,9 @@ use App\Http\Requests\ContactFormRequest;
 
 use App\Models\Genre;
 use Illuminate\Support\Facades\Cache;
-/*add Naresh 15-11-2022*/ 
+/*add Naresh 15-11-2022*/
 use Cookie;
-/*End Naresh 15-11-2022*/ 
+/*End Naresh 15-11-2022*/
 class HomeController extends Controller
 {
 
@@ -57,8 +57,8 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(Request $request)
-    { 
-        /*add Naresh 15-11-2022*/ 
+    {
+        /*add Naresh 15-11-2022*/
        $this->setCookie($request);
        /*End Naresh 15-11-2022*/
        try {
@@ -66,12 +66,12 @@ class HomeController extends Controller
        } catch(Exception $e) {
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
        }
-       
+
        $imagePath=asset("/uploads/channellogo/notfound.png");
-   
+
 $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
 DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
-       
+
        ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
        ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
        ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
@@ -83,7 +83,7 @@ DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.
 
 $pagechannel=$second->get()
 ->reject(function($element) use($imagePath) {
-    
+
     return $element->image === null;
 })->groupBy('genrenae');
 
@@ -110,13 +110,13 @@ $Genrekey=$pagechannel->keys();
       $d=collect($plans->data)
       ->groupBy('billing_scheme');
     //   ->where('billing_scheme', 'per_unit')
-      
+
       $plansdetails=$d->all();
       $plankey=$d->keys();
         return view('frontend.home', compact('login','plans','pagechannel','Genrekey','plansdetails','plankey'));
     }
 
-    /*add Naresh 15-11-2022*/ 
+    /*add Naresh 15-11-2022*/
 public function setCookie(Request $request) {
     $UTMSource = $request->UTMSource;
     $UTMCampaign = $request->UTMCampaign;
@@ -135,10 +135,10 @@ public function setCookie(Request $request) {
     //return $response;
 }
 
-/*End Naresh 15-11-2022*/ 
+/*End Naresh 15-11-2022*/
 
     public function indexCache()
-    { 
+    {
         $stats = Cache::getMemcached()->getStats();
         $getAllKeys = Cache::getMemcached()->getAllKeys();
         dump($getAllKeys);
@@ -147,26 +147,26 @@ public function setCookie(Request $request) {
            $pagechannel  = Cache::remember('homepagechannel',60*60*24, function () {
 
             $imagePath=asset("/uploads/channellogo/notfound.png");
-   
+
             $second=Channel::toBase()->select('channels.id',DB::raw('IFNULL(gracenotechannels.StationName,channels.name) StationName'),
             DB::raw('IFNULL(gracenotechannels.CallSign,channels.name) CallSign'), 'channels.image',DB::raw('IFNULL(genre.name,"Others") genrenae'))
-                   
+
                    ->leftJoin('gracenotechannels', 'gracenotechannels.CallSign', '=', 'channels.callSign')
                    ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                    ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-            
+
             ->where('channels.status','=','1')
             ->orderBy('channels.StationName', 'asc');
-                
+
 return $second->get()
 ->reject(function($element) use($imagePath) {
-    
+
     return $element->image === null;
 })->groupBy('genrenae');
           });
 
-   
-   
+
+
 
           $Genrekey=$pagechannel->keys();
     //    dd($Genrekey);
@@ -185,32 +185,32 @@ return $second->get()
     }
 
     public function botman(){
-        return view('frontend.botman'); 
+        return view('frontend.botman');
     }
-    
+
    /* public function location(Request $request)
-    {     
+    {
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
         try {
         $client = new \GuzzleHttp\Client();
         // $url = "http://nominatim.openstreetmap.org/reverse?email=myemail@myserver.com&format=xml&lat=-23.56320001&lon=-46.66140002&zoom=27&addressdetails=1";
         $response = $client->get('http://nominatim.openstreetmap.org/reverse?email=contact@streamlytv.com&format=json&lat='.$LAT.'&lon='.$LON.'&zoom=27&addressdetails=1');
-       
+
        $jsonfile=$response->getBody();
        if (!json_decode($jsonfile, TRUE)) {return false;}
        else{
         $resp = json_decode($jsonfile, true);
     }
-       // $data = json_decode($jsonfile, true); 
+       // $data = json_decode($jsonfile, true);
         // return $resp; exit;
          if( isset($resp['address']['postcode'] ) ){
             $zipcode= $resp['address']['postcode'];
             $nameArr = ['zipcode' => $zipcode];
-            $validator = Validator::make($nameArr, 
+            $validator = Validator::make($nameArr,
         [
             'zipcode' => 'required|exists:zipcodes,zipcode,status,1'
-        ], 
+        ],
         [
             'zipcode.exists'=>'You are away from the zipcode proximity'
         ]
@@ -218,7 +218,7 @@ return $second->get()
     if ($validator->fails()) {
         return $validator->errors();
     }
-         
+
         return $resp;
         }
         return $resp;
@@ -231,12 +231,12 @@ return $second->get()
         }
 
        // computeDistance($lat1, $lng1, $lat2, $lng2, $radius = 6378137);
-        
+
         // return $resp;
     }
     catch (\GuzzleHttp\Exception\RequestException $e) {
-       
-        
+
+
         if ($e->hasResponse()) {
             $response = $e->getResponse();
             // var_dump($response->getStatusCode()); // HTTP status code;
@@ -249,68 +249,68 @@ return $second->get()
         }
         else {return   json_encode($e->getMessage(), true);}
     } catch (Exception $ex) {
-        
+
         return json_encode($ex->getMessage(), true);
-       
+
    }
 
         // $response = new GuzzleHttp\Client();('http://nominatim.openstreetmap.org/reverse?json_callback=cb&format=json&lat=28.7441&lon=77.0732&zoom=27&addressdetails=1');
-        
+
     } */
     public function geofence(Request $request)
-    {     
+    {
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
         $client = new \GuzzleHttp\Client(['base_uri' => 'http://localhost:6750/']);
         $response=$client->request('GET', 'geofenceturf', [
             'query' => ['lat' => $LAT,'lon'=>$LON]
         ]);
-        
-        
+
+
        $jsonfile=$response->getBody();
        $resp = json_decode($jsonfile, true);
 
 if($resp['response_code']=='200'){
-return response()->json($resp, 200); 
+return response()->json($resp, 200);
 
 }
  else{
-    return response()->json($resp, 403); 
+    return response()->json($resp, 403);
  }
-      
-    
-        
+
+
+
    }
 
    /* public function oldgeofence(Request $request)
-    {     
+    {
         $LAT= $request['latitude'];
         $LON = $request['longitude'];
-    
+
       $query= Zipcode::select('map.zcta5ce10 AS zipcode')
         ->whereRaw("ST_Contains( map.SHAPE, ST_GeomFromText( 'POINT(".$LAT.' '.$LON." )', 4683 ) )")
         ->join('map', 'zipcodes.zipcode', '=', 'map.zcta5ce10')->where('zipcodes.status',1)->get();
-      
+
         if((count($query)==0)){
             return response()->json([
                 'success' => false,
                 'message' => 'Not within zipcode boundary',
-                
+
                 'response_code'=>403,
-                
+
             ], 403);
         } else{
             $zipcode=$query->pluck('zipcode');
-     
+
     $response = [
         'success' => true,
         'data' => $zipcode[0],
         'message' => $zipcode[0].' Zipcode is allowed.','response_code'=>200,
     ];
-    return response()->json($response, 200); 
+    return response()->json($response, 200);
         }
-    
-        
+
+
    } */
 
    public function simplequeryrun(Request $request){
@@ -326,7 +326,7 @@ return response()->json($resp, 200);
         // 'sds' => $data,
         'response_code'=>200,
     ];
-    return response()->json($response, 200); 
+    return response()->json($response, 200);
  }
 
 
@@ -342,7 +342,7 @@ return response()->json($resp, 200);
     # Build GeoJSON feature collection array
 $geojson = array(
     'type'      => 'FeatureCollection',
-    
+
     // 'crs' => htmlspecialchars(json_encode($crs), ENT_QUOTES, 'UTF-8'),
     'features'  => array()
  );
@@ -353,26 +353,26 @@ $geojson = array(
             'message'=>'No zipcode is allowed',
             'response_code'=>200,
         ];
-        return response()->json($response, 200); 
+        return response()->json($response, 200);
     }
-    
+
       foreach($data as $fieldnam) {
         $properties =  array(
             'color'=> 'red',
             'title' => $fieldnam['zipcode']
-            
+
         );
-        
+
         $feature = array(
             'type' => 'Feature',
             'properties' => $properties,
-            
+
             'geometry' => $fieldnam->shape,
-             
+
        );
-                        
-  
-    
+
+
+
          array_push($geojson['features'], $feature);
      }
      $response = [
@@ -382,20 +382,20 @@ $geojson = array(
         // 'myarr' => $myarr,
         'response_code'=>200,
     ];
-    return response()->json($response, 200); 
+    return response()->json($response, 200);
     // return response()->json($response, 200, [], JSON_NUMERIC_CHECK|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
  }
-     
+
     public function verified()
     {
-        
+
 
         return view('frontend.verified');
     }
-    
+
     public function checkAvailabilty()
     {
-        
+
 $address = new Address([
     'Address2' => '2932 Nutwood',
     'City' => 'Fullerton',
@@ -410,7 +410,7 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     $message=$response['Address'];
 }
 // if($response['Address']['Error']['Description']=='Address Not Found.  '){print_r($response);} else{print_r($response);}
- 
+
 if(Auth::check()){
     $login = true;
 } else {
@@ -421,7 +421,7 @@ if(Auth::check()){
     }
     public function checkAvailabilty2()
     {
-        
+
 // $address = new Address([
 //     'Address2' => '6406 Ivy Lane',
 //     'City' => 'Greenbelt',
@@ -447,12 +447,12 @@ if(Auth::check()){
 
     public function addressCheck(Request $request)
     { //dd($request);
-        
+
         if($request->has('Address2')){
-            
-            
+
+
             try {
-             
+
 $address = new Address([
     'Address2' => $request->input('Address2'),
     'City' => $request->input('City'),
@@ -481,36 +481,36 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
             } catch (Exception $e) {
                 return response()->json(['message' => $e->getMessage()], 400);
             }
-         
+
         }
-        
+
     }
     public function contactform()
     {
         if( Auth::check()){
             $login = true;}else{ $login = false; }
-       
+
         return view('frontend.contactform',compact('login'));
         // return view('frontend.verified');
-    } 
-    
+    }
+
     public function showSupportedDevices(){
        /**
         * *normal coment
        *! This needs to be changed
        *? think twice before testing this method
        * TODO: Refactor the view
-       */ 
+       */
         if( Auth::check()){
             $login = true;}else{ $login = false; }
-       
+
         return view('frontend.supporteddevice',compact('login'));
-        
+
     }
-    
+
     public function helpandsupp()
     {
-        
+
         if( Auth::check()){
             $login = true;}else{ $login = false; }
         $frontendjson = FrontendText::find(1)->frontendjson;
@@ -524,13 +524,13 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
     }
 
     public function SubscriptionPage(Request $request)
-    { 
-        /*add Naresh 15-11-2022*/ 
+    {
+        /*add Naresh 15-11-2022*/
     //    $this->setCookie($request);
        /*End Naresh 15-11-2022*/
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers'], 'product' => 'prod_NV3xdPjVaNDrwn']);
         // $imagePath=asset("/uploads/channellogo/notfound.png");
-   
+
          if( Auth::check()){
             $login = true;
             $user=Auth::user();
@@ -549,16 +549,16 @@ if(isset($response['Address']['Error'])){$message=$response['Address']['Error'][
       $d=collect($plans->data)
       ->groupBy('billing_scheme');
     //   ->where('billing_scheme', 'per_unit')
-      
+
       $plansdetails=$d->all();
       $plankey=$d->keys();
         return view('frontend.pages.subscription', compact('login','plans','plansdetails','plankey'));
     }
-    
+
 public function PlanRenews(Request $request)
-    { 
+    {
         $plans = \Stripe\Plan::all(['active'=>true,'expand' => ['data.tiers']]);
-   
+
         if( Auth::check()){
             $login = true;
             $user=Auth::user();
@@ -597,6 +597,7 @@ public function PlanRenews(Request $request)
                     'metadata' => $plan->metadata,
                     'type'=> $plan->billing_scheme,
                     'tiers' => $plan->billing_scheme == "tiered" ? $plan->tiers : [],
+                    'trial_period_days' => $plan->trial_period_days
                 ];
             });
 

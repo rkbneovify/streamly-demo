@@ -14,6 +14,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Exception;
+
 class UserController extends Controller
 {
     public function accountEdit(Request $request)
@@ -34,7 +36,8 @@ class UserController extends Controller
 
                 if ($request->has('name')) {
                     if (strlen(trim($request['name'])) <  1) {
-                        return redirect()->back()->with('errormsgname', 'Please enter correct name');
+                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Please enter correct name');
+                        return response()->json($response, 401);
                     }
                     $user->name = $request['name'];
                 }
@@ -42,7 +45,7 @@ class UserController extends Controller
                     $credentials = ['email' => $user->email, 'password' => $request->old_password];
                     $token = JWTAuth::attempt($credentials);
                     if (!$token) {
-                        $response = array('success' => false, 'response_code' => 401, 'message' => 'Wrong old password');
+                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
                         return response()->json($response, 401);
                     }
                 }
@@ -134,5 +137,4 @@ class UserController extends Controller
 
         return (!empty($errors)) ? $errors : 'no error';
     }
-
 }

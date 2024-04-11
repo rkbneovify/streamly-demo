@@ -46,6 +46,8 @@ Route::post('auth/geofence2', 'Admin\TurfController2@index')->middleware(['jwt.v
 
 //Get all stripe plans
 Route::get('/stripe/plans', 'HomeController@getAllPlans');
+Route::post('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
+Route::post('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
 
 /** Angular Frontend APIs code ends here */
 
@@ -62,6 +64,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('verify-otp', 'Auth\AuthController@verifyOtp');
     Route::post('account-edit', 'Auth\UserController@accountEdit')->middleware(['jwt.verify']);
     Route::post('multi-session-destroy', 'Auth\UserController@multiSessionDestroy')->middleware(['jwt.verify']);
+
     /** Angular Frontend APIs code ends here */
 
     Route::post('login', 'Auth\AuthController@login');
