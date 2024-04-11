@@ -29,7 +29,13 @@ import {
   switchMap,
 } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-
+import { environment } from '../../../environments/environment';
+import {
+  loadStripe,
+  Stripe,
+  StripeCardElement,
+  StripeCardElementOptions,
+} from '@stripe/stripe-js';
 
 @Component({
   selector: 'app-register',
@@ -48,10 +54,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit {
-  selectedTab: string = 'Availability';
+  STRIPE: any;
+  selectedTab: string = 'Payment';
   isWidth767: number = window.innerWidth;
   userState: string = '';
   userCity: string = '';
+  showplansDetails: boolean = false;
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
@@ -59,11 +67,17 @@ export class RegisterComponent implements OnInit {
   resendButtonDisabled = false;
   countdown = 60;
   all_Plans: any = [];
+  checkoutPlans: any;
+  device_per_unit: number = 1;
+  planAmount!:number;
+
   // forms
+  counterControl!: FormControl;
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
-  selectedPlan:any;
+  selectedPlan: any;
+  selectedPlanType: string = '';
   acceptTerm: boolean = false;
   // ======================== constructor ================================
   constructor(
@@ -71,7 +85,7 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private el: ElementRef,
     private renderer: Renderer2,
-    private ts:ToastrService
+    private ts: ToastrService
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -97,7 +111,7 @@ export class RegisterComponent implements OnInit {
   }
 
   // ============================== ngOnIt==========================
-  ngOnInit(): void {
+  async ngOnInit() {
     this.searchTerms
       .pipe(
         debounceTime(300),
@@ -108,6 +122,87 @@ export class RegisterComponent implements OnInit {
         this.zipcodedata = [...apiResponse];
         console.log('API Response:', apiResponse);
       });
+
+    this.counterControl = this.fb.control(1, [Validators.min(1)]);
+
+    // stripe call
+    // this.addStripe();
+
+    this.STRIPE = await loadStripe(environment.stripe.publicKey);
+    console.log(this.STRIPE);
+
+    const el = this.STRIPE?.elements();
+
+    const card = el.create('card');
+
+    card.mount('#card');
+
+    card.on('change', (ev: any) => {
+      const displayError: any = document.getElementById('card-errors');
+      ev.error
+        ? (displayError.textContent = ev.error.message)
+        : (displayError.textContent = '');
+    });
+
+    const button = document.getElementById('button');
+    button?.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const ownerInfo = {
+        owner: { name: 'Deepak' },
+        amount: 1000,
+        currency: 'USD',
+      };
+
+      try {
+        const result: any = await this.STRIPE.createPaymentMethod({
+          type: 'card',
+          card,
+          billing_details: { name: 'Deepak' },
+        });
+        const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
+        console.log('payment Method', result);
+        console.log('Token Created', tokenInfo);
+
+        // const initCustomCheckout = await this.stripe
+        // .confirmCardPayment(`${environment.stripe.clientSecret}`, {
+        //   payment_method: {
+        //     card: card,
+        //     billing_details: {
+        //       name: 'Deepak',
+        //     },
+        //   },
+        // })
+        // console.log('clientSecret',initCustomCheckout);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    // addStripe() {
+    //   this.STRIPE = Stripe(environment.stripe.publicKey);
+    //   console.log(this.STRIPE);
+
+    //   const elements = this.STRIPE.elements();
+    //   const cardElement = elements.create('card', { hidePostalCode: true });
+
+    //   cardElement.mount('#card-element');
+
+    //  const cardHolderName = document.getElementById('name');
+    //  const cardButton = document.getElementById('card-button');
+    //  const clientSecret = cardButton.dataset.secret;
+    //  let validCard = false;
+    //  const cardError = document.getElementById('card-errors');
+
+    //  cardElement.addEventListener('change', function(event) {
+
+    //      if (event.error) {
+    //          validCard = false;
+    //          cardError.textContent = event.error.message;
+    //      } else {
+    //          validCard = true;
+    //          cardError.textContent = '';
+    //      }
+    //  });
   }
 
   onSearch(searchTerm: any): void {
@@ -167,13 +262,53 @@ export class RegisterComponent implements OnInit {
           console.log('Plans data --> ', this.all_Plans);
 
           this.all_Plans[0].forEach((el: any) => {
-            console.log( el.id, 'name', el.amount, 'nikename', el.nickname, el.metadata
+            console.log(
+              el.id,
+              'name',
+              el.amount,
+              'nikename',
+              el.nickname,
+              el.metadata
             );
           });
         }
       },
       error: (err) => console.log('Plans error --> ', err),
     });
+  }
+
+  // selectedplansbyid
+  selectedPlanById() {
+    if (this.selectedPlan) {
+      const id = this.selectedPlan.id;
+
+      if (this.selectedPlanType == 'per_unit') {
+        this.crud.postRequest('get-basic-plan/' + id, {}).subscribe({
+          next: (data: any) => {
+            console.log('===========basic plan>', data);
+            this.checkoutPlans = data;
+            console.log('checkout================>', this.checkoutPlans);
+            this.selectedTab = 'Payment';
+          },
+          error: (err: any) => {
+            console.log(err);
+          },
+        });
+      }
+
+      if (this.selectedPlanType == 'tiered') {
+        this.crud.postRequest('get-tier-plan/' + id, {}).subscribe({
+          next: (data: any) => {
+            console.log('============ tiered plans ==>', data);
+            this.checkoutPlans = data;
+            this.selectedTab = 'Payment';
+          },
+          error: (err: any) => {
+            console.log(err);
+          },
+        });
+      }
+    }
   }
 
   // if the zipcode is Invalid then send the details
@@ -186,9 +321,10 @@ export class RegisterComponent implements OnInit {
     };
     console.log(userDetails);
     this.crud.postRequest('auth/zipcodeInquery', userDetails).subscribe({
-      next: (data:any) => {this.ts.success(data.success);
-      document.getElementById('closeWrongZipForm')?.click();
-    },
+      next: (data: any) => {
+        this.ts.success(data.success);
+        document.getElementById('closeWrongZipForm')?.click();
+      },
       error: (err) => this.ts.error(err.error),
     });
   }
@@ -199,25 +335,32 @@ export class RegisterComponent implements OnInit {
     this.crud
       .postRequest('auth/send-otp', { email: verifiMailDetails })
       .subscribe({
-        next: (data:any) => {console.log('otpdata-->', data);this.ts.success(data.message)},
-        error: (err:any) => {this.ts.success(err.message);console.log('otp-error-->', err)},
+        next: (data: any) => {
+          console.log('otpdata-->', data);
+          this.ts.success(data.message);
+        },
+        error: (err: any) => {
+          this.ts.success(err.message);
+          console.log('otp-error-->', err);
+        },
       });
   }
   verifyOtpWithMail(verifyDetails: any) {
     this.crud.postRequest('auth/verify-otp', verifyDetails).subscribe({
-      next: (data:any) => {
+      next: (data: any) => {
         console.log('otpdata verify-->', data);
         this.ts.success(data.message);
-        setTimeout(()=>{
-          if(data){
+        setTimeout(() => {
+          if (data) {
             this.getAllThePlans();
             this.selectedTab = 'Plans';
           }
-        },1000);
-        
+        }, 1000);
       },
-      error: (err) => {this.ts.error(err.error.error)
-      this.otpVerificationForm.reset()},
+      error: (err) => {
+        this.ts.error(err.error.error);
+        this.otpVerificationForm.reset();
+      },
     });
   }
 
@@ -334,7 +477,13 @@ export class RegisterComponent implements OnInit {
           this.showAlreadyUserModal();
         } else {
           console.log('register function', 'check zip code');
-          console.log( 'register function', 'value', this.checkZipCodeValid(this.searchZipInput), 'zipInput', this.searchZipInput );
+          console.log(
+            'register function',
+            'value',
+            this.checkZipCodeValid(this.searchZipInput),
+            'zipInput',
+            this.searchZipInput
+          );
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
             this.showCorrectZipcode();
@@ -366,13 +515,12 @@ export class RegisterComponent implements OnInit {
     console.log('wrong_zipcode value -->>', this.wrong_zipcodeDetials.value);
   }
 
-  backbutton(data:any){
-    if(data=='Plans'){
-      this.selectedTab='Plans'
+  backbutton(data: any) {
+    if (data == 'Plans') {
+      this.selectedTab = 'Plans';
       // this.getAllThePlans();
-    }
-    else{
-      this.selectedTab='Terms'
+    } else {
+      this.selectedTab = 'Terms';
     }
   }
 
@@ -382,5 +530,52 @@ export class RegisterComponent implements OnInit {
       otp: this.getOtpValue(),
     };
     this.verifyOtpWithMail(otpAndEmail);
+  }
+
+  // counter inc
+  increment() {
+    if (this.counterControl.value < 100) {
+      this.counterControl.setValue(this.counterControl.value + 1);
+      this.device_per_unit = Number(this.counterControl.value);
+    }
+  }
+
+  decrement() {
+    if (this.counterControl.value > 1) {
+      this.counterControl.setValue(this.counterControl.value - 1);
+      this.device_per_unit = Number(this.counterControl.value);
+    }
+  }
+
+  //
+  selectedTabTerms(data: any) {
+    if (data) {
+      this.selectedPlanType = data.type;
+      this.selectedPlan = data;
+      this.ts.success('Plan Selected');
+      console.log('===========>', this.selectedPlan);
+      this.selectedTab = 'Terms';
+    }
+  }
+
+
+  getTotalPrice(): number {
+    if (this.checkoutPlans) {
+      let totalPrice = 0;
+      const amount10 = this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
+      const amount18 = this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
+      const amount16 = this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
+  
+      if (this.device_per_unit <= 10) {
+        totalPrice = amount10 * this.device_per_unit;
+      } else if (this.device_per_unit <= 15) {
+        totalPrice = amount18 * this.device_per_unit;
+      } else {
+        totalPrice = amount16 * this.device_per_unit;
+      }
+  
+      return totalPrice;
+    }
+    return 0; // Return 0 if checkoutPlans is not defined
   }
 }
