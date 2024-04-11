@@ -7,7 +7,8 @@ export const environment = {
   baseUrl: 'https://new.staging.streamlytv.com',
   // baseUrl: 'http://localhost:8000',
   stripe: {
-    publicKey: 'pk_test_51OzBloSA7waI3emKqFtc5EwG8do6KT1gbLAgAy3x4tpoRCjscvMnAf5UHsLpBMAJPfKVw8U0XpRCV2De6fonkom600TWicawcL',
+    publicKey: 'pk_test_51P3YU9SJIkcBUHrJdi42SlDjdbQGCBkW4GiPQVIQV3zCa5gqlHEwaL7oiughaqmy2wcu6D2PnkLp0Hn78iTFK5HX00864N6ycY',
+    clientSecret:'sk_test_51P3YU9SJIkcBUHrJqGxak8OiONgkOz5OLkXCj5CQFZuoIm57aUVNvuwFk53TtHDCGwmqhHqf9bWc7sfmfR8eY8rz00DomUNqay'
   }
 };
 

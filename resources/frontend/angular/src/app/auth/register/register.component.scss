@@ -561,6 +561,62 @@
         }
         .row_plans {
           border-bottom: 1px solid #ffffff4d;
+          div{
+            .input-coupon{
+              border-radius: 4px 0px 0px 4px;
+              border: none;
+            }
+            .btn-coupon{
+              width: auto;
+              border-radius: 0 4px 4px 0;
+              color: #ffffff;
+              background: #616b75 !important;
+            }
+          }
+        }
+
+        .row_total{
+          .tiers{
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 800;
+          }
+
+          .tiers_plan_dec{  
+            font-family: Poppins;
+          border-radius: 4px;
+          overflow: auto;
+          text-align: center;
+          color: #ffffff;
+          .tier_plan{
+            // justify-content: center;
+            // align-items: center;
+            div{
+              border: 1px solid #616b75;
+              // padding: 1rem;
+              flex: 1;
+              height: 74px;
+              min-width: 71px;
+              // margin: auto;
+            }
+          }
+          .tier_heading{
+            div{
+            background-color: #1b4974;
+            }
+          }
+          .tier_plan_price{
+            > *:not(:first-child){
+              padding-top: 1.5rem;
+            }
+            div{
+              background-color: #899097;
+            }
+          }
+          }
+          #tier__b{
+            border-top: 1px solid #ffffff4d !important;
+          }
         }
       }
     }

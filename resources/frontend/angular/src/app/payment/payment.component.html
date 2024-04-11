@@ -37,11 +37,11 @@
 <button type="button" (click)="stripeCard.createToken(extraData)">createToken</button> -->
 
 
-<!-- <div class="payment-box">
+<div class="payment-box">
   <div id="card"></div>
   <button id="button">pay</button>
   <div id="card-errors"></div>
-</div> -->
+</div>
 
 
 <!-- <form [formGroup]="paymentForm" (ngSubmit)="submitPayment()">
@@ -53,7 +53,7 @@
   <button type="submit" [disabled]="paymentForm.invalid">Pay</button>
 </form> -->
 
-<div class="container">
+<!-- <div class="container">
   <h2 class="mt-5 mb-4">Angular Stripe Checkout Example</h2>
   <div class="col-md-5 mb-2">
     <button (click)="makePayment(15)" class="btn btn-danger btn-block">Pay $15</button>
@@ -64,4 +64,55 @@
   <div class="col-md-5">
     <button (click)="makePayment(35)" class="btn btn-success btn-block">Pay $35</button>
   </div>
-</div>
+</div> -->
+
+
+<!-- <div [formGroup]="paymentElementForm">
+  <div>
+    <input placeholder="name" formControlName="name" />
+  </div>
+  <div appearance="fill">
+    <input placeholder="Email" type="email" formControlName="email" />
+  </div>
+  <div appearance="fill">
+    <input placeholder="Address" formControlName="address" />
+  </div>
+  <div appearance="fill">
+    <input placeholder="ZIP Code" formControlName="zipcode" />
+  </div>
+  <div appearance="fill">
+    <input placeholder="city" formControlName="city" />
+  </div>
+  <ng-container *ngIf="elementsOptions.clientSecret">
+    <ngx-stripe-elements [stripe]="stripe" [elementsOptions]="elementsOptions">
+      <ngx-stripe-payment [options]="paymentElementOptions"></ngx-stripe-payment>
+    </ngx-stripe-elements>
+  </ng-container>
+  
+  <button (click)="pay()">PAY</button>
+</div> -->
+
+<!-- <div [formGroup]="paymentElementForm">
+  <div appearance="fill">
+    <input matInput placeholder="Name" formControlName="name" />
+  </div>
+  <div appearance="fill">
+    <input matInput placeholder="Email" type="email" formControlName="email" />
+  </div>
+  <div appearance="fill">
+    <input matInput placeholder="Address" formControlName="address" />
+  </div>
+  <div appearance="fill">
+    <input matInput placeholder="ZIP Code" formControlName="zipcode" />
+  </div>
+  <div appearance="fill">
+    <input matInput placeholder="City" formControlName="city" />
+  </div>
+  Check if clientSecret is available before rendering ngx-stripe-elements
+  <ng-container *ngIf="elementsOptions.clientSecret">
+    <ngx-stripe-elements [stripe]="stripe" [elementsOptions]="elementsOptions">
+      <ngx-stripe-payment [options]="paymentElementOptions"></ngx-stripe-payment>
+    </ngx-stripe-elements>
+  </ng-container>
+  <button mat-raised-button color="primary" (click)="pay()">PAY</button>
+</div> -->
