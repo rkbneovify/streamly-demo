@@ -29,7 +29,6 @@ import {
   switchMap,
 } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { connect } from 'node:http2';
 
 
 @Component({
@@ -61,13 +60,17 @@ export class RegisterComponent implements OnInit {
   resendButtonDisabled = false;
   countdown = 60;
   all_Plans: any = [];
+  checkoutPlans:any;
   device_per_unit:number=1;
+
+
   // forms
   counterControl!: FormControl;
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
   selectedPlan:any;
+  selectedPlanType:string=''
   acceptTerm: boolean = false;
   // ======================== constructor ================================
   constructor(
@@ -114,7 +117,6 @@ export class RegisterComponent implements OnInit {
       });
 
       this.counterControl = this.fb.control(1, [Validators.min(1)]);
-      // this.selectedPlanById('plan_P9HdM8mHmthvuR')
   }
 
   onSearch(searchTerm: any): void {
@@ -183,28 +185,38 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // selectedplansbyid
   selectedPlanById(){
-    const id = this.selectedPlan;
     if(this.selectedPlan){
-      console.log('Selected plan',);
-      this.crud.postRequest('get-basic-plan/'+id.id,{}).subscribe({
+      const id = this.selectedPlan.id;
+
+      if(this.selectedPlanType == 'per_unit'){
+        this.crud.postRequest('get-basic-plan/'+id,{}).subscribe({
+          next:(data:any)=>{
+            console.log('===========basic plan>',data);
+            this.checkoutPlans = data;
+            console.log('checkout================>',this.checkoutPlans)
+            this.selectedTab = 'Payment'
+          },
+          error:(err:any)=>{
+            console.log(err);
+          }
+        });
+      }
+
+
+      if(this.selectedPlanType == 'tiered'){this.crud.postRequest('get-tier-plan/'+id,{}).subscribe({
         next:(data:any)=>{
-          console.log(data);
+          console.log('============ tiered plans ==>',data);
+          this.checkoutPlans = data;
+          this.selectedTab = 'Payment'
         },
         error:(err:any)=>{
           console.log(err);
         }
-      });
-      // this.crud.postRequest('get-tier-plan/'+data,{}).subscribe({
-      //   next:(data:any)=>{
-      //     console.log(data);
-      //   },
-      //   error:(err:any)=>{
-      //     console.log(err);
-      //   }
-      // });
+      });}
     }
-    this.selectedTab = 'Payment'
+
   }
 
   // if the zipcode is Invalid then send the details
@@ -430,5 +442,17 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+
+  // 
+  selectedTabTerms(data:any){
+    if(data){
+      this.selectedPlanType = data.type
+      this.selectedPlan = data;
+      this.ts.success('Plan Selected');
+      console.log('===========>',this.selectedPlan);
+      this.selectedTab = 'Terms'; 
+
+    }
+  }
 
 }

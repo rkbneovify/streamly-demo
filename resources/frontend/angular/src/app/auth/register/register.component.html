@@ -424,13 +424,21 @@
                 <div class="d-flex flex-column justify-content-between">
                   <h3>{{ data.nickname }}</h3>
                   <p>
-                    <span>$</span>{{ data.amount }}
+                    <span>$</span>{{ data.amount/100 }}
                     <span>/ {{ data.interval }}</span>
                   </p>
                 </div>
               </div>
 
               <div class="col_2_subblock d-flex flex-column gap-2">
+                <div class="d-flex flex-nowrap"
+                >
+                <div>
+                  <img src="../../../assets/dummy-img/check.svg" alt="" />
+                </div>
+                <p>Trial days: <span> {{ data.trial_period_days ?  data.trial_period_days :'no trials days' }}</span></p>
+                </div>
+
                 <div
                   *ngFor="let metadata of data.metadata | keyvalue"
                   class="d-flex flex-nowrap"
@@ -463,7 +471,7 @@
               </div>
 
               <div class="res-step3-btn">
-                <button (click)="selectedTab = 'Terms'; selectedPlan = data">
+                <button (click)="selectedTabTerms(data)">
                   Select Plan
                 </button>
               </div>
@@ -665,7 +673,7 @@
         <img src="../../../assets/dummy-img/arrow.svg" alt="" />
         <div class="backbtn backbtnwhite ms-2">Back</div>
       </div>
-      <!-- <div class="col-12 col-md-4 cart-content d-flex flex-column">
+      <div *ngIf="selectedPlanType == 'per_unit'" class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">
             <h2>Cart</h2>
@@ -680,16 +688,16 @@
             <div class="row_plans flex-column-flex justify-content-between pt-2 pb-3">
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">Trial</p>
-                <p>no trials days</p>
+                <p>{{ checkoutPlans.trial_period_days ?  checkoutPlans.trial_period_days :'no trials days' }}</p>
               </div>
               <div class="d-flex justify-content-between ">
                 <p class="fw-bolder">Coupon	</p>
-                <p>$ 0</p>
+                <p>$ {{+checkoutPlans.amount/100}}</p>
               </div>
             </div>
             <div class="row_total d-flex justify-content-between py-4">
               <p class="fw-bolder">Total</p>
-              <p class="total">$79</p>
+              <p class="total">${{+checkoutPlans.amount / 100}}</p>
             </div>
           </div>
         </div>
@@ -710,8 +718,9 @@
             </div>
           </div>
         </div>
-      </div> -->
-      <div class="col-12 col-md-4 cart-content d-flex flex-column">
+      </div>
+      
+      <div *ngIf="selectedPlanType == 'tiered'" class="col-12 col-md-4 cart-content d-flex flex-column">
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading pt-2">
             <h2>Your Bill summary</h2>
