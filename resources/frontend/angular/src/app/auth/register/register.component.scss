@@ -407,6 +407,15 @@
   }
 
   .col_2_subblock {
+    p {
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 23px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #d2eaff;
+    }
     .d-flex {
       gap: 9px;
       div {
@@ -414,15 +423,6 @@
           min-width: 24px;
           height: 24px;
         }
-      }
-      p {
-        font-family: Inter;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 23px;
-        letter-spacing: 0em;
-        text-align: left;
-        color: #d2eaff;
       }
     }
   }
