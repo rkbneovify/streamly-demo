@@ -1,5 +1,6 @@
 import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -55,11 +56,11 @@ import {
 })
 export class RegisterComponent implements OnInit {
   STRIPE: any;
-  selectedTab: string = 'Payment';
+  selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
   userState: string = '';
   userCity: string = '';
-  showplansDetails: boolean = false;
+  showplansDetails: boolean = true;
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
@@ -70,9 +71,18 @@ export class RegisterComponent implements OnInit {
   checkoutPlans: any;
   device_per_unit: number = 1;
   planAmount!:number;
+  devicePlanAmount:number=0;
+  couponValidationResult: any;
+  zipcardShow:boolean=false;
+  cardZipData!:any;
+  private searchCoupnTerm = new Subject<string>();
+  private searchZipTerms = new Subject<string>();
+
+
 
   // forms
   counterControl!: FormControl;
+  paymentFormDetails!:FormGroup;
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
@@ -85,7 +95,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private el: ElementRef,
     private renderer: Renderer2,
-    private ts: ToastrService
+    private ts: ToastrService,
+    private cdr: ChangeDetectorRef
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -108,6 +119,19 @@ export class RegisterComponent implements OnInit {
       digit5: ['', Validators.required],
       digit6: ['', Validators.required],
     });
+
+    this.paymentFormDetails = this.fb.group({
+      // nameOnCard: ['', Validators.required],
+      // cardNumber: ['', Validators.required],
+      cardZip: ['', Validators.required],
+      // email: ['', [Validators.required, Validators.email]],
+      couponCode: [''],
+      // address1: ['', Validators.required],
+      // address2: [''],
+      // city: ['', Validators.required],
+      // state: ['', Validators.required],
+      // country: ['', Validators.required]
+    });
   }
 
   // ============================== ngOnIt==========================
@@ -121,6 +145,66 @@ export class RegisterComponent implements OnInit {
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
         console.log('API Response:', apiResponse);
+      });
+
+      // this.searchZipTerms
+      // .pipe(
+      //   debounceTime(300),
+      //   distinctUntilChanged(), // ignore if next search term is same as previous
+      //   switchMap((term: string) => this.getZipcode(term))
+      // )
+      // .subscribe((apiResponse: any) => {
+      //   this.zipcodedata = [...apiResponse];
+      //   console.log('API Response:', apiResponse);
+      // });
+
+      // this.searchZipTerms
+      // .pipe(debounceTime(3000)) // Delay API request by 3 seconds
+      // .subscribe((value: string) => {
+      //   this.getZipcode(value).subscribe({
+      //     next:(res:any)=>{
+      //       console.log('======= res>',res);
+      //     },
+      //     error:(err:any)=>{console.log(err)}
+      //   });
+      // });
+
+      this.searchZipTerms
+  .pipe(
+    debounceTime(3000), // Delay API request by 3 seconds
+    switchMap((value: string) => {
+      if (value.length > 0) {
+        return this.getZipcode(value);
+      } else {
+        return of([]); // Return an empty array if the search term is empty
+      }
+    })
+  )
+  .subscribe({
+    next: (res: any) => {
+      console.log('======= res>', res);
+      this.cardZipData = res.some((zcode: any) => {
+        console.log(zcode.value, '==========================',this.paymentFormDetails.value.cardZip );
+        return zcode.value === this.paymentFormDetails.value.cardZip;
+      });;
+
+      if(this.cardZipData){
+        this.ts.success('ZipCode is valid')
+      }else{
+        this.ts.error("ZipCode is not valid")
+      }
+      console.log(this.cardZipData,'========>cardzip');
+    },
+    error: (err: any) => {
+      console.log(err);
+    }
+  });
+
+      // this.searchCoupnTerm.pipe(debounceTime(300),switchMap((term:s)))
+      this.searchCoupnTerm
+      .pipe(debounceTime(3000)) // Delay API request by 3 seconds
+      .subscribe((value: string) => {
+        this.validateCoupon();
       });
 
     this.counterControl = this.fb.control(1, [Validators.min(1)]);
@@ -162,17 +246,6 @@ export class RegisterComponent implements OnInit {
         const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
         console.log('payment Method', result);
         console.log('Token Created', tokenInfo);
-
-        // const initCustomCheckout = await this.stripe
-        // .confirmCardPayment(`${environment.stripe.clientSecret}`, {
-        //   payment_method: {
-        //     card: card,
-        //     billing_details: {
-        //       name: 'Deepak',
-        //     },
-        //   },
-        // })
-        // console.log('clientSecret',initCustomCheckout);
       } catch (error) {
         console.log(error);
       }
@@ -212,6 +285,12 @@ export class RegisterComponent implements OnInit {
     this.searchZipInput = searchTerm.term;
     this.city_state_readonly = false;
   }
+
+  onZipChange(event: any) {
+    const searchTerm = event.target.value; 
+    this.searchZipTerms.next(searchTerm); 
+  }
+  
 
   onSelect(selectedValue: any): void {
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
@@ -283,7 +362,7 @@ export class RegisterComponent implements OnInit {
       const id = this.selectedPlan.id;
 
       if (this.selectedPlanType == 'per_unit') {
-        this.crud.postRequest('get-basic-plan/' + id, {}).subscribe({
+        this.crud.getRequest('get-basic-plan/' + id).subscribe({
           next: (data: any) => {
             console.log('===========basic plan>', data);
             this.checkoutPlans = data;
@@ -297,7 +376,7 @@ export class RegisterComponent implements OnInit {
       }
 
       if (this.selectedPlanType == 'tiered') {
-        this.crud.postRequest('get-tier-plan/' + id, {}).subscribe({
+        this.crud.getRequest('get-tier-plan/' + id).subscribe({
           next: (data: any) => {
             console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
@@ -453,6 +532,15 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  // check the zipcode is valid or not
+  checkcardZipCodeValid(zipcode: any): boolean {
+    const search = zipcode;
+    return this.cardZipData.some((zcode: any) => {
+      console.log(zcode.value, '==========================', search);
+      return zcode.value === search;
+    });
+  }
+
   // get the zipcode acc. to the input
   getZipcode(searchTerm: string): Observable<any> {
     if (searchTerm.length > 0) {
@@ -559,23 +647,52 @@ export class RegisterComponent implements OnInit {
   }
 
 
+
+
   getTotalPrice(): number {
     if (this.checkoutPlans) {
       let totalPrice = 0;
-      const amount10 = this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
-      const amount18 = this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
-      const amount16 = this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
+      const amount10 = +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
+      const amount18 = +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
+      const amount16 = +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
   
       if (this.device_per_unit <= 10) {
+        this.devicePlanAmount = amount10
         totalPrice = amount10 * this.device_per_unit;
       } else if (this.device_per_unit <= 15) {
+        this.devicePlanAmount = amount18
         totalPrice = amount18 * this.device_per_unit;
+
       } else {
+        this.devicePlanAmount = amount16
         totalPrice = amount16 * this.device_per_unit;
+
       }
-  
+    
       return totalPrice;
     }
     return 0; // Return 0 if checkoutPlans is not defined
+  }
+
+  onCouponInputChange(event: any) {
+    this.searchCoupnTerm.next(event.target.value);
+  }
+
+  validateCoupon() {
+    if (this.paymentFormDetails.valid) {
+      const coupon = this.paymentFormDetails.value.couponCode;
+      this.crud.postRequest('validate-coupon', { coupon }).subscribe(
+        {next:(data:any) => {
+          this.couponValidationResult = data;
+          console.log('Coupon validation data:', data);
+          this.ts.success(data.message);
+        },
+        error:(err:any) => {
+          console.error('Error validating coupon:', err);
+          this.ts.error(err.error.message.coupon[0]);
+
+        }}
+      );
+    }
   }
 }
