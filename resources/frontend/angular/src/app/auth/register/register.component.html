@@ -371,7 +371,7 @@
 
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
-        <div class="step1-imgs-2">
+        <div class="step1-imgs-2" (click)="getAllThePlans()">
           <img
             class="step1-img"
             src="../../../assets/dummy-img/res-step3.png"
@@ -384,7 +384,7 @@
         id="carouselExampleIndicators"
         class="carousel slide"
         data-bs-ride="carousel"
-        data-bs-interval="5000"
+        data-bs-interval="5000000000"
         data-pause="hover"
       >
         <div class="carousel-indicators">
@@ -424,13 +424,27 @@
                 <div class="d-flex flex-column justify-content-between">
                   <h3>{{ data.nickname }}</h3>
                   <p>
-                    <span>$</span>{{ data.amount / 100 }}
+                    <span *ngIf="data.type !== 'tiered'">$</span>
+                    <span *ngIf="data.type !== 'tiered'">
+                      {{ data.amount / 100 }}
+                    </span>
+                    <span *ngIf="data.type == 'tiered'" >
+                      Tiers 1
+                    </span>
                     <span>/ {{ data.interval }}</span>
                   </p>
+                  
                 </div>
               </div>
-
-              <div class="col_2_subblock d-flex flex-column gap-2">
+              
+              <div  class="col_2_subblock d-flex flex-column gap-2">
+                <div *ngIf="data.type == 'tiered'" [ngClass]="{'rotate-90':showTiredPlan,'pointer':true,'my-n2':true}" (click)="showTiredPlan=!showTiredPlan">
+                  <img
+                  [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+                  src="../../../assets/dummy-img/chevron-down.svg"
+                  alt=""
+                  />
+                </div>
                 <div class="d-flex flex-nowrap">
                   <div>
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
@@ -478,9 +492,46 @@
                 </div> -->
               </div>
 
+              
+              <div *ngIf="showTiredPlan && data.type == 'tiered'" class="tiers_plan_dec">
+                <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
+                  <div class="h-auto py-3">Quantity</div>
+                  <div class="h-auto py-3">Price per unit</div>
+                  <div class="h-auto py-3">Flat amount</div>
+                </div>
+
+                <div
+                  *ngFor="let tPlans of data.tiers"
+                  class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
+                >
+                  <div *ngIf="tPlans.up_to">
+                    For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
+                    {{ tPlans.up_to }}
+                  </div>
+                  <div *ngIf="tPlans.up_to == null">For the rest</div>
+                  <div>${{ +tPlans.unit_amount / 100 }}</div>
+                  <div>${{ +tPlans.flat_amount / 100 }}</div>
+                </div>
+                <!-- 
+                <div class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
+                  <div>For the first 11 to 15</div>
+                  <div>$18.00</div>
+                  <div>$0.00</div>
+                </div>
+
+                <div class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
+                  <div>For the rest</div>
+                  <div>$16.00</div>
+                  <div>$0.00</div>
+                </div> -->
+              </div>
               <div class="res-step3-btn">
                 <button (click)="selectedTabTerms(data)">Select Plan</button>
               </div>
+
+              
+
+
             </div>
           </div>
 
@@ -796,7 +847,7 @@
             >
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">{{ device_per_unit }} X device(s)</p>
-                <p>${{ getTotalPrice() }}</p>
+                <p>${{ totalPrice }}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <input
@@ -866,7 +917,7 @@
                 class="tier__b pt-2 d-flex justify-content-between align-item-center"
               >
                 <p class="fw-bolder">Total</p>
-                <p class="total">${{ getTotalPrice() }}</p>
+                <p class="total">${{ totalPrice }}</p>
               </div>
             </div>
           </div>
@@ -913,23 +964,19 @@
             <div class="card-input">
               <input
               formControlName="cardZip"
-                [type]="zipcardShow ? 'text' : 'password'"
-                placeholder="Enter"
+              type="text"
+              placeholder="Enter Zip"
                 (input)="onZipChange($event)"
               />
-              <img
+              <!-- <img
                 src="../../../assets/dummy-img/eye.svg"
                 alt=""
                 (click)="zipcardShow = !zipcardShow"
-              />
+              /> -->
             </div>
           </div>
 
-          <div class="payment-box">
-            <div id="card"></div>
-            <button id="button">pay</button>
-            <div id="card-errors"></div>
-          </div>
+
         </div>
 
         <div class="row gy-2 row2">
@@ -974,13 +1021,13 @@
           <div class="col-6 col-md-4 ps-0">
             <p>City</p>
             <div class="card-input">
-              <input type="text" placeholder="Amherst" />
+              <input type="text" placeholder="Amherst" formControlName="paymentCity"/>
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>State</p>
             <div class="card-input">
-              <input type="text" placeholder="Massachusetts" />
+              <input type="text" placeholder="Massachusetts" formControlName="paymentState"/>
             </div>
           </div>
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
@@ -989,6 +1036,11 @@
               <input type="text" placeholder="USA" />
             </div>
           </div>
+        </div>
+        <div class="payment-box">
+          <div id="card-data"></div>
+          <button id="button">pay</button>
+          <div id="card-errors"></div>
         </div>
         <div class="row gy-2 justify-content-end">
           <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
