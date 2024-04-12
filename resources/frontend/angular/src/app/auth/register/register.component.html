@@ -424,19 +424,27 @@
                 <div class="d-flex flex-column justify-content-between">
                   <h3>{{ data.nickname }}</h3>
                   <p>
-                    <span>$</span>{{ data.amount/100 }}
+                    <span>$</span>{{ data.amount / 100 }}
                     <span>/ {{ data.interval }}</span>
                   </p>
                 </div>
               </div>
 
               <div class="col_2_subblock d-flex flex-column gap-2">
-                <div class="d-flex flex-nowrap"
-                >
-                <div>
-                  <img src="../../../assets/dummy-img/check.svg" alt="" />
-                </div>
-                <p>Trial days: <span> {{ data.trial_period_days ?  data.trial_period_days :'no trials days' }}</span></p>
+                <div class="d-flex flex-nowrap">
+                  <div>
+                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                  </div>
+                  <p>
+                    Trial days:
+                    <span>
+                      {{
+                        data.trial_period_days
+                          ? data.trial_period_days
+                          : "no trials days"
+                      }}</span
+                    >
+                  </p>
                 </div>
 
                 <div
@@ -471,9 +479,7 @@
               </div>
 
               <div class="res-step3-btn">
-                <button (click)="selectedTabTerms(data)">
-                  Select Plan
-                </button>
+                <button (click)="selectedTabTerms(data)">Select Plan</button>
               </div>
             </div>
           </div>
@@ -667,13 +673,16 @@
       *ngIf="selectedTab == 'Payment'"
     >
       <div
-        (click)="getAllThePlans()"
+        (click)="backbutton('Terms')"
         class="pointer payment-back-btn backbtnwhiteposition-absolute d-flex justify-content-start align-item-center"
       >
         <img src="../../../assets/dummy-img/arrow.svg" alt="" />
         <div class="backbtn backbtnwhite ms-2">Back</div>
       </div>
-      <div *ngIf="selectedPlanType == 'per_unit'" class="col-12 col-md-4 cart-content d-flex flex-column">
+      <div
+        *ngIf="selectedPlanType == 'per_unit'"
+        class="col-12 col-md-4 cart-content d-flex flex-column"
+      >
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading">
             <h2>Cart</h2>
@@ -682,22 +691,48 @@
             <div class="row_plans d-flex justify-content-between pt-4 pb-5">
               <p class="fw-bolder">Basic Plan</p>
               <div>
-                <img src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
+                <img
+                  src="../../../assets/dummy-img/shopping-cart-03.svg"
+                  alt=""
+                />
               </div>
             </div>
-            <div class="row_plans flex-column-flex justify-content-between pt-2 pb-3">
+            <div
+              class="row_plans flex-column-flex justify-content-between pt-2 pb-3"
+            >
+              <div class="d-flex justify-content-between mb-2">
+                <p class="fw-bolder">
+                  {{ checkoutPlans.plandetails.nickname }}
+                </p>
+                <p>
+                  ${{ checkoutPlans.plandetails.amount / 100 }}/1
+                  {{ checkoutPlans.plandetails.interval }}
+                </p>
+              </div>
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">Trial</p>
-                <p>{{ checkoutPlans.plandetails.trial_period_days ?  checkoutPlans.plandetails.trial_period_days + 'days' :'no trials days' }}</p>
+                <p>
+                  {{
+                    checkoutPlans.plandetails.trial_period_days
+                      ? checkoutPlans.plandetails.trial_period_days + "days"
+                      : "no trials days"
+                  }}
+                </p>
               </div>
-              <div class="d-flex justify-content-between ">
-                <p class="fw-bolder">Coupon	</p>
-                <p>$ {{+checkoutPlans.plandetails.amount/100}}</p>
+              <div class="d-flex justify-content-between mb-2">
+                <p class="fw-bolder">Tax</p>
+                <p>$ 0</p>
+              </div>
+              <div class="d-flex justify-content-between">
+                <p class="fw-bolder">Coupon</p>
+                <p>$ 0</p>
               </div>
             </div>
             <div class="row_total d-flex justify-content-between py-4">
               <p class="fw-bolder">Total</p>
-              <p class="total">${{+checkoutPlans.plandetails.amount / 100}}</p>
+              <p class="total">
+                ${{ +checkoutPlans.plandetails.amount / 100 }}
+              </p>
             </div>
           </div>
         </div>
@@ -719,8 +754,11 @@
           </div>
         </div>
       </div>
-      
-      <div *ngIf="selectedPlanType == 'tiered'" class="col-12 col-md-4 cart-content d-flex flex-column">
+
+      <div
+        *ngIf="selectedPlanType == 'tiered'"
+        class="col-12 col-md-4 cart-content d-flex flex-column"
+      >
         <div class="row_5_rt d-flex flex-column m-3">
           <div class="row_5_heading pt-2">
             <h2>Your Bill summary</h2>
@@ -729,7 +767,19 @@
             <div
               class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column"
             >
-              <p class="text-nowrap">$ {{getTotalPrice()}} per device/ per month</p>
+              <p class="text-nowrap">
+                $
+                <span *ngIf="device_per_unit <=10">{{
+                  +checkoutPlans.plandetails.tiers[0].unit_amount / 100
+                }}</span>
+                <span *ngIf="+device_per_unit >=11 && +device_per_unit <=15">{{
+                  +checkoutPlans.plandetails.tiers[1].unit_amount / 100
+                }}</span>
+                <span *ngIf="+device_per_unit >= 16">{{
+                  +checkoutPlans.plandetails.tiers[2].unit_amount / 100
+                }}</span>
+                per device/ per month
+              </p>
               <div class="counter d-flex justify-content-center mt-3">
                 <button class="btn-inc btn-count me-2" (click)="decrement()">
                   -
@@ -745,8 +795,8 @@
               class="row_plans flex-column-flex justify-content-between pb-3"
             >
               <div class="d-flex justify-content-between mb-2">
-                <p class="fw-bolder">{{device_per_unit}} X device(s)</p>
-                <p>${{getTotalPrice()}}</p>
+                <p class="fw-bolder">{{ device_per_unit }} X device(s)</p>
+                <p>${{ getTotalPrice() }}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <input
@@ -759,9 +809,12 @@
             </div>
 
             <div class="row_total flex-column justify-content-between py-4">
-              <div class="pointer" (click)="showplansDetails=!showplansDetails">
-                <img 
-                  [ngClass]="{'m-auto':true,'rotate-90':showplansDetails}"
+              <div
+                class="pointer"
+                (click)="showplansDetails = !showplansDetails"
+              >
+                <img
+                  [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
                   src="../../../assets/dummy-img/chevron-down.svg"
                   alt=""
                 />
@@ -769,20 +822,25 @@
               </div>
 
               <div class="tiers_plan_dec" *ngIf="showplansDetails">
-
                 <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
-                  <div class="h-auto py-3 ">Quantity</div>
-                  <div class="h-auto py-3 ">Price per unit</div>
-                  <div class="h-auto py-3 ">Flat amount</div>
+                  <div class="h-auto py-3">Quantity</div>
+                  <div class="h-auto py-3">Price per unit</div>
+                  <div class="h-auto py-3">Flat amount</div>
                 </div>
 
-                <div *ngFor="let tPlans of checkoutPlans.plandetails.tiers" class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
-                  <div *ngIf="tPlans.up_to">For the first {{+tPlans.up_to>10?'11':'1'}} to {{tPlans.up_to}}</div>
-                  <div *ngIf="tPlans.up_to == null" >For the rest</div>
-                  <div>${{+tPlans.unit_amount/100}}</div>
-                  <div>${{+tPlans.flat_amount/100}}</div>
+                <div
+                  *ngFor="let tPlans of checkoutPlans.plandetails.tiers"
+                  class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
+                >
+                  <div *ngIf="tPlans.up_to">
+                    For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
+                    {{ tPlans.up_to }}
+                  </div>
+                  <div *ngIf="tPlans.up_to == null">For the rest</div>
+                  <div>${{ +tPlans.unit_amount / 100 }}</div>
+                  <div>${{ +tPlans.flat_amount / 100 }}</div>
                 </div>
-<!-- 
+                <!-- 
                 <div class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
                   <div>For the first 11 to 15</div>
                   <div>$18.00</div>
@@ -797,13 +855,18 @@
               </div>
 
               <div>
-                <p class="px-2 my-3 ">Your plan will end on May 10 2024 We are charging you for the total number of devices.</p>
+                <p class="px-2 my-3">
+                  Your plan will end on May 10 2024 We are charging you for the
+                  total number of devices.
+                </p>
               </div>
 
-              <div id="tier__b" class="tier__b pt-2 d-flex justify-content-between align-item-center">
+              <div
+                id="tier__b"
+                class="tier__b pt-2 d-flex justify-content-between align-item-center"
+              >
                 <p class="fw-bolder">Total</p>
-                <p class="total">${{getTotalPrice()}}</p>
-  
+                <p class="total">${{ getTotalPrice() }}</p>
               </div>
             </div>
           </div>
@@ -828,12 +891,15 @@
         </div>
       </div>
 
-      <div class="col-12 col-md-8 px-4 carts-details">
+      <form
+        [formGroup]="paymentFormDetails"
+        class="col-12 col-md-8 px-4 carts-details"
+      >
         <div class="row gy-2 row1">
           <div class="col-6 col-md-4 ps-0">
             <p>Name on Card</p>
             <div class="card-input">
-              <input type="text" placeholder="Enter" />
+              <input form type="text" placeholder="Enter" />
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
@@ -845,8 +911,17 @@
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Credit Card Zip</p>
             <div class="card-input">
-              <input type="password" placeholder="Enter" />
-              <img src="../../../assets/dummy-img/eye.svg" alt="" />
+              <input
+              formControlName="cardZip"
+                [type]="zipcardShow ? 'text' : 'password'"
+                placeholder="Enter"
+                (input)="onZipChange($event)"
+              />
+              <img
+                src="../../../assets/dummy-img/eye.svg"
+                alt=""
+                (click)="zipcardShow = !zipcardShow"
+              />
             </div>
           </div>
 
@@ -867,8 +942,16 @@
           <div class="col-6 col-md-4 px-0 pe-md-3">
             <p>Coupon Code</p>
             <div class="card-input">
-              <input type="text" placeholder="Enter Coupon Code" />
+              <input
+                formControlName="couponCode"
+                type="text"
+                placeholder="Enter Coupon Code"
+                (input)="onCouponInputChange($event)"
+              />
             </div>
+            <!-- <div *ngIf="couponValidationResult">
+              {{couponValidationResult.message}}
+            </div> -->
           </div>
         </div>
 
@@ -912,7 +995,7 @@
             <button class="flex-fill">Start your 7 days trial</button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
 
     <div
