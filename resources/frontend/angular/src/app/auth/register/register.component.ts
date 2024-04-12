@@ -1,5 +1,6 @@
 import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -54,7 +55,7 @@ import {
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit,AfterViewInit {
   STRIPE: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
@@ -73,8 +74,10 @@ export class RegisterComponent implements OnInit {
   planAmount!:number;
   devicePlanAmount:number=0;
   couponValidationResult: any;
+  couponDataDetails:any;
   zipcardShow:boolean=false;
   cardZipData!:any;
+  showTiredPlan:boolean=false; 
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -128,13 +131,55 @@ export class RegisterComponent implements OnInit {
       couponCode: [''],
       // address1: ['', Validators.required],
       // address2: [''],
-      // city: ['', Validators.required],
-      // state: ['', Validators.required],
+      paymentCity: ['', Validators.required],
+      paymentState: ['', Validators.required],
       // country: ['', Validators.required]
     });
   }
 
   // ============================== ngOnIt==========================
+   async ngAfterViewInit() {
+    if(this.selectedTab == 'Payment'){
+      this.STRIPE = await loadStripe(environment.stripe.publicKey);
+    console.log(this.STRIPE);
+
+    const el = this.STRIPE?.elements();
+
+    const card = el.create('card');
+
+    card.mount('#card-data');
+
+    card.on('change', (ev: any) => {
+      const displayError: any = document.getElementById('card-errors');
+      ev.error
+        ? (displayError.textContent = ev.error.message)
+        : (displayError.textContent = '');
+    });
+
+    const button = document.getElementById('button');
+    button?.addEventListener('click', async (event) => {
+      event.preventDefault();
+      const ownerInfo = {
+        owner: { name: 'Deepak' },
+        amount: 1000,
+        currency: 'USD',
+      };
+
+      try {
+        const result: any = await this.STRIPE.createPaymentMethod({
+          type: 'card',
+          card,
+          billing_details: { name: 'Deepak' },
+        });
+        const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
+        console.log('payment Method', result);
+        console.log('Token Created', tokenInfo);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    }
+  }
   async ngOnInit() {
     this.searchTerms
       .pipe(
@@ -189,7 +234,10 @@ export class RegisterComponent implements OnInit {
       });;
 
       if(this.cardZipData){
-        this.ts.success('ZipCode is valid')
+        console.log(this.cardZipData,'data in if');
+        this.ts.success('ZipCode is valid');
+        this.paymentFormDetails.get('paymentState')?.setValue(res[0].state);
+        this.paymentFormDetails.get('paymentCity')?.setValue(res[0].city);
       }else{
         this.ts.error("ZipCode is not valid")
       }
@@ -211,46 +259,6 @@ export class RegisterComponent implements OnInit {
 
     // stripe call
     // this.addStripe();
-
-    this.STRIPE = await loadStripe(environment.stripe.publicKey);
-    console.log(this.STRIPE);
-
-    const el = this.STRIPE?.elements();
-
-    const card = el.create('card');
-
-    card.mount('#card');
-
-    card.on('change', (ev: any) => {
-      const displayError: any = document.getElementById('card-errors');
-      ev.error
-        ? (displayError.textContent = ev.error.message)
-        : (displayError.textContent = '');
-    });
-
-    const button = document.getElementById('button');
-    button?.addEventListener('click', async (event) => {
-      event.preventDefault();
-      const ownerInfo = {
-        owner: { name: 'Deepak' },
-        amount: 1000,
-        currency: 'USD',
-      };
-
-      try {
-        const result: any = await this.STRIPE.createPaymentMethod({
-          type: 'card',
-          card,
-          billing_details: { name: 'Deepak' },
-        });
-        const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
-        console.log('payment Method', result);
-        console.log('Token Created', tokenInfo);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
     // addStripe() {
     //   this.STRIPE = Stripe(environment.stripe.publicKey);
     //   console.log(this.STRIPE);
@@ -537,6 +545,10 @@ export class RegisterComponent implements OnInit {
     const search = zipcode;
     return this.cardZipData.some((zcode: any) => {
       console.log(zcode.value, '==========================', search);
+      if(zcode.value === search){
+        this.paymentFormDetails.get('paymentState')?.setValue('');
+
+      }
       return zcode.value === search;
     });
   }
@@ -622,16 +634,18 @@ export class RegisterComponent implements OnInit {
 
   // counter inc
   increment() {
-    if (this.counterControl.value < 100) {
-      this.counterControl.setValue(this.counterControl.value + 1);
-      this.device_per_unit = Number(this.counterControl.value);
+    if (this.counterControl.value < 1000) {
+      this.counterControl.setValue(+this.counterControl.value + 1);
+      this.device_per_unit = Number(+this.counterControl.value);
+      this.getTotalPrice();
     }
   }
 
   decrement() {
     if (this.counterControl.value > 1) {
-      this.counterControl.setValue(this.counterControl.value - 1);
-      this.device_per_unit = Number(this.counterControl.value);
+      this.counterControl.setValue(+this.counterControl.value - 1);
+      this.device_per_unit = Number(+this.counterControl.value);
+      this.getTotalPrice();
     }
   }
 
@@ -647,31 +661,29 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  totalPrice:any=20;
 
-
-  getTotalPrice(): number {
+  getTotalPrice() {
     if (this.checkoutPlans) {
-      let totalPrice = 0;
+      this.totalPrice = 0;
       const amount10 = +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
       const amount18 = +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
       const amount16 = +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
   
       if (this.device_per_unit <= 10) {
         this.devicePlanAmount = amount10
-        totalPrice = amount10 * this.device_per_unit;
+        this.totalPrice = amount10 * this.device_per_unit;
       } else if (this.device_per_unit <= 15) {
         this.devicePlanAmount = amount18
-        totalPrice = amount18 * this.device_per_unit;
+        this.totalPrice = amount18 * this.device_per_unit;
 
       } else {
         this.devicePlanAmount = amount16
-        totalPrice = amount16 * this.device_per_unit;
+        this.totalPrice = amount16 * this.device_per_unit;
 
       }
-    
-      return totalPrice;
+      this.discountCode();
     }
-    return 0; // Return 0 if checkoutPlans is not defined
   }
 
   onCouponInputChange(event: any) {
@@ -679,13 +691,23 @@ export class RegisterComponent implements OnInit {
   }
 
   validateCoupon() {
-    if (this.paymentFormDetails.valid) {
+    let body = {
+      "message": "Coupon is valid! & 15% for (1 months)",
+      "amountoff": 0,
+      "percentoff": 15
+    }
+  
+    // if (this.paymentFormDetails.valid) {
       const coupon = this.paymentFormDetails.value.couponCode;
       this.crud.postRequest('validate-coupon', { coupon }).subscribe(
         {next:(data:any) => {
           this.couponValidationResult = data;
           console.log('Coupon validation data:', data);
           this.ts.success(data.message);
+          this.couponDataDetails=body;
+          if(this.couponDataDetails){
+            this.discountCode();
+          }
         },
         error:(err:any) => {
           console.error('Error validating coupon:', err);
@@ -693,6 +715,24 @@ export class RegisterComponent implements OnInit {
 
         }}
       );
+    // }
+  }
+
+  // {
+  //   "message": "Coupon is valid! & 15% for (1 months)",
+  //   "amountoff": 0,
+  //   "percentoff": 15
+  // }
+
+  discountCode(){
+    if(this.couponDataDetails){
+      if(this.couponDataDetails?.amount){
+         this.totalPrice=this.totalPrice - this.couponDataDetails?.amount;
+      }else if(this.couponDataDetails?.percentoff)
+      {
+        this.totalPrice =this.totalPrice - this.couponDataDetails?.percentoff/100
+      }
     }
   }
+
 }
