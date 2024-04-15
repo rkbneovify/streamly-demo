@@ -15,7 +15,7 @@
   <!-- <div class="row"> -->
   <div class="overflow-auto">
     <div class="progressbar">
-      <div class="steps" (click)="selectedTab = 'Availability'">
+      <div class="steps" >
         <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}">
           <span>
             <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
@@ -23,7 +23,7 @@
         </div>
         <p class="text-center">Availability</p>
       </div>
-      <div class="steps" (click)="selectedTab = 'Verification'">
+      <div class="steps" >
         <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}">
           <span>
             <img src="../../../assets/dummy-img/verificatoin.svg" alt="" />
@@ -31,7 +31,7 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <div class="steps" (click)="selectedTab = 'Plans'">
+      <div class="steps" >
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans',}">
           <span>
             <img src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -39,7 +39,7 @@
         </div>
         <p class="text-center">Plans</p>
       </div>
-      <div class="steps" (click)="selectedTab = 'Terms'">
+      <div class="steps" >
         <div [ngClass]="{'bullet4':true,'activeTab':selectedTab=='Terms',}">
           <span>
             <img src="../../../assets/dummy-img/temsanscond.svg" alt="" />
@@ -55,7 +55,7 @@
         </div>
         <p class="text-center">Payment</p>
       </div>
-      <div class="steps" (click)="selectedTab = 'Confirmation'">
+      <div class="steps" >
         <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}">
           <span>
             <img src="../../../assets/dummy-img/congrats.svg" alt="" />
@@ -701,7 +701,7 @@
         </div>
       </div>
 
-      <form [formGroup]="paymentFormDetails" (ngSubmit)="submitPaymentDetails()"
+      <form [formGroup]="paymentFormDetails"
         class="col-12 col-md-8 px-4 carts-details">
         <div class="row gy-2 row1">
           <div class="col-6 col-md-4 ps-0">
@@ -710,23 +710,26 @@
               <input form type="text" placeholder="Enter" formControlName="nameOnCard" />
             </div>
           </div>
-          <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
+          <!-- <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>Credit Card Number</p>
             <div class="card-input">
               <input type="text" placeholder="Enter" formControlName="cardNumber" />
             </div>
-          </div>
+          </div> -->
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Credit Card Zip</p>
             <div class="card-input">
-              <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" />
+              <!-- <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" /> -->
               <!-- <img
                 src="../../../assets/dummy-img/eye.svg"
                 alt=""
                 (click)="zipcardShow = !zipcardShow"
               /> -->
+              <ng-select class="res-ngselect" formControlName="cardZip" [items]="zipcodedata" (search)="onSearch($event)"
+              (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
+                </ng-select>
             </div>
-          </div>
+            </div>
 
 
         </div>
@@ -735,7 +738,7 @@
           <div class="col-6 col-md-4 ps-0">
             <p>Email</p>
             <div class="card-input">
-              <input type="email" placeholder="Enter" required formControlName="cardEmail" />
+              <input type="email" placeholder="Enter" required formControlName="cardEmail"/>
             </div>
           </div>
           <div class="col-6 col-md-4 px-0 pe-md-3">
@@ -752,7 +755,8 @@
 
         <div class="row gy-2 mt-4">
           <div class="col-6 ps-0">
-            <p>Address 1</p>
+            <!-- <button (click)="paymentShowData()"></button> -->
+            <p >Address 1</p>
             <div class="card-input">
               <input type="text" placeholder="Enter Address 1" formControlName="address1" />
             </div>
@@ -792,7 +796,7 @@
         </div> -->
         <div>
           <div id="form-field">
-            <div id="card-info" #cardInfo></div>
+            <div class="input_standred" id="card-info" #cardInfo></div>
             <!-- <button id="submit-button" type="submit">
               Pay
             </button> -->
