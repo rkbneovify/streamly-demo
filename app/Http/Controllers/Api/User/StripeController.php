@@ -3,16 +3,28 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmailOtp;
 use Illuminate\Http\Request;
 use App\Models\FrontendText;
 use Illuminate\Support\Facades\DB;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Carbon\Carbon;
 use Stripe\Coupon;
 use Illuminate\Support\Facades\Validator;
+use App\User;
+use App\Models\RoleUser;
+use Illuminate\Support\Facades\Hash;
+use Exception;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\ValidationException;
+use Stripe\Customer;
+use Stripe\PaymentMethod;
+use Stripe\Subscription;
 
 class StripeController extends Controller
 {
+    private $DEFAULT_ROLE_ID = 3;
+
     public function __construct()
     {
         $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
@@ -112,8 +124,8 @@ class StripeController extends Controller
                             }
                             $price = $status->percent_off . '% for ' . $duration;
                         }
-                    }else{
-                        return response()->json(['message' => $request->coupon." is Invalid or expired."], 400);
+                    } else {
+                        return response()->json(['message' => $request->coupon . " is Invalid or expired."], 400);
                     }
                 } catch (\Stripe\Error\InvalidRequest $e) {
                     return response()->json(['message' => $e->getMessage()], 400);
@@ -121,5 +133,211 @@ class StripeController extends Controller
                 return response()->json(['message' => 'Coupon is valid! & ' . $price, 'amountoff' => $status->amount_off / 100, 'percentoff' => $status->percent_off], 200);
             }
         }
+    }
+
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6',
+            'stripeToken' => 'required',
+            'trial_days' => 'required',
+            'plan_id' => 'required',
+            'quantity' => 'required',
+            'line1' => 'required',
+            'line2' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+            'card_brand' => 'required',
+            'card_last_four' => 'required',
+            'zip_code' => ['required', 'regex:/^[0-9]{3,7}$/', 'exists:zipcodes,zipcode,status,1'],
+        ], ['zip_code.exists' => 'Unfortunately, the service is not yet available for the submitted zip code.']);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $trial_days = $request->trial_days;
+            $StripeplanId = $request->plan_id;
+            $quantity = $request->quantity ?? 1;
+            // $stripeToken = \Stripe\Token::create(array(
+            //     "card" => array(
+            //       "number" => "4242424242424242",
+            //       "exp_month" => 1,
+            //       "exp_year" => 2030,
+            //       "cvc" => "314"
+            //     )
+            //   ));
+            // 1. Create Payment Method
+            $paymentMethod = PaymentMethod::create([
+                'type' => 'card',
+                'card' => [
+                    'token' => $request->stripeToken,
+                ],
+            ]);
+
+            $customer = $this->createStripeCustomer($request, $paymentMethod);
+
+            // Create user
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = Hash::make($request->password);
+            $user->zipcode = $request->zip_code;
+            $user->email_verified_at = EmailOtp::where('email', $request->email)->select('updated_at')->first();
+            $user->is_active = 1;
+            $user->mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+            $user->city = $request->city;
+            $user->state = $request->state;
+            $user->stripe_id = $customer->id;
+            $user->card_brand = $request->card_brand;
+            $user->card_last_four = $request->card_last_four;
+
+            if ($user->save()) {
+                // Assign default role
+                $role = RoleUser::create([
+                    'user_id' => $user->id,
+                    'role_id' => $this->DEFAULT_ROLE_ID,
+                ]);
+
+                // Generate email HTML
+                $login_link = env('FRONTEND_URL') . '/auth/login';
+                $html = '<html>
+                            Hi, ' . $request['name'] . '<br><br>
+                            Thank you for registering for ' . env('APP_NAME') . '.<br><br>
+                            Please click the following link to login to your account.
+                            <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
+                            Thank you!<br>
+                            The ' . env('APP_NAME') . ' Team!
+                        </html>';
+                // Send email
+                Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
+                    $message->to($request->input('email'), $request->input('name'))
+                        ->subject(env('APP_NAME') . ': Account Verification');
+                });
+
+                if ($coupon = $request->get('coupon')) {
+                    $subscription_details = $this->withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                } else {
+                    $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                }
+
+                return response()->json([
+                    'message' => 'User Registered Successfully !',
+                    'subscription_details' => $subscription_details
+                ]);
+            } else {
+                return response()->json(['error' => 'Something Went Wrong.'], 500);
+            }
+        }
+    }
+
+    private function createStripeCustomer($request, $paymentMethod)
+    {
+        $customer = Customer::create([
+            'email' => $request->email,
+            'payment_method' => $paymentMethod->id,
+            'address' => [
+                'line1' => $request->line1,
+                'line2' => $request->line2,
+                'city' => $request->city,
+                'state' => $request->state,
+                'country' => $request->country,
+                'postal_code' => $request->zip_code
+            ]
+        ]);
+        return $customer;
+    }
+
+    private function withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod)
+    {
+
+        if (!empty($trial_days)) {
+            $newSubscription = $user->newSubscription('main', $StripeplanId)->quantity($quantity)->trialDays($trial_days)
+                ->withCoupon($coupon)
+                ->create($paymentMethod, ['email' => $user->email]);
+
+            //send user email after successfull payment
+            // Send confirmation email Trail
+            $this->sendSubscriptionConfirmationEmailTrail($user);
+        } else {
+            $newSubscription = $user->newSubscription('main', $StripeplanId)
+                ->quantity($quantity)
+                ->withCoupon($coupon)
+                ->create($paymentMethod, ['email' => $user->email]);
+
+            //send user email after successfull payment
+            // Send confirmation email
+            $this->sendSubscriptionConfirmationEmail($user);
+        }
+        return $newSubscription;
+    }
+
+    private function withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod)
+    {
+
+        //check for trial days
+        // Create subscription
+        if (!empty($trial_days)) {
+            $newSubscription = $user->newSubscription('main', $StripeplanId)
+                ->quantity($quantity)
+                ->trialDays($trial_days)->create($paymentMethod, ['email' => $user->email]);
+
+            //send user email after successfull payment
+            // Send confirmation email Trail
+            $this->sendSubscriptionConfirmationEmailTrail($user);
+        } else {
+            $newSubscription = $user->newSubscription('main', $StripeplanId)
+                ->quantity($quantity)
+                ->create($paymentMethod, ['email' => $user->email]);
+
+            //send user email after successfull payment
+            // Send confirmation email
+            $this->sendSubscriptionConfirmationEmail($user);
+        }
+
+        return $newSubscription;
+    }
+
+    private function sendSubscriptionConfirmationEmail($user)
+    {
+        // Send user email after successful payment
+        $website_link = env('APP_URL');
+
+        $html = '<html>
+                    Hi, ' . $user->name . '<br><br>
+                    Thanks for Subscribing! ' . env('APP_NAME') . '.<br>Your subscription is now active.<br>
+                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    <br><br>
+                    Thanks!<br>
+                    Team Streamly
+                </html>';
+
+        Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+            $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! ' . env('APP_NAME'));
+        });
+    }
+
+    private function sendSubscriptionConfirmationEmailTrail($user)
+    {
+        $website_link = env('APP_URL');
+
+        $html = '<html>
+                    Hi, ' . $user->name . '<br><br>
+                    Thanks for Subscribing! ' . env('APP_NAME') . '.<br>Your FREE TRIAL PERIOD is now active. After the trial period ends, your credit card will be billed the monthly subscription amount. <br>
+                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    <br><br>
+                    Thanks!<br>
+                    Team Streamly
+                </html>';
+
+        Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+            $message->to($user->email, $user->name)
+                ->subject('Thanks for Subscribing! ' . env('APP_NAME'));
+        });
     }
 }

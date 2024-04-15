@@ -65,6 +65,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('verify-otp', 'Auth\AuthController@verifyOtp');
     Route::post('account-edit', 'Auth\UserController@accountEdit')->middleware(['jwt.verify']);
     Route::post('multi-session-destroy', 'Auth\UserController@multiSessionDestroy')->middleware(['jwt.verify']);
+    Route::post('register', 'Api\User\StripeController@register');
+
 
     /** Angular Frontend APIs code ends here */
 
