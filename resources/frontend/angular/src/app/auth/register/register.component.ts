@@ -56,7 +56,7 @@ import {
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent implements OnInit,AfterViewInit {
-  STRIPE: any;
+  stripe: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
   userState: string = '';
@@ -124,62 +124,117 @@ export class RegisterComponent implements OnInit,AfterViewInit {
     });
 
     this.paymentFormDetails = this.fb.group({
-      // nameOnCard: ['', Validators.required],
-      // cardNumber: ['', Validators.required],
+      nameOnCard: ['', Validators.required],
+      cardNumber: ['', Validators.required],
       cardZip: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]],
+      cardEmail: ['', [Validators.required, Validators.email]],
       couponCode: [''],
-      // address1: ['', Validators.required],
-      // address2: [''],
+      address1: ['', Validators.required],
+      address2: [''],
       paymentCity: ['', Validators.required],
       paymentState: ['', Validators.required],
-      // country: ['', Validators.required]
+      country: ['', Validators.required]
     });
   }
+
+  // async ngAfterViewInit(){
+  //   // if(this.selectedTab == 'Payment'){
+  //     this.stripe = await loadStripe(environment.stripe.publicKey);
+  //   console.log(this.stripe);
+
+  //   const el = this.stripe?.elements();
+
+  //   const card = el.create('card');
+
+  //   card.mount('#card-data');
+
+  //   card.on('change', (ev: any) => {
+  //     const displayError: any = document.getElementById('card-errors');
+  //     ev.error
+  //       ? (displayError.textContent = ev.error.message)
+  //       : (displayError.textContent = '');
+  //   });
+
+  //   const button = document.getElementById('button');
+  //   button?.addEventListener('click', async (event) => {
+  //     event.preventDefault();
+  //     const ownerInfo = {
+  //       owner: { name: 'Deepak' },
+  //       amount: 1000,
+  //       currency: 'USD',
+  //     };
+
+  //     try {
+  //       const result: any = await this.stripe.createPaymentMethod({
+  //         type: 'card',
+  //         card,
+  //         billing_details: { name: 'Deepak' },
+  //       });
+  //       const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+  //       console.log('payment Method', result);
+  //       console.log('Token Created', tokenInfo);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   });
+  //   // }
+  // }
 
   // ============================== ngOnIt==========================
-   async ngAfterViewInit() {
-    if(this.selectedTab == 'Payment'){
-      this.STRIPE = await loadStripe(environment.stripe.publicKey);
-    console.log(this.STRIPE);
+  
+  async ngAfterViewInit() {
 
-    const el = this.STRIPE?.elements();
+     if(this.selectedTab == 'Payment'){
 
-    const card = el.create('card');
+    try {
+      this.stripe = await loadStripe(environment.stripe.publicKey);
+      const el = this.stripe?.elements();
+      const card = el.create('card');
 
-    card.mount('#card-data');
+      // Check if the card-data element exists before mounting
+      const cardDataElement = document.getElementById('card-data');
+      if (cardDataElement) {
+        card.mount('#card-data');
 
-    card.on('change', (ev: any) => {
-      const displayError: any = document.getElementById('card-errors');
-      ev.error
-        ? (displayError.textContent = ev.error.message)
-        : (displayError.textContent = '');
-    });
-
-    const button = document.getElementById('button');
-    button?.addEventListener('click', async (event) => {
-      event.preventDefault();
-      const ownerInfo = {
-        owner: { name: 'Deepak' },
-        amount: 1000,
-        currency: 'USD',
-      };
-
-      try {
-        const result: any = await this.STRIPE.createPaymentMethod({
-          type: 'card',
-          card,
-          billing_details: { name: 'Deepak' },
+        card.on('change', (ev: any) => {
+          const displayError: any = document.getElementById('card-errors');
+          ev.error
+            ? (displayError.textContent = ev.error.message)
+            : (displayError.textContent = '');
         });
-        const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
-        console.log('payment Method', result);
-        console.log('Token Created', tokenInfo);
-      } catch (error) {
-        console.log(error);
+
+        const button = document.getElementById('button');
+        button?.addEventListener('click', async (event) => {
+          event.preventDefault();
+          const ownerInfo = {
+            owner: { name: 'Deepak' },
+            amount: 1000,
+            currency: 'USD',
+          };
+
+          try {
+            const result: any = await this.stripe.createPaymentMethod({
+              type: 'card',
+              card,
+              billing_details: { name: 'Deepak' },
+            });
+            const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+            console.log('payment Method', result);
+            console.log('Token Created', tokenInfo);
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      } else {
+        console.error('Element with ID card-data not found in the DOM.');
       }
-    });
+    } catch (error) {
+      console.error('Error loading Stripe:', error);
     }
+
   }
+  }
+
   async ngOnInit() {
     this.searchTerms
       .pipe(
@@ -284,6 +339,46 @@ export class RegisterComponent implements OnInit,AfterViewInit {
     //          cardError.textContent = '';
     //      }
     //  });
+    // if(this.selectedTab == 'Payment'){
+    //   this.stripe = await loadStripe(environment.stripe.publicKey);
+    // console.log(this.stripe);
+
+    // const el = this.stripe?.elements();
+
+    // const card = el.create('card');
+
+    // card.mount('#card-data');
+
+    // card.on('change', (ev: any) => {
+    //   const displayError: any = document.getElementById('card-errors');
+    //   ev.error
+    //     ? (displayError.textContent = ev.error.message)
+    //     : (displayError.textContent = '');
+    // });
+
+    // const button = document.getElementById('button');
+    // button?.addEventListener('click', async (event) => {
+    //   event.preventDefault();
+    //   const ownerInfo = {
+    //     owner: { name: 'Deepak' },
+    //     amount: 1000,
+    //     currency: 'USD',
+    //   };
+
+    //   try {
+    //     const result: any = await this.stripe.createPaymentMethod({
+    //       type: 'card',
+    //       card,
+    //       billing_details: { name: 'Deepak' },
+    //     });
+    //     const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+    //     console.log('payment Method', result);
+    //     console.log('Token Created', tokenInfo);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
+    // }
   }
 
   onSearch(searchTerm: any): void {
@@ -733,6 +828,11 @@ export class RegisterComponent implements OnInit,AfterViewInit {
         this.totalPrice =this.totalPrice - this.couponDataDetails?.percentoff/100
       }
     }
+  }
+
+  submitPaymentDetails(){
+    const formData = this.paymentFormDetails.value;
+    console.log(formData);
   }
 
 }
