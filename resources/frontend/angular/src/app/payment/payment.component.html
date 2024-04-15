@@ -1,1 +1,23 @@
-<button (click)="stripePayment()" > Make Payment</button>
+<form (ngSubmit)="createStripeToken()" class="checkout">
+    <label class="cinf0" for="card-info">Card Info</label>
+    <div id="form-field">
+        <div id="card-info" #cardInfo></div>
+        <button id="submit-button" type="submit">
+            Pay &#163; {{_totalAmount}}
+        </button>
+        <!-- <mat-error id="card-errors" role="alert" *ngIf="cardError">
+            <mat-icon style="color: #f44336">cancel</mat-icon>
+            &nbsp;{{ cardError }}
+        </mat-error> -->
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+<!-- <button (click)="stripePayment()" > Make Payment</button> -->
