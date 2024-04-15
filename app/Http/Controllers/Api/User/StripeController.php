@@ -163,14 +163,7 @@ class StripeController extends Controller
             $trial_days = $request->trial_days;
             $StripeplanId = $request->plan_id;
             $quantity = $request->quantity ?? 1;
-            // $stripeToken = \Stripe\Token::create(array(
-            //     "card" => array(
-            //       "number" => "4242424242424242",
-            //       "exp_month" => 1,
-            //       "exp_year" => 2030,
-            //       "cvc" => "314"
-            //     )
-            //   ));
+
             // 1. Create Payment Method
             $paymentMethod = PaymentMethod::create([
                 'type' => 'card',
@@ -185,7 +178,9 @@ class StripeController extends Controller
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            $password = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-_+='), 0, 10);
+            $user->password = Hash::make($password);
+            $user->forced_change = 1;
             $user->zipcode = $request->zip_code;
             $user->email_verified_at = EmailOtp::where('email', $request->email)->select('updated_at')->first();
             $user->is_active = 1;
@@ -207,7 +202,9 @@ class StripeController extends Controller
                 $login_link = env('FRONTEND_URL') . '/auth/login';
                 $html = '<html>
                             Hi, ' . $request['name'] . '<br><br>
-                            Thank you for registering for ' . env('APP_NAME') . '.<br><br>
+                            Thank you for registering for ' . env('APP_NAME') . '.
+                            <br><br>Username: '.$user->email.'
+                            <br>Password: '.$password.'<br><br>
                             Please click the following link to login to your account.
                             <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
                             Thank you!<br>
@@ -216,7 +213,7 @@ class StripeController extends Controller
                 // Send email
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
                     $message->to($request->input('email'), $request->input('name'))
-                        ->subject(env('APP_NAME') . ': Account Verification');
+                        ->subject(env('APP_NAME') . ': Account Registration');
                 });
 
                 if ($coupon = $request->get('coupon')) {
