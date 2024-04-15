@@ -40,9 +40,9 @@ import {
   StripeCardElementOptions,
 } from '@stripe/stripe-js';
 
-declare var $: any;
-declare var stripe: any;
-declare var elements: any
+// declare var $: any;
+// declare var stripe: any;
+// declare var elements: any
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -134,9 +134,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
     this.paymentFormDetails = this.fb.group({
       nameOnCard: ['', Validators.required],
-      cardNumber: ['', Validators.required],
+      // cardNumber: ['', Validators.required],
       cardZip: ['', Validators.required],
-      cardEmail: ['', [Validators.required, Validators.email]],
+      cardEmail: [this.availabilityForm.value.email, [Validators.required, Validators.email]],
       couponCode: [''],
       address1: ['', Validators.required],
       address2: [''],
@@ -408,6 +408,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
     this.availabilityForm.get('state')?.setValue(selectedValue.state);
     this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
+    if(this.selectedTab == 'Payment'){
+      this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
+    this.paymentFormDetails.get('paymentState')?.setValue(selectedValue.state);
+    this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
+    }
     this.city_state_readonly = true;
     this.searchZipInput = selectedValue.value;
   }
@@ -480,6 +485,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.checkoutPlans = data;
             console.log('checkout================>', this.checkoutPlans);
             this.selectedTab = 'Payment';
+            this.paymentFormDetails.get('cardEmail')?.setValue(this.availabilityForm.get('email')?.value);
+            console.log('avail email',this.availabilityForm.get('email')?.value);
+            console.log('avail email 2',this.availabilityForm.value.email);
+
+            this.initializeKey(data.STRIPE_KEY);
+            // this.initiateCardElement();
           },
           error: (err: any) => {
             console.log(err);
@@ -493,6 +504,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
+            // this.initiateCardElement(); 
+            this.paymentFormDetails.get('cardEmail')?.setValue(this.availabilityForm.get('email')?.value);
+            console.log('avail email',this.availabilityForm.get('email')?.value);
+            console.log('avail email 2',this.availabilityForm.value.email);
+            this.initializeKey(data.STRIPE_KEY);
           },
           error: (err: any) => {
             console.log(err);
@@ -536,6 +552,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         },
       });
   }
+
   verifyOtpWithMail(verifyDetails: any) {
     this.crud.postRequest('auth/verify-otp', verifyDetails).subscribe({
       next: (data: any) => {
@@ -550,7 +567,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         this.ts.error(err.error.error);
-        this.otpVerificationForm.reset();
+        // this.otpVerificationForm.reset();
+        Object.keys(this.otpVerificationForm.controls).forEach(key => {
+          if (key !== 'email') {
+            this.otpVerificationForm.get(key)?.reset(); // Reset the value of the control
+          }
+        });
       },
     });
   }
@@ -616,7 +638,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // resent otp
   resendOtp() {
     this.selectedTab = 'Verification';
-    const email = this.otpVerificationForm.get('email')?.value;
+    const email = this.availabilityForm.get('email')?.value;
     if (email) {
       this.getOtpWithMail(email);
       console.log('Working');
@@ -840,9 +862,68 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
   }
 
-  submitPaymentDetails() {
+  // {
+    //     "name": "AnnuStripeTest1",
+    //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
+    //     "password": "12345678",
+    //     "stripeToken": "tok_visa",
+    //     "trial_days": "1",
+    //     "plan_id": "FJZCNhouM8Nr",
+    //     "quantity": "1",
+    //     "line1": "H. No. 265",
+    //     "line2": "abc",
+    //     "city": "Chesterfield",
+    //     "state": "Massachusetts",
+    //     "country": "United States",
+    //     "card_brand": "visa",
+    //     "card_last_four": "4242",
+    //     "zip_code": "01012"
+    // }
+
+  //   nameOnCard: ['', Validators.required],
+  //   cardNumber: ['', Validators.required],
+  //   cardZip: ['', Validators.required],
+  //   cardEmail: ['', [Validators.required, Validators.email]],
+  //   couponCode: [''],
+  //   address1: ['', Validators.required],
+  //   address2: [''],
+  //   paymentCity: ['', Validators.required],
+  //   paymentState: ['', Validators.required],
+  //   country: ['', Validators.required]
+  // });
+
+  submitPaymentDetails(token:any) {
     const formData = this.paymentFormDetails.value;
-    console.log(formData);
+    let body = {
+          "name": this.paymentFormDetails.value.nameOnCard,
+          "email": this.paymentFormDetails.value.cardEmail,
+          "stripeToken": token.id,
+          "trial_days": '7',
+          "plan_id": this.selectedPlan.id,
+          "quantity": '1',
+          "line1": this.paymentFormDetails.value.address1,
+          "line2": this.paymentFormDetails.value.address2,
+          "city": this.paymentFormDetails.value.paymentCity,
+          "state": this.paymentFormDetails.value.paymentState,
+          "country": this.paymentFormDetails.value.country,
+          "card_brand": token.card.brand,
+          "card_last_four": token.card.last4,
+          "zip_code": this.paymentFormDetails.value.cardZip
+      }
+
+      this.crud.postRequest('auth/register',body).subscribe({
+        next:(res:any)=>{console.log('resdata ======> ',res);this.ts.success(res.message);
+        this.selectedTab = 'Confirmation'
+      },
+        error:(err:any)=>{console.log('errdata ======> ',err);this.ts.success(err.message)}
+      })
+    console.log('==Body======>',body);
+  }
+
+
+  paymentShowData(){
+    const formData = this.paymentFormDetails.value;
+    console.log('========paymentData==========>',formData);
   }
 
 
@@ -851,8 +932,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
 
 
-
   // payment code by ashish
+
+  stripe:any;
+  elements:any;
 
   ngOnDestroy() {
     if (this.card) {
@@ -863,8 +946,35 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // this.initiateCardElement();
   }
+
+  async initializeKey(key:any){
+    this.stripe = await Stripe(key);
+    this.elements = this.stripe.elements();
+    if(this.stripe){
+      this.initiateCardElement();
+    }
+  }
+
   initiateCardElement() {
     this.selectedTab = 'Payment';
+
+    const cards = {
+      hidePostalCode: true,
+      style: {
+       base: {
+        iconColor: '#666EE8',
+        color: '#31325F',
+        lineHeight: '40px',
+        fontWeight: 300,
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSize: '15px',
+      
+        '::placeholder': {
+          color: '#CFD7E0',
+         },
+        }, 
+       } 
+      }
 
     if (this.selectedTab == 'Payment') {
       const cardStyle = {
@@ -883,12 +993,14 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         },
       };
       setTimeout(() => {
-        this.card = elements.create('card', { cardStyle });
+        this.card = this.elements.create('card',  cards ,);
+        console.log(this.card);
         this.card.mount(this.cardInfo.nativeElement);
         this.card.addEventListener('change', this.cardHandler);
       }, 4000);
     }
   }
+
   onChange(error: any) {
     if (error) {
       this.cardError = error.message;
@@ -897,11 +1009,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
     this.cd.detectChanges();
   }
+
   async createStripeToken() {
     console.log(this.card, 'card');
-    const { token, error } = await stripe.createToken(this.card);
-    console.log(token, 'token');
+    const { token, error } = await this.stripe.createToken(this.card);
+    console.log(token, 'token');  
 
+    this.submitPaymentDetails(token);
     if (token) {
       this.onSuccess(token);
     } else {
@@ -919,6 +1033,25 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
 
 
+
+//   curl --location 'http://127.0.0.1:8000api/auth/register' \
+// --data-raw '{
+//     "name": "AnnuStripeTest1",
+//     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
+//     "password": "12345678",
+//     "stripeToken": "tok_visa",
+//     "trial_days": "1",
+//     "plan_id": "FJZCNhouM8Nr",
+//     "quantity": "1",
+//     "line1": "H. No. 265",
+//     "line2": "abc",
+//     "city": "Chesterfield",
+//     "state": "Massachusetts",
+//     "country": "United States",
+//     "card_brand": "visa",
+//     "card_last_four": "4242",
+//     "zip_code": "01012"
+// }'
 
 
 
