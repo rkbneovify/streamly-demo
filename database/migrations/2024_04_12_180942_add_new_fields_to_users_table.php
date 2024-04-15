@@ -16,6 +16,7 @@ class AddNewFieldsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('city')->nullable()->after('address');
             $table->string('state')->nullable()->after('city');
+            $table->tinyInteger('forced_change')->nullable()->after('is_active');
         });
     }
 
