@@ -140,7 +140,6 @@ class StripeController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
             'stripeToken' => 'required',
             'trial_days' => 'required',
             'plan_id' => 'required',
