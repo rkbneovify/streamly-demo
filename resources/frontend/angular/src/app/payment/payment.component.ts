@@ -1,71 +1,120 @@
-import { Component, NgModule, OnInit } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { loadStripe, Stripe, StripeCardElement, StripeCardElementOptions } from '@stripe/stripe-js';
-import { StripeService } from 'ngx-stripe';
+import { ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgIf } from '@angular/common';
-import { StripeCard } from 'stripe-angular';
-import { promises } from 'dns';
-interface StripeServerCheckoutOptions {
-  lineItems: Array<{ price: string; quantity: number }>;
-  mode: 'payment' | 'subscription';
-  successUrl?: string;
-  cancelUrl?: string;
-}
+// interface StripeServerCheckoutOptions {
+//   lineItems: Array<{ price: string; quantity: number }>;
+//   mode: 'payment' | 'subscription';
+//   successUrl?: string;
+//   cancelUrl?: string;
+// }
+declare var $: any;
+declare var stripe: any;
+declare var elements: any
 
 @Component({
   selector: 'app-payment',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveFormsModule, NgIf, FormsModule],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.scss'
 })
 export class PaymentComponent implements OnInit {
-  // stripe: any = environment.stripe.publicKey;
-  stripe:any;
-  options!: StripeServerCheckoutOptions
-  constructor() { }
-  ngOnInit(): void {
 
-    this.stripe = Stripe(
-      "pk_test_51P40xLSImeftE9DrP1msVHBgpXZTDyUgtjx080RIKlV2gG3QLEl85znHUa08cV2OhIc5mNrxdD0PZCdFyCfhOvxq00ufEqblZ5"
-    );
+  @ViewChild('cardInfo') public cardInfo!: ElementRef;
+  _totalAmount: number = 10;
+  card: any;
+  cardHandler = this.onChange.bind(this);
+  cardError: any;
+
+  constructor(private cd: ChangeDetectorRef,) { }
+
+  ngOnInit() { }
+  ngOnDestroy() {
+    if (this.card) {
+      this.card.removeEventListener('change', this.cardHandler);
+      this.card.destroy();
+    }
   }
+  ngAfterViewInit() {
+    this.initiateCardElement();
+  }
+  initiateCardElement() {
+    const cardStyle = {
+      base: {
+        color: '#32325d',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4',
+        },
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a',
+      },
+    };
+    this.card = elements.create('card', { cardStyle });
+    this.card.mount(this.cardInfo.nativeElement);
+    this.card.addEventListener('change', this.cardHandler);
+  }
+  onChange(error: any) {
+    if (error) {
+      this.cardError = error.message;
+    } else {
+      this.cardError = null;
+    }
+    this.cd.detectChanges();
+  }
+  async createStripeToken() {
+    debugger
 
-  // var checkoutButton = document.getElementById("checkout");
-  // var checkoutSamosaButton = document.getElementById("checkout-samosa");
+    console.log(this.card, 'card');
 
-  stripePayment() {
-    this.stripe.redirectToCheckout({
-      lineItems: [{ price: 'price_1P45HASImeftE9Dr4qtyZHQ4', quantity: 1 }],
-      mode: 'subscription',
-      successUrl: "http://localhost:4200/payment?success=true",
-      cancelUrl: "http://localhost:4200/payment?failure=false",
-    }).then(function (result: any) {
+    const { token, error } = await stripe.createToken(this.card);
+    console.log(token, 'token');
 
-      if (result.error) {
-        console.error(result.error.message);
-      }
-    });
-    // this.stripe.redirectToCheckout({
-    //     lineItems: [{ price: item, quantity: 1 }],
-    //     mode: 'subscription',
-    //     successUrl: "https://example.com/success",
-    //     cancelUrl: "https://example.com/canceled",
-    //   }).then(function (result) {
-    //     if (result.error) {
-    //       var displayError = document.getElementById("error-message");
-    //       displayError.textContent = result.error.message;
-    //     }
-    //   });
-  };
-
-//   checkoutSamosaButton.addEventListener(
-//     "click",
-//     stripePayment("price_1P43taSImeftE9DrP7j8zpcR", "subscription")
-//   );
-// checkoutButton.addEventListener(
-//   "click",
-//   stripePayment("price_1P41IFSImeftE9DrgZQaFubC")
-// );
+    if (token) {
+      this.onSuccess(token);
+    } else {
+      this.onError(error);
+    }
+  }
+  onSuccess(token: any) {
+  }
+  onError(error: any) {
+    if (error.message) {
+      this.cardError = error.message;
+    }
+  }
 }
+
+
+
+
+
+
+
+// export class PaymentComponent implements OnInit {
+//   stripe:any;
+//   options!: StripeServerCheckoutOptions
+//   constructor() { }
+//   ngOnInit(): void {
+//     this.stripe = Stripe(
+//       "pk_test_51P40xLSImeftE9DrP1msVHBgpXZTDyUgtjx080RIKlV2gG3QLEl85znHUa08cV2OhIc5mNrxdD0PZCdFyCfhOvxq00ufEqblZ5"
+//     );
+//   }
+//   stripePayment() {
+//     this.stripe.redirectToCheckout({
+//       lineItems: [{ price: 'price_1P45HASImeftE9Dr4qtyZHQ4', quantity: 1 }],
+//       mode: 'subscription',
+//       successUrl: "http://localhost:4200/payment?success=true",
+//       cancelUrl: "http://localhost:4200/payment?failure=false",
+//     }).then(function (result: any) {
+
+//       if (result.error) {
+//         console.error(result.error.message);
+//       }
+//     });
+//   };
+// }

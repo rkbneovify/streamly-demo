@@ -1,5 +1,6 @@
 import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -7,6 +8,7 @@ import {
   NgModule,
   OnInit,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
@@ -38,6 +40,9 @@ import {
   StripeCardElementOptions,
 } from '@stripe/stripe-js';
 
+declare var $: any;
+declare var stripe: any;
+declare var elements: any
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -54,8 +59,9 @@ import {
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent implements OnInit {
-  STRIPE: any;
+
+export class RegisterComponent implements OnInit, AfterViewInit {
+  // stripe: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
   userState: string = '';
@@ -70,11 +76,13 @@ export class RegisterComponent implements OnInit {
   all_Plans: any = [];
   checkoutPlans: any;
   device_per_unit: number = 1;
-  planAmount!:number;
-  devicePlanAmount:number=0;
+  planAmount!: number;
+  devicePlanAmount: number = 0;
   couponValidationResult: any;
-  zipcardShow:boolean=false;
-  cardZipData!:any;
+  couponDataDetails: any;
+  zipcardShow: boolean = false;
+  cardZipData!: any;
+  showTiredPlan: boolean = false;
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -82,21 +90,25 @@ export class RegisterComponent implements OnInit {
 
   // forms
   counterControl!: FormControl;
-  paymentFormDetails!:FormGroup;
+  paymentFormDetails!: FormGroup;
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
   selectedPlan: any;
   selectedPlanType: string = '';
   acceptTerm: boolean = false;
+
+  @ViewChild('cardInfo') public cardInfo!: ElementRef;
+  _totalAmount: number = 10;
+  card: any;
+  cardHandler = this.onChange.bind(this);
+  cardError: any;
   // ======================== constructor ================================
   constructor(
     private crud: CrudService,
     private fb: FormBuilder,
     private el: ElementRef,
-    private renderer: Renderer2,
-    private ts: ToastrService,
-    private cdr: ChangeDetectorRef
+    private ts: ToastrService, private cd: ChangeDetectorRef
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -121,20 +133,117 @@ export class RegisterComponent implements OnInit {
     });
 
     this.paymentFormDetails = this.fb.group({
-      // nameOnCard: ['', Validators.required],
-      // cardNumber: ['', Validators.required],
+      nameOnCard: ['', Validators.required],
+      cardNumber: ['', Validators.required],
       cardZip: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]],
+      cardEmail: ['', [Validators.required, Validators.email]],
       couponCode: [''],
-      // address1: ['', Validators.required],
-      // address2: [''],
-      // city: ['', Validators.required],
-      // state: ['', Validators.required],
-      // country: ['', Validators.required]
+      address1: ['', Validators.required],
+      address2: [''],
+      paymentCity: ['', Validators.required],
+      paymentState: ['', Validators.required],
+      country: ['', Validators.required]
     });
   }
 
+  // async ngAfterViewInit(){
+  //   // if(this.selectedTab == 'Payment'){
+  //     this.stripe = await loadStripe(environment.stripe.publicKey);
+  //   console.log(this.stripe);
+
+  //   const el = this.stripe?.elements();
+
+  //   const card = el.create('card');
+
+  //   card.mount('#card-data');
+
+  //   card.on('change', (ev: any) => {
+  //     const displayError: any = document.getElementById('card-errors');
+  //     ev.error
+  //       ? (displayError.textContent = ev.error.message)
+  //       : (displayError.textContent = '');
+  //   });
+
+  //   const button = document.getElementById('button');
+  //   button?.addEventListener('click', async (event) => {
+  //     event.preventDefault();
+  //     const ownerInfo = {
+  //       owner: { name: 'Deepak' },
+  //       amount: 1000,
+  //       currency: 'USD',
+  //     };
+
+  //     try {
+  //       const result: any = await this.stripe.createPaymentMethod({
+  //         type: 'card',
+  //         card,
+  //         billing_details: { name: 'Deepak' },
+  //       });
+  //       const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+  //       console.log('payment Method', result);
+  //       console.log('Token Created', tokenInfo);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   });
+  //   // }
+  // }
+
   // ============================== ngOnIt==========================
+
+  // async ngAfterViewInit() {
+
+  //   if (this.selectedTab == 'Payment') {
+
+  //     try {
+  //       this.stripe = await loadStripe(environment.stripe.publicKey);
+  //       const el = this.stripe?.elements();
+  //       const card = el.create('card');
+
+  //       // Check if the card-data element exists before mounting
+  //       const cardDataElement = document.getElementById('card-data');
+  //       if (cardDataElement) {
+  //         card.mount('#card-data');
+
+  //         card.on('change', (ev: any) => {
+  //           const displayError: any = document.getElementById('card-errors');
+  //           ev.error
+  //             ? (displayError.textContent = ev.error.message)
+  //             : (displayError.textContent = '');
+  //         });
+
+  //         const button = document.getElementById('button');
+  //         button?.addEventListener('click', async (event) => {
+  //           event.preventDefault();
+  //           const ownerInfo = {
+  //             owner: { name: 'Deepak' },
+  //             amount: 1000,
+  //             currency: 'USD',
+  //           };
+
+  //           try {
+  //             const result: any = await this.stripe.createPaymentMethod({
+  //               type: 'card',
+  //               card,
+  //               billing_details: { name: 'Deepak' },
+  //             });
+  //             const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+  //             console.log('payment Method', result);
+  //             console.log('Token Created', tokenInfo);
+  //           } catch (error) {
+  //             console.log(error);
+  //           }
+  //         });
+  //       } else {
+  //         console.error('Element with ID card-data not found in the DOM.');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error loading Stripe:', error);
+  //     }
+
+  //   }
+  // }
+
   async ngOnInit() {
     this.searchTerms
       .pipe(
@@ -147,61 +256,64 @@ export class RegisterComponent implements OnInit {
         console.log('API Response:', apiResponse);
       });
 
-      // this.searchZipTerms
-      // .pipe(
-      //   debounceTime(300),
-      //   distinctUntilChanged(), // ignore if next search term is same as previous
-      //   switchMap((term: string) => this.getZipcode(term))
-      // )
-      // .subscribe((apiResponse: any) => {
-      //   this.zipcodedata = [...apiResponse];
-      //   console.log('API Response:', apiResponse);
-      // });
+    // this.searchZipTerms
+    // .pipe(
+    //   debounceTime(300),
+    //   distinctUntilChanged(), // ignore if next search term is same as previous
+    //   switchMap((term: string) => this.getZipcode(term))
+    // )
+    // .subscribe((apiResponse: any) => {
+    //   this.zipcodedata = [...apiResponse];
+    //   console.log('API Response:', apiResponse);
+    // });
 
-      // this.searchZipTerms
-      // .pipe(debounceTime(3000)) // Delay API request by 3 seconds
-      // .subscribe((value: string) => {
-      //   this.getZipcode(value).subscribe({
-      //     next:(res:any)=>{
-      //       console.log('======= res>',res);
-      //     },
-      //     error:(err:any)=>{console.log(err)}
-      //   });
-      // });
+    // this.searchZipTerms
+    // .pipe(debounceTime(3000)) // Delay API request by 3 seconds
+    // .subscribe((value: string) => {
+    //   this.getZipcode(value).subscribe({
+    //     next:(res:any)=>{
+    //       console.log('======= res>',res);
+    //     },
+    //     error:(err:any)=>{console.log(err)}
+    //   });
+    // });
 
-      this.searchZipTerms
-  .pipe(
-    debounceTime(3000), // Delay API request by 3 seconds
-    switchMap((value: string) => {
-      if (value.length > 0) {
-        return this.getZipcode(value);
-      } else {
-        return of([]); // Return an empty array if the search term is empty
-      }
-    })
-  )
-  .subscribe({
-    next: (res: any) => {
-      console.log('======= res>', res);
-      this.cardZipData = res.some((zcode: any) => {
-        console.log(zcode.value, '==========================',this.paymentFormDetails.value.cardZip );
-        return zcode.value === this.paymentFormDetails.value.cardZip;
-      });;
+    this.searchZipTerms
+      .pipe(
+        debounceTime(3000), // Delay API request by 3 seconds
+        switchMap((value: string) => {
+          if (value.length > 0) {
+            return this.getZipcode(value);
+          } else {
+            return of([]); // Return an empty array if the search term is empty
+          }
+        })
+      )
+      .subscribe({
+        next: (res: any) => {
+          console.log('======= res>', res);
+          this.cardZipData = res.some((zcode: any) => {
+            console.log(zcode.value, '==========================', this.paymentFormDetails.value.cardZip);
+            return zcode.value === this.paymentFormDetails.value.cardZip;
+          });;
 
-      if(this.cardZipData){
-        this.ts.success('ZipCode is valid')
-      }else{
-        this.ts.error("ZipCode is not valid")
-      }
-      console.log(this.cardZipData,'========>cardzip');
-    },
-    error: (err: any) => {
-      console.log(err);
-    }
-  });
+          if (this.cardZipData) {
+            console.log(this.cardZipData, 'data in if');
+            this.ts.success('ZipCode is valid');
+            this.paymentFormDetails.get('paymentState')?.setValue(res[0].state);
+            this.paymentFormDetails.get('paymentCity')?.setValue(res[0].city);
+          } else {
+            this.ts.error("ZipCode is not valid")
+          }
+          console.log(this.cardZipData, '========>cardzip');
+        },
+        error: (err: any) => {
+          console.log(err);
+        }
+      });
 
-      // this.searchCoupnTerm.pipe(debounceTime(300),switchMap((term:s)))
-      this.searchCoupnTerm
+    // this.searchCoupnTerm.pipe(debounceTime(300),switchMap((term:s)))
+    this.searchCoupnTerm
       .pipe(debounceTime(3000)) // Delay API request by 3 seconds
       .subscribe((value: string) => {
         this.validateCoupon();
@@ -211,46 +323,6 @@ export class RegisterComponent implements OnInit {
 
     // stripe call
     // this.addStripe();
-
-    this.STRIPE = await loadStripe(environment.stripe.publicKey);
-    console.log(this.STRIPE);
-
-    const el = this.STRIPE?.elements();
-
-    const card = el.create('card');
-
-    card.mount('#card');
-
-    card.on('change', (ev: any) => {
-      const displayError: any = document.getElementById('card-errors');
-      ev.error
-        ? (displayError.textContent = ev.error.message)
-        : (displayError.textContent = '');
-    });
-
-    const button = document.getElementById('button');
-    button?.addEventListener('click', async (event) => {
-      event.preventDefault();
-      const ownerInfo = {
-        owner: { name: 'Deepak' },
-        amount: 1000,
-        currency: 'USD',
-      };
-
-      try {
-        const result: any = await this.STRIPE.createPaymentMethod({
-          type: 'card',
-          card,
-          billing_details: { name: 'Deepak' },
-        });
-        const tokenInfo = await this.STRIPE.createToken(card, ownerInfo);
-        console.log('payment Method', result);
-        console.log('Token Created', tokenInfo);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-
     // addStripe() {
     //   this.STRIPE = Stripe(environment.stripe.publicKey);
     //   console.log(this.STRIPE);
@@ -276,6 +348,46 @@ export class RegisterComponent implements OnInit {
     //          cardError.textContent = '';
     //      }
     //  });
+    // if(this.selectedTab == 'Payment'){
+    //   this.stripe = await loadStripe(environment.stripe.publicKey);
+    // console.log(this.stripe);
+
+    // const el = this.stripe?.elements();
+
+    // const card = el.create('card');
+
+    // card.mount('#card-data');
+
+    // card.on('change', (ev: any) => {
+    //   const displayError: any = document.getElementById('card-errors');
+    //   ev.error
+    //     ? (displayError.textContent = ev.error.message)
+    //     : (displayError.textContent = '');
+    // });
+
+    // const button = document.getElementById('button');
+    // button?.addEventListener('click', async (event) => {
+    //   event.preventDefault();
+    //   const ownerInfo = {
+    //     owner: { name: 'Deepak' },
+    //     amount: 1000,
+    //     currency: 'USD',
+    //   };
+
+    //   try {
+    //     const result: any = await this.stripe.createPaymentMethod({
+    //       type: 'card',
+    //       card,
+    //       billing_details: { name: 'Deepak' },
+    //     });
+    //     const tokenInfo = await this.stripe.createToken(card, ownerInfo);
+    //     console.log('payment Method', result);
+    //     console.log('Token Created', tokenInfo);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // });
+    // }
   }
 
   onSearch(searchTerm: any): void {
@@ -287,10 +399,10 @@ export class RegisterComponent implements OnInit {
   }
 
   onZipChange(event: any) {
-    const searchTerm = event.target.value; 
-    this.searchZipTerms.next(searchTerm); 
+    const searchTerm = event.target.value;
+    this.searchZipTerms.next(searchTerm);
   }
-  
+
 
   onSelect(selectedValue: any): void {
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
@@ -537,6 +649,10 @@ export class RegisterComponent implements OnInit {
     const search = zipcode;
     return this.cardZipData.some((zcode: any) => {
       console.log(zcode.value, '==========================', search);
+      if (zcode.value === search) {
+        this.paymentFormDetails.get('paymentState')?.setValue('');
+
+      }
       return zcode.value === search;
     });
   }
@@ -622,16 +738,18 @@ export class RegisterComponent implements OnInit {
 
   // counter inc
   increment() {
-    if (this.counterControl.value < 100) {
-      this.counterControl.setValue(this.counterControl.value + 1);
-      this.device_per_unit = Number(this.counterControl.value);
+    if (this.counterControl.value < 1000) {
+      this.counterControl.setValue(+this.counterControl.value + 1);
+      this.device_per_unit = Number(+this.counterControl.value);
+      this.getTotalPrice();
     }
   }
 
   decrement() {
     if (this.counterControl.value > 1) {
-      this.counterControl.setValue(this.counterControl.value - 1);
-      this.device_per_unit = Number(this.counterControl.value);
+      this.counterControl.setValue(+this.counterControl.value - 1);
+      this.device_per_unit = Number(+this.counterControl.value);
+      this.getTotalPrice();
     }
   }
 
@@ -647,31 +765,29 @@ export class RegisterComponent implements OnInit {
   }
 
 
+  totalPrice: any = 20;
 
-
-  getTotalPrice(): number {
+  getTotalPrice() {
     if (this.checkoutPlans) {
-      let totalPrice = 0;
+      this.totalPrice = 0;
       const amount10 = +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
       const amount18 = +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
       const amount16 = +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
-  
+
       if (this.device_per_unit <= 10) {
         this.devicePlanAmount = amount10
-        totalPrice = amount10 * this.device_per_unit;
+        this.totalPrice = amount10 * this.device_per_unit;
       } else if (this.device_per_unit <= 15) {
         this.devicePlanAmount = amount18
-        totalPrice = amount18 * this.device_per_unit;
+        this.totalPrice = amount18 * this.device_per_unit;
 
       } else {
         this.devicePlanAmount = amount16
-        totalPrice = amount16 * this.device_per_unit;
+        this.totalPrice = amount16 * this.device_per_unit;
 
       }
-    
-      return totalPrice;
+      this.discountCode();
     }
-    return 0; // Return 0 if checkoutPlans is not defined
   }
 
   onCouponInputChange(event: any) {
@@ -679,20 +795,138 @@ export class RegisterComponent implements OnInit {
   }
 
   validateCoupon() {
-    if (this.paymentFormDetails.valid) {
-      const coupon = this.paymentFormDetails.value.couponCode;
-      this.crud.postRequest('validate-coupon', { coupon }).subscribe(
-        {next:(data:any) => {
+    let body = {
+      "message": "Coupon is valid! & 15% for (1 months)",
+      "amountoff": 0,
+      "percentoff": 15
+    }
+
+    // if (this.paymentFormDetails.valid) {
+    const coupon = this.paymentFormDetails.value.couponCode;
+    this.crud.postRequest('validate-coupon', { coupon }).subscribe(
+      {
+        next: (data: any) => {
           this.couponValidationResult = data;
           console.log('Coupon validation data:', data);
           this.ts.success(data.message);
+          this.couponDataDetails = body;
+          if (this.couponDataDetails) {
+            this.discountCode();
+          }
         },
-        error:(err:any) => {
+        error: (err: any) => {
           console.error('Error validating coupon:', err);
           this.ts.error(err.error.message.coupon[0]);
 
-        }}
-      );
+        }
+      }
+    );
+    // }
+  }
+
+  // {
+  //   "message": "Coupon is valid! & 15% for (1 months)",
+  //   "amountoff": 0,
+  //   "percentoff": 15
+  // }
+
+  discountCode() {
+    if (this.couponDataDetails) {
+      if (this.couponDataDetails?.amount) {
+        this.totalPrice = this.totalPrice - this.couponDataDetails?.amount;
+      } else if (this.couponDataDetails?.percentoff) {
+        this.totalPrice = this.totalPrice - this.couponDataDetails?.percentoff / 100
+      }
     }
   }
+
+  submitPaymentDetails() {
+    const formData = this.paymentFormDetails.value;
+    console.log(formData);
+  }
+
+
+
+
+
+
+
+
+  // payment code by ashish
+
+  ngOnDestroy() {
+    if (this.card) {
+      this.card.removeEventListener('change', this.cardHandler);
+      this.card.destroy();
+    }
+  }
+  ngAfterViewInit() {
+    // this.initiateCardElement();
+  }
+  initiateCardElement() {
+    this.selectedTab = 'Payment';
+
+    if (this.selectedTab == 'Payment') {
+      const cardStyle = {
+        base: {
+          color: '#32325d',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '16px',
+          '::placeholder': {
+            color: '#aab7c4',
+          },
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a',
+        },
+      };
+      setTimeout(() => {
+        this.card = elements.create('card', { cardStyle });
+        this.card.mount(this.cardInfo.nativeElement);
+        this.card.addEventListener('change', this.cardHandler);
+      }, 4000);
+    }
+  }
+  onChange(error: any) {
+    if (error) {
+      this.cardError = error.message;
+    } else {
+      this.cardError = null;
+    }
+    this.cd.detectChanges();
+  }
+  async createStripeToken() {
+    console.log(this.card, 'card');
+    const { token, error } = await stripe.createToken(this.card);
+    console.log(token, 'token');
+
+    if (token) {
+      this.onSuccess(token);
+    } else {
+      this.onError(error);
+    }
+  }
+  onSuccess(token: any) {
+  }
+  onError(error: any) {
+    if (error.message) {
+      this.cardError = error.message;
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
