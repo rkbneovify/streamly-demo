@@ -973,6 +973,14 @@ color: #004480;
 }
 }
 
+.margin-2rem{
+  margin-top: -3rem;
+}
+
+.ml_12{
+  margin: 0 0 0 -12px;
+}
+
 @media screen and (max-width: 768px) {
   .col_2_1 {
     flex-basis: 80% !important;
