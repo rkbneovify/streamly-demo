@@ -31,7 +31,7 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <div class="steps" >
+      <div class="steps" (click)="selectedTab='Plans'" >
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans',}">
           <span>
             <img src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -47,7 +47,7 @@
         </div>
         <p class="text-center">T&C</p>
       </div>
-      <div class="steps" (click)="initiateCardElement();">
+      <div class="steps" (click)="selectedTab='Payment'">
         <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment',}">
           <span>
             <img src="../../../assets/dummy-img/payment.svg" alt="" />
@@ -279,7 +279,7 @@
                   <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
                     src="../../../assets/dummy-img/chevron-down.svg" alt="" />
                 </div>
-                <div class="d-flex flex-nowrap">
+                <div class="d-flex flex-nowrap" *ngIf="!showTiredPlan">
                   <div>
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
@@ -295,11 +295,11 @@
                 </div>
 
                 <div *ngFor="let metadata of data.metadata | keyvalue" class="d-flex flex-nowrap">
-                  <div>
+                  <div *ngIf="!showTiredPlan">
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
                   <ng-container *ngIf="metadata.value">
-                    <p>{{ metadata.value }}</p>
+                    <p *ngIf="!showTiredPlan">{{ metadata.value }}</p>
                   </ng-container>
                 </div>
                 <!-- <div class="d-flex flex-nowrap">
@@ -323,7 +323,7 @@
               </div>
 
 
-              <div *ngIf="showTiredPlan && data.type == 'tiered'" class="tiers_plan_dec">
+              <div *ngIf="showTiredPlan && data.type == 'tiered'" [ngClass]="{'tiers_plan_dec':true,'margin-2rem':showTiredPlan}">
                 <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
                   <div class="h-auto py-3">Quantity</div>
                   <div class="h-auto py-3">Price per unit</div>
@@ -794,9 +794,9 @@
           <button id="button">pay</button>
           <div id="card-errors"></div>
         </div> -->
-        <div>
+        <div class="row gy-2">
           <div id="form-field">
-            <div class="input_standred" id="card-info" #cardInfo></div>
+            <div class="input_standred ml_12" id="card-info" #cardInfo></div>
             <!-- <button id="submit-button" type="submit">
               Pay
             </button> -->
