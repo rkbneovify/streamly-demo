@@ -21,7 +21,7 @@ class UserController extends Controller
     public function accountEdit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'password' => 'required_without:name',
+            'password' => 'required_without:name|string|min:6',
             'name' => 'required_without:password',
             'old_password' => 'required_with:password,'
         ]);
@@ -136,5 +136,51 @@ class UserController extends Controller
         }
 
         return (!empty($errors)) ? $errors : 'no error';
+    }
+
+    public function forceChangePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string|confirmed|min:6',
+            'password_confirmation' => 'required',
+            'old_password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $user = JWTAuth::user();
+
+            if ($user) {
+
+                if ($request->has('old_password')) {
+                    $credentials = ['email' => $user->email, 'password' => $request->old_password];
+                    $token = JWTAuth::attempt($credentials);
+                    if (!$token) {
+                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
+                        return response()->json($response, 401);
+                    }
+                }
+
+                if ($request->password == $request->old_password) {
+                    return response()->json(['error' => 'Your Old Password Cannot Be New Password'], 400);
+                }
+
+                if ($request->has('password')) {
+                    $user->password = Hash::make($request->password);
+                    $user->forced_change = 0;
+                }
+                if ($user->save()) {
+                    $response = array('success' => true, 'response_code' => 200, 'message' => 'Password updated successfully.');
+                    return response()->json($response, 200);
+                }
+            } else {
+                $response = array('success' => false, 'response_code' => 404, 'message' => 'User not found');
+                return response()->json($response, 404);
+            }
+        }
     }
 }
