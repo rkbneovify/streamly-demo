@@ -181,7 +181,14 @@ class StripeController extends Controller
             $user->password = Hash::make($password);
             $user->forced_change = 1;
             $user->zipcode = $request->zip_code;
-            $user->email_verified_at = EmailOtp::where('email', $request->email)->select('updated_at')->first();
+            $emailOtp = EmailOtp::where('email', $request->email)->select('updated_at')->first();
+            if ($emailOtp) {
+                // Extract the updated_at value from the $emailOtp object
+                $user->email_verified_at = $emailOtp->updated_at;
+            } else {
+                // Handle the case where no record is found.
+                return response()->json(['error' => 'Email not Verified!'], 400);
+            }
             $user->is_active = 1;
             $user->mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
             $user->city = $request->city;
@@ -202,8 +209,8 @@ class StripeController extends Controller
                 $html = '<html>
                             Hi, ' . $request['name'] . '<br><br>
                             Thank you for registering for ' . env('APP_NAME') . '.
-                            <br><br>Username: '.$user->email.'
-                            <br>Password: '.$password.'<br><br>
+                            <br><br>Username: ' . $user->email . '
+                            <br>Password: ' . $password . '<br><br>
                             Please click the following link to login to your account.
                             <br><br><a href="' . $login_link . '" target=_blank style="  display: block; width: 115px; height: 25px; background: #004E92 0% 0% no-repeat padding-box; padding: 10px; text-align: center; border-radius: 5px; color: white; font-weight: bold; line-height: 25px;">Login</a><br><br>
                             Thank you!<br>
