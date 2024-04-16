@@ -338,25 +338,25 @@
 }
 
 // step3
-.row_3{
-  #carouselExampleIndicators{
+.row_3 {
+  #carouselExampleIndicators {
     width: 275px;
     border-radius: 12px;
   }
-  .carousel-control-next,.carousel-control-prev{
+  .carousel-control-next,
+  .carousel-control-prev {
     background: #ffdb4e !important;
     border-radius: 50% !important;
     height: 40px !important;
     top: 50% !important;
-    span{
+    span {
       width: 15px !important;
     }
   }
-  .carousel-control-next{
+  .carousel-control-next {
     right: -3rem !important;
-
   }
-  .carousel-control-prev{
+  .carousel-control-prev {
     left: -3rem !important;
   }
 }
@@ -370,7 +370,7 @@
   overflow: auto;
   width: 275px;
 
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     width: 0px;
   }
   .col_2_gap {
@@ -445,40 +445,62 @@
     }
   }
 
-
-  .tiers_plan_dec{  
+  .tiers_plan_dec {
     font-family: Poppins;
-  border-radius: 4px;
-  // overflow-y: auto;
-  text-align: center;
-  color: #ffffff;
-  height: max-content;
-  // height: fit-content;
-  .tier_plan{
-    // justify-content: center;
-    // align-items: center;
-    div{
-      border: 1px solid #616b75;
-      // padding: 1rem;
-      flex: 1;
-      height: 74px;
-      min-width: 71px;
-      // margin: auto;
+    border-radius: 4px;
+    overflow-y: scroll;
+    height: 180px;
+    text-align: center;
+    color: #ffffff;
+    height: max-content;
+    &::-webkit-scrollbar {
+      width: 5px;
     }
-  }
-  .tier_heading{
-    div{
-    background-color: #1b4974;
+    &::-webkit-scrollbar {
+      height: 0px;
     }
-  }
-  .tier_plan_price{
-    > *:not(:first-child){
-      padding-top: 1.5rem;
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 5px;
     }
-    div{
-      background-color: #899097;
+    &::-webkit-scrollbar-thumb {
+      background: #234b69e5;
+      border-radius: 5px;
     }
-  }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    // height: fit-content;
+    .tier_plan {
+      // justify-content: center;
+      // align-items: center;
+      div {
+        border: 1px solid #616b75;
+        // padding: 1rem;
+        flex: 1;
+        height: 74px;
+        min-width: 71px;
+        // margin: auto;
+      }
+    }
+    .tier_heading {
+      div {
+        background-color: #1b4974;
+      }
+    }
+    .tier_plan_price {
+      > *:not(:first-child) {
+        padding-top: 1.5rem;
+      }
+      div {
+        // background-color: #899097;
+        background-color: ghostwhite;
+        color: #234b69e5;
+      }
+    }
   }
 }
 
@@ -601,12 +623,12 @@
         }
         .row_plans {
           border-bottom: 1px solid #ffffff4d;
-          div{
-            .input-coupon{
+          div {
+            .input-coupon {
               border-radius: 4px 0px 0px 4px;
               border: none;
             }
-            .btn-coupon{
+            .btn-coupon {
               width: auto;
               border-radius: 0 4px 4px 0;
               color: #ffffff;
@@ -615,46 +637,68 @@
           }
         }
 
-        .row_total{
-          .tiers{
+        .row_total {
+          .tiers {
             color: #ffffff;
             font-size: 1.3rem;
             font-weight: 800;
           }
 
-          .tiers_plan_dec{  
+          .tiers_plan_dec {
             font-family: Poppins;
-          border-radius: 4px;
-          overflow: auto;
-          text-align: center;
-          color: #ffffff;
-          .tier_plan{
-            // justify-content: center;
-            // align-items: center;
-            div{
-              border: 1px solid #616b75;
-              // padding: 1rem;
-              flex: 1;
-              height: 74px;
-              min-width: 71px;
-              // margin: auto;
+            border-radius: 4px;
+            overflow: auto;
+            text-align: center;
+            color: #ffffff;
+
+            &::-webkit-scrollbar {
+              width: 5px;
+            }
+            &::-webkit-scrollbar {
+              height: 5px;
+            }
+
+            &::-webkit-scrollbar-track {
+              background: #f1f1f1;
+              border-radius: 5px;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #234b69e5;
+              border-radius: 5px;
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+              background: #555;
+            }
+            .tier_plan {
+              // justify-content: center;
+              // align-items: center;
+              div {
+                border: 1px solid #616b75;
+                // padding: 1rem;
+                flex: 1;
+                height: 74px;
+                min-width: 71px;
+                // margin: auto;
+              }
+            }
+            .tier_heading {
+              div {
+                background-color: #1b4974;
+              }
+            }
+            .tier_plan_price {
+              > *:not(:first-child) {
+                padding-top: 1.5rem;
+              }
+              div {
+                // background-color: #899097;
+                background-color: ghostwhite;
+                color: #234b69e5;
+              }
             }
           }
-          .tier_heading{
-            div{
-            background-color: #1b4974;
-            }
-          }
-          .tier_plan_price{
-            > *:not(:first-child){
-              padding-top: 1.5rem;
-            }
-            div{
-              background-color: #899097;
-            }
-          }
-          }
-          #tier__b{
+          #tier__b {
             border-top: 1px solid #ffffff4d !important;
           }
         }
@@ -922,62 +966,62 @@
   outline: none !important;
   border-radius: 0 !important;
 }
-.backbtn{
+.backbtn {
   font-family: Poppins;
-font-size: 16px;
-font-weight: 600;
-line-height: 24px;
-text-align: left;
-color: #004480;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+  color: #004480;
 }
 
-.backbtnwhite{
+.backbtnwhite {
   color: white;
 }
-.payment-back-btn{
+.payment-back-btn {
   top: 15px;
   left: 0;
 }
 
-.CardNumberField-input-wrapper{
-  .InputContainer{
-  .InputElement{
-    width: 100%;
-            height: 48px;
-            padding: 9px 12px 9px 12px;
-            border-radius: 4px;
-            border: none;
-            border-bottom: 1px solid #ffffff99;
-            gap: 10px;
-            background: #1b4974;
-            font-family: Poppins;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 21px;
-            letter-spacing: 0em;
-            text-align: left;
-            color: #ffffff !important;
-            &::placeholder {
-              font-family: Poppins;
-              font-size: 14px;
-              font-weight: 500;
-              line-height: 21px;
-              letter-spacing: 0em;
-              text-align: left;
-              color: #bdbdbd;
-            }
-            &:focus {
-              outline: none;
-            }
+.CardNumberField-input-wrapper {
+  .InputContainer {
+    .InputElement {
+      width: 100%;
+      height: 48px;
+      padding: 9px 12px 9px 12px;
+      border-radius: 4px;
+      border: none;
+      border-bottom: 1px solid #ffffff99;
+      gap: 10px;
+      background: #1b4974;
+      font-family: Poppins;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 21px;
+      letter-spacing: 0em;
+      text-align: left;
+      color: #ffffff !important;
+      &::placeholder {
+        font-family: Poppins;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 21px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #bdbdbd;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
   }
 }
-}
 
-.margin-2rem{
+.margin-2rem {
   margin-top: -3rem;
 }
 
-.ml_12{
+.ml_12 {
   margin: 0 0 0 -12px;
 }
 
@@ -988,7 +1032,7 @@ color: #004480;
   .label-p {
     color: #494343 !important;
   }
-  .carousel-indicators{
+  .carousel-indicators {
     bottom: -35px !important;
   }
 }
