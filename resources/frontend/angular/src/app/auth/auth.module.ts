@@ -6,6 +6,7 @@ import { RegisterComponent } from './register/register.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { RemoveDeviceComponent } from './remove-device/remove-device.component';
+import { ChangepasswordComponent } from './changepassword/changepassword.component';
 const routes: Routes = [
   {
     path: 'login',
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'change-password/:token',
+    component: ChangepasswordComponent,
   },
   {
     path: 'forget-password',

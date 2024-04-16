@@ -787,7 +787,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
 
-  totalPrice: any = 20;
+  basicPrice:any = 20;
+  totalPrice: any = this.basicPrice;
+  grandTotalPrice: any = this.basicPrice;
 
   getTotalPrice() {
     if (this.checkoutPlans) {
@@ -808,6 +810,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         this.totalPrice = amount16 * this.device_per_unit;
 
       }
+      this.grandTotalPrice = this.totalPrice;
       this.discountCode();
     }
   }
@@ -828,18 +831,24 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.crud.postRequest('validate-coupon', { coupon }).subscribe(
       {
         next: (data: any) => {
+          if(data.message != `No such coupon: '${coupon}'`){
+
           this.couponValidationResult = data;
           console.log('Coupon validation data:', data);
           this.ts.success(data.message);
-          this.couponDataDetails = body;
+          this.couponDataDetails = data;
+
           if (this.couponDataDetails) {
             this.discountCode();
           }
+        }else{
+          this.ts.error(data.message);
+        }
         },
         error: (err: any) => {
           console.error('Error validating coupon:', err);
           this.ts.error(err.error.message.coupon[0]);
-
+          this.grandTotalPrice=this.totalPrice;
         }
       }
     );
@@ -853,11 +862,14 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // }
 
   discountCode() {
+    console.log(this.couponDataDetails,'============ifout============>');
+    this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
-      if (this.couponDataDetails?.amount) {
-        this.totalPrice = this.totalPrice - this.couponDataDetails?.amount;
+    console.log(this.couponDataDetails,'==============ifin==========>');
+      if (this.couponDataDetails?.amountoff) {
+        this.grandTotalPrice = this.totalPrice - this.couponDataDetails?.amountoff;
       } else if (this.couponDataDetails?.percentoff) {
-        this.totalPrice = this.totalPrice - this.couponDataDetails?.percentoff / 100
+        this.grandTotalPrice = this.totalPrice - this.couponDataDetails?.percentoff / 100
       }
     }
   }

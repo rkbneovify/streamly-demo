@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
           
           if (res.response_code == 200) {
             if(res.user.forced_change == 1){
-              this.router.navigateByUrl('/auth/forget-password');
+              this.router.navigateByUrl(`auth/change-password/${res?.access_token}`);
             }
           else{
             console.log('login resp-->',res);
