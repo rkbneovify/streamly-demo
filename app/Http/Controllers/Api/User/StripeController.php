@@ -64,7 +64,7 @@ class StripeController extends Controller
         // }
     }
 
-    public function showTierPage(Request $request, $stripeplanID)
+    public function getTierPlan(Request $request, $stripeplanID)
     {
         $plandetails = \Stripe\Plan::retrieve(['id' => $stripeplanID, 'expand' => ["tiers"]]);
 
