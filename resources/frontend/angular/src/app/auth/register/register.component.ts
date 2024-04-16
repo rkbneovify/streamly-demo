@@ -894,13 +894,22 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   submitPaymentDetails(token:any) {
     const formData = this.paymentFormDetails.value;
+    let trial_day
+    let quantity = this.device_per_unit;
+    if(this.checkoutPlans.plansdetails.trial_period_days){
+      trial_day = this.checkoutPlans.plansdetails.trial_period_days
+    }else{
+      trial_day =0;
+    }
+
+
     let body = {
           "name": this.paymentFormDetails.value.nameOnCard,
           "email": this.paymentFormDetails.value.cardEmail,
           "stripeToken": token.id,
-          "trial_days": '7',
+          "trial_days": trial_day,
           "plan_id": this.selectedPlan.id,
-          "quantity": '1',
+          "quantity": quantity,
           "line1": this.paymentFormDetails.value.address1,
           "line2": this.paymentFormDetails.value.address2,
           "city": this.paymentFormDetails.value.paymentCity,
@@ -963,14 +972,14 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       style: {
        base: {
         iconColor: '#666EE8',
-        color: '#31325F',
+        color: '#ffffff',
         lineHeight: '40px',
         fontWeight: 300,
         fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSize: '15px',
-      
+        fontSize: '15px', 
+        magin:'0 0 0 -12px',     
         '::placeholder': {
-          color: '#CFD7E0',
+          color: '#bdbdbd',
          },
         }, 
        } 

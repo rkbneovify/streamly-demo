@@ -57,6 +57,10 @@ export class LoginComponent implements OnInit {
           console.log(res,'response of login api');
           
           if (res.response_code == 200) {
+            if(res.user.forced_change == 1){
+              this.router.navigateByUrl('/auth/forget-password');
+            }
+          else{
             console.log('login resp-->',res);
             this.ts.success(res?.message)
             let deviceInfo = {
@@ -70,7 +74,7 @@ export class LoginComponent implements OnInit {
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
-            this.router.navigateByUrl('/user/home');
+            this.router.navigateByUrl('/user/home');}
           }
         },
         error: (err: any) => {
