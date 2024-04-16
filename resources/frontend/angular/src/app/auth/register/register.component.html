@@ -563,10 +563,11 @@
                 <p>$ 0</p>
               </div>
             </div>
-            <div class="row_total d-flex justify-content-between py-4">
+            <div class="row_total d-flex justify-content-between ">
               <p class="fw-bolder">Total</p>
               <p class="total">
-                ${{ +checkoutPlans.plandetails.amount / 100 }}
+                <!-- ${{ +checkoutPlans.plandetails.amount / 100 }} -->
+                ${{grandTotalPrice}}
               </p>
             </div>
           </div>
@@ -629,7 +630,7 @@
               </div>
             </div>
 
-            <div class="row_total flex-column justify-content-between py-4">
+            <div class="row_total flex-column justify-content-between">
               <div class="pointer" (click)="showplansDetails = !showplansDetails">
                 <img [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
                   src="../../../assets/dummy-img/chevron-down.svg" alt="" />
@@ -669,7 +670,7 @@
 
               <div>
                 <p class="px-2 my-3">
-                  Your plan will end on May 10 2024 We are charging you for the
+                  Your plan will end on {{checkoutPlans.ApproxEndDateOfSubscription | date }} We are charging you for the
                   total number of devices.
                 </p>
               </div>
@@ -773,19 +774,19 @@
           <div class="col-6 col-md-4 ps-0">
             <p>City</p>
             <div class="card-input">
-              <input type="text" placeholder="Amherst" formControlName="paymentCity" />
+              <input type="text" placeholder="Ex:- Amherst" formControlName="paymentCity" />
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>State</p>
             <div class="card-input">
-              <input type="text" placeholder="Massachusetts" formControlName="paymentState" />
+              <input type="text" placeholder="Ex:- Massachusetts" formControlName="paymentState" />
             </div>
           </div>
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Country</p>
             <div class="card-input">
-              <input type="text" placeholder="USA" formControlName="country" />
+              <input type="text" placeholder="Ex:- USA" formControlName="country" />
             </div>
           </div>
         </div>
@@ -795,16 +796,19 @@
           <div id="card-errors"></div>
         </div> -->
         <div class="row gy-2">
+          <div class="col-12 p-0">
+          <p>Card Details</p>
           <div id="form-field">
-            <div class="input_standred ml_12" id="card-info" #cardInfo></div>
+            <div class="input_standred " id="card-info" #cardInfo></div>
             <!-- <button id="submit-button" type="submit">
               Pay
             </button> -->
           </div>
         </div>
+        </div>
         <div class="row gy-2 justify-content-end">
           <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
-            <button type="submit" class="flex-fill"  (click)="createStripeToken()">Start your 7 days trial</button>
+            <button [disabled]="!paymentFormDetails.valid" type="submit" [ngClass]="{'flex-fill':true,'btn-bg-gold':paymentFormDetails.valid }"  (click)="createStripeToken()">Start your 7 days trial</button>
           </div>
         </div>
       </form>

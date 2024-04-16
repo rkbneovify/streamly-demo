@@ -1,4 +1,4 @@
-import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
+import { NgIf, NgFor, KeyValuePipe, DatePipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -55,11 +55,11 @@ import {
     RouterLink,
     ReactiveFormsModule,
     KeyValuePipe,
+    DatePipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-
 export class RegisterComponent implements OnInit, AfterViewInit {
   // stripe: any;
   selectedTab: string = 'Availability';
@@ -86,8 +86,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
-
-
   // forms
   counterControl!: FormControl;
   paymentFormDetails!: FormGroup;
@@ -108,7 +106,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private crud: CrudService,
     private fb: FormBuilder,
     private el: ElementRef,
-    private ts: ToastrService, private cd: ChangeDetectorRef
+    private ts: ToastrService,
+    private cd: ChangeDetectorRef
   ) {
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
@@ -136,13 +135,16 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
       cardZip: ['', Validators.required],
-      cardEmail: [this.availabilityForm.value.email, [Validators.required, Validators.email]],
+      cardEmail: [
+        this.availabilityForm.value.email,
+        [Validators.required, Validators.email],
+      ],
       couponCode: [''],
       address1: ['', Validators.required],
       address2: [''],
       paymentCity: ['', Validators.required],
       paymentState: ['', Validators.required],
-      country: ['', Validators.required]
+      country: ['', Validators.required],
     });
   }
 
@@ -293,9 +295,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         next: (res: any) => {
           console.log('======= res>', res);
           this.cardZipData = res.some((zcode: any) => {
-            console.log(zcode.value, '==========================', this.paymentFormDetails.value.cardZip);
+            console.log(
+              zcode.value,
+              '==========================',
+              this.paymentFormDetails.value.cardZip
+            );
             return zcode.value === this.paymentFormDetails.value.cardZip;
-          });;
+          });
 
           if (this.cardZipData) {
             console.log(this.cardZipData, 'data in if');
@@ -303,13 +309,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.paymentFormDetails.get('paymentState')?.setValue(res[0].state);
             this.paymentFormDetails.get('paymentCity')?.setValue(res[0].city);
           } else {
-            this.ts.error("ZipCode is not valid")
+            this.ts.error('ZipCode is not valid');
           }
           console.log(this.cardZipData, '========>cardzip');
         },
         error: (err: any) => {
           console.log(err);
-        }
+        },
       });
 
     // this.searchCoupnTerm.pipe(debounceTime(300),switchMap((term:s)))
@@ -403,15 +409,16 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.searchZipTerms.next(searchTerm);
   }
 
-
   onSelect(selectedValue: any): void {
     this.availabilityForm.get('city')?.setValue(selectedValue.city);
     this.availabilityForm.get('state')?.setValue(selectedValue.state);
     this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
-    if(this.selectedTab == 'Payment'){
+    if (this.selectedTab == 'Payment') {
       this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
-    this.paymentFormDetails.get('paymentState')?.setValue(selectedValue.state);
-    this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
+      this.paymentFormDetails
+        .get('paymentState')
+        ?.setValue(selectedValue.state);
+      this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
     }
     this.city_state_readonly = true;
     this.searchZipInput = selectedValue.value;
@@ -485,9 +492,14 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.checkoutPlans = data;
             console.log('checkout================>', this.checkoutPlans);
             this.selectedTab = 'Payment';
-            this.paymentFormDetails.get('cardEmail')?.setValue(this.availabilityForm.get('email')?.value);
-            console.log('avail email',this.availabilityForm.get('email')?.value);
-            console.log('avail email 2',this.availabilityForm.value.email);
+            this.paymentFormDetails
+              .get('cardEmail')
+              ?.setValue(this.availabilityForm.get('email')?.value);
+            console.log(
+              'avail email',
+              this.availabilityForm.get('email')?.value
+            );
+            console.log('avail email 2', this.availabilityForm.value.email);
 
             this.initializeKey(data.STRIPE_KEY);
             // this.initiateCardElement();
@@ -504,10 +516,15 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
-            // this.initiateCardElement(); 
-            this.paymentFormDetails.get('cardEmail')?.setValue(this.availabilityForm.get('email')?.value);
-            console.log('avail email',this.availabilityForm.get('email')?.value);
-            console.log('avail email 2',this.availabilityForm.value.email);
+            // this.initiateCardElement();
+            this.paymentFormDetails
+              .get('cardEmail')
+              ?.setValue(this.availabilityForm.get('email')?.value);
+            console.log(
+              'avail email',
+              this.availabilityForm.get('email')?.value
+            );
+            console.log('avail email 2', this.availabilityForm.value.email);
             this.initializeKey(data.STRIPE_KEY);
           },
           error: (err: any) => {
@@ -568,7 +585,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       error: (err) => {
         this.ts.error(err.error.error);
         // this.otpVerificationForm.reset();
-        Object.keys(this.otpVerificationForm.controls).forEach(key => {
+        Object.keys(this.otpVerificationForm.controls).forEach((key) => {
           if (key !== 'email') {
             this.otpVerificationForm.get(key)?.reset(); // Reset the value of the control
           }
@@ -673,7 +690,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       console.log(zcode.value, '==========================', search);
       if (zcode.value === search) {
         this.paymentFormDetails.get('paymentState')?.setValue('');
-
       }
       return zcode.value === search;
     });
@@ -786,29 +802,29 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-  basicPrice:any = 20;
+  basicPrice: any = 20;
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
 
   getTotalPrice() {
     if (this.checkoutPlans) {
       this.totalPrice = 0;
-      const amount10 = +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
-      const amount18 = +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
-      const amount16 = +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
+      const amount10 =
+        +this.checkoutPlans.plandetails.tiers[0].unit_amount / 100;
+      const amount18 =
+        +this.checkoutPlans.plandetails.tiers[1].unit_amount / 100;
+      const amount16 =
+        +this.checkoutPlans.plandetails.tiers[2].unit_amount / 100;
 
       if (this.device_per_unit <= 10) {
-        this.devicePlanAmount = amount10
+        this.devicePlanAmount = amount10;
         this.totalPrice = amount10 * this.device_per_unit;
       } else if (this.device_per_unit <= 15) {
-        this.devicePlanAmount = amount18
+        this.devicePlanAmount = amount18;
         this.totalPrice = amount18 * this.device_per_unit;
-
       } else {
-        this.devicePlanAmount = amount16
+        this.devicePlanAmount = amount16;
         this.totalPrice = amount16 * this.device_per_unit;
-
       }
       this.grandTotalPrice = this.totalPrice;
       this.discountCode();
@@ -821,37 +837,37 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   validateCoupon() {
     let body = {
-      "message": "Coupon is valid! & 15% for (1 months)",
-      "amountoff": 0,
-      "percentoff": 15
-    }
+      message: 'Coupon is valid! & 15% for (1 months)',
+      amountoff: 0,
+      percentoff: 15,
+    };
 
     // if (this.paymentFormDetails.valid) {
     const coupon = this.paymentFormDetails.value.couponCode;
-    this.crud.postRequest('validate-coupon', { coupon }).subscribe(
-      {
-        next: (data: any) => {
-          if(data.message != `No such coupon: '${coupon}'`){
-
+    this.crud.postRequest('validate-coupon', { coupon }).subscribe({
+      next: (data: any) => {
+        if (data.message != `No such coupon: '${coupon}'`) {
           this.couponValidationResult = data;
           console.log('Coupon validation data:', data);
           this.ts.success(data.message);
           this.couponDataDetails = data;
-
+          this.grandTotalPrice = this.totalPrice;
           if (this.couponDataDetails) {
             this.discountCode();
           }
-        }else{
+        } else {
           this.ts.error(data.message);
+          this.couponDataDetails = null;
+          this.grandTotalPrice = this.totalPrice;
         }
-        },
-        error: (err: any) => {
-          console.error('Error validating coupon:', err);
-          this.ts.error(err.error.message.coupon[0]);
-          this.grandTotalPrice=this.totalPrice;
-        }
-      }
-    );
+      },
+      error: (err: any) => {
+        console.error('Error validating coupon:', err);
+        this.ts.error(err.error.message.coupon[0]);
+        this.grandTotalPrice = this.totalPrice;
+        this.couponDataDetails = null;
+      },
+    });
     // }
   }
 
@@ -862,35 +878,38 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // }
 
   discountCode() {
-    console.log(this.couponDataDetails,'============ifout============>');
+    console.log(this.couponDataDetails, '============ifout============>');
     this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
-    console.log(this.couponDataDetails,'==============ifin==========>');
+      console.log(this.couponDataDetails, '==============ifin==========>');
       if (this.couponDataDetails?.amountoff) {
-        this.grandTotalPrice = this.totalPrice - this.couponDataDetails?.amountoff;
+        this.grandTotalPrice =
+          this.totalPrice - this.couponDataDetails?.amountoff;
       } else if (this.couponDataDetails?.percentoff) {
-        this.grandTotalPrice = this.totalPrice - this.couponDataDetails?.percentoff / 100
+        this.grandTotalPrice =
+          this.totalPrice -
+          this.totalPrice * (this.couponDataDetails?.percentoff / 100);
       }
     }
   }
 
   // {
-    //     "name": "AnnuStripeTest1",
-    //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
-    //     "password": "12345678",
-    //     "stripeToken": "tok_visa",
-    //     "trial_days": "1",
-    //     "plan_id": "FJZCNhouM8Nr",
-    //     "quantity": "1",
-    //     "line1": "H. No. 265",
-    //     "line2": "abc",
-    //     "city": "Chesterfield",
-    //     "state": "Massachusetts",
-    //     "country": "United States",
-    //     "card_brand": "visa",
-    //     "card_last_four": "4242",
-    //     "zip_code": "01012"
-    // }
+  //     "name": "AnnuStripeTest1",
+  //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
+  //     "password": "12345678",
+  //     "stripeToken": "tok_visa",
+  //     "trial_days": "1",
+  //     "plan_id": "FJZCNhouM8Nr",
+  //     "quantity": "1",
+  //     "line1": "H. No. 265",
+  //     "line2": "abc",
+  //     "city": "Chesterfield",
+  //     "state": "Massachusetts",
+  //     "country": "United States",
+  //     "card_brand": "visa",
+  //     "card_last_four": "4242",
+  //     "zip_code": "01012"
+  // }
 
   //   nameOnCard: ['', Validators.required],
   //   cardNumber: ['', Validators.required],
@@ -904,59 +923,68 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   //   country: ['', Validators.required]
   // });
 
-  submitPaymentDetails(token:any) {
+  submitPaymentDetails(token: any) {
     const formData = this.paymentFormDetails.value;
-    let trial_day
+    let trial_day;
     let quantity = this.device_per_unit;
-    if(this.checkoutPlans.plansdetails.trial_period_days){
-      trial_day = this.checkoutPlans.plansdetails.trial_period_days
-    }else{
-      trial_day =0;
+    console.log(
+      '===out-trial====>',
+      this.checkoutPlans.plandetails?.trial_period_days
+    );
+    if (this.checkoutPlans.plandetails?.trial_period_days) {
+      console.log(
+        '===intrial====>',
+        this.checkoutPlans.plandetails?.trial_period_days
+      );
+      trial_day = this.checkoutPlans.plandetails?.trial_period_days;
+    } else {
+      console.log(
+        '=else==trial=====>',
+        this.checkoutPlans.plandetails?.trial_period_days
+      );
+      trial_day = 0;
     }
 
-
     let body = {
-          "name": this.paymentFormDetails.value.nameOnCard,
-          "email": this.paymentFormDetails.value.cardEmail,
-          "stripeToken": token.id,
-          "trial_days": trial_day,
-          "plan_id": this.selectedPlan.id,
-          "quantity": quantity,
-          "line1": this.paymentFormDetails.value.address1,
-          "line2": this.paymentFormDetails.value.address2,
-          "city": this.paymentFormDetails.value.paymentCity,
-          "state": this.paymentFormDetails.value.paymentState,
-          "country": this.paymentFormDetails.value.country,
-          "card_brand": token.card.brand,
-          "card_last_four": token.card.last4,
-          "zip_code": this.paymentFormDetails.value.cardZip
-      }
+      name: this.paymentFormDetails.value.nameOnCard,
+      email: this.paymentFormDetails.value.cardEmail,
+      stripeToken: token.id,
+      trial_days: trial_day,
+      plan_id: this.selectedPlan.id,
+      quantity: quantity,
+      line1: this.paymentFormDetails.value.address1,
+      line2: this.paymentFormDetails.value.address2,
+      city: this.paymentFormDetails.value.paymentCity,
+      state: this.paymentFormDetails.value.paymentState,
+      country: this.paymentFormDetails.value.country,
+      card_brand: token.card.brand,
+      card_last_four: token.card.last4,
+      zip_code: this.paymentFormDetails.value.cardZip,
+    };
 
-      this.crud.postRequest('auth/register',body).subscribe({
-        next:(res:any)=>{console.log('resdata ======> ',res);this.ts.success(res.message);
-        this.selectedTab = 'Confirmation'
+    this.crud.postRequest('auth/register', body).subscribe({
+      next: (res: any) => {
+        console.log('resdata ======> ', res);
+        this.ts.success(res.message);
+        this.selectedTab = 'Confirmation';
       },
-        error:(err:any)=>{console.log('errdata ======> ',err);this.ts.success(err.message)}
-      })
-    console.log('==Body======>',body);
+      error: (err: any) => {
+        console.log('errdata ======> ', err);
+        this.ts.success(err.message);
+      },
+    });
+    console.log('==Body======>', body);
   }
 
-
-  paymentShowData(){
+  paymentShowData() {
     const formData = this.paymentFormDetails.value;
-    console.log('========paymentData==========>',formData);
+    console.log('========paymentData==========>', formData);
   }
-
-
-
-
-
-
 
   // payment code by ashish
 
-  stripe:any;
-  elements:any;
+  stripe: any;
+  elements: any;
 
   ngOnDestroy() {
     if (this.card) {
@@ -968,10 +996,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     // this.initiateCardElement();
   }
 
-  async initializeKey(key:any){
+  async initializeKey(key: any) {
     this.stripe = await Stripe(key);
     this.elements = this.stripe.elements();
-    if(this.stripe){
+    if (this.stripe) {
       this.initiateCardElement();
     }
   }
@@ -982,20 +1010,20 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     const cards = {
       hidePostalCode: true,
       style: {
-       base: {
-        iconColor: '#666EE8',
-        color: '#ffffff',
-        lineHeight: '40px',
-        fontWeight: 300,
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSize: '15px', 
-        magin:'0 0 0 -12px',     
-        '::placeholder': {
-          color: '#bdbdbd',
-         },
-        }, 
-       } 
-      }
+        base: {
+          iconColor: '#666EE8',
+          color: '#ffffff',
+          lineHeight: '40px',
+          fontWeight: 300,
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSize: '15px',
+          magin: '0 0 0 -12px',
+          '::placeholder': {
+            color: '#bdbdbd',
+          },
+        },
+      },
+    };
 
     if (this.selectedTab == 'Payment') {
       const cardStyle = {
@@ -1014,7 +1042,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         },
       };
       setTimeout(() => {
-        this.card = this.elements.create('card',  cards ,);
+        this.card = this.elements.create('card', cards);
         console.log(this.card);
         this.card.mount(this.cardInfo.nativeElement);
         this.card.addEventListener('change', this.cardHandler);
@@ -1034,7 +1062,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   async createStripeToken() {
     console.log(this.card, 'card');
     const { token, error } = await this.stripe.createToken(this.card);
-    console.log(token, 'token');  
+    console.log(token, 'token');
 
     this.submitPaymentDetails(token);
     if (token) {
@@ -1043,44 +1071,29 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.onError(error);
     }
   }
-  onSuccess(token: any) {
-  }
+  onSuccess(token: any) {}
   onError(error: any) {
     if (error.message) {
       this.cardError = error.message;
     }
   }
 
-
-
-
-
-//   curl --location 'http://127.0.0.1:8000api/auth/register' \
-// --data-raw '{
-//     "name": "AnnuStripeTest1",
-//     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
-//     "password": "12345678",
-//     "stripeToken": "tok_visa",
-//     "trial_days": "1",
-//     "plan_id": "FJZCNhouM8Nr",
-//     "quantity": "1",
-//     "line1": "H. No. 265",
-//     "line2": "abc",
-//     "city": "Chesterfield",
-//     "state": "Massachusetts",
-//     "country": "United States",
-//     "card_brand": "visa",
-//     "card_last_four": "4242",
-//     "zip_code": "01012"
-// }'
-
-
-
-
-
-
-
-
-
-
+  //   curl --location 'http://127.0.0.1:8000api/auth/register' \
+  // --data-raw '{
+  //     "name": "AnnuStripeTest1",
+  //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
+  //     "password": "12345678",
+  //     "stripeToken": "tok_visa",
+  //     "trial_days": "1",
+  //     "plan_id": "FJZCNhouM8Nr",
+  //     "quantity": "1",
+  //     "line1": "H. No. 265",
+  //     "line2": "abc",
+  //     "city": "Chesterfield",
+  //     "state": "Massachusetts",
+  //     "country": "United States",
+  //     "card_brand": "visa",
+  //     "card_last_four": "4242",
+  //     "zip_code": "01012"
+  // }'
 }
