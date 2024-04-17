@@ -274,7 +274,7 @@
               </div>
 
               <div class="col_2_subblock d-flex flex-column gap-2">
-                <div *ngIf="data.type == 'tiered'" [ngClass]="{'rotate-90':showTiredPlan,'pointer':true,'my-n2':true}"
+                <div *ngIf="data.type == 'tiered'" [ngClass]="{'pointer':true,'my-n21':true}"
                   (click)="showTiredPlan=!showTiredPlan">
                   <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
                     src="../../../assets/dummy-img/chevron-down.svg" alt="" />
@@ -348,9 +348,9 @@
 
               <div *ngIf="showTiredPlan && data.type == 'tiered'" [ngClass]="{'tiers_plan_dec':true,'margin-2rem':showTiredPlan}">
                 <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
-                  <div class="h-auto py-3">Quantity</div>
-                  <div class="h-auto py-3">Price per unit</div>
-                  <div class="h-auto py-3">Flat amount</div>
+                  <div class="h-auto py-2">Quantity</div>
+                  <div class="h-auto py-2">Price per unit</div>
+                  <div class="h-auto py-2">Flat amount</div>
                 </div>
 
                 <div *ngFor="let tPlans of data.tiers" class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
@@ -376,7 +376,7 @@
                 </div> -->
               </div>
 
-              <div class="res-step3-btn">
+              <div [ngClass]="{'res-step3-btn':true,'mar-n26':showTiredPlan}">
                 <button (click)="selectedTabTerms(data)">Select Plan</button>
               </div>
 
