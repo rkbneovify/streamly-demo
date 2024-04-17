@@ -70,6 +70,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
+  searchZipCardInput:string = '';
   city_state_readonly: boolean = false;
   resendButtonDisabled = false;
   countdown = 60;
@@ -83,6 +84,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   zipcardShow: boolean = false;
   cardZipData!: any;
   showTiredPlan: boolean = false;
+  discount:any=0;
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -92,6 +94,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
+  couponFormControl!:FormControl;
   selectedPlan: any;
   selectedPlanType: string = '';
   acceptTerm: boolean = false;
@@ -326,7 +329,16 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       });
 
     this.counterControl = this.fb.control(1, [Validators.min(1)]);
-
+    this.couponFormControl = this.fb.control('');
+    
+    this.couponFormControl.valueChanges.subscribe(() => {
+      if (this.couponFormControl.value === '') {
+        // this.applyCoupon();
+        this.validateCoupon();
+        console.log('touched');
+      }
+      // this.touchedOnce = true;
+    });
     // stripe call
     // this.addStripe();
     // addStripe() {
@@ -394,13 +406,28 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     //   }
     // });
     // }
+
+    // $(document).ready(function(){
+    //   $('#myCarousel').on('slid.bs.carousel', function () {
+    //     // Your custom code to execute when the slide changes
+    //     console.log('Slide changed');
+    //     // You can put any code here that you want to execute on slide change
+    //   });
+    // });
   }
 
   onSearch(searchTerm: any): void {
     console.log(searchTerm.term);
     this.searchTerms.next(searchTerm.term);
-    this.availabilityForm.get('zipcode')?.setValue(searchTerm.term);
-    this.searchZipInput = searchTerm.term;
+    if (this.selectedTab == 'Payment') {
+      this.paymentFormDetails.get('cardZip')?.setValue(searchTerm.term);
+      this.searchZipCardInput =searchTerm.term;
+    }
+
+    if(this.selectedTab == 'Availability'){ 
+      this.availabilityForm.get('zipcode')?.setValue(searchTerm.term);
+      this.searchZipInput = searchTerm.term;
+    }
     this.city_state_readonly = false;
   }
 
@@ -410,18 +437,40 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   onSelect(selectedValue: any): void {
-    this.availabilityForm.get('city')?.setValue(selectedValue.city);
-    this.availabilityForm.get('state')?.setValue(selectedValue.state);
-    this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
-    if (this.selectedTab == 'Payment') {
-      this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
-      this.paymentFormDetails
-        .get('paymentState')
-        ?.setValue(selectedValue.state);
-      this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
+    console.log('54545454545454==========================',selectedValue);
+    if(typeof selectedValue !== 'undefined' && selectedValue !== null){
+    console.log('54545454545454============iffff==============',selectedValue);
+      if (this.selectedTab == 'Payment') {
+        this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
+        this.paymentFormDetails
+          .get('paymentState')
+          ?.setValue(selectedValue.state);
+        this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
+        this.searchZipInput = selectedValue.value;
+      }
+      if(this.selectedTab == 'Availability'){
+        this.availabilityForm.get('city')?.setValue(selectedValue.city);
+        this.availabilityForm.get('state')?.setValue(selectedValue.state);
+        this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
+        this.city_state_readonly = true;
+        this.searchZipInput = selectedValue.value;
+      }
+    }else{
+    console.log('54545454545454=========else=================',selectedValue);
+
+      if (this.selectedTab == 'Payment') {
+        this.paymentFormDetails.get('paymentCity')?.setValue('');
+        this.paymentFormDetails
+          .get('paymentState')
+          ?.setValue('');
+      }
+      if(this.selectedTab == 'Availability'){
+        this.availabilityForm.get('city')?.setValue('');
+        this.availabilityForm.get('state')?.setValue('');
+        this.city_state_readonly = false;
+        this.searchZipInput = '';
+      }
     }
-    this.city_state_readonly = true;
-    this.searchZipInput = selectedValue.value;
   }
 
   @HostListener('window:resize', ['$event'])
@@ -836,38 +885,46 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   validateCoupon() {
-    let body = {
-      message: 'Coupon is valid! & 15% for (1 months)',
-      amountoff: 0,
-      percentoff: 15,
-    };
+    // let body = {
+    //   message: 'Coupon is valid! & 15% for (1 months)',
+    //   amountoff: 0,
+    //   percentoff: 15,
+    // };
 
     // if (this.paymentFormDetails.valid) {
-    const coupon = this.paymentFormDetails.value.couponCode;
-    this.crud.postRequest('validate-coupon', { coupon }).subscribe({
-      next: (data: any) => {
-        if (data.message != `No such coupon: '${coupon}'`) {
-          this.couponValidationResult = data;
-          console.log('Coupon validation data:', data);
-          this.ts.success(data.message);
-          this.couponDataDetails = data;
-          this.grandTotalPrice = this.totalPrice;
-          if (this.couponDataDetails) {
-            this.discountCode();
+    const coupon = this.couponFormControl.value;
+    if(coupon){
+      this.crud.postRequest('validate-coupon', { coupon }).subscribe({
+        next: (data: any) => {
+          if (data.message != `No such coupon: '${coupon}'`) {
+            this.couponValidationResult = data;
+            console.log('Coupon validation data:', data);
+            this.ts.success(data.message);
+            this.couponDataDetails = data;
+            this.grandTotalPrice = this.totalPrice;
+            if (this.couponDataDetails) {
+              this.discountCode();
+            }
+          } else {
+            this.ts.error(data.message);
+            this.discount=0;
+            this.couponDataDetails = null;
+            this.grandTotalPrice = this.totalPrice;
           }
-        } else {
-          this.ts.error(data.message);
-          this.couponDataDetails = null;
+        },
+        error: (err: any) => {
+          console.error('Error validating coupon:', err);
+          this.ts.error(err.error.message.coupon[0]);
           this.grandTotalPrice = this.totalPrice;
-        }
-      },
-      error: (err: any) => {
-        console.error('Error validating coupon:', err);
-        this.ts.error(err.error.message.coupon[0]);
-        this.grandTotalPrice = this.totalPrice;
-        this.couponDataDetails = null;
-      },
-    });
+          this.couponDataDetails = null;
+        },
+      });
+    }else{
+      this.ts.error('Enter Coupon');
+      this.couponDataDetails = null;
+      this.discount=0;
+      this.grandTotalPrice = this.totalPrice;
+    }
     // }
   }
 
@@ -882,14 +939,16 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
       console.log(this.couponDataDetails, '==============ifin==========>');
+      this.discount=this.couponDataDetails?.amountoff
       if (this.couponDataDetails?.amountoff) {
-        this.grandTotalPrice =
-          this.totalPrice - this.couponDataDetails?.amountoff;
+        this.grandTotalPrice =this.totalPrice - this.discount;
       } else if (this.couponDataDetails?.percentoff) {
-        this.grandTotalPrice =
-          this.totalPrice -
-          this.totalPrice * (this.couponDataDetails?.percentoff / 100);
+        this.discount = this.totalPrice * (this.couponDataDetails?.percentoff / 100);
+        this.grandTotalPrice = this.totalPrice - this.discount;
+          
       }
+    }else{
+      this.discount=0
     }
   }
 
