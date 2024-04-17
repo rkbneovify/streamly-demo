@@ -279,7 +279,7 @@
                   <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
                     src="../../../assets/dummy-img/chevron-down.svg" alt="" />
                 </div>
-                <div class="d-flex flex-nowrap" *ngIf="!showTiredPlan">
+                <div class="d-flex flex-nowrap" *ngIf="!showTiredPlan && data.type == 'tiered'">
                   <div>
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
@@ -288,18 +288,41 @@
                     <span>
                       {{
                       data.trial_period_days
-                      ? data.trial_period_days
-                      : "no trials days"
+                      ? data.trial_period_days+' days'
+                      : "No trials days"
+                      }}</span>
+                  </p>
+                </div>
+
+                <div class="d-flex flex-nowrap" *ngIf="data.type == 'per_unit'">
+                  <div>
+                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                  </div>
+                  <p>
+                    Trial days:
+                    <span>
+                      {{
+                      data.trial_period_days
+                      ? data.trial_period_days+' days'
+                      : "No trials days"
                       }}</span>
                   </p>
                 </div>
 
                 <div *ngFor="let metadata of data.metadata | keyvalue" class="d-flex flex-nowrap">
-                  <div *ngIf="!showTiredPlan">
+                  
+                  <div *ngIf="!showTiredPlan && data.type == 'tiered'">
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
-                  <ng-container *ngIf="metadata.value">
+                  <ng-container *ngIf="metadata.value && data.type == 'tiered'">
                     <p *ngIf="!showTiredPlan">{{ metadata.value }}</p>
+                  </ng-container>
+
+                  <div *ngIf="data.type == 'per_unit'">
+                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                  </div>
+                  <ng-container *ngIf="data.type == 'per_unit'">
+                    <p>{{ metadata.value }}</p>
                   </ng-container>
                 </div>
                 <!-- <div class="d-flex flex-nowrap">
@@ -352,6 +375,7 @@
                   <div>$0.00</div>
                 </div> -->
               </div>
+
               <div class="res-step3-btn">
                 <button (click)="selectedTabTerms(data)">Select Plan</button>
               </div>
@@ -452,6 +476,7 @@
           <span class="visually-hidden">Next</span>
         </button>
       </div>
+
     </div>
 
     <div class="row_4 my-4 position-relative" *ngIf="selectedTab == 'Terms'">
@@ -549,8 +574,8 @@
                 <p>
                   {{
                   checkoutPlans.plandetails.trial_period_days
-                  ? checkoutPlans.plandetails.trial_period_days + "days"
-                  : "no trials days"
+                  ? checkoutPlans.plandetails.trial_period_days + " days"
+                  : "No trials days"
                   }}
                 </p>
               </div>
@@ -560,7 +585,11 @@
               </div>
               <div class="d-flex justify-content-between">
                 <p class="fw-bolder">Coupon</p>
-                <p>$ 0</p>
+                <p>$ {{discount>0?discount + ' off':discount}}</p>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
+                <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button>
               </div>
             </div>
             <div class="row_total d-flex justify-content-between ">
@@ -620,13 +649,19 @@
               </div>
             </div>
             <div class="row_plans flex-column-flex justify-content-between pb-3">
+              
               <div class="d-flex justify-content-between mb-2">
                 <p class="fw-bolder">{{ device_per_unit }} X device(s)</p>
                 <p>${{ totalPrice }}</p>
               </div>
+              <div class="d-flex justify-content-between mb-2">
+                <p class="fw-bolder">Coupon</p>
+                <p>$ {{discount>0?discount + ' off':discount}}</p>
+
+              </div>
               <div class="d-flex justify-content-between">
-                <input type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
-                <button class="btn_hover btn-coupon">Apply</button>
+                <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
+                <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button>
               </div>
             </div>
 
@@ -705,10 +740,10 @@
       <form [formGroup]="paymentFormDetails"
         class="col-12 col-md-8 px-4 carts-details">
         <div class="row gy-2 row1">
-          <div class="col-6 col-md-4 ps-0">
+          <div class="col-6 col-md-6 ps-0">
             <p>Name on Card</p>
             <div class="card-input">
-              <input form type="text" placeholder="Enter" formControlName="nameOnCard" />
+              <input form type="text" placeholder="Enter Name" formControlName="nameOnCard" />
             </div>
           </div>
           <!-- <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
@@ -717,7 +752,7 @@
               <input type="text" placeholder="Enter" formControlName="cardNumber" />
             </div>
           </div> -->
-          <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
+          <div class="col-6 col-md-6 px-md-0 ps-0 pe-3">
             <p>Credit Card Zip</p>
             <div class="card-input">
               <!-- <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" /> -->
@@ -736,22 +771,22 @@
         </div>
 
         <div class="row gy-2 row2">
-          <div class="col-6 col-md-4 ps-0">
+          <div class="col-12 col-md-12 ps-0">
             <p>Email</p>
             <div class="card-input">
-              <input type="email" placeholder="Enter" required formControlName="cardEmail"/>
+              <input type="email" placeholder="Enter Email" required formControlName="cardEmail"/>
             </div>
           </div>
-          <div class="col-6 col-md-4 px-0 pe-md-3">
+          <!-- <div class="col-6 col-md-4 px-0 pe-md-3">
             <p>Coupon Code</p>
             <div class="card-input">
               <input formControlName="couponCode" type="text" placeholder="Enter Coupon Code"
                 (input)="onCouponInputChange($event)" />
-            </div>
+            </div> -->
             <!-- <div *ngIf="couponValidationResult">
               {{couponValidationResult.message}}
             </div> -->
-          </div>
+          <!-- </div> -->
         </div>
 
         <div class="row gy-2 mt-4">
@@ -774,19 +809,19 @@
           <div class="col-6 col-md-4 ps-0">
             <p>City</p>
             <div class="card-input">
-              <input type="text" placeholder="Ex:- Amherst" formControlName="paymentCity" />
+              <input type="text" placeholder="Enter City" formControlName="paymentCity" />
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>State</p>
             <div class="card-input">
-              <input type="text" placeholder="Ex:- Massachusetts" formControlName="paymentState" />
+              <input type="text" placeholder="Enter State" formControlName="paymentState" />
             </div>
           </div>
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Country</p>
             <div class="card-input">
-              <input type="text" placeholder="Ex:- USA" formControlName="country" />
+              <input type="text" placeholder="Enter Country" formControlName="country" />
             </div>
           </div>
         </div>

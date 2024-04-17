@@ -24,7 +24,7 @@ export class ChangepasswordComponent {
   showPassword3: boolean = false;
 
   resetPasswordForm!: FormGroup;
-  token: any = this.ar.snapshot.paramMap.get('token');
+  token: any = localStorage.getItem('changeToken');
   constructor(
     private fb: FormBuilder,
     private ar: ActivatedRoute,
@@ -34,7 +34,6 @@ export class ChangepasswordComponent {
   ) {
     this.resetPasswordForm = this.fb.group(
       {
-        email: ['', [Validators.required, Validators.email]],
         oldPassword: ['', [Validators.required]],
         password1: ['', [Validators.required]],
         password2: ['', [Validators.required]],
@@ -46,6 +45,7 @@ export class ChangepasswordComponent {
   passwordMatchValidator(formGroup: FormGroup) {
     const passwordControl = formGroup.get('password1');
     const confirmPasswordControl = formGroup.get('password2');
+    
 
     if (
       passwordControl &&
@@ -53,7 +53,7 @@ export class ChangepasswordComponent {
       passwordControl.value !== confirmPasswordControl.value
     ) {
       confirmPasswordControl?.setErrors({ passwordMismatch: true });
-      this.toastr.error('Password not matching');
+      this.toastr.success('Password not matching');
     } else {
       confirmPasswordControl?.setErrors(null);
     }
@@ -70,21 +70,29 @@ export class ChangepasswordComponent {
       password_confirmation: this.resetPasswordForm.get('password2')?.value,
     };
 
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${this.token}`,
-      'Accept': 'application/json'
-    });
+    if(this.token){
 
-    console.log(this.token);
-
-    this.crud.postRequest('auth/force-change-password', data,headers).subscribe({
-      next: (res: any) => {
-        this.toastr.success(res.message);
-        this.router.navigateByUrl('/auth/login');
-      },
-      error: (err) => {
-        this.toastr.error(err.error.message);
-      },
-    });
+      const headers = new HttpHeaders({
+        'Authorization': `Bearer ${this.token}`,
+        'Accept': 'application/json'
+      });
+      
+      console.log(this.token);
+      
+      this.crud.postRequest('auth/force-change-password', data,headers).subscribe({
+        next: (res: any) => {
+          this.toastr.success(res.message);
+          localStorage.removeItem('deviceId');
+          localStorage.removeItem('deviceInfo');
+          localStorage.removeItem('userDetails');
+          localStorage.removeItem('changeToken');
+          
+          this.router.navigateByUrl('/auth/login');
+        },
+        error: (err) => {
+          this.toastr.error(err.error.message);
+        },
+      });
+    } 
   }
 }
