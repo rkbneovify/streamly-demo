@@ -39,7 +39,7 @@ main {
       display: flex;
       flex-direction: column;
       height: -webkit-fill-available;
-      justify-content: space-between;
+      justify-content: end;
       padding-bottom: 50px;
       .landing_carousel_section1_img1 {
         img {

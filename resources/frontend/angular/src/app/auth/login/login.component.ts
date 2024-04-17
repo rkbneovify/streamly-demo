@@ -58,7 +58,8 @@ export class LoginComponent implements OnInit {
           
           if (res.response_code == 200) {
             if(res.user.forced_change == 1){
-              this.router.navigateByUrl(`auth/change-password/${res?.access_token}`);
+              localStorage.setItem('changeToken',res?.access_token);
+              this.router.navigateByUrl(`auth/change-password`);
             }
           else{
             console.log('login resp-->',res);
@@ -74,7 +75,8 @@ export class LoginComponent implements OnInit {
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
-            this.router.navigateByUrl('/user/home');}
+            this.router.navigateByUrl('/user/home');
+          }
           }
         },
         error: (err: any) => {
