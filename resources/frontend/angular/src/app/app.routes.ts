@@ -6,6 +6,7 @@ import { ScheduleChartComponent } from './schedule-chart/schedule-chart.componen
 import { PlansComponent } from './plans/plans.component';
 import { DashjstestComponent } from './dashjstest/dashjstest.component';
 import { PaymentComponent } from './payment/payment.component';
+import { authguardGuard } from './guards/authguard.guard';
 
 export const routes: Routes = [
   {path:'',component:LandingPageComponent},
@@ -14,7 +15,7 @@ export const routes: Routes = [
   {path:'plans',component:PlansComponent},
   {path:'payment',component:PaymentComponent},
   {path:'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
-  {path:'user', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+  {path:'user', canActivate: [authguardGuard], loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
   {path:'**',component:PageNotFoundComponent},
 
 ];
