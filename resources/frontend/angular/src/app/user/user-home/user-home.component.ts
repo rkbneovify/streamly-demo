@@ -16,11 +16,14 @@ export class UserHomeComponent implements OnInit {
 
   access_Token:any;
   sldierData:any;
+  favChannelList:any;
+  favoriteChannels: number[] = [];
 
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
   ngOnInit(): void {
     this.loginSliders();
+    this.getFavoriteList();
   }
 
 
@@ -47,5 +50,80 @@ export class UserHomeComponent implements OnInit {
   }
     // console.log('hello');
   }
+
+  // Check if a channel is marked as favorite
+  isFavorite(channelId: number): boolean {
+    return this.favoriteChannels.includes(channelId);
+}
+
+
+          // Toggle favorite status
+    toggleFavorite(channelId: number): void {
+      // If channel is already favorite, remove it
+      if (this.isFavorite(channelId)) {
+          this.removeFavoriteChannel(channelId);
+      } else {
+          // add it to favorites
+          this.addFavoriteChannel(channelId);
+      }
+  }
+  
+  // 
+      getAuthHeaders(): HttpHeaders {
+    const tokenData = JSON.parse(localStorage.getItem('deviceInfo') || '').access_token;
+    return new HttpHeaders({
+        'Authorization': `Bearer ${tokenData}`,
+        'Accept': 'application/json'
+    });
+}
+
+
+   // Add channel to favorites
+   addFavoriteChannel(channelId: number): void {
+    // Call API to add channel to favorites
+    this.crud.postRequest('auth/addtofavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
+        if (res.response_code === 200) {
+            this.favoriteChannels.push(channelId); // Update local favorite list
+            this.updateFavoriteChannels(); // Update local storage
+            this.ts.success(res.message);
+        }
+    });
+}
+
+// Remove channel from favorites
+removeFavoriteChannel(channelId: number): void {
+    // Call API to remove channel from favorites
+    this.crud.postRequest('auth/unfavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
+        if (res.response_code === 200) {
+            this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
+            this.updateFavoriteChannels(); // Update local storage
+            this.ts.success(res.message);
+        }
+    });
+}
+
+// Fetch favorite list
+getFavoriteList(): void {
+  console.log('==========================================>')
+    const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+    if (storedFavoriteChannels) {
+        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+    } else {
+        // Fetch from API if not found in local storage
+        this.crud.getRequest('auth/my_favorites', this.getAuthHeaders()).subscribe((res: any) => {
+            if (res.response_code === 200) {
+                this.favoriteChannels = res.data.map((channel: any) => channel.id);
+                this.updateFavoriteChannels(); // Update local storage
+            }
+        });
+    }
+}
+
+// Update local storage with current favorite channels
+updateFavoriteChannels(): void {
+  console.log('favoriteChannels',this.favoriteChannels);
+    localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
+}
+
 
 }
