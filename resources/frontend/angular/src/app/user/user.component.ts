@@ -71,7 +71,8 @@ export class UserComponent {
             localStorage.removeItem('deviceInfo');
             localStorage.removeItem('userDetails');
             localStorage.removeItem('loggedInDeviceDetail');
-            localStorage.removeItem('loggedInDeviceDetails')
+            localStorage.removeItem('loggedInDeviceDetails');
+            localStorage.removeItem('favoriteChannels');
             this.ts.success(res.message);
             this.router.navigate(['/']);
           }
