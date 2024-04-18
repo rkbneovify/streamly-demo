@@ -1019,6 +1019,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       card_brand: token.card.brand,
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetails.value.cardZip,
+      coupon:this.discount
     };
 
     this.crud.postRequest('auth/register', body).subscribe({
