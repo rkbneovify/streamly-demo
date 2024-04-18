@@ -37,9 +37,12 @@
                               <img src="../../assets/dummy-img/play_icon.svg" alt="" />
                               <p>Play</p>
                           </div>
-                          <div class="heart_circle pointer ms-2">
+                          <!-- <div class="heart_circle pointer ms-2" (click)="addFavouriteChannel(data.channel_id)">
                               <img src="../../assets/dummy-img/heart-circle.svg" alt="" />
-                          </div>
+                          </div> -->
+                          <div class="heart_circle pointer ms-2" (click)="toggleFavorite(data.channel_id)">
+                            <img src="../../assets/dummy-img/heart-circle.svg" alt="" [class.favorite]="isFavorite(data.channel_id)">
+                        </div>
                           <!-- <div class="info_circle pointer">
                               <img src="../../assets/dummy-img/info-circle.svg" alt="" />
                           </div> -->
