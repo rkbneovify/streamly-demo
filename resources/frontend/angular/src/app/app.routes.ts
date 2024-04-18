@@ -4,7 +4,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ScheduleChartComponent } from './schedule-chart/schedule-chart.component';
 import { PlansComponent } from './plans/plans.component';
-import { DashjstestComponent } from './dashjstest/dashjstest.component';
 import { PaymentComponent } from './payment/payment.component';
 import { authguardGuard } from './guards/authguard.guard';
 
