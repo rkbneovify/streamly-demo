@@ -125,5 +125,8 @@ updateFavoriteChannels(): void {
     localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
 }
 
-
+// set player data in local 
+setplayerData(id:string){
+  localStorage.setItem('playerId',id);
+}
 }

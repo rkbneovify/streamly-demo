@@ -26,6 +26,7 @@ export class AccountsettingsComponent implements OnInit {
   deviceInfo: any;
   access_Token: any;
   updated_data: any;
+  homeTimeZone!:string;
 
   constructor(
     private fb: FormBuilder,
@@ -56,6 +57,7 @@ export class AccountsettingsComponent implements OnInit {
     if (deviceInfoData !== null) {
       try {
         this.deviceInfo = JSON.parse(localStorage.getItem('deviceInfo') || '');
+        this.homeTimeZone = this.deviceInfo.timezone
       } catch (error) {
         console.error('Error parsing JSON data:', error);
       }
