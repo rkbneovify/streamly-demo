@@ -18,13 +18,28 @@ main {
   width: 0 !important;
 }
 
+.schedule_Container{
+  margin-right: 1rem;
+}
+
 .navbar_Schedule {
-  padding: 1rem 0;
+  display: none;
+  .logo-navbarL{
+    img{
+      min-width: 110px;
+    }
+  }
+
+  gap: 1rem;
+  padding: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-right: 1rem;
   .searchbar_pro {
     .search_Bar {
       position: relative;
       input {
-        width: 500px;
+        width: auto;
         height: 40px;
         gap: 10px;
         border-radius: 98px;
@@ -66,6 +81,8 @@ main {
   }
 }
 
+
+
 .profileUserMenu {
   width: 220px;
   height: auto;
@@ -86,7 +103,7 @@ main {
     padding: 8px 13px 8px 13px;
     gap: 10px;
     cursor: pointer;
-
+    
     p {
       font-family: Poppins;
       font-size: 14px;
@@ -127,7 +144,7 @@ main {
       }
     }
   }
-
+  
   &:hover {
     // max-width: ;
   }
@@ -146,4 +163,53 @@ main {
 
 .activeTab{
   border-left: 5px solid #FFFFFF !important;
+}
+
+@media screen and (min-width: 850px) {
+  .navbar_Schedule {
+    margin-right: 0rem;
+    .logo-navbarL{
+      img{
+
+      }
+    }
+    padding: 1rem 0;
+    .searchbar_pro {
+      .search_Bar {
+
+        input {
+          width: 500px;}
+        }
+        }
+        }
+}
+
+@media screen and (max-width: 630px) {
+  .schedule_Container{
+    .row{
+      margin-right: 1rem;
+    }
+    .landing_carousel_container {
+      margin-right: 1rem !important;
+    }
+  }
+  .search_Bar{
+    width: 220px;
+    input{
+      width: -webkit-fill-available !important;
+    }
+  }
+}
+
+@media screen and (max-width: 498px) {
+  .search_Bar{
+    width: 100px;
+
+  }
+
+  .schedule_Container{
+    .row{
+      margin-right: 2rem;
+    }
+  }
 }
