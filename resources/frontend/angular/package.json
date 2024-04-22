@@ -35,6 +35,7 @@
     "stripe-angular": "^1.9.3",
     "tslib": "^2.3.0",
     "video.js": "^8.10.0",
+    "videojs-contrib-eme": "^5.2.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
