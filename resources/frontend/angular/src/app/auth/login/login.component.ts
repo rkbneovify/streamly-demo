@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
               sessionid: res?.sessionid,
               timezone: res?.timezone,
               token_type: res?.token_type,
-              userrole: res?.userrole 
+              userrole: res?.userrole, 
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
@@ -89,6 +89,12 @@ export class LoginComponent implements OnInit {
             // this.router.navigate(['auth/remove-device']);
           } else {
             this.ts.error(err.error.message);
+          }
+
+          if(err.status == 429){
+            console.log('===============move to login')
+            this.router.navigate(['user']);
+
           }
         }
       });
