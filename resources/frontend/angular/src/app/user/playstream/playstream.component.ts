@@ -1,4 +1,4 @@
-  import { NgFor } from '@angular/common';
+import { NgFor } from '@angular/common';
   import {
     Component,
     ElementRef,
@@ -70,7 +70,7 @@
           this.tokenkey = res.data;
           console.log(this.tokenkey, 'token key');
       
-          console.log(`${this.playerId}?access_key=${this.tokenkey}===8888`);
+          console.log(`${this.playerId} ?access_key=${this.tokenkey}===8888`);
           // this.player = videojs(this.videoPlayer.nativeElement, {
           //   autoplay: true,
           //   controls: true,
@@ -95,26 +95,61 @@
           //     // Add other DRM-specific options here
           //   }
           // });
+          // this.player = videojs(this.videoPlayer.nativeElement, {
+          //   plugins: {
+          //     eme: {
+          //       keySystems: {
+          //         'com.widevine.alpha': {
+          //           licenseUrl: res?.widevinelicense
+          //         },
+          //         'com.microsoft.playready': {
+          //           licenseUrl: res?.playreadylicense
+          //         }
+          //         // Add more DRM systems as needed
+          //       }
+          //     }
+          //   },
+          //   sources: [
+          //     {
+          //       src: atob(res.data), // Decode base64-encoded video URL
+          //       type: 'application/dash+xml'
+          //     }
+          //   ],
+          //   emeHeaders: {
+          //     Authorization: this.Bearer_token,
+          //   },
+          // });
+          
           this.player = videojs(this.videoPlayer.nativeElement, {
-            plugins: {
-              eme: {
-                keySystems: {
-                  'com.widevine.alpha': {
-                    licenseUrl: res?.widevinelicense
-                  },
-                  'com.microsoft.playready': {
-                    licenseUrl: res?.playreadylicense
-                  }
-                  // Add more DRM systems as needed
-                }
-              }
-            },
+            autoplay: true,
+            controls: true,
             sources: [
               {
-                src: atob(res.data), // Decode base64-encoded video URL
-                type: 'video/mp4'
-              }
-            ]
+                src: `https://d2t3s7h1wasu4l.cloudfront.net/CNBC/index.mpd`,
+                type: 'application/dash+xml',
+              },
+            ],
+            emeHeaders: {
+              Authorization: this.Bearer_token,
+            },
+            emeOptions: {
+              keySystems: {
+                'com.widevine.alpha': {
+                  // licenseUrl: res?.widevinelicense,
+                  url: `${res?.widevinelicense +'AcquireLicense'}`,
+                  audioContentType: 'audio/webm; codecs="vorbis"',
+                  videoContentType: 'video/webm; codecs="vp9"',
+                  licenseHeaders: {
+                    'X-AxDRM-Message':res.data
+                  }
+                },
+                'com.microsoft.playready': {
+                  licenseUrl: res?.playreadylicense,
+                },
+                // Add more DRM systems as needed
+              },
+              // Add other DRM-specific options here
+            },
           });
         },
         error: (err) => console.log(err),
