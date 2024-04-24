@@ -1,4 +1,4 @@
-<div class="row gy-0 gx-0 flex-nowrap">
+<div class="row gy-0 gx-0 flex-nowrap overflow-hidden">
   <div class="sidebar_container col-1 p-0 d-flex flex-column justify-content-between align-items-center py-3">
     <div class="sidebar_1 pointer" (click)="sideBarAnimation()">
       <img src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
@@ -25,7 +25,7 @@
           <nav
             class="navbar_Schedule d-flex align-item-center justify-content-between"
           >
-            <div>
+            <div class="logo-navbarL">
               <img src="../../assets/dummy-img/nav-logo.svg" alt="" srcset="" />
             </div>
             <div class="searchbar_pro d-flex gap-2">
@@ -61,7 +61,7 @@
           </nav>
         </div>
       </div>
-      <div class="row">
+      <div class="row justify-sm-content-center">
         <div class="col-12">
           <router-outlet></router-outlet>
         </div>
