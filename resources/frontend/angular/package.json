@@ -29,6 +29,7 @@
     "bootstrap": "^5.3.3",
     "dashjs": "^4.7.4",
     "express": "^4.18.2",
+    "mock-browser": "^0.92.14",
     "ngx-stripe": "^17.1.1",
     "ngx-toastr": "^16.2.0",
     "rxjs": "~7.8.0",
