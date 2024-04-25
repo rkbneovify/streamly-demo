@@ -108,17 +108,48 @@
   <div class="account_details_container account_subscription_container mb-4">
     <p class="account-heading mb-4">Account Details</p>
     <div class="accountdetails">
-      <div class="acoount_user_name">
+      <div class="acoount_user_name ">
         <label>Current Plan</label>
-        <p>Silver 34fn sd</p>
+        <p>{{planName}}</p>
       </div>
+      <div [ngClass]="{'acoount_user_name my-4':true,'h-auto-min':billingScheme == 'tiered'}">
+        <label [ngClass]="{'flex-1':billingScheme == 'tiered'}">Current Plan Type</label>
+        <p *ngIf="billingScheme == 'per_unit'">{{billingScheme}}</p>
+        <div *ngIf="billingScheme == 'tiered'" [ngClass]="{'row_total align-items-start flex-column justify-content-between':true,'h-auto-min flex-1':billingScheme == 'tiered'}">
+          <div class="pointer"  (click)="showTiredPlan = !showTiredPlan">
+            <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+              src="../../../assets/dummy-img/chevron-down.svg" alt="" />
+            <div class="text-center tiers def-color">Tiers 1 months</div>
+          </div>
+
+          <div [ngClass]="{'tiers_plan_dec':true,'h-auto-min':billingScheme == 'tiered'}" *ngIf="showTiredPlan">
+            <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
+              <div class="h-auto py-3">Quantity</div>
+              <div class="h-auto py-3">Price per unit</div>
+              <div class="h-auto py-3">Flat amount</div>
+            </div>
+
+            <div *ngFor="let tPlans of tiredPlansDetails"
+              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
+              <div *ngIf="tPlans.up_to">
+                For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
+                {{ tPlans.up_to }}
+              </div>
+              <div *ngIf="tPlans.up_to == null">For the rest</div>
+              <div>${{ +tPlans.unit_amount / 100 }}</div>
+              <div>${{ +tPlans.flat_amount / 100 }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Silver 34fn sd  -->
       <div class="acoount_user_email my-4">
         <label>Plan Renewal Date</label>
-        <p>No Upcoming Invoices</p>
+        <p>{{renewalDate | date}}</p>
       </div>
       <div class="acoount_user_password">
         <label for="">Payment Method</label>
-        <p>Visa 4242</p>
+        <p>{{cardDetails?.card_brand}} {{cardDetails?.card_last_four}}</p>
       </div>
     </div>
     <div class="accountbtn_container my-4">
@@ -131,11 +162,11 @@
     <div class="accountdetails">
       <div class="acoount_user_name">
         <label>Card Type</label>
-        <p>Visa</p>
+        <p>{{cardDetails?.card_brand}}</p>
       </div>
       <div class="acoount_user_email my-4">
         <label>Card Number</label>
-        <p>*********4242</p>
+        <p>*********{{cardDetails?.card_last_four}}</p>
       </div>
     </div>
     <div class="accountbtn_container my-4">
@@ -151,16 +182,16 @@
         <p>Date</p>
         <p>Download</p>
       </div>
-      <div class="invoicesdetails">
-        <p>12345678</p>
+      <div *ngFor="let data of invoices" class="invoicesdetails">
+        <p>{{data?.created}}</p>
         <p>11/03/2024</p>
         <p class="pointer">Invoice</p>
       </div>
-      <div class="invoicesdetails">
+      <!-- <div class="invoicesdetails">
         <p>12345678</p>
         <p>11/03/2024</p>
         <p class="pointer">Invoice</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>

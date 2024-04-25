@@ -116,3 +116,73 @@
 .password-height{
   height: auto !important;
 }
+
+.h-auto-min{
+  min-height: 48px;
+  height: auto !important;
+}
+
+.acoount_user_name{
+  
+  .tiers_plan_dec {
+    font-family: Poppins;
+    border-radius: 6px;
+    // overflow-y: scroll;
+    // height: 180px;
+    text-align: center;
+    color: #ffffff;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch !important;
+    .tier_plan {
+      display: block;
+      align-items: stretch !important;
+      height: auto !important;
+      div{
+      align-items: stretch !important;
+
+      }
+      // justify-content: center;
+      // align-items: center;
+      div {
+        border: 1px solid #616b75;
+        // padding: 1rem;
+        flex: 2;
+        height: auto;
+        min-width: 71px;
+        // margin: auto;
+      }
+    }
+    .tier_heading {
+      div {
+        background-color: #1b4974;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+    }
+    .tier_plan_price {
+      > *:not(:first-child) {
+        justify-content: center;
+      }
+      div {
+        // background-color: #899097;
+        padding-top: 1rem;
+        background-color: ghostwhite;
+        color: #234b69e5;
+        font-size: 12px;
+        font-weight: 600;
+      }
+    }
+  }
+
+}
+
+.def-color{
+  font-family: Poppins;
+  color: #ffffff;
+}
+
+.flex-1{
+  flex: 1 !important;
+}

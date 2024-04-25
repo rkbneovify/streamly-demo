@@ -124,7 +124,8 @@ main {
   min-width: 80px;
   background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
   // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
-  transition: max-width 2s ease-in-out;
+  width: 80px;
+  transition: all 0.5s ease;
   .sidebar_1 {
     width: 24px;
     height: 24px;
@@ -150,6 +151,10 @@ main {
   }
 }
 
+.expanded{
+  width: 120px !important;
+}
+
 
 .sidebar_2{
   div{
@@ -164,6 +169,14 @@ main {
 .activeTab{
   border-left: 5px solid #FFFFFF !important;
 }
+
+.flex_1{
+  flex: 1;
+}
+
+// .animantiontest{
+//   >:first-child
+// }
 
 @media screen and (min-width: 850px) {
   .navbar_Schedule {
@@ -183,6 +196,9 @@ main {
         }
         }
 }
+
+
+
 
 @media screen and (max-width: 630px) {
   .schedule_Container{

@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -14,7 +14,7 @@ import { CrudService } from '../../services/crud.service';
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, NgIf],
+  imports: [ReactiveFormsModule, NgClass, NgIf,DatePipe,NgFor],
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
@@ -27,6 +27,16 @@ export class AccountsettingsComponent implements OnInit {
   access_Token: any;
   updated_data: any;
   homeTimeZone!:string;
+  Bearer_token:any;
+  planName!:string;
+  renewalDate:any;
+  cardDetails!:any;
+  invoices:any;
+  billingScheme!:string;
+  tiredPlansDetails:any;
+  invoicesDate!:any;
+  showTiredPlan:boolean=false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -43,6 +53,7 @@ export class AccountsettingsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllDetails();
     const jsonData = localStorage.getItem('userDetails');
     if (jsonData !== null) {
       try {
@@ -140,5 +151,45 @@ export class AccountsettingsComponent implements OnInit {
     this.updateuserDetatils.controls['oldpassword'].setValue('');
     this.updateuserDetatils.controls['newpassword'].setValue('');
     
+    
+
+    // user detials
+  }
+
+  getAllDetails(){
+    this.crud.getRequest('auth/setting-details',this.getAuthHeaders()).subscribe({
+      next:(res:any)=>{
+        let planFullName;
+        const plan1st = res?.plan.nickname;
+        const plan2nd = res?.plan?.currency;
+        const plan3rd = res?.plan?.interval;
+
+        planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(1, 3):''} ${plan2nd?plan2nd.substring(1,3):''}`;        
+        
+        this.billingScheme = res.plan.billing_scheme;
+        this.invoices = res?.invoices.data;
+        this.invoicesDate = new Date(this.invoices?.created * 1000);
+        this.renewalDate = res?.renewaldatetime;
+        this.planName = planFullName;
+        this.cardDetails = res?.userinfo;
+        this.tiredPlansDetails = res.plan.tiers;
+
+
+
+        console.log(res,'Acccccc');
+      },
+      error:(err)=>console.log(err)
+    })
+  }
+
+  getAuthHeaders(): HttpHeaders {
+    const tokenData = JSON.parse(
+      localStorage.getItem('deviceInfo') || ''
+    ).access_token;
+    this.Bearer_token= tokenData;
+    return new HttpHeaders({
+      Authorization: `Bearer ${tokenData}`,
+      Accept: 'application/json',
+    });
   }
 }
