@@ -17,6 +17,8 @@ export class UserComponent {
   submenu:boolean=false;
   activeTab:string='home';
   access_Token!:any;
+  isExpanded: boolean = false;
+
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
 
   sideBarAnimation (){
@@ -50,6 +52,10 @@ export class UserComponent {
     }
   }
 
+
+  toggleSidebar(): void {
+    this.isExpanded = !this.isExpanded;
+  }
 
 
 
