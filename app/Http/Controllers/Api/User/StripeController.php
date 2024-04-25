@@ -20,6 +20,8 @@ use Illuminate\Validation\ValidationException;
 use Stripe\Customer;
 use Stripe\PaymentMethod;
 use Stripe\Subscription;
+use App\SessionTable;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
 {
@@ -342,5 +344,82 @@ class StripeController extends Controller
             $message->to($user->email, $user->name)
                 ->subject('Thanks for Subscribing! ' . env('APP_NAME'));
         });
+    }
+
+    public function showUserDetails(Request $request)
+    {
+        $response_to_send = [];
+
+        $id = JWTAuth::user()->id;
+        $userinfo = User::find($id);
+        $resultoffset = $userinfo->zipcode;
+        $timezoneData = fetchHomeTimezoneUsingZip($resultoffset);
+        $timezone = $timezoneData[0];
+        $allSession = SessionTable::where([
+            ['status', '=', '1'],
+            ['users_id', '=', $id],
+        ])->orderBy('connected_devices', 'asc')->get();
+
+        $subscription = JWTAuth::user()->subscriptions()->first();
+
+        if (!$userinfo->subscribed('main')) {
+            $plan = (object) ['amount' => '0'];
+        } else {
+            $stripe_plan = $subscription->stripe_plan;
+
+            $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
+
+            if ($STRIPE_KEY[0]->type == $userinfo->mode) {
+                $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
+                $invoices =  \Stripe\Invoice::all(['customer' => JWTAuth::user()->stripe_id, 'expand' => ['data.charge']]);
+            } else {
+                $plan = null;
+                $invoices = '';
+            };
+        }
+
+        if ($subscription) {
+            if ($subscription->ends_at) {
+                $renewaldatetime = 'Plan Expired';
+            } else {
+                $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
+
+                $curl = curl_init();
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer=' . $userinfo->stripe_id . '',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'GET',
+                    CURLOPT_HTTPHEADER => array(
+                        'Content-Type: application/x-www-form-urlencoded',
+                        'Authorization: Bearer ' . $STRIPE_SECRET . ''
+                    ),
+                ));
+
+                $response = curl_exec($curl);
+                // print_r($response);
+                // die;
+                $renewalDatestripe = json_decode($response);
+                curl_close($curl);
+                $renewaldatetime = date('Y-m-d H:i:s', $renewalDatestripe->next_payment_attempt) ?? 'No upcoming invoices';
+                // $renewaldatetime = 'No upcoming invoices';
+            }
+        } else {
+            $renewaldatetime = '';
+        }
+        // print_r($allSession);
+        // die;
+        // Populate response
+        // $response_to_send['allSession'] = $allSession->toArray();
+        $response_to_send['subscription'] = $subscription;
+        $response_to_send['plan'] = $plan;
+        $response_to_send['userinfo'] = $userinfo;
+        $response_to_send['invoices'] = $invoices;
+        $response_to_send['timezone'] = $timezone;
+        $response_to_send['renewaldatetime'] = $renewaldatetime;
+        $response_to_send['zipcode'] = $resultoffset;
+
+        return response()->json($response_to_send);
     }
 }
