@@ -62,10 +62,15 @@ main {
 .devices-container {
   .card_device {
     width: 350px;
-    height: 260px;
+    height: 285px;
     border: 1px solid #ffffff;
     border-radius: 8px;
     padding: 18px;
+
+    .btn_hover{
+      min-height: fit-content;
+      padding: 0.5rem;
+    }
     .devi_top {
       text-align: -webkit-center;
       position: relative;

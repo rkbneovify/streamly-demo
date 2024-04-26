@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor,NgIf],
+  imports: [NgFor,NgIf,NgClass],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss'
 })
@@ -25,7 +25,17 @@ export class TotalaccountComponent {
     const jsonData = localStorage.getItem('loggedInDeviceDetails');
     if (jsonData !== null) {
       try {
-        this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetails') || '');
+        let data = JSON.parse(localStorage.getItem('loggedInDeviceDetails') || '');
+        console.log(data,'===============before ==============> ',this.current_device);
+
+        data = data.sort((a: any, b: any) => {
+          // If the session ID matches the current user's device ID, move it to the top
+          if (a.personaldeviceid === this.current_device) return -1;
+          if (b.personaldeviceid === this.current_device) return 1;
+          return 0;
+        });
+        console.log(data,'===============after Data ==============>',this.current_device);
+        this.response = data;
       } catch (error) {
         console.error('Error parsing JSON data:', error);
       }
@@ -97,7 +107,14 @@ export class TotalaccountComponent {
         this.apiService.getRequest('auth/connecteddevice', headers).subscribe((res: any) => {
           console.log('get all device ->>',res);
           if(res.response_code == 200){
-            const data = res.data;
+            let data = res.data;
+            // Sort the connected devices array based on the current user's device ID
+            data = data.sort((a: any, b: any) => {
+              // If the session ID matches the current user's device ID, move it to the top
+              if (a.personaldeviceid === this.current_device) return -1;
+              if (b.personaldeviceid === this.current_device) return 1;
+              return 0;
+            });
             this.connectedDevice = data;
             localStorage.setItem('loggedInDeviceDetails',JSON.stringify(data));
           }else{
@@ -130,6 +147,8 @@ getDeviceId(event: any, sessionId: string): void {
 mutileLogout(){
   if(this.deviceId.length >0){
     this.removedevices(this.deviceId);
+  }else{
+    this.toastr.error('Choose a device');
   }
 }
 

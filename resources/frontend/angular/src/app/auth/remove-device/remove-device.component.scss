@@ -48,7 +48,16 @@ main {
     font-weight: 700;
     line-height: 48px;
     text-align: center;
+    @media screen and (max-width:'500px'){
+      font-size: 22px;
+
+      .btnBackToLogin{
+        padding: 5px 11px 5px 11px; 
+        font-size: 14px;
+      }
+    }
   }
+  
   .toatlcheck-device {
     p {
       font-size: 14px;
@@ -57,12 +66,19 @@ main {
       text-align: left;
     }
   }
+
+  .btnBackToLogin{
+    @media screen and (max-width:'500px'){
+        padding: 5px 11px 5px 11px; 
+        font-size: 14px;
+      }
+  }
 }
 
 .devices-container {
   .card_device {
     width: 350px;
-    height: 260px;
+    height: 285px;
     border: 1px solid #ffffff;
     border-radius: 8px;
     padding: 18px;

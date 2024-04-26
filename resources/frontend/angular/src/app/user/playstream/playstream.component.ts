@@ -11,7 +11,7 @@ import { NgFor } from '@angular/common';
   import videojs from 'video.js';
   import 'video.js/dist/video-js.css';
   import 'videojs-contrib-eme';
-  import dashjs from 'dashjs';
+  // import dashjs from 'dashjs';
   @Component({
     selector: 'app-playstream',
     standalone: true,
@@ -166,51 +166,69 @@ import { NgFor } from '@angular/common';
     }
 
     ngOnInit() {
-      // this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders()).subscribe({
-      //   next: (res: any) => {
-      //     this.tokenkey = res.data;
-      //     console.log(this.tokenkey, 'token key');
-      //               this.player = videojs(this.videoPlayer.nativeElement, {
-      //       preload:"auto",
-      //       controls: true,
-      //       sources: [
-      //         {
-      //           src: `https://d2t3s7h1wasu4l.cloudfront.net/CNBC/index.mpd`,
-      //           type: 'application/dash+xml',
-      //         },
-      //       ],
-      //       emeHeaders: {
-      //         Authorization: this.Bearer_token,
-      //       },
-      //       emeOptions: {
-      //         keySystems: {
-      //           'com.widevine.alpha': {
-      //             // licenseUrl: res?.widevinelicense,
-      //             url: `${res?.widevinelicense +'AcquireLicense'}`,
-      //             audioContentType: 'audio/webm; codecs="vorbis"',
-      //             videoContentType: 'video/webm; codecs="vp9"',
-      //             licenseHeaders: {
-      //               'X-AxDRM-Message':res?.widevinelicense
-      //             }
-      //           },
-      //           'com.microsoft.playready': {
-      //             licenseUrl: res?.playreadylicense,
-      //           },
-      //           // Add more DRM systems as needed
-      //         },
-      //         // Add other DRM-specific options here
-      //       },
-      //     });
-      //   },
-      //   error: (err) => console.log(err),
-      // });
+      this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders()).subscribe({
+        next: (res: any) => {
+          this.tokenkey = res.data;
+          console.log(this.tokenkey, 'token key');
+                    this.player = videojs(this.videoPlayer.nativeElement, {
+                      
+
+            liveui: true,
+            preload:"auto",
+            controls: true,
+            sources: [
+              {
+                src: `https://d2t3s7h1wasu4l.cloudfront.net/CNBC/index.mpd`,
+                type: 'application/dash+xml',
+              },
+            ],
+            emeOptions: {
+              keySystems: {
+                'com.widevine.alpha': {
+                  licenseUrl: res?.widevinelicense,
+                  url: `${res?.widevinelicense +'AcquireLicense'}`,
+                  licenseHeaders: {
+                    'X-AxDRM-Message':res?.data
+                  },
+                //   serverURL: res.widevinelicense,
+                //   httpRequestHeaders: {
+                //     'customdata': res.data // Assuming message contains the token
+                  }
+                // },
+                // 'com.microsoft.playready': {
+                //   licenseUrl: res?.playreadylicense,
+                },
+                // Add more DRM systems as needed
+              },
+              // Add other DRM-specific options here
+            // },
+          });
+
+          // player.setProtectionData({
+          //   'com.widevine.alpha': {
+          //     serverURL: res.widevinelicense,
+          //     httpRequestHeaders: {
+          //       'customdata': res.data // Assuming message contains the token
+          //     }
+          //   }
+          // });
+        },
+        error: (err) => console.log(err),
+      });
 
       // const self = this;
-      this.getDRMKeys().subscribe((response:any) => {
-        if (response.success && response.data) {
-          const player = dashjs.MediaPlayer().create();
-          const data = atob(response.data);
-          player.initialize(this.videoPlayer.nativeElement,this.playerId , true)
+
+
+      // this.getDRMKeys().subscribe((response:any) => {
+      //   if (response.success && response.data) {
+      //     const player = dashjs.MediaPlayer().create();
+      //     const data = atob(response.data);
+      //     player.initialize(this.videoPlayer.nativeElement,this.playerId , true)
+
+
+
+
+
           //   keySystems: {
           //     'com.widevine.alpha': {
           //       licenseUrl: response.widevinelicense
@@ -226,17 +244,24 @@ import { NgFor } from '@angular/common';
         //   'com.microsoft.playready': { serverURL: response.playreadylicense }
         // });
                 // Configure DRM license URLs
-                player.setProtectionData({
-                  'com.widevine.alpha': {
-                    serverURL: response.widevinelicense,
-                    httpRequestHeaders: {
-                      'customdata': response.data // Assuming message contains the token
-                    }
-                  }
-                });
-        } else {
-          console.error('Error retrieving DRM authentication key:', response.message);
-        }
+
+
+
+
+        //         player.setProtectionData({
+        //           'com.widevine.alpha': {
+        //             serverURL: response.widevinelicense,
+        //             httpRequestHeaders: {
+        //               'customdata': response.data // Assuming message contains the token
+        //             }
+        //           }
+        //         });
+        // } else {
+        //   console.error('Error retrieving DRM authentication key:', response.message);
+        // }
+
+
+
 
         // if (response.success && response.data) {
         //   const player = dashjs.MediaPlayer().create();
@@ -298,7 +323,11 @@ import { NgFor } from '@angular/common';
         // } else {
         //   console.error('Error retrieving DRM authentication key:', response.message);
         // }
-      });
+
+
+
+
+      // });
 
     }
 

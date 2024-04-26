@@ -14,6 +14,9 @@ import { RouterLink } from '@angular/router';
 export class RemoveDeviceComponent implements OnInit {
   response: any;
   connectedDevice!: any;
+  access_Token!:any;
+  current_device:any;
+  deviceId:Array<string>=[];
   constructor(private apiService: CrudService, private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -31,6 +34,7 @@ export class RemoveDeviceComponent implements OnInit {
     // this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
     console.log(this.response,'respose');
     
+    this.current_device = localStorage.getItem('deviceId');
     this.connectedDevice = this.response;
   }
 
@@ -50,4 +54,47 @@ export class RemoveDeviceComponent implements OnInit {
 
     });
   }
+
+  getDeviceId(event: any, sessionId: string): void {
+    if (event.target.checked) {
+      // If the checkbox is checked, add the session ID to the deviceId array
+      this.deviceId.push(sessionId);
+    } else {
+      // If the checkbox is unchecked, remove the session ID from the deviceId array
+      this.deviceId = this.deviceId.filter(id => id !== sessionId);
+    }
+    console.log('Device IDs:', this.deviceId);
+  }
+  
+  // mutileLogout(){
+  //   if(this.deviceId.length >0){
+  //     this.removedevices(this.deviceId);
+  //   }
+  // }
+  
+  // removedevices(id: any): void {
+  //   const userToken = localStorage.getItem('deviceInfo');
+  //   let headers;
+  //   if (userToken !== null) {
+  //       this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
+  //       const tokenData = this.access_Token?.access_token;
+  //       this.current_device = this.access_Token?.personaldeviceid;
+  //       headers = new HttpHeaders({
+  //         'Authorization': `Bearer ${tokenData}`,
+  //         'Accept': 'application/json'
+  //       });
+  //     }
+  //   this.apiService.postRequest('auth/multi-session-destroy', { 'id': id },headers).subscribe({
+  //     next: (res: any) => {
+  //       if (res.jwterror == 'no error') {
+  //         this.toastr.success('Devices removed successfully')
+  //         this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
+  //         this.response = this.connectedDevice;
+  //         localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
+  //       }
+  //     },
+  //     error: err =>{ this.toastr.error(err.error?.error); console.log(err)},
+  
+  //   });
+  // }
 }
