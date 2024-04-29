@@ -67,7 +67,7 @@
   
                           <ng-template #btnlogOut>
                               <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                  <button class="input_st w-auto h-100" (click)="removedevice(data.session_id)" >Log out</button>
+                                  <button class="input_st min75-h40 w-auto h-100 position-relative"  [class.spinner]="loading" [disabled]="loading" (click)="removedevice(data.session_id)" > <span *ngIf="!loading"> Log out</span></button>
                               </div>
                           </ng-template>
                         </div>

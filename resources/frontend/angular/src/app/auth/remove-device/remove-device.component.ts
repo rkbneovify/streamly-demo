@@ -17,6 +17,7 @@ export class RemoveDeviceComponent implements OnInit {
   access_Token!:any;
   current_device:any;
   deviceId:Array<string>=[];
+  loading:boolean = false;
   constructor(private apiService: CrudService, private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -40,9 +41,11 @@ export class RemoveDeviceComponent implements OnInit {
 
   removedevice(id: string): void {
     console.log('---device id ',id);
+    this.loading = true;
     this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
       next: (res: any) => {
         if (res.response_code == 200) {
+          this.loading = false;
           this.toastr.success('Device removed successfully')
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
           this.response = this.connectedDevice;

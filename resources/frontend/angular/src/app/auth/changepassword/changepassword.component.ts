@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -14,7 +14,7 @@ import { HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-changepassword',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, RouterLink],
+  imports: [ReactiveFormsModule, NgClass, RouterLink, NgIf],
   templateUrl: './changepassword.component.html',
   styleUrl: './changepassword.component.scss',
 })
@@ -22,6 +22,7 @@ export class ChangepasswordComponent {
   showPassword1: boolean = false;
   showPassword2: boolean = false;
   showPassword3: boolean = false;
+  loading: boolean = false;
 
   resetPasswordForm!: FormGroup;
   token: any = localStorage.getItem('changeToken');
@@ -45,7 +46,6 @@ export class ChangepasswordComponent {
   passwordMatchValidator(formGroup: FormGroup) {
     const passwordControl = formGroup.get('password1');
     const confirmPasswordControl = formGroup.get('password2');
-    
 
     if (
       passwordControl &&
@@ -60,39 +60,45 @@ export class ChangepasswordComponent {
   }
 
   resetPassword_Link() {
+    this.loading = true;
     console.log('Email -->', this.resetPasswordForm.get('email')?.value);
     console.log('Email -->', this.resetPasswordForm.value.email);
     console.log('Token -->', this.token);
     let data = {
-      email:this.resetPasswordForm.get('email')?.value,
+      email: this.resetPasswordForm.get('email')?.value,
       old_password: this.resetPasswordForm.get('oldPassword')?.value,
       password: this.resetPasswordForm.get('password1')?.value,
       password_confirmation: this.resetPasswordForm.get('password2')?.value,
     };
 
-    if(this.token){
-
+    if (this.token) {
       const headers = new HttpHeaders({
-        'Authorization': `Bearer ${this.token}`,
-        'Accept': 'application/json'
+        Authorization: `Bearer ${this.token}`,
+        Accept: 'application/json',
       });
-      
+
       console.log(this.token);
-      
-      this.crud.postRequest('auth/force-change-password', data,headers).subscribe({
-        next: (res: any) => {
-          this.toastr.success(res.message);
-          localStorage.removeItem('deviceId');
-          localStorage.removeItem('deviceInfo');
-          localStorage.removeItem('userDetails');
-          localStorage.removeItem('changeToken');
-          
-          this.router.navigateByUrl('/auth/login');
-        },
-        error: (err) => {
-          this.toastr.error(err.error.message);
-        },
-      });
-    } 
+
+      this.crud
+        .postRequest('auth/force-change-password', data, headers)
+        .subscribe({
+          next: (res: any) => {
+            this.toastr.success(res.message);
+            localStorage.removeItem('deviceId');
+            localStorage.removeItem('deviceInfo');
+            localStorage.removeItem('userDetails');
+            localStorage.removeItem('changeToken');
+            this.loading = false;
+            this.router.navigateByUrl('/auth/login');
+          },
+          error: (err) => {
+            this.loading = false;
+
+            this.toastr.error(err.error.message);
+          },
+        });
+    } else {
+      this.loading = false;
+    }
   }
 }
