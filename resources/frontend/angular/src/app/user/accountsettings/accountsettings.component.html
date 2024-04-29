@@ -90,10 +90,14 @@
       </button>
       <button
         *ngIf="editMode"
-        class="plan_btn btn-edit"
+        class="plan_btn btn-edit position-relative"
+        [class.spinner]="loading" [disabled]="loading"
         (click)="saveChanges()"
+
       >
+      <span *ngIf="!loading">
         Save
+      </span>
       </button>
       <button
         *ngIf="editMode"

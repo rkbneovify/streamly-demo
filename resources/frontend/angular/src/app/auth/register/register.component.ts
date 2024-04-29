@@ -85,6 +85,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   cardZipData!: any;
   showTiredPlan: boolean = false;
   discount:any=0;
+  loading:boolean = false;
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -624,6 +625,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       next: (data: any) => {
         console.log('otpdata verify-->', data);
         this.ts.success(data.message);
+        this.loading = false;
         setTimeout(() => {
           if (data) {
             this.getAllThePlans();
@@ -632,6 +634,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         }, 1000);
       },
       error: (err) => {
+        this.loading = false;
+
         this.ts.error(err.error.error);
         // this.otpVerificationForm.reset();
         Object.keys(this.otpVerificationForm.controls).forEach((key) => {
@@ -765,6 +769,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         const message = resp.message;
         if (isUserExist) {
           console.log('register function', message);
+          this.loading = false;
           this.showAlreadyUserModal();
         } else {
           console.log('register function', 'check zip code');
@@ -778,14 +783,18 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
             this.showCorrectZipcode();
+            this.loading = false;
           } else {
             this.showWrongZipcode();
             console.log('register function', 'Invalid zip code.');
+            this.loading = false;
           }
+          this.loading = false;
         }
         console.log(resp);
       },
       error: (error) => {
+        this.loading = false;
         console.log(error);
       },
     });
@@ -794,9 +803,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   submitForm() {
     if (this.availabilityForm.valid) {
       const data = this.availabilityForm.value;
+      this.loading = true;
       this.checkEmailRegistration(data);
       console.log('form Data :', this.availabilityForm.value);
     } else {
+      this.loading = false;
       console.log(this.availabilityForm.errors);
     }
   }
@@ -816,6 +827,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   otpVerifySubmit() {
+    this.loading = true;
     const otpAndEmail = {
       email: this.otpVerificationForm.get('email')?.value,
       otp: this.getOtpValue(),
@@ -1024,11 +1036,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
     this.crud.postRequest('auth/register', body).subscribe({
       next: (res: any) => {
+        this.loading = false;
         console.log('resdata ======> ', res);
         this.ts.success(res.message);
         this.selectedTab = 'Confirmation';
       },
       error: (err: any) => {
+        this.loading = false;
         console.log('errdata ======> ', err);
         this.ts.success(err.message);
       },
@@ -1038,6 +1052,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   paymentShowData() {
     const formData = this.paymentFormDetails.value;
+    this.loading = false;
     console.log('========paymentData==========>', formData);
   }
 
@@ -1120,6 +1135,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   async createStripeToken() {
+    this.loading = true;
     console.log(this.card, 'card');
     const { token, error } = await this.stripe.createToken(this.card);
     console.log(token, 'token');

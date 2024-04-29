@@ -36,6 +36,7 @@ export class AccountsettingsComponent implements OnInit {
   tiredPlansDetails:any;
   invoicesDate!:any;
   showTiredPlan:boolean=false;
+  loading:boolean=false;
 
 
   constructor(
@@ -91,6 +92,7 @@ export class AccountsettingsComponent implements OnInit {
 
   saveChanges() {
     // saving changes here
+    this.loading = true;
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
@@ -117,6 +119,7 @@ export class AccountsettingsComponent implements OnInit {
             next:(res: any) => {
               console.log('->>', res);
               if(res.response_code == 200){
+                this.loading = false;
                             // Update name in local storage
               this.usersdetail.name = body.name;
               console.log(this.usersdetail);
@@ -129,13 +132,17 @@ export class AccountsettingsComponent implements OnInit {
                 this.toggleEditMode();
               }else{
                 console.log(res,'123123123');
+                this.loading = false;
                 this.ts.error(res.message);
               }
   
             },
             error:(err:any)=>{
               console.log(err,'error');
-                this.ts.error(err.error.message);
+              this.loading = false;
+              err.error.message.password.forEach(element => {
+                this.ts.error(element);
+              });
             }
           });
         // }

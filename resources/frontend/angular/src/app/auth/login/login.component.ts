@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   showPassword: boolean = false;
   showPasscode: boolean = false;
   userDeviceID!: string;
+  loading:boolean = false;
   userToken!: string;
   constructor(private fb: FormBuilder, private crudService: CrudService, private router: Router, private ts: ToastrService) {
     this.loginFormWithEmail = this.fb.group({
@@ -51,14 +52,17 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginFormWithEmail.valid) {
+      this.loading = true;
       const formData = this.loginFormWithEmail.value;
       formData.deviceid = this.userDeviceID;// Call the function to generate Device ID
       this.crudService.postRequest('auth/login', formData).subscribe({
         next: (res: any) => {
+
           console.log(res,'response of login api');
           
           if (res.response_code == 200) {
             if(res.user.forced_change == 1){
+              this.loading = false;
               localStorage.setItem('changeToken',res?.access_token);
               this.router.navigateByUrl(`auth/change-password`);
             }
@@ -82,16 +86,25 @@ export class LoginComponent implements OnInit {
         },
         error: (err: any) => {
           if (err.status == 479) {
+            this.loading = false;
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
             this.router.navigate(['auth/remove-device']);
+            this.ts.error(err.error.message,null, {
+              closeButton: true, // Enable close button
+              disableTimeOut: true, // Disable auto close
+              tapToDismiss: false, // Disable dismiss on click
+            }
+              );
 
             // this.crudService.sendResponse(err.error.loggedindeviceinfolist.data);
             // this.router.navigate(['auth/remove-device']);
           } else {
+            this.loading = false;
             this.ts.error(err.error.message);
           }
 
           if(err.status == 429){
+            this.loading = false;
             console.log('===============move to login')
             this.router.navigate(['user']);
 

@@ -53,7 +53,11 @@
                   </div>
                   <div class="justify-content-center" (click)="logoutUser()">
                     <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
-                    <p>Log out</p>
+                    <p class="position-relative min-hwl" [class.spinner]="loading">
+                      <span class="nologout" *ngIf="!loading">
+                        Log out
+                      </span>
+                    </p>
                   </div>
                 </div>
               </div>
