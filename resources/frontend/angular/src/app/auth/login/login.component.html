@@ -83,7 +83,7 @@
             <p class="login-fpass mt-2 pointer" routerLink="/auth/forget-password">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button [ngClass]="{'btn_2':true,'mb-2':true,'btn-bg-gold':loginFormWithEmail.valid}" type="submit" placeholder="">Log In</button>
+            <button [class.spinner]="loading" [disabled]="loading" [ngClass]="{'btn_2 position-relative':true,'mb-2':true,'btn-bg-gold':loginFormWithEmail.valid}" type="submit" placeholder=""> <span *ngIf="!loading">Log In</span></button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer ms-2"

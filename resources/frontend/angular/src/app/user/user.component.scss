@@ -178,6 +178,11 @@ main {
 //   >:first-child
 // }
 
+.min-hwl{
+  min-width: 51px;
+  min-height: 21px;
+}
+
 @media screen and (min-width: 850px) {
   .navbar_Schedule {
     margin-right: 0rem;
