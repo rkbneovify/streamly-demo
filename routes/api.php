@@ -140,6 +140,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     /** Channel SLider API */
     Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify']);
+    Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes
