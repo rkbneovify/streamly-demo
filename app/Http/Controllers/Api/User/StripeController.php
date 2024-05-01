@@ -422,4 +422,16 @@ class StripeController extends Controller
 
         return response()->json($response_to_send);
     }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        $user = JWTAuth::user();
+        try {
+            $user->subscription('main')->skipTrial()->cancelNow();
+            return response()->json(['message' => 'Subscription Cancelled Successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
 }
