@@ -11,20 +11,23 @@ import { ScheduleDetailComponent } from './playlist-schedule/schedule-detail/sch
 import { AccountsettingsComponent } from './accountsettings/accountsettings.component';
 import { TotalaccountComponent } from './totalaccount/totalaccount.component';
 import { PlansComponent } from './plans/plans.component';
+import { authguardGuard } from '../guards/authguard.guard';
+import { SubscriptionExpiredComponent } from './subscription-expired/subscription-expired.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
     path: '', component: UserComponent, children: [
       { path: '', component: UserHomeComponent },
-      { path: 'home', component: UserHomeComponent },
-      { path: 'favorite', component: FavouritesComponent },
-      { path: 'playlistschedule', component: PlaylistScheduleComponent },
-      { path: 'plan', component: PlansComponent },
-      { path: 'schedule-details', component: ScheduleDetailComponent },
-      { path: 'user-settings', component: AccountsettingsComponent },
-      { path: 'playstream', component: PlaystreamComponent },
-      { path: 'downloadapp', component: DownloadappComponent },
-      { path: 'connected-device', component: TotalaccountComponent },
+      { path: 'home', component: UserHomeComponent ,canActivate: [authguardGuard] },
+      { path: 'favorite', component: FavouritesComponent,canActivate: [authguardGuard] },
+      { path: 'playlistschedule', component: PlaylistScheduleComponent,canActivate: [authguardGuard]  },
+      { path: 'plan', component: PlansComponent,canActivate: [authguardGuard]  },
+      { path: 'schedule-details', component: ScheduleDetailComponent,canActivate: [authguardGuard]  },
+      { path: 'user-settings', component: AccountsettingsComponent,canActivate: [authguardGuard]  },
+      { path: 'playstream', component: PlaystreamComponent,canActivate: [authguardGuard]  },
+      { path: 'downloadapp', component: DownloadappComponent,canActivate: [authguardGuard]  },
+      { path: 'connected-device', component: TotalaccountComponent,canActivate: [authguardGuard]  },
+      { path: 'subscription-expired', component: SubscriptionExpiredComponent,canActivate: [authguardGuard]  },
 
     ]
   }

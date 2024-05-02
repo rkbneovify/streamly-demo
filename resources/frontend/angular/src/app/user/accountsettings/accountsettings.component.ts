@@ -37,6 +37,7 @@ export class AccountsettingsComponent implements OnInit {
   invoicesDate!:any;
   showTiredPlan:boolean=false;
   loading:boolean=false;
+  subscribed:boolean;
 
 
   constructor(
@@ -82,6 +83,8 @@ export class AccountsettingsComponent implements OnInit {
     this.updateuserDetatils.controls['zipcode'].setValue(
       this.usersdetail?.zipcode
     );
+
+    this.subscribed = this.usersdetail?.subscribed;
   }
 
   toggleEditMode() {
