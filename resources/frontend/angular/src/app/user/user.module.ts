@@ -10,6 +10,8 @@ import { DownloadappComponent } from './downloadapp/downloadapp.component';
 import { ScheduleDetailComponent } from './playlist-schedule/schedule-detail/schedule-detail.component';
 import { AccountsettingsComponent } from './accountsettings/accountsettings.component';
 import { TotalaccountComponent } from './totalaccount/totalaccount.component';
+import { PlansComponent } from './plans/plans.component';
+// import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
     path: '', component: UserComponent, children: [
@@ -17,6 +19,7 @@ const routes: Routes = [
       { path: 'home', component: UserHomeComponent },
       { path: 'favorite', component: FavouritesComponent },
       { path: 'playlistschedule', component: PlaylistScheduleComponent },
+      { path: 'plan', component: PlansComponent },
       { path: 'schedule-details', component: ScheduleDetailComponent },
       { path: 'user-settings', component: AccountsettingsComponent },
       { path: 'playstream', component: PlaystreamComponent },

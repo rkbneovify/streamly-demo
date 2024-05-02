@@ -26,8 +26,8 @@ export class CrudService {
   putRequest(requestUrl:string,data:any){
     return this.http.put(`${this.baseUrl}/api/${requestUrl}`,data)
   }
-  deleteRequest(requestUrl:string){
-    return this.http.delete(`${this.baseUrl}/api/${requestUrl}`)
+  deleteRequest(requestUrl:string, headers?: any){
+    return this.http.delete(`${this.baseUrl}/api/${requestUrl}`,{ headers })
   }
 
   postRequest1(requestUrl:string,data:any){
