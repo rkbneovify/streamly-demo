@@ -109,7 +109,7 @@
     </div>
   </form>
 
-  <div class="account_details_container account_subscription_container mb-4">
+  <div class="account_details_container account_subscription_container mb-4" *ngIf="subscribed">
     <p class="account-heading mb-4">Subscription</p>
     <div class="accountdetails">
       <div class="acoount_user_name ">
@@ -161,7 +161,7 @@
     </div>
   </div>
 
-  <div class="account_details_container account_subscription_container">
+  <div class="account_details_container account_subscription_container" *ngIf="subscribed">
     <p class="account-heading mb-4">Card Details</p>
     <div class="accountdetails">
       <div class="acoount_user_name">
@@ -178,7 +178,7 @@
     </div>
   </div>
 
-  <div class="account_details_container mt-4 account_Invoices_container">
+  <div class="account_details_container mt-4 account_Invoices_container" *ngIf="subscribed">
     <p class="account-heading">Invoices</p>
     <div class="invoicesdetails_main">
       <div class="invoicesdetails invoicesdetail_heading">

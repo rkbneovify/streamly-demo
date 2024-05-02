@@ -76,7 +76,8 @@ export class LoginComponent implements OnInit {
               sessionid: res?.sessionid,
               timezone: res?.timezone,
               token_type: res?.token_type,
-              userrole: res?.userrole, 
+              userrole: res?.userrole,
+              subscribed:res?.subscribed
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
