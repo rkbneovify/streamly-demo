@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { RouterLink } from '@angular/router';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-remove-device',
   standalone: true,
-  imports: [NgFor,NgIf,RouterLink],
+  imports: [NgFor,NgIf,RouterLink,NgClass],
   templateUrl: './remove-device.component.html',
   styleUrl: './remove-device.component.scss',
 })
@@ -17,7 +18,7 @@ export class RemoveDeviceComponent implements OnInit {
   access_Token!:any;
   current_device:any;
   deviceId:Array<string>=[];
-  loading:boolean = false;
+  loading: { [key: string]: boolean } = {};
   constructor(private apiService: CrudService, private toastr: ToastrService) { }
 
   ngOnInit() {
@@ -40,12 +41,12 @@ export class RemoveDeviceComponent implements OnInit {
   }
 
   removedevice(id: string): void {
-    console.log('---device id ',id);
-    this.loading = true;
+    console.log('---device id loading',this.loading);
+    this.loading[id] = true;
     this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
       next: (res: any) => {
         if (res.response_code == 200) {
-          this.loading = false;
+          // this.loading[id] = false;
           this.toastr.success('Device removed successfully')
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
           this.response = this.connectedDevice;
@@ -68,36 +69,37 @@ export class RemoveDeviceComponent implements OnInit {
     }
     console.log('Device IDs:', this.deviceId);
   }
+
+
+  mutileLogout(){
+    if(this.deviceId.length >0){
+      this.removedevices(this.deviceId);
+    }
+  }
   
-  // mutileLogout(){
-  //   if(this.deviceId.length >0){
-  //     this.removedevices(this.deviceId);
-  //   }
-  // }
+  removedevices(id: any): void {
+    const userToken = localStorage.getItem('deviceInfo');
+    let headers;
+    if (userToken !== null) {
+        this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
+        const tokenData = this.access_Token?.access_token;
+        this.current_device = this.access_Token?.personaldeviceid;
+        headers = new HttpHeaders({
+          'Authorization': `Bearer ${tokenData}`,
+          'Accept': 'application/json'
+        });
+      }
+    this.apiService.postRequest('auth/multi-session-destroy', { 'id': id },headers).subscribe({
+      next: (res: any) => {
+        if (res.jwterror == 'no error') {
+          this.toastr.success('Devices removed successfully')
+          this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
+          this.response = this.connectedDevice;
+          localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
+        }
+      },
+      error: err =>{ this.toastr.error(err.error?.error); console.log(err)},
   
-  // removedevices(id: any): void {
-  //   const userToken = localStorage.getItem('deviceInfo');
-  //   let headers;
-  //   if (userToken !== null) {
-  //       this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
-  //       const tokenData = this.access_Token?.access_token;
-  //       this.current_device = this.access_Token?.personaldeviceid;
-  //       headers = new HttpHeaders({
-  //         'Authorization': `Bearer ${tokenData}`,
-  //         'Accept': 'application/json'
-  //       });
-  //     }
-  //   this.apiService.postRequest('auth/multi-session-destroy', { 'id': id },headers).subscribe({
-  //     next: (res: any) => {
-  //       if (res.jwterror == 'no error') {
-  //         this.toastr.success('Devices removed successfully')
-  //         this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
-  //         this.response = this.connectedDevice;
-  //         localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
-  //       }
-  //     },
-  //     error: err =>{ this.toastr.error(err.error?.error); console.log(err)},
-  
-  //   });
-  // }
+    });
+  }
 }

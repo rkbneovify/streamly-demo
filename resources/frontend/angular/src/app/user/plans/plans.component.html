@@ -1,0 +1,244 @@
+<main class="main-container">
+  <div class="plans_container">
+    <div class="plans_options">
+      <h1>Available Plans</h1>
+      <div class="plans_buttons">
+        <div
+          [ngClass]="{
+            plan_btn_1: true,
+            btn_avtive: selectTab == 'basicPlans'
+          }"
+          (click)="selectTab = 'basicPlans'"
+        >
+          Basic Plan
+        </div>
+        <div
+          [ngClass]="{
+            plan_btn_2: true,
+            btn_avtive: selectTab == 'otherPlans'
+          }"
+          (click)="selectTab = 'otherPlans'"
+        >
+          Other Plan
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="selectTab == 'basicPlans'"
+      [ngClass]="{ plans_categories: true }"
+    >
+      <!-- daily start -->
+      <div      
+        class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
+      >
+        <div class="col_2_gap d-flex pb-4">
+          <div>
+            <img src="../../../assets/dummy-img/daily_plan.svg" alt="" />
+          </div>
+          <div class="d-flex flex-column justify-content-between">
+            <h3>Daily</h3>
+            <p><span>$</span>4 <span>/ 1 day</span></p>
+          </div>
+        </div>
+
+        <div class="col_2_subblock d-flex flex-column gap-2">
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Trial days: 7 days</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Play on up to 5 devices at one time</p>
+          </div>
+          <!-- <div class="d-flex flex-nowrap">
+                <div>
+                  <img src="../../../assets/dummy-img/check.svg" alt="" />
+                </div>
+                <p>Play on any platform with one account</p>
+              </div>
+              <div class="d-flex flex-nowrap">
+                <div>
+                  <img src="../../../assets/dummy-img/check.svg" alt="" />
+                </div>
+                <p>No contracts cancel anytime</p>
+              </div> -->
+        </div>
+
+        <div class="res-step3-btn">
+          <button>Select Plan</button>
+        </div>
+      </div>
+      <!-- daily ends -->
+
+      <!-- mondthly start-->
+      <div      
+        class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
+      >
+        <div class="col_2_gap d-flex pb-4">
+          <div>
+            <img src="../../../assets/dummy-img/month_plan.svg" alt="" />
+          </div>
+          <div class="d-flex flex-column justify-content-between">
+            <h3>Monthly</h3>
+            <p><span>$</span>79 <span>/ 1 month</span></p>
+          </div>
+        </div>
+
+        <div class="col_2_subblock d-flex flex-column gap-2">
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Trial days: 7 days</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Play on up to 5 devices at one time</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Play on any platform with one account</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>No contracts cancel anytime</p>
+          </div>
+        </div>
+
+        <div class="res-step3-btn">
+          <button>Select Plan</button>
+        </div>
+      </div>
+      <!-- monthly ends -->
+
+      <!-- yearly start -->
+      <div
+        class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
+      >
+        <div class="col_2_gap d-flex pb-4">
+          <div>
+            <img src="../../../assets/dummy-img/year_plan.svg" alt="" />
+          </div>
+          <div class="d-flex flex-column justify-content-between">
+            <h3>Yearly</h3>
+            <p><span>$</span>650.98 <span>/ 1 yearly</span></p>
+          </div>
+        </div>
+
+        <div class="col_2_subblock d-flex flex-column gap-2">
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Trial days: 7 days</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Play on up to 10 devices at one time</p>
+          </div>
+          <!-- <div class="d-flex flex-nowrap">
+                  <div>
+                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                  </div>
+                  <p>Play on any platform with one account</p>
+                </div>
+                <div class="d-flex flex-nowrap">
+                  <div>
+                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                  </div>
+                  <p>No contracts cancel anytime</p>
+                </div> -->
+        </div>
+
+        <div class="res-step3-btn">
+          <button>Select Plan</button>
+        </div>
+      </div>
+      <!-- yearly ends -->
+    </div>
+
+    <div *ngIf="selectTab == 'otherPlans'" class="plans_categories plans_other">
+      <!-- daily start -->
+      <div class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
+        <div class="col_2_gap pb-4">
+          <div class="d-flex flex-column justify-content-between">
+            <h3 class="text-center my-3">Tiers 1 Months</h3>
+            <div class="other_plan_tier row my-2">
+              <div class="col-4 text-nowrap">Quantity</div>
+              <div class="col-4 text-nowrap">Price per unit</div>
+              <div class="col-4 text-nowrap">Flat Amount</div>
+            </div>
+            <div class="other_plan_tier row my-2">
+              <div class="col-4 text-nowrap">
+                <div>For the first</div>
+                <div class="ps-3">1 to 10</div>
+              </div>
+              <div class="col-4 text-nowrap">$ 20</div>
+              <div class="col-4 text-nowrap">$ 0.00</div>
+            </div>
+            <div class="other_plan_tier row my-2">
+              <div class="col-4 text-nowrap">
+                <div>For the next</div>
+                <div class="ps-3">11 to 15</div>
+              </div>
+              <div class="col-4 text-nowrap">$ 15</div>
+              <div class="col-4 text-nowrap">$ 0.00</div>
+            </div>
+            <div class="other_plan_tier row my-2">
+              <div class="col-4 text-nowrap">
+                <div>For the rest</div>
+              </div>
+              <div class="col-4 text-nowrap">$ 10</div>
+              <div class="col-4 text-nowrap">$ 0.00</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col_2_subblock d-flex flex-column gap-2">
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Trial days: 7 days</p>
+          </div>
+          <div class="d-flex flex-nowrap">
+            <div>
+              <img src="../../../assets/dummy-img/check.svg" alt="" />
+            </div>
+            <p>Play on up to 5 devices at one time</p>
+          </div>
+          <!-- <div class="d-flex flex-nowrap">
+                <div>
+                  <img src="../../../assets/dummy-img/check.svg" alt="" />
+                </div>
+                <p>Play on any platform with one account</p>
+              </div>
+              <div class="d-flex flex-nowrap">
+                <div>
+                  <img src="../../../assets/dummy-img/check.svg" alt="" />
+                </div>
+                <p>No contracts cancel anytime</p>
+              </div> -->
+        </div>
+
+        <div class="res-step3-btn">
+          <button>Select Plan</button>
+        </div>
+      </div>
+      <!-- daily ends -->
+    </div>
+  </div>
+</main>

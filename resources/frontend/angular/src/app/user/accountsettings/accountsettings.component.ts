@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from 'express';
+import {  Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 
@@ -42,7 +42,8 @@ export class AccountsettingsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private crud: CrudService,
-    private ts: ToastrService
+    private ts: ToastrService, 
+    private router: Router
   ) {
     this.updateuserDetatils = this.fb.group({
       fullname: ['', Validators.required],
@@ -198,5 +199,24 @@ export class AccountsettingsComponent implements OnInit {
       Authorization: `Bearer ${tokenData}`,
       Accept: 'application/json',
     });
+  }
+
+
+
+  deleteSub(): void {
+    this.crud.deleteRequest('cancel-subscription/616',this.getAuthHeaders()).subscribe({
+      next: (res: any) => {
+        if (res.response_code == 200) {
+          this.router.navigate(['user/plan']);
+          this.ts.success('subscription cancel successfully');
+        }
+      },
+      error: err => this.ts.error(err.error?.error)
+
+    });
+  }
+
+  showPopConf(){
+    document.getElementById('btnShowPopConf').click();
   }
 }
