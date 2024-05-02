@@ -49,6 +49,7 @@ Route::get('/stripe/plans', 'HomeController@getAllPlans');
 Route::get('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicPlan');
 Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getTierPlan');
 Route::post('validate-coupon', 'Api\User\StripeController@validateCoupon');
+Route::delete('cancel-subscription/{id}', 'Api\User\StripeController@destroy')->middleware(['jwt.verify']);
 
 /** Angular Frontend APIs code ends here */
 
@@ -138,7 +139,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
 
     /** Channel SLider API */
-    Route::get('channel-sliders','Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify']);
+    Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify']);
+    Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 });
 
 // Superadmin Routes
