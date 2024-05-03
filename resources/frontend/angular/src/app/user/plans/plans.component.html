@@ -29,7 +29,8 @@
       [ngClass]="{ plans_categories: true }"
     >
       <!-- daily start -->
-      <div      
+      <div
+      *ngFor="let plan of all_Plans[0]"     
         class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
       >
         <div class="col_2_gap d-flex pb-4">
@@ -75,8 +76,10 @@
       </div>
       <!-- daily ends -->
 
+
       <!-- mondthly start-->
-      <div      
+
+      <!-- <div      
         class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
       >
         <div class="col_2_gap d-flex pb-4">
@@ -114,16 +117,18 @@
             </div>
             <p>No contracts cancel anytime</p>
           </div>
-        </div>
+        </div> -->
 
-        <div class="res-step3-btn">
+        <!-- <div class="res-step3-btn">
           <button>Select Plan</button>
         </div>
-      </div>
+      </div> -->
+
       <!-- monthly ends -->
 
       <!-- yearly start -->
-      <div
+
+      <!-- <div
         class="col_2_s_3 my-auto d-flex flex-column justify-content-between"
       >
         <div class="col_2_gap d-flex pb-4">
@@ -148,7 +153,7 @@
               <img src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p>Play on up to 10 devices at one time</p>
-          </div>
+          </div> -->
           <!-- <div class="d-flex flex-nowrap">
                   <div>
                     <img src="../../../assets/dummy-img/check.svg" alt="" />
@@ -161,13 +166,15 @@
                   </div>
                   <p>No contracts cancel anytime</p>
                 </div> -->
-        </div>
+        <!-- </div> -->
 
-        <div class="res-step3-btn">
+        <!-- <div class="res-step3-btn">
           <button>Select Plan</button>
         </div>
-      </div>
+      </div> -->
+      
       <!-- yearly ends -->
+
     </div>
 
     <div *ngIf="selectTab == 'otherPlans'" class="plans_categories plans_other">
@@ -240,5 +247,6 @@
       </div>
       <!-- daily ends -->
     </div>
+    
   </div>
 </main>
