@@ -50,6 +50,8 @@ Route::get('get-basic-plan/{stripeplanid}', 'Api\User\StripeController@getBasicP
 Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getTierPlan');
 Route::post('validate-coupon', 'Api\User\StripeController@validateCoupon');
 Route::delete('cancel-subscription/{id}', 'Api\User\StripeController@destroy')->middleware(['jwt.verify']);
+Route::post('subscription-payment', 'Api\User\StripeController@afterLoginSubscriptionPayment')->middleware(['jwt.verify']);
+
 
 /** Angular Frontend APIs code ends here */
 
