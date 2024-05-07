@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EmailOtp;
 use Illuminate\Http\Request;
 use App\Models\FrontendText;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Stripe\Coupon;
@@ -17,7 +18,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
-use Stripe\Customer;
+use Stripe\Customer as Customer;
 use Stripe\PaymentMethod;
 use Stripe\Subscription;
 use App\SessionTable;
@@ -195,6 +196,7 @@ class StripeController extends Controller
             $user->mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
             $user->city = $request->city;
             $user->state = $request->state;
+            $user->country = $request->country;
             $user->stripe_id = $customer->id;
             $user->card_brand = $request->card_brand;
             $user->card_last_four = $request->card_last_four;
@@ -283,7 +285,6 @@ class StripeController extends Controller
 
     private function withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod)
     {
-
         //check for trial days
         // Create subscription
         if (!empty($trial_days)) {
@@ -364,6 +365,7 @@ class StripeController extends Controller
 
         if (!$userinfo->subscribed('main')) {
             $plan = (object) ['amount' => '0'];
+            $invoices = '';
         } else {
             $stripe_plan = $subscription->stripe_plan;
 
@@ -402,16 +404,12 @@ class StripeController extends Controller
                 // die;
                 $renewalDatestripe = json_decode($response);
                 curl_close($curl);
-                $renewaldatetime = date('Y-m-d H:i:s', $renewalDatestripe->next_payment_attempt) ?? 'No upcoming invoices';
+                $renewaldatetime = property_exists($renewalDatestripe, 'next_payment_attempt') ? date('Y-m-d H:i:s', $renewalDatestripe->next_payment_attempt) : 'No upcoming invoices';
                 // $renewaldatetime = 'No upcoming invoices';
             }
         } else {
             $renewaldatetime = '';
         }
-        // print_r($allSession);
-        // die;
-        // Populate response
-        // $response_to_send['allSession'] = $allSession->toArray();
         $response_to_send['subscription'] = $subscription;
         $response_to_send['plan'] = $plan;
         $response_to_send['userinfo'] = $userinfo;
@@ -432,6 +430,156 @@ class StripeController extends Controller
             return response()->json(['message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
             return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function afterLoginSubscriptionPayment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'stripeToken' => 'required',
+            'trial_days' => 'required',
+            'plan_id' => 'required',
+            'quantity' => 'required',
+            'line1' => 'required',
+            'line2' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'country' => 'required',
+            'card_brand' => 'required',
+            'card_last_four' => 'required',
+            'zip_code' => ['required', 'regex:/^[0-9]{3,7}$/', 'exists:zipcodes,zipcode,status,1'],
+        ], ['zip_code.exists' => 'Unfortunately, the service is not yet available for the submitted zip code.']);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            try {
+                $trial_days = $request->trial_days;
+                $StripeplanId = $request->plan_id;
+                $quantity = $request->quantity ?? 1;
+
+                // 1. Create Payment Method
+                $paymentMethod = PaymentMethod::create([
+                    'type' => 'card',
+                    'card' => [
+                        'token' => $request->stripeToken,
+                    ],
+                ]);
+                // fetch user
+                $user = JWTAuth::user();
+                // dd($user);
+                $customer = $this->updateStripeCustomer($request, $paymentMethod, $user->stripe_id);
+
+                $user->mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
+                $user->city = $request->city;
+                $user->state = $request->state;
+                $user->country = $request->country;
+                $user->stripe_id = $customer->id;
+                $user->card_brand = $request->card_brand;
+                $user->card_last_four = $request->card_last_four;
+
+                if ($user->save()) {
+                    if ($user->subscribed('main') && !$user->subscribedToPlan($StripeplanId, 'main')) {
+                        // Swap subscription if different plan
+                        $user->subscription('main')->quantity($quantity)->swap($StripeplanId);
+                    } else {
+                        if ($coupon = $request->get('coupon')) {
+                            $subscription_details = $this->withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                        } else {
+                            $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                        }
+                    }
+                    $this->updateUserRoleBasedOnSubscription($user, $request);
+
+                    // Perform additional tasks (e.g., checking hotel rooms)
+                    CheckPreviousHotelRooms($quantity, $user->id);
+
+                    // Return a success response
+                    return response()->json([
+                        'message' => 'Payment successful !',
+                        'subscription_details' => $subscription_details
+                    ]);
+                } else {
+                    return response()->json(['error' => 'Something Went Wrong.'], 500);
+                }
+            } catch (\Stripe\Exception\CardException $e) {
+                // Handle specific Stripe exceptions
+                return response()->json(['error' => $e->getMessage()], 400);
+            } catch (\Exception $e) {
+                // Handle generic exceptions
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
+        }
+    }
+
+    private function updateStripeCustomer($request, $paymentMethod, $customerId)
+    {
+        // Attach the payment method to the customer if it's not already attached
+        $paymentMethodId = $paymentMethod->id; // Replace with the actual payment method ID
+        $customer = \Stripe\Customer::retrieve($customerId);
+        $paymentMethods = $customer->payment_methods;
+
+        if ($paymentMethods) {
+            $attached = false;
+            foreach ($paymentMethods as $paymentMethod) {
+                if ($paymentMethod->id === $paymentMethodId) {
+                    $attached = true;
+                    break;
+                }
+            }
+            if (!$attached) {
+                $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+                $paymentMethod->attach(['customer' => $customerId]);
+            }
+        } else {
+            // If there are no payment methods yet, simply attach the provided one
+            $paymentMethod = \Stripe\PaymentMethod::retrieve($paymentMethodId);
+            $paymentMethod->attach(['customer' => $customerId]);
+        }
+        // Update customer details
+        $updatedCustomer = Customer::update(
+            $customerId,
+            [
+                'name' => $request->name,
+                'invoice_settings' => [
+                    'default_payment_method' => $paymentMethod->id
+                ],
+                'address' => [
+                    'line1' => $request->line1,
+                    'line2' => $request->line2,
+                    'city' => $request->city,
+                    'state' => $request->state,
+                    'country' => $request->country,
+                    'postal_code' => $request->zip_code
+                ]
+            ]
+        );
+        return $updatedCustomer;
+    }
+
+    public function updateUserRoleBasedOnSubscription($user, $request)
+    {
+        if ($request->tier == 'tiered') {
+            $tieruserrole = Role::where('name', 'tieruser')->first();
+
+            $userRole =  $user->roles->first()->display_name;
+
+            if ($userRole !== 'admin' || 'superadmin') {
+
+                $user->roles()->sync([$tieruserrole->id]);
+            }
+        } else {
+            $tieruserrole = Role::where('name', 'user')->first();
+
+            $userRole =  $user->roles->first()->display_name;
+
+            if ($userRole !== 'admin' || 'superadmin') {
+
+                $user->roles()->sync([$tieruserrole->id]);
+            }
         }
     }
 }
