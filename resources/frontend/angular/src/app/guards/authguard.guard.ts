@@ -26,7 +26,11 @@ export const authguardGuard: CanActivateFn = (route, state) => {
       console.log('subscription false, else block executed');
       const currentRoute = state?.url;
       console.log('current route=>',currentRoute,'====>',currentRoute?.includes('user-settings') ,'state = >',state,'route=>',route);
-      if (currentRoute?.includes('user-settings') || currentRoute?.includes('user/plan') || currentRoute?.includes('user/subscription-expired')) {
+      if (currentRoute?.includes('user-settings') || currentRoute?.includes('user/plan') || currentRoute?.includes('user/subscription-expired')
+      || currentRoute?.includes('user/connected-device')
+      || currentRoute?.includes('user/downloadapp')
+      || currentRoute?.includes('user/payment-subscription')
+      ) {
         console.log('if current route matches');
         return true;
       } else {
