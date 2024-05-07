@@ -84,7 +84,7 @@ export class AccountsettingsComponent implements OnInit {
       this.usersdetail?.zipcode
     );
 
-    this.subscribed = this.usersdetail?.subscribed;
+    this.subscribed = this.deviceInfo?.subscribed;
   }
 
   toggleEditMode() {
@@ -209,10 +209,8 @@ export class AccountsettingsComponent implements OnInit {
   deleteSub(): void {
     this.crud.deleteRequest('cancel-subscription/616',this.getAuthHeaders()).subscribe({
       next: (res: any) => {
-        if (res.response_code == 200) {
           this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
-        }
       },
       error: err => this.ts.error(err.error?.error)
 

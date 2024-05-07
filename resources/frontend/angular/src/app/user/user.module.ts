@@ -13,6 +13,7 @@ import { TotalaccountComponent } from './totalaccount/totalaccount.component';
 import { PlansComponent } from './plans/plans.component';
 import { authguardGuard } from '../guards/authguard.guard';
 import { SubscriptionExpiredComponent } from './subscription-expired/subscription-expired.component';
+import { SubPaymentComponent } from './sub-payment/sub-payment.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -28,6 +29,8 @@ const routes: Routes = [
       { path: 'downloadapp', component: DownloadappComponent,canActivate: [authguardGuard]  },
       { path: 'connected-device', component: TotalaccountComponent,canActivate: [authguardGuard]  },
       { path: 'subscription-expired', component: SubscriptionExpiredComponent,canActivate: [authguardGuard]  },
+      { path: 'payment-subscription', component: SubPaymentComponent,canActivate: [authguardGuard]  },
+      
 
     ]
   }

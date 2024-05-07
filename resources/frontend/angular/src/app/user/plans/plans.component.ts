@@ -1,11 +1,12 @@
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, KeyValuePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plans',
   standalone: true,
-  imports: [NgIf,NgClass,CommonModule,NgFor],
+  imports: [NgIf,NgClass,CommonModule,NgFor,KeyValuePipe],
   templateUrl: './plans.component.html',
   styleUrl: './plans.component.scss'
 })
@@ -14,7 +15,7 @@ selectTab:string ='basicPlans';
 all_Plans:any;
 basic_plans:any;
 Tiered_plans:any; 
-constructor(private crud:CrudService){}
+constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
   this.getAllThePlans();
@@ -36,13 +37,26 @@ getAllThePlans(): void {
         if (plan.type === 'per_unit') {
           console.log(plan, '=====plan in per');
           this.basic_plans.push(plan); // Push plan to basic_plans array
+
         } else if (plan.type === 'tiered') {
-          this.Tiered_plans = plan; // Assign plan to Tiered_plans (assuming there's only one tiered plan)
+
+          this.Tiered_plans = [plan]; // Assign plan to Tiered_plans (assuming there's only one tiered plan)
+          console.log(this.Tiered_plans);
         }
       });
     },
     error: (err) => console.log('Plans error --> ', err),
   });
+}
+selectedPlanType:string='';
+
+selectedplanData(planId: any,planType:any) {
+
+  if(planId && planType){
+    localStorage.setItem('planType',planType);
+    localStorage.setItem('planId',planId);
+    this.router.navigate(['/user/payment-subscription'])
+  }
 }
 
 }

@@ -897,13 +897,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   validateCoupon() {
-    // let body = {
-    //   message: 'Coupon is valid! & 15% for (1 months)',
-    //   amountoff: 0,
-    //   percentoff: 15,
-    // };
-
-    // if (this.paymentFormDetails.valid) {
     const coupon = this.couponFormControl.value;
     if(coupon){
       this.crud.postRequest('validate-coupon', { coupon }).subscribe({
@@ -1056,7 +1049,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     console.log('========paymentData==========>', formData);
   }
 
-  // payment code by ashish
+
 
   stripe: any;
   elements: any;
@@ -1147,6 +1140,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.onError(error);
     }
   }
+
   onSuccess(token: any) {}
   onError(error: any) {
     if (error.message) {
