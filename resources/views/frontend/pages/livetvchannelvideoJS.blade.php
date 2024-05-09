@@ -324,29 +324,26 @@
 
             player.on('ready', function() {
                 console.log("playr ready");
-                var show_on_start = true; < !-- // Set true to show overlay banner before video start-->
+                var show_on_start = true; // Set true to show overlay banner before video start-->
 
-                <
-                !-- // Find overlay elements-->
+                // Find overlay elements-->
                 var parent = player.el().parentNode;
                 var closeBtn = parent.querySelector('.over-close');
-                var overlay = parent.querySelector('.div-over'); <
-                !-- // Close overlay and play media file on close button click-->
+                var overlay = parent.querySelector(
+                    '.div-over'); // Close overlay and play media file on close button click-->
                 closeBtn.addEventListener('click', function(e) {
                     overlay.style.display = 'none';
                     player.play();
                 }, false);
 
-                <
-                !-- // Show overlay on Pause event-->
+                // Show overlay on Pause event-->
                 this.on("pause", function() {
                     if (!this.seeking() && this.paused()) {
                         overlay.style.display = 'block';
                     }
                 });
 
-                <
-                !-- // Hide overlay on Play event-->
+                // Hide overlay on Play event-->
                 this.on('play', function(e) {
                     overlay.style.display = 'none';
                 });
@@ -668,11 +665,11 @@
         }
 
         /* .owl-carousel .owl-item img {
-               display: block;
-               width: auto;
-               margin: 0 auto;
-               height: 1.5rem;
-              } */
+                                   display: block;
+                                   width: auto;
+                                   margin: 0 auto;
+                                   height: 1.5rem;
+                                  } */
 
         .channelogosame {
 
@@ -1091,24 +1088,24 @@ overflow-y: scroll;">
                 </div>
                 <!-- <div class="row">
 
-                 <div class="offset-md-3 col-xs-6 video-container">
-                  <video id="example_video_1" class="video-js vjs-default-skin"
-                  controls preload="auto" width="640" height="264"
-                  poster="//vjs.zencdn.net/v/oceans.png"
-                  data-setup='{"example_option":true}'>
-                  <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
-                  </video>
+                                     <div class="offset-md-3 col-xs-6 video-container">
+                                      <video id="example_video_1" class="video-js vjs-default-skin"
+                                      controls preload="auto" width="640" height="264"
+                                      poster="//vjs.zencdn.net/v/oceans.png"
+                                      data-setup='{"example_option":true}'>
+                                      <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+                                      </video>
 
-                 </div>
-                 <div class="col-xs-3">
-                  <div>
-                   <p>Times Now Global</p>
-                   <p>News Bulletin</p>
-                   <p>04:00 - 05:00PM</p>
-                   <p>Genre : <a href="javascript:void(0)">News</a></p>
-                  </div>
-                 </div>
-                </div> -->
+                                     </div>
+                                     <div class="col-xs-3">
+                                      <div>
+                                       <p>Times Now Global</p>
+                                       <p>News Bulletin</p>
+                                       <p>04:00 - 05:00PM</p>
+                                       <p>Genre : <a href="javascript:void(0)">News</a></p>
+                                      </div>
+                                     </div>
+                                    </div> -->
             </div>
         </div>
 
@@ -1170,13 +1167,13 @@ overflow-y: scroll;">
         </div>
         <!-- stream inturpt popup -->
         <!-- <div id="WarningShow" class="Warning">
-                <span class="cancel-icon" onclick="functionClose()">×</span>
-                Due to some technical reason, channel get interrupted.<br>Kindly try again later
-                <div class="WarningButton">
-               <button id="warningBtn" type="button" onclick="functionBack()">Back</button>
-               <button id="warningBtn" type="button" onclick="functionRefresh()">Try Again</button>
-               </div>
-                </div> -->
+                                    <span class="cancel-icon" onclick="functionClose()">×</span>
+                                    Due to some technical reason, channel get interrupted.<br>Kindly try again later
+                                    <div class="WarningButton">
+                                   <button id="warningBtn" type="button" onclick="functionBack()">Back</button>
+                                   <button id="warningBtn" type="button" onclick="functionRefresh()">Try Again</button>
+                                   </div>
+                                    </div> -->
         <!-- stream inturpt popup end-->
     </section>
     <script>
