@@ -1,0 +1,20 @@
+<div class="container-faq">
+  <div class="main-faq">
+    <div class="main-term-text my-2">
+      <h3>Frequently Asked Questions</h3>
+    </div>
+    <div class="container-quesAns mb-3" *ngFor="let faqItem of faqItems; let i = index">
+      <div class="container-question d-flex justify-content-between px-4" (click)="toggleAnswer(i)">
+        <p>{{faqItem.question}}</p>
+        <div>
+          <img [class.rotateDonw]="faqItem.expanded" src="../../assets/dummy-img/chevron-down.svg" alt="" />
+        </div>
+      </div>
+      <div class="container-answer px-4 mt-2" [class.expanded]="faqItem.expanded">
+        <p>
+          {{faqItem.answer}}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

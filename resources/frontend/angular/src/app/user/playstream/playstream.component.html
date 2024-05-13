@@ -1,12 +1,45 @@
 <div class="row play_container_top">
     <div class="col-lg-8 col-12 playstream_1">
-        <video height="400px" width="400px" class="video-js vjs-default-skin" #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
-        type="application/dash+xml"
-        >
-        <source src="media/intro.mp4" type="video/mp4"/>
-        <source src="media/intro.ogv" type="video/ogg"/>
-        <source src="media/intro.webm" type="video/webm"/>
-    </video>
+        
+        <div class="dash-video-player ">
+            <div class="videoContainer" id="videoContainer">
+        
+                <video data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
+                type="application/dash+xml">
+                    <source src="media/intro.mp4" type="video/mp4"/>
+                    <source src="media/intro.ogv" type="video/ogg"/>
+                    <source src="media/intro.webm" type="video/webm"/>  
+                </video>
+
+                <div id="videoController" class="video-controller unselectable">
+                    <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
+                        <span id="iconPlayPause" class="icon-play"></span>
+                    </div>
+                    <span id="videoTime" class="time-display">00:00:00</span>
+                    <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
+                        <span class="icon-fullscreen-enter"></span>
+                    </div>
+                    <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
+                        <span class="icon-bitrate"></span>
+                    </div>
+                    <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01"/>
+                    <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
+                        <span id="iconMute" class="icon-mute-off"></span>
+                    </div>
+                    <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
+                        <span class="icon-tracks"></span>
+                    </div>
+                    <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
+                        <span class="icon-caption"></span>
+                    </div>
+                    <span id="videoDuration" class="duration-display">00:00:00</span>
+                    <div class="seekContainer">
+                        <input type="range" id="seekbar" value="0" class="seekbar" min="0" step="0.01"/>
+                    </div>
+                </div>
+            </div>  
+        </div>
+
     </div>
     <div class="col-lg-4 col-12 playstream_2">
         <h1>How the universe works</h1>
