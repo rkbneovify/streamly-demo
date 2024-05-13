@@ -38,7 +38,10 @@ export class AccountsettingsComponent implements OnInit {
   showTiredPlan:boolean=false;
   loading:boolean=false;
   subscribed:boolean;
-
+  planInterval:any;
+  interval_count:any;
+  qunantity:any;
+  qunantity_t:any;
 
   constructor(
     private fb: FormBuilder,
@@ -174,8 +177,10 @@ export class AccountsettingsComponent implements OnInit {
         const plan1st = res?.plan.nickname;
         const plan2nd = res?.plan?.currency;
         const plan3rd = res?.plan?.interval;
+        this.planInterval = plan3rd;
+        this.interval_count = res?.plan?.interval_count;
 
-        planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(1, 3):''} ${plan2nd?plan2nd.substring(1,3):''}`;        
+        planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;        
         
         this.billingScheme = res.plan.billing_scheme;
         this.invoices = res?.invoices.data;
@@ -184,9 +189,9 @@ export class AccountsettingsComponent implements OnInit {
         this.planName = planFullName;
         this.cardDetails = res?.userinfo;
         this.tiredPlansDetails = res.plan.tiers;
+        this.qunantity = res.subscription.quantity
 
-
-
+        this.get_price(this.qunantity,this.tiredPlansDetails)
         console.log(res,'Acccccc');
       },
       error:(err)=>console.log(err)
@@ -202,6 +207,42 @@ export class AccountsettingsComponent implements OnInit {
       Authorization: `Bearer ${tokenData}`,
       Accept: 'application/json',
     });
+  }
+
+total_price:any = 0;
+
+
+  get_price(quant:any,value:any){
+    console.log(quant,value,'============>')
+    const amount10 =
+    +value[0].unit_amount / 100;
+    const amount18 =
+    +value[1].unit_amount / 100;
+    const amount16 =
+    +value[2].unit_amount / 100;
+    
+    
+    const upto10 =
+    value[0].up_to;
+    const upto18 =
+    value[1].up_to;
+    
+    console.log('bedirelkjsdfl==========',amount10,amount16,amount18);
+    if(value){
+      if(quant <=upto10){
+    console.log('bedirelkjsdfl========== 1000000')
+
+        this.total_price = quant*amount10
+      }else if(quant <=upto18 && quant >upto10){
+        this.total_price = quant*amount18
+    console.log('bedirelkjsdfl========== 18000000')
+
+      }else if(quant >upto18){
+        this.total_price = quant*amount16
+    console.log('bedirelkjsdfl========== 16000000')
+
+      }
+    }
   }
 
 
