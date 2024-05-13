@@ -5,6 +5,10 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ScheduleChartComponent } from './schedule-chart/schedule-chart.component';
 import { PaymentComponent } from './payment/payment.component';
 import { authguardGuard } from './guards/authguard.guard';
+import { HelpAndSupportComponent } from './help-and-support/help-and-support.component';
+import { TermConditionComponent } from './term-condition/term-condition.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { FaqComponent } from './faq/faq.component';
 
 export const routes: Routes = [
   {path:'',component:LandingPageComponent},
@@ -13,6 +17,12 @@ export const routes: Routes = [
   {path:'payment',component:PaymentComponent},
   {path:'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
   {path:'user', canActivate: [authguardGuard], loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+  {path:'help-and-support',component:HelpAndSupportComponent},
+  {path:'term-condition',component:TermConditionComponent},
+  {path:'privacy-policy',component:PrivacyPolicyComponent},
+  {path:'faq',component:FaqComponent},
+
+
   {path:'**',component:PageNotFoundComponent},
 
 ];
