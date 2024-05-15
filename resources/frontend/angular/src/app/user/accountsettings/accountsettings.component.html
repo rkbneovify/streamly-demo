@@ -123,7 +123,7 @@
           <div class="pointer"  (click)="showTiredPlan = !showTiredPlan">
             <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
               src="../../../assets/dummy-img/chevron-down.svg" alt="" />
-            <div class="text-center tiers def-color">Tiers 1 months</div>
+            <div class="text-center tiers def-color">Tiers {{interval_count}} {{planInterval}}</div>
           </div>
 
           <div [ngClass]="{'tiers_plan_dec':true,'h-auto-min':billingScheme == 'tiered'}" *ngIf="showTiredPlan">
@@ -145,6 +145,11 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="acoount_user_email my-4">
+        <label>Current Pack</label>
+        <p>{{billingScheme}} with {{qunantity}} quantity ${{total_price}} per {{interval_count}} {{planInterval}}</p>
       </div>
       <!-- Silver 34fn sd  -->
       <div class="acoount_user_email my-4">
