@@ -22,7 +22,7 @@ class CreateChannelsTable extends Migration
             $table->string('url', 225)->nullable();
             $table->string('dash_url', 255)->nullable();
             $table->string('smooth_url', 255)->nullable();
-            $table->integer('genre_id')->index()->nullable();
+            $table->unsignedBigInteger('genre_id')->index()->nullable();
             $table->foreign('genre_id')->references('id')->on('genre')->onDelete('set null');
             $table->string('genres', 200)->nullable()->comment('1=News,2=Comedy,3=Movies,4=Family,5=Kids,6=Sports');
             $table->string('image', 255)->nullable();
