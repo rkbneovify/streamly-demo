@@ -26,7 +26,7 @@ class CreateNewGcChannelsTable extends Migration
             $table->string('genres', 200)->nullable()->comment('1=News,2=Comedy,3=Movies,4=Family,5=Kids,6=Sports');
             $table->string('image', 255)->nullable();
             $table->tinyInteger('status')->default(1);
-            $table->json('zip_code', 255)->default('["ALL"]');
+            $table->text('zip_code', 255)->default('["ALL"]');
             $table->timestamps();
         });
     }
