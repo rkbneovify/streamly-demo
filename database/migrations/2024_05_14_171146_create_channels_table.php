@@ -39,9 +39,9 @@ class CreateChannelsTable extends Migration
      */
     public function down()
     {
-        Schema::table('channels', function (Blueprint $table) {
-            $table->dropForeign(['genre_id']);
-        });
+        // Schema::table('channels', function (Blueprint $table) {
+        //     $table->dropForeign(['genre_id']);
+        // });
 
         Schema::dropIfExists('channels');
     }
