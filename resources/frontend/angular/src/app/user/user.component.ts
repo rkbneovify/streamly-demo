@@ -18,6 +18,7 @@ export class UserComponent {
   access_Token!: any;
   isExpanded: boolean = false;
   loading: boolean = false;
+  showSubMenu:boolean=false;
 
   constructor(
     private crud: CrudService,
@@ -114,5 +115,16 @@ export class UserComponent {
     }else{
       this.loading = false;
     }
+  }
+
+  changeTab(){
+    this.activeTab='allChannel';
+    this.showSubMenu = true;
+  }
+
+  backTohome(){
+    this.showSubMenu = false;
+    this.router.navigateByUrl('/user')
+    this.activeTab='home';
   }
 }

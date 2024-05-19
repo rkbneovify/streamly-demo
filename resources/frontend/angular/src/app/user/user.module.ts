@@ -14,6 +14,10 @@ import { PlansComponent } from './plans/plans.component';
 import { authguardGuard } from '../guards/authguard.guard';
 import { SubscriptionExpiredComponent } from './subscription-expired/subscription-expired.component';
 import { SubPaymentComponent } from './sub-payment/sub-payment.component';
+import { AllChannelComponent } from './channels/all-channel/all-channel.component';
+import { NewsComponent } from './channels/news/news.component';
+import { FamilyComponent } from './channels/family/family.component';
+import { ComedyComponent } from './channels/comedy/comedy.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -30,6 +34,12 @@ const routes: Routes = [
       { path: 'connected-device', component: TotalaccountComponent,canActivate: [authguardGuard]  },
       { path: 'subscription-expired', component: SubscriptionExpiredComponent,canActivate: [authguardGuard]  },
       { path: 'payment-subscription', component: SubPaymentComponent,canActivate: [authguardGuard]  },
+      { path: 'channel/all', component: AllChannelComponent },
+      { path: 'channel/news', component: NewsComponent },
+      { path: 'channel/family', component: FamilyComponent },
+      { path: 'channel/comedy', component: ComedyComponent },
+
+
       
 
     ]
