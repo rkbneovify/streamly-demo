@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,26 @@ export class CrudService {
   
   getRequest(requestUrl:string,headers?:any){
     return this.http.get(`${this.baseUrl}/api/${requestUrl}`,{headers});
+  }
+  getRequest2(requestUrl: string, typeUrl: string, data?: any, headers?: any): Observable<any> {
+    // Initialize an empty options object
+    let requestOptions: any = {};
+
+    // Set headers if provided
+    if (headers) {
+      requestOptions.headers = new HttpHeaders(headers);
+    }
+
+    // Construct the query parameters
+    let params = {};
+    if (data) {
+      params = { ...data, typeurl: typeUrl };
+    } else {
+      params = { typeurl: typeUrl };
+    }
+
+    // Perform the HTTP GET request
+    return this.http.get(`${this.baseUrl}/api/${requestUrl}`, { params, ...requestOptions });
   }
   // postRequest(requestUrl:string,data:any){
   //   return this.http.post(`${this.baseUrl}/api/${requestUrl}`,data)
