@@ -15,8 +15,7 @@ class CreateChannelSliderTable extends Migration
     {
         Schema::create('channel_slider', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // $table->id();
-            $table->integer('channel_id');
+            $table->unsignedBigInteger('channel_id');
             $table->string('program_name')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
