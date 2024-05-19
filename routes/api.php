@@ -51,7 +51,7 @@ Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getTierPla
 Route::post('validate-coupon', 'Api\User\StripeController@validateCoupon');
 Route::delete('cancel-subscription/{id}', 'Api\User\StripeController@destroy')->middleware(['jwt.verify']);
 Route::post('subscription-payment', 'Api\User\StripeController@afterLoginSubscriptionPayment')->middleware(['jwt.verify']);
-
+Route::get('fetchGracenoteData', 'Api\User\NewGracenoteController@fetchGracenoteData');
 
 /** Angular Frontend APIs code ends here */
 
@@ -72,7 +72,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('force-change-password', 'Auth\UserController@forceChangePassword')->middleware(['jwt.verify']);
     Route::get('setting-details', 'Api\User\StripeController@showUserDetails')->middleware(['jwt.verify']);
 
-
+    Route::get('channelListWithGracenote', 'Api\User\NewGracenoteController@channelListWithGracenote')->middleware(['jwt.verify']);;
 
 
     /** Angular Frontend APIs code ends here */
