@@ -1,8 +1,15 @@
 <div class="container-pricacy">
     <div class="main-pricacy">
-      <div class="main-term-text">
-        <h3>Privacy & Policy</h3>
-        <p class="my-3">
+      <div class="main-term-text mt-3 position-relative">
+        <div class="position-absolute d-flex back-btn_go" (click)="goBack()">
+            <div>
+                <img src="../../assets/dummy-img/chevron-left.svg" alt="">
+            </div>
+            Go Back
+        </div>
+
+        <h3>{{title}}</h3>
+        <!-- <p class="my-3">
           Lorem ipsum dolor sit amet consectetur. Quisque enim facilisi elementum dictum vitae ornare. Posuere nisi interdum eget magna ullamcorper id. Auctor purus egestas at tincidunt euismod dolor lectus sit rhoncus. Integer fames massa pharetra cursus dictum nisl senectus. Sed ipsum hac pellentesque posuere pretium. Consectetur semper aenean at amet pellentesque ornare sodales. Id fermentum lorem dignissim urna pharetra.
           </p>
           <p class="my-3">
@@ -22,7 +29,13 @@
           </p>
           <p class="my-3">
               Diam dolor laoreet pulvinar arcu egestas aliquam sem. In vel posuere nullam consectetur. Nibh tincidunt ultrices posuere massa tempor pharetra. Tortor adipiscing pellentesque magna porttitor. Imperdiet commodo ultrices metus tincidunt. Ut accumsan nisl ornare tortor in. Vel fringilla tincidunt quis sagittis nulla viverra. Id urna aliquet at iaculis id sed. Et tempor etiam et et fringilla. Condimentum odio orci donec lorem convallis ipsum et. Nisi scelerisque faucibus ut aliquam in mi eu et ac. Dui arcu at leo consectetur facilisi ut tellus mauris sed. Pellentesque purus condimentum lorem mattis sed sed ut faucibus blandit.
+          </p> -->
+
+
+          <p class="my-3" *ngFor="let data of privacyPolicyData">
+            {{data}}
           </p>
+
       </div>
     </div>
   </div>
