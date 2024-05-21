@@ -9,6 +9,9 @@ import { HelpAndSupportComponent } from './help-and-support/help-and-support.com
 import { TermConditionComponent } from './term-condition/term-condition.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { FaqComponent } from './faq/faq.component';
+import { ContactUsComponent } from './contact-us/contact-us.component';
+import { ReportFormComponent } from './report-form/report-form.component';
+import { SupportedDevicesComponent } from './supported-devices/supported-devices.component';
 
 export const routes: Routes = [
   {path:'',component:LandingPageComponent},
@@ -21,8 +24,14 @@ export const routes: Routes = [
   {path:'term-condition',component:TermConditionComponent},
   {path:'privacy-policy',component:PrivacyPolicyComponent},
   {path:'faq',component:FaqComponent},
+  {path:'contact-us',component:ContactUsComponent},
+  {path:'report',component:ReportFormComponent},
+  {path:'supported-devices',component:SupportedDevicesComponent},
+
+  
 
 
+  
   {path:'**',component:PageNotFoundComponent},
 
 ];

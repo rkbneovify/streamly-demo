@@ -376,3 +376,9 @@ nav {
   border-top-color: #000000;
   animation: spinner .8s linear infinite;
 }
+
+.back-btn_go{
+  cursor: pointer;
+  color: #ffd84e; 
+  /* top: 1rem; */
+}
