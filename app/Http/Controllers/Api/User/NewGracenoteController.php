@@ -23,8 +23,8 @@ class NewGracenoteController extends Controller
         // Create a Guzzle client instance
         $client = new Client();
 
-        $startDate = '2024-05-10';
-        $endDate = '2024-05-11';
+        $startDate = '2024-05-16';
+        $endDate = '2024-05-17';
         // Fetch source data
         $sourceResponse = $client->get('http://on-api.gracenote.com/v3/Sources', [
             'query' => [
@@ -163,7 +163,7 @@ class NewGracenoteController extends Controller
         return $array;
     }
 
-    public function channelListWithGracenote(Request $request, $validate = 0)
+    public function channelListWithGracenote(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
@@ -213,6 +213,119 @@ class NewGracenoteController extends Controller
                 }
             }
             $query->where('channels.status', '=', '1');
+            $query->groupBy('channels.id');
+            $query->orderBy('channels.id', 'asc');
+
+            $record = $query->get();
+
+
+            // Step 1: Collect prgSvcId values
+            $prgSvcIds = $record->pluck('prgSvcId')->filter()->all();
+
+            // Step 2: Send a single API request
+            $client = new Client();
+            // Fetch source data
+            $sourceResponse = $client->get('http://on-api.gracenote.com/v3/Sources', [
+                'query' => [
+                    'prgSvcId' => implode(',', $prgSvcIds),
+                    'api_key' => $this->apiKey,
+                ],
+            ]);
+            // Parse XML response for sources
+            $sourceXml = $sourceResponse->getBody()->getContents();
+            $sourceData = json_decode(json_encode($this->xmlToJson($sourceXml)), true);
+
+
+            // Step 3: Map API response and merge with channels data
+            $channelsData = $record->map(function ($channel) use ($sourceData) {
+                $prgSvcData = collect($sourceData['sources']['prgSvcs']['prgSvc'])
+                    ->where('prgSvcId', $channel->prgSvcId)
+                    ->first();
+
+                if ($prgSvcData) {
+                    $channel->gracenote_data = [
+                        'prgSvcId' => $prgSvcData['prgSvcId'],
+                        'updateId' => $prgSvcData['updateId'],
+                        'updateDate' => $prgSvcData['updateDate'],
+                        'name' => $prgSvcData['name'],
+                        'videoQuality' => $prgSvcData['videoQuality'],
+                        'timeZone' => $prgSvcData['timeZone'],
+                        'callSign' => $prgSvcData['callSign'],
+                        'enhancedCallSign' => $prgSvcData['enhancedCallSign'] ?? NULL,
+                        'URL' => $prgSvcData['URL'] ?? NULL,
+                        'assets' => $prgSvcData['assets'] ?? []
+                        // Add more fields as needed
+                    ];
+                } else {
+                    $channel->gracenote_data = [];
+                }
+
+                return $channel;
+            });
+
+
+            $response = [
+                'success' => true,
+                'data' => $channelsData,
+                'message' => 'Channel with genre successfully fetched',
+                'response_code' => 200,
+            ];
+            return response()->json($response, 200);
+        }
+    }
+    public function filterChannels(Request $request, $genre)
+    {
+        $validator = Validator::make($request->all(), [
+            'typeurl' => 'required',
+            // 'genre' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $user = JWTAuth::user();
+            $urlType = $request->get('typeurl');
+            $zipcode = $request->get('zipcode');
+            $validate = 0;
+            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+                $validate = 1;
+            }
+            $imagePath = url("/uploads/channellogo/");
+
+            if ($urlType == 'manifest') {
+                $type = 'smooth_url';
+            } else if ($urlType == 'm3u8') {
+                $type = 'url';
+            } else if ($urlType == "mpd") {
+                $type = 'dash_url';
+            } else {
+                $type = 'dash_url';
+            }
+            $query = Channel::select(
+                'channels.id',
+                'channels.prgSvcId',
+                DB::raw('IFNULL(channels.callSign,channels.name) as callSign'),
+                DB::raw('IFNULL(channels.stationName,channels.name) as stationName'),
+                'channels.image',
+                "channels.$type as url",
+                DB::raw("IFNULL(CONCAT('$imagePath/', `image`), CONCAT('$imagePath/', 'notfound.png')) as logo")
+            )
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id');
+            if ($validate) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                }
+            }
+            $query->where('channels.status', '=', '1');
+            if ($genre != 'Others') {
+                $query->where('genre.name', '=', $genre);
+            } else if ($genre == 'Others') {
+                $query->whereNull('genre.name');
+            }
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');
 
