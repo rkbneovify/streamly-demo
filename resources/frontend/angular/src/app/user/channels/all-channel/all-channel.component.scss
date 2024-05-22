@@ -154,12 +154,14 @@ main {
         position: relative;
         display: flex;
         overflow-x: hidden;
+        background-color: #00070e;
         
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {
           max-width: 160px;
           height: 100%;
+          object-fit: none;
         //   border-radius: 10px;
         //   transition: border-radius 1s ease;
         }

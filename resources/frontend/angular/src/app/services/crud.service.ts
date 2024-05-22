@@ -57,4 +57,9 @@ export class CrudService {
   sendResponse(response: any) {
     this.apiResponseSubject.next(response);
   }
+
+  // /filterChannels/Others
+  filterChannelResponse(channel:string,body?:any,headers?:any){
+    return this.http.post(`${this.baseUrl}/api/auth/filterChannels/${channel}`,body,{headers})
+  }
 }
