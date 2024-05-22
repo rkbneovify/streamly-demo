@@ -382,3 +382,9 @@ nav {
   color: #ffd84e; 
   /* top: 1rem; */
 }
+
+.favorite {
+  fill: red;
+  background-color: red;
+  border-radius: 50%;
+}
