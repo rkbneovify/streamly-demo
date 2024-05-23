@@ -125,6 +125,10 @@ main {
   background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
   // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
   width: 80px;
+  p{
+    color: #ffffff;
+    text-wrap: nowrap;
+  }
   transition: all 0.5s ease;
   .sidebar_1 {
     width: 24px;
@@ -155,20 +159,33 @@ main {
   width: 120px !important;
 }
 
+.pdL{
+  padding-left: 0.4rem;
 
+}
 .sidebar_2{
   gap: 1rem;
+  align-self: start;
+
   div{
     height: 56px;
     width: 88px;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0.4rem;
+  }
+}
+
+.sidebar_2_ext{
+  div{
+    padding-left: 0.4rem;
+    justify-content: start;
   }
 }
 
 .activeTab{
-  border-left: 5px solid #FFFFFF !important;
+  border-left: 2px solid #FFFFFF !important;
 }
 
 .flex_1{
@@ -182,6 +199,15 @@ main {
 .min-hwl{
   min-width: 51px;
   min-height: 21px;
+}
+
+.sidebar_3{
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  p{
+    text-wrap: nowrap;
+  }
 }
 
 @media screen and (min-width: 850px) {
