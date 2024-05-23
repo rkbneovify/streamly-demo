@@ -72,9 +72,11 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('force-change-password', 'Auth\UserController@forceChangePassword')->middleware(['jwt.verify']);
     Route::get('setting-details', 'Api\User\StripeController@showUserDetails')->middleware(['jwt.verify']);
 
-    Route::post('channelListWithGracenote', 'Api\User\NewGracenoteController@channelListWithGracenote')->middleware(['jwt.verify']);;
-    Route::post('filterChannels/{genre}', 'Api\User\NewGracenoteController@filterChannels')->middleware(['jwt.verify']);;
+    Route::post('channelListWithGracenote', 'Api\User\NewGracenoteController@channelListWithGracenote')->middleware(['jwt.verify']);
+    Route::post('filterChannels/{genre}', 'Api\User\NewGracenoteController@filterChannels')->middleware(['jwt.verify']);
+    Route::post('epgguide', 'Api\User\NewGracenoteController@fetchGracenoteData')->middleware(['jwt.verify']);
 
+    Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 
