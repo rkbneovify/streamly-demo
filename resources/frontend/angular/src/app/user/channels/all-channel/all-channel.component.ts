@@ -712,7 +712,11 @@ export class AllChannelComponent implements OnInit{
 
 
   ngOnInit(): void {
-    this.getPrivacyP();
+    if(JSON.parse(localStorage.getItem('allChannel'))){
+      this.data = JSON.parse(localStorage.getItem('allChannel'));
+    }else{
+      this.getPrivacyP();
+    }
     this.getFavoriteList();
   }
 
@@ -738,7 +742,9 @@ export class AllChannelComponent implements OnInit{
   }
     this.apiService.postRequest('auth/channelListWithGracenote', body, this.getAuthHeaders()).subscribe({
       next: (res: any) => {
-        this.data = res.data
+        const list = res.data;
+        localStorage.setItem('allChannel',JSON.stringify(list));
+        this.data = JSON.parse(localStorage.getItem('allChannel'));
         console.log(res.data,"==============>", res?.data[2]?.gracenote_data?.url+'/'+res.data?.gracenote_data?.url?.assets?.asset[0]?.URI);
       },
       error: (err: any) => {
