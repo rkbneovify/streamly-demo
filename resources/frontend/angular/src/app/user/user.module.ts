@@ -18,6 +18,13 @@ import { AllChannelComponent } from './channels/all-channel/all-channel.componen
 import { NewsComponent } from './channels/news/news.component';
 import { FamilyComponent } from './channels/family/family.component';
 import { ComedyComponent } from './channels/comedy/comedy.component';
+import { HelpAndSupportComponent } from '../components/footerComponents/help-and-support/help-and-support.component';
+import { TermConditionComponent } from '../components/footerComponents/term-condition/term-condition.component';
+import { PrivacyPolicyComponent } from '../components/footerComponents/privacy-policy/privacy-policy.component';
+import { FaqComponent } from '../components/footerComponents/faq/faq.component';
+import { ContactUsComponent } from '../components/footerComponents/contact-us/contact-us.component';
+import { ReportFormComponent } from '../components/footerComponents/report-form/report-form.component';
+import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -38,6 +45,13 @@ const routes: Routes = [
       { path: 'channel/news', component: NewsComponent },
       { path: 'channel/family', component: FamilyComponent },
       { path: 'channel/comedy', component: ComedyComponent },
+      {path:'help-and-support',component:HelpAndSupportComponent},
+      {path:'term-condition',component:TermConditionComponent},
+      {path:'privacy-policy',component:PrivacyPolicyComponent},
+      {path:'faq',component:FaqComponent},
+      {path:'contact-us',component:ContactUsComponent},
+      {path:'report',component:ReportFormComponent},
+      {path:'supported-devices',component:SupportedDevicesComponent},
 
 
       

@@ -123,6 +123,27 @@ main {
 
 
 .landing_carousel_section2 {
+  overflow-y: auto;
+  height: 520px;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar {
+    height: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #234b69e5;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
     .landing_carousel_section2_top {
       font-family: Poppins;
       font-size: 18px;
@@ -143,7 +164,7 @@ main {
 
     .landing_carousel_section2_bottom {
       flex-basis: 160px;
-      gap: 10px;
+      gap: 36px;
       overflow-x: auto;
 
       .card_page {
@@ -154,14 +175,16 @@ main {
         position: relative;
         display: flex;
         overflow-x: hidden;
-        background-color: #00070e;
+        // background-color: #00070e;
+        background-color: lightslategrey;
+
         
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {
           max-width: 160px;
           height: 100%;
-          object-fit: none;
+          object-fit: contain;
         //   border-radius: 10px;
         //   transition: border-radius 1s ease;
         }
@@ -240,7 +263,6 @@ main {
       }
     }
   }
-
 
   @media screen and (max-width: 765px) {
     .search_Bar{

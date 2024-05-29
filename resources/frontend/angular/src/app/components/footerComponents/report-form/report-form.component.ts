@@ -1,14 +1,15 @@
-import { Location, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CrudService } from '../services/crud.service';
+import { CrudService } from '../../../services/crud.service';
+import { Location, NgFor, NgIf } from '@angular/common';
+
 @Component({
-  selector: 'app-privacy-policy',
+  selector: 'app-report-form',
   standalone: true,
   imports: [NgFor,NgIf],
-  templateUrl: './privacy-policy.component.html',
-  styleUrl: './privacy-policy.component.scss'
+  templateUrl: './report-form.component.html',
+  styleUrl: './report-form.component.scss'
 })
-export class PrivacyPolicyComponent implements OnInit{
+export class ReportFormComponent implements OnInit{
   privacyPolicyData:any;
   title:string;
   constructor(private location:Location,private apiService:CrudService){}
