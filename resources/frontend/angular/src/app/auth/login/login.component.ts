@@ -6,6 +6,7 @@ import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { log } from 'console';
 import { HttpHeaders } from '@angular/common/http';
+import {AuthService} from '../../services/authService/authservice.service'
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   userDeviceID!: string;
   loading:boolean = false;
   userToken!: string;
-  constructor(private fb: FormBuilder, private crudService: CrudService, private router: Router, private ts: ToastrService) {
+  constructor(private fb: FormBuilder, private crudService: CrudService, private router: Router, private ts: ToastrService,private setToken:AuthService) {
     this.loginFormWithEmail = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -69,6 +70,7 @@ export class LoginComponent implements OnInit {
           else{
             console.log('login resp-->',res);
             this.ts.success(res?.message)
+            const token = res?.access_token
             let deviceInfo = {
               access_token : res?.access_token,
               device_info: res?.device_info,
@@ -80,6 +82,7 @@ export class LoginComponent implements OnInit {
               subscribed:res?.subscribed
             }
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
+            this.setToken.setAuthorizationToken(token);
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
             this.router.navigateByUrl('/user/home');
           }
