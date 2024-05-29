@@ -31,7 +31,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
-import { CrudService } from '../services/crud.service';
+import { CrudService } from '../../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 

@@ -12,6 +12,9 @@ main {
   height: 100vh;
   overflow-y: auto;
   padding: 0 1rem;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
 }
 
 .schedule_Container::-webkit-scrollbar {
@@ -265,3 +268,139 @@ main {
     }
   }
 }
+
+
+  // ----------------- Footer ----------------------------
+// ----------------- ------ ----------------------------
+
+footer {
+  padding-block: 3rem;
+}
+
+footer .contain:first-child {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+
+  > div {
+    flex-basis: 50%;
+  }
+
+  > :first-child {
+    display: flex;
+    flex-direction: column;
+
+    ul {
+      display: flex;
+    }
+  }
+
+  > :last-child {
+    display: flex;
+    column-gap: 3rem;
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.865rem;
+    }
+
+    a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--clr-100);
+    }
+
+    li + li {
+      margin-top: 0.865rem;
+    }
+  }
+}
+
+.footer {
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(0, 137, 255, 1) 0%,
+    rgba(0, 39, 73, 1) 53%,
+    rgba(3, 28, 50, 1) 92%
+  );
+  // border-radius: 2rem 2rem 0 0;
+
+  //   position: relative;
+  //   overflow: hidden;
+  .contain {
+    .left {
+      // background-image: url('../../../assets/dummy-img/Polygon\ 8.png');
+      background-size: 67% 100%;
+      background-repeat: no-repeat;
+      background-position: right;
+      min-height: 370px;
+
+      .text-p1 {
+        max-width: 40ch;
+        border-bottom: 1px solid hsla(0, 0%, 83%, 0.342);
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        text-align: justify;
+      }
+    }
+
+    .right {
+      flex-wrap: wrap;
+      row-gap: 3rem;
+      justify-content: space-between;
+    }
+  }
+}
+
+@media screen and (max-width: 530px) {
+  .arrow-img{
+    left: 0 !important;
+  }
+  .svg_width{
+    width: 250px !important;
+  }
+  }
+  
+  @media screen and (max-width: 375px) {
+    .channel-list{
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+    footer {.contain{ .right{
+      justify-content: center !important;
+      div{
+        flex-basis: 100%;
+        text-align: center;
+      }
+    }}}
+    footer .contain:first-child {  
+      > div {
+      }  
+      > :first-child {  
+        ul {
+        }
+      }  
+      > :last-child {
+        margin-top: -1rem;
+      }
+    }
+  }
+  
+  
+  @media screen and (min-width:375px) and (max-width: 800px) {
+    footer .contain:first-child {  
+      > div {
+      }  
+      > :first-child {  
+        ul {
+        }
+      }  
+      > :last-child {
+        margin-top: -4rem;
+      }
+    }
+  }
