@@ -138,6 +138,7 @@ class GracenoteCronController extends Controller
         sleep(1);
         $dataArray = [];
         foreach ($scheduleData->schedules->schedule as $schedule) {
+            sleep(1);
             foreach ($schedule->event as $event) {
                 $programResponse = $client->get('http://on-api.gracenote.com/v3/Programs', [
                     'query' => [
