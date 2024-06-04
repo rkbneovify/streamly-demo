@@ -6,11 +6,13 @@
 main {
   //   background-image: url("../../../assets/dummy-img/404-bg.png");
   background-image: url("../../assets/dummy-img/404-bg.png");
+  background-color: #001325;
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
-  height: 100vh;
-  overflow-y: auto;
+  // min-height: -webkit-fill-available;
+  min-height: 100vh;
+  // overflow-y: auto;
   padding: 0 1rem;
   &::-webkit-scrollbar {
     width: 0 !important;
@@ -127,6 +129,11 @@ main {
   min-width: 80px;
   background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
   // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
+  height:-webkit-fill-available;
+  z-index: 99;
+    position: fixed;
+    top: 0;
+  // height: 100vh;
   width: 80px;
   p{
     color: #ffffff;
@@ -165,6 +172,10 @@ main {
 .pdL{
   padding-left: 0.4rem;
 
+}
+
+.mar-5rem{
+  margin-left: 5rem !important;
 }
 .sidebar_2{
   gap: 1rem;
@@ -275,6 +286,7 @@ main {
 
 footer {
   padding-block: 3rem;
+  margin-left: 5rem;
 }
 
 footer .contain:first-child {
