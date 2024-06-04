@@ -135,7 +135,7 @@ class GracenoteCronController extends Controller
         $scheduleXml = $scheduleResponse->getBody()->getContents();
         $scheduleData = $this->xmlToJson($scheduleXml);
         // GracenoteScheduleProgram::truncate();
-
+        sleep(1);
         $dataArray = [];
         foreach ($scheduleData->schedules->schedule as $schedule) {
             foreach ($schedule->event as $event) {
