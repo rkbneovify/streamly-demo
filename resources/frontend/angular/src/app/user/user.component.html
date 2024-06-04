@@ -1,11 +1,11 @@
 <div class="row gy-0 gx-0 flex-nowrap overflow-hidden">
-  <div [ngClass]="{ 'expanded': isExpanded }" class="sidebar_container col-1 p-0 d-flex flex-column justify-content-between align-items-center py-3">
+  <div [ngClass]="{ 'expanded': isExpanded }" class="sidebar_container  col-1 p-0 d-flex flex-column align-items-center pt-3">
     <div class="sidebar_1 pointer"  (click)="toggleSidebar()">
       <img src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
     </div>
-    <div class="sidebar_2 d-flex flex-column justify-content-between align-items-center" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
+    <div class="sidebar_2 d-flex flex-column justify-content-between align-items-center mt-5" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
       
-      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user/home" [ngClass]="{'submenu1 pointer':true,'activeTab':activeTab==='home'}" >
+      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user/home" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
         <img src="../../assets/dummy-img/sidemenu1.svg" alt="" />
         <p *ngIf="isExpanded">Home</p>
       </div>
@@ -46,13 +46,13 @@
       </div>
     </div>
     
-    <div class="sidebar_3 pointer">
+    <div class="sidebar_3 pointer mt-5">
       <img src="../../assets/dummy-img/side_setting.svg" alt="" />
       <p *ngIf="isExpanded">Settings</p>
     </div>
   </div>
 
-  <div class="col-11 p-0 m-0 flex_1">
+  <div class="col-11 p-0 m-0 flex_1 mar-5rem">
     <main class="schedule_Container">
       <div class="row">
         <div class="col-12">
