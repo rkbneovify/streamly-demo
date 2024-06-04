@@ -17,12 +17,15 @@ class GracenoteCronController extends Controller
 
     private function xmlToJson($xml)
     {
+        ini_set('memory_limit', '256M');
         $xmlObject = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         $jsonArray = $this->xmlToArray($xmlObject);
         return json_decode(json_encode($jsonArray));
     }
     private function xmlToArray($xml)
     {
+        ini_set('memory_limit', '256M');
+
         $array = [];
         // If there are attributes, add them to the array
         if ($xml->attributes()) {
