@@ -56,7 +56,7 @@ Route::post('subscription-payment', 'Api\User\StripeController@afterLoginSubscri
 
 /** Gracenote API data into db cron code start here */
 Route::get('gracenote-sources-cron', 'GracenoteCron\GracenoteCronController@gracenoteSourcesCron');
-Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronController@gracenoteScheduleProgramCron');
+Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronController@gracenoteScheduleProgramCron2');
 
 /** Gracenote API data into db cron code end here */
 
