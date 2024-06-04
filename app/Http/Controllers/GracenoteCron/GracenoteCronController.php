@@ -117,6 +117,8 @@ class GracenoteCronController extends Controller
 
     public function gracenoteScheduleProgramCron(Request $request)
     {
+        ini_set('memory_limit', '256M');
+
         $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
 
         // Create a Guzzle client instance
