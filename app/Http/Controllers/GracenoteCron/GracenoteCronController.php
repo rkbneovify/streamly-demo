@@ -135,10 +135,10 @@ class GracenoteCronController extends Controller
         $scheduleXml = $scheduleResponse->getBody()->getContents();
         $scheduleData = $this->xmlToJson($scheduleXml);
         // GracenoteScheduleProgram::truncate();
-        sleep(1);
+
         $dataArray = [];
         foreach ($scheduleData->schedules->schedule as $schedule) {
-            sleep(1);
+
             foreach ($schedule->event as $event) {
                 $programResponse = $client->get('http://on-api.gracenote.com/v3/Programs', [
                     'query' => [
@@ -219,5 +219,230 @@ class GracenoteCronController extends Controller
             ], 500);
         }
         // return $dataArray;
+    }
+
+    public function gracenoteScheduleProgramCron1(Request $request)
+    {
+        $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
+
+        // Create a Guzzle client instance
+        $client = new Client();
+        $startDate = Carbon::today()->format('Y-m-d');
+        $endDate = Carbon::today()->addDays(2)->format('Y-m-d');
+        $scheduleResponse = $client->get('http://on-api.gracenote.com/v3/Schedules', [
+            'query' => [
+                'prgSvcId' => implode(',', $prgSvcIds),
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'api_key' => $this->apiKey,
+            ],
+        ]);
+
+        // Parse XML response for schedules
+        $scheduleXml = $scheduleResponse->getBody()->getContents();
+        $scheduleData = $this->xmlToJson($scheduleXml);
+
+        $dataArray = [];
+        $tmsIds = [];
+
+        foreach ($scheduleData->schedules->schedule as $schedule) {
+            foreach ($schedule->event as $event) {
+                $tmsIds[] = $event->TMSId;
+
+                // Extract schedule details to be used later
+                $time = $event->time;
+                $duration = $event->dur;
+                $timezone = 'UTC';
+                $today = Carbon::today($timezone);
+
+                $startDateTime = Carbon::parse($today->toDateString() . ' ' . $time, $timezone);
+                $durationInterval = new \DateInterval($duration);
+                $endDateTime = $startDateTime->copy()->add($durationInterval);
+
+                $startTimestamp = $startDateTime->timestamp;
+                $endTimestamp = $endDateTime->timestamp;
+
+                $dataArray[] = [
+                    'prgSvcId' => $schedule->prgSvcId,
+                    'date' => $schedule->date,
+                    'TMSId' => $event->TMSId,
+                    'rootId' => $event->rootId,
+                    'time' => $event->time,
+                    'duration' => $event->dur,
+                    'start' => $startTimestamp,
+                    'end' => $endTimestamp,
+                    'quals' => $event->quals ?? null,
+                    'title' => null,
+                    'description' => null,
+                    'assets' => "[]"
+                ];
+            }
+        }
+
+        // Batch request for programs by TMSIds
+        $programResponse = $client->get('http://on-api.gracenote.com/v3/Programs', [
+            'query' => [
+                'tmsId' => implode(',', $tmsIds),
+                'api_key' => $this->apiKey,
+            ],
+        ]);
+
+        // Parse XML response for programs
+        $programXml = $programResponse->getBody()->getContents();
+        $programData = $this->xmlToJson($programXml);
+        $programs = $programData->programs->program;
+
+        // Create a map for quick lookup
+        $programMap = [];
+        foreach ($programs as $program) {
+            $programMap[$program->TMSId] = $program;
+        }
+
+        // Map program details to events
+        foreach ($dataArray as &$data) {
+            if (isset($programMap[$data['TMSId']])) {
+                $program = $programMap[$data['TMSId']];
+                $data['title'] = is_array($program->titles->title) ? $program->titles->title[0]->text : null;
+                $data['description'] = isset($program->descriptions->desc)
+                    ? (is_array($program->descriptions->desc)
+                        ? ($program->descriptions->desc[0]->text ?? null)
+                        : ($program->descriptions->desc->text ?? null))
+                    : null;
+                $data['assets'] = isset($program->assets) ? json_encode($program->assets) : "[]";
+            }
+        }
+
+        if (!empty($dataArray)) {
+            GracenoteScheduleProgram::truncate();
+            $chunkSize = 500; // Adjust the chunk size as needed
+            $chunks = array_chunk($dataArray, $chunkSize);
+
+            foreach ($chunks as $chunk) {
+                GracenoteScheduleProgram::insert($chunk);
+            }
+
+            DB::table('gracenote_schedule_program')->update([
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Gracenote Schedule Program Data stored successfully!'
+        ], 200);
+    }
+    public function gracenoteScheduleProgramCron2(Request $request)
+    {
+        $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
+
+        // Create a Guzzle client instance
+        $client = new Client();
+        $startDate = Carbon::today()->format('Y-m-d');
+        $endDate = Carbon::today()->addDays(2)->format('Y-m-d');
+        $scheduleResponse = $client->get('http://on-api.gracenote.com/v3/Schedules', [
+            'query' => [
+                'prgSvcId' => implode(',', $prgSvcIds),
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+                'api_key' => $this->apiKey,
+            ],
+        ]);
+
+        // Parse XML response for schedules
+        $scheduleXml = $scheduleResponse->getBody()->getContents();
+        $scheduleData = $this->xmlToJson($scheduleXml);
+
+        $dataArray = [];
+        $tmsIds = [];
+
+        foreach ($scheduleData->schedules->schedule as $schedule) {
+            foreach ($schedule->event as $event) {
+                $tmsIds[] = $event->TMSId;
+
+                // Extract schedule details to be used later
+                $time = $event->time;
+                $duration = $event->dur;
+                $timezone = 'UTC';
+                $today = Carbon::today($timezone);
+
+                $startDateTime = Carbon::parse($today->toDateString() . ' ' . $time, $timezone);
+                $durationInterval = new \DateInterval($duration);
+                $endDateTime = $startDateTime->copy()->add($durationInterval);
+
+                $startTimestamp = $startDateTime->timestamp;
+                $endTimestamp = $endDateTime->timestamp;
+
+                $dataArray[] = [
+                    'prgSvcId' => $schedule->prgSvcId,
+                    'date' => $schedule->date,
+                    'TMSId' => $event->TMSId,
+                    'rootId' => $event->rootId,
+                    'time' => $event->time,
+                    'duration' => $event->dur,
+                    'start' => $startTimestamp,
+                    'end' => $endTimestamp,
+                    'quals' => $event->quals ?? null,
+                    'title' => null,
+                    'description' => null,
+                    'assets' => "[]"
+                ];
+            }
+        }
+
+        // Batch the TMSIds into smaller groups to avoid the 414 error
+        $chunkedTmsIds = array_chunk($tmsIds, 50); // Adjust the chunk size as needed
+        $programMap = [];
+
+        foreach ($chunkedTmsIds as $chunk) {
+            $programResponse = $client->get('http://on-api.gracenote.com/v3/Programs', [
+                'query' => [
+                    'tmsId' => implode(',', $chunk),
+                    'api_key' => $this->apiKey,
+                ],
+            ]);
+
+            // Parse XML response for programs
+            $programXml = $programResponse->getBody()->getContents();
+            $programData = $this->xmlToJson($programXml);
+
+            foreach ($programData->programs->program as $program) {
+                $programMap[$program->TMSId] = $program;
+            }
+        }
+
+        // Map program details to events
+        foreach ($dataArray as &$data) {
+            if (isset($programMap[$data['TMSId']])) {
+                $program = $programMap[$data['TMSId']];
+                $data['title'] = is_array($program->titles->title) ? $program->titles->title[0]->text : null;
+                $data['description'] = isset($program->descriptions->desc)
+                    ? (is_array($program->descriptions->desc)
+                        ? ($program->descriptions->desc[0]->text ?? null)
+                        : ($program->descriptions->desc->text ?? null))
+                    : null;
+                $data['assets'] = isset($program->assets) ? json_encode($program->assets) : "[]";
+            }
+        }
+
+        if (!empty($dataArray)) {
+            GracenoteScheduleProgram::truncate();
+            $chunkSize = 500; // Adjust the chunk size as needed
+            $chunks = array_chunk($dataArray, $chunkSize);
+
+            foreach ($chunks as $chunk) {
+                GracenoteScheduleProgram::insert($chunk);
+            }
+
+            DB::table('gracenote_schedule_program')->update([
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Gracenote Schedule Program Data stored successfully!'
+        ], 200);
     }
 }
