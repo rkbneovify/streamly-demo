@@ -34,7 +34,7 @@
                         </div>
                         <div class="remove_dev_con my-3 d-flex justify-content-between">
                             <p class="dev_heading">Login</p>
-                            <p>{{data?.logintime | date}}</p>
+                            <p>{{(data?.logintime | timeAgo)}}</p>
                         </div>
                         <div class="remove_dev_con d-flex justify-content-between">
                             <p class="dev_heading">{{data.device_type}}</p>

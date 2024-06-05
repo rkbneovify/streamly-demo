@@ -4,10 +4,10 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ScheduleChartComponent } from './schedule-chart/schedule-chart.component';
 import { PaymentComponent } from './payment/payment.component';
-import { authGuarLoginStatus, authguardGuard } from './guards/authguard.guard';
+import {  authGuarRedirectToUser, authguardGuard } from './guards/authguard.guard';
 
 export const routes: Routes = [
-  {path:'',canActivate:[authGuarLoginStatus],component:LandingPageComponent,loadChildren:()=>import('./landing-page/landing-page.module').then(m=>m.LandingPageModule)},
+  {path:'',canActivate:[authGuarRedirectToUser],component:LandingPageComponent,loadChildren:()=>import('./landing-page/landing-page.module').then(m=>m.LandingPageModule)},
   {path:'password/reset/:token',component:ResetPasswordComponent},
   {path:'schedule',component:ScheduleChartComponent},
   {path:'payment',component:PaymentComponent},

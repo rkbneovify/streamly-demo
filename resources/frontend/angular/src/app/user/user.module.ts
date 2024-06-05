@@ -26,6 +26,7 @@ import { ContactUsComponent } from '../components/footerComponents/contact-us/co
 import { ReportFormComponent } from '../components/footerComponents/report-form/report-form.component';
 import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
 import { SearchComponent } from './search/search.component';
+import { TimeAgoPipe } from '../pipe/time-ago.pipe';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -66,7 +67,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule, RouterModule.forChild(routes)
+    CommonModule, 
+    RouterModule.forChild(routes),
   ]
 })
 export class UserModule { }
