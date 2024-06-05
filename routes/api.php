@@ -51,10 +51,14 @@ Route::get('get-tier-plan/{stripeplanid}', 'Api\User\StripeController@getTierPla
 Route::post('validate-coupon', 'Api\User\StripeController@validateCoupon');
 Route::delete('cancel-subscription/{id}', 'Api\User\StripeController@destroy')->middleware(['jwt.verify']);
 Route::post('subscription-payment', 'Api\User\StripeController@afterLoginSubscriptionPayment')->middleware(['jwt.verify']);
-Route::get('fetchGracenoteData', 'Api\User\NewGracenoteController@fetchGracenoteData');
 
 /** Angular Frontend APIs code ends here */
 
+/** Gracenote API data into db cron code start here */
+Route::get('gracenote-sources-cron', 'GracenoteCron\GracenoteCronController@gracenoteSourcesCron');
+Route::get('gracenote-schedule-program-cron', 'GracenoteCron\GracenoteCronController@gracenoteScheduleProgramCron2');
+
+/** Gracenote API data into db cron code end here */
 
 // Authentication Routes
 Route::group(['prefix' => 'auth'], function ($router) {
@@ -74,9 +78,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     Route::post('channelListWithGracenote', 'Api\User\NewGracenoteController@channelListWithGracenote')->middleware(['jwt.verify']);
     Route::post('filterChannels/{genre}', 'Api\User\NewGracenoteController@filterChannels')->middleware(['jwt.verify']);
-    Route::post('epgguide', 'Api\User\NewGracenoteController@fetchGracenoteData')->middleware(['jwt.verify']);
+    Route::get('epgguide', 'Api\User\NewGracenoteController@epg_guide')->middleware(['jwt.verify']);
+    Route::get('fetchGracenoteData', 'Api\User\NewGracenoteController@fetchGracenoteData');
 
     Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
+
+    Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 
