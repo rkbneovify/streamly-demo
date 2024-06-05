@@ -24,8 +24,8 @@ export class LandingPageComponent implements OnInit{
     }
     
 
-if(localStorage.getItem('token')){
-  this.router.navigateByUrl('/user');
-}
+// if(localStorage.getItem('token')){
+//   this.router.navigateByUrl('/user');
+// }
   }
 }

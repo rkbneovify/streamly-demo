@@ -25,6 +25,7 @@ import { FaqComponent } from '../components/footerComponents/faq/faq.component';
 import { ContactUsComponent } from '../components/footerComponents/contact-us/contact-us.component';
 import { ReportFormComponent } from '../components/footerComponents/report-form/report-form.component';
 import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
+import { SearchComponent } from './search/search.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -52,6 +53,7 @@ const routes: Routes = [
       {path:'contact-us',component:ContactUsComponent},
       {path:'report',component:ReportFormComponent},
       {path:'supported-devices',component:SupportedDevicesComponent},
+      {path:'search',component:SearchComponent},
 
 
       
