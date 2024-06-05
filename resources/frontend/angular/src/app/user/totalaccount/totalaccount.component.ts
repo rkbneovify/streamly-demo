@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import {  NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
+import { TimeAgoPipe } from '../../pipe/time-ago.pipe'
 
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor,NgIf,NgClass,DatePipe],
+  imports: [NgFor,NgIf,NgClass, TimeAgoPipe],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss'
 })
@@ -17,7 +18,7 @@ export class TotalaccountComponent {
   access_Token!:any;
   current_device:any;
   deviceId:Array<string>=[];
-  constructor(private apiService: CrudService, private toastr: ToastrService) { 
+  constructor(private apiService: CrudService, private toastr: ToastrService ) { 
     this.get_all_device();
   }
 

@@ -213,7 +213,7 @@ main {
         position: relative;
         display: flex;
         overflow-x: hidden;
-        
+        background-color: lightslategrey;
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {

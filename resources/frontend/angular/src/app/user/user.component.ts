@@ -4,11 +4,12 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { SearchComponent } from './search/search.component';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterOutlet, RouterLink],
+  imports: [NgClass, NgFor, NgIf, RouterOutlet, RouterLink,SearchComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -19,11 +20,13 @@ export class UserComponent {
   isExpanded: boolean = false;
   loading: boolean = false;
   showSubMenu:boolean=false;
+  searchShow:boolean=false;
 
   constructor(
     private crud: CrudService,
     private router: Router,
-    private ts: ToastrService
+    private ts: ToastrService,
+    // private search:SearchComponent
   ) {}
 
   sideBarAnimation() {
