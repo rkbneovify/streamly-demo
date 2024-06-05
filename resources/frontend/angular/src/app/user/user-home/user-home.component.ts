@@ -24,6 +24,7 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
     this.loginSliders();
     this.getFavoriteList();
+    this.channelsWithGenre();
   }
 
 
@@ -128,5 +129,27 @@ updateFavoriteChannels(): void {
 // set player data in local 
 setplayerData(id:string){
   localStorage.setItem('playerId',id);
+  this.router.navigateByUrl('/user/playstream');
+}
+
+genre_Data:any ;
+// get genre channel
+channelsWithGenre() {
+  const body = {
+    "typeurl": "mpd",
+    "zipcode": ""
+}
+  this.crud.postRequest('auth/channel-list', body, this.getAuthHeaders()).subscribe({
+    next: (res: any) => {
+      // const list = res.data;
+      // localStorage.setItem('allChannel',JSON.stringify(list));
+      // this.data = JSON.parse(localStorage.getItem('allChannel'));
+      this.genre_Data = res.data;
+      console.log(this.genre_Data);
+    },
+    error: (err: any) => {
+      console.log(err);
+    }
+  });
 }
 }
