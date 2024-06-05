@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-totalaccount',
   standalone: true,
-  imports: [NgFor,NgIf,NgClass],
+  imports: [NgFor,NgIf,NgClass,DatePipe],
   templateUrl: './totalaccount.component.html',
   styleUrl: './totalaccount.component.scss'
 })
