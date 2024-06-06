@@ -11,7 +11,7 @@ import { ScheduleDetailComponent } from './playlist-schedule/schedule-detail/sch
 import { AccountsettingsComponent } from './accountsettings/accountsettings.component';
 import { TotalaccountComponent } from './totalaccount/totalaccount.component';
 import { PlansComponent } from './plans/plans.component';
-import { authguardGuard } from '../guards/authguard.guard';
+import { authGuarLoginStatus, authguardGuard } from '../guards/authguard.guard';
 import { SubscriptionExpiredComponent } from './subscription-expired/subscription-expired.component';
 import { SubPaymentComponent } from './sub-payment/sub-payment.component';
 import { AllChannelComponent } from './channels/all-channel/all-channel.component';
@@ -27,6 +27,7 @@ import { ReportFormComponent } from '../components/footerComponents/report-form/
 import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
 import { SearchComponent } from './search/search.component';
 import { TimeAgoPipe } from '../pipe/time-ago.pipe';
+import { CommonChannelComponent } from './channels/common-channel/common-channel.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -47,6 +48,7 @@ const routes: Routes = [
       { path: 'channel/news', component: NewsComponent },
       { path: 'channel/family', component: FamilyComponent },
       { path: 'channel/comedy', component: ComedyComponent },
+      { path: 'channels/:genreName',canActivate:[authGuarLoginStatus], component: CommonChannelComponent },
       {path:'help-and-support',component:HelpAndSupportComponent},
       {path:'term-condition',component:TermConditionComponent},
       {path:'privacy-policy',component:PrivacyPolicyComponent},
