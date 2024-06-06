@@ -129,7 +129,11 @@ main {
   min-width: 80px;
   background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
   // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
-  height:-webkit-fill-available;
+  /* For full height */
+  height: -moz-available; /* Firefox-specific */
+  height: -webkit-fill-available; /* Chrome-specific */
+  height: fill-available; /* Standard */
+  height: 100%;
   z-index: 99;
     position: fixed;
     top: 0;

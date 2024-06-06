@@ -36,12 +36,11 @@ main {
     width: 24px;
     height: 24px;
   }
-  input[type="checkbox"]{
+  input[type="checkbox"] {
     border: 1px solid #ffffff;
   }
   input[type="checkbox"]:checked {
     border: 2px solid #ffffff;
-    
   }
   h1 {
     font-size: 32px;
@@ -67,7 +66,7 @@ main {
     border-radius: 8px;
     padding: 18px;
 
-    .btn_hover{
+    .btn_hover {
       min-height: fit-content;
       padding: 0.5rem;
     }
@@ -87,6 +86,7 @@ main {
       .device_img {
         width: 169.04px;
         height: 108px;
+        margin: auto;
       }
       .device_imgpar {
         img {
@@ -109,8 +109,8 @@ main {
         line-height: 21px;
         letter-spacing: 0em;
         text-align: left;
-        .dev_heading{
-        font-weight: 400;
+        .dev_heading {
+          font-weight: 400;
         }
       }
     }
