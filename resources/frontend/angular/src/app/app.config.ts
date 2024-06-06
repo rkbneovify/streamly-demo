@@ -8,10 +8,12 @@ import { StripeModule } from 'stripe-angular';
 
 import { routes } from './app.routes';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { authInterceptor } from './_interceptor/auth.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes),
     provideClientHydration(),
     provideNgxStripe(),

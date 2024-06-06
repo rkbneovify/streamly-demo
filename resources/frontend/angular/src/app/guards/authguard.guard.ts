@@ -75,17 +75,16 @@ export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
 
 // checkuserLogin or not
 export const authGuarLoginStatus: CanActivateFn = (route, state) => {
-  console.log('auth gaurd works');
 
   const token = localStorage.getItem('token');
       if (token) {                
         console.log('Heman =====>',token);
-        inject(Router).navigateByUrl('/auth/login');
-        return false;
+        return true;
       } 
       else {
         console.log('Heman =====>',token);
-        return true;
+        inject(Router).navigateByUrl('/auth/login');
+        return false;
       }
 
 };

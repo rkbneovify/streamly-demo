@@ -202,8 +202,9 @@ main {
 
     .landing_carousel_section2_bottom {
       flex-basis: 160px;
-      gap: 10px;
+      gap: 1rem;
       overflow-x: auto;
+      padding-bottom: 0.5rem;
 
       .card_page {
         min-width: 160px;
@@ -219,6 +220,7 @@ main {
         img {
           max-width: 160px;
           height: 100%;
+          object-fit: contain;
         //   border-radius: 10px;
         //   transition: border-radius 1s ease;
         }

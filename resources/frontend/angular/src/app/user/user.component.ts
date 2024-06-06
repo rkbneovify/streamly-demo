@@ -93,7 +93,7 @@ export class UserComponent {
             next:(res: any) => {
             console.log('Log Out', res);
             if (res.response_code == 200) {
-              localStorage.removeItem('deviceInfo');
+              localStorage.clear();
               localStorage.removeItem('userDetails');
               localStorage.removeItem('loggedInDeviceDetail');
               localStorage.removeItem('loggedInDeviceDetails');

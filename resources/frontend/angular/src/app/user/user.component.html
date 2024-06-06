@@ -1,5 +1,5 @@
 <div class="row gy-0 gx-0 flex-nowrap overflow-hidden">
-  <div (click)="searchShow = false" [ngClass]="{ 'expanded': isExpanded }" class="sidebar_container  col-1 p-0 d-flex flex-column align-items-center pt-3">
+  <div (click)="searchShow = false" [ngClass]="{ 'expanded': isExpanded }" class="sidebar_container justify-content-between  col-1 p-0 d-flex flex-column align-items-center pt-3">
     <div class="sidebar_1 pointer"  (click)="toggleSidebar()">
       <img src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
     </div>
@@ -30,7 +30,7 @@
         <p *ngIf="isExpanded">All</p>
       </div>
 
-      <div (click)="activeTab='family'" routerLink="/user/channel/family" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='family'}">
+      <!-- <div (click)="activeTab='family'" routerLink="/user/channel/family" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='family'}">
         <img src="../../assets/dummy-img/Family.svg" alt="" />
         <p *ngIf="isExpanded">Family</p>
       </div>
@@ -43,10 +43,10 @@
       <div (click)="activeTab='comedy'" routerLink="/user/channel/comedy" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='comedy'}">
         <img src="../../assets/dummy-img/Comedy.svg" alt="" />
         <p *ngIf="isExpanded">Comedy</p>
-      </div>
+      </div> -->
     </div>
     
-    <div class="sidebar_3 pointer mt-5">
+    <div class="sidebar_3 pointer pb-4">
       <img src="../../assets/dummy-img/side_setting.svg" alt="" />
       <p *ngIf="isExpanded">Settings</p>
     </div>
@@ -182,13 +182,13 @@
         <div>
           <h3>OUR CHANNELS</h3>
           <ul>
-            <li><a routerLink="/user/channel/news">Complete list</a></li>
-            <li><a routerLink="/user/channel/news">News</a></li>
-            <li><a routerLink="/user/channel/news">Comedy</a></li>
-            <li><a routerLink="/user/channel/news">Movies</a></li>
-            <li><a routerLink="/user/channel/news">Family</a></li>
-            <li><a routerLink="/user/channel/news">Sports</a></li>
-            <li><a routerLink="/user/channel/news">Other</a></li>
+            <li><a routerLink="/user/channels/all">Complete list</a></li>
+            <li><a routerLink="/user/channels/News">News</a></li>
+            <li><a routerLink="/user/channels/Comedy">Comedy</a></li>
+            <li><a routerLink="/user/channels/Movies">Movies</a></li>
+            <li><a routerLink="/user/channels/Family">Family</a></li>
+            <li><a routerLink="/user/channels/Sports">Sports</a></li>
+            <li><a routerLink="/user/channels/Other">Other</a></li>
           </ul>
         </div>
         <div>
