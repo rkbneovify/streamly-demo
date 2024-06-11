@@ -10,7 +10,7 @@
         <p *ngIf="isExpanded">Home</p>
       </div>
 
-      <div *ngIf="!showSubMenu" (click)="activeTab='fav'" routerLink="/user/favorite" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
+      <div *ngIf="!showSubMenu" (click)="activeTab='fav'" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
         <img src="../../assets/dummy-img/sidemenu2.svg" alt="" />
         <p *ngIf="isExpanded">My Stuff</p>
       </div>
@@ -182,7 +182,7 @@
         <div>
           <h3>OUR CHANNELS</h3>
           <ul>
-            <li><a routerLink="/user/channels/all">Complete list</a></li>
+            <li><a routerLink="/user/channel/all">Complete list</a></li>
             <li><a routerLink="/user/channels/News">News</a></li>
             <li><a routerLink="/user/channels/Comedy">Comedy</a></li>
             <li><a routerLink="/user/channels/Movies">Movies</a></li>

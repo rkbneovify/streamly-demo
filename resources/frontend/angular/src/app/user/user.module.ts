@@ -33,7 +33,7 @@ const routes: Routes = [
     path: '', component: UserComponent, children: [
       { path: '', component: UserHomeComponent },
       { path: 'home', component: UserHomeComponent ,canActivate: [authguardGuard] },
-      { path: 'favorite', component: FavouritesComponent,canActivate: [authguardGuard] },
+      { path: 'my-stuff', component: FavouritesComponent,canActivate: [authguardGuard] },
       { path: 'playlistschedule', component: PlaylistScheduleComponent,canActivate: [authguardGuard]  },
       { path: 'plan', component: PlansComponent,canActivate: [authguardGuard]  },
       { path: 'schedule-details', component: ScheduleDetailComponent,canActivate: [authguardGuard]  },
