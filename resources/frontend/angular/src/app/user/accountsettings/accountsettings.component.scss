@@ -89,14 +89,20 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         p {
           font-family: Roboto;
           font-size: 14px;
           font-weight: 500;
           line-height: 16.41px;
           text-align: left;
+          flex: 1;
+          word-break:break-all;
         }
-
+        invoicesdetails:first-child{
+          width:150px;
+          overflow: hidden;
+        }
         &:nth-child(even) {
           background: #f0f0f0;
         }
