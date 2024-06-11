@@ -40,9 +40,6 @@ export class AllChannelComponent implements OnInit{
     });
   }
 
-
-
-
   getPrivacyP() {
     const body = {
       "typeurl": "mpd",
@@ -66,8 +63,6 @@ export class AllChannelComponent implements OnInit{
   isFavorite(channelId: number): boolean {
     return this.favoriteChannels.includes(channelId);
 }
-
-
           // Toggle favorite status
     toggleFavorite(channelId: number): void {
       // If channel is already favorite, remove it
@@ -78,9 +73,6 @@ export class AllChannelComponent implements OnInit{
           this.addFavoriteChannel(channelId);
       }
   }
-  
-
-
    // Add channel to favorites
    addFavoriteChannel(channelId: number): void {
     // Call API to add channel to favorites
@@ -92,7 +84,6 @@ export class AllChannelComponent implements OnInit{
         }
     });
 }
-
 // Remove channel from favorites
 removeFavoriteChannel(channelId: number): void {
     // Call API to remove channel from favorites
@@ -104,11 +95,10 @@ removeFavoriteChannel(channelId: number): void {
         }
     });
 }
-
 // Fetch favorite list
 getFavoriteList(): void {
   console.log('==========================================>')
-    const storedFavoriteChannels = localStorage.getItem('allFavoriteChannels');
+    const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
     } else {
@@ -121,11 +111,10 @@ getFavoriteList(): void {
         });
     }
 }
-
 // Update local storage with current favorite channels
 updateFavoriteChannels(): void {
   console.log('favoriteChannels',this.favoriteChannels);
-    localStorage.setItem('allFavoriteChannels', JSON.stringify(this.favoriteChannels));
+    localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
 }
 
 // set player data in local 
