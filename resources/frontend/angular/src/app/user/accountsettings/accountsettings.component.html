@@ -158,7 +158,7 @@
       </div>
       <div class="acoount_user_password">
         <label for="">Payment Method</label>
-        <p>{{cardDetails?.card_brand}} {{cardDetails?.card_last_four}}</p>
+        <p>{{cardDetails}}</p>
       </div>
     </div>
     <div class="accountbtn_container my-4  ">
@@ -171,11 +171,11 @@
     <div class="accountdetails">
       <div class="acoount_user_name">
         <label>Card Type</label>
-        <p>{{cardDetails?.card_brand}}</p>
+        <p>{{cardDetails1?.card_brand}}</p>
       </div>
       <div class="acoount_user_email my-4">
         <label>Card Number</label>
-        <p>*********{{cardDetails?.card_last_four}}</p>
+        <p>*********{{cardDetails1?.card_last_four}}</p>
       </div>
     </div>
     <div class="accountbtn_container my-4">
@@ -188,13 +188,17 @@
     <div class="invoicesdetails_main">
       <div class="invoicesdetails invoicesdetail_heading">
         <p>Invoices</p>
+        <p>Amount</p>
         <p>Date</p>
         <p>Download</p>
       </div>
       <div *ngFor="let data of invoices" class="invoicesdetails">
-        <p>{{data?.created}}</p>
-        <p>11/03/2024</p>
-        <p class="pointer">Invoice</p>
+        <p>{{data?.id}}</p>
+        <p>{{data?.amount}}</p>
+        <p>{{data?.date | date}}</p>
+        <p class="pointer" >
+          <a [href]="data.receipt_link" target="_blank">Invoices</a>
+        </p>
       </div>
       <!-- <div class="invoicesdetails">
         <p>12345678</p>
