@@ -22,6 +22,7 @@ use Stripe\Customer as Customer;
 use Stripe\PaymentMethod;
 use Stripe\Subscription;
 use App\SessionTable;
+use Laravel\Cashier\Cashier;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class StripeController extends Controller
@@ -351,35 +352,69 @@ class StripeController extends Controller
     {
         $response_to_send = [];
 
-        $id = JWTAuth::user()->id;
-        $userinfo = User::find($id);
+        $userinfo = JWTAuth::user();
         $resultoffset = $userinfo->zipcode;
         $timezoneData = fetchHomeTimezoneUsingZip($resultoffset);
         $timezone = $timezoneData[0];
-        $allSession = SessionTable::where([
-            ['status', '=', '1'],
-            ['users_id', '=', $id],
-        ])->orderBy('connected_devices', 'asc')->get();
+        $customerId = JWTAuth::user()->stripe_id;
 
-        $subscription = JWTAuth::user()->subscriptions()->first();
+        // $subscription = JWTAuth::user()->subscriptions()->first();
 
+        $customer = \Stripe\Customer::retrieve($customerId);
+        $subscription = $customer->subscriptions->data[0] ?? JWTAuth::user()->subscriptions()->first();
+        // return ($subscription);
+        // die;
         if (!$userinfo->subscribed('main')) {
             $plan = (object) ['amount' => '0'];
             $invoices = '';
+            $renewaldatetime = '';
         } else {
-            $stripe_plan = $subscription->stripe_plan;
+            // $stripe_plan = $subscription->plan->id;
 
             $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
 
             if ($STRIPE_KEY[0]->type == $userinfo->mode) {
-                $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
-                $invoices =  \Stripe\Invoice::all(['customer' => JWTAuth::user()->stripe_id, 'expand' => ['data.charge']]);
+                // $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
+                $plan = $subscription->plan ??  \Stripe\Plan::retrieve(['id' => $subscription->stripe_plan, 'expand' => ["tiers"]]);
+                $invoices_data =  \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
+                $invoices = [];
+                foreach ($invoices_data->data as $invoice) {
+                    $amount = Cashier::formatAmount($invoice->total ?? '0', $invoice->currency ?? 'USD');
+                    $invoice_id = $invoice->id;
+                    // $date = date('Y-m-d H:i:s', $invoice->created);
+                    $date = date('Y-m-d H:i:s', $invoice->status_transitions->paid_at);
+                    $receipt_link = $invoice->charge->receipt_url ?? null;
+
+                    $invoices[] = [
+                        'id' => $invoice_id,
+                        'amount' => $amount,
+                        'date' => $date,
+                        'receipt_link' => $receipt_link
+                    ];
+                }
+                // for renewal date
+                if ($subscription->cancel_at) {
+                    $renewaldatetime = 'Plan Expired';
+                } else {
+                    // dd(date('Y-m-d H:i:s', $subscription->current_period_end));
+                    $renewaldatetime = isset($subscription->current_period_end) ? date('Y-m-d H:i:s', $subscription->current_period_end) : 'No upcoming invoices';
+                }
+                // for subscription details
+                if (!empty($plan->tiers)) {
+                    $plan_name = ($plan->nickname ?? '') . ' ' . ('with ' . $subscription->quantity . ' quantity' ?? '') . ' ' . (Cashier::formatAmount($invoices_data->data[0]->total ?? '0', $invoices_data->data[0]->currency ?? 'USD')) . ' per ' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                    $plan_type = "Tiers" . ' ' . $plan->interval_count . ' ' . $plan->interval;
+                } else {
+                    $plan_name = ($plan->nickname ?? '') . ' ' . (Cashier::formatAmount($plan->amount ?? '0', $plan->currency ?? 'USD')) . '/' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                    $plan_type = $plan->billing_scheme;
+                }
             } else {
                 $plan = null;
                 $invoices = '';
+                $renewaldatetime = '';
             };
         }
 
+        /*
         if ($subscription) {
             if ($subscription->ends_at) {
                 $renewaldatetime = 'Plan Expired';
@@ -409,14 +444,38 @@ class StripeController extends Controller
             }
         } else {
             $renewaldatetime = '';
-        }
-        $response_to_send['subscription'] = $subscription;
+        } */
+        $subscription_data = [
+            'id' => $subscription->id,
+            'name' => $plan_name,
+            'plan_type' => $plan_type,
+            'renewaldatetime' => $renewaldatetime,
+            'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
+
+        ];
+        $user_data = [
+            "id" => $userinfo->id,
+            "name" => $userinfo->name,
+            "email" => $userinfo->email,
+            "zipcode" => $resultoffset,
+            "timezone" => $timezone ?? null,
+            "passcode" => HashUserID($userinfo->id)
+        ];
+        $card_details = [
+            "card_brand" => $userinfo->card_brand ?? null,
+            "card_last_four" => $userinfo->card_last_four ?? null
+        ];
+        $response_to_send['success'] = true;
+        $response_to_send['response_code'] = 200;
+        $response_to_send['message'] = "Setting details successfully retrieved";
+        $response_to_send['subscription'] = $subscription_data;
         $response_to_send['plan'] = $plan;
-        $response_to_send['userinfo'] = $userinfo;
+        $response_to_send['userinfo'] = $user_data;
         $response_to_send['invoices'] = $invoices;
-        $response_to_send['timezone'] = $timezone;
-        $response_to_send['renewaldatetime'] = $renewaldatetime;
-        $response_to_send['zipcode'] = $resultoffset;
+        $response_to_send['card_details'] = $card_details;
+        // $response_to_send['timezone'] = $timezone;
+        // $response_to_send['renewaldatetime'] = $renewaldatetime;
+        // $response_to_send['zipcode'] = $resultoffset;
 
         return response()->json($response_to_send);
     }
