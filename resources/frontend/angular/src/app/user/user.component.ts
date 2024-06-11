@@ -1,6 +1,6 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
@@ -27,7 +27,15 @@ export class UserComponent {
     private router: Router,
     private ts: ToastrService,
     // private search:SearchComponent
-  ) {}
+    private viewportScroller: ViewportScroller
+    
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.viewportScroller.scrollToPosition([0, 0]);
+      }
+    });
+  }
 
   sideBarAnimation() {
     const userToken = localStorage.getItem('deviceInfo');

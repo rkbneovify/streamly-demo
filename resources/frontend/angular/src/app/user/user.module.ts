@@ -26,7 +26,6 @@ import { ContactUsComponent } from '../components/footerComponents/contact-us/co
 import { ReportFormComponent } from '../components/footerComponents/report-form/report-form.component';
 import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
 import { SearchComponent } from './search/search.component';
-import { TimeAgoPipe } from '../pipe/time-ago.pipe';
 import { CommonChannelComponent } from './channels/common-channel/common-channel.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
@@ -57,10 +56,6 @@ const routes: Routes = [
       {path:'report',component:ReportFormComponent},
       {path:'supported-devices',component:SupportedDevicesComponent},
       {path:'search',component:SearchComponent},
-
-
-      
-
     ]
   }
 ];

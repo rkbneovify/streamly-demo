@@ -31,6 +31,7 @@ export class AccountsettingsComponent implements OnInit {
   planName!:string;
   renewalDate:any;
   cardDetails!:any;
+  cardDetails1:any;
   invoices:any;
   billingScheme!:string;
   tiredPlansDetails:any;
@@ -180,14 +181,15 @@ export class AccountsettingsComponent implements OnInit {
         this.planInterval = plan3rd;
         this.interval_count = res?.plan?.interval_count;
 
-        planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;        
+        // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;        
         
         this.billingScheme = res.plan.billing_scheme;
-        this.invoices = res?.invoices.data;
+        this.invoices = res?.invoices;
         this.invoicesDate = new Date(this.invoices?.created * 1000);
-        this.renewalDate = res?.renewaldatetime;
-        this.planName = planFullName;
-        this.cardDetails = res?.userinfo;
+        this.renewalDate = res?.subscription.renewaldatetime;
+        this.planName = res.subscription.name;
+        this.cardDetails = res?.subscription.payment_method;
+        this.cardDetails1 = res.card_details;
         this.tiredPlansDetails = res.plan.tiers;
         this.qunantity = res.subscription.quantity
 

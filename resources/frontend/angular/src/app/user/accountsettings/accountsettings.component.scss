@@ -79,6 +79,10 @@
     .invoicesdetails_main {
       margin-top: 1rem;
       background: #ffffff;
+      justify-content: start;
+      .invoicesdetails_main:first-child{
+        min-width: 150px;
+      }
       .invoicesdetails {
         height: 56px;
         padding: 20px 16px 20px 16px;
