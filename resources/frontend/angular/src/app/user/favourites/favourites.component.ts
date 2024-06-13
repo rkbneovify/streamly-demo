@@ -90,7 +90,9 @@ export class FavouritesComponent implements OnInit {
 
   getFavoriteListData(): void {
     // Fetch from API if not found in local storage
-    this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
+    const body = {"typeurl" : "mpd"}
+
+    this.apiService.postRequest('auth/favourite-channels',body).subscribe((res: any) => {
       if (res.response_code === 200) {
         this.favListData = res.data;
       }
@@ -100,7 +102,8 @@ export class FavouritesComponent implements OnInit {
   recentsPlayData: any;
   getRecentsListData(): void {
     // Fetch from API if not found in local storage
-    this.apiService.getRequest('auth/my_recents').subscribe((res: any) => {
+    const body = {"typeurl" : "mpd"}
+    this.apiService.postRequest('auth/recent-channels',body).subscribe((res: any) => {
       if (res.response_code === 200) {
         this.recentsPlayData = res.data;
       }
