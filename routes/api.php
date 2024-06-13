@@ -84,6 +84,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
 
     Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify']);
+    Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
+    Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 
