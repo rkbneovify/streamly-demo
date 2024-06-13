@@ -9,7 +9,6 @@ use App\Models\FavouriteChannel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use phpDocumentor\Reflection\Types\Null_;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class GracenoteChannelApiController extends Controller
