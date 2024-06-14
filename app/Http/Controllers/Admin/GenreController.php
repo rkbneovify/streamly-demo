@@ -15,50 +15,52 @@ use Illuminate\Support\Facades\DB;
 
 class GenreController extends Controller
 {    //use ImageUpload; //Using our created Trait to access inside trait method
-       /**
+    /**
      * Display a listing of the resource.
      *
      * @param  Index  $request
      * @return \Illuminate\Http\Response
      */
-    
+
     public function index()
-    { 
+    {
         $users = DB::table('genre')->get();
 
         return view('admin.viewgenre', compact('users'));
     }
 
-    public function addgenre(){
+    public function addgenre()
+    {
         return view('admin.addgenre');
     }
 
-    public function creategenre(Request $request){
+    public function creategenre(Request $request)
+    {
 
-        if($request){
+        if ($request) {
             $add_genre = DB::table('genre')->insert(
                 array(
-                   'name' => $request->name,
-                   'status' => '1',
-                   'created_on' => date("Y/m/d h:i:s")
+                    'name' => $request->name,
+                    'status' => '1',
+                    'created_at' => date("Y/m/d h:i:s")
                 )
-             );
+            );
 
             return redirect('admin/addgenre')->with('info', 'Genre Added Successfully');
-            
-        }else{
+        } else {
             return redirect('admin/addgenre')->with('error', 'OOPS! Something Went Wrong.');
         }
     }
 
-    public function deletegenre($id){
+    public function deletegenre($id)
+    {
 
         $DeleteGenre = Genre::where('id', $id)->delete();
 
-        if($DeleteGenre){
+        if ($DeleteGenre) {
             return redirect('admin/allgenre')->with('info', 'Genre Deleted Successfully');
-        }else{
-        return redirect('admin/allgenre')->with('error', 'OOPS! Something Went Wrong.');
+        } else {
+            return redirect('admin/allgenre')->with('error', 'OOPS! Something Went Wrong.');
         }
     }
 }
