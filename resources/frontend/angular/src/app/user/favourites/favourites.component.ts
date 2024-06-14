@@ -89,9 +89,7 @@ export class FavouritesComponent implements OnInit {
   }
 
   getFavoriteListData(): void {
-    // Fetch from API if not found in local storage
     const body = {"typeurl" : "mpd"}
-
     this.apiService.postRequest('auth/favourite-channels',body).subscribe((res: any) => {
       if (res.response_code === 200) {
         this.favListData = res.data;

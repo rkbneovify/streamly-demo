@@ -64,7 +64,7 @@
             </div>
             <div class="searchbar_pro d-flex gap-2">
               <div class="search_Bar" >
-                <input type="text" placeholder="" (focus)="searchShow=!searchShow" (blur)="searchShow = false"
+                <input type="text" placeholder="" (input)="onSearch($event.target)" (focus)="searchShow=!searchShow" (blur)="searchShow = false"
                 />
                 <img src="../../assets/dummy-img/search-md.svg" alt="" />
               </div>

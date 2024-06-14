@@ -24,6 +24,7 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
     this.loginSliders();
     this.getFavoriteList();
+    this.getRecentsListData();
     this.channelsWithGenre();
   }
 
@@ -149,6 +150,17 @@ channelsWithGenre() {
     },
     error: (err: any) => {
       console.log(err);
+    }
+  });
+}
+
+recentsPlayData: any;
+getRecentsListData(): void {
+  // Fetch from API if not found in local storage
+  const body = {"typeurl" : "mpd"}
+  this.crud.postRequest('auth/recent-channels',body).subscribe((res: any) => {
+    if (res.response_code === 200) {
+      this.recentsPlayData = res.data;
     }
   });
 }

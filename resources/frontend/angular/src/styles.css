@@ -389,6 +389,31 @@ nav {
   border-radius: 50%;
 }
 
+#heart-icon {
+  transition: fill 0.3s ease;
+}
+
+#heart-icon.favActive path {
+  fill: #ca1111;
+  animation: popup 0.3s ease;
+}
+
+@keyframes popup {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#heart-icon.favAnimate {
+  
+}
+
 ::-webkit-scrollbar {
   scrollbar-width: thin; 
   scrollbar-color: #888 #f1f1f1;
