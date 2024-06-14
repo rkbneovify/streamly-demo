@@ -83,7 +83,7 @@ main {
 
     .landing_carousel_section2_bottom {
       flex-basis: 160px;
-      gap: 10px;
+      gap: 20px;
       overflow-x: auto;
 
       .card_page {
@@ -94,12 +94,13 @@ main {
         position: relative;
         display: flex;
         overflow-x: hidden;
-        
+        background-color: #4b98db4d;
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {
           max-width: 160px;
           height: 100%;
+          object-fit: contain;
         //   border-radius: 10px;
         //   transition: border-radius 1s ease;
         }
