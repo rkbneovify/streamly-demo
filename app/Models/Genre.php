@@ -29,8 +29,8 @@ class Genre extends Model
     protected $fillable = [
         'name',
         'status',
-        'created_at',
-        'modified_on'
+        'image',
+        'position'
     ];
 
     /**
@@ -38,7 +38,7 @@ class Genre extends Model
      */
     protected $dates = [
         'created_at',
-        'modified_on'
+        'updated_at'
     ];
 
     /**
