@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Genre;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 //use App\Traits\ImageUpload;programs
 /**
@@ -24,9 +26,9 @@ class GenreController extends Controller
 
     public function index()
     {
-        $users = DB::table('genre')->get();
+        $genres = DB::table('genre')->get();
 
-        return view('admin.viewgenre', compact('users'));
+        return view('admin.viewgenre', compact('genres'));
     }
 
     public function addgenre()
@@ -36,19 +38,31 @@ class GenreController extends Controller
 
     public function creategenre(Request $request)
     {
-
-        if ($request) {
-            $add_genre = DB::table('genre')->insert(
-                array(
-                    'name' => $request->name,
-                    'status' => '1',
-                    'created_at' => date("Y/m/d h:i:s")
-                )
-            );
-
-            return redirect('admin/addgenre')->with('info', 'Genre Added Successfully');
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'position' => 'required|integer',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg'
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
         } else {
-            return redirect('admin/addgenre')->with('error', 'OOPS! Something Went Wrong.');
+            $genre = new Genre();
+            $genre->name = $request->name;
+            $genre->status = 1;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/genre');
+                $image->move($destinationPath, $name);
+                $genre->image = '/uploads/genre/' . $name;
+            }
+            $genre->position = $request->position;
+
+            if ($genre->save()) {
+                return redirect('admin/addgenre')->with('info', 'Genre Added Successfully');
+            } else {
+                return redirect('admin/addgenre')->with('error', 'OOPS! Something Went Wrong.');
+            }
         }
     }
 
