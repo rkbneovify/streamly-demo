@@ -341,6 +341,10 @@ class NewChannelApiController extends Controller
     public function allGenre()
     {
         $genres = Genre::select('name', 'image')->orderBy('position')->get();
+
+        $genres->map(function ($genre) {
+            $genre->image = env('APP_URL') . $genre->image;
+        });
         return response()->json($genres);
     }
 }
