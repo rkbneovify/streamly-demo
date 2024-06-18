@@ -28,6 +28,9 @@ export class UserComponent implements OnInit {
   showSubMenu: boolean = false;
   searchShow: boolean = false;
   searchResults: any[] = [];
+  favChannelList:any;
+  favoriteChannels: number[] = [];
+
   private searchSubject: Subject<string> = new Subject();
   constructor(
     private crud: CrudService,
@@ -175,15 +178,19 @@ export class UserComponent implements OnInit {
 
   performSearch(searchTerm: string): void {
     if (!searchTerm) {
-      this.searchResults = [];
+      this.allChannelDataList = [];
       return;
     }
 
+    const term = {
+      "search": searchTerm
+  }
+
     this.crud
-      .getRequest(`your-api-endpoint?query=${searchTerm}`)
+      .postRequest("auth/new-search",term)
       .subscribe({
         next: (res: any) => {
-          this.searchResults = res.data;
+          this.allChannelDataList = res;
         },
         error: (err: any) => {
           console.error('Search API error: ', err);
@@ -191,4 +198,81 @@ export class UserComponent implements OnInit {
         },
       });
   }
+
+allChannelDataList:any;
+  // get all channels
+  get_All_Channels(){
+    const body= {
+      "typeurl": "mpd"
+  }
+    this.crud.postRequest('auth/all-channel-list',body).subscribe({
+      next:(res:any)=>{
+        this.allChannelDataList = res.data;
+        this.searchShow=!this.searchShow;
+        console.log(res);
+      },
+      error:(error:any)=>{
+        console.log(error);
+      }
+    })
+  }
+  // searchShow=!searchShow
+  checkData(){
+    if(!this.allChannelDataList){
+      this.get_All_Channels();
+    }
+  }
+
+    // Check if a channel is marked as favorite
+    isFavorite(channelId: number): boolean {
+      return this.favoriteChannels.includes(channelId);
+  }
+  
+  
+            // Toggle favorite status
+      toggleFavorite(channelId: number): void {
+        // If channel is already favorite, remove it
+        if (this.isFavorite(channelId)) {
+            this.removeFavoriteChannel(channelId);
+        } else {
+            // add it to favorites
+            this.addFavoriteChannel(channelId);
+        }
+    }
+
+       // Add channel to favorites
+   addFavoriteChannel(channelId: number): void {
+    // Call API to add channel to favorites
+    this.crud.postRequest('auth/addtofavorite', { channelid: channelId }).subscribe((res: any) => {
+        if (res.response_code === 200) {
+            this.favoriteChannels.push(channelId); // Update local favorite list
+            this.updateFavoriteChannels(); // Update local storage
+            this.ts.success(res.message);
+        }
+    });
+}
+
+// Remove channel from favorites
+removeFavoriteChannel(channelId: number): void {
+    // Call API to remove channel from favorites
+    this.crud.postRequest('auth/unfavorite', { channelid: channelId }).subscribe((res: any) => {
+        if (res.response_code === 200) {
+            this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
+            this.updateFavoriteChannels(); // Update local storage
+            this.ts.success(res.message);
+        }
+    });
+}
+
+// Update local storage with current favorite channels
+updateFavoriteChannels(): void {
+  console.log('favoriteChannels',this.favoriteChannels);
+    localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
+}
+
+// set player data in local 
+setplayerData(id:string){
+  localStorage.setItem('playerId',id);
+  this.router.navigateByUrl('/user/playstream');
+}
 }
