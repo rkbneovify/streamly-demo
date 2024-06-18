@@ -65,7 +65,7 @@
       </div>
   
       <div class="landing_carousel_section2 mt-5">
-          <div class="landing_carousel_section2_top">Recently Played</div>
+          <div *ngIf="recentsPlayData" class="landing_carousel_section2_top">Recently Played</div>
           <div class="landing_carousel_section2_bottom mt-3 d-flex">
             <div class="card_page" *ngFor="let item of recentsPlayData">
               <img
