@@ -43,11 +43,24 @@ export class AllChannelComponent implements OnInit{
   getPrivacyP() {
     const body = {
       "typeurl": "mpd",
-      "zipcode": ""
   }
-    this.apiService.postRequest('auth/channelListWithGracenote', body, this.getAuthHeaders()).subscribe({
+
+  // this.crud.postRequest('auth/all-channel-list', body).subscribe({
+  //   next: (res: any) => {
+  //     this.allChannelDataList = this.chunkArray(res.data, 6);
+  //     console.log(this.chunkArray(res.data, 6));
+  //     this.searchShow = !this.searchShow;
+  //     console.log(res);
+  //   },
+  //   error: (error: any) => {
+  //     console.log(error);
+  //   },
+  // });
+
+
+    this.apiService.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
-        const list = res.data;
+        const list = this.chunkArray(res.data,6);
         localStorage.setItem('allChannel',JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
         console.log(res.data,"==============>", res?.data[2]?.gracenote_data?.url+'/'+res.data?.gracenote_data?.url?.assets?.asset[0]?.URI);
@@ -56,6 +69,15 @@ export class AllChannelComponent implements OnInit{
         console.log(err);
       }
     });
+  }
+
+  // 
+  chunkArray(array: any, chunkSize: any): any {
+    const result: any = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      result.push(array.slice(i, i + chunkSize));
+    }
+    return result;
   }
 
 
