@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
   showSubMenu: boolean = false;
   searchShow: boolean = false;
   searchResults: any[] = [];
-  favChannelList:any;
+  favChannelList: any;
   favoriteChannels: number[] = [];
 
   private searchSubject: Subject<string> = new Subject();
@@ -49,12 +49,11 @@ export class UserComponent implements OnInit {
   ngOnInit(): void {
     // this.getRecentsListData();
     this.setActiveTabBasedOnUrl();
-    this.searchSubject.pipe(
-      debounceTime(300), 
-      distinctUntilChanged()
-    ).subscribe((searchTerm: string) => {
-      this.performSearch(searchTerm);
-    });
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((searchTerm: string) => {
+        this.performSearch(searchTerm);
+      });
   }
 
   sideBarAnimation() {
@@ -157,7 +156,6 @@ export class UserComponent implements OnInit {
     this.activeTab = 'home';
   }
 
-
   setActiveTabBasedOnUrl(): void {
     const url = this.router.url;
     if (url.includes('/user/home')) {
@@ -183,96 +181,129 @@ export class UserComponent implements OnInit {
     }
 
     const term = {
-      "search": searchTerm
+      search: searchTerm,
+    };
+
+    this.crud.postRequest('auth/new-search', term).subscribe({
+      next: (res: any) => {
+        this.allChannelDataList = this.chunkArray(res, 6);
+      },
+      error: (err: any) => {
+        console.error('Search API error: ', err);
+        this.ts.error('Search failed. Please try again.');
+      },
+    });
   }
 
-    this.crud
-      .postRequest("auth/new-search",term)
-      .subscribe({
-        next: (res: any) => {
-          this.allChannelDataList = res;
-        },
-        error: (err: any) => {
-          console.error('Search API error: ', err);
-          this.ts.error('Search failed. Please try again.');
-        },
-      });
-  }
+  allChannelDataList: any = [];
 
-allChannelDataList:any;
   // get all channels
-  get_All_Channels(){
-    const body= {
-      "typeurl": "mpd"
-  }
-    this.crud.postRequest('auth/all-channel-list',body).subscribe({
-      next:(res:any)=>{
-        this.allChannelDataList = res.data;
-        this.searchShow=!this.searchShow;
+  get_All_Channels() {
+    const body = {
+      typeurl: 'mpd',
+    };
+    this.crud.postRequest('auth/all-channel-list', body).subscribe({
+      next: (res: any) => {
+        this.allChannelDataList = this.chunkArray(res.data, 6);
+        console.log(this.chunkArray(res.data, 6));
+        this.searchShow = !this.searchShow;
         console.log(res);
       },
-      error:(error:any)=>{
+      error: (error: any) => {
         console.log(error);
-      }
-    })
+      },
+    });
   }
+
+  chunkArray(array: any, chunkSize: any): any {
+    const result: any = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      result.push(array.slice(i, i + chunkSize));
+    }
+    return result;
+  }
+
   // searchShow=!searchShow
-  checkData(){
-    if(!this.allChannelDataList){
+  checkData() {
+    // console.log(this.allChannelDataList,'dfghjhgvb');
+    if (!this.allChannelDataList.length) {
       this.get_All_Channels();
     }
   }
 
-    // Check if a channel is marked as favorite
-    isFavorite(channelId: number): boolean {
-      return this.favoriteChannels.includes(channelId);
+  // Check if a channel is marked as favorite
+  isFavorite(channelId: number): boolean {
+    return this.favoriteChannels.includes(channelId);
   }
-  
-  
-            // Toggle favorite status
-      toggleFavorite(channelId: number): void {
-        // If channel is already favorite, remove it
-        if (this.isFavorite(channelId)) {
-            this.removeFavoriteChannel(channelId);
-        } else {
-            // add it to favorites
-            this.addFavoriteChannel(channelId);
-        }
+
+  // Toggle favorite status
+  toggleFavorite(channelId: number): void {
+    // If channel is already favorite, remove it
+    if (this.isFavorite(channelId)) {
+      this.removeFavoriteChannel(channelId);
+    } else {
+      // add it to favorites
+      this.addFavoriteChannel(channelId);
     }
+  }
 
-       // Add channel to favorites
-   addFavoriteChannel(channelId: number): void {
+  // Add channel to favorites
+  addFavoriteChannel(channelId: number): void {
     // Call API to add channel to favorites
-    this.crud.postRequest('auth/addtofavorite', { channelid: channelId }).subscribe((res: any) => {
+    this.crud
+      .postRequest('auth/addtofavorite', { channelid: channelId })
+      .subscribe((res: any) => {
         if (res.response_code === 200) {
-            this.favoriteChannels.push(channelId); // Update local favorite list
-            this.updateFavoriteChannels(); // Update local storage
-            this.ts.success(res.message);
+          this.favoriteChannels.push(channelId); // Update local favorite list
+          this.updateFavoriteChannels(); // Update local storage
+          this.ts.success(res.message);
         }
-    });
-}
+      });
+  }
 
-// Remove channel from favorites
-removeFavoriteChannel(channelId: number): void {
+  // Remove channel from favorites
+  removeFavoriteChannel(channelId: number): void {
     // Call API to remove channel from favorites
-    this.crud.postRequest('auth/unfavorite', { channelid: channelId }).subscribe((res: any) => {
+    this.crud
+      .postRequest('auth/unfavorite', { channelid: channelId })
+      .subscribe((res: any) => {
         if (res.response_code === 200) {
-            this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
-            this.updateFavoriteChannels(); // Update local storage
-            this.ts.success(res.message);
+          this.favoriteChannels = this.favoriteChannels.filter(
+            (id) => id !== channelId
+          ); // Update local favorite list
+          this.updateFavoriteChannels(); // Update local storage
+          this.ts.success(res.message);
         }
-    });
-}
+      });
+  }
 
-// Update local storage with current favorite channels
-updateFavoriteChannels(): void {
-  console.log('favoriteChannels',this.favoriteChannels);
-    localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
-}
+  // Update local storage with current favorite channels
+  updateFavoriteChannels(): void {
+    console.log('favoriteChannels', this.favoriteChannels);
+    localStorage.setItem(
+      'favoriteChannels',
+      JSON.stringify(this.favoriteChannels)
+    );
+  }
 
-// set player data in local 
-setplayerData(id:string){
-  localStorage.setItem('playerId',id);
-  this.router.navigateByUrl('/user/playstream');
-}
+  // set player data in local
+  setplayerData(id: string, type?: any) {
+    localStorage.setItem('playerId', id);
+    this.router.navigateByUrl('/user/playstream');
+    this.searchShow = !this.searchShow;
+  }
+
+  closeSearchData() {
+    this.searchShow = !this.searchShow;
+    this.allChannelDataList = [];
+  }
+
+
+  playlist_details_show:boolean=false;
+
+
+  showPlaylist(){
+    this.playlist_details_show= !this.playlist_details_show;
+  }
+
 }
