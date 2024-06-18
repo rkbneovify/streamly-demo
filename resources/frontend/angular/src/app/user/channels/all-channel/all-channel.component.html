@@ -32,7 +32,7 @@
             <!-- <img [src]="item.logo" alt=""> -->
                 <img loading="lazy" *ngIf="item?.gracenote_data?.assets?.asset?.length" [src]="item?.prgSvcId? 'https://demo.tmsimg.com/'+item?.gracenote_data?.assets?.asset[0].URI :item.logo " alt="">
 
-                <img loading="lazy" *ngIf="!item?.gracenote_data?.assets?.asset?.length || !item?.prgSvcId" [src]="item?.logo" alt="">
+                <img loading="lazy" *ngIf="!item?.gracenote_data?.assets?.asset?.length || !item?.prgSvcId" [src]="item?.logo?item?.logo:'../../../../assets/dummy-img/Subtract.png'" alt="" >
                 <!-- <img *ngIf="!item?.prgSvcId" [src]="item.logo" alt=""> -->
 
                 <div class="card_content">
