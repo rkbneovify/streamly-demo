@@ -106,16 +106,32 @@
           <router-outlet *ngIf="!searchShow"></router-outlet>
           <!-- <app-search *ngIf="searchShow"></app-search> -->
 
-          <div *ngIf="searchShow" class="landing_carousel_section2 mt-5">
-            <div class="allChannelsList my-4 d-flex flex-wrap" >
-                <div class="card_page" *ngFor="let item of allChannelDataList">        
-                    <img [src]="item?.image?item?.image:'../../../assets/dummy-img/Subtract-2.png'">
+          <div *ngIf="searchShow" class="landing_carousel_section2 mt-1">
+            <h1 class="text-center close-search">
+              <!-- <span (click)="closeSearchData()">X</span> -->
+              <img class="m-auto " (click)="closeSearchData()" src="../../../assets/dummy-img/close-circle.svg" alt="">
+            </h1>
+            <div class="allChannelsList my-4 d-flex flex-nowrap" *ngFor="let row of allChannelDataList">
+                <div class="card_page" *ngFor="let item of row">        
+                    <img [src]="item?.image?item?.image:'../../../assets/dummy-img/Subtract-2.png'" [ngClass]="{'object-fill':item?.type == 'event'}">
                     <div class="card_content">
                         <div class="card_content_text1 d-flex justify-content-between">
-                            <div class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url)">
+
+                            <div *ngIf="item?.type == 'channel'" class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
                                 <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
                                 <p class="d-flex flex-column">Play <span></span></p>
                             </div>
+                            <div *ngIf="!(item?.type == 'channel') && !(item?.type == 'event') "  class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
+                              <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
+                              <p class="d-flex flex-column">Play <span></span></p>
+                          </div>
+
+                            <!-- for shows detail  -->
+                            <div *ngIf="item?.type == 'event'" class="play_img d-flex align-items-center gap-2">
+                              <!-- <img src="../../../assets/dummy-img/play_icon.svg" alt="" /> -->
+                              <p class="d-flex flex-column" (click)="showPlaylist()">See Details... <span></span></p>
+                          </div>
+
                             <div class="d-flex gap-2">
                                 <div class="rounded-circle overflow-hidden" (click)="toggleFavorite(item.id)"><img class="rounded-circle" src="../../../assets/dummy-img/heart-circle.svg" alt="" 
                                     [class.favorite]="isFavorite(item.id)"></div>
@@ -127,15 +143,83 @@
                             <p *ngIf="item?.gracenote_data" class="fw-light"><span class="fw-bold">Video Type :- </span> {{item?.gracenote_data?.videoQuality?.videoType}}</p>
         
                         </div>
-                        <!-- <div class="card_content_text3">
-                            Season 1 : Yorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
-                        </div> -->
+                        <div *ngIf="item.description" class="card_content_text3">
+
+                            {{item.description}}
+
+                        </div>
                     </div>
         
                 </div>
             </div>
         </div>
 
+<!-- show channels details detials  -->
+        <div *ngIf="playlist_details_show" class="modal-overlay"></div>
+        <div *ngIf="playlist_details_show" class="row schedule_details_container">
+          <div class="col-4 section1_img">
+            <img src="../../../../assets/dummy-img/Rectangle 1078.png" alt=""/>
+          </div>
+          <div class="col-lg-4 col-12 playstream_2">
+            <h1>How the universe works</h1>
+            <p class="my-3">
+              Dorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
+            <div class="play_btn_container_1">
+              <button class="playbtn_time text-nowrap">15 m</button>
+              <button class="playbtn_hd">
+                <img src="../../../assets/dummy-img/playTv.svg" alt="" />
+                <span>HD</span>
+              </button>
+            </div>
+            <p class="playstream_desc my-3">
+              Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+              vulputate libero et velit interdum, ac aliquet odio mattis. Class
+              aptent taciti sociosqu ad litora torquent per conubia nostra, per
+              inceptos himenaeos.
+            </p>
+    
+            <div class="play_btn_container_2">
+              <button class="plan_btn playbtn_genre">
+                <span class="text-nowrap">Genre :</span
+                ><span class="text-nowrap">Sci-Fi</span>
+              </button>
+              <button class="plan_btn playbtn_aired mt-3">
+                <span class="text-nowrap">Aired :</span
+                ><span class="text-nowrap">Starts in 15 mins</span>
+              </button>
+            </div>
+
+          </div>
+          <div class="col-4 schedule_details_section3">
+            <div class="schedule_details_data d-flex align-items-center gap-2">
+              <div>
+                <img src="../../../../assets/dummy-img/calendar-2.svg" alt="" />
+              </div>
+              <h3>Schedule</h3>
+            </div>
+            <div class="schedule_details_time-container">
+              <div
+                class="schedule_details_time my-3"
+                *ngFor="let data of [1, 2, 3]"
+              >
+                <div class="schedule_details_day mb-2">Today, 09 Feb</div>
+                <div
+                  class="schedule_details_hr d-flex align-items-center justify-content-between"
+                >
+                  <p>01:30 PM</p>
+                  <p>01:30 PM</p>
+                  <p>01:30 PM</p>
+                  <p>01:30 PM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div (click)="playlist_details_show=false" class="close_menu_details pointer">
+            <img src="../../../assets/dummy-img/close-circle.svg" alt="">
+          </div>
+        </div>
 
         </div>
       </div>

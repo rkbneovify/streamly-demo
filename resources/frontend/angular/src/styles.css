@@ -437,3 +437,7 @@ nav {
 .card_content{
   overflow-x: hidden;
 }
+
+.object-fill{
+  object-fit: fill !important;
+}
