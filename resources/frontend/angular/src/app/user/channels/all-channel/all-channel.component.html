@@ -50,7 +50,7 @@
 
       <img
       [src]="
-        item?.image ? item?.image : '../../../assets/dummy-img/Subtract-2.png'
+        item?.image ? item?.image : '../../../assets/dummy-img/inf.png'
       "
       [ngClass]="{ 'object-fill': item?.type == 'event' }"
     />
@@ -66,7 +66,7 @@
               src="../../../assets/dummy-img/play_icon.svg"
               alt=""
             />
-            <p class="d-flex flex-column">Play <span>S1 E1</span></p>
+            <p class="d-flex flex-column">Play</p>
           </div>
           <div class="d-flex gap-2">
             <div
@@ -90,7 +90,10 @@
           </div>
         </div>
         <div class="card_content_text2 my-5">
-          <p class="mb-4">{{ item.stationName }}</p>
+          <p class="mb-4" *ngIf="item.stationName">{{ item.stationName}}</p>
+          <p class="mb-4" *ngIf="item.callSign">{{ item.callSign }}</p>  
+          <p class="mb-4" *ngIf="item.timeZone"><span class="fw-bold">Time zone :- </span> {{ item.timeZone }}</p>  
+          
           <p *ngIf="item?.gracenote_data" class="fw-light">
             <span class="fw-bold">Video Type :- </span>
             {{ item?.gracenote_data?.videoQuality?.videoType }}

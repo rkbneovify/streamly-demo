@@ -575,7 +575,7 @@ footer .contain:first-child {
     // ============================ shows menu details==== 
     .schedule_details_container {
       row-gap: 3rem;
-      position: absolute;
+      position: fixed;
       top: 0;
       bottom: 0;
       left: 0;
@@ -588,6 +588,7 @@ footer .contain:first-child {
       margin: auto;
       z-index: 135;
       max-width: 750px;
+      height: 90%;
       &::-webkit-scrollbar{
         width: 0;
       }
