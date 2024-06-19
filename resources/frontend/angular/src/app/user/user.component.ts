@@ -54,6 +54,9 @@ export class UserComponent implements OnInit {
       .subscribe((searchTerm: string) => {
         this.performSearch(searchTerm);
       });
+
+      // get the fav. list 
+     this.getFavoriteList();
   }
 
   sideBarAnimation() {
@@ -121,7 +124,7 @@ export class UserComponent implements OnInit {
               localStorage.removeItem('userDetails');
               localStorage.removeItem('loggedInDeviceDetail');
               localStorage.removeItem('loggedInDeviceDetails');
-              localStorage.removeItem('favoriteChannels');
+              localStorage.removeItem('allFavoriteChannels');
               localStorage.removeItem('token');
 
               this.ts.success(res.message);
@@ -246,6 +249,23 @@ export class UserComponent implements OnInit {
       this.addFavoriteChannel(channelId);
     }
   }
+
+  // Fetch favorite list
+getFavoriteList(): void {
+  console.log('==========================================>')
+    const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+    if (storedFavoriteChannels) {
+        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+    } else {
+        // Fetch from API if not found in local storage
+        this.crud.getRequest('auth/my_favorites').subscribe((res: any) => {
+            if (res.response_code === 200) {
+                this.favoriteChannels = res.data.map((channel: any) => channel.id);
+                this.updateFavoriteChannels(); // Update local storage
+            }
+        });
+    }
+}
 
   // Add channel to favorites
   addFavoriteChannel(channelId: number): void {
