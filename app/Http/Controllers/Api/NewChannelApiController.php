@@ -293,49 +293,51 @@ class NewChannelApiController extends Controller
     // }
     public function searchChannelProgram(Request $request)
     {
-        $search = $request->input('search');
+        $validator = Validator::make($request->all(), [
+            'search' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $search = $request->input('search');
 
-        // Fetch programs matching the search query
-        $programs = GracenoteScheduleProgram::select('prgSvcId', 'title as name', 'description', 'assets')
-            ->where('title', 'like', "%{$search}%")
-            ->get();
+            // Fetch programs matching the search query
+            $programs = GracenoteScheduleProgram::select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
+                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->where('title', 'like', "%{$search}%")
+                ->get();
 
-        // Process each program to add image URI and type, and remove assets
-        $programs->map(function ($program) {
-            $program->image = $this->getURIFromAssetForProgram($program->assets);
-            $program->type = 'event';
-            $program->callSign = null;
-            unset($program->assets);
-        });
+            // Process each program to add image URI and type, and remove assets
+            $programs->map(function ($program) {
+                $program->image = $this->getURIFromAssetForProgram($program->assets);
+                $program->type = 'event';
+                $program->callSign = null;
+                unset($program->assets);
+            });
 
-        // Log the programs fetched for debugging
-        // Log::debug('Programs:', $programs->toArray());
+            // Fetch channels matching the search query
+            $channels = GracenoteSource::select('channels.id as channel_id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets')
+                ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
+                ->where('gracenote_sources.stationName', 'like', "%{$search}%")
+                ->get();
 
-        // Fetch channels matching the search query
-        $channels = GracenoteSource::select('prgSvcId', 'stationName as name', 'callSign', 'assets')
-            ->where('stationName', 'like', "%{$search}%")
-            ->get();
+            // Process each channel to add image URI and type, and remove assets
+            $channels->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
+                $channel->type = 'channel';
+                $channel->description = null;
+                $channel->TMSId = null;
+                unset($channel->assets);
+            });
 
-        // Process each channel to add image URI and type, and remove assets
-        $channels->map(function ($channel) {
-            $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
-            $channel->type = 'channel';
-            $channel->description = null;
-            unset($channel->assets);
-        });
+            // $programs = ($programs->unique('name')->toArray());
+            $data = collect(array_merge($channels->toArray(), $programs->toArray()));
 
-        // Log the channels fetched for debugging
-        // Log::debug('Channels:', $channels->toArray());
-
-        // Merge programs and channels into a single collection
-        // $data = $channels->merge($programs);
-
-        // Log the merged data for debugging
-        // Log::debug('Merged Data:', $data->toArray());
-        $programs = ($programs->unique('name')->toArray());
-        $data = collect(array_merge($channels->toArray(), $programs));
-
-        return response()->json($data);
+            return response()->json($data);
+        }
     }
 
     public function allGenre()
@@ -345,6 +347,54 @@ class NewChannelApiController extends Controller
         $genres->map(function ($genre) {
             $genre->image = env('APP_URL') . $genre->image;
         });
-        return response()->json($genres);
+        $response = [
+            'success' => true,
+            'response_code' => 200,
+            'message' => 'All genres Retrieved successfully.',
+            'data' => $genres
+        ];
+        return response()->json($response);
+    }
+
+    public function programDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'TMSId' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $TMSId = $request->TMSId;
+            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('title', 'description', 'duration', 'quals', 'assets')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
+                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->groupBy('gracenote_schedule_program.id')
+                ->first();
+            $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
+                ->where('title', 'like', "%{$program->title}%")
+                ->get();
+            $data = [
+                "title" => $program->title,
+                "description" => $program->description,
+                "duration" => $program->duration,
+                "quals" => $program->quals,
+                "genre" =>  json_decode($program->genre),
+                "image" => $this->getURIFromAssetForProgram($program->assets),
+                "schedule" => $program_details
+            ];
+            unset($program->assets);
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Program Details Retrieved successfully.',
+                'data' => $data
+            ];
+            return response()->json($response);
+        }
     }
 }
