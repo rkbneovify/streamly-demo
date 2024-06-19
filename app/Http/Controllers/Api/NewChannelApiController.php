@@ -305,7 +305,7 @@ class NewChannelApiController extends Controller
             $search = $request->input('search');
 
             // Fetch programs matching the search query
-            $programs = GracenoteScheduleProgram::select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
+            $programs = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%")
                 ->get();
@@ -319,7 +319,7 @@ class NewChannelApiController extends Controller
             });
 
             // Fetch channels matching the search query
-            $channels = GracenoteSource::select('channels.id as channel_id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets')
+            $channels = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets')
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%")
                 ->get();
