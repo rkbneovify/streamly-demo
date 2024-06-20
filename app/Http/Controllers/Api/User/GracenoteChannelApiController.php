@@ -135,6 +135,7 @@ class GracenoteChannelApiController extends Controller
             $user = JWTAuth::user();
             $urlType = $request->get('typeurl');
             $zipcode = $request->get('zipcode');
+            $genre = $request->get('genre');
             $validate = 0;
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
@@ -160,6 +161,11 @@ class GracenoteChannelApiController extends Controller
                 if (!empty($zipcode)) {
                     $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                 }
+            }
+            if (!empty($genre) && $genre != 'Others') {
+                $query->where('genre.name', '=', $genre);
+            } else if ($genre == 'Others') {
+                $query->whereNull('genre.name');
             }
             $query->where('channels.status', '=', '1');
             $query->groupBy('channels.id');
