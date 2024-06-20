@@ -63,7 +63,29 @@ main {
 }
 
 
+
 .landing_carousel_section2 {
+  overflow-y: auto;
+  height: 570px;
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar {
+    height: 0px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #234b69e5;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
     .landing_carousel_section2_top {
       font-family: Poppins;
       font-size: 18px;
@@ -86,6 +108,10 @@ main {
       flex-basis: 160px;
       gap: 36px;
       overflow-x: auto;
+      &::-webkit-scrollbar {
+        width: 0px;
+        height: 0px;
+      }
 
       .card_page {
         min-width: 160px;
@@ -97,6 +123,8 @@ main {
         overflow-x: hidden;
         // background-color: #00070e;
         background-color: #4b98db4d;
+
+        
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {
@@ -181,6 +209,7 @@ main {
       }
     }
   }
+
 
 
   @media screen and (max-width: 765px) {

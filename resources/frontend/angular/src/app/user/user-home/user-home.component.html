@@ -122,7 +122,7 @@
           <div class="landing_carousel_section2_top">{{list?.genre_name}} <span class="pointer" [routerLink]="'/user/channels/'+list.genre_name">See More >></span></div>
           <div class="landing_carousel_section2_bottom mt-3 d-flex" >
               <div class="card_page" *ngFor="let data of list?.channels" >
-                  <img *ngIf="!data?.image" src="../../../assets/dummy-img/Subtract-2.png" alt="">
+                  <img *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt="">
                   <img *ngIf="data?.image" [src]="data?.image" alt="">
                   <div class="card_content">
                       <div class="card_content_text1 d-flex justify-content-between">

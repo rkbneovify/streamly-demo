@@ -27,13 +27,21 @@
       }
       .schedule_categories {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-start;
         align-items: center;
         flex: 1;
         margin-left: 10px;
+        flex-wrap: nowrap;
+        overflow-x: hidden;
+        &::-webkit-scrollbar{
+          height: 0px;
+          width: 0px;
+        }
         .schedule_category {
           padding: 8px 16px 8px 16px;
           height: 40px;
+          min-width: 100px;
+          text-align: center;
           cursor: pointer;
           &:hover {
             background-color: #ffffff2e;
@@ -79,6 +87,11 @@
       .schedule_hours {
         justify-content: space-between;
         flex: 1;
+        overflow-x: auto;
+        &::-webkit-scrollbar{
+          height: 0;
+          width: 0;
+        }
         .schedule_hour {
           flex: 1;
           padding: 10px 0px 10px 16px;
@@ -86,6 +99,7 @@
           font-weight: 400;
           line-height: 20px;
           color: #e0e0e0;
+          min-width: 225px;
         }
       }
   

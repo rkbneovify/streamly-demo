@@ -29,7 +29,11 @@ export class NewsComponent implements OnInit {
       this.keyword = urlSegments[urlSegments.length - 1].path;
 
       if (this.keyword) {
-        this.apiService.filterChannelResponse(this.keyword, this.body,this.getAuthHeaders()).subscribe({
+        const body = {
+          "typeurl": "mpd",
+          "genre":this.keyword 
+      }
+        this.apiService.filterChannelResponse(body).subscribe({
           next:(res:any)=>{
             console.log('Data===>',res)
             this.data = res?.data;
