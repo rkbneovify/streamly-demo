@@ -29,10 +29,14 @@ export class ComedyComponent implements OnInit {
       this.keyword = urlSegments[urlSegments.length - 1].path;
 
       if (this.keyword) {
-        this.apiService.filterChannelResponse(this.keyword, this.body,this.getAuthHeaders()).subscribe({
+        const body = {
+          "typeurl": "mpd",
+          "genre":this.keyword 
+      }
+        this.apiService.filterChannelResponse(body).subscribe({
           next:(res:any)=>{
             console.log('Data===>',res)
-            this.data = res?.data;
+            this.data = this.chunkArray(res.data,6);
             this.getFavoriteList();
           }
         });
@@ -52,6 +56,15 @@ export class ComedyComponent implements OnInit {
     });
   }
 
+
+    // 
+    chunkArray(array: any, chunkSize: any): any {
+      const result: any = [];
+      for (let i = 0; i < array.length; i += chunkSize) {
+        result.push(array.slice(i, i + chunkSize));
+      }
+      return result;
+    }
 
 
 

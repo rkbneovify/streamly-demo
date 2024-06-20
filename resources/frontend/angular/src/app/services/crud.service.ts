@@ -59,7 +59,7 @@ export class CrudService {
   }
 
   // /filterChannels/Others
-  filterChannelResponse(channel:string,body?:any,headers?:any){
-    return this.http.post(`${this.baseUrl}/api/auth/filterChannels/${channel}`,body,{headers})
+  filterChannelResponse(body?:any,headers?:any){
+    return this.http.post(`${this.baseUrl}/api/auth/all-channel-list`,body);
   }
 }

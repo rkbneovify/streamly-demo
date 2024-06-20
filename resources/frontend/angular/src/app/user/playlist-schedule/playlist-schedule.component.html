@@ -1,25 +1,15 @@
 <div class="schedule_main">
   <div class="schedule_heading_container">
     <div class="schedule_channels">Streamly Channels</div>
-    <div class="schedule_categories">
-      <div class="schedule_category">Comedy</div>
-      <div class="schedule_category">Family</div>
-      <div class="schedule_category">Kids</div>
-      <div class="schedule_category">Movies</div>
-      <div class="schedule_category">News</div>
-      <div class="schedule_category">Sports</div>
-      <div class="schedule_category">Others</div>
-      <div class="schedule_category">Others</div>
-      <div class="schedule_category">Others</div>
-      <div class="schedule_category">Others</div>
-      <div class="schedule_category">Others</div>
+    <div class="schedule_categories" [@slideInOut]="'active'">
+      <div class="schedule_category" *ngFor="let category of visibleCategories">{{ category }}</div>
     </div>
     <div class="schedule_arrow d-flex">
-      <div class="pointer">
-        <img src="../../assets/dummy-img/chevron-left.svg" alt="" />
+      <div class="pointer" (click)="moveCategories('left')">
+        <img src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
       </div>
-      <div class="pointer">
-        <img src="../../assets/dummy-img/chevron-right.svg" alt="" />
+      <div class="pointer" (click)="moveCategories('right')">
+        <img src="../../assets/dummy-img/chevron-right.svg" alt="Next" />
       </div>
     </div>
   </div>
@@ -46,10 +36,10 @@
       </ng-select> -->
     </div>
     <div class="schedule_hours d-flex">
-      <div class="schedule_hour">12:30 PM</div>
-      <div class="schedule_hour">01:00 PM</div>
+      <div class="schedule_hour" *ngFor="let hour of scheduleHours">{{hour}}</div>
+      <!-- <div class="schedule_hour">01:00 PM</div>
       <div class="schedule_hour">01:30 PM</div>
-      <div class="schedule_hour">02:00 PM</div>
+      <div class="schedule_hour">02:00 PM</div> -->
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div class="schedule_GoLive pointer">Go Live</div>
