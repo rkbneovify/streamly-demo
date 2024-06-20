@@ -139,7 +139,8 @@
                             </div>
                         </div>
                         <div class="card_content_text2 my-5">
-                            <p class="mb-4">{{item.stationName}}</p>
+                            <p class="mb-4" *ngIf="item.stationName">{{item.stationName}}</p>
+                            <p class="mb-4" *ngIf="item.name">{{item.name}}</p>
                             <p *ngIf="item?.gracenote_data" class="fw-light"><span class="fw-bold">Video Type :- </span> {{item?.gracenote_data?.videoQuality?.videoType}}</p>
         
                         </div>

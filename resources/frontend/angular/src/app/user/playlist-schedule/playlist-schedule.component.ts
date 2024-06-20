@@ -1,12 +1,17 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgStyle } from '@angular/common';
 import { Component, OnInit} from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CrudService } from '../../services/crud.service';
+import { ToastrService } from 'ngx-toastr';
+import { DurationFormatPipe } from '../../pipe/duration-format.pipe';
+import { TimeFormatPipe } from '../../pipe/time-format.pipe';
+
 
 @Component({
   selector: 'app-playlist-schedule',
   standalone: true,
-  imports: [NgFor, RouterLink, NgIf],
+  imports: [NgFor, RouterLink, NgIf,TimeFormatPipe,DurationFormatPipe,NgStyle],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
   animations: [
@@ -94,9 +99,11 @@ export class PlaylistScheduleComponent implements OnInit {
 
   visibleCategories = this.categories.slice(0, 6); // Initially show the first three categories
 
-  constructor() {}
+  constructor(private apiService:CrudService,private toaster:ToastrService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log('minutes value====>',this.calculateWidth(1718841600,1718845200));
+  }
 
   showPlaylist() {
     this.playlist_details_show = !this.playlist_details_show;
@@ -125,5 +132,49 @@ export class PlaylistScheduleComponent implements OnInit {
         );
       }
     }
+  }
+
+  getScheduleProgram:any;
+  getScheduleChannelLogo:any;
+  getScheduleData(){
+    const body = {
+      "typeurl": "mpd",
+      "genre": "Movies"
+  }
+    this.apiService.postRequest('auth/epg-guide',body).subscribe({
+      next:(res:any)=>{
+        console.log(res);
+        this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
+        this.getScheduleProgram = res.data;
+      },
+      error:(err:any)=>{
+        console.error(err);
+      }
+    })
+  }
+
+  // get the channels log and id 
+  filterchannelAnd(stations:any){
+    return stations
+      .filter(station => station.prgSvcId !== null)
+      .map(station => ({
+        id: station.id,
+        image: station.image,
+        url: station.channel_url
+      }))
+  }
+
+  // function to change the time into width
+  calculateWidth(start:any,end:any){
+
+    if (!start || !end) {
+      return '';
+    }
+
+    const startDate = new Date(start * 1000); // Convert to milliseconds
+    const endDate = new Date(end * 1000); // Convert to milliseconds
+    const durationMs = endDate.getTime() - startDate.getTime(); // Calculate the duration in milliseconds
+    const durationMinutes = Math.floor(durationMs / (1000 * 60)); // Convert duration to minutes
+    return durationMinutes * 10;
   }
 }

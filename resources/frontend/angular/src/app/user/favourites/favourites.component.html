@@ -1,5 +1,5 @@
 <div class="landing_carousel_section2 mt-5">
-  <div *ngIf="favListData.length" class="landing_carousel_section2_top">
+  <div *ngIf="favListData?.length" class="landing_carousel_section2_top">
     Favourite<span class="pointer"> See More >></span>
   </div>
   <!-- <div class="landing_carousel_section2_bottom mt-3 d-flex">
@@ -53,9 +53,10 @@
           </div>
         </div>
         <div class="card_content_text2 my-5">
-          <p class="mb-4">{{ item.stationName }}</p>
-          <p class="fw-light">
-            <span class="fw-bold">Video Type :- </span> {{ item?.callSign }}
+          <p class="mb-4" *ngIf="item.stationName">{{ item.stationName }}</p>
+          <p class="mb-4" *ngIf="item.timeZone">{{ item.timeZone }}</p>
+          <p class="fw-light" *ngIf="item.callSign">
+            <span class="fw-bold"></span> {{ item?.callSign }}
           </p>
         </div>
       </div>
@@ -63,7 +64,7 @@
   </div>
 </div>
 
-<div class="landing_carousel_section2 mt-5">
+<div class="landing_carousel_section2 mt-5" *ngIf="recentsPlayData">
   <div class="landing_carousel_section2_top">
     Recent <span class="pointer"> See More >></span>
   </div>
