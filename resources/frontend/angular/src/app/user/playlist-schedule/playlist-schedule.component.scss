@@ -33,6 +33,7 @@
       margin-left: 10px;
       flex-wrap: nowrap;
       overflow-x: hidden;
+      scroll-behavior: smooth;
       &::-webkit-scrollbar {
         height: 0px;
         width: 0px;
@@ -87,7 +88,8 @@
     .schedule_hours {
       justify-content: space-between;
       flex: 1;
-      overflow-x: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
       &::-webkit-scrollbar {
         height: 0;
         width: 0;
@@ -119,7 +121,8 @@
   position: relative;
   .schedule_content {
     background-color: #ffffff12;
-    overflow: auto;
+    overflow: hidden;
+    scroll-behavior: smooth;
     &::-webkit-scrollbar{
       height: 0;
       width: 0;
