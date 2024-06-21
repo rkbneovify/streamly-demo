@@ -1,18 +1,21 @@
 <div class="schedule_main">
   <div class="schedule_heading_container">
-    <div class="schedule_channels" (click)="getScheduleData()">Streamly Channels</div>
-    <div class="schedule_categories" [@slideInOut]="'active'">
-      <div class="schedule_category" *ngFor="let category of visibleCategories">{{ category }}</div>
+    <div class="schedule_channels" (click)="getScheduleData('Movies')">Streamly Channels</div>
+    
+    <div class="schedule_categories" [@slideInOut]="'active'" #scrollablecategory>
+      <div class="schedule_category" *ngFor="let category of categories" (click)="getScheduleData(category)">{{ category }}</div>
     </div>
+    
     <div class="schedule_arrow d-flex">
-      <div class="pointer" (click)="moveCategories('left')">
+      <div class="pointer" (click)="scrollLeft(50)">
         <img src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
       </div>
-      <div class="pointer" (click)="moveCategories('right')">
+      <div class="pointer" (click)="scrollRight(50)">
         <img src="../../assets/dummy-img/chevron-right.svg" alt="Next" />
       </div>
     </div>
   </div>
+  
 
   <div class="schedule_time_container">
     <div class="schedule_days">
@@ -35,15 +38,15 @@
       >
       </ng-select> -->
     </div>
-    <div class="schedule_hours d-flex">
-      <div class="schedule_hour" *ngFor="let hour of scheduleHours">{{hour}}</div>
+    <div class="schedule_hours scrollByRight d-flex" #scrollableContent>
+      <div class="schedule_hour" *ngFor="let hour of getCurrentTimeSlot()">{{hour}}</div>
       <!-- <div class="schedule_hour">01:00 PM</div>
       <div class="schedule_hour">01:30 PM</div>
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
-      <div class="schedule_GoLive pointer">Go Live</div>
-      <div class="pointer">
+      <div class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
+      <div class="pointer" (click)="scrollContent(100)">
         <img src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
     </div>
@@ -83,7 +86,7 @@
 
 
     
-    <div class="schedule_content">
+    <div class="schedule_content scrollByRight" #scrollableContent1>
 
       <div class="schedule_channel_container">
         <div class="schedule_channel" *ngFor="let channel of getScheduleChannelLogo">
@@ -140,7 +143,7 @@
 
       <div class="schedule_time_programs_container">
 
-        <ng-container *ngFor="let data of getScheduleProgram">
+        <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
             <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time" *ngFor="let program of data.program">
               <h4 class="program_title p-0 m-0">{{program?.title}}</h4>
