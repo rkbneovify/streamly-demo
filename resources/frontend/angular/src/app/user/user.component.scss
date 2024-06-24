@@ -639,7 +639,7 @@ footer .contain:first-child {
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 77px;
+          width: min-content;
           height: 35px;
           padding: 12px 20px 12px 20px;
           border-radius: 40px;
@@ -658,13 +658,14 @@ footer .contain:first-child {
           justify-content: center;
           align-items: center;
           gap: 5px;
-          width: 93px;
+          width: min-content;
           height: 36px;
           padding: 8px 20px 8px 20px;
           border-radius: 40px;
           background-color: #ffdb4e;
           outline: none;
           border: none;
+          text-wrap: nowrap;
           img {
             width: 16.67px;
             height: 15px;

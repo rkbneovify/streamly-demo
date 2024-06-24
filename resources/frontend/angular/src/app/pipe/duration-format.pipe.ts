@@ -29,3 +29,55 @@ export class DurationFormatPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: 'durationISOFormat',
+  standalone: true
+})
+export class DurationISOFormatPipe implements PipeTransform {
+
+  transform(value: string): string {
+    if (!value) {
+      return '';
+    }
+
+    // Regular expression to parse ISO 8601 duration format
+    const regex = /P(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?/;
+    const matches = value.match(regex);
+
+    if (!matches) {
+      return '';
+    }
+
+    const hours = matches[1] ? parseInt(matches[1], 10) : 0;
+    const minutes = matches[2] ? parseInt(matches[2], 10) : 0;
+
+    let result = '';
+    if (hours > 0) {
+      result += hours + ' hour' + (hours > 1 ? 's' : '') + ' ';
+    }
+    if (minutes > 0) {
+      result += minutes + ' minute' + (minutes > 1 ? 's' : '');
+    }
+
+    return result.trim();
+  }
+
+}
+
+
+@Pipe({
+  name: 'truncate',
+  standalone:true
+})
+export class TruncatePipe implements PipeTransform {
+
+  transform(value: string, limit: number = 15): string {
+    if (!value) {
+      return '';
+    }
+
+    return value.length > limit ? value.substring(0, limit) + '...' : value;
+  }
+
+}
