@@ -4,6 +4,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChild,
@@ -12,8 +13,9 @@ import {
 import { RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
-import { DurationFormatPipe } from '../../pipe/duration-format.pipe';
+import { DurationFormatPipe,DurationISOFormatPipe,TruncatePipe } from '../../pipe/duration-format.pipe';
 import { TimeFormatPipe } from '../../pipe/time-format.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-playlist-schedule',
@@ -25,6 +27,9 @@ import { TimeFormatPipe } from '../../pipe/time-format.pipe';
     TimeFormatPipe,
     DurationFormatPipe,
     NgStyle,
+    FormsModule,
+    DurationISOFormatPipe,
+    TruncatePipe
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -40,7 +45,7 @@ import { TimeFormatPipe } from '../../pipe/time-format.pipe';
     ]),
   ],
 })
-export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
+export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestroy {
   playlist_details_show: boolean = false;
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -149,7 +154,9 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
       this.calculateWidth(1718841600, 1718845200)
     );
     console.log('currnet time', this.getCurrentTimeSlot());
-    // this.getScheduleData('Movies');
+    this.getScheduleData('Movies');
+    this.setDefaultDay();
+    // this.startTimer()
   }
 
   ngAfterViewInit() {
@@ -190,7 +197,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
     console.log(position);
   }
 
-  getScheduleProgram: any;
+  // getScheduleProgram: any;
   getScheduleChannelLogo: any;
   getScheduleData(genre?: string) {
     const body = {
@@ -201,7 +208,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
       next: (res: any) => {
         console.log(res);
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
-        this.getScheduleProgram = res.data;
+        // this.getScheduleProgram = res.data;
         this.filterPrograms(res);
       },
       error: (err: any) => {
@@ -209,7 +216,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
   // get the channels log and id
   filterchannelAnd(stations: any) {
     return stations
@@ -267,5 +273,64 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit {
     console.log('Filtered Programs:', this.filteredPrograms);
   }
 
-  // scrollByRight
+  // program-details data 
+  programDetailData:any;
+  getProgramDetailData(tmsId?: string) {
+    const body = {
+      "TMSId": tmsId
+    };
+    this.apiService.postRequest('auth/program-details', body).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.showPlaylist()
+        this.programDetailData = res.data;
+        console.log(res);
+      },
+      error: (err: any) => {
+        console.error(err);
+      },
+    });
+  }
+
+
+  // filter according to days
+  days: string[] = ['Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  selectedDay: string;
+
+  setDefaultDay() {
+    const today = new Date().getDay();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const todayName = dayNames[today];
+
+    if (todayName === 'Sunday' || todayName === 'Saturday') {
+      this.selectedDay = todayName;
+    } else {
+      const daysMap = {
+        'Monday': 'Monday',
+        'Tuesday': 'Tuesday',
+        'Wednesday': 'Wednesday',
+        'Thursday': 'Thursday',
+        'Friday': 'Friday'
+      };
+      this.selectedDay = daysMap[todayName];
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.clearInterval();
+  }
+
+  // show live timer
+  private intervalId: any;
+  startTimer(): void {
+    this.intervalId = setInterval(() => {
+      this.scrollContent(100);
+    }, 60000); // 60000 milliseconds = 1 minute
+  }
+
+  clearInterval(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
 }

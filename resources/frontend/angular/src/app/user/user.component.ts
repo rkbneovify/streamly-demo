@@ -11,11 +11,13 @@ import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { DurationISOFormatPipe } from '../pipe/duration-format.pipe';
+
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterOutlet, RouterLink, SearchComponent],
+  imports: [NgClass, NgFor, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -326,4 +328,23 @@ getFavoriteList(): void {
     this.playlist_details_show= !this.playlist_details_show;
   }
 
+
+    // program-details data 
+    programDetailData:any;
+    getProgramDetailData(tmsId?: string) {
+      const body = {
+        "TMSId": tmsId
+      };
+      this.crud.postRequest('auth/program-details', body).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          this.showPlaylist()
+          this.programDetailData = res.data;
+          console.log(res);
+        },
+        error: (err: any) => {
+          console.error(err);
+        },
+      });
+    }
 }
