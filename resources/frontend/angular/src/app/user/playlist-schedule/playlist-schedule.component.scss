@@ -1,5 +1,4 @@
 .schedule_main {
-  // width: 1292px;
   height: 530px;
   border-radius: 11px;
   margin: 1rem;
@@ -56,33 +55,40 @@
       }
     }
   }
-
+  // .schedule_time_programs_counter_timer{
+  //   height: 100%;
+  //   width: 150px;
+  //   background: #FFFFFF0D;
+  //   border-right: 2px solid #004480;
+  //   height: 451px;
+  //   position: fixed;
+  //   left: 280px;
+  // }
   .schedule_time_container {
     display: flex;
     background-color: #ffffff2e;
     .schedule_days {
       width: 168px;
       height: 40px;
-
+      background-color: transparent;
       select {
         width: 100%;
         border: none;
         outline: none;
         color: #ffffff;
         padding: 8px 20px 8px 20px;
-        background-color: transparent;
+        background: inherit !important;
         font-size: 14px;
         font-weight: 500;
         line-height: 24px;
         option {
-          background-color: #00274900 !important;
+          // background-color: #00274900 !important;
         }
       }
     }
 
     .schedule_days select option {
-      /* CSS styles for options */
-      background-color: #00274900 !important;
+      background-color: rgba(255, 255, 255, 0.5) !important;
     }
 
     .schedule_hours {
@@ -123,7 +129,7 @@
     background-color: #ffffff12;
     overflow: hidden;
     scroll-behavior: smooth;
-    &::-webkit-scrollbar{
+    &::-webkit-scrollbar {
       height: 0;
       width: 0;
     }
@@ -132,6 +138,11 @@
       position: absolute;
       top: 0;
       bottom: 0;
+      &::before{
+        width: 150px;
+        background: #FFFFFF0D;
+        border-right: 2px solid #004480;
+      }
       .schedule_channel {
         width: 168px;
         height: 100px;
@@ -169,8 +180,18 @@
       }
     }
 
+    .schedule_channel::after,.schedule_channel::before{
+      width: 150px;
+      height: 100px;
+      background: #FFFFFF0D;
+      border-right: 2px solid #004480;
+    }
+
+    
     .schedule_time_programs_container {
       margin-left: 168px;
+        // #004480 background
+  // #FFFFFF0D border
       .schedule_time_programs {
         // flex: 1;
         // display: grid;
@@ -190,6 +211,11 @@
             font-weight: 600;
             line-height: 20px;
             text-align: left;
+            overflow-x: auto;
+            &::-webkit-scrollbar{
+              height: 0;
+              width: 0;
+            }
           }
           .program_time {
             font-weight: 500;
@@ -224,7 +250,12 @@
   padding: 40px 50px 40px 50px;
   border-radius: 20px;
   gap: 0.6rem;
-  width: -webkit-fill-available;
+  width: 100%;
+  z-index: 135;
+  height: 450px;
+  margin: auto;
+  position: fixed;
+  max-width: 975px;
   &::-webkit-scrollbar {
     width: 0;
   }
@@ -275,7 +306,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 77px;
+        width: min-content;
         height: 35px;
         padding: 12px 20px 12px 20px;
         border-radius: 40px;
@@ -294,13 +325,14 @@
         justify-content: center;
         align-items: center;
         gap: 5px;
-        width: 93px;
+        width: min-content;
         height: 36px;
         padding: 8px 20px 8px 20px;
         border-radius: 40px;
         background-color: #ffdb4e;
         outline: none;
         border: none;
+        text-wrap: nowrap;
         img {
           width: 16.67px;
           height: 15px;
@@ -401,6 +433,8 @@
     }
   }
 
+
+
   .schedule_details_section3 {
     flex: 1;
     width: 385px;
@@ -408,6 +442,8 @@
     padding: 24px;
     border-radius: 10px;
     background: #ffffff26;
+    max-height: 100%;
+    overflow: auto;
     .schedule_details_data {
       h3 {
         font-family: Poppins;
@@ -446,4 +482,14 @@
     width: fit-content;
     right: 13px;
   }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 134;
 }

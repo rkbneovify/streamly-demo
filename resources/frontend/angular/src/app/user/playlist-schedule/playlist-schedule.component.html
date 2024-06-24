@@ -1,4 +1,4 @@
-<div class="schedule_main">
+<div class="schedule_main postion-relative">
   <div class="schedule_heading_container">
     <div class="schedule_channels" (click)="getScheduleData('Movies')">Streamly Channels</div>
     
@@ -18,7 +18,7 @@
   
 
   <div class="schedule_time_container">
-    <div class="schedule_days">
+    <!-- <div class="schedule_days">
       <select name="" id="">
         <option value="Today">Today</option>
         <option value="Tomorrow">Tomorrow</option>
@@ -30,15 +30,13 @@
         <option value="Saturday">Saturday</option>
         <option value="Friday">Sunday</option>
       </select>
-      <!-- <ng-select
-        class="res-ngselect"
-        [items]="daysData"
-        [searchable]="false"
-        bindLabel="label"
-      >
-      </ng-select> -->
+    </div> -->
+    <div class="schedule_days">
+      <select [(ngModel)]="selectedDay">
+        <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+      </select>
     </div>
-    <div class="schedule_hours scrollByRight d-flex" #scrollableContent>
+    <div class="schedule_hours scrollByRight d-flex" [@slideInOut]="'active'" #scrollableContent>
       <div class="schedule_hour" *ngFor="let hour of getCurrentTimeSlot()">{{hour}}</div>
       <!-- <div class="schedule_hour">01:00 PM</div>
       <div class="schedule_hour">01:30 PM</div>
@@ -54,41 +52,11 @@
 
   <!-- channels container start -->
   <div class="schedule_container_content position-relative">
-
-    <!-- <ng-container *ngFor="let data of getScheduleProgram">
-      <div class="schedule_content" *ngIf="data?.prgSvcId">
-        <div class="schedule_channel">
-          <div class="history_ch">
-            <img [src]="data.image?data.image:'../../assets/dummy-img/history_ch.png'" [alt]="data?.stationName" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div>
-
-        <div class="schedule_time_programs nowrap">
-          <div class="schedule_time" *ngFor="let program of data?.program">
-            <h4 class="program_title p-0 m-0">{{program?.title}}</h4>
-            <p class="program_time my-2">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
-            <div
-              class="program_ep d-flex justify-content-between align-items-center"
-            >
-              <p></p>
-              <p>{{program?.start | durationFormat:program?.end}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-container> -->
-
-
-
-
-
-    
-    <div class="schedule_content scrollByRight" #scrollableContent1>
+    <div class="schedule_time_programs_counter_timer"></div>
+    <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
       <div class="schedule_channel_container">
+        <ng-container *ngIf="filteredPrograms?.length">
         <div class="schedule_channel" *ngFor="let channel of getScheduleChannelLogo">
           <div class="history_ch">
             <img [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
@@ -97,6 +65,7 @@
             <img src="../../assets/dummy-img/heart.svg" alt="" />
           </div>
         </div>
+      </ng-container>
 
         <!-- <div class="schedule_channel">
           <div class="history_ch">
@@ -142,10 +111,9 @@
       </div>
 
       <div class="schedule_time_programs_container">
-
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
-            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time" *ngFor="let program of data.program">
+            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time" *ngFor="let program of data.program" (click)="getProgramDetailData(program?.TMSId)">
               <h4 class="program_title p-0 m-0">{{program?.title}}</h4>
               <p class="program_time my-2">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
               <div
@@ -191,217 +159,38 @@
         </div> -->
       </div>
     </div>
-
-
-<!-- 
-    <div class="schedule_content">
-      <div class="schedule_channel">
-        <div class="history_ch">
-          <img src="../../assets/dummy-img/history_ch.png" alt="" />
-        </div>
-        <div class="heart_ch pointer">
-          <img src="../../assets/dummy-img/heart.svg" alt="" />
-        </div>
-      </div>
-
-      <div class="schedule_time_programs">
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="schedule_content">
-      <div class="schedule_channel">
-        <div class="history_ch">
-          <img src="../../assets/dummy-img/history_ch.png" alt="" />
-        </div>
-        <div class="heart_ch pointer">
-          <img src="../../assets/dummy-img/heart.svg" alt="" />
-        </div>
-      </div>
-      <div class="schedule_time_programs">
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="schedule_content">
-      <div class="schedule_channel">
-        <div class="history_ch">
-          <img src="../../assets/dummy-img/history_ch.png" alt="" />
-        </div>
-        <div class="heart_ch pointer">
-          <img src="../../assets/dummy-img/heart.svg" alt="" />
-        </div>
-      </div>
-      <div class="schedule_time_programs">
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="schedule_content">
-      <div class="schedule_channel">
-        <div class="history_ch">
-          <img src="../../assets/dummy-img/history_ch.png" alt="" />
-        </div>
-        <div class="heart_ch pointer">
-          <img src="../../assets/dummy-img/heart.svg" alt="" />
-        </div>
-      </div>
-      <div class="schedule_time_programs">
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-        <div class="schedule_time">
-          <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-          <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-          <div
-            class="program_ep d-flex justify-content-between align-items-center"
-          >
-            <p>EP</p>
-            <p>45 mins</p>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
-
+    <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
       <div class="col-4 section1_img">
-        <img src="../../../../assets/dummy-img/Rectangle 1078.png" alt="" />
+        <img [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1>How the universe works</h1>
+        <h1>{{programDetailData?.title | truncate}}</h1>
         <p class="my-3">
-          Dorem ipsum dolor sit amet, consectetur adipiscing elit.
+          {{programDetailData?.quals}}
         </p>
         <div class="play_btn_container_1">
-          <button class="playbtn_time text-nowrap">15 m</button>
+          <button class="playbtn_time text-nowrap">{{programDetailData.duration | durationISOFormat}}</button>
           <button class="playbtn_hd">
             <img src="../../../assets/dummy-img/playTv.svg" alt="" />
-            <span>HD</span>
+            <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
         <p class="playstream_desc my-3">
-          Dorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-          vulputate libero et velit interdum, ac aliquet odio mattis. Class
-          aptent taciti sociosqu ad litora torquent per conubia nostra, per
-          inceptos himenaeos.
+          {{programDetailData?.description}}
         </p>
-
+  
         <div class="play_btn_container_2">
           <button class="plan_btn playbtn_genre">
             <span class="text-nowrap">Genre :</span
-            ><span class="text-nowrap">Sci-Fi</span>
+            ><span class="text-nowrap pe-1" *ngFor="let genre of programDetailData?.genre">{{genre}}</span>
           </button>
           <button class="plan_btn playbtn_aired mt-3">
             <span class="text-nowrap">Aired :</span
             ><span class="text-nowrap">Starts in 15 mins</span>
           </button>
         </div>
-
+  
         <!-- <div class="playstream_onNow_container">
                 <div>
                     <h2 class="play_stream_now">On Now</h2>
@@ -431,25 +220,23 @@
         <div class="schedule_details_time-container">
           <div
             class="schedule_details_time my-3"
-            *ngFor="let data of [1, 2, 3]"
+            *ngFor="let data of programDetailData?.schedule"
           >
-            <div class="schedule_details_day mb-2">Today, 09 Feb</div>
+            <div class="schedule_details_day mb-2">{{data?.date}}</div>
             <div
               class="schedule_details_hr d-flex align-items-center justify-content-between"
             >
-              <p>01:30 PM</p>
-              <p>01:30 PM</p>
-              <p>01:30 PM</p>
-              <p>01:30 PM</p>
+              <p>{{data?.time}}</p>
             </div>
           </div>
         </div>
       </div>
-
+  
       <div (click)="playlist_details_show=false" class="close_menu_details pointer">
         <img src="../../../assets/dummy-img/close-circle.svg" alt="">
       </div>
     </div>
+
   </div>
-  <!-- channels container end -->
+    <!-- channels container end -->
 </div>
