@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { NgFor, NgIf, NgStyle } from '@angular/common';
+import { JsonPipe, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -10,12 +10,13 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { DurationFormatPipe,DurationISOFormatPipe,TruncatePipe } from '../../pipe/duration-format.pipe';
 import { TimeFormatPipe } from '../../pipe/time-format.pipe';
 import { FormsModule } from '@angular/forms';
+import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 
 @Component({
   selector: 'app-playlist-schedule',
@@ -29,7 +30,9 @@ import { FormsModule } from '@angular/forms';
     NgStyle,
     FormsModule,
     DurationISOFormatPipe,
-    TruncatePipe
+    TruncatePipe,
+    ScheduleFormatterPipe,
+    JsonPipe
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -145,7 +148,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   constructor(
     private apiService: CrudService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -223,7 +227,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       .map((station) => ({
         id: station.id,
         image: station.image,
-        url: station.channel_url,
+        channel_url: station.channel_url,
+        url: station.url,
       }));
   }
 
@@ -284,6 +289,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         console.log(res);
         this.showPlaylist()
         this.programDetailData = res.data;
+        // localStorage.setItem('playerChannelId',res.data)
         console.log(res);
       },
       error: (err: any) => {
@@ -332,5 +338,11 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
+  }
+
+  setChannelId(id:string,url:string){
+    localStorage.setItem('playerChannelId',id);
+    localStorage.setItem('playerId',url);
+    this.router.navigateByUrl('user/playstream')
   }
 }

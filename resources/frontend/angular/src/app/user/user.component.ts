@@ -12,12 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { DurationISOFormatPipe } from '../pipe/duration-format.pipe';
+import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
+  imports: [NgClass, NgFor, ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
