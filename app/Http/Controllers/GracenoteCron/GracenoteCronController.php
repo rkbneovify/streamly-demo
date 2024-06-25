@@ -339,6 +339,8 @@ class GracenoteCronController extends Controller
     }
     public function gracenoteScheduleProgramCron2(Request $request)
     {
+        ini_set('memory_limit', '512M');
+
         $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
 
         // Create a Guzzle client instance
@@ -371,7 +373,7 @@ class GracenoteCronController extends Controller
                 $timezone = 'UTC';
                 $today = Carbon::today($timezone);
 
-                $startDateTime = Carbon::parse($today->toDateString() . ' ' . $time, $timezone);
+                $startDateTime = Carbon::parse($schedule->date . ' ' . $time, $timezone);
                 $durationInterval = new \DateInterval($duration);
                 $endDateTime = $startDateTime->copy()->add($durationInterval);
 
@@ -432,7 +434,7 @@ class GracenoteCronController extends Controller
 
         if (!empty($dataArray)) {
             GracenoteScheduleProgram::truncate();
-            $chunkSize = 500; // Adjust the chunk size as needed
+            $chunkSize = 400; // Adjust the chunk size as needed
             $chunks = array_chunk($dataArray, $chunkSize);
 
             foreach ($chunks as $chunk) {
