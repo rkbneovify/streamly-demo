@@ -182,10 +182,10 @@
                 <span class="text-nowrap">Genre :</span
                 ><span class="text-nowrap pe-1" *ngFor="let genre of programDetailData?.genre">{{genre}}</span>
               </button>
-              <button class="plan_btn playbtn_aired mt-3">
+              <!-- <button class="plan_btn playbtn_aired mt-3">
                 <span class="text-nowrap">Aired :</span
                 ><span class="text-nowrap">Starts in 15 mins</span>
-              </button>
+              </button> -->
             </div>
     
             <!-- <div class="playstream_onNow_container">
@@ -216,16 +216,27 @@
             </div>
             <div class="schedule_details_time-container">
               <div
-                class="schedule_details_time my-3"
-                *ngFor="let data of programDetailData?.schedule"
-              >
-                <div class="schedule_details_day mb-2">{{data?.date}}</div>
-                <div
-                  class="schedule_details_hr d-flex align-items-center justify-content-between"
-                >
-                  <p>{{data?.time}}</p>
-                </div>
-              </div>
+            class="schedule_details_time my-3"
+            
+          >
+            <div class="schedule_details_day mb-2">{{(programDetailData?.schedule | scheduleFormatter).today }}</div>
+            <div
+              class="schedule_details_hr d-flex align-items-center justify-content-between"
+            >
+              <p>{{(programDetailData?.schedule | scheduleFormatter).todaySchedule }}</p>
+            </div>
+          </div>
+          <div
+            class="schedule_details_time my-3"
+            
+          >
+            <div class="schedule_details_day mb-2">{{ (programDetailData?.schedule | scheduleFormatter).tomorrow }}</div>
+            <div
+              class="schedule_details_hr d-flex align-items-center justify-content-between"
+            >
+              <p>{{ (programDetailData?.schedule | scheduleFormatter).tomorrowSchedule }}</p>
+            </div>
+          </div>
             </div>
           </div>
     
