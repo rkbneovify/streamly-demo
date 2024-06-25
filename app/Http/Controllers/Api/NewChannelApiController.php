@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
@@ -368,7 +369,7 @@ class NewChannelApiController extends Controller
             ], 400);
         } else {
             $TMSId = $request->TMSId;
-            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('title', 'description', 'duration', 'quals', 'assets')
+            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('gracenote_schedule_program.prgSvcId', 'title', 'description', 'duration', 'quals', 'assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -377,6 +378,8 @@ class NewChannelApiController extends Controller
                 ->first();
             $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
                 ->where('title', 'like', "%{$program->title}%")
+                ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
+                ->orderBy('start')
                 ->get();
             $data = [
                 "title" => $program->title,
@@ -395,6 +398,101 @@ class NewChannelApiController extends Controller
                 'data' => $data
             ];
             return response()->json($response);
+        }
+    }
+
+    public function playerDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'channel_id' => 'required',
+            'current_datetime' => 'required|date|date_format:Y-m-d H:i:s'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $channel_id = $request->channel_id;
+            $current_datetime = $request->current_datetime;
+            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(genre.id), ',', '\",\"'), '\"]') as genre_ids")
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            $query->groupBy('channels.id');
+            $record = $query->get();
+
+            $genre_ids = json_decode($record[0]->genre_ids);
+            $query1 = Channel::select('channels.id', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            if (!empty($genre_ids)) {
+                $query1->whereIn('channels_genre.genre_id', $genre_ids);
+            } else {
+                $query1->whereNull('channels_genre.genre_id');
+            }
+            $query1->groupBy('channels.id');
+            $recommended_channels = $query1->get()->unique()->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset($channel->assets);
+                unset($channel->assets);
+                return $channel;
+            });
+            $record->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->genre_ids = json_decode($channel->genre_ids);
+                unset($channel->assets);
+                unset($channel->genre_ids);
+                return $channel;
+            });
+
+            $current_datetimestamp = Carbon::parse($current_datetime, 'UTC')->timestamp;
+
+            $program = GracenoteScheduleProgram::select('title', 'description', 'duration', 'quals', 'assets', 'date', 'time')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
+                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->where('start', '<=', $current_datetimestamp)
+                ->where('end', '>=', $current_datetimestamp)
+                ->where('gracenote_schedule_program.prgSvcId', $record[0]->prgSvcId)
+                // WHERE `start` <= 1719313930 AND `end` >= 1719313930
+                ->groupBy('gracenote_schedule_program.id')
+                ->first();
+            if (!empty($program)) {
+                $up_next = GracenoteScheduleProgram::select('title', 'description', 'time', 'duration')
+                    ->where('date', $program->date)
+                    ->where('time', '>', $program->time)
+                    ->where('gracenote_schedule_program.prgSvcId', $record[0]->prgSvcId)
+                    ->orderBy('start')
+                    ->get();
+                $data = [
+                    "title" => $program->title,
+                    "description" => $program->description,
+                    "duration" => $program->duration,
+                    "quals" => $program->quals,
+                    "genre" =>  json_decode($program->genre),
+                    "image" => $this->getURIFromAssetForProgram($program->assets),
+                    "up_next" => $up_next
+                ];
+            } else {
+                $data = NULL;
+            }
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Player Details Retrieved successfully.',
+                'data' => [
+                    "channel" => $record[0],
+                    "recommended_channels" => $recommended_channels,
+                    "program_details" => $data
+                ],
+
+            ];
+            return response()->json($response, 200);
         }
     }
 }

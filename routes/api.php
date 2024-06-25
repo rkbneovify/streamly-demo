@@ -91,6 +91,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify']);
     Route::get('all-genre', 'Api\NewChannelApiController@allGenre')->middleware(['jwt.verify']);
     Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify']);
+    Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 
