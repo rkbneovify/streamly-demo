@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,5 +48,14 @@ class FooterApiController extends Controller
                 ], 500);
             }
         }
+    }
+    public function faq(Request $request)
+    {
+        $faq = DB::table('faqs')->select('question_key', 'question_answer')->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'FAQ received successfully.',
+            'data' => $faq
+        ], 200);
     }
 }
