@@ -587,8 +587,8 @@ footer .contain:first-child {
       gap: 0.6rem;
       margin: auto;
       z-index: 135;
-      max-width: 995px;
-      height: 90%;
+      max-width: 90%;
+      max-height:85%;
       &::-webkit-scrollbar{
         width: 0;
       }

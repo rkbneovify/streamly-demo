@@ -25,9 +25,11 @@ export class LoginComponent implements OnInit {
   userToken!: string;
   constructor(private fb: FormBuilder, private crudService: CrudService, private router: Router, private ts: ToastrService,private setToken:AuthService) {
     this.loginFormWithEmail = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+
+    console.log(this.loginFormWithEmail);
   }
 
   ngOnInit(): void {

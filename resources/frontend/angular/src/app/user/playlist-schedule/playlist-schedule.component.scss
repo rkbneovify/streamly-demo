@@ -42,9 +42,16 @@
         height: 40px;
         min-width: 100px;
         text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         &:hover {
           background-color: #ffffff2e;
+        }
+
+        img{
+          width: 20px;
         }
       }
       .schedule_arrow {
@@ -96,6 +103,7 @@
 
     .schedule_hours {
       justify-content: space-between;
+      cursor: pointer;
       flex: 1;
       overflow-x: hidden;
       scroll-behavior: smooth;
@@ -110,7 +118,7 @@
         font-weight: 400;
         line-height: 20px;
         color: #e0e0e0;
-        min-width: 300px;
+        min-width: 150px;
       }
     }
 
@@ -137,6 +145,7 @@
       width: 0;
     }
     .schedule_channel_container {
+      cursor: pointer;  
       width: 168px;
       position: absolute;
       top: 0;
@@ -201,6 +210,7 @@
         // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         // overflow-x: auto;
         // grid-auto-flow: column;
+        cursor: pointer;
         height: 100px;
         padding: 0 2px;
         white-space: nowrap;
@@ -255,10 +265,10 @@
   gap: 0.6rem;
   width: 100%;
   z-index: 135;
-  height: 450px;
+  height: 85%;
   margin: auto;
   position: fixed;
-  max-width: 1024px;
+  max-width: 90%;
   &::-webkit-scrollbar {
     width: 0;
   }
@@ -495,4 +505,9 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 134;
+}
+
+
+.backgorundGroundColor{
+  background-color: #0a3153;
 }

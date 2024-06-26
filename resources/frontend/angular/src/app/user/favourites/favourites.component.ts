@@ -87,6 +87,14 @@ export class FavouritesComponent implements OnInit {
       });
     }
   }
+  // Update local storage with current favorite channels
+  updateFavoriteChannels(): void {
+    console.log('favoriteChannels', this.favoriteChannels);
+    localStorage.setItem(
+      'favoriteChannels',
+      JSON.stringify(this.favoriteChannels)
+    );
+  }
 
   getFavoriteListData(): void {
     const body = {"typeurl" : "mpd"}
@@ -96,7 +104,7 @@ export class FavouritesComponent implements OnInit {
       }
     });
   }
-
+  
   recentsPlayData: any;
   getRecentsListData(): void {
     // Fetch from API if not found in local storage
@@ -106,15 +114,6 @@ export class FavouritesComponent implements OnInit {
         this.recentsPlayData = res.data;
       }
     });
-  }
-
-  // Update local storage with current favorite channels
-  updateFavoriteChannels(): void {
-    console.log('favoriteChannels', this.favoriteChannels);
-    localStorage.setItem(
-      'favoriteChannels',
-      JSON.stringify(this.favoriteChannels)
-    );
   }
   // set player data in local
   setplayerData(id: string) {
