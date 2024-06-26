@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { JsonPipe, NgFor, NgIf, NgStyle } from '@angular/common';
+import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -32,7 +32,8 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
     DurationISOFormatPipe,
     TruncatePipe,
     ScheduleFormatterPipe,
-    JsonPipe
+    JsonPipe,
+    NgClass
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -107,23 +108,19 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     '11:30 PM',
   ];
 
-  categories: any = [
-    'Comedy',
-    'Family',
-    'Kids',
-    'Action',
-    'Drama',
-    'Thriller',
-    'Romance',
-    'Sci-Fi',
-    'Fantasy',
-    'Adventure',
-    'Mystery',
-    'Documentary',
-    'Crime',
-    'Animation',
-    'Reality-TV',
-  ];
+  categories: any;
+
+  getAllCategories(){
+    this.apiService.getRequest('auth/all-genre').subscribe({
+      next:(res:any)=>{
+        console.log(res);
+        this.categories=res.data;
+      },
+      error:(err:any)=>{
+        console.log(err);
+      }
+    })
+  }
 
   // filter time acc to currnet time
   getCurrentTimeSlot(): string[] {
@@ -153,6 +150,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   ) {}
 
   ngOnInit(): void {
+    this.getAllCategories();
     console.log(
       'minutes value====>',
       this.calculateWidth(1718841600, 1718845200)
@@ -161,6 +159,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     this.getScheduleData('Movies');
     this.setDefaultDay();
     // this.startTimer()
+    this.getFavoriteList();
   }
 
   ngAfterViewInit() {
@@ -187,6 +186,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   scrollContent(position: number) {
     if (position != 0) {
+      this.changeColorBackgroung = true;
       if (
         this.scrollableContent.nativeElement &&
         this.scrollableContent.nativeElement
@@ -197,6 +197,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     } else {
       this.scrollableContent.nativeElement.scrollLeft = 0;
       this.scrollableContent1.nativeElement.scrollLeft = 0;
+      this.changeColorBackgroung = false;
     }
     console.log(position);
   }
@@ -241,7 +242,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     const endDate = new Date(end * 1000);
     const durationMs = endDate.getTime() - startDate.getTime();
     const durationMinutes = Math.floor(durationMs / (1000 * 60));
-    return durationMinutes * 10;
+    return durationMinutes * 5;
   }
 
   filteredPrograms: any = [];
@@ -254,7 +255,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         const currentPrograms = service.program.filter(
           (program: any, i: any) => {
             // console.log(i,'start=> ',program.start <= now ,'end=> ', program.end >= now);
-
             if (
               (+program.start <= +now && +program.end >= +now) ||
               (+now <= +program.start && +now <= +program.end)
@@ -347,6 +347,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   
     if(this.selectedDay == 'Tomorrow' || this.selectedDay == 'Today'){
       this.filterProgramsByDay(day);
+    }else{
+
     }
   }
 
@@ -359,36 +361,109 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     } else {
       targetDate = today;
     }
-    const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
-    const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
+    // const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
+    // const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
 
-    this.filteredPrograms = [];
-    this.apiService.getRequest('auth/epg-guide').subscribe({
-      next: (res: any) => {
-        res.data.forEach((service: any) => {
-          if (service.prgSvcId) {
-            const currentPrograms = service.program.filter((program: any) => {
-              const programStart = new Date(program.start * 1000).getTime() / 1000;
-              const programEnd = new Date(program.end * 1000).getTime() / 1000;
-              return (
-                (programStart >= targetStart && programStart <= targetEnd) ||
-                (programEnd >= targetStart && programEnd <= targetEnd) ||
-                (programStart <= targetStart && programEnd >= targetEnd)
-              );
-            });
+    // this.filteredPrograms = [];
+    // this.apiService.getRequest('auth/epg-guide').subscribe({
+    //   next: (res: any) => {
+    //     res.data.forEach((service: any) => {
+    //       if (service.prgSvcId) {
+    //         const currentPrograms = service.program.filter((program: any) => {
+    //           const programStart = new Date(program.start * 1000).getTime() / 1000;
+    //           const programEnd = new Date(program.end * 1000).getTime() / 1000;
+    //           return (
+    //             (programStart >= targetStart && programStart <= targetEnd) ||
+    //             (programEnd >= targetStart && programEnd <= targetEnd) ||
+    //             (programStart <= targetStart && programEnd >= targetEnd)
+    //           );
+    //         });
 
-            if (currentPrograms.length > 0) {
-              this.filteredPrograms.push({
-                ...service,
-            program: currentPrograms,
-              });
-            }
+    //         if (currentPrograms.length > 0) {
+    //           this.filteredPrograms.push({
+    //             ...service,
+    //         program: currentPrograms,
+    //           });
+    //         }
+    //       }
+    //     });
+    //   },
+    //   error: (err: any) => {
+    //     console.error(err);
+    //   },
+    // });
+  }
+
+  changeColorBackgroung:boolean= false;
+  favoriteChannels: any;
+
+    // Check if a channel is marked as favorite
+    isFavorite(channelId: number): boolean {
+      return this.favoriteChannels.includes(channelId);
+    }
+    // Toggle favorite status
+    toggleFavorite(channelId: number): void {
+      // If channel is already favorite, remove it
+      if (this.isFavorite(channelId)) {
+        this.removeFavoriteChannel(channelId);
+      } else {
+        // add it to favorites
+        this.addFavoriteChannel(channelId);
+      }
+    }
+    // Add channel to favorites
+    addFavoriteChannel(channelId: number): void {
+      // Call API to add channel to favorites
+      this.apiService
+        .postRequest('auth/addtofavorite', { channelid: channelId })
+        .subscribe((res: any) => {
+          if (res.response_code === 200) {
+            this.favoriteChannels.push(channelId); // Update local favorite list
+            this.updateFavoriteChannels(); // Update local storage
+            this.toaster.success(res.message);
           }
         });
-      },
-      error: (err: any) => {
-        console.error(err);
-      },
-    });
-  }
+    }
+    // Remove channel from favorites
+    removeFavoriteChannel(channelId: number): void {
+      // Call API to remove channel from favorites
+      this.apiService
+        .postRequest('auth/unfavorite', { channelid: channelId })
+        .subscribe((res: any) => {
+          if (res.response_code === 200) {
+            this.favoriteChannels = this.favoriteChannels.filter(
+              (id) => id !== channelId
+            ); // Update local favorite list
+  
+            this.updateFavoriteChannels(); // Update local storage
+            this.toaster.success(res.message);
+          }
+        });
+    }
+    favListData: any;
+    // Fetch favorite list
+    getFavoriteList(): void {
+      console.log('==========================================>');
+      const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+      if (storedFavoriteChannels) {
+        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+      } else {
+        // Fetch from API if not found in local storage
+        this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
+          if (res.response_code === 200) {
+            // this.favListData = res;
+            this.favoriteChannels = res.data.map((channel: any) => channel.id);
+            this.updateFavoriteChannels(); // Update local storage
+          }
+        });
+      }
+    }
+    // Update local storage with current favorite channels
+    updateFavoriteChannels(): void {
+      console.log('favoriteChannels', this.favoriteChannels);
+      localStorage.setItem(
+        'favoriteChannels',
+        JSON.stringify(this.favoriteChannels)
+      );
+    }
 }

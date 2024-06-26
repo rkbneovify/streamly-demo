@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule, NgClass, RouterLink],
+  imports: [ReactiveFormsModule, NgClass, RouterLink,NgIf],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })
@@ -22,8 +22,8 @@ export class ResetPasswordComponent {
     private toastr: ToastrService) {
     this.resetPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password1: ['', [Validators.required]],
-      password2: ['', [Validators.required]],
+      password1: ['', [Validators.required, Validators.minLength(6)]],
+      password2: ['', [Validators.required, Validators.minLength(6)]],
     },{ validator: this.passwordMatchValidator })
     
   }
@@ -31,7 +31,7 @@ export class ResetPasswordComponent {
     this.resetPasswordForm.controls['email'].setValue(this.email['_value'].email);
   }
 
-  passwordMatchValidator(formGroup: FormGroup){
+  passwordMatchValidator(formGroup: FormGroup) {
     const passwordControl = formGroup.get('password1');
     const confirmPasswordControl = formGroup.get('password2');
 

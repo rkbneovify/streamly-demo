@@ -3,14 +3,17 @@
     <div class="schedule_channels" (click)="getScheduleData('Movies')">Streamly Channels</div>
     
     <div class="schedule_categories" [@slideInOut]="'active'" #scrollablecategory>
-      <div class="schedule_category" *ngFor="let category of categories" (click)="getScheduleData(category)">{{ category }}</div>
+      <div class="schedule_category" *ngFor="let category of categories" (click)="getScheduleData(category.name)">
+        <img class="me-1" [src]="category?.image" [alt]="category.name">
+        {{ category?.name }}
+      </div>
     </div>
     
     <div class="schedule_arrow d-flex">
-      <div class="pointer" (click)="scrollLeft(50)">
+      <div class="pointer" (click)="scrollRight(50)">
         <img src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
       </div>
-      <div class="pointer" (click)="scrollRight(50)">
+      <div class="pointer" (click)="scrollLeft(50)">
         <img src="../../assets/dummy-img/chevron-right.svg" alt="Next" />
       </div>
     </div>
@@ -32,7 +35,7 @@
       </select>
     </div> -->
     <div class="schedule_days">
-      <select [(ngModel)]="selectedDay" (change)="changeDays(selectedDay)">
+      <select [(ngModel)]="selectedDay" (ngModelChange)="changeDays(selectedDay)">
         <option *ngFor="let day of days" [value]="day">{{ day }}</option>
       </select>
     </div>
@@ -55,59 +58,39 @@
     <div class="schedule_time_programs_counter_timer"></div>
     <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
-      <div class="schedule_channel_container">
+      <div class="schedule_channel_container" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}">
         <ng-container *ngIf="filteredPrograms?.length">
         <div class="schedule_channel" *ngFor="let channel of getScheduleChannelLogo">
           <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
             <img [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
           </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
+          <div class="heart_ch">
+            <!-- <img src="../../assets/dummy-img/heart.svg" alt="" /> -->
+            <svg
+              [title]="'favorite'"
+              class="mt-2 me-2"
+              (click)="toggleFavorite(channel?.id)"
+              [class.favActive]="isFavorite(channel?.id)"
+              id="heart-icon"
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              cursor="pointer"
+            >
+
+            <!-- (click)="toggleFavorite(channel?.id)"
+              [class.favActive]="isFavorite(channel?.id)" -->
+
+              <path
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                fill="#ccc"
+              />
+            </svg>
           </div>
         </div>
       </ng-container>
-
-        <!-- <div class="schedule_channel">
-          <div class="history_ch">
-            <img src="../../assets/dummy-img/history_ch.png" alt="" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div>
-        <div class="schedule_channel">
-          <div class="history_ch">
-            <img src="../../assets/dummy-img/history_ch.png" alt="" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div>
-        <div class="schedule_channel">
-          <div class="history_ch">
-            <img src="../../assets/dummy-img/history_ch.png" alt="" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div>
-        <div class="schedule_channel">
-          <div class="history_ch">
-            <img src="../../assets/dummy-img/history_ch.png" alt="" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div>
-        <div class="schedule_channel">
-          <div class="history_ch">
-            <img src="../../assets/dummy-img/history_ch.png" alt="" />
-          </div>
-          <div class="heart_ch pointer">
-            <img src="../../assets/dummy-img/heart.svg" alt="" />
-          </div>
-        </div> -->
-
       </div>
 
       <div class="schedule_time_programs_container">
@@ -158,6 +141,8 @@
           </div>
         </div> -->
       </div>
+
+      <div class="m-auto h-100 text-center" *ngIf="!filteredPrograms?.length">No Data Found</div>
     </div>
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">

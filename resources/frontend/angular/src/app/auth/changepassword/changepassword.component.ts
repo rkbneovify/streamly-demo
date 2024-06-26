@@ -36,8 +36,8 @@ export class ChangepasswordComponent {
     this.resetPasswordForm = this.fb.group(
       {
         oldPassword: ['', [Validators.required]],
-        password1: ['', [Validators.required]],
-        password2: ['', [Validators.required]],
+        password1: ['', [Validators.required, Validators.minLength(6)]],
+        password2: ['', [Validators.required, Validators.minLength(6)]],
       },
       { validator: this.passwordMatchValidator }
     );
@@ -47,13 +47,8 @@ export class ChangepasswordComponent {
     const passwordControl = formGroup.get('password1');
     const confirmPasswordControl = formGroup.get('password2');
 
-    if (
-      passwordControl &&
-      confirmPasswordControl &&
-      passwordControl.value !== confirmPasswordControl.value
-    ) {
+    if (passwordControl && confirmPasswordControl && passwordControl.value !== confirmPasswordControl.value) {
       confirmPasswordControl?.setErrors({ passwordMismatch: true });
-      this.toastr.success('Password not matching');
     } else {
       confirmPasswordControl?.setErrors(null);
     }

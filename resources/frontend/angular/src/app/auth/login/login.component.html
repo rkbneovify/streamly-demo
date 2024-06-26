@@ -63,6 +63,12 @@
               formControlName="email"
               required
             />
+
+                          <!-- Error message -->
+              <div *ngIf="loginFormWithEmail.get('email').touched && loginFormWithEmail.get('email').invalid" class="text-danger">
+                <small *ngIf="loginFormWithEmail.get('email').errors?.['required']">Email is required.</small>
+                <small *ngIf="loginFormWithEmail.get('email').errors?.['pattern']">Email is not valid.</small>
+              </div>
           </div>
 
           <div class="login-field">
@@ -80,6 +86,11 @@
               />
               <img class="pointer" (click)="showPassword=!showPassword" src="../../../assets/dummy-img/eye.svg" alt="" />
             </div>
+              <!-- Error message -->
+                <div *ngIf="loginFormWithEmail.get('password').touched && loginFormWithEmail.get('password').invalid" class="text-danger">
+                  <small *ngIf="loginFormWithEmail.get('password').errors?.['required']">Password is required.</small>
+                  <small *ngIf="loginFormWithEmail.get('password').errors?.['minlength']">Password must be at least 6 characters long.</small>
+                </div>
             <p class="login-fpass mt-2 pointer" routerLink="/auth/forget-password">Forgot Password ?</p>
           </div>
           <div class="login-field">
