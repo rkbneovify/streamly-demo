@@ -299,28 +299,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }
 
 
-  // filter according to days
-  days: string[] = ['Today', 'Tomorrow', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  selectedDay: string;
-
-  setDefaultDay() {
-    const today = new Date().getDay();
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const todayName = dayNames[today];
-
-    if (todayName === 'Sunday' || todayName === 'Saturday') {
-      this.selectedDay = todayName;
-    } else {
-      const daysMap = {
-        'Monday': 'Monday',
-        'Tuesday': 'Tuesday',
-        'Wednesday': 'Wednesday',
-        'Thursday': 'Thursday',
-        'Friday': 'Friday'
-      };
-      this.selectedDay = daysMap[todayName];
-    }
-  }
 
   ngOnDestroy(): void {
     this.clearInterval();
@@ -344,5 +322,73 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     localStorage.setItem('playerChannelId',id);
     localStorage.setItem('playerId',url);
     this.router.navigateByUrl('user/playstream')
+  }
+
+
+
+  // filter according to days
+  days: string[] = ['Today', 'Tomorrow'];
+  selectedDay: string;
+
+  setDefaultDay() {
+    const today = new Date().getDay();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const todayName = dayNames[today];
+    this.days.push(todayName);
+    this.selectedDay = todayName;
+    
+  }
+
+
+  changeDays(day: string) {
+    // Implement the logic to update the schedule data based on the selected day (Today or Tomorrow)
+    console.log(`Day changed to: ${day}`);
+    // Add logic to filter schedule data based on the day
+  
+    if(this.selectedDay == 'Tomorrow' || this.selectedDay == 'Today'){
+      this.filterProgramsByDay(day);
+    }
+  }
+
+  filterProgramsByDay(day: string) {
+    const today = new Date();
+    let targetDate: Date;
+    if (day === 'Tomorrow') {
+      targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + 1);
+    } else {
+      targetDate = today;
+    }
+    const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
+    const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
+
+    this.filteredPrograms = [];
+    this.apiService.getRequest('auth/epg-guide').subscribe({
+      next: (res: any) => {
+        res.data.forEach((service: any) => {
+          if (service.prgSvcId) {
+            const currentPrograms = service.program.filter((program: any) => {
+              const programStart = new Date(program.start * 1000).getTime() / 1000;
+              const programEnd = new Date(program.end * 1000).getTime() / 1000;
+              return (
+                (programStart >= targetStart && programStart <= targetEnd) ||
+                (programEnd >= targetStart && programEnd <= targetEnd) ||
+                (programStart <= targetStart && programEnd >= targetEnd)
+              );
+            });
+
+            if (currentPrograms.length > 0) {
+              this.filteredPrograms.push({
+                ...service,
+            program: currentPrograms,
+              });
+            }
+          }
+        });
+      },
+      error: (err: any) => {
+        console.error(err);
+      },
+    });
   }
 }
