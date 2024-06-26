@@ -7,14 +7,14 @@
 
   <div class="container-quesAns mb-3" (click)="toggleAnswer(i)">
     <div class="container-question d-flex justify-content-between px-4">
-      <p>{{faqItem.question}}</p>
+      <p>{{faqItem.question_key}}</p>
       <div>
         <img [class.rotateDonw]="faqItem.expanded" src="../../assets/dummy-img/chevron-down.svg" alt="" />
       </div>
     </div>
     <div class="container-answer px-4 mt-2" [class.expanded]="faqItem.expanded">
       <p>
-        {{faqItem.answer}}
+        {{faqItem?.question_answer}}
       </p>
     </div>
   </div>

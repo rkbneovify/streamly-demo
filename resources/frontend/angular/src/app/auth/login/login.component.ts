@@ -47,9 +47,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  showtos() {
-    this.ts.success('hello whow are you')
-  }
 
   onSubmit() {
     if (this.loginFormWithEmail.valid) {

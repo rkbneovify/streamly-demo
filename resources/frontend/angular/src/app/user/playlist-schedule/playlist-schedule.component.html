@@ -32,7 +32,7 @@
       </select>
     </div> -->
     <div class="schedule_days">
-      <select [(ngModel)]="selectedDay">
+      <select [(ngModel)]="selectedDay" (change)="changeDays(selectedDay)">
         <option *ngFor="let day of days" [value]="day">{{ day }}</option>
       </select>
     </div>
