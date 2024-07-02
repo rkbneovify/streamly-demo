@@ -25,6 +25,7 @@ main {
 
 .schedule_Container{
   margin-right: 1rem;
+  padding-left: 6rem;
   padding-bottom: 1rem;
 }
 
@@ -126,9 +127,10 @@ main {
 }
 
 .sidebar_container {
-  max-width: 120px;
+  max-width: 140px;
   min-width: 80px;
-  background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
+  // background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
+  background: linear-gradient(90deg, #001325cc 31.4%, rgb(0 19 37 / 15%) 81%);
   // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
   /* For full height */
   height: -moz-available; /* Firefox-specific */
@@ -144,7 +146,7 @@ main {
     color: #ffffff;
     text-wrap: nowrap;
   }
-  transition: all 0.5s ease;
+  transition: all 0.6s ease;
   .sidebar_1 {
     width: 24px;
     height: 24px;
@@ -171,7 +173,7 @@ main {
 }
 
 .expanded{
-  width: 120px !important;
+  width: 140px !important;
 }
 
 .pdL{
@@ -188,8 +190,11 @@ main {
 
   div{
     height: 56px;
-    width: 88px;
-    display: flex;
+    // width: 88px;
+    // display: flex;
+    text-wrap: nowrap;
+    padding: 1rem 0;
+    padding-left: 1.5rem;
     justify-content: center;
     align-items: center;
     gap: 0.4rem;
@@ -198,7 +203,7 @@ main {
 
 .sidebar_2_ext{
   div{
-    padding-left: 0.4rem;
+    // padding-left: 0.4rem;
     justify-content: start;
   }
 }
@@ -291,7 +296,7 @@ main {
 
 footer {
   padding-block: 3rem;
-  margin-left: 5rem;
+  padding-left: 5rem;
 }
 
 footer .contain:first-child {
@@ -461,6 +466,7 @@ footer .contain:first-child {
         overflow-x: hidden;
         // background-color: #00070e;
         background-color: #4b98db4d;
+        background-image: url("../../assets/dummy-img/carBG.png");
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
         img {
@@ -821,4 +827,29 @@ footer .contain:first-child {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 134;
+  }
+
+
+  .display-none{
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1rem;
+    width: 0px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.6s ease, width 0.6s ease-in-out;
+    
+  }
+
+  .min-20{
+    min-width: 20px;
+  }
+
+  .rotate-180{
+    transform: rotate(180deg);
+  }
+
+  .display-block{
+    opacity: 1;
+    width: 100px !important;
   }

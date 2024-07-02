@@ -109,7 +109,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   ];
 
   categories: any;
-
+  // get category list
   getAllCategories(){
     this.apiService.getRequest('auth/all-genre').subscribe({
       next:(res:any)=>{
@@ -203,8 +203,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }
 
   // getScheduleProgram: any;
+  getAllScheduleData:any;
   getScheduleChannelLogo: any;
   getScheduleData(genre?: string) {
+    this.active_categories(genre);
     const body = {
       typeurl: 'mpd',
       genre: genre,
@@ -212,6 +214,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     this.apiService.postRequest('auth/epg-guide', body).subscribe({
       next: (res: any) => {
         console.log(res);
+        this.getAllScheduleData = res.data;
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
         // this.getScheduleProgram = res.data;
         this.filterPrograms(res);
@@ -245,6 +248,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     return durationMinutes * 5;
   }
 
+  // filterProgram
   filteredPrograms: any = [];
   filterPrograms(apiResponse: any) {
     this.filteredPrograms = [];
@@ -358,8 +362,35 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     if (day === 'Tomorrow') {
       targetDate = new Date(today);
       targetDate.setDate(today.getDate() + 1);
+
+      // getAllScheduleData
     } else {
       targetDate = today;
+    const now = Math.floor(Date.now() / 1000);
+      this.filterPrograms = this.getAllScheduleData.forEach((service: any) => {
+        if (service.prgSvcId) {
+          const currentPrograms = service.program.filter(
+            (program: any, i: any) => {
+              // console.log(i,'start=> ',program.start <= now ,'end=> ', program.end >= now);
+              if (
+                (+program.start >= +now && +program.end >= +now) ||
+                (+now <= +program.start && +now <= +program.end)
+              ) {
+                return true;
+              } else {
+                return false;
+              }
+            }
+          );
+  
+          if (currentPrograms.length > 0) {
+            this.filteredPrograms.push({
+              ...service,
+              program: currentPrograms,
+            });
+          }
+        }
+      });
     }
     // const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
     // const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
@@ -465,5 +496,20 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         'favoriteChannels',
         JSON.stringify(this.favoriteChannels)
       );
+    }
+
+
+    // active_categories
+    selected_category:string='Streamly_channels';
+
+    active_categories(category:string){
+      this.selected_category = category;
+      // if(this.selected_category == category){
+      //   console.log('selected tab==>',category);
+      //   return true
+      // }else{
+      //   console.log('selected else tab==>',category);
+      //   return false
+      // }
     }
 }

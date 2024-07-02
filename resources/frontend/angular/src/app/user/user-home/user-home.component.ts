@@ -22,6 +22,7 @@ export class UserHomeComponent implements OnInit {
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
   ngOnInit(): void {
+    console.log('Home page start..')
     this.loginSliders();
     this.getFavoriteList();
     this.getRecentsListData();

@@ -33,7 +33,7 @@ export class ScheduleFormatterPipe implements PipeTransform {
       return schedule
         .filter(event => event.date === date)
         .map(event => formatTime(event.time))
-        .join(' ');
+        .join('  ,  ');
     };
 
     const formattedToday = filterAndFormat(today);

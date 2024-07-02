@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
             this.setToken.setAuthorizationToken(token);
             localStorage.setItem('userDetails', JSON.stringify(res?.user));
-            this.router.navigateByUrl('/user/home');
+            this.router.navigateByUrl('/user');
           }
           }
         },

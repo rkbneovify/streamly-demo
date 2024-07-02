@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, NgModule, OnInit } from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -13,12 +13,13 @@ import { SearchComponent } from './search/search.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { DurationISOFormatPipe } from '../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor, ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
+  imports: [NgClass, NgFor , FormsModule , ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -33,6 +34,7 @@ export class UserComponent implements OnInit {
   searchResults: any[] = [];
   favChannelList: any;
   favoriteChannels: number[] = [];
+  searchTerm:any='';
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -319,6 +321,8 @@ getFavoriteList(): void {
   closeSearchData() {
     this.searchShow = !this.searchShow;
     this.allChannelDataList = [];
+    this.searchTerm = ''
+
   }
 
 
