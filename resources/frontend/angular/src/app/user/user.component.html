@@ -1,33 +1,33 @@
 <div class="row gy-0 gx-0 flex-nowrap overflow-hidden">
   <div (click)="searchShow = false" [ngClass]="{ 'expanded': isExpanded }" class="sidebar_container justify-content-between  col-1 p-0 d-flex flex-column align-items-center pt-3">
-    <div class="sidebar_1 pointer"  (click)="toggleSidebar()">
-      <img src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
+    <div class="sidebar_1 pointer" (click)="toggleSidebar()" [ngClass]="{'rotate-180':isExpanded}">
+      <img  loading="lazy" src="../../assets/dummy-img/sidebar_arrow.svg" alt="" />
     </div>
-    <div class="sidebar_2 d-flex flex-column justify-content-between align-items-center mt-5" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
+    <div class="sidebar_2  flex-column justify-content-between align-items-center mt-5" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
       
-      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user/home" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
-        <img src="../../assets/dummy-img/sidemenu1.svg" alt="" />
-        <p *ngIf="isExpanded">Home</p>
+      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
+        <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu1.svg" alt="" />
+        <p class="display-none" [ngClass]="{'display-block':isExpanded}">Home</p>
       </div>
 
       <div *ngIf="!showSubMenu" (click)="activeTab='fav'" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
-        <img src="../../assets/dummy-img/sidemenu2.svg" alt="" />
-        <p *ngIf="isExpanded">My Stuff</p>
+        <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu2.svg" alt="" />
+        <p class="display-none" [ngClass]="{'display-block':isExpanded}">My Stuff</p>
       </div>
 
       <div *ngIf="!showSubMenu" (click)="activeTab='playsh'" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
-        <img src="../../assets/dummy-img/side_menu3.svg" alt="" />
-        <p *ngIf="isExpanded">Guide</p>
+        <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/side_menu3.svg" alt="" />
+        <p class="display-none" [ngClass]="{'display-block':isExpanded}">Guide</p>
       </div>
 
       <!-- <div *ngIf="showSubMenu" (click)="backTohome()" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true}">
-        <img src="../../assets/dummy-img/chevron-left.svg" alt="" />
+        <img [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/chevron-left.svg" alt="" />
         <span class="back"> back</span>
       </div> -->
 
       <div (click)="activeTab='allChannel'"  routerLink="/user/channel/all" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='allChannel'}">
-        <img src="../../assets/dummy-img/All.svg" alt="" />
-        <p *ngIf="isExpanded">All</p>
+        <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/All.svg" alt="" />
+        <p class="display-none" [ngClass]="{'display-block':isExpanded}">All</p>
       </div>
 
       <!-- <div (click)="activeTab='family'" routerLink="/user/channel/family" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='family'}">
@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div class="col-11 p-0 m-0 flex_1 mar-5rem">
+  <div class="col-11 p-0 m-0 flex_1">
     <main class="schedule_Container">
       <div class="row">
         <div class="col-12">
@@ -60,30 +60,30 @@
             class="navbar_Schedule d-flex align-item-center justify-content-between"
           >
             <div class="logo-navbarL">
-              <img src="../../assets/dummy-img/nav-logo.svg" alt="" srcset="" />
+              <img loading="lazy" src="../../assets/dummy-img/nav-logo.svg" alt="" srcset="" />
             </div>
             <div class="searchbar_pro d-flex gap-2">
               <div class="search_Bar" >
-                <input type="text" placeholder="" (input)="onSearch($event.target)" (focus)="checkData()"
+                <input type="text" placeholder="" [(ngModel)]="searchTerm" (input)="onSearch($event.target)" (focus)="checkData()"
                 />
-                <img src="../../assets/dummy-img/search-md.svg" alt="" />
+                <img loading="lazy" src="../../assets/dummy-img/search-md.svg" alt="" />
               </div>
               <div class="position-relative">
                 <div (click)="submenu = !submenu" class="schedule_profile pointer">
-                  <img class="userProfileImage" src="../../assets/dummy-img/user-circle.svg" alt="" />
+                  <img loading="lazy" class="userProfileImage" src="../../assets/dummy-img/user-circle.svg" alt="" />
                 </div>
 
                 <div  *ngIf="submenu" class="profileUserMenu position-absolute">
                   <div (click)="submenu = false" routerLink="user-settings">
-                    <img src="../../assets/dummy-img/user.svg" alt="" />
+                    <img loading="lazy" src="../../assets/dummy-img/user.svg" alt="" />
                     <p>Account Settings</p>
                   </div>
                   <div (click)="submenu = false" routerLink="connected-device">
-                    <img src="../../assets/dummy-img/devices.svg" alt="" />
+                    <img loading="lazy" src="../../assets/dummy-img/devices.svg" alt="" />
                     <p>Connected Devices</p>
                   </div>
                   <div (click)="submenu = false" routerLink="downloadapp">
-                    <img src="../../assets/dummy-img/download.svg" alt="" />
+                    <img loading="lazy" src="../../assets/dummy-img/download.svg" alt="" />
                     <p>Download App</p>
                   </div>
                   <div class="justify-content-center" (click)="logoutUser()">
@@ -109,20 +109,20 @@
           <div *ngIf="searchShow" class="landing_carousel_section2 mt-1">
             <h1 class="text-center close-search">
               <!-- <span (click)="closeSearchData()">X</span> -->
-              <img class="m-auto " (click)="closeSearchData()" src="../../../assets/dummy-img/close-circle.svg" alt="">
+              <img loading="lazy" class="m-auto " (click)="closeSearchData()" src="../../../assets/dummy-img/close-circle.svg" alt="">
             </h1>
             <div class="allChannelsList my-4 d-flex flex-nowrap" *ngFor="let row of allChannelDataList">
                 <div class="card_page" *ngFor="let item of row">        
-                    <img [src]="item?.image?item?.image:'../../../assets/dummy-img/inf.png'" [ngClass]="{'object-fill':item?.type == 'event'}">
+                    <img  loading="lazy"[src]="item?.image?item?.image:'../../../assets/dummy-img/inf.png'" [ngClass]="{'object-fill':item?.type == 'event'}">
                     <div class="card_content">
                         <div class="card_content_text1 d-flex justify-content-between">
 
                             <div *ngIf="item?.type == 'channel'" class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
-                                <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
+                                <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
                                 <p class="d-flex flex-column">Play <span></span></p>
                             </div>
                             <div *ngIf="!(item?.type == 'channel') && !(item?.type == 'event') "  class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
-                              <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
+                              <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
                               <p class="d-flex flex-column">Play <span></span></p>
                           </div>
 
@@ -135,10 +135,11 @@
                             <div class="d-flex gap-2">
                                 <div class="rounded-circle overflow-hidden" (click)="toggleFavorite(item.id)"><img class="rounded-circle" src="../../../assets/dummy-img/heart-circle.svg" alt="" 
                                     [class.favorite]="isFavorite(item.id)"></div>
-                                <div><img src="../../../assets/dummy-img/more-circle.svg" alt=""></div>
+                                <div><img loading="lazy" src="../../../assets/dummy-img/more-circle.svg" alt=""></div>
                             </div>
                         </div>
                         <div class="card_content_text2 my-5">
+                          <p class="mb-4" *ngIf="item.name">{{item.callSign}}</p>
                             <p class="mb-4" *ngIf="item.stationName">{{item.stationName}}</p>
                             <p class="mb-4" *ngIf="item.name">{{item.name}}</p>
                             <p *ngIf="item?.gracenote_data" class="fw-light"><span class="fw-bold">Video Type :- </span> {{item?.gracenote_data?.videoQuality?.videoType}}</p>
@@ -159,7 +160,7 @@
         <div *ngIf="playlist_details_show" class="modal-overlay"></div>
         <div *ngIf="playlist_details_show" class="row schedule_details_container">
           <div class="col-4 section1_img">
-            <img [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
+            <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
           </div>
           <div class="col-lg-4 col-12 playstream_2">
             <h1>{{programDetailData?.title}}</h1>
@@ -169,7 +170,7 @@
             <div class="play_btn_container_1">
               <button class="playbtn_time text-nowrap">{{programDetailData?.duration | durationISOFormat}}</button>
               <button class="playbtn_hd">
-                <img src="../../../assets/dummy-img/playTv.svg" alt="" />
+                <img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt="" />
                 <span>{{programDetailData?.quals}}</span>
               </button>
             </div>
@@ -210,14 +211,14 @@
           <div class="col-4 schedule_details_section3">
             <div class="schedule_details_data d-flex align-items-center gap-2">
               <div>
-                <img src="../../../../assets/dummy-img/calendar-2.svg" alt="" />
+                <img loading="lazy" src="../../../../assets/dummy-img/calendar-2.svg" alt="" />
               </div>
               <h3>Schedule</h3>
             </div>
             <div class="schedule_details_time-container">
               <div
             class="schedule_details_time my-3"
-            
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).todaySchedule"
           >
             <div class="schedule_details_day mb-2">{{(programDetailData?.schedule | scheduleFormatter).today }}</div>
             <div
@@ -228,7 +229,7 @@
           </div>
           <div
             class="schedule_details_time my-3"
-            
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule"
           >
             <div class="schedule_details_day mb-2">{{ (programDetailData?.schedule | scheduleFormatter).tomorrow }}</div>
             <div
@@ -241,7 +242,7 @@
           </div>
     
           <div (click)="playlist_details_show=false" class="close_menu_details pointer">
-            <img src="../../../assets/dummy-img/close-circle.svg" alt="">
+            <img loading="lazy" src="../../../assets/dummy-img/close-circle.svg" alt="">
           </div>
         </div>
 

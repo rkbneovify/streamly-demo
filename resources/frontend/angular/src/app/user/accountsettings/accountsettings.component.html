@@ -121,7 +121,7 @@
         <p *ngIf="billingScheme == 'per_unit'">{{billingScheme}}</p>
         <div *ngIf="billingScheme == 'tiered'" [ngClass]="{'row_total align-items-start flex-column justify-content-between':true,'h-auto-min flex-1':billingScheme == 'tiered'}">
           <div class="pointer"  (click)="showTiredPlan = !showTiredPlan">
-            <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+            <img loading="lazy" [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
               src="../../../assets/dummy-img/chevron-down.svg" alt="" />
             <div class="text-center tiers def-color">Tiers {{interval_count}} {{planInterval}}</div>
           </div>
@@ -223,7 +223,7 @@
         <div class="zip_top">
           <h3 class="d-flex gap-2 mt-2">
             <span class="d-flex gap-2">
-              <img src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
               Do you want to cancel the subscription
             </span>
           </h3>

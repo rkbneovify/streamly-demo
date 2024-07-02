@@ -54,6 +54,7 @@
           alt=""
         />
         <img
+        loading="lazy"
         [src]="
           item?.image ? item?.image : '../../../assets/dummy-img/inf.png'
         "
@@ -79,6 +80,7 @@
                 (click)="toggleFavorite(item.id)"
               >
                 <img
+                loading="lazy"
                   class="rounded-circle"
                   src="../../../assets/dummy-img/heart-circle.svg"
                   alt=""

@@ -63,12 +63,12 @@ export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
 
   const token = localStorage.getItem('token');
       if (token) {                
-        console.log('Heman =====>',token);
+        console.log('Heman3 =====>',token);
         inject(Router).navigateByUrl('/user');
         return false;
       } 
       else {
-        console.log('Heman =====>',token);
+        console.log('Heman1 =====>',token);
         return true;
       }
 };
@@ -77,15 +77,21 @@ export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
 export const authGuarLoginStatus: CanActivateFn = (route, state) => {
 
   const token = localStorage.getItem('token');
-      if (token) {                
-        console.log('Heman =====>',token);
-        return true;
-      } 
-      else {
-        console.log('Heman =====>',token);
-        inject(Router).navigateByUrl('/auth/login');
-        return false;
-      }
+  if (token) {
+    if (state.url === '/user') {
+      return true; // Already on the target route, allow navigation
+    }
+    console.log('Heman2 =====>', token);
+    inject(Router).navigateByUrl('/user');
+    return false; // Prevent the navigation to the requested route
+  } else {
+    if (state.url === '/auth/login') {
+      return true; // Already on the target route, allow navigation
+    }
+    console.log('Heman4 =====>', token);
+    inject(Router).navigateByUrl('/auth/login');
+    return false; // Prevent the navigation to the requested route
+  }
 
 };
 

@@ -35,7 +35,7 @@
       >
         <div class="col_2_gap d-flex pb-4">
           <div>
-            <img src="../../../assets/dummy-img/daily_plan.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/daily_plan.svg" alt="" />
           </div>
           <div class="d-flex flex-column justify-content-between">
             <h3>{{plan.nickname}}</h3>
@@ -46,7 +46,7 @@
         <div class="col_2_subblock d-flex flex-column gap-2">
           <div class="d-flex flex-nowrap">
             <div *ngIf="plan.trial_period_days">
-              <img src="../../../assets/dummy-img/check.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p *ngIf="plan.trial_period_days ">
               Trial days: 7 days
@@ -58,14 +58,14 @@
           <div *ngFor="let metadata of plan.metadata | keyvalue" class="d-flex flex-nowrap">
                   
             <div *ngIf="plan.type == 'tiered'">
-              <img src="../../../assets/dummy-img/check.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <ng-container *ngIf="plan.type == 'tiered'">
               <p>{{ metadata.value }}</p>
             </ng-container>
 
             <div *ngIf="plan.type == 'per_unit'">
-              <img src="../../../assets/dummy-img/check.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <ng-container *ngIf="plan.type == 'per_unit'">
               <p>{{ metadata.value }}</p>
@@ -242,13 +242,13 @@
         <div class="col_2_subblock d-flex flex-column gap-2">
           <div class="d-flex flex-nowrap">
             <div>
-              <img src="../../../assets/dummy-img/check.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p>Trial days: {{data.trial_period_days?data.trial_period_days:'No trial Days.'}}</p>
           </div>
           <div *ngFor="let mdata of data.metadata | keyvalue" class="d-flex flex-nowrap">
             <div>
-              <img src="../../../assets/dummy-img/check.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p>{{mdata.value}}</p>
           </div>

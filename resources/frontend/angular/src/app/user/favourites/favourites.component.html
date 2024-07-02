@@ -10,12 +10,13 @@
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of favListData">
       <!-- <img src="../../../../assets/dummy-img/mvf2.png" alt=""> -->
-      <img
+      <img loading="lazy" *ngIf="item.image" class="p-2"
         [src]="
           item.image ? item.image : '../../../assets/dummy-img/play_icon.svg'
         "
         alt=""
       />
+      <p class="no-img" *ngIf="!item.image">No Image</p>
 
       <!-- <img [src]="item.logo" alt=""> -->
       <!-- <img *ngIf="item?.gracenote_data?.assets?.asset?.length" [src]="item?.prgSvcId? 'https://demo.tmsimg.com/'+item?.gracenote_data?.assets?.asset[0].URI :item.logo " alt=""> -->
@@ -29,7 +30,7 @@
             class="play_img d-flex align-items-center gap-2"
             (click)="setplayerData(item?.url)"
           >
-            <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
             <p class="d-flex flex-column">
               Play
               <!-- <span>S1 E1</span> -->
@@ -41,6 +42,7 @@
               (click)="toggleFavorite(item.id)"
             >
               <img
+              loading="lazy"
                 class="rounded-circle"
                 src="../../../assets/dummy-img/heart-circle.svg"
                 alt=""
@@ -48,7 +50,7 @@
               />
             </div>
             <div>
-              <img src="../../../assets/dummy-img/more-circle.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/more-circle.svg" alt="" />
             </div>
           </div>
         </div>
@@ -71,6 +73,7 @@
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of recentsPlayData">
       <img
+      loading="lazy"
         [src]="
           item.image ? item.image : '../../../assets/dummy-img/play_icon.svg'
         "
@@ -83,7 +86,8 @@
             class="play_img d-flex align-items-center gap-2"
             (click)="setplayerData(item?.url)"
           >
-            <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
+            <img 
+            loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
             <p class="d-flex flex-column">
               Play
               <!-- <span>S1 E1</span> -->
@@ -112,7 +116,7 @@
               />
             </svg>
             <div>
-              <img src="../../../assets/dummy-img/more-circle.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/more-circle.svg" alt="" />
             </div>
           </div>
         </div>

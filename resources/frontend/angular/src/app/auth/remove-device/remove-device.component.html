@@ -52,15 +52,15 @@
                     <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
                         <div class="devi_top">
                           <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
-                            <img class="dots_v" src={{data.device_img}} alt="dot">
-                            <img class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
+                            <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
+                            <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
                             <!-- <div class="device_imgpar d-flex justify-content-center align-items-center">
                                 <img src="../../../assets/dummy-img/check-circle.svg" alt="">
                                 <p>This Device</p>
                             </div> -->
                             <ng-container  *ngIf="current_device == data.personaldeviceid; else btnlogOut">
                               <div class="device_imgpar d-flex justify-content-center align-items-center">
-                                  <img src="../../../assets/dummy-img/check-circle.svg" alt="">
+                                  <img loading="lazy" src="../../../assets/dummy-img/check-circle.svg" alt="">
                                   <p >This Device</p>
                               </div>
                           </ng-container>
@@ -83,7 +83,7 @@
                             <div class="remove_dev_con d-flex justify-content-between">
                                 <p class="dev_heading">{{data.device_type}}</p>
                                 <p class="d-flex gap-1">
-                                    <img src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
+                                    <img loading="lazy" src="../../../assets/dummy-img/ch_Icon.svg" alt="ch">
                                     {{data.device_name}}
                                 </p>
                             </div>
