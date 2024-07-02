@@ -22,7 +22,6 @@
       width: 168px;
       padding: 8px 16px 8px 16px;
       height: 40px;
-      border-bottom: 2px solid #ffffff;
     }
     .schedule_categories {
       display: flex;
@@ -129,6 +128,10 @@
       }
     }
   }
+}
+
+.active_categories{
+  border-bottom: 2px solid #ffffff;
 }
 
 .schedule_container_content {
