@@ -1,20 +1,20 @@
 <div class="schedule_main postion-relative">
   <div class="schedule_heading_container">
-    <div class="schedule_channels" (click)="getScheduleData('Movies')">Streamly Channels</div>
+    <div class="schedule_channels" [class.active_categories]="selected_category =='Streamly_channels'" (click)="active_categories('Streamly_channels')">Streamly Channels</div>
     
     <div class="schedule_categories" [@slideInOut]="'active'" #scrollablecategory>
-      <div class="schedule_category" *ngFor="let category of categories" (click)="getScheduleData(category.name)">
-        <img class="me-1" [src]="category?.image" [alt]="category.name">
+      <div class="schedule_category" [class.active_categories]="selected_category == category.name" *ngFor="let category of categories" (click)="getScheduleData(category.name)">
+        <img loading="lazy" class="me-1" [src]="category?.image" [alt]="category.name">
         {{ category?.name }}
       </div>
     </div>
     
     <div class="schedule_arrow d-flex">
       <div class="pointer" (click)="scrollRight(50)">
-        <img src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
+        <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="Previous" />
       </div>
       <div class="pointer" (click)="scrollLeft(50)">
-        <img src="../../assets/dummy-img/chevron-right.svg" alt="Next" />
+        <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="Next" />
       </div>
     </div>
   </div>
@@ -48,7 +48,7 @@
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
       <div class="pointer" (click)="scrollContent(100)">
-        <img src="../../assets/dummy-img/chevron-right.svg" alt="" />
+        <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@
         <ng-container *ngIf="filteredPrograms?.length">
         <div class="schedule_channel" *ngFor="let channel of getScheduleChannelLogo">
           <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
-            <img [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
+            <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
           </div>
           <div class="heart_ch">
             <!-- <img src="../../assets/dummy-img/heart.svg" alt="" /> -->
@@ -147,7 +147,7 @@
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
       <div class="col-4 section1_img">
-        <img [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
+        <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1>{{programDetailData?.title | truncate}}</h1>
@@ -157,7 +157,7 @@
         <div class="play_btn_container_1">
           <button class="playbtn_time text-nowrap">{{programDetailData.duration | durationISOFormat}}</button>
           <button class="playbtn_hd">
-            <img src="../../../assets/dummy-img/playTv.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt="" />
             <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
@@ -198,14 +198,14 @@
       <div class="col-4 schedule_details_section3">
         <div class="schedule_details_data d-flex align-items-center gap-2">
           <div>
-            <img src="../../../../assets/dummy-img/calendar-2.svg" alt="" />
+            <img loading="lazy" src="../../../../assets/dummy-img/calendar-2.svg" alt="" />
           </div>
           <h3>Schedule</h3>
         </div>
         <div class="schedule_details_time-container">
           <div
             class="schedule_details_time my-3"
-            
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).todaySchedule"
           >
             <div class="schedule_details_day mb-2">{{(programDetailData?.schedule | scheduleFormatter).today }}</div>
             <div
@@ -216,20 +216,20 @@
           </div>
           <div
             class="schedule_details_time my-3"
-            
+            *ngIf="(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule"
           >
             <div class="schedule_details_day mb-2">{{ (programDetailData?.schedule | scheduleFormatter).tomorrow }}</div>
             <div
               class="schedule_details_hr d-flex align-items-center justify-content-between"
             >
-              <p>{{ (programDetailData?.schedule | scheduleFormatter).tomorrowSchedule }}</p>
+              <p>{{(programDetailData?.schedule | scheduleFormatter).tomorrowSchedule }}</p>
             </div>
           </div>
         </div>
       </div>
   
       <div (click)="playlist_details_show=false" class="close_menu_details pointer">
-        <img src="../../../assets/dummy-img/close-circle.svg" alt="">
+        <img loading="lazy" src="../../../assets/dummy-img/close-circle.svg" alt="">
       </div>
     </div>
 
