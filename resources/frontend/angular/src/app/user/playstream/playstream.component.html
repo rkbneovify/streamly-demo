@@ -46,7 +46,7 @@
         <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
         <div class="play_btn_container_1">
             <button class="playbtn_time">{{channelData?.program_details?.duration}}</button>
-            <button class="playbtn_hd"><img src="../../../assets/dummy-img/playTv.svg" alt=""> <span>{{channelData?.program_details?.quals}}</span></button>
+            <button class="playbtn_hd"><img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt=""> <span>{{channelData?.program_details?.quals}}</span></button>
         </div>
         <p class="playstream_desc my-3">
             {{channelData?.program_details?.description}}
@@ -88,7 +88,7 @@
             <div class="landing_carousel_section2_bottom gap-5 mt-3 d-flex" >
                 <ng-container *ngFor="let recommended_channels of channelData?.recommended_channels">
                     <div class="card_page" (click)="setChannelId(recommended_channels?.id,recommended_channels?.dash_url)">
-                        <img [src]="recommended_channels?.image? recommended_channels?.image:'../../../assets/dummy-img/historyPlay.png'" alt="">   
+                        <img loading="lazy" [src]="recommended_channels?.image? recommended_channels?.image:'../../../assets/dummy-img/historyPlay.png'" alt="">   
                     </div>
                     </ng-container>
                 

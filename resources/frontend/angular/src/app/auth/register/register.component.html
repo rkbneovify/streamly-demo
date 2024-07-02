@@ -1,6 +1,6 @@
 <nav class="register-nav">
   <div class="nav-logo">
-    <img class="pointer" src="../../../assets/dummy-img/nav-logo.svg" alt="" routerLink="/" />
+    <img loading="lazy" class="pointer" src="../../../assets/dummy-img/nav-logo.svg" alt="" routerLink="/" />
   </div>
 </nav>
 <!-- <div>
@@ -18,7 +18,7 @@
       <div class="steps" >
         <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}">
           <span>
-            <img src="../../../assets/dummy-img/rs-1.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/rs-1.svg" alt="" />
           </span>
         </div>
         <p class="text-center">Availability</p>
@@ -26,7 +26,7 @@
       <div class="steps" >
         <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}">
           <span>
-            <img src="../../../assets/dummy-img/verificatoin.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/verificatoin.svg" alt="" />
           </span>
         </div>
         <p class="text-center">Verification</p>
@@ -34,7 +34,7 @@
       <div class="steps" (click)="selectedTab='Plans'" >
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans',}">
           <span>
-            <img src="../../../assets/dummy-img/passport.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
           </span>
         </div>
         <p class="text-center">Plans</p>
@@ -42,7 +42,7 @@
       <div class="steps" >
         <div [ngClass]="{'bullet4':true,'activeTab':selectedTab=='Terms',}">
           <span>
-            <img src="../../../assets/dummy-img/temsanscond.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/temsanscond.svg" alt="" />
           </span>
         </div>
         <p class="text-center">T&C</p>
@@ -50,7 +50,7 @@
       <div class="steps" (click)="selectedTab='Payment'">
         <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment',}">
           <span>
-            <img src="../../../assets/dummy-img/payment.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/payment.svg" alt="" />
           </span>
         </div>
         <p class="text-center">Payment</p>
@@ -58,7 +58,7 @@
       <div class="steps" >
         <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}">
           <span>
-            <img src="../../../assets/dummy-img/congrats.svg" alt="" />
+            <img loading="lazy" src="../../../assets/dummy-img/congrats.svg" alt="" />
           </span>
         </div>
         <p class="text-center">Confirmation</p>
@@ -74,9 +74,9 @@
     <div class="row_1" *ngIf="selectedTab == 'Availability'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs">
-          <img class="map" src="../../../assets/dummy-img/res-map.png" alt="map" />
-          <img class="search" src="../../../assets/dummy-img/res-se.png" alt="" />
-          <img class="checking" src="../../../assets/dummy-img/res-ch.png" alt="" />
+          <img loading="lazy" class="map" src="../../../assets/dummy-img/res-map.png" alt="map" />
+          <img loading="lazy" class="search" src="../../../assets/dummy-img/res-se.png" alt="" />
+          <img loading="lazy" class="checking" src="../../../assets/dummy-img/res-ch.png" alt="" />
           <p class="col_1-text">
             The information is required to check Streamly availability in your
             area.
@@ -150,7 +150,7 @@
     <div class="row_1 row_2" *ngIf="selectedTab == 'Verification'">
       <div class="col_1 d-md-block d-none">
         <div>
-          <img class="step1-img" src="../../../assets/dummy-img/res_step_2.png" alt="map" />
+          <img loading="lazy" class="step1-img" src="../../../assets/dummy-img/res_step_2.png" alt="map" />
         </div>
       </div>
       <form [formGroup]="otpVerificationForm" (ngSubmit)="otpVerifySubmit()" class="col_2 col_2_1 col_2_2">
@@ -243,7 +243,7 @@
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
         <div class="step1-imgs-2" (click)="getAllThePlans()">
-          <img class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
+          <img loading="lazy" class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
         </div>
       </div>
 
@@ -262,7 +262,7 @@
             <div class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
               <div class="col_2_gap d-flex pb-4">
                 <div>
-                  <img src="../../../assets/dummy-img/month_plan.svg" alt="" />
+                  <img loading="lazy" src="../../../assets/dummy-img/month_plan.svg" alt="" />
                 </div>
                 <div class="d-flex flex-column justify-content-between">
                   <h3>{{ data.nickname }}</h3>
@@ -283,12 +283,12 @@
               <div class="col_2_subblock d-flex flex-column gap-2">
                 <div *ngIf="data.type == 'tiered'" [ngClass]="{'pointer':true,'my-n21':true}"
                   (click)="showTiredPlan=!showTiredPlan">
-                  <img [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+                  <img loading="lazy" [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
                     src="../../../assets/dummy-img/chevron-down.svg" alt="" />
                 </div>
                 <div class="d-flex flex-nowrap" *ngIf="!showTiredPlan && data.type == 'tiered'">
                   <div>
-                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                    <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
                   <p>
                     Trial days:
@@ -303,7 +303,7 @@
 
                 <div class="d-flex flex-nowrap" *ngIf="data.type == 'per_unit'">
                   <div>
-                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                    <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
                   <p>
                     Trial days:
@@ -319,14 +319,14 @@
                 <div *ngFor="let metadata of data.metadata | keyvalue" class="d-flex flex-nowrap">
                   
                   <div *ngIf="!showTiredPlan && data.type == 'tiered'">
-                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                    <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
                   <ng-container *ngIf="metadata.value && data.type == 'tiered'">
                     <p *ngIf="!showTiredPlan">{{ metadata.value }}</p>
                   </ng-container>
 
                   <div *ngIf="data.type == 'per_unit'">
-                    <img src="../../../assets/dummy-img/check.svg" alt="" />
+                    <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
                   </div>
                   <ng-container *ngIf="data.type == 'per_unit'">
                     <p>{{ metadata.value }}</p>
@@ -489,8 +489,8 @@
     <div class="row_4 my-4 position-relative" *ngIf="selectedTab == 'Terms'">
       <div style="top: -10px; left: 12px" (click)="backbutton('Plans')"
         class="pointer position-absolute d-flex justify-content-center align-item-center">
-        <img *ngIf="!acceptTerm" src="../../../assets/dummy-img/backArrow.svg" alt="" />
-        <img *ngIf="acceptTerm" src="../../../assets/dummy-img/arrow.svg" alt="" />
+        <img loading="lazy" *ngIf="!acceptTerm" src="../../../assets/dummy-img/backArrow.svg" alt="" />
+        <img loading="lazy" *ngIf="acceptTerm" src="../../../assets/dummy-img/arrow.svg" alt="" />
         <div [ngClass]="{ 'backbtn ms-2': true, backbtnwhite: acceptTerm }">
           Back
         </div>
@@ -551,7 +551,7 @@
     <div class="row_5 row py-4 pt-5 position-relative" *ngIf="selectedTab == 'Payment'">
       <div (click)="backbutton('Terms')"
         class="pointer payment-back-btn backbtnwhiteposition-absolute d-flex justify-content-start align-item-center">
-        <img src="../../../assets/dummy-img/arrow.svg" alt="" />
+        <img loading="lazy" src="../../../assets/dummy-img/arrow.svg" alt="" />
         <div class="backbtn backbtnwhite ms-2">Back</div>
       </div>
       <div *ngIf="selectedPlanType == 'per_unit'" class="col-12 col-md-4 cart-content d-flex flex-column">
@@ -563,7 +563,7 @@
             <div class="row_plans d-flex justify-content-between pt-4 pb-5">
               <p class="fw-bolder">Basic Plan</p>
               <div>
-                <img src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
+                <img loading="lazy" src="../../../assets/dummy-img/shopping-cart-03.svg" alt="" />
               </div>
             </div>
             <div class="row_plans flex-column-flex justify-content-between pt-2 pb-3">
@@ -612,16 +612,16 @@
           <p>Payment Accepted cards</p>
           <div class="cards-brands d-flex gap-2">
             <div class="card">
-              <img src="../../../assets/dummy-img/visa.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/visa.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/american.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/american.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/discover.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/discover.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/mastercard.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/mastercard.svg" alt="" />
             </div>
           </div>
         </div>
@@ -674,7 +674,7 @@
 
             <div class="row_total flex-column justify-content-between">
               <div class="pointer" (click)="showplansDetails = !showplansDetails">
-                <img [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
+                <img loading="lazy" [ngClass]="{ 'm-auto': true, 'rotate-90': showplansDetails }"
                   src="../../../assets/dummy-img/chevron-down.svg" alt="" />
                 <div class="text-center tiers">Tiers 1 months</div>
               </div>
@@ -729,16 +729,16 @@
           <p>Payment Accepted cards</p>
           <div class="cards-brands d-flex gap-2">
             <div class="card">
-              <img src="../../../assets/dummy-img/visa.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/visa.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/american.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/american.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/discover.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/discover.svg" alt="" />
             </div>
             <div class="card">
-              <img src="../../../assets/dummy-img/mastercard.svg" alt="" />
+              <img loading="lazy" src="../../../assets/dummy-img/mastercard.svg" alt="" />
             </div>
           </div>
         </div>
@@ -863,7 +863,7 @@
     <div class="row_6 my-4 d-flex justify-content-center align-item-center" *ngIf="selectedTab == 'Confirmation'">
       <div class="row_6_container">
         <div class="">
-          <img src="../../../assets/dummy-img/heart-icon.png" alt="" />
+          <img loading="lazy" src="../../../assets/dummy-img/heart-icon.png" alt="" />
         </div>
         <div class="thank_text">
           <h3>Thank You!</h3>
@@ -890,7 +890,7 @@
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
             alt="" />
         </div>
       </div>
@@ -921,7 +921,7 @@
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
             alt="" />
         </div>
       </div>
@@ -929,7 +929,7 @@
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img src="../../../assets/dummy-img/check-circle-broken.svg" alt="" /> </span>Your Zipcode :
+              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" /> </span>Your Zipcode :
             <span>{{ searchZipInput }}</span>
           </h3>
         </div>
@@ -962,7 +962,7 @@
     <div class="modal-content popup_bg">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img class="pointer" id="closeWrongZipForm" data-bs-dismiss="modal" aria-label="Close"
+          <img loading="lazy" class="pointer" id="closeWrongZipForm" data-bs-dismiss="modal" aria-label="Close"
             src="../../../assets/dummy-img/x-circle.svg" alt="" />
         </div>
       </div>
@@ -970,7 +970,7 @@
         <div class="zip_top">
           <h3 class="d-flex gap-2">
             <span>
-              <img src="../../../assets/dummy-img/alert-triangle.svg" alt="" /> </span>Your Zipcode :
+              <img loading="lazy" src="../../../assets/dummy-img/alert-triangle.svg" alt="" /> </span>Your Zipcode :
             <span>{{ searchZipInput }}</span>
           </h3>
         </div>
