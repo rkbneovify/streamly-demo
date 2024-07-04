@@ -73,13 +73,15 @@
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of recentsPlayData">
       <img
+      *ngIf="item.image"
       loading="lazy"
         [src]="
           item.image ? item.image : '../../../assets/dummy-img/play_icon.svg'
         "
         alt=""
       />
-
+      <p class="no-img" *ngIf="!item.image">No Image</p>
+    
       <div class="card_content">
         <div class="card_content_text1 d-flex justify-content-between">
           <div

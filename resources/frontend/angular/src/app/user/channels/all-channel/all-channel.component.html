@@ -49,12 +49,14 @@
       /> -->
 
       <img
+      *ngIf="item.image"
       loading="lazy"
       [src]="
         item?.image ? item?.image : '../../../assets/dummy-img/inf.png'
       "
       [ngClass]="{ 'object-fill': item?.type == 'event' }"
     />
+    <p class="no-img" *ngIf="!item.image">No Image</p>
     
       <div class="card_content">
         <div class="card_content_text1 d-flex justify-content-between">

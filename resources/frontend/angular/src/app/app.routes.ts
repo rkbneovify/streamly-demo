@@ -14,5 +14,4 @@ export const routes: Routes = [
   {path:'auth',canActivate:[authGuarLoginStatus], loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)},
   {path:'user', canActivate: [authguardGuard], loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
   {path:'**',component:PageNotFoundComponent},
-
 ];

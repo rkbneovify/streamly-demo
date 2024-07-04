@@ -115,6 +115,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       next:(res:any)=>{
         console.log(res);
         this.categories=res.data;
+        this.categories.push({name:'Others',image:''})
       },
       error:(err:any)=>{
         console.log(err);
@@ -156,7 +157,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       this.calculateWidth(1718841600, 1718845200)
     );
     console.log('currnet time', this.getCurrentTimeSlot());
-    this.getScheduleData('Movies');
+    this.getScheduleData('');
     this.setDefaultDay();
     // this.startTimer()
     this.getFavoriteList();
@@ -291,12 +292,18 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
         console.log(res);
-        this.showPlaylist()
-        this.programDetailData = res.data;
+        if(!! res?.data){
+          this.showPlaylist();
+          this.programDetailData = res.data;
+        }else{
+          this.toaster.error('No Program details found.')
+        }
+
         // localStorage.setItem('playerChannelId',res.data)
         console.log(res);
       },
       error: (err: any) => {
+        this.toaster.error(err.message);
         console.error(err);
       },
     });
@@ -500,7 +507,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
 
     // active_categories
-    selected_category:string='Streamly_channels';
+    selected_category:string='';
 
     active_categories(category:string){
       this.selected_category = category;

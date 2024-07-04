@@ -45,13 +45,13 @@
 
                 <div class="toatlcheck-device my-4 d-flex gap-3 align-items-center">
                     <!-- <input type="checkbox"> -->
-                    <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
+                    <!-- <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()"> -->
                     <p class="d-inline-block">Device {{connectedDevice.length}}/5</p>
                 </div>
                 <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
                     <div *ngFor="let data of connectedDevice;" class="col-4 card_device">
                         <div class="devi_top">
-                          <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id">
+                          <!-- <input *ngIf="current_device !== data.personaldeviceid" type="checkbox" (change)="getDeviceId($event, data.session_id)" [value]="data.session_id"> -->
                             <img loading="lazy" class="dots_v" src={{data.device_img}} alt="dot">
                             <img loading="lazy" class="device_img" src="../../../assets/dummy-img/remvoe_laptop.png" alt="laptop">
                             <!-- <div class="device_imgpar d-flex justify-content-center align-items-center">
