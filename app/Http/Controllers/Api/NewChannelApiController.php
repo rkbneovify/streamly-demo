@@ -194,6 +194,16 @@ class NewChannelApiController extends Controller
             $urlType = $request->get('typeurl');
             $zipcode = $request->get('zipcode');
             $genre = $request->get('genre');
+            $hoursoffset = $request->get('hoursoffset');
+            $pattern = '/^(-?\d{2}:\d{2})$/';
+
+            if (preg_match($pattern, $hoursoffset, $matches)) {
+                // String matches the format, and $matches[1] contains the matched value
+                $hoursofset = $matches[1];
+            } else {
+                // String does not match the format
+                $hoursofset = '00:00';
+            }
 
             $validate = 0;
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
@@ -248,7 +258,11 @@ class NewChannelApiController extends Controller
 
     private function getProgramScheduleById($prgSvcId)
     {
-        $programs = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'start', 'end', 'assets')->get();
+        $gmdate_string = gmdate('Y-m-d H:i');
+        $current_timestamp = strtotime($gmdate_string . ' GMT');
+        $programs = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'start', 'end', 'assets')
+            ->where('end', '>=', $current_timestamp)
+            ->get();
         $programs->map(function ($program) {
             $program->image = $this->getURIFromAssetForProgram($program->assets);
             unset($program->assets);
@@ -376,27 +390,32 @@ class NewChannelApiController extends Controller
                 ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
-            $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
-                ->where('title', 'like', "%{$program->title}%")
-                ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
-                ->orderBy('start')
-                ->get();
-            $data = [
-                "title" => $program->title,
-                "description" => $program->description,
-                "duration" => $program->duration,
-                "quals" => $program->quals,
-                "genre" =>  json_decode($program->genre),
-                "image" => $this->getURIFromAssetForProgram($program->assets),
-                "schedule" => $program_details
-            ];
-            unset($program->assets);
+            if (!empty($program)) {
+                $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
+                    ->where('title', 'like', "%{$program->title}%")
+                    ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
+                    ->orderBy('start')
+                    ->get();
+                $data = [
+                    "title" => $program->title,
+                    "description" => $program->description,
+                    "duration" => $program->duration,
+                    "quals" => $program->quals,
+                    "genre" =>  json_decode($program->genre),
+                    "image" => $this->getURIFromAssetForProgram($program->assets),
+                    "schedule" => $program_details
+                ];
+                unset($program->assets);
+            } else {
+                $data = [];
+            }
             $response = [
                 'success' => true,
                 'response_code' => 200,
                 'message' => 'Program Details Retrieved successfully.',
                 'data' => $data
             ];
+
             return response()->json($response);
         }
     }
