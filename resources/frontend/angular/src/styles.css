@@ -431,17 +431,17 @@ nav {
 }
 
 /*Change text in autofill textbox*/
-/* input:-webkit-autofill{
+input:-webkit-autofill{
   -webkit-text-fill-color: white !important;
-} */
+}
 
 /* Change the white to any color */
-/* input:-webkit-autofill,
+input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px #1b4974 inset !important;
-} */
+}
 
 /* input:-internal-autofill-selected{
   background-color:transparent !important;

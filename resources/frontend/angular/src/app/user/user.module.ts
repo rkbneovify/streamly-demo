@@ -31,7 +31,7 @@ import { CommonChannelComponent } from './channels/common-channel/common-channel
 const routes: Routes = [
   {
     path: '', component: UserComponent, children: [
-      { path: '', component: UserHomeComponent },
+      { path: '', redirectTo:'home',pathMatch:'full' },
       { path: 'home', component: UserHomeComponent ,canActivate: [authguardGuard] },
       { path: 'my-stuff', component: FavouritesComponent,canActivate: [authguardGuard] },
       { path: 'playlistschedule', component: PlaylistScheduleComponent,canActivate: [authguardGuard]  },
