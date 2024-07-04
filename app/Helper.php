@@ -69,7 +69,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                 // Query the name field in status table
                 $q->select('id', 'personal_devicename', 'device_id', 'user_id')->where('user_id', '=', $uid);
             }])
-                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device, user_ip, logintime")
                 ->where([
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
@@ -105,7 +105,7 @@ function checkLoginLimit($user_id, $token, $deviceDetails)
                     ['status', '=', '1'],
                     ['users_id', '=', $uid],
                 ])
-                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device")
+                ->selectRaw("id ,connected_devices, SUBSTRING_INDEX(mac_address, '#~', -1) device_id,SUBSTRING_INDEX(mac_address, '#~', 1) device_name,device,user_ip, logintime")
                 ->orderBy('connected_devices', 'asc');
             $s = '';
             $numofdevice = '';
@@ -1846,4 +1846,4 @@ function convertTimeZoneAbbreviation($abbreviation, $zipCode)
  -user bought tiered plan of 10 devices || 10 htoel rooms were created
 -user cancels the tiered plan
 -user boughts tiered plan 6 devices || 6 hotel rooms should be present
-*/
+ */
