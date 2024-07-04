@@ -58,20 +58,38 @@ export const authguardGuard: CanActivateFn = (route, state) => {
 };
 
 // checkuserLogin or not
+// export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
+//   console.log('auth gaurd works');
+
+//   const token = localStorage.getItem('token');
+//       if (token) {                
+//         console.log('Heman3 =====>',token);
+//         inject(Router).navigateByUrl('/user');
+//         return false;
+//       } 
+//       else {
+//         console.log('Heman1 =====>',token);
+//         return true;
+//       }
+// };
 export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
-  console.log('auth gaurd works');
+  console.log('auth guard works');
 
   const token = localStorage.getItem('token');
-      if (token) {                
-        console.log('Heman3 =====>',token);
+
+  if (token) {
+    if (state.url !== '/user') {  // Check if the current route is not '/user'
+      console.log('Heman3 =====>', token);
+      // router.navigateByUrl('/user');
         inject(Router).navigateByUrl('/user');
-        return false;
-      } 
-      else {
-        console.log('Heman1 =====>',token);
-        return true;
-      }
-};
+    }
+    return false; // Block navigation to the requested route
+  } else {
+    console.log('Heman1 =====>', token);
+    return true; // Allow navigation to the requested route
+  }
+}
+
 
 // checkuserLogin or not
 export const authGuarLoginStatus: CanActivateFn = (route, state) => {
