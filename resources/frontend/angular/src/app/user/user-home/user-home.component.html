@@ -20,7 +20,7 @@
               <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}">
                   <div class="landing_carousel_section1">
                       <div class="landing_carousel_section1_img">
-                      <img src={{data.image}} alt="" loading="lazy" />
+                      <img src={{data.image}} alt="" loading="lazy" /> 
                       </div>
                       <div class="landing_carousel_section1_text_content">
                       <!-- <div class="landing_carousel_section1_img1">
@@ -69,12 +69,14 @@
           <div class="landing_carousel_section2_bottom mt-3 d-flex">
             <div class="card_page" *ngFor="let item of recentsPlayData">
               <img
+              *ngIf="item.image"
               loading="lazy"
                 [src]="
                   item.image ? item.image : '../../../assets/dummy-img/play_icon.svg'
                 "
                 alt=""
               />
+              <p class="no-img" *ngIf="!item.image">No Image</p>
         
               <div class="card_content">
                 <div class="card_content_text1 d-flex justify-content-between">
@@ -126,8 +128,9 @@
           <div class="landing_carousel_section2_top">{{list?.genre_name}} <span class="pointer" [routerLink]="'/user/channels/'+list.genre_name">See More >></span></div>
           <div class="landing_carousel_section2_bottom mt-3 d-flex" >
               <div class="card_page" *ngFor="let data of list?.channels" >
-                  <img loading="lazy" *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt="">
+                  <!-- <img loading="lazy" *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt=""> -->
                   <img loading="lazy" *ngIf="data?.image" [src]="data?.image" alt="">
+              <p class="no-img" *ngIf="!data.image">No Image</p>
                   <div class="card_content">
                       <div class="card_content_text1 d-flex justify-content-between">
                           <div class="play_img d-flex align-items-center gap-2" (click)="setplayerData(data?.url)">

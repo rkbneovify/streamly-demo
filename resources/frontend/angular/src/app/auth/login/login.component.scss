@@ -78,6 +78,11 @@ main {
         bottom: 14px;
         right: 12px;
       }
+      svg{
+        position: absolute;
+        bottom: 15px;
+        right: 13px;
+      }
     }
     input {
       width: 100%;
@@ -220,6 +225,17 @@ main {
     }
     .divider {
       margin: 0 1rem;
+    }
+  }
+
+  .login-container {
+    header {
+      h1 {
+        font-size: 35px;
+      }
+      .info {
+        font-size: 16px;
+      }
     }
   }
 }
