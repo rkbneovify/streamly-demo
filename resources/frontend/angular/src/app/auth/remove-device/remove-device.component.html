@@ -64,7 +64,7 @@
                                   <p >This Device</p>
                               </div>
                           </ng-container>
-  <!-- class="input_st min75-h40 w-auto h-100 position-relative" [class.spinner]="loading[data.session_id]" [disabled]="loading[data.session_id]" (click)="removedevice(data.session_id)"> <span *ngIf="!loading[data.session_id]" -->
+                          <!-- class="input_st min75-h40 w-auto h-100 position-relative" [class.spinner]="loading[data.session_id]" [disabled]="loading[data.session_id]" (click)="removedevice(data.session_id)"> <span *ngIf="!loading[data.session_id]" -->
                           <ng-template #btnlogOut>
                               <div class="device_imgpar d-flex justify-content-center align-items-center">
                                   <button class="input_st min75-h40 w-auto h-100 position-relative"  [class.spinner]="loading[data.session_id]" [disabled]="loading[data.session_id]" (click)="removedevice(data.session_id)" > <span *ngIf="!loading[data.session_id]"> Log out</span></button>
@@ -74,11 +74,11 @@
                         <div class="devi_bottom">
                             <div class="remove_dev_con d-flex justify-content-between">
                                 <p class="dev_heading">IP</p>
-                                <p>14.102.190.50</p>
+                                <p>{{data?.user_ip}}</p>
                             </div>
                             <div class="remove_dev_con my-3 d-flex justify-content-between">
                                 <p class="dev_heading">Login</p>
-                                <p>1 week ago</p>
+                                <p>{{(data?.logintime | timeAgo)}}</p>
                             </div>
                             <div class="remove_dev_con d-flex justify-content-between">
                                 <p class="dev_heading">{{data.device_type}}</p>
