@@ -4,11 +4,13 @@ import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { RouterLink } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
+import { TimeAgoPipe } from '../../pipe/time-ago.pipe';
+
 
 @Component({
   selector: 'app-remove-device',
   standalone: true,
-  imports: [NgFor,NgIf,RouterLink,NgClass],
+  imports: [NgFor,NgIf,RouterLink,NgClass,TimeAgoPipe],
   templateUrl: './remove-device.component.html',
   styleUrl: './remove-device.component.scss',
 })

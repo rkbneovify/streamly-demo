@@ -39,8 +39,6 @@
     "rxjs": "~7.8.0",
     "stripe-angular": "^1.9.3",
     "tslib": "^2.3.0",
-    "video.js": "^8.10.0",
-    "videojs": "^1.0.0",
     "videojs-contrib-eme": "^5.2.1",
     "zone.js": "~0.14.3"
   },

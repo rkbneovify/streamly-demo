@@ -3,27 +3,25 @@ import { CanActivateFn, Router } from '@angular/router';
 
 export const authguardGuard: CanActivateFn = (route, state) => {
   let user;
-  console.log('auth gaurd works');
+  const router = inject(Router); // Inject Router
+
+  console.log('auth guard works');
 
   const jsonData = localStorage.getItem('deviceInfo');
   if (jsonData !== null) {
     try {
-      user = JSON.parse(localStorage.getItem('deviceInfo') || '');
+      user = JSON.parse(jsonData);
     } catch (error) {
       console.error('Error parsing JSON data:', error);
     }
   }
-  if (!!user?.access_token) {
-    console.log(user.subscribed, '=======sub====');
-    // return true
 
+  if (user?.access_token) {
+    console.log(user.subscribed, '=======sub====');
     if (user?.subscribed) {
       console.log('subscription true, if block executed');
       return true;
     } else {
-      // inject(Router).navigateByUrl('user/plan');
-      // return false;
-      console.log('subscription false, else block executed');
       const currentRoute = state?.url;
       console.log(
         'current route=>',
@@ -46,71 +44,54 @@ export const authguardGuard: CanActivateFn = (route, state) => {
         console.log('if current route matches');
         return true;
       } else {
-        inject(Router).navigateByUrl('user/subscription-expired');
+        router.navigateByUrl('user/subscription-expired');
         console.log('else plans');
         return false;
       }
     }
   } else {
-    inject(Router).navigateByUrl('auth/login');
+    router.navigateByUrl('auth/login');
     return false;
   }
 };
 
-// checkuserLogin or not
-// export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
-//   console.log('auth gaurd works');
-
-//   const token = localStorage.getItem('token');
-//       if (token) {                
-//         console.log('Heman3 =====>',token);
-//         inject(Router).navigateByUrl('/user');
-//         return false;
-//       } 
-//       else {
-//         console.log('Heman1 =====>',token);
-//         return true;
-//       }
-// };
 export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
   console.log('auth guard works');
 
+  const router = inject(Router); // Inject Router
   const token = localStorage.getItem('token');
 
   if (token) {
-    if (state.url !== '/user') {  // Check if the current route is not '/user'
+    if (state.url !== '/user') {
       console.log('Heman3 =====>', token);
-      // router.navigateByUrl('/user');
-        inject(Router).navigateByUrl('/user');
+      router.navigateByUrl('/user/home');
+      return false; // Block navigation to the requested route
     }
-    return false; // Block navigation to the requested route
+    return true; // Already on /user, allow navigation
   } else {
     console.log('Heman1 =====>', token);
     return true; // Allow navigation to the requested route
   }
-}
+};
 
-
-// checkuserLogin or not
+// Check user login status
 export const authGuarLoginStatus: CanActivateFn = (route, state) => {
-
+  const router = inject(Router); // Inject Router
   const token = localStorage.getItem('token');
+
   if (token) {
     if (state.url === '/user') {
       return true; // Already on the target route, allow navigation
     }
     console.log('Heman2 =====>', token);
-    inject(Router).navigateByUrl('/user');
-    return false; // Prevent the navigation to the requested route
+    router.navigateByUrl('/user');
+    return false; // Prevent navigation to the requested route
   } else {
     if (state.url === '/auth/login') {
       return true; // Already on the target route, allow navigation
     }
     console.log('Heman4 =====>', token);
-    inject(Router).navigateByUrl('/auth/login');
-    return false; // Prevent the navigation to the requested route
+    router.navigateByUrl('/auth/login');
+    return false; // Prevent navigation to the requested route
   }
-
 };
-
-
