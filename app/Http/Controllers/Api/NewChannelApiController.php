@@ -385,11 +385,12 @@ class NewChannelApiController extends Controller
             $TMSId = $request->TMSId;
             $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('gracenote_schedule_program.prgSvcId', 'title', 'description', 'duration', 'quals', 'assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
-                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
-                ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-                ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
+
             if (!empty($program)) {
                 $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
                     ->where('title', 'like', "%{$program->title}%")
