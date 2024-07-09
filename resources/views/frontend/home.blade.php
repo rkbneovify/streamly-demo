@@ -47,8 +47,8 @@ use Laravel\Cashier\Cashier; ?>
             padding: 0;
             margin: 0;
             /* background: -webkit-linear-gradient(98deg, #000428 0%, #004E92 100%);
-          background: -moz-linear-gradient(98deg, #000428 0%, #004E92 100%);
-          background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box; */
+                      background: -moz-linear-gradient(98deg, #000428 0%, #004E92 100%);
+                      background: transparent linear-gradient(98deg, #000428 0%, #004E92 100%) 0% 0% no-repeat padding-box; */
             /* background-color: #15101E; */
             background-image: null;
             background-size: cover;
@@ -251,7 +251,7 @@ use Laravel\Cashier\Cashier; ?>
             display: -ms-flexbox;
             display: flex;
             /* justify-content: center;
-          align-items: center; */
+                      align-items: center; */
             font-size: 2em;
             /* color: #20263f; */
             border-radius: 15px;
@@ -586,7 +586,7 @@ use Laravel\Cashier\Cashier; ?>
 
     <!-- Select Plan-->
     @if (!empty($plansdetails))
-        <section class="page-section ">
+        <section class="page-section" id="services">
             <div class="container">
                 <div class="text-center">
 
@@ -697,7 +697,7 @@ use Laravel\Cashier\Cashier; ?>
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
             /* width: 163px;
-            height: 41px; */
+                        height: 41px; */
 
         }
 
@@ -759,7 +759,7 @@ use Laravel\Cashier\Cashier; ?>
                         </div>
                         <!-- <div id="{{ $key }}" class="col-sm-12 no-gutters collapse  text-center show" data-parent="#accordion">
 
-                </div>  -->
+                            </div>  -->
                     @else
                         <div class="tab-pane fade col-sm-12 no-gutters" id="pills-{{ $key }}" role="tabpanel"
                             aria-labelledby="pills-{{ $key }}-tab">
@@ -777,7 +777,7 @@ use Laravel\Cashier\Cashier; ?>
                         </div>
                         <!-- <div id="{{ $key }}" class="col-sm-12 no-gutters collapse  text-center " data-parent="#accordion">
 
-            </div>  -->
+                        </div>  -->
                     @endif
                 @endforeach
             </div>
@@ -830,29 +830,29 @@ use Laravel\Cashier\Cashier; ?>
         </div>
     </section>
     <!--
-        <section class="page-section " >
-        <div class="container"><div class="accordion" id="accordion1">
+                    <section class="page-section " >
+                    <div class="container"><div class="accordion" id="accordion1">
 
-        @foreach ($Genrekey as $keyer => $genrewe)
+                    @foreach ($Genrekey as $keyer => $genrewe)
     <?php
     ?>
-        @component('components.card.card', [
-            'cardHeadingId' => 'heading' . $keyer,
-            'cardCollapseId' => 'collapse' . $keyer,
-            'parentId' => 'accordion1',
-            'index' => $keyer,
-        ])
+                    @component('components.card.card', [
+                        'cardHeadingId' => 'heading' . $keyer,
+                        'cardCollapseId' => 'collapse' . $keyer,
+                        'parentId' => 'accordion1',
+                        'index' => $keyer,
+                    ])
         @slot('cardTitle')
             my card title #{{ $keyer }}
         @endslot
 
-                  @slot('cardBody')
+                                          @slot('cardBody')
             <strong> this the content of my card{{ $keyer }} body</strong>
         @endslot
     @endcomponent
     @endforeach
-        </div></div>
-        </section> -->
+                    </div></div>
+                    </section> -->
     <style>
         #pills-tab>.nav-item>a {
             position: relative;
