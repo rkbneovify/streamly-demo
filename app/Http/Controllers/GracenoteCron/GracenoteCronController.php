@@ -419,7 +419,7 @@ class GracenoteCronController extends Controller
         }
 
         // Map program details to events
-        foreach ($dataArray as &$data) {
+        foreach ($dataArray as $index => &$data) {
             if (isset($programMap[$data['TMSId']])) {
                 $program = $programMap[$data['TMSId']];
                 $data['title'] = is_array($program->titles->title) ? $program->titles->title[0]->text : null;
@@ -429,6 +429,10 @@ class GracenoteCronController extends Controller
                         : ($program->descriptions->desc->text ?? null))
                     : null;
                 $data['assets'] = isset($program->assets) ? json_encode($program->assets) : "[]";
+            }
+            // Free memory periodically
+            if ($index % 1000 == 0) {
+                gc_collect_cycles();
             }
         }
 
