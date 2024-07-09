@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class NewChannelApiController extends Controller
 {
-    private $exculdedUsers = ["jmheil@gmail.com", "llipschultz@neovix.com", "brian_marlin@yahoo.com", "qasuresh@yopmail.com", "qajalaj@yopmail.com", "pm13426@gmail.com", "nathan@neovix.com", "willis@neovix.com", "davea@neovix.com"];
+    private $exculdedUsers = ["jmheil@gmail.com", "llipschultz@neovix.com", "brian_marlin@yahoo.com", "qasuresh@yopmail.com", "qajalaj@yopmail.com", "pm13426@gmail.com", "nathan@neovix.com", "willis@neovix.com", "davea@neovix.com", "willthiswork2023@outlook.com"];
 
     private function getURIFromAsset($assets)
     {
@@ -242,6 +242,24 @@ class NewChannelApiController extends Controller
                 $channel->image = $this->getURIFromAsset($channel->assets);
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId);
                 unset($channel->assets);
+                if ($channel->stationName == null) {
+                    $channel->stationName = "NA";
+                }
+                if ($channel->callSign == null) {
+                    $channel->callSign = "NA";
+                }
+                if ($channel->timeZone == null) {
+                    $channel->timeZone = "NA";
+                }
+                if ($channel->channel_url == null) {
+                    $channel->channel_url = "NA";
+                }
+                if ($channel->prgSvcId == null) {
+                    $channel->prgSvcId = "NA";
+                }
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/No Image.png';
+                }
                 return $channel;
             });
 
@@ -385,11 +403,12 @@ class NewChannelApiController extends Controller
             $TMSId = $request->TMSId;
             $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('gracenote_schedule_program.prgSvcId', 'title', 'description', 'duration', 'quals', 'assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
-                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
-                ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-                ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
+
             if (!empty($program)) {
                 $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
                     ->where('title', 'like', "%{$program->title}%")
@@ -472,9 +491,9 @@ class NewChannelApiController extends Controller
 
             $program = GracenoteScheduleProgram::select('title', 'description', 'duration', 'quals', 'assets', 'date', 'time')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
-                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
-                ->join('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
-                ->join('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->where('start', '<=', $current_datetimestamp)
                 ->where('end', '>=', $current_datetimestamp)
                 ->where('gracenote_schedule_program.prgSvcId', $record[0]->prgSvcId)
