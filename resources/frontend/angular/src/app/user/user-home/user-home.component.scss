@@ -272,13 +272,7 @@ main {
             color: #ffffff;
           }
 
-          .card_content_text3 {
-            font-family: Poppins;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 21px;
-            color: #BDBDBD;
-          }
+
         }
 
         &:hover {
@@ -352,4 +346,12 @@ main {
   fill: red;
   background-color: red;
   border-radius: 50%;
+}
+
+.card_content_text3 {
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: #BDBDBD;
 }
