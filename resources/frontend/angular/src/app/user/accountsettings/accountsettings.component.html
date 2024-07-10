@@ -262,35 +262,25 @@
     <div class="modal-content showPopConf popup_bg ms-5">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <i class="bi bi-x "></i>
+          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
+            alt="" />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
-          <h3 class="d-flex gap-2 mt-2">
+          <h3 class="d-flex gap-2 mt-2 mb-0">
             <span class="d-flex gap-2">
               <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
-              Do you want to delete your account.
+              Enter password to delete your account
             </span>
           </h3>
         </div>
-        <div class="zip_bottom d-flex gap-2 justify-content-evenly">
-          <!-- <div class="zip_bottom_p">
-            <p class="">
-              Congratulations! Your Zipcode is in our service area. Proceed to
-              the next step to subscribe
-            </p>
-          </div>
-          <div class="zip_bottom_cs d-flex justify-content-center">
-            <p><span>City : </span>hello</p>
-            <p><span>State :</span>helo</p>
-          </div> -->
-          <button class="btn_2 btn-bg-gold w-auto" data-bs-dismiss="modal" (click)="deleteSub()">
-            Yes
-          </button>
-          <button class="btn_2 btn-bg-gold w-auto " data-bs-dismiss="modal">
-            No
-          </button>
+        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+          <div class="zip_bottom_p">
+            <form class="d-flex flex-column gap-2 justify-content-evenly" [formGroup]="deleteAccountForm" (ngSubmit)="deleteUserAccount()">
+              <input type="text" class="input_standred" placeholder="Enter Password" formControlName="password">
+              <button class="btn_2 w-auto align-self-center" [ngClass]="{'btn-bg-gold':!deleteAccountForm.invalid}" data-bs-dismiss="modal" type="submit" [disabled]="deleteAccountForm.invalid">Delete Account</button>
+            </form>
         </div>
       </div>
     </div>
