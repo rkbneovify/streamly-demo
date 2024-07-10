@@ -260,6 +260,13 @@ total_price:any = 0;
     });
   }
 
+
+  showPopDeleteAccount(){
+    document.getElementById('btnShowPopDeleteAccount').click();
+  }
+
+  
+
   showPopConf(){
     document.getElementById('btnShowPopConf').click();
   }

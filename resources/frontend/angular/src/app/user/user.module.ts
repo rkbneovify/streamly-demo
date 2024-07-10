@@ -47,7 +47,7 @@ const routes: Routes = [
       { path: 'channel/news', component: NewsComponent },
       { path: 'channel/family', component: FamilyComponent },
       { path: 'channel/comedy', component: ComedyComponent },
-      { path: 'channels/:genreName',canActivate:[authGuarLoginStatus], component: CommonChannelComponent },
+      { path: 'channels/:genreName', component: CommonChannelComponent },
       {path:'help-and-support',component:HelpAndSupportComponent},
       {path:'term-condition',component:TermConditionComponent},
       {path:'privacy-policy',component:PrivacyPolicyComponent},
