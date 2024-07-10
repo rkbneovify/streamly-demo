@@ -87,7 +87,7 @@
             <div class="landing_carousel_section2_top">Recommended Channels</div>
             <div class="landing_carousel_section2_bottom gap-5 mt-3 d-flex" >
                 <ng-container *ngFor="let recommended_channels of channelData?.recommended_channels">
-                    <div class="card_page" (click)="setChannelId(recommended_channels?.id,recommended_channels?.dash_url)">
+                    <div class="card_page pointer" (click)="showRecommendedChannels(recommended_channels?.dash_url,recommended_channels?.id)">
                         <img loading="lazy" [src]="recommended_channels?.image? recommended_channels?.image:'../../../assets/dummy-img/historyPlay.png'" alt="">   
                     </div>
                     </ng-container>

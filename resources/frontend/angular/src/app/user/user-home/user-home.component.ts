@@ -129,8 +129,9 @@ updateFavoriteChannels(): void {
 }
 
 // set player data in local 
-setplayerData(id:string){
+setplayerData(id:string,channel_id?:any){
   localStorage.setItem('playerId',id);
+  localStorage.setItem('playerChannelId',channel_id)
   this.router.navigateByUrl('/user/playstream');
 }
 

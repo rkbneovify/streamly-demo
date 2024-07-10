@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="accountbtn_container">
-      <button *ngIf="!editMode" class="plan_btn btn-delete">
+      <button (click)="showPopDeleteAccount()" *ngIf="!editMode" class="plan_btn btn-delete">
         Account Delete
       </button>
       <button
@@ -225,6 +225,52 @@
             <span class="d-flex gap-2">
               <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
               Do you want to cancel the subscription
+            </span>
+          </h3>
+        </div>
+        <div class="zip_bottom d-flex gap-2 justify-content-evenly">
+          <!-- <div class="zip_bottom_p">
+            <p class="">
+              Congratulations! Your Zipcode is in our service area. Proceed to
+              the next step to subscribe
+            </p>
+          </div>
+          <div class="zip_bottom_cs d-flex justify-content-center">
+            <p><span>City : </span>hello</p>
+            <p><span>State :</span>helo</p>
+          </div> -->
+          <button class="btn_2 btn-bg-gold w-auto" data-bs-dismiss="modal" (click)="deleteSub()">
+            Yes
+          </button>
+          <button class="btn_2 btn-bg-gold w-auto " data-bs-dismiss="modal">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal for zipcode-correct-->
+<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopDeleteAccount"
+  id="btnShowPopDeleteAccount"></button>
+<div class="modal fade" id="showPopDeleteAccount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered zipcode_correct">
+    <div class="modal-content showPopConf popup_bg ms-5">
+      <div class="modal-header p-0 m-0 d-flex justify-content-end">
+        <div class="btn-cl">
+          <i class="bi bi-x "></i>
+        </div>
+      </div>
+      <div class="modal-body p-0 m-0">
+        <div class="zip_top">
+          <h3 class="d-flex gap-2 mt-2">
+            <span class="d-flex gap-2">
+              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              Do you want to delete your account.
             </span>
           </h3>
         </div>
