@@ -28,11 +28,18 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   constructor(private crud: CrudService,private router:Router) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
+    if(this.playerChannelId){
+      this.addToRecentChannel(this.playerChannelId);
+    }
   }
 
   ngOnInit() {
+    this.playerDash();
+    this.getPlayerData();
+  }
 
 
+  playerDash(){
     this.getDRMKeys().subscribe((response:any) => {
       if (response.success && response.data) {
         const player = dashjs.MediaPlayer().create();
@@ -71,8 +78,20 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
 
     });
+  }
 
-    this.getPlayerData();
+  showRecommendedChannels(playerURL:string,channelID:any){
+    this.playerId = playerURL;
+    this.playerChannelId = channelID;
+    console.log('showRecommendedChannels =>',this.playerId,this.playerChannelId);
+    if(playerURL && channelID){
+      // this.playerDash();
+      // this.getPlayerData();
+      // this.addToRecentChannel(channelID);
+      localStorage.setItem('playerChannelId',channelID);
+      localStorage.setItem('playerId',playerURL);
+      window.location.reload();
+    }
   }
 
   getAuthHeaders(): HttpHeaders {
@@ -94,6 +113,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     // Dispose Video.js player when component is destroyed
     if (this.player) {
       this.player.dispose();
+    }
+    if(this.playerChannelId){
+      localStorage.setItem('playerChannelId','');
     }
   }
 
@@ -132,5 +154,22 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     localStorage.setItem('playerChannelId',id);
     localStorage.setItem('playerId',url);
     this.router.navigateByUrl('user/playstream')
+  }
+
+  // add to recent channels
+  addToRecentChannel(playerChannelId:any){
+    try {
+      this.crud.postRequest('auth/addtorecent',{'channelids':playerChannelId}).subscribe({
+        next:(res)=>{
+          console.log('hello addToRecentChannel =>')
+          console.log(res);
+        },
+        error:(err)=>{
+          console.log(err)
+        }
+      })
+    } catch (error) {
+      throw new error;
+    }
   }
 }
