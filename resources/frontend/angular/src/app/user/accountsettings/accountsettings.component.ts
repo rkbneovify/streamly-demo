@@ -57,6 +57,11 @@ export class AccountsettingsComponent implements OnInit {
       newpassword: ['', Validators.required],
       zipcode: ['', Validators.required],
     });
+
+    // delete user account form
+    this.deleteAccountForm = this.fb.group({
+      password: ['',[Validators.required]]
+    });
   }
 
   ngOnInit(): void {
@@ -248,7 +253,7 @@ total_price:any = 0;
   }
 
 
-
+// delete subscription
   deleteSub(): void {
     this.crud.deleteRequest('cancel-subscription/616',this.getAuthHeaders()).subscribe({
       next: (res: any) => {
@@ -260,9 +265,23 @@ total_price:any = 0;
     });
   }
 
-
+  // delete user account
+  deleteAccountForm: FormGroup;
   showPopDeleteAccount(){
     document.getElementById('btnShowPopDeleteAccount').click();
+  }
+
+  deleteUserAccount(): void {
+    this.crud.postRequest('auth/user/delete',{password:this.deleteAccountForm.get('password').value}).subscribe({
+      next: (res: any) => {
+        console.log("deleteUserAccount => ",res);
+          this.ts.success('Account delete successfully');
+          localStorage.clear();
+          this.router.navigate(['/']);
+      },
+      error: err => this.ts.error(err.error?.message)
+
+    });
   }
 
   
