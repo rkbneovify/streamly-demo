@@ -5,7 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { NgxStripeModule } from 'ngx-stripe';
 import { environment } from '../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
-import { LoaderComponent } from "./components/others/loader/loader.component";
+// import { LoaderComponent } from "./components/others/loader/loader.component";
 
 
 @Component({
@@ -13,7 +13,7 @@ import { LoaderComponent } from "./components/others/loader/loader.component";
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    imports: [RouterOutlet, HttpClientModule, LoaderComponent]
+    imports: [RouterOutlet, HttpClientModule]
 })
 export class AppComponent {
   title = 'angular';
