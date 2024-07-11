@@ -89,11 +89,19 @@
           <label class="label-p" for="fName">Full Name <span class="text-danger">*</span></label>
           <input name="fname" id="fName" formControlName="fullName" type="text" placeholder="Enter your name"
             class="input_field" />
+             <!-- Error message -->
+             <div *ngIf="availabilityForm.get('fullName').touched && availabilityForm.get('fullName').invalid" class="text-danger">
+              <small *ngIf="availabilityForm.get('fullName').errors?.['required']">fullName is required.</small>
+            </div>
         </div>
         <div class="input_fields">
           <label class="label-p" for="email">Email<span class="text-danger">*</span></label>
           <input name="email" formControlName="email" id="email" type="email" placeholder="Enter your email"
             class="input_field" required />
+            <!-- Error message -->
+            <div *ngIf="availabilityForm.get('email').touched && availabilityForm.get('email').invalid" class="text-danger">
+              <small *ngIf="availabilityForm.get('email').errors?.['required']">Email is required.</small>
+            </div>
         </div>
         <div class="input_fields">
           <label class="label-p" for="zipcode">Enter your zipcode <span class="text-danger">*</span></label>
@@ -118,17 +126,28 @@
           <ng-select class="res-ngselect" formControlName="zipcode" [items]="zipcodedata" (search)="onSearch($event)"
             (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
           </ng-select>
+
+          <div *ngIf="availabilityForm.get('zipcode').touched && availabilityForm.get('zipcode').invalid" class="text-danger">
+            <small *ngIf="availabilityForm.get('zipcode').errors?.['required']">Zip code is required.</small>
+          </div>
           <!-- </div> -->
         </div>
         <div class="input_fields">
           <label class="label-p" for="city">City <span class="text-danger">*</span></label>
           <input name="city" formControlName="city" id="city" type="text" autocomplete="off" placeholder="City"
             class="input_field" [readOnly]="city_state_readonly" />
+            <!--validation error -->
+            <div *ngIf="availabilityForm.get('city').touched && availabilityForm.get('city').invalid" class="text-danger">
+              <small *ngIf="availabilityForm.get('city').errors?.['required']">City is required.</small>
+            </div>
         </div>
         <div class="input_fields">
           <label class="label-p" for="state">State <span class="text-danger">*</span></label>
           <input name="state" formControlName="state" id="state" type="text" autocomplete="off" placeholder="State"
             class="input_field" [readOnly]="city_state_readonly" />
+            <div *ngIf="availabilityForm.get('state').touched && availabilityForm.get('state').invalid" class="text-danger">
+              <small *ngIf="availabilityForm.get('state').errors?.['required']">State is required.</small>
+            </div>
         </div>
         <div class="input_fields">
           <button [class.spinner]="loading" [disabled]="loading" [ngClass]="{ 'position-relative':true,'btn-bg-gold ': availabilityForm.valid }" [disabled]="!availabilityForm.valid"
@@ -634,7 +653,7 @@
           </div>
           <div class="row_5_items d-flex flex-column gap-4">
             <div class="row_plans d-flex justify-content-between pt-4 pb-3 flex-column">
-              <p class="text-nowrap">
+              <p>
                 $
                 <span *ngIf="device_per_unit <=10">{{
                   +checkoutPlans.plandetails.tiers[0].unit_amount / 100
@@ -751,6 +770,10 @@
             <p>Name on Card</p>
             <div class="card-input">
               <input form type="text" placeholder="Enter Name" formControlName="nameOnCard" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('nameOnCard').touched && paymentFormDetails.get('nameOnCard').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('nameOnCard').errors?.['required']">Name is required.</small>
+            </div>
             </div>
           </div>
           <!-- <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
@@ -771,6 +794,10 @@
               <ng-select class="res-ngselect" formControlName="cardZip" [items]="zipcodedata" (search)="onSearch($event)"
               (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
                 </ng-select>
+                  <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('cardZip').touched && paymentFormDetails.get('cardZip').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('cardZip').errors?.['required']">Card Zip is required.</small>
+            </div>
             </div>
             </div>
 
@@ -782,6 +809,10 @@
             <p>Email</p>
             <div class="card-input">
               <input type="email" placeholder="Enter Email" required formControlName="cardEmail" readonly/>
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('cardEmail').touched && paymentFormDetails.get('cardEmail').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('cardEmail').errors?.['required']">Email is required.</small>
+            </div>
             </div>
           </div>
           <!-- <div class="col-6 col-md-4 px-0 pe-md-3">
@@ -802,12 +833,20 @@
             <p >Address 1</p>
             <div class="card-input">
               <input type="text" placeholder="Enter Address 1" formControlName="address1" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('address1').touched && paymentFormDetails.get('address1').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('address1').errors?.['required']">Address 1 is required.</small>
+            </div>
             </div>
           </div>
           <div class="col-6 px-0">
             <p>Address 2</p>
             <div class="card-input">
               <input type="text" placeholder="Enter Address 2" formControlName="address2" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('address2').touched && paymentFormDetails.get('address2').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('address2').errors?.['required']">Address 2 is required.</small>
+            </div>
             </div>
           </div>
         </div>
@@ -817,18 +856,30 @@
             <p>City</p>
             <div class="card-input">
               <input type="text" placeholder="Enter City" formControlName="paymentCity" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('paymentCity').touched && paymentFormDetails.get('paymentCity').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('paymentCity').errors?.['required']">City is required.</small>
+            </div>
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
             <p>State</p>
             <div class="card-input">
               <input type="text" placeholder="Enter State" formControlName="paymentState" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('paymentState').touched && paymentFormDetails.get('paymentState').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('paymentState').errors?.['required']">State is required.</small>
+            </div>
             </div>
           </div>
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
             <p>Country</p>
             <div class="card-input">
               <input type="text" placeholder="Enter Country" formControlName="country" />
+              <!--validation error -->
+            <div *ngIf="paymentFormDetails.get('country').touched && paymentFormDetails.get('country').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetails.get('country').errors?.['required']">country is required.</small>
+            </div>
             </div>
           </div>
         </div>
@@ -850,7 +901,7 @@
         </div>
         <div class="row gy-2 justify-content-end">
           <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
-            <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetails.valid" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetails.valid }"  (click)="createStripeToken()">
+            <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetails.valid && checkCardDetail" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetails.valid }"  (click)="createStripeToken()">
               <span *ngIf="!loading">
                 Start your 7 days trial
               </span>

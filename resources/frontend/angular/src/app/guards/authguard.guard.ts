@@ -91,6 +91,15 @@ export const authGuarLoginStatus: CanActivateFn = (route, state) => {
       return true; // Already on the target route, allow navigation
     }
     console.log('Heman4 =====>', token);
+    if(
+      state?.url?.includes('register') ||
+      state?.url?.includes('change-password') ||
+      state?.url?.includes('forget-password') ||
+      state?.url?.includes('remove-device')
+    ){
+      // console.log('state =>',state,'route =>',route);
+      return true;
+    }
     router.navigateByUrl('/auth/login');
     return false; // Prevent navigation to the requested route
   }

@@ -145,7 +145,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       ],
       couponCode: [''],
       address1: ['', Validators.required],
-      address2: [''],
+      address2: ['',Validators.required],
       paymentCity: ['', Validators.required],
       paymentState: ['', Validators.required],
       country: ['', Validators.required],
@@ -1061,7 +1061,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
   }
   ngAfterViewInit() {
-    // this.initiateCardElement();
+    document.addEventListener('DOMContentLoaded', () => {
+      this.checkCardDetails();
+    });
   }
 
   async initializeKey(key: any) {
@@ -1148,9 +1150,27 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     }
   }
 
+
+
+  checkCardDetail:boolean = false;
+  checkCardDetails(){
+    if(this.selectedTab == 'Payment'){
+        const element= this.cardInfo.nativeElement;
+        const hasClassComplete = element.classList.contains('StripeElement--complete');
+        console.log('hasClassComplete',hasClassComplete);
+        if(hasClassComplete){
+          this.checkCardDetail = true;
+        }else{
+          this.checkCardDetail = false
+        }
+      }else{
+        this.checkCardDetail = false;
+      }
+  }
+
   //   curl --location 'http://127.0.0.1:8000api/auth/register' \
   // --data-raw '{
-  //     "name": "AnnuStripeTest1",
+  //     "name": "AnnuStripeTest1",,
   //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
   //     "password": "12345678",
   //     "stripeToken": "tok_visa",
