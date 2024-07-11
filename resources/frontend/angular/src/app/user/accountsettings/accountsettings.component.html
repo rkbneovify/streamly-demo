@@ -4,7 +4,7 @@
     <p class="account-heading mb-4">Account Details</p>
     <div class="accountdetails">
       <div class="acoount_user_name">
-        <label>Name</label>
+        <label [ngClass]="{'m-r-20':editMode}">Name</label>
         <ng-container *ngIf="editMode; else displayMode">
           <input
             required
