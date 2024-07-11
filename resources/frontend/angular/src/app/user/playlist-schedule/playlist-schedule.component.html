@@ -58,11 +58,15 @@
     <div class="schedule_time_programs_counter_timer"></div>
     <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
-      <div class="schedule_channel_container" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}">
+      <div class="schedule_channel_container">
         <ng-container *ngIf="filteredPrograms?.length">
-        <div class="schedule_channel" *ngFor="let channel of getScheduleChannelLogo">
+        <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
+
           <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
             <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
+            <div class="history_ch-play-icon">
+              <img loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
+            </div>
           </div>
           <div class="heart_ch">
             <!-- <img src="../../assets/dummy-img/heart.svg" alt="" /> -->
@@ -89,6 +93,7 @@
               />
             </svg>
           </div>
+
         </div>
       </ng-container>
       </div>

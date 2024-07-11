@@ -184,6 +184,30 @@
             width: 100%;
             height: 60px;
           }
+
+          .history_ch-play-icon{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000000a9;
+            opacity: 0;
+            transition: opacity 400ms ease-in-out;
+            img{
+              width: min-content;
+              height: 48px;
+            }
+          }
+
+          &:hover{
+            .history_ch-play-icon{
+              opacity: 1;
+            }
+          }
         }
         .heart_ch {
           position: absolute;
@@ -217,7 +241,7 @@
         // grid-auto-flow: column;
         cursor: pointer;
         height: 100px;
-        padding: 0 2px;
+        // padding: 0 2px;
         white-space: nowrap;
         .schedule_time {
           display: inline-block;
@@ -521,7 +545,7 @@
 
 
 .backgorundGroundColor{
-  background-color: #0a3153;
+  background-color: #0a3153 !important;
 }
 
 
