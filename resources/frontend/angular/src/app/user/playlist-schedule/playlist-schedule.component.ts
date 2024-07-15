@@ -115,6 +115,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       next:(res:any)=>{
         console.log(res);
         this.categories=res.data;
+        this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
         this.categories.push({name:'Others',image:''})
       },
       error:(err:any)=>{
@@ -207,10 +208,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   getAllScheduleData:any;
   getScheduleChannelLogo: any;
   getScheduleData(genre?: string) {
-    this.active_categories(genre);
+    this.active_categories((genre == '' || genre == 'All' ?'All':genre));
     const body = {
       typeurl: 'mpd',
-      genre: genre,
+      genre: genre == 'All'?'':genre,
     };
     this.apiService.postRequest('auth/epg-guide', body).subscribe({
       next: (res: any) => {
@@ -507,16 +508,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
 
     // active_categories
-    selected_category:string='';
+    selected_category:string='All';
 
     active_categories(category:string){
+      console.log('selected_category',this.selected_category,category);
       this.selected_category = category;
-      // if(this.selected_category == category){
-      //   console.log('selected tab==>',category);
-      //   return true
-      // }else{
-      //   console.log('selected else tab==>',category);
-      //   return false
-      // }
     }
 }
