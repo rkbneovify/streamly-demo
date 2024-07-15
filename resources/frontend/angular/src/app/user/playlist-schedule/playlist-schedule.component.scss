@@ -275,6 +275,13 @@
             font-size: 14px;
           }
         }
+
+      //   &:first-child .schedule_time:hover{
+          
+      //     .program_ep{
+      //       display: none;
+      //     }
+      // }
       }
     }
   }
@@ -532,6 +539,15 @@
 }
 
 
+// .schedule_time_programs:first-of-type .schedule_time:first-of-type:hover .program_ep {
+//   display: none;
+// }
+
+.hover-active:hover{
+          display: none;
+        }
+
+
 
 .modal-overlay {
   position: fixed;
@@ -546,6 +562,16 @@
 
 .backgorundGroundColor{
   background-color: #0a3153 !important;
+}
+
+.playstream_Play_icon{
+  width: 40px;
+  align-items: center;
+  cursor: pointer;
+  img{
+    object-fit: contain;
+    width: 100%;
+  }
 }
 
 
@@ -570,6 +596,7 @@
 
   .playstream_2{
     overflow-y: visible !important;
+
   }
 
   .schedule_details_section3{
