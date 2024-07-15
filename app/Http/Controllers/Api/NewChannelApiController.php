@@ -369,7 +369,13 @@ class NewChannelApiController extends Controller
             // $programs = ($programs->unique('name')->toArray());
             $data = collect(array_merge($channels->toArray(), $programs->toArray()));
 
-            return response()->json($data);
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Search Results Retrieved successfully.',
+                'data' => $data
+            ];
+            return response()->json($response);
         }
     }
 
