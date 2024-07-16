@@ -101,7 +101,7 @@
       <div class="schedule_time_programs_container">
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
-            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time"  *ngFor="let program of data.program;let index = index"  [ngClass]="{'hover-active':index == 0}" (click)="getProgramDetailData(program?.TMSId)">
+            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time"  *ngFor="let program of data.program;let index = index"  [ngClass]="{'hover-active':index == 0}" (click)="getProgramDetailData(program?.TMSId,index)">
               <h4 class="program_title p-0 m-0">{{program?.title}}</h4>
               <p class="program_time my-2">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
               <div
@@ -157,8 +157,8 @@
         <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1>{{programDetailData?.title | truncate}}</h1>
-        <div class="d-flex playstream_Play_icon my-2">
+        <h1 [title]="programDetailData?.title">{{programDetailData?.title | truncate}}</h1>
+        <div class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="w-100" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
         </div>

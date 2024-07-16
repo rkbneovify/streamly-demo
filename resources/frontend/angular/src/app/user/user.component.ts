@@ -194,7 +194,8 @@ export class UserComponent implements OnInit {
 
     this.crud.postRequest('auth/new-search', term).subscribe({
       next: (res: any) => {
-        this.allChannelDataList = this.chunkArray(res, 6);
+        this.allChannelDataList = this.chunkArray(res.data, 6);
+        this.ts.success(res.message);
       },
       error: (err: any) => {
         console.error('Search API error: ', err);
