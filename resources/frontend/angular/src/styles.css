@@ -468,3 +468,7 @@ input:-webkit-autofill:active{
   border-top-color: #000000;
   animation: spinner .8s linear infinite;
 }
+
+/* .toast-success{
+  background-color: purple !important;
+} */
