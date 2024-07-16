@@ -539,4 +539,71 @@ class NewChannelApiController extends Controller
             return response()->json($response, 200);
         }
     }
+
+    public function ChannelProgramDetails(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'channel_id' => 'required',
+            'current_datetime' => 'required|date|date_format:Y-m-d H:i:s'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $channel_id = $request->channel_id;
+            $current_datetime = $request->current_datetime;
+            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.prgSvcId', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            $query->groupBy('channels.id');
+            $record = $query->get();
+
+            $record->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset($channel->assets);
+                unset($channel->assets);
+                return $channel;
+            });
+
+            $current_datetimestamp = Carbon::parse($current_datetime, 'UTC')->timestamp;
+
+            $program = GracenoteScheduleProgram::select('title', 'description', 'duration', 'quals', 'assets', 'date', 'time')
+                ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
+                ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->where('start', '<=', $current_datetimestamp)
+                ->where('end', '>=', $current_datetimestamp)
+                ->where('gracenote_schedule_program.prgSvcId', $record[0]->prgSvcId)
+                // WHERE `start` <= 1719313930 AND `end` >= 1719313930
+                ->groupBy('gracenote_schedule_program.id')
+                ->first();
+            if (!empty($program)) {
+                $data = [
+                    "title" => $program->title,
+                    "description" => $program->description,
+                    "duration" => $program->duration,
+                    "quals" => $program->quals,
+                    "genre" =>  json_decode($program->genre),
+                    "image" => $this->getURIFromAssetForProgram($program->assets),
+                ];
+            } else {
+                $data = NULL;
+            }
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Player Details Retrieved successfully.',
+                'data' => [
+                    "channel" => $record[0],
+                    "program_details" => $data
+                ],
+
+            ];
+            return response()->json($response, 200);
+        }
+    }
 }
