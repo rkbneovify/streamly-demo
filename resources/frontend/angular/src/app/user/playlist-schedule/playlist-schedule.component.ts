@@ -286,7 +286,13 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // program-details data 
   programDetailData:any;
-  getProgramDetailData(tmsId?: string) {
+  programPlayable:boolean=false;
+  getProgramDetailData(tmsId?: string,index?:any) {
+    if(index == 0){
+      this.programPlayable = true;
+    }else{
+      this.programPlayable = false;
+    }
     const body = {
       "TMSId": tmsId
     };
