@@ -84,6 +84,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
 
     Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify']);
+    Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify']);
     Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify']);
