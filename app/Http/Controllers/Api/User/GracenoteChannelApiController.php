@@ -195,4 +195,49 @@ class GracenoteChannelApiController extends Controller
             return response()->json($response, 200);
         }
     }
+
+    public function channelListBeforeLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'typeurl' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+
+            $query = Channel::select('channels.id', 'gracenote_sources.stationName', 'gracenote_sources.assets')
+                // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
+                ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
+                ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
+                ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            $query->where('channels.status', '=', '1');
+            $query->orderBy('genre_name', 'asc');
+            $record = $query->get()->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset($channel->assets);
+                unset($channel->assets);
+                return $channel;
+            });
+
+            $data = $record->groupBy('genre_name');
+            foreach ($data as $genre => $channels) {
+                $genreArray = [
+                    "genre_name" => $genre,
+                    "channels" => $channels
+                ];
+                $result[] = $genreArray;
+            }
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Channel List Retrieved successfully.',
+                'data' => $result,
+
+            ];
+            return response()->json($response, 200);
+        }
+    }
 }
