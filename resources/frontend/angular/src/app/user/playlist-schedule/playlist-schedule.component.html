@@ -61,7 +61,6 @@
       <div class="schedule_channel_container">
         <ng-container *ngIf="filteredPrograms?.length">
         <div class="schedule_channel" [ngClass]="{'backgorundGroundColor':changeColorBackgroung}" *ngFor="let channel of getScheduleChannelLogo">
-
           <div class="history_ch" (click)="setChannelId(channel?.id,channel?.url)">
             <img loading="lazy" [src]="channel.image?channel.image:'../../assets/dummy-img/history_ch.png'" [alt]="channel?.stationName" />
             <div class="history_ch-play-icon">
@@ -101,7 +100,7 @@
       <div class="schedule_time_programs_container">
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
-            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end)}" class="schedule_time"  *ngFor="let program of data.program;let index = index"  [ngClass]="{'hover-active':index == 0}" (click)="getProgramDetailData(program?.TMSId,index)">
+            <div [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index)}" class="schedule_time"  *ngFor="let program of data.program;let index = index"  [ngClass]="{'hover-active':index == 0}" (click)="getProgramDetailData(program?.TMSId,index,data.id,data.url)">
               <h4 class="program_title p-0 m-0">{{program?.title}}</h4>
               <p class="program_time my-2">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
               <div
@@ -158,7 +157,7 @@
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1 [title]="programDetailData?.title">{{programDetailData?.title | truncate}}</h1>
-        <div class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
+        <div (click)="setChannelId(programChannelId,programChannelUrl)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="w-100" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
         </div>
