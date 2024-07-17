@@ -147,15 +147,10 @@
                           </div>
                       </div>
                       
-                      <div class="card_content_text2 my-3 ">
-                        <p class="mt-3 mb-2">{{data?.stationName}}</p>
-                        <p class="card_content_text3">{{data?.callSign}}</p>
-                      </div>
-                      <div class="card_content_text2 my-3">
-                          <!-- <p>2020</p> -->
-                      </div>
-                      <div class="card_content_text3">
-                          {{data.timeZone}}
+                      <div class="card_content_text2 mt-5 ">
+                        <p *ngIf="data?.stationName" class="mt-3 mb-2">{{data?.stationName}}</p>
+                        <p *ngIf="data?.callSign" class="card_content_text3 mb-2">{{data?.callSign}}</p>
+                        <p *ngIf="data.timeZone" class="card_content_text3">{{data.timeZone}}</p>
                       </div>
                   </div>
               </div>

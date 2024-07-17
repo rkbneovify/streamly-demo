@@ -67,10 +67,8 @@
         </div>
         <div class="card_content_text2 my-5">
           <p class="mb-2" *ngIf="item.stationName">{{ item.stationName }}</p>
-          <p class="fw-light mb-2" *ngIf="item.callSign">
-            <span class=""></span> {{ item?.callSign }}
-          </p>
-          <p class="fw-light" *ngIf="item.timeZone">{{ item.timeZone }}</p>
+          <p class="card_content_text3 mb-2" *ngIf="item.callSign">{{ item?.callSign }}</p>
+          <p class="card_content_text3" *ngIf="item.timeZone">{{ item.timeZone }}</p>
         </div>
       </div>
     </div>
@@ -141,11 +139,11 @@
           </div>
         </div>
         <div class="card_content_text2 my-5">
-          <p class="mb-2">{{ item.stationName }}</p>
-          <p class="mb-2 fw-light">
+          <p *ngIf="item.stationName" class="mb-2">{{ item.stationName }}</p>
+          <p *ngIf="item.callSign"class="mb-2 card_content_text3">
             {{ item?.callSign }}
           </p>
-          <p class="fw-light" *ngIf="item.timeZone">{{ item.timeZone }}</p>
+          <p class="card_content_text3" *ngIf="item.timeZone">{{ item.timeZone }}</p>
         </div>
         <!-- <div class="card_content_text3">
                         Season 1 : Yorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.

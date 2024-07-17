@@ -54,12 +54,14 @@
           alt=""
         />
         <img
+        *ngIf="item?.image"
         loading="lazy"
         [src]="
           item?.image ? item?.image : '../../../assets/dummy-img/inf.png'
         "
         [ngClass]="{ 'object-fill': item?.type == 'event' }"
       />
+    <p class="no-img" *ngIf="!item.image">No Image</p>
       
         <div class="card_content">
           <div class="card_content_text1 d-flex justify-content-between">
@@ -96,14 +98,10 @@
               </div>
             </div>
           </div>
-          <div class="card_content_text2 my-5">
-            <p class="mb-4" *ngIf="item.stationName">{{ item.stationName}}</p>
-            <p class="mb-4" *ngIf="item.callSign">{{ item.callSign }}</p>  
-            <p class="mb-4" *ngIf="item.timeZone"><span class="fw-bold">Time zone :- </span> {{ item.timeZone }}</p>  
-            <p *ngIf="item?.gracenote_data" class="fw-light">
-              <span class="fw-bold">Video Type :- </span>
-              {{ item?.gracenote_data?.videoQuality?.videoType }}
-            </p>
+          <div class="card_content_text2 mt-5">
+            <p class="mb-2" *ngIf="item.stationName">{{ item.stationName}}</p>
+            <p class="mb-2 card_content_text3" *ngIf="item.callSign">{{ item.callSign }}</p>  
+            <p class="mb-2 card_content_text3" *ngIf="item.timeZone"> {{ item.timeZone }}</p>  
           </div>
         </div>
       </div>

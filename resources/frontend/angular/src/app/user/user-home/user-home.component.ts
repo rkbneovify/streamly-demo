@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
+import { log } from '../../services/utils/utils.service';
 
 @Component({
   selector: 'app-user-home',
@@ -22,6 +23,7 @@ export class UserHomeComponent implements OnInit {
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
   ngOnInit(): void {
+    log();
     console.log('Home page start..')
     this.loginSliders();
     this.getFavoriteList();
