@@ -8,3 +8,7 @@ export class UtilsService {
   constructor() { }
   
 }
+
+export function log() {
+  console.log('test')
+}

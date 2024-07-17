@@ -234,6 +234,19 @@ main {
   }
 }
 
+.btn-see-deatisl{
+  border: 1px solid #001325;
+  border-radius: 0.7rem;
+  width: min-content;
+  padding: 0.4rem;
+  text-wrap: nowrap;
+  transition: all 300ms ease-in-out;
+  &:hover{
+    background-color: #001325;
+    border-color: #1A2B3B;
+  }
+}
+
 @media screen and (min-width: 850px) {
   .navbar_Schedule {
     margin-right: 0rem;
