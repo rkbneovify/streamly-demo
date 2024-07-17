@@ -11,7 +11,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { DurationISOFormatPipe } from '../pipe/duration-format.pipe';
+import { DurationISOFormatPipe, TruncatePipe } from '../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
 
@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor , FormsModule , ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe],
+  imports: [NgClass, NgFor , FormsModule , ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe,TruncatePipe],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })

@@ -113,7 +113,9 @@
             </h1>
             <div class="allChannelsList my-4 d-flex flex-nowrap" *ngFor="let row of allChannelDataList">
                 <div class="card_page" *ngFor="let item of row">        
-                    <img  loading="lazy"[src]="item?.image?item?.image:'../../../assets/dummy-img/inf.png'" [ngClass]="{'object-fill':item?.type == 'event'}">
+                    <img *ngIf="item.image"  loading="lazy"[src]="item?.image?item?.image:'../../../assets/dummy-img/inf.png'" [ngClass]="{'object-fill':item?.type == 'event'}">
+                    <p class="no-img" *ngIf="!item.image">No Image</p>
+
                     <div class="card_content">
                         <div class="card_content_text1 d-flex justify-content-between">
 
@@ -125,30 +127,27 @@
                               <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
                               <p class="d-flex flex-column">Play <span></span></p>
                           </div>
-
-                            <!-- for shows detail  -->
-                            <div *ngIf="item?.type == 'event'" class="play_img d-flex align-items-center gap-2">
-                              <!-- <img src="../../../assets/dummy-img/play_icon.svg" alt="" /> -->
-                              <p class="d-flex flex-column" (click)="getProgramDetailData(item?.TMSId)">See Details... <span></span></p>
-                          </div>
-
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2" *ngIf="item?.type != 'event'">
                                 <div class="rounded-circle" (click)="toggleFavorite(item.id)"><img class="rounded-circle" src="../../../assets/dummy-img/heart-circle.svg" alt="" 
-                                    [class.favorite]="isFavorite(item.id)"></div>
-                                <div><img loading="lazy" src="../../../assets/dummy-img/more-circle.svg" alt=""></div>
+                                    [class.favorite]="isFavorite(item.id)">
+                                  </div>
+                                <div>
+                                  <img loading="lazy" src="../../../assets/dummy-img/more-circle.svg" alt="">
+                                </div>
                             </div>
                         </div>
-                        <div class="card_content_text2 my-5">
-                          <p class="mb-4" *ngIf="item.name">{{item.callSign}}</p>
-                            <p class="mb-4" *ngIf="item.stationName">{{item.stationName}}</p>
-                            <p class="mb-4" *ngIf="item.name">{{item.name}}</p>
-                            <p *ngIf="item?.gracenote_data" class="fw-light"><span class="fw-bold">Video Type :- </span> {{item?.gracenote_data?.videoQuality?.videoType}}</p>
-        
+                        <div *ngIf="item?.type != 'event'" class="card_content_text2 my-5">
+                          <p class="mb-2" *ngIf="item?.stationName">{{item.stationName}}</p>
+                          <p class="card_content_text3 mb-2" *ngIf="item?.callSign">{{item.callSign}}</p>
+                          <p class="card_content_text3 mb-2" *ngIf="item.timeZone">{{item.timeZone}}</p>
+                          <p class="card_content_text3 mx-5" *ngIf="!item.timeZone && !item?.callSign && !item.stationName && item?.type != 'event'">No Details</p>
                         </div>
-                        <div *ngIf="item.description" class="card_content_text3">
-
-                            {{item.description}}
-
+                        <div *ngIf="item?.type == 'event'" class="card_content_text2">
+                          <p class="mb-2" *ngIf="item?.name">{{item.name | truncate:75}}</p>
+                          <p class="card_content_text3" *ngIf="item?.description">{{item.description | truncate:75}}</p>
+                          <!-- for shows detail  -->
+                          <p *ngIf="item?.type == 'event'" class="btn-see-deatisl mt-2" (click)="getProgramDetailData(item?.TMSId)">See Details
+                          </p>
                         </div>
                     </div>
         
