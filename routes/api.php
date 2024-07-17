@@ -93,6 +93,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('all-genre', 'Api\NewChannelApiController@allGenre')->middleware(['jwt.verify']);
     Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify']);
     Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify']);
+    Route::post('channel-program-details', 'Api\NewChannelApiController@ChannelProgramDetails')->middleware(['jwt.verify']);
     Route::get('faq', 'Api\User\FooterApiController@faq');
     Route::post('bugReport', 'Api\User\FooterApiController@sendBugReportAPI');
 
