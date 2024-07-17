@@ -153,10 +153,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   ngOnInit(): void {
     this.getAllCategories();
-    console.log(
-      'minutes value====>',
-      this.calculateWidth(1718841600, 1718845200)
-    );
     console.log('currnet time', this.getCurrentTimeSlot());
     this.getScheduleData('');
     this.setDefaultDay();
@@ -207,6 +203,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // getScheduleProgram: any;
   getAllScheduleData:any;
   getScheduleChannelLogo: any;
+    // filterProgram
+    filteredPrograms: any = [];
   getScheduleData(genre?: string) {
     this.active_categories((genre == '' || genre == 'All' ?'All':genre));
     const body = {
@@ -219,7 +217,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         this.getAllScheduleData = res.data;
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
         // this.getScheduleProgram = res.data;
-        this.filterPrograms(res);
+        this.filteredPrograms = res.data;
+        // this.filterPrograms(res);
       },
       error: (err: any) => {
         console.error(err);
@@ -239,57 +238,40 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }
 
   // function to change the time into width
-  calculateWidth(start: any, end: any) {
+  calculateWidth(start: any, end: any,index:any) {
     if (!start || !end) {
       return '';
     }
+
+    const currentTime = new Date().getTime(); // Current time in milliseconds
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
+
+  // Check if start time is less than current time
+  if (index && startDate.getTime() < currentTime) {
     const durationMs = endDate.getTime() - startDate.getTime();
     const durationMinutes = Math.floor(durationMs / (1000 * 60));
     return durationMinutes * 5;
   }
-
-  // filterProgram
-  filteredPrograms: any = [];
-  filterPrograms(apiResponse: any) {
-    this.filteredPrograms = [];
-    const now = Math.floor(Date.now() / 1000);
-    console.log('Current time (seconds since epoch):', now);
-    apiResponse.data.forEach((service: any) => {
-      if (service.prgSvcId) {
-        const currentPrograms = service.program.filter(
-          (program: any, i: any) => {
-            // console.log(i,'start=> ',program.start <= now ,'end=> ', program.end >= now);
-            if (
-              (+program.start <= +now && +program.end >= +now) ||
-              (+now <= +program.start && +now <= +program.end)
-            ) {
-              return true;
-            } else {
-              return false;
-            }
-          }
-        );
-
-        if (currentPrograms.length > 0) {
-          this.filteredPrograms.push({
-            ...service,
-            program: currentPrograms,
-          });
-        }
-      }
-    });
-
-    console.log('Filtered Programs:', this.filteredPrograms);
+  
+  // If start time is not less than current time, return difference in minutes multiplied by 5
+  const timeDifferenceMs = currentTime - startDate.getTime();
+  const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  return timeDifferenceMinutes * 5;
   }
+
+
 
   // program-details data 
   programDetailData:any;
   programPlayable:boolean=false;
-  getProgramDetailData(tmsId?: string,index?:any) {
+  programChannelId:string;
+  programChannelUrl:string;
+  getProgramDetailData(tmsId?: string,index?:any,channelId?:string,channelUrl?:string) {
     if(index == 0){
       this.programPlayable = true;
+      this.programChannelId=channelId;
+      this.programChannelUrl=channelUrl;
     }else{
       this.programPlayable = false;
     }
@@ -381,30 +363,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     } else {
       targetDate = today;
     const now = Math.floor(Date.now() / 1000);
-      this.filterPrograms = this.getAllScheduleData.forEach((service: any) => {
-        if (service.prgSvcId) {
-          const currentPrograms = service.program.filter(
-            (program: any, i: any) => {
-              // console.log(i,'start=> ',program.start <= now ,'end=> ', program.end >= now);
-              if (
-                (+program.start >= +now && +program.end >= +now) ||
-                (+now <= +program.start && +now <= +program.end)
-              ) {
-                return true;
-              } else {
-                return false;
-              }
-            }
-          );
-  
-          if (currentPrograms.length > 0) {
-            this.filteredPrograms.push({
-              ...service,
-              program: currentPrograms,
-            });
-          }
-        }
-      });
     }
     // const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
     // const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
