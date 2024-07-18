@@ -93,7 +93,7 @@
             </div>
           </div>
         </div>
-        <div class="card_content_text2 my-5">
+        <!-- <div class="card_content_text2 my-5">
           <p class="mb-4" *ngIf="item.stationName">{{ item.stationName}}</p>
           <p class="mb-4" *ngIf="item.callSign">{{ item.callSign }}</p>  
           <p class="mb-4" *ngIf="item.timeZone"><span class="fw-bold">Time zone :- </span> {{ item.timeZone }}</p>  
@@ -102,6 +102,11 @@
             <span class="fw-bold">Video Type :- </span>
             {{ item?.gracenote_data?.videoQuality?.videoType }}
           </p>
+        </div> -->
+        <div class="card_content_text2 mt-5">
+          <p class="mb-2" *ngIf="item.stationName">{{ item.stationName}}</p>
+          <p class="mb-2 card_content_text3" *ngIf="item.callSign">{{ item.callSign }}</p>  
+          <p class="mb-2 card_content_text3" *ngIf="item.timeZone"> {{ item.timeZone }}</p>  
         </div>
       </div>
     </div>

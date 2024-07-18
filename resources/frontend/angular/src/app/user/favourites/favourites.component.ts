@@ -116,8 +116,9 @@ export class FavouritesComponent implements OnInit {
     });
   }
   // set player data in local
-  setplayerData(id: string) {
-    localStorage.setItem('playerId', id);
+  setplayerData(url: string,channel_id?:any) {
+    localStorage.setItem('playerId', url);
+    localStorage.setItem('playerChannelId',channel_id);
     this.router.navigateByUrl('/user/playstream');
   }
 }
