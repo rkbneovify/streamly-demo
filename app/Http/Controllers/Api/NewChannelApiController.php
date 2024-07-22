@@ -183,6 +183,7 @@ class NewChannelApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
+            'day' => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -204,7 +205,7 @@ class NewChannelApiController extends Controller
                 // String does not match the format
                 $hoursofset = '00:00';
             }
-
+            $day = $request->day;
             $validate = 0;
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
@@ -237,10 +238,10 @@ class NewChannelApiController extends Controller
             }
             $query->groupBy('channels.id');
             $query->orderBy('channels.id', 'asc');
-            $record = $query->get()->map(function ($channel) {
+            $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
-                $channel->program = $this->getProgramScheduleById($channel->prgSvcId);
+                $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
                 if ($channel->stationName == null) {
                     $channel->stationName = "NA";
@@ -274,13 +275,19 @@ class NewChannelApiController extends Controller
         }
     }
 
-    private function getProgramScheduleById($prgSvcId)
+    private function getProgramScheduleById($prgSvcId, $day)
     {
         $gmdate_string = gmdate('Y-m-d H:i');
         $current_timestamp = strtotime($gmdate_string . ' GMT');
-        $programs = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'start', 'end', 'assets')
-            ->where('end', '>=', $current_timestamp)
-            ->get();
+        $query = GracenoteScheduleProgram::where('prgSvcId', $prgSvcId)->select('title', 'description', 'TMSId', 'quals', 'start', 'end', 'assets');
+        if ($day == 'today') {
+            $gmdate = gmdate('Y-m-d');
+            $query->where('end', '>=', $current_timestamp);
+        } else if ($day == 'tomorrow') {
+            $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
+        }
+        $query->where('date', $gmdate);
+        $programs = $query->get();
         $programs->map(function ($program) {
             $program->image = $this->getURIFromAssetForProgram($program->assets);
             unset($program->assets);
@@ -328,6 +335,7 @@ class NewChannelApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'search' => 'required',
+            'typeurl' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -336,7 +344,16 @@ class NewChannelApiController extends Controller
             ], 400);
         } else {
             $search = $request->input('search');
-
+            $urlType = $request->typeurl;
+            if ($urlType == 'manifest') {
+                $type = 'smooth_url';
+            } else if ($urlType == 'm3u8') {
+                $type = 'url';
+            } else if ($urlType == "mpd") {
+                $type = 'dash_url';
+            } else {
+                $type = 'dash_url';
+            }
             // Fetch programs matching the search query
             $programs = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
@@ -348,11 +365,12 @@ class NewChannelApiController extends Controller
                 $program->image = $this->getURIFromAssetForProgram($program->assets);
                 $program->type = 'event';
                 $program->callSign = null;
+                $program->url = null;
                 unset($program->assets);
             });
 
             // Fetch channels matching the search query
-            $channels = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets')
+            $channels = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%")
                 ->get();
@@ -596,7 +614,7 @@ class NewChannelApiController extends Controller
             $response = [
                 'success' => true,
                 'response_code' => 200,
-                'message' => 'Player Details Retrieved successfully.',
+                'message' => 'Channel Program Details Retrieved successfully.',
                 'data' => [
                     "channel" => $record[0],
                     "program_details" => $data
