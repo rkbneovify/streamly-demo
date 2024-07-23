@@ -1,16 +1,13 @@
 <div class="row play_container_top">
     <div class="col-lg-8 col-12 playstream_1">
-        
         <div class="dash-video-player ">
             <div class="videoContainer" id="videoContainer">
-        
                 <video data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
                 type="application/dash+xml">
                     <source src="media/intro.mp4" type="video/mp4"/>
                     <source src="media/intro.ogv" type="video/ogg"/>
                     <source src="media/intro.webm" type="video/webm"/>  
                 </video>
-
                 <!-- <div id="videoController" class="video-controller unselectable">
                     <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
                         <span id="iconPlayPause" class="icon-play"></span>
@@ -62,7 +59,10 @@
         <div class="playstream_onNow_container">
             <div>
                 <h2 class="play_stream_now">On Now</h2>
-                <p class="mt-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <p class="mt-3">
+                    <!-- Dorem ipsum dolor sit amet, consectetur adipiscing elit. -->
+                    {{channelData?.program_details?.description}}
+                </p>
             </div>
 
             <div class="playstream_bottom_child mt-3" >
