@@ -107,7 +107,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     '11:00 PM',
     '11:30 PM',
   ];
-
+  dayfilter:string = 'today';
   categories: any;
   // get category list
   getAllCategories(){
@@ -125,7 +125,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }
 
   // filter time acc to currnet time
-  getCurrentTimeSlot(): string[] {
+  getCurrentTimeDate:any;
+  getCurrentTimeSlot(dayFilter?:string) {
+  if(dayFilter != 'tomorrow'){
+    console.log('if day =>',dayFilter);
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
@@ -136,11 +139,17 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     const closestIndex = this.scheduleHours.indexOf(closestTime);
 
     // Return the schedule starting from the closest time slot
-    return [
+
+    this.getCurrentTimeDate = [
       ...this.scheduleHours.slice(closestIndex),
       ...this.scheduleHours.slice(0, closestIndex),
     ];
+  }else{
+    console.log('esle day =>',dayFilter);
+    this.getCurrentTimeDate = [...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM'))];
   }
+  }
+  // 
   padZero(num: number): string {
     return num < 10 ? '0' + num : num.toString();
   }
@@ -201,23 +210,23 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }
 
   // getScheduleProgram: any;
-  getAllScheduleData:any;
+  // getAllScheduleData:any;
   getScheduleChannelLogo: any;
-    // filterProgram
-    filteredPrograms: any = [];
-  getScheduleData(genre?: string) {
+  // filterProgram
+  filteredPrograms: any = [];
+  getScheduleData(genre?: string,dayFilter:string=this.dayfilter) {
     this.active_categories((genre == '' || genre == 'All' ?'All':genre));
     const body = {
       typeurl: 'mpd',
       genre: genre == 'All'?'':genre,
+      day: dayFilter
     };
     this.apiService.postRequest('auth/epg-guide', body).subscribe({
       next: (res: any) => {
-        console.log(res);
-        this.getAllScheduleData = res.data;
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
-        // this.getScheduleProgram = res.data;
         this.filteredPrograms = res.data;
+        // this.getAllScheduleData = res.data;
+        // this.getScheduleProgram = res.data;
         // this.filterPrograms(res);
       },
       error: (err: any) => {
@@ -240,6 +249,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // function to change the time into width
   calculateWidth(start: any, end: any,index:any) {
     if (!start || !end) {
+      console.log('start end not there');
       return '';
     }
     const startDate = new Date(start * 1000);
@@ -248,13 +258,13 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // Check if start time is less than current time
   if (index == 0 && startDate.getTime() < currentTime) {
-    console.log("Current time => ", currentTime);
-    console.log("start time => ", startDate,'startDate.getTime =>',startDate.getTime());
-    console.log("startDate.getTime() > currentTime => ", startDate.getTime() < currentTime);
+    // console.log("Current time => ", currentTime);
+    // console.log("start time => ", startDate,'startDate.getTime =>',startDate.getTime());
+    // console.log("startDate.getTime() > currentTime => ", startDate.getTime() < currentTime);
     const durationMs = endDate.getTime() - startDate.getTime();
     const timeDifferenceMs = currentTime - startDate.getTime();
     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-    console.log("timeDifferenceMinutes => ", timeDifferenceMinutes);
+    // console.log("timeDifferenceMinutes => ", timeDifferenceMinutes);
 
     // const durationMs = endDate.getTime() - startDate.getTime();
     // const durationMinutes = Math.floor(durationMs / (1000 * 60));
@@ -279,6 +289,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   programPlayable:boolean=false;
   programChannelId:string;
   programChannelUrl:string;
+
   getProgramDetailData(tmsId?: string,index?:any,channelId?:string,channelUrl?:string) {
     if(index == 0){
       this.programPlayable = true;
@@ -292,7 +303,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     };
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
-        console.log(res);
         if(!! res?.data){
           this.showPlaylist();
           this.programDetailData = res.data;
@@ -301,7 +311,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         }
 
         // localStorage.setItem('playerChannelId',res.data)
-        console.log(res);
+
       },
       error: (err: any) => {
         this.toaster.error(err.message);
@@ -351,16 +361,17 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     
   }
 
-
+  // filter according to today and tommorrow
   changeDays(day: string) {
-    // Implement the logic to update the schedule data based on the selected day (Today or Tomorrow)
     console.log(`Day changed to: ${day}`);
-    // Add logic to filter schedule data based on the day
-  
-    if(this.selectedDay == 'Tomorrow' || this.selectedDay == 'Today'){
-      this.filterProgramsByDay(day);
+    this.dayfilter = day != 'Tomorrow'?'today':'tomorrow'
+    if(this.selectedDay != 'Tomorrow'){
+      this.getScheduleData(this.selected_category,this.dayfilter);
+      this.getCurrentTimeSlot(this.dayfilter);
     }else{
-
+      console.log('changes Days filter =>',this.dayfilter);
+      this.getScheduleData(this.selected_category,this.dayfilter);
+      this.getCurrentTimeSlot(this.dayfilter);
     }
   }
 

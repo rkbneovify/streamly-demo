@@ -40,7 +40,7 @@
       </select>
     </div>
     <div class="schedule_hours scrollByRight d-flex" [@slideInOut]="'active'" #scrollableContent>
-      <div class="schedule_hour" *ngFor="let hour of getCurrentTimeSlot()">{{hour}}</div>
+      <div class="schedule_hour" *ngFor="let hour of getCurrentTimeDate">{{hour}}</div>
       <!-- <div class="schedule_hour">01:00 PM</div>
       <div class="schedule_hour">01:30 PM</div>
       <div class="schedule_hour">02:00 PM</div> -->
