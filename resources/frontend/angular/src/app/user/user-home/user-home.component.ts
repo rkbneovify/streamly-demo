@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
+import { SkeletonLoaderComponent } from '../../components/others/skeleton-loader/skeleton-loader.component';
 
 @Component({
   selector: 'app-user-home',
   standalone: true,
-  imports: [CommonModule, NgClass,RouterLink],
+  imports: [CommonModule, NgClass,RouterLink,SkeletonLoaderComponent],
   templateUrl: './user-home.component.html',
   styleUrl: './user-home.component.scss'
 })
@@ -18,6 +19,7 @@ export class UserHomeComponent implements OnInit {
   sldierData:any;
   favChannelList:any;
   favoriteChannels: number[] = [];
+  isLoading:boolean = false;
 
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
@@ -159,10 +161,12 @@ channelsWithGenre() {
 recentsPlayData: any;
 getRecentsListData(): void {
   // Fetch from API if not found in local storage
+  this.isLoading = true;
   const body = {"typeurl" : "mpd"}
   this.crud.postRequest('auth/recent-channels',body).subscribe((res: any) => {
     if (res.response_code === 200) {
       this.recentsPlayData = res.data;
+      this.isLoading = false;
     }
   });
 }
