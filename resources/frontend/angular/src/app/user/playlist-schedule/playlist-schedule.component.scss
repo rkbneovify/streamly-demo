@@ -118,7 +118,8 @@
         font-weight: 400;
         line-height: 20px;
         color: #e0e0e0;
-        min-width: 150px;
+        // min-width: 150px;
+        min-width: 300px;
       }
     }
 
@@ -241,6 +242,7 @@
         // grid-auto-flow: column;
         cursor: pointer;
         height: 100px;
+        // overflow: hidden;
         // padding: 0 2px;
         white-space: nowrap;
         .schedule_time {
@@ -319,6 +321,7 @@
     overflow-y: inherit;
     border-radius: 10px;
     flex: 1;
+    background-image: url('../../../assets/dummy-img/bg.png');
     &::-webkit-scrollbar {
       width: 0;
     }

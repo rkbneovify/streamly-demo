@@ -119,11 +119,11 @@
                     <div class="card_content">
                         <div class="card_content_text1 d-flex justify-content-between">
 
-                            <div *ngIf="item?.type == 'channel'" class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
+                            <div *ngIf="item?.type == 'channel'" class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.id)">
                                 <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
                                 <p class="d-flex flex-column">Play <span></span></p>
                             </div>
-                            <div *ngIf="!(item?.type == 'channel') && !(item?.type == 'event') "  class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.type)">
+                            <div *ngIf="!(item?.type == 'channel') && !(item?.type == 'event')"  class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url,item?.id)">
                               <img loading="lazy" src="../../../assets/dummy-img/play_icon.svg" alt="" />
                               <p class="d-flex flex-column">Play <span></span></p>
                           </div>
@@ -138,6 +138,7 @@
                         </div>
                         <div *ngIf="item?.type != 'event'" class="card_content_text2 my-5">
                           <p class="mb-2" *ngIf="item?.stationName">{{item.stationName}}</p>
+                          <p class="mb-2" *ngIf="item?.name">{{item.name}}</p>
                           <p class="card_content_text3 mb-2" *ngIf="item?.callSign">{{item.callSign}}</p>
                           <p class="card_content_text3 mb-2" *ngIf="item.timeZone">{{item.timeZone}}</p>
                           <p class="card_content_text3 mx-5" *ngIf="!item.timeZone && !item?.callSign && !item.stationName && item?.type != 'event'">No Details</p>

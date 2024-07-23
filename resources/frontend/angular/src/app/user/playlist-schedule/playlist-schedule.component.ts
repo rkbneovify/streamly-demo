@@ -242,22 +242,34 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     if (!start || !end) {
       return '';
     }
-
-    const currentTime = new Date().getTime(); // Current time in milliseconds
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
+    const currentTime = new Date().getTime(); // Current time in millisecond
 
   // Check if start time is less than current time
-  if (index && startDate.getTime() < currentTime) {
+  if (index == 0 && startDate.getTime() < currentTime) {
+    console.log("Current time => ", currentTime);
+    console.log("start time => ", startDate,'startDate.getTime =>',startDate.getTime());
+    console.log("startDate.getTime() > currentTime => ", startDate.getTime() < currentTime);
     const durationMs = endDate.getTime() - startDate.getTime();
-    const durationMinutes = Math.floor(durationMs / (1000 * 60));
-    return durationMinutes * 5;
+    const timeDifferenceMs = currentTime - startDate.getTime();
+    const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+    console.log("timeDifferenceMinutes => ", timeDifferenceMinutes);
+
+    // const durationMs = endDate.getTime() - startDate.getTime();
+    // const durationMinutes = Math.floor(durationMs / (1000 * 60));
+    return timeDifferenceMinutes * 10;
   }
   
   // If start time is not less than current time, return difference in minutes multiplied by 5
-  const timeDifferenceMs = currentTime - startDate.getTime();
-  const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  return timeDifferenceMinutes * 5;
+  // const timeDifferenceMs = currentTime - startDate.getTime();
+  // const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  // return timeDifferenceMinutes * 5;
+
+
+  const durationMs = endDate.getTime() - startDate.getTime();
+  const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  return durationMinutes * 10;
   }
 
 
