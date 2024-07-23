@@ -190,6 +190,7 @@ export class UserComponent implements OnInit {
 
     const term = {
       search: searchTerm,
+      "typeurl": "mpd"
     };
 
     this.crud.postRequest('auth/new-search', term).subscribe({
@@ -313,8 +314,9 @@ getFavoriteList(): void {
   }
 
   // set player data in local
-  setplayerData(id: string, type?: any) {
-    localStorage.setItem('playerId', id);
+  setplayerData(channelUrl: string, playerChannelId?: any) {
+    localStorage.setItem('playerId', channelUrl);
+    localStorage.setItem('playerChannelId',playerChannelId);
     this.router.navigateByUrl('/user/playstream');
     this.searchShow = !this.searchShow;
   }

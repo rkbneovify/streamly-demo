@@ -152,8 +152,9 @@
     </div>
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
-      <div class="col-4 section1_img">
-        <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
+      <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
+        <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
+      <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1 [title]="programDetailData?.title">{{programDetailData?.title | truncate}}</h1>
