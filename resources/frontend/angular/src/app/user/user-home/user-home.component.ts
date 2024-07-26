@@ -4,12 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
-import { SkeletonLoaderComponent } from '../../components/others/skeleton-loader/skeleton-loader.component';
+import { LoaderComponent } from '../../components/others/loader/loader.component';
 
 @Component({
   selector: 'app-user-home',
   standalone: true,
-  imports: [CommonModule, NgClass,RouterLink,SkeletonLoaderComponent],
+  imports: [CommonModule, NgClass,RouterLink,LoaderComponent],
   templateUrl: './user-home.component.html',
   styleUrl: './user-home.component.scss'
 })
@@ -24,7 +24,6 @@ export class UserHomeComponent implements OnInit {
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
   ngOnInit(): void {
-    console.log('Home page start..')
     this.loginSliders();
     this.getFavoriteList();
     this.getRecentsListData();
@@ -33,6 +32,7 @@ export class UserHomeComponent implements OnInit {
 
 
   loginSliders (){
+  this.isLoading = true;
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
@@ -42,18 +42,19 @@ export class UserHomeComponent implements OnInit {
           'Authorization': `Bearer ${tokenData}`,
           'Accept': 'application/json'
         });
-        console.log(tokenData,'--------token');
         this.crud.getRequest('auth/channel-sliders', headers).subscribe((res: any) => {
-          console.log('get all channel-sliders ->>',res);
           if(res.response_code == 200){
             this.sldierData = res.data;
+  this.isLoading = false;
+
           }
         });
       } catch (error) {
-          console.error('Error parsing JSON data:--->>>', error);
+          console.error(error);
+  this.isLoading = false;
+
       }
   }
-    // console.log('hello');
   }
 
   // Check if a channel is marked as favorite
@@ -86,30 +87,34 @@ export class UserHomeComponent implements OnInit {
    // Add channel to favorites
    addFavoriteChannel(channelId: number): void {
     // Call API to add channel to favorites
+  this.isLoading = true;
     this.crud.postRequest('auth/addtofavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
         if (res.response_code === 200) {
             this.favoriteChannels.push(channelId); // Update local favorite list
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
+  this.isLoading = true;
         }
     });
 }
 
 // Remove channel from favorites
 removeFavoriteChannel(channelId: number): void {
+  this.isLoading = true;
     // Call API to remove channel from favorites
     this.crud.postRequest('auth/unfavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
         if (res.response_code === 200) {
             this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
+            this.isLoading = true;
         }
     });
 }
 
 // Fetch favorite list
 getFavoriteList(): void {
-  console.log('==========================================>')
+  this.isLoading = true;
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
@@ -119,6 +124,7 @@ getFavoriteList(): void {
             if (res.response_code === 200) {
                 this.favoriteChannels = res.data.map((channel: any) => channel.id);
                 this.updateFavoriteChannels(); // Update local storage
+                this.isLoading = false;
             }
         });
     }
@@ -126,7 +132,6 @@ getFavoriteList(): void {
 
 // Update local storage with current favorite channels
 updateFavoriteChannels(): void {
-  console.log('favoriteChannels',this.favoriteChannels);
     localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
 }
 
@@ -140,6 +145,7 @@ setplayerData(id:string,channel_id?:any){
 genre_Data:any ;
 // get genre channel
 channelsWithGenre() {
+  this.isLoading = true;
   const body = {
     "typeurl": "mpd",
     "zipcode": ""
@@ -150,10 +156,11 @@ channelsWithGenre() {
       // localStorage.setItem('allChannel',JSON.stringify(list));
       // this.data = JSON.parse(localStorage.getItem('allChannel'));
       this.genre_Data = res.data;
-      console.log(this.genre_Data);
+  this.isLoading = false;
     },
     error: (err: any) => {
       console.log(err);
+  this.isLoading = false;
     }
   });
 }
