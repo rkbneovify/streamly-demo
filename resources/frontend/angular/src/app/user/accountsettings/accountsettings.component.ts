@@ -43,6 +43,7 @@ export class AccountsettingsComponent implements OnInit {
   interval_count:any;
   qunantity:any;
   qunantity_t:any;
+  isLoading:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -109,6 +110,7 @@ export class AccountsettingsComponent implements OnInit {
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
+    this.isLoading = true;
         this.access_Token = JSON.parse(
           localStorage.getItem('deviceInfo') || ''
         );
@@ -117,25 +119,20 @@ export class AccountsettingsComponent implements OnInit {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
-        console.log('token', headers);
-
         // if (this.updated_data) {
         let body = {
           name: this.updateuserDetatils.value.fullname,
           old_password: this.updateuserDetatils.value.oldpassword,
           password: this.updateuserDetatils.value.newpassword,
         };
-        console.log('updated values -->>>', body);
         this.crud
           .postRequest('auth/account-edit', body, headers)
           .subscribe({
             next:(res: any) => {
-              console.log('->>', res);
               if(res.response_code == 200){
                 this.loading = false;
                             // Update name in local storage
               this.usersdetail.name = body.name;
-              console.log(this.usersdetail);
               localStorage.setItem(
                 'userDetails',
                 JSON.stringify(this.usersdetail)
@@ -144,14 +141,13 @@ export class AccountsettingsComponent implements OnInit {
                 this.ts.success(res.message);
                 this.toggleEditMode();
               }else{
-                console.log(res,'123123123');
                 this.loading = false;
                 this.ts.error(res.message);
               }
+              this.isLoading = false;
   
             },
             error:(err:any)=>{
-              console.log(err,'error');
               this.loading = false;
               err.error.message.password.forEach(element => {
                 this.ts.error(element);
@@ -161,10 +157,10 @@ export class AccountsettingsComponent implements OnInit {
         // }
       } catch (error) {
         console.error('Error parsing JSON data:--->>>', error);
+    this.isLoading = false;
       }
     }
 
-    console.log(this.updateuserDetatils.value);
     this.updateuserDetatils.controls['fullname'].setValue(
       this.usersdetail?.name
     );
@@ -177,6 +173,7 @@ export class AccountsettingsComponent implements OnInit {
   }
 
   getAllDetails(){
+    this.isLoading = true;
     this.crud.getRequest('auth/setting-details',this.getAuthHeaders()).subscribe({
       next:(res:any)=>{
         let planFullName;
@@ -199,9 +196,9 @@ export class AccountsettingsComponent implements OnInit {
         this.qunantity = res.subscription.quantity
 
         this.get_price(this.qunantity,this.tiredPlansDetails)
-        console.log(res,'Acccccc');
+    this.isLoading = true;
       },
-      error:(err)=>console.log(err)
+      error:(err)=>{console.log(err); this.isLoading = true;}
     })
   }
 
@@ -220,7 +217,6 @@ total_price:any = 0;
 
 
   get_price(quant:any,value:any){
-    console.log(quant,value,'============>')
     const amount10 =
     +value[0].unit_amount / 100;
     const amount18 =
@@ -233,21 +229,16 @@ total_price:any = 0;
     value[0].up_to;
     const upto18 =
     value[1].up_to;
-    
-    console.log('bedirelkjsdfl==========',amount10,amount16,amount18);
     if(value){
       if(quant <=upto10){
-    console.log('bedirelkjsdfl========== 1000000')
+
 
         this.total_price = quant*amount10
       }else if(quant <=upto18 && quant >upto10){
         this.total_price = quant*amount18
-    console.log('bedirelkjsdfl========== 18000000')
 
       }else if(quant >upto18){
         this.total_price = quant*amount16
-    console.log('bedirelkjsdfl========== 16000000')
-
       }
     }
   }
@@ -255,12 +246,14 @@ total_price:any = 0;
 
 // delete subscription
   deleteSub(): void {
+    this.isLoading = true;
     this.crud.deleteRequest('cancel-subscription/616',this.getAuthHeaders()).subscribe({
       next: (res: any) => {
           this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
+          this.isLoading = false;
       },
-      error: err => this.ts.error(err.error?.error)
+      error: err => {this.ts.error(err.error?.error);this.isLoading = false;}
 
     });
   }
@@ -272,14 +265,15 @@ total_price:any = 0;
   }
 
   deleteUserAccount(): void {
+    this.isLoading = true;
     this.crud.postRequest('auth/user/delete',{password:this.deleteAccountForm.get('password').value}).subscribe({
       next: (res: any) => {
-        console.log("deleteUserAccount => ",res);
           this.ts.success('Account delete successfully');
           localStorage.clear();
+          this.isLoading = false;
           this.router.navigate(['/']);
       },
-      error: err => this.ts.error(err.error?.message)
+      error: err => {this.ts.error(err.error?.message);this.isLoading = false;}
 
     });
   }

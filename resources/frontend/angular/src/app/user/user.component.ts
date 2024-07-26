@@ -76,17 +76,14 @@ export class UserComponent implements OnInit {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
-        console.log(tokenData, '--------token');
         this.crud
           .getRequest('auth/channel-sliders', headers)
           .subscribe((res: any) => {
-            console.log('get all channel-sliders ->>', res);
           });
       } catch (error) {
-        console.error('Error parsing JSON data:--->>>', error);
+        console.error(error);
       }
     }
-    // console.log('hello');
   }
 
   @HostListener('document:click', ['$event'])
@@ -120,10 +117,8 @@ export class UserComponent implements OnInit {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
-        console.log(tokenData);
         this.crud.postRequest(`auth/logout`, {}, headers1).subscribe({
           next: (res: any) => {
-            console.log('Log Out', res);
             if (res.response_code == 200) {
               localStorage.clear();
               localStorage.removeItem('userDetails');
@@ -136,7 +131,6 @@ export class UserComponent implements OnInit {
               this.loading = false;
               this.router.navigate(['/']);
             } else {
-              console.log('hello ji');
               this.loading = false;
             }
           },
@@ -146,7 +140,7 @@ export class UserComponent implements OnInit {
         });
       } catch (error) {
         this.loading = false;
-        console.error('Error parsing JSON data:--->>>', error);
+        console.error(error);
       }
     } else {
       this.loading = false;
@@ -178,7 +172,6 @@ export class UserComponent implements OnInit {
   }
 
   onSearch(searchTerm: any): void {
-    console.log(searchTerm?.value);
     this.searchSubject.next(searchTerm.value);
   }
 
@@ -199,7 +192,7 @@ export class UserComponent implements OnInit {
         this.ts.success(res.message);
       },
       error: (err: any) => {
-        console.error('Search API error: ', err);
+        console.error(err);
         this.ts.error('Search failed. Please try again.');
       },
     });
@@ -215,9 +208,7 @@ export class UserComponent implements OnInit {
     this.crud.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
         this.allChannelDataList = this.chunkArray(res.data, 6);
-        console.log(this.chunkArray(res.data, 6));
         this.searchShow = !this.searchShow;
-        console.log(res);
       },
       error: (error: any) => {
         console.log(error);
@@ -235,7 +226,6 @@ export class UserComponent implements OnInit {
 
   // searchShow=!searchShow
   checkData() {
-    // console.log(this.allChannelDataList,'dfghjhgvb');
     if (!this.allChannelDataList.length) {
       this.get_All_Channels();
     }
@@ -259,7 +249,6 @@ export class UserComponent implements OnInit {
 
   // Fetch favorite list
 getFavoriteList(): void {
-  console.log('==========================================>')
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
@@ -306,7 +295,6 @@ getFavoriteList(): void {
 
   // Update local storage with current favorite channels
   updateFavoriteChannels(): void {
-    console.log('favoriteChannels', this.favoriteChannels);
     localStorage.setItem(
       'favoriteChannels',
       JSON.stringify(this.favoriteChannels)
@@ -345,10 +333,8 @@ getFavoriteList(): void {
       };
       this.crud.postRequest('auth/program-details', body).subscribe({
         next: (res: any) => {
-          console.log(res);
           this.showPlaylist()
           this.programDetailData = res.data;
-          console.log(res);
         },
         error: (err: any) => {
           console.error(err);
