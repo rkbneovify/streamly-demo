@@ -2,6 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -52,7 +53,8 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestroy {
   playlist_details_show: boolean = false;
   isLoading:boolean = false;
-  liveCurrentTime:any;
+  liveCurrentTime: number = 0;
+  intervalLiveWidth: any;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -165,14 +167,26 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   constructor(
     private apiService: CrudService,
     private toaster: ToastrService,
-    private router:Router
+    private router:Router,
+    private cdr: ChangeDetectorRef
   ) {}
-
   ngOnInit(): void {
     this.getAllCategories();
     this.getScheduleData('');
     this.getFavoriteList();
     this.getCurrentTimeSlot();
+    // this.intervalLiveWidth()
+    // setInterval(()=>{
+    //   this.liveCurrentTime+=10
+    // },1000)
+        // Update marginLeft every 1 minute (60,000 milliseconds)
+        this.setLiveMinWith();
+        if(this.liveCurrentTime){
+          this.intervalLiveWidth = setInterval(() => {
+            this.liveCurrentTime += 10;
+            this.cdr.detectChanges();
+          }, 60000); // 60000 milliseconds = 1 minute
+        }
   }
 
   ngAfterViewInit() {
@@ -181,6 +195,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       console.log(`Element ${index}:`, element.nativeElement);
     });
   }
+
 
   showPlaylist() {
     this.playlist_details_show = !this.playlist_details_show;
@@ -294,6 +309,15 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // const durationMinutes = Math.floor(durationMs / (1000 * 60));
   // return {width:durationMinutes * 10,magin_left:0}
   // }
+
+  setLiveMinWith(){
+    const currentTimeIndex = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+    const currentTime = new Date().getTime();
+    const timeDifferenceMs = currentTime - currentTimeIndex;
+      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+       this.liveCurrentTime = timeDifferenceMinutes * 10;
+       console.log('liveCurrentTime ==> ',this.liveCurrentTime)
+  }
   
   calculateWidth(start: any, end: any, index: any) {
     if (!start || !end) {
@@ -437,6 +461,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   ngOnDestroy(): void {
     this.clearInterval();
+    if (this.intervalLiveWidth) {
+      clearInterval(this.intervalLiveWidth);}
   }
 
   // show live timer
