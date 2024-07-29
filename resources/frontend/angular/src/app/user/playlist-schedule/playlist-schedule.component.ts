@@ -52,6 +52,8 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestroy {
   playlist_details_show: boolean = false;
   isLoading:boolean = false;
+  liveCurrentTime:any;
+
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
   @ViewChild('scrollableContent1') scrollableContent1: ElementRef;
@@ -129,6 +131,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // filter time acc to currnet time
   getCurrentTimeDate:any;
+  getCurrentTimeDataFirstIndex:any;
   getCurrentTimeSlot(dayFilter?:string) {
   if(dayFilter != 'tomorrow'){
     const now = new Date();
@@ -149,6 +152,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   }else{
     this.getCurrentTimeDate = [...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM'))];
   }
+
+  this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
+  console.log(this.getCurrentTimeDataFirstIndex);
+
   }
   // 
   padZero(num: number): string {
@@ -165,6 +172,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     this.getAllCategories();
     this.getScheduleData('');
     this.getFavoriteList();
+    this.getCurrentTimeSlot();
   }
 
   ngAfterViewInit() {
@@ -246,39 +254,147 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       }));
   }
 
-  // function to change the time into width
-  calculateWidth(start: any, end: any,index:any) {
+  // // function to change the time into width
+  // calculateWidth(start: any, end: any,index:any) {
+  //   if (!start || !end) {
+  //     return {width:0,magin_left:0};
+  //   }
+  //   const startDate = new Date(start * 1000);
+  //   const endDate = new Date(end * 1000);
+  //   // const currentTime = new Date().getTime();
+  //   const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+
+  //   // Check if start time is less than current time
+  //   if (index == 0 && startDate.getTime() < currentTime) {
+  //   // console.log('currentTime2 ==>',currentTime2,'currentTime ==>',currentTime)
+  //   // const durationMs = endDate.getTime() - startDate.getTime();
+  //   const timeDifferenceMs = currentTime - startDate.getTime();
+  //   const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  //   // const durationMs = endDate.getTime() - startDate.getTime();
+  //   // const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //   console.log(index,' =  isTrue =>',index == 0 && startDate.getTime() < currentTime,'  timeDifferenceMs ==>',timeDifferenceMs,'  timeDifferenceMinutes => ', timeDifferenceMinutes);
+  //   return {width:timeDifferenceMinutes * 10,magin_left:0}
+  // }
+  // else if(index == 0 && startDate.getTime() > currentTime){
+  //   const durationMs = endDate.getTime() - startDate.getTime();
+  //   const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //   const timeDifferenceMs = currentTime - startDate.getTime();
+  //   const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  //   return {width:durationMinutes * 10,magin_left:timeDifferenceMinutes}
+
+  // }
+  
+  // // If start time is not less than current time, return difference in minutes multiplied by 5
+  // // const timeDifferenceMs = currentTime - startDate.getTime();
+  // // const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  // // return timeDifferenceMinutes * 5;
+
+
+  // const durationMs = endDate.getTime() - startDate.getTime();
+  // const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  // return {width:durationMinutes * 10,magin_left:0}
+  // }
+  
+  calculateWidth(start: any, end: any, index: any) {
     if (!start || !end) {
-      return '';
+      return { width: 0, margin_left: 0 };
     }
+    
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
-    const currentTime = new Date().getTime(); // Current time in millisecond
-
-  // Check if start time is less than current time
-  if (index == 0 && startDate.getTime() < currentTime) {
-    const durationMs = endDate.getTime() - startDate.getTime();
-    const timeDifferenceMs = currentTime - startDate.getTime();
-    const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-    // const durationMs = endDate.getTime() - startDate.getTime();
-    // const durationMinutes = Math.floor(durationMs / (1000 * 60));
-    return timeDifferenceMinutes * 10;
+    const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+  
+    let width = 0;
+    let margin_left = 0;
+  
+    if (index == 0 && startDate.getTime() < currentTime) {
+      const timeDifferenceMs = currentTime - startDate.getTime();
+      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+      width = timeDifferenceMinutes * 10;
+      margin_left = 0;
+      // console.log(index == 0 && startDate.getTime() < currentTime,'timeDifferenceMinutes=>',timeDifferenceMinutes,{ width, margin_left }) 
+    } else if (index == 0 && startDate.getTime() > currentTime) {
+      const durationMs = endDate.getTime() - startDate.getTime();
+      const durationMinutes = Math.floor(durationMs / (1000 * 60));
+      const timeDifferenceMs = startDate.getTime() - currentTime;
+      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+      // console.log(index == 0 && startDate.getTime() > currentTime,'getTime() > currentTime=> ',timeDifferenceMinutes,{ width, margin_left })
+      width = durationMinutes * 10;
+      margin_left = timeDifferenceMinutes * 10;
+    } else {
+      const durationMs = endDate.getTime() - startDate.getTime();
+      const durationMinutes = Math.floor(durationMs / (1000 * 60));
+      width = durationMinutes * 10;
+      margin_left = 0;
+      // console.log('Without con =>> ',{ width, margin_left })
+    }
+  
+    return { width, margin_left };
   }
   
-  // If start time is not less than current time, return difference in minutes multiplied by 5
-  // const timeDifferenceMs = currentTime - startDate.getTime();
-  // const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  // return timeDifferenceMinutes * 5;
 
+  getDateTimeWithProvidedTime(timeStr:string) {
+  // Get the current date
+  const currentDate = new Date();
+  
+  // Extract hours and minutes from the provided time string
+  const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
+  let hours = parseInt(timeParts[1]);
+  const minutes = parseInt(timeParts[2]);
+  const period = timeParts[3];
 
-  const durationMs = endDate.getTime() - startDate.getTime();
-  const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  return durationMinutes * 10;
+  // Convert to 24-hour format if necessary
+  if (period === 'PM' && hours !== 12) {
+    hours += 12;
+  } else if (period === 'AM' && hours === 12) {
+    hours = 0;
   }
+
+  // Create a new date object with the provided time for the current date in local time
+  currentDate.setHours(hours, minutes, 0, 0);
+  // console.log(currentDate);
+  return currentDate;
+  }
+
+  // (timeStr) {
+  //   // Get the current date
+  //   const currentDate = new Date();
+    
+  //   // Extract hours and minutes from the provided time string
+  //   const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
+  //   let hours = parseInt(timeParts[1]);
+  //   const minutes = parseInt(timeParts[2]);
+  //   const period = timeParts[3];
+  
+  //   // Convert to 24-hour format if necessary
+  //   if (period === 'PM' && hours !== 12) {
+  //     hours += 12;
+  //   } else if (period === 'AM' && hours === 12) {
+  //     hours = 0;
+  //   }
+  
+  //   // Create a new date object with the provided time for the current date in local time
+  //   currentDate.setHours(hours, minutes, 0, 0);
+  
+  //   // Convert the current date with provided time to a UTC timestamp in milliseconds
+  //   const utcDate = new Date(Date.UTC(
+  //     currentDate.getFullYear(),
+  //     currentDate.getMonth(),
+  //     currentDate.getDate(),
+  //     currentDate.getHours(),
+  //     currentDate.getMinutes(),
+  //     currentDate.getSeconds(),
+  //     currentDate.getMilliseconds()
+  //   ));
+  
+  //   // Return the timestamp in milliseconds
+  //   return utcDate.getTime();
+  // }
 
 
 
   // program-details data 
+  
   programDetailData:any;
   programPlayable:boolean=false;
   programChannelId:string;
