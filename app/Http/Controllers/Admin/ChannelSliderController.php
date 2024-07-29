@@ -39,6 +39,7 @@ class ChannelSliderController extends Controller
             'description' => 'required',
             'status' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'optimised_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
             'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
@@ -54,6 +55,12 @@ class ChannelSliderController extends Controller
                 $imagePath = $destinationPath . "/" .  $name;
                 $image->move($destinationPath, $name);
             }
+            if ($request->hasFile('optimised_image')) {
+                $optimised_image = $request->file('optimised_image');
+                $optimised_name = time() + 1 . '.' . $optimised_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/channel_slider');
+                $optimised_image->move($destinationPath, $optimised_name);
+            }
 
             $slideAdd = new ChannelSlider();
             $slideAdd->channel_id = $request['channel'];
@@ -61,9 +68,10 @@ class ChannelSliderController extends Controller
             $slideAdd->description =  $request['description'];
             $slideAdd->status = $request['status'];
             $slideAdd->image = '/uploads/channel_slider/' . $name;
+            $slideAdd->optimised_image = '/uploads/channel_slider/' . $optimised_name;
             if ($request->hasFile('background_image')) {
                 $background_image = $request->file('background_image');
-                $name = time() . '.' . $background_image->getClientOriginalExtension();
+                $name = time() + 2 . '.' . $background_image->getClientOriginalExtension();
                 $destinationPath = public_path('/uploads/channel_slider');
                 $imagePath = $destinationPath . "/" .  $name;
                 $background_image->move($destinationPath, $name);
@@ -146,11 +154,29 @@ class ChannelSliderController extends Controller
                 }
                 // Upload new image
                 $image = $request->file('image');
-                $name = time() . '.' . $image->getClientOriginalExtension();                $destinationPath = public_path('/uploads/channel_slider');
+                $name = time() . '.' . $image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/channel_slider');
                 $imagePath = '/uploads/channel_slider/' . $name;
                 $image->move($destinationPath, $name);
 
                 $slideUpdate->image = $imagePath;
+            }
+            if ($request->hasFile('optimised_image')) {
+                // Remove previous image if it exists
+                if ($slideUpdate->optimised_image) {
+                    $oldImagePath = public_path($slideUpdate->optimised_image);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                // Upload new image
+                $optimised_image = $request->file('optimised_image');
+                $optimised_name = time() + 1 . '.' . $optimised_image->getClientOriginalExtension();
+                $destinationPath = public_path('/uploads/channel_slider');
+                $optimised_imagePath = '/uploads/channel_slider/' . $optimised_name;
+                $optimised_image->move($destinationPath, $optimised_name);
+
+                $slideUpdate->optimised_image = $optimised_imagePath;
             }
             if ($request->hasFile('background_image')) {
                 // Remove previous background_image if it exists
@@ -162,7 +188,7 @@ class ChannelSliderController extends Controller
                 }
                 // Upload new image
                 $background_image = $request->file('background_image');
-                $name = time() . '.' .$background_image->getClientOriginalExtension();
+                $name = time() + 2 . '.' . $background_image->getClientOriginalExtension();
                 $destinationPath = public_path('/uploads/channel_slider');
                 $imagePath = '/uploads/channel_slider/' . $name;
                 $background_image->move($destinationPath, $name);
