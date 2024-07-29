@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {LoaderService} from '../../../services/loaderService/loader.service';
+// import {LoaderService} from '../../../services/loaderService/loader.service';
 import { NgIf } from '@angular/common';
 @Component({
   selector: 'app-loader',
@@ -9,14 +9,14 @@ import { NgIf } from '@angular/common';
   styleUrl: './loader.component.scss'
 })
 export class LoaderComponent {
-  isLoading: boolean = false;
+  // isLoading: boolean = false;
 
-  constructor(private loaderService: LoaderService) { }
+  // constructor(private loaderService: LoaderService) { }
 
-  ngOnInit(): void {
-    this.loaderService.isLoading.subscribe((value) => {
-      this.isLoading = value;
-      console.log(this.isLoading,'loader....');
-    });
-  }
+  // ngOnInit(): void {
+  //   this.loaderService.isLoading.subscribe((value) => {
+  //     this.isLoading = value;
+  //     console.log(this.isLoading,'loader....');
+  //   });
+  // }
 }

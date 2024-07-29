@@ -16,6 +16,7 @@ export class AllChannelComponent implements OnInit{
   Bearer_token:any;
   favChannelList:any;
   favoriteChannels: number[] = [];
+  isLoading:boolean = false;
 
   data:any;
   constructor(private apiService:CrudService,private router:Router,private ts:ToastrService){}
@@ -41,6 +42,7 @@ export class AllChannelComponent implements OnInit{
   }
 
   getPrivacyP() {
+  this.isLoading = true;
     const body = {
       "typeurl": "mpd",
   }
@@ -64,9 +66,12 @@ export class AllChannelComponent implements OnInit{
         localStorage.setItem('allChannel',JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
         console.log(res.data,"==============>", res?.data[2]?.gracenote_data?.url+'/'+res.data?.gracenote_data?.url?.assets?.asset[0]?.URI);
+        this.isLoading = false;
+
       },
       error: (err: any) => {
         console.log(err);
+      this.isLoading = true;
       }
     });
   }
@@ -97,6 +102,7 @@ export class AllChannelComponent implements OnInit{
   }
    // Add channel to favorites
    addFavoriteChannel(channelId: number): void {
+  this.isLoading = true;
     // Call API to add channel to favorites
     this.apiService.postRequest('auth/addtofavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
         if (res.response_code === 200) {
@@ -104,10 +110,12 @@ export class AllChannelComponent implements OnInit{
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
         }
+  this.isLoading = false;
     });
 }
 // Remove channel from favorites
 removeFavoriteChannel(channelId: number): void {
+  this.isLoading = true;
     // Call API to remove channel from favorites
     this.apiService.postRequest('auth/unfavorite', { channelid: channelId }, this.getAuthHeaders()).subscribe((res: any) => {
         if (res.response_code === 200) {
@@ -115,21 +123,24 @@ removeFavoriteChannel(channelId: number): void {
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
         }
+  this.isLoading = false;
     });
 }
 // Fetch favorite list
 getFavoriteList(): void {
-  console.log('==========================================>')
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
     } else {
+  this.isLoading = true;
         // Fetch from API if not found in local storage
         this.apiService.getRequest('auth/my_favorites', this.getAuthHeaders()).subscribe((res: any) => {
             if (res.response_code === 200) {
                 this.favoriteChannels = res.data.map((channel: any) => channel.id);
                 this.updateFavoriteChannels(); // Update local storage
             }
+            this.isLoading = false;
+
         });
     }
 }

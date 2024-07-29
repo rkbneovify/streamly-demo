@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="accountbtn_container">
-      <button (click)="showPopDeleteAccount()" *ngIf="!editMode" class="plan_btn btn-delete">
+      <button (click)="showPopDeleteAccount()" *ngIf="!editMode" class="plan_btn btn-delete text-nowrap">
         Account Delete
       </button>
       <button
@@ -162,7 +162,7 @@
       </div>
     </div>
     <div class="accountbtn_container my-4  ">
-      <button class="plan_btn btn-delete w-auto" (click)="showPopConf()">Cancel Subscription</button>
+      <button class="plan_btn btn-delete w-auto text-nowrap" (click)="showPopConf()">Cancel Subscription</button>
     </div>
   </div>
 
@@ -285,4 +285,8 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="loader"></div>
 </div>
