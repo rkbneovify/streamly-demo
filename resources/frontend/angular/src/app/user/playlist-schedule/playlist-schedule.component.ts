@@ -51,6 +51,7 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 })
 export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestroy {
   playlist_details_show: boolean = false;
+  isLoading:boolean = false;
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
   @ViewChild('scrollableContent1') scrollableContent1: ElementRef;
@@ -111,15 +112,17 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   categories: any;
   // get category list
   getAllCategories(){
+  this.isLoading = true;
     this.apiService.getRequest('auth/all-genre').subscribe({
       next:(res:any)=>{
-        console.log(res);
         this.categories=res.data;
         this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
         this.categories.push({name:'Others',image:''})
+        this.isLoading = true;
       },
       error:(err:any)=>{
         console.log(err);
+  this.isLoading = true;
       }
     })
   }
@@ -128,7 +131,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   getCurrentTimeDate:any;
   getCurrentTimeSlot(dayFilter?:string) {
   if(dayFilter != 'tomorrow'){
-    console.log('if day =>',dayFilter);
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
@@ -145,7 +147,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       ...this.scheduleHours.slice(0, closestIndex),
     ];
   }else{
-    console.log('esle day =>',dayFilter);
     this.getCurrentTimeDate = [...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM'))];
   }
   }
@@ -162,10 +163,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   ngOnInit(): void {
     this.getAllCategories();
-    console.log('currnet time', this.getCurrentTimeSlot());
     this.getScheduleData('');
-    this.setDefaultDay();
-    // this.startTimer()
     this.getFavoriteList();
   }
 
@@ -206,7 +204,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       this.scrollableContent1.nativeElement.scrollLeft = 0;
       this.changeColorBackgroung = false;
     }
-    console.log(position);
   }
 
   // getScheduleProgram: any;
@@ -215,6 +212,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // filterProgram
   filteredPrograms: any = [];
   getScheduleData(genre?: string,dayFilter:string=this.dayfilter) {
+  this.isLoading = true;
     this.active_categories((genre == '' || genre == 'All' ?'All':genre));
     const body = {
       typeurl: 'mpd',
@@ -225,12 +223,14 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       next: (res: any) => {
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
         this.filteredPrograms = res.data;
+  this.isLoading = false;
         // this.getAllScheduleData = res.data;
         // this.getScheduleProgram = res.data;
         // this.filterPrograms(res);
       },
       error: (err: any) => {
         console.error(err);
+  this.isLoading = false;
       },
     });
   }
@@ -249,7 +249,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // function to change the time into width
   calculateWidth(start: any, end: any,index:any) {
     if (!start || !end) {
-      console.log('start end not there');
       return '';
     }
     const startDate = new Date(start * 1000);
@@ -258,14 +257,9 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // Check if start time is less than current time
   if (index == 0 && startDate.getTime() < currentTime) {
-    // console.log("Current time => ", currentTime);
-    // console.log("start time => ", startDate,'startDate.getTime =>',startDate.getTime());
-    // console.log("startDate.getTime() > currentTime => ", startDate.getTime() < currentTime);
     const durationMs = endDate.getTime() - startDate.getTime();
     const timeDifferenceMs = currentTime - startDate.getTime();
     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-    // console.log("timeDifferenceMinutes => ", timeDifferenceMinutes);
-
     // const durationMs = endDate.getTime() - startDate.getTime();
     // const durationMinutes = Math.floor(durationMs / (1000 * 60));
     return timeDifferenceMinutes * 10;
@@ -291,6 +285,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   programChannelUrl:string;
 
   getProgramDetailData(tmsId?: string,index?:any,channelId?:string,channelUrl?:string) {
+  this.isLoading = true;
     if(index == 0){
       this.programPlayable = true;
       this.programChannelId=channelId;
@@ -310,12 +305,14 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
           this.toaster.error('No Program details found.')
         }
 
-        // localStorage.setItem('playerChannelId',res.data)
+  this.isLoading = false;
+  // localStorage.setItem('playerChannelId',res.data)
 
       },
       error: (err: any) => {
         this.toaster.error(err.message);
         console.error(err);
+  this.isLoading = false;
       },
     });
   }
@@ -350,7 +347,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // filter according to days
   days: string[] = ['Today', 'Tomorrow'];
-  selectedDay: string;
+  selectedDay: string = 'Today';
 
   setDefaultDay() {
     const today = new Date().getDay();
@@ -363,13 +360,11 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   // filter according to today and tommorrow
   changeDays(day: string) {
-    console.log(`Day changed to: ${day}`);
     this.dayfilter = day != 'Tomorrow'?'today':'tomorrow'
     if(this.selectedDay != 'Tomorrow'){
       this.getScheduleData(this.selected_category,this.dayfilter);
       this.getCurrentTimeSlot(this.dayfilter);
     }else{
-      console.log('changes Days filter =>',this.dayfilter);
       this.getScheduleData(this.selected_category,this.dayfilter);
       this.getCurrentTimeSlot(this.dayfilter);
     }
@@ -469,7 +464,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     favListData: any;
     // Fetch favorite list
     getFavoriteList(): void {
-      console.log('==========================================>');
+  this.isLoading = true;
       const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
       if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
@@ -481,12 +476,12 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
             this.favoriteChannels = res.data.map((channel: any) => channel.id);
             this.updateFavoriteChannels(); // Update local storage
           }
+  this.isLoading = false;
         });
       }
     }
     // Update local storage with current favorite channels
     updateFavoriteChannels(): void {
-      console.log('favoriteChannels', this.favoriteChannels);
       localStorage.setItem(
         'favoriteChannels',
         JSON.stringify(this.favoriteChannels)
@@ -498,7 +493,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     selected_category:string='All';
 
     active_categories(category:string){
-      console.log('selected_category',this.selected_category,category);
       this.selected_category = category;
     }
 }

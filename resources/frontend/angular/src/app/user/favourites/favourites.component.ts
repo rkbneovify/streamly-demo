@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class FavouritesComponent implements OnInit {
   favoriteChannels: any;
+  isLoading:boolean = false;
   constructor(
     private apiService: CrudService,
     private router: Router,
@@ -41,6 +42,7 @@ export class FavouritesComponent implements OnInit {
   // Add channel to favorites
   addFavoriteChannel(channelId: number): void {
     // Call API to add channel to favorites
+  this.isLoading = true;
     this.apiService
       .postRequest('auth/addtofavorite', { channelid: channelId })
       .subscribe((res: any) => {
@@ -50,11 +52,13 @@ export class FavouritesComponent implements OnInit {
           this.getFavoriteListData();
           this.ts.success(res.message);
         }
+  this.isLoading = false;
       });
   }
   // Remove channel from favorites
   removeFavoriteChannel(channelId: number): void {
     // Call API to remove channel from favorites
+  this.isLoading = true;
     this.apiService
       .postRequest('auth/unfavorite', { channelid: channelId })
       .subscribe((res: any) => {
@@ -67,12 +71,13 @@ export class FavouritesComponent implements OnInit {
           this.updateFavoriteChannels(); // Update local storage
           this.ts.success(res.message);
         }
+      this.isLoading = false;
       });
   }
   favListData: any;
   // Fetch favorite list
   getFavoriteList(): void {
-    console.log('==========================================>');
+  this.isLoading = true;
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
       this.favoriteChannels = JSON.parse(storedFavoriteChannels);
@@ -84,12 +89,12 @@ export class FavouritesComponent implements OnInit {
           this.favoriteChannels = res.data.map((channel: any) => channel.id);
           this.updateFavoriteChannels(); // Update local storage
         }
+        this.isLoading = false;
       });
     }
   }
   // Update local storage with current favorite channels
   updateFavoriteChannels(): void {
-    console.log('favoriteChannels', this.favoriteChannels);
     localStorage.setItem(
       'favoriteChannels',
       JSON.stringify(this.favoriteChannels)
@@ -97,22 +102,26 @@ export class FavouritesComponent implements OnInit {
   }
 
   getFavoriteListData(): void {
+  this.isLoading = true;
     const body = {"typeurl" : "mpd"}
     this.apiService.postRequest('auth/favourite-channels',body).subscribe((res: any) => {
       if (res.response_code === 200) {
         this.favListData = res.data;
       }
+    this.isLoading = false;
     });
   }
   
   recentsPlayData: any;
   getRecentsListData(): void {
+  this.isLoading = true;
     // Fetch from API if not found in local storage
     const body = {"typeurl" : "mpd"}
     this.apiService.postRequest('auth/recent-channels',body).subscribe((res: any) => {
       if (res.response_code === 200) {
         this.recentsPlayData = res.data;
       }
+  this.isLoading = false;
     });
   }
   // set player data in local
