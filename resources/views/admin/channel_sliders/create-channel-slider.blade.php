@@ -84,6 +84,13 @@
                                 @enderror
                             </div>
                             <div class="form-group">
+                                <label for="optimised_image">Optimised Image Upload: *</label>
+                                <input type="file" name="optimised_image" class="form-control-file">
+                                @error('optimised_image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="background_image">Background Image Upload:</label>
                                 <input type="file" name="background_image" class="form-control-file">
                                 @error('background_image')
