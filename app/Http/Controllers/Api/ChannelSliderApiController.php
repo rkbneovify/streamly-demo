@@ -31,10 +31,11 @@ class ChannelSliderApiController extends Controller
         //     ->get();
 
         $channel_slides = ChannelSlider::Join('channels', 'channel_slider.channel_id', '=', 'channels.id')
-            ->select('channel_slider.channel_id', 'channel_slider.program_name', 'channel_slider.description', 'channel_slider.status', 'channel_slider.image', 'channel_slider.background_image', 'channels.name as channel_name', 'channels.callSign', 'channels.stationName', 'channels.url', 'channels.dash_url', 'channels.smooth_url', 'channels.zip_code')
+            ->select('channel_slider.channel_id', 'channel_slider.program_name', 'channel_slider.description', 'channel_slider.status', 'channel_slider.image', 'channel_slider.optimised_image', 'channel_slider.background_image', 'channels.name as channel_name', 'channels.callSign', 'channels.stationName', 'channels.url', 'channels.dash_url', 'channels.smooth_url', 'channels.zip_code')
             ->get()
             ->map(function ($slide) {
                 $slide->image = env('APP_URL') . $slide->image;
+                $slide->optimised_image = env('APP_URL') . $slide->optimised_image;
                 $slide->background_image = $slide->background_image ? env('APP_URL') . $slide->background_image : null;
                 $slide->zip_code = json_decode($slide->zip_code);
                 $slide->favourite = FavouriteChannel::where('channels_id', $slide->channel_id)->where('user_id', JWTAuth::user()->id)->exists();
