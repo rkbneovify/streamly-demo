@@ -1,4 +1,4 @@
-import { DatePipe, NgFor } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-playstream',
   standalone: true,
-  imports: [NgFor,DatePipe],
+  imports: [NgFor,DatePipe,NgIf],
   templateUrl: './playstream.component.html',
   styleUrl: './playstream.component.scss',
 })
@@ -24,6 +24,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   tokenkey: any;
   Bearer_token: any;
   channelData:any;
+  liveCurrentTime:any;
 
   constructor(private crud: CrudService,private router:Router) {
     this.playerId = localStorage.getItem('playerId');
@@ -36,6 +37,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.playerDash();
     this.getPlayerData();
+
+    setInterval(()=>{
+      this.liveCurrentTime += 10
+    },1000)
   }
 
 

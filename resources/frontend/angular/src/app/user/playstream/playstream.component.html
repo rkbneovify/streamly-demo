@@ -38,7 +38,7 @@
         </div>
 
     </div>
-    <div class="col-lg-4 col-12 playstream_2">
+    <div class="col-lg-4 col-12 playstream_2" *ngIf="channelData?.program_details; else noProgram">
         <h1 (click)="getPlayerData()">{{channelData?.program_details?.title}}</h1>
         <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
         <div class="play_btn_container_1 mt-2">
@@ -79,10 +79,17 @@
         </div>
 
     </div>
+
+    <ng-template #noProgram>
+        <div class="col-12 text-center text-white my-2">
+          <!-- You can add any alternative content here -->
+          <p>No program details available.</p>
+        </div>
+      </ng-template>
 </div>
 
-<div class="row">
-    <div class="col-12">
+<div class="row" >
+    <div class="col-12" *ngIf="channelData?.recommended_channels; else recommended_channels">
         <div class="landing_carousel_section2 mt-5">
             <div class="landing_carousel_section2_top">Recommended Channels</div>
             <div class="landing_carousel_section2_bottom gap-5 mt-3 d-flex" >
@@ -96,4 +103,11 @@
             
         </div>
     </div>
+
+    <ng-template #recommended_channels>
+        <div class="col-12">
+          <!-- You can add any alternative content here -->
+          <p>No recommended channels available.</p>
+        </div>
+      </ng-template>
 </div>
