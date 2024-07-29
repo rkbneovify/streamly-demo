@@ -68,7 +68,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="fname">Program Name: *</label><br>
-                                <input class="form-control" type="text" id="program_name" name="program_name" value= "{{ $slideUpdate->program_name }}">
+                                <input class="form-control" type="text" id="program_name" name="program_name"
+                                    value= "{{ $slideUpdate->program_name }}">
                                 @error('program_name')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -89,9 +90,19 @@
                                 @enderror
                             </div>
                             <div class="form-group">
+                                <label for="optimised_image">Optimised Image Upload: </label>
+                                <input type="file" name="optimised_image" class="form-control-file">
+                                <img class="mt-3" src="{{ $slideUpdate->optimised_image }}" height="170"
+                                    width="350">
+                                @error('optimised_image')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="background_image">Background Image Upload: </label>
                                 <input type="file" name="background_image" class="form-control-file">
-                                <img class="mt-3" src="{{ $slideUpdate->background_image }}" height="170" width="350">
+                                <img class="mt-3" src="{{ $slideUpdate->background_image }}" height="170"
+                                    width="350">
                                 @error('background_image')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

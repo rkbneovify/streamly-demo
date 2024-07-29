@@ -19,6 +19,7 @@ class CreateChannelSliderTable extends Migration
             $table->string('program_name')->nullable();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('optimised_image')->nullable();
             $table->string('background_image')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
 
