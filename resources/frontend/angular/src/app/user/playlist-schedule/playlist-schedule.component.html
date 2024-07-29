@@ -98,10 +98,8 @@
       </div>
 
       <div class="schedule_time_programs_container position-relative">
-        <!-- <div class="position-fixed" [ngStyle]="{'margin-left.px': liveCurrentTime}"
-        class="schedule_time">
-          hello
-        </div> -->
+        <div class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
+        </div>
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
             <div 
