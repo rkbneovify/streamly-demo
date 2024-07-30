@@ -119,6 +119,7 @@
         line-height: 20px;
         color: #e0e0e0;
         // min-width: 150px;
+      border: 1px solid rgba(255, 255, 255, 0.1019607843);
         min-width: 300px;
       }
     }
@@ -156,6 +157,7 @@
       position: absolute;
       top: 0;
       bottom: 0;
+      z-index: 133;
       &::before{
         width: 150px;
         background: #FFFFFF0D;
@@ -587,6 +589,7 @@
 .livetimecounter{
   background-color:#FFFFFF0D;
   border-right: 4px solid #004480;
+  z-index: 132;
 }
 
 @media screen and (max-width: 750px) {
