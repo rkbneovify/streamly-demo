@@ -319,11 +319,48 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
        console.log('liveCurrentTime ==> ',this.liveCurrentTime)
   }
   
+  // calculateWidth(start: any, end: any, index: any) {
+  //   if (!start || !end) {
+  //     return { width: 0, margin_left: 0 };
+  //   }
+    
+  //   const startDate = new Date(start * 1000);
+  //   const endDate = new Date(end * 1000);
+  //   const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+  
+  //   let width = 0;
+  //   let margin_left = 0;
+  
+  //   if (index == 0 && startDate.getTime() < currentTime) {
+  //     const timeDifferenceMs = currentTime - startDate.getTime();
+  //     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  //     width = timeDifferenceMinutes * 10;
+  //     margin_left = 0;
+  //     console.log(index == 0 && startDate.getTime() < currentTime,'timeDifferenceMinutes=>',timeDifferenceMinutes,{ width, margin_left });
+  //   } else if (index == 0 && startDate.getTime() > currentTime) {
+  //     const durationMs = endDate.getTime() - startDate.getTime();
+  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //     const timeDifferenceMs = startDate.getTime() - currentTime;
+  //     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  //     width = durationMinutes * 10;
+  //     margin_left = timeDifferenceMinutes * 10;
+  //     console.log(index == 0 && startDate.getTime() > currentTime,'getTime() > currentTime=> ',timeDifferenceMinutes,{ width, margin_left })
+  //   } else {
+  //     const durationMs = endDate.getTime() - startDate.getTime();
+  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //     width = durationMinutes * 10;
+  //     margin_left = 0;
+  //     // console.log('Without con =>> ',{ width, margin_left })
+  //   }
+  
+  //   return { width, margin_left };
+  // }
+
   calculateWidth(start: any, end: any, index: any) {
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
     }
-    
+  
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
     const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
@@ -331,30 +368,40 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     let width = 0;
     let margin_left = 0;
   
-    if (index == 0 && startDate.getTime() < currentTime) {
-      const timeDifferenceMs = currentTime - startDate.getTime();
-      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-      width = timeDifferenceMinutes * 10;
-      margin_left = 0;
-      // console.log(index == 0 && startDate.getTime() < currentTime,'timeDifferenceMinutes=>',timeDifferenceMinutes,{ width, margin_left }) 
-    } else if (index == 0 && startDate.getTime() > currentTime) {
-      const durationMs = endDate.getTime() - startDate.getTime();
-      const durationMinutes = Math.floor(durationMs / (1000 * 60));
-      const timeDifferenceMs = startDate.getTime() - currentTime;
-      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-      // console.log(index == 0 && startDate.getTime() > currentTime,'getTime() > currentTime=> ',timeDifferenceMinutes,{ width, margin_left })
-      width = durationMinutes * 10;
-      margin_left = timeDifferenceMinutes * 10;
+    if (index === 0) {
+      if (startDate.getTime() < currentTime) {
+        // The event has already started
+        if (endDate.getTime() < currentTime) {
+          // The event has also ended
+          width = 0; // No width because the event has passed
+          margin_left = 0;
+        } else {
+          // The event is currently ongoing
+          const durationMs = endDate.getTime() - currentTime;
+          const durationMinutes = Math.floor(durationMs / (1000 * 60));
+          width = durationMinutes * 10;
+          margin_left = 0;
+        }
+      } else {
+        // The event has not started yet
+        const durationMs = endDate.getTime() - startDate.getTime();
+        const durationMinutes = Math.floor(durationMs / (1000 * 60));
+        const timeDifferenceMs = startDate.getTime() - currentTime;
+        const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+        width = durationMinutes * 10;
+        margin_left = timeDifferenceMinutes * 10;
+      }
     } else {
+      // For all other indices (not the first one)
       const durationMs = endDate.getTime() - startDate.getTime();
       const durationMinutes = Math.floor(durationMs / (1000 * 60));
       width = durationMinutes * 10;
       margin_left = 0;
-      // console.log('Without con =>> ',{ width, margin_left })
     }
   
     return { width, margin_left };
   }
+  
   
 
   getDateTimeWithProvidedTime(timeStr:string) {
@@ -460,24 +507,25 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
 
   ngOnDestroy(): void {
-    this.clearInterval();
+    // this.clearInterval();
     if (this.intervalLiveWidth) {
-      clearInterval(this.intervalLiveWidth);}
-  }
-
-  // show live timer
-  private intervalId: any;
-  startTimer(): void {
-    this.intervalId = setInterval(() => {
-      this.scrollContent(100);
-    }, 60000); // 60000 milliseconds = 1 minute
-  }
-
-  clearInterval(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
+      clearInterval(this.intervalLiveWidth);
     }
   }
+
+  // // show live timer
+  // private intervalId: any;
+  // startTimer(): void {
+  //   this.intervalId = setInterval(() => {
+  //     this.scrollContent(100);
+  //   }, 60000); // 60000 milliseconds = 1 minute
+  // }
+
+  // clearInterval(): void {
+  //   if (this.intervalId) {
+  //     clearInterval(this.intervalId);
+  //   }
+  // }
 
   setChannelId(id:string,url:string){
     localStorage.setItem('playerChannelId',id);

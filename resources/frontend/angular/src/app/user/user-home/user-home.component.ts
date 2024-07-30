@@ -93,7 +93,7 @@ export class UserHomeComponent implements OnInit {
             this.favoriteChannels.push(channelId); // Update local favorite list
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
-  this.isLoading = true;
+  this.isLoading = false;
         }
     });
 }
@@ -107,7 +107,7 @@ removeFavoriteChannel(channelId: number): void {
             this.favoriteChannels = this.favoriteChannels.filter(id => id !== channelId); // Update local favorite list
             this.updateFavoriteChannels(); // Update local storage
             this.ts.success(res.message);
-            this.isLoading = true;
+            this.isLoading = false;
         }
     });
 }
