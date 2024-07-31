@@ -74,6 +74,14 @@
   .schedule_time_container {
     display: flex;
     background-color: #ffffff2e;
+    .left-side-move{
+      cursor: pointer; 
+      padding-top: 8px;
+      background: #47627b;
+      height: 40px;
+      margin-left: 168px;
+      z-index: 1;
+    }
     .schedule_days {
       width: 168px;
       height: 40px;
@@ -118,15 +126,20 @@
         font-weight: 400;
         line-height: 20px;
         color: #e0e0e0;
-        // min-width: 150px;
+        min-width: 150px;
       border: 1px solid rgba(255, 255, 255, 0.1019607843);
-        min-width: 300px;
+        // min-width: 300px;
       }
     }
 
     .schedule_GoLive_container {
       gap: 1.4rem;
       margin-left: 4px;
+      .schedule_Live{
+        color: red;
+        font-weight: bold;
+        padding-left: 10px;
+      }
       .schedule_GoLive {
         color: #ffdb4e;
       }
@@ -245,6 +258,8 @@
         // grid-auto-flow: column;
         cursor: pointer;
         height: 100px;
+        border-top: 1px solid #ffffff1a;
+        border-bottom: 1px solid #ffffff1a;
         // overflow: hidden;
         // padding: 0 2px;
         white-space: nowrap;
