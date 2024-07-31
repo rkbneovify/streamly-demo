@@ -55,6 +55,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   isLoading:boolean = false;
   liveCurrentTime: number = 0;
   intervalLiveWidth: any;
+  toggleLeftArrow:boolean = false;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -120,8 +121,20 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     this.apiService.getRequest('auth/all-genre').subscribe({
       next:(res:any)=>{
         this.categories=res.data;
-        this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
-        this.categories.push({name:'Others',image:''})
+        // this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
+        // this.categories.push({name:'Others',image:''})
+
+      // Add 'All' category at the beginning if it doesn't already exist
+      const allCategory = { name: 'All', image: '../../../assets/dummy-img/All.svg' };
+      if (!this.categories.some(category => category.name === 'All')) {
+        this.categories.unshift(allCategory);
+      }
+
+      // Add 'Others' category at the end if it doesn't already exist
+      const othersCategory = { name: 'Others', image: '' };
+      if (!this.categories.some(category => category.name === 'Others')) {
+        this.categories.push(othersCategory);
+      }
         this.isLoading = true;
       },
       error:(err:any)=>{
@@ -183,7 +196,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         this.setLiveMinWith();
         if(this.liveCurrentTime){
           this.intervalLiveWidth = setInterval(() => {
-            this.liveCurrentTime += 10;
+            this.liveCurrentTime += 5;
             this.cdr.detectChanges();
           }, 60000); // 60000 milliseconds = 1 minute
         }
@@ -211,22 +224,38 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       this.scrollablecategory.nativeElement.scrollLeft -= offset;
     }
   }
-
+  go_Live:boolean = false;
+  count:number = 0;
   scrollContent(position: number) {
-    if (position != 0) {
-      this.changeColorBackgroung = true;
-      if (
-        this.scrollableContent.nativeElement &&
-        this.scrollableContent.nativeElement
-      ) {
-        this.scrollableContent.nativeElement.scrollLeft += position;
-        this.scrollableContent1.nativeElement.scrollLeft += position;
+      if (position != 0) {
+        this.changeColorBackgroung = true;
+        this.toggleLeftArrow = true
+        this.go_Live = true
+        if (
+          this.scrollableContent.nativeElement &&
+          this.scrollableContent.nativeElement
+        ) {
+          this.scrollableContent.nativeElement.scrollLeft += position;
+          this.scrollableContent1.nativeElement.scrollLeft += position;
+          if(position > 0){
+            this.count += 1;
+          }else{
+            this.count -= 1;
+          }
+        }
+      } else {
+        this.scrollableContent.nativeElement.scrollLeft = 0;
+        this.scrollableContent1.nativeElement.scrollLeft = 0;
+        this.changeColorBackgroung = false;
+        this.toggleLeftArrow = false;
+        this.go_Live = false;
+        this.count = 0
       }
-    } else {
-      this.scrollableContent.nativeElement.scrollLeft = 0;
-      this.scrollableContent1.nativeElement.scrollLeft = 0;
+    if(this.count == 0){
+      this.toggleLeftArrow = false;
       this.changeColorBackgroung = false;
-    }
+      this.go_Live = false;
+      }
   }
 
   // getScheduleProgram: any;
@@ -315,7 +344,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     const currentTime = new Date().getTime();
     const timeDifferenceMs = currentTime - currentTimeIndex;
       const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-       this.liveCurrentTime = timeDifferenceMinutes * 10;
+       this.liveCurrentTime = timeDifferenceMinutes * 5;
        console.log('liveCurrentTime ==> ',this.liveCurrentTime)
   }
   
@@ -379,7 +408,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
           // The event is currently ongoing
           const durationMs = endDate.getTime() - currentTime;
           const durationMinutes = Math.floor(durationMs / (1000 * 60));
-          width = durationMinutes * 10;
+          width = durationMinutes * 5;
           margin_left = 0;
         }
       } else {
@@ -388,17 +417,17 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         const durationMinutes = Math.floor(durationMs / (1000 * 60));
         const timeDifferenceMs = startDate.getTime() - currentTime;
         const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-        width = durationMinutes * 10;
-        margin_left = timeDifferenceMinutes * 10;
+        width = durationMinutes * 5;
+        margin_left = timeDifferenceMinutes * 5;
       }
     } else {
       // For all other indices (not the first one)
       const durationMs = endDate.getTime() - startDate.getTime();
       const durationMinutes = Math.floor(durationMs / (1000 * 60));
-      width = durationMinutes * 10;
+      width = durationMinutes * 5;
       margin_left = 0;
     }
-  
+
     return { width, margin_left };
   }
   
