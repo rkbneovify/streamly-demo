@@ -252,6 +252,8 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         this.count = 0
       }
     if(this.count == 0){
+      this.scrollableContent.nativeElement.scrollLeft = 0;
+      this.scrollableContent1.nativeElement.scrollLeft = 0;
       this.toggleLeftArrow = false;
       this.changeColorBackgroung = false;
       this.go_Live = false;
