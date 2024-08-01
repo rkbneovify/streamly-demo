@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\GracenoteScheduleProgram;
 use App\GracenoteSource;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BugReporting\Store;
 use App\Models\Channel;
 use App\Models\FavouriteChannel;
 use App\Models\Genre;
@@ -425,11 +426,12 @@ class NewChannelApiController extends Controller
             ], 400);
         } else {
             $TMSId = $request->TMSId;
-            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('gracenote_schedule_program.prgSvcId', 'title', 'description', 'duration', 'quals', 'assets')
+            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
                 ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
+                ->leftJoin('gracenote_sources', 'gracenote_schedule_program.prgSvcId', '=', 'gracenote_sources.prgSvcId')
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
 
@@ -440,6 +442,11 @@ class NewChannelApiController extends Controller
                     ->orderBy('start')
                     ->get();
                 $data = [
+                    'channel_id' => $program->channel_id,
+                    'stationName' => $program->stationName,
+                    'url' => $program->url,
+                    'dash_url' => $program->dash_url,
+                    'smooth_url' => $program->smooth_url,
                     "title" => $program->title,
                     "description" => $program->description,
                     "duration" => $program->duration,
