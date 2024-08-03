@@ -12,6 +12,11 @@ interface ScheduleItem {
 })
 export class ScheduleFormatterPipe implements PipeTransform {
 
+  convertTZ(date:any, tzString = Intl.DateTimeFormat().resolvedOptions().timeZone):any 
+  {
+    return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {timeZone: tzString}));
+  }
+
   transform(schedule: ScheduleItem[]): any {
     const today = new Date().toISOString().split('T')[0];
     const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
@@ -22,18 +27,23 @@ export class ScheduleFormatterPipe implements PipeTransform {
       return date.toLocaleDateString('en-US', options);
     };
 
-    const formatTime = (timeStr: string) => {
-      const [hour, minute] = timeStr.split(':');
+    const formatTime = (timeStr: any) => {
+      const t = this.convertTZ(`${timeStr?.date} ${timeStr?.time} +0000`);
+      const h = t.getHours();
+      const m = t.getMinutes();
+      // console.log('format ==> ',this.convertTZ(`${timeStr?.date} ${timeStr?.time} +0000`),h,m);
+
+      const [hour, minute] = timeStr.time.split(':');
       const date = new Date();
-      date.setHours(parseInt(hour), parseInt(minute));
-      return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      date.setHours(parseInt(h), parseInt(m));
+      return `${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
     };
 
     const filterAndFormat = (date: string) => {
       return schedule
         .filter(event => event.date === date)
-        .map(event => formatTime(event.time))
-        .join('  ,  ');
+        .map(event => formatTime(event))
+        .join(' | ');
     };
 
     const formattedToday = filterAndFormat(today);
