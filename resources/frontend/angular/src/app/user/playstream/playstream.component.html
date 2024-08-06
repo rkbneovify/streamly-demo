@@ -3,11 +3,27 @@
         <div class="dash-video-player ">
             <div class="videoContainer" id="videoContainer">
                 <video data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
-                type="application/dash+xml">
+                type="application/dash+xml"
+                >
                     <source src="media/intro.mp4" type="video/mp4"/>
                     <source src="media/intro.ogv" type="video/ogg"/>
                     <source src="media/intro.webm" type="video/webm"/>  
                 </video>
+
+                    <!-- Custom Controls
+                <div class="video-controls">
+                    <button (click)="togglePlayPause()">Play/Pause 
+                        <span id="iconPlayPause" class="icon-play"></span>
+                    </button>
+                    <button (click)="toggleMute()">Mute/Unmute</button>
+                    <button (click)="toggleFullscreen()">Fullscreen
+                        <span class="icon-fullscreen-enter"></span>
+                    </button>
+                    <div class="live-indicator">LIVE</div>
+                </div> -->
+
+
+
                 <!-- <div id="videoController" class="video-controller unselectable">
                     <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
                         <span id="iconPlayPause" class="icon-play"></span>
@@ -69,7 +85,7 @@
                 <h2>Up Next</h2>
                 <div class="playstream_liveTime d-flex align-items-baseline gap-3 mt-3" *ngFor="let up_next of channelData?.program_details?.up_next">
                     <div class="text-nowrap">
-                        {{up_next?.time}}
+                        {{formatTime(up_next?.time)}}
                     </div>
                     <div class="taj">
                         {{up_next?.title}}

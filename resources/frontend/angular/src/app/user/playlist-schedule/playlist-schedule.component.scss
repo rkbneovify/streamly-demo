@@ -146,6 +146,7 @@
       }
       .schedule_GoLive {
         color: #ffdb4e;
+        text-wrap: nowrap;
       }
     }
   }
@@ -704,6 +705,9 @@
         padding: 8px 10px 8px 7px !important;
       }
     }
+    .left-side-move{
+      margin-left: 110px !important;
+    }
   }
 
   .schedule_main{
@@ -714,5 +718,15 @@
 @media screen and (max-width: 475px){
   .schedule_channels{
     display: none;
+  }
+
+  .schedule_GoLive_container{
+    gap: 0.5rem !important;
+  }
+
+  .animantiontest{
+    .col-12{
+      padding: 0 !important;
+    }
   }
 }

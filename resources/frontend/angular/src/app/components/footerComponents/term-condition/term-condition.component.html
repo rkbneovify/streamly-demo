@@ -1,13 +1,13 @@
 <div class="container-termCond">
   <div class="main-termCond">
     <div class="main-term-text mt-3 position-relative">
-        <div class="position-absolute d-flex back-btn_go" (click)="goBack()">
+        <div class="position-absolute d-flex back-btn_go" *ngIf="showbackbtn" (click)="goBack()">
             <div>
                 <img loading="lazy"s src="../../assets/dummy-img/chevron-left.svg" alt="">
             </div>
             Go Back
         </div>
-      <h3 cla>{{title}}</h3>
+      <h3 [ngClass]="{'ptbtn':showbackbtn}">{{title}}</h3>
       <!-- <p class="my-3">
         Lorem ipsum dolor sit amet consectetur. Quisque enim facilisi elementum dictum vitae ornare. Posuere nisi interdum eget magna ullamcorper id. Auctor purus egestas at tincidunt euismod dolor lectus sit rhoncus. Integer fames massa pharetra cursus dictum nisl senectus. Sed ipsum hac pellentesque posuere pretium. Consectetur semper aenean at amet pellentesque ornare sodales. Id fermentum lorem dignissim urna pharetra.
         </p>

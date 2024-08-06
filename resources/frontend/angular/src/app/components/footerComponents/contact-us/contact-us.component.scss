@@ -1,9 +1,10 @@
 .container-contactUs {
     background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
     width: 100%;
-    height: 100vh;
+    height: 100%;
     text-align: center;
-    overflow-y: auto;
+    // overflow-y: auto;
+    padding: 1rem;
     &::-webkit-scrollbar {
       width: 0px;
     }
@@ -59,3 +60,6 @@ padding: 1rem;
   }
 
 
+.back-btn_go{
+  top: -24px;
+}

@@ -45,7 +45,6 @@ main {
   h1 {
     font-size: 32px;
     font-weight: 700;
-    line-height: 48px;
     text-align: center;
   }
   .toatlcheck-device {
@@ -84,8 +83,8 @@ main {
         right: 0;
       }
       .device_img {
-        width: 169.04px;
-        height: 108px;
+        max-width: 169.04px;
+        max-height: 108px;
         margin: auto;
       }
       .device_imgpar {
@@ -109,9 +108,82 @@ main {
         line-height: 21px;
         letter-spacing: 0em;
         text-align: left;
+        gap: 10px;
+        p{
+          img{
+            width: 16px;
+            height: 16px;
+          }
+        }
         .dev_heading {
           font-weight: 400;
+          text-wrap: nowrap;
         }
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 545px){
+  .remove_Device-Container {
+    padding: 1rem;
+    h1{
+    font-size: 22px;
+    }
+
+    .toatlcheck-device{
+      flex-direction: column;
+      p{
+        line-height: 16px;
+        font-size: 12px;
+      }
+    }
+
+    .noBtn_hover{
+      font-size: 13px !important;
+      padding: 0px 6px 0px 6px;
+      min-height: 36px;
+    }
+  }
+}
+
+@media screen and (max-width: 375px){
+  .remove_Device-Container {
+    padding: 1rem;
+    h1{
+    font-size: 22px;
+    }
+
+    .toatlcheck-device{
+      flex-direction: column;
+    }
+
+    .dots_v{
+      width: 16px;
+      height: 16px;
+    }
+    .devi_top{
+      input{
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+
+
+  .card_device{
+    padding: 5px;
+  }
+
+  .device_img {
+    max-width: 130.04px !important;
+  }
+
+  .devi_bottom {
+    .remove_dev_con {
+      p{
+        font-size: 13px;
       }
     }
   }

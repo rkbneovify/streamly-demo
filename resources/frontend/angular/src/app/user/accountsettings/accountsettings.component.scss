@@ -74,12 +74,17 @@
     height: auto;
   }
   .account_Invoices_container {
-    height: 300px;
+    height: 350px;
     padding-bottom: 1rem;
+    &::-webkit-scrollbar{
+      width: 5px;
+      height: 5px;
+    }
     .invoicesdetails_main {
       margin-top: 1rem;
       background: #ffffff;
       justify-content: start;
+      min-width: 500px;
       .invoicesdetails_main:first-child{
         min-width: 150px;
       }
@@ -98,6 +103,9 @@
           text-align: left;
           flex: 1;
           word-break:break-all;
+          &:first-child{
+            margin-right: 0.8rem;
+          }
         }
         invoicesdetails:first-child{
           width:150px;
@@ -282,6 +290,54 @@
 
 @media screen and  (max-width:654px){
   .account_details_container{
-    padding: 40px 20px 40px 20px !important;
+    padding: 30px 20px 40px 20px !important;
+  }
+
+  .accountSettings_container{
+    h1{
+      font-size: 23px;
+    }
+  }
+
+  .account-heading{
+    font-size: 20px !important;
+  }
+
+  .acoount_user_email{
+    p{
+      word-break: break-all;
+
+    }
+  }
+
+  .invoicesdetails_main{
+    .invoicesdetails{
+      p{
+        &:first-child{
+          margin-right: 0.6rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and  (max-width:460px){
+  .accountbtn_container{
+    flex-direction: column !important;
+    button{
+      width: 100% !important;
+      padding-left: 5px !important;
+    }
+  }
+
+  .accountdetails{
+    div{
+      flex-direction: column !important;
+      align-items: start !important;
+      height: auto !important;
+      p{
+        opacity: 0.8;
+      }
+    }
   }
 }

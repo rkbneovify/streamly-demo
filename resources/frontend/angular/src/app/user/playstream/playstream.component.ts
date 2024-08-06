@@ -10,10 +10,11 @@ import { CrudService } from '../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import * as dashjs from 'dashjs';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-playstream',
   standalone: true,
-  imports: [NgFor,DatePipe,NgIf],
+  imports: [NgFor,DatePipe,NgIf,FormsModule],
   templateUrl: './playstream.component.html',
   styleUrl: './playstream.component.scss',
 })
@@ -24,7 +25,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   tokenkey: any;
   Bearer_token: any;
   channelData:any;
-  liveCurrentTime:any;
 
   constructor(private crud: CrudService,private router:Router) {
     this.playerId = localStorage.getItem('playerId');
@@ -37,12 +37,35 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.playerDash();
     this.getPlayerData();
-
-    setInterval(()=>{
-      this.liveCurrentTime += 10
-    },1000)
   }
 
+  // Method to convert a date to the specified timezone
+  convertTZ(date: any, tzString = Intl.DateTimeFormat().resolvedOptions().timeZone): Date {
+    return new Date(new Date(date).toLocaleString("en-US", { timeZone: tzString }));
+  }
+
+  // Method to format time
+  formatTime(timeStr: any): string {
+    // Extract the current date
+    const currentDate = new Date();
+    // Combine with the provided time
+    const dateString = `${currentDate.getUTCFullYear()}-${(currentDate.getUTCMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${currentDate.getUTCDate().toString().padStart(2, "0")} ${timeStr} +0000`;
+
+    // Convert the combined date string to the local timezone
+    const localDate = this.convertTZ(dateString);
+    // Extract hours and minutes
+    const hours = localDate.getHours();
+    const minutes = localDate.getMinutes();
+
+    // Create a new date object with the extracted time
+    const formattedDate = new Date();
+    formattedDate.setHours(hours, minutes);
+
+    // Return the formatted time string
+    return formattedDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  }
 
   playerDash(){
     this.getDRMKeys().subscribe((response:any) => {
@@ -53,7 +76,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         // var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
         // controlbar.initialize();
         player.initialize(this.videoPlayer.nativeElement,this.playerId, true)
-
+        this.videoPlayer.nativeElement.volume = this.volume;
         // player.updateSettings({
         //   streaming: {
         //     utcSynchronization: {
@@ -83,6 +106,38 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
 
     });
+  }
+
+  togglePlayPause() {
+    if (this.videoPlayer.nativeElement.paused) {
+      this.videoPlayer.nativeElement.play();
+    } else {
+      this.videoPlayer.nativeElement.pause();
+    }
+  }
+
+  toggleMute() {
+    this.videoPlayer.nativeElement.muted = !this.videoPlayer.nativeElement.muted;
+  }
+
+  toggleFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      this.videoPlayer.nativeElement.requestFullscreen();
+    }
+  }
+
+  volume: number = 1; // Default volume
+  changeVolume(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.volume = parseFloat(input.value);
+    this.videoPlayer.nativeElement.volume = this.volume;
+    if (this.volume === 0) {
+      this.videoPlayer.nativeElement.muted = true;
+    } else {
+      this.videoPlayer.nativeElement.muted = false;
+    }
   }
 
   showRecommendedChannels(playerURL:string,channelID:any){

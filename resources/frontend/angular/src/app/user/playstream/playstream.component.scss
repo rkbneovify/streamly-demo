@@ -1,11 +1,11 @@
 .play_container_top {
   .playstream_1 {
     video {
-      width: -webkit-fill-available !important;
+      width: 100% !important;
       height: 450.61px;
     }
     .vjs-big-play-centered {
-      width: -webkit-fill-available !important;
+      width: 100% !important;
       height: 450.61px;
     }
   }
@@ -207,3 +207,29 @@
       }
     }
   }
+
+@media screen and (max-width: 992px){
+  .play_container_top {
+    .playstream_1 {
+      video {
+        height: auto !important;
+      }
+      .vjs-big-play-centered {
+        height: auto !important;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 475px){
+  .play_btn_container_1{
+    flex-direction: column;
+    .playbtn_hd{
+      span{
+        font-size: 12px !important;
+      }
+    }
+  }
+}
+
+// play_btn_container_1

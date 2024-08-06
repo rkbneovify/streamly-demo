@@ -1,7 +1,7 @@
 
 <div class="container-contactUs">
-    <div class="main-contactUs">
-      <div class="main-term-text mt-3 position-relative">
+    <div class="main-contactUs" *ngIf="showbackbtn">
+      <div class="main-term-text mt-3 position-relative" >
         <div class="position-absolute d-flex back-btn_go" (click)="goBack()">
             <div>
                 <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="">
