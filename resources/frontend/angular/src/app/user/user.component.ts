@@ -98,7 +98,15 @@ export class UserComponent implements OnInit {
       console.log('helllo');
       this.submenu = false;
     }
+
+    const isSearchfalse = target.classList.contains('.submenu1') || target.classList.contains('.submenu2') || target.classList.contains('.submenu3') ;
+    console.log(isSearchfalse);
+    if(isSearchfalse){
+      this.searchTerm = '';
+      console.log('Search False ');
+    }
   }
+
 
   toggleSidebar(): void {
     this.isExpanded = !this.isExpanded;
@@ -173,6 +181,11 @@ export class UserComponent implements OnInit {
 
   onSearch(searchTerm: any): void {
     this.searchSubject.next(searchTerm.value);
+    if(searchTerm){
+      this.searchShow = true;
+    }else{
+      this.searchShow = false;
+    }
   }
 
   performSearch(searchTerm: string): void {

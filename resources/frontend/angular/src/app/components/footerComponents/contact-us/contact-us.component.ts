@@ -30,7 +30,7 @@
 // }
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
 import { CrudService } from '../../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpHeaders } from '@angular/common/http';
@@ -38,12 +38,13 @@ import { HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,NgIf],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.scss'
 })
 export class ContactUsComponent {
   contactForm: FormGroup;
+  showbackbtn:boolean = true;
 
   constructor(private location: Location, private crud: CrudService, private fb: FormBuilder,private toast:ToastrService) {
     this.contactForm = this.fb.group({
@@ -51,6 +52,12 @@ export class ContactUsComponent {
       email: ['', [Validators.required, Validators.email]],
       message: ['', Validators.required]
     });
+
+    if(localStorage.getItem('token')){
+      this.showbackbtn = false;
+    }else{
+      this.showbackbtn = true
+    }
   }
 
   goBack(): void {

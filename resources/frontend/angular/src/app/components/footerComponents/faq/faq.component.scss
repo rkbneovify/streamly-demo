@@ -18,7 +18,7 @@
       font-family: Poppins;
       font-size: 36px;
       font-weight: 700;
-      line-height: 54px;
+      // line-height: 54px;
       color: #ffffff;
     }
     p {
@@ -44,7 +44,7 @@
     font-family: Poppins;
     font-size: 20px;
     font-weight: 700;
-    line-height: 30px;
+    // line-height: 30px;
     text-align: left;
     color: #ffffff;
     cursor: pointer;
@@ -74,9 +74,78 @@
       font-family: Poppins;
       font-size: 18px;
       font-weight: 500;
-      line-height: 27px;
+      // line-height: 27px;
       text-align: left;
       color: #FFFFFF;
+    }
+  }
+}
+
+@media screen and (max-width: 592px) {
+  .main-term-text{
+    padding: 0 1.5rem !important;
+  }
+  .main-faq {
+    .main-term-text {
+      h3 {
+        font-size: 26px;
+      }
+      p {
+        font-size: 18px;
+        line-height: 22px;
+        text-align: justify;
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 434px) {
+  .main-faq {
+    .main-term-text {
+      h3 {
+        font-size: 22px;
+      }
+      p{
+        font-size: 12px;
+      }
+    }
+  }
+
+  .main-term-text{
+    padding: 0 0.5rem !important;
+  }
+
+  .container-quesAns {
+    padding: 16px 0px 16px 0px;
+    p{
+      font-size: 13px !important;
+    }
+  }
+
+  .container-question{
+    p{
+      font-size: 16px;      
+    }
+  }
+
+  .main-faq {
+    .main-term-text {
+      h3 {
+        font-size: 26px;
+      }
+    }
+  }
+}
+
+
+
+@media screen and (max-width: 365px){
+  .main-faq {
+    .main-term-text {
+      h3 {
+        font-size: 16px;
+      }
     }
   }
 }

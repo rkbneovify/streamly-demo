@@ -1,7 +1,7 @@
 .container-helpSupport {
   background: linear-gradient(152.73deg, #007fed -11.49%, #002749 96.63%);
   width: 100%;
-  height: 100vh;
+  height: 100%;
   text-align: center;
 
   .helpSupport-img {
@@ -41,6 +41,38 @@
       font-weight: 500;
       line-height: 30px;
       color: #FFFFFF;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .main-tel-mail {
+    flex-direction: column;
+    align-items: center;
+    .tel,
+    .mail {
+      max-width: 400px;
+      width: 100% !important;
+      gap: 12px !important;
+      height: 115px !important;
+    }
+    .tel-img {
+      text-align: -webkit-center;
+    }
+    p {
+      font-size: 14px !important;
+    }
+
+    .mail{
+      p{
+        word-break: break-all;
+      }
+    }
+  }
+
+  .main-help-text{
+    p{
+      font-size: 14px !important;
     }
   }
 }

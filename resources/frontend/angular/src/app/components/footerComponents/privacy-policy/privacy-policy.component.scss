@@ -16,7 +16,7 @@
       font-family: Poppins;
       font-size: 30px;
       font-weight: 700;
-      line-height: 54px;
+      // line-height: 54px;
       color: #ffffff;
       text-transform: capitalize;
     }
@@ -24,11 +24,55 @@
       font-family: Poppins;
       font-size: 18px;
       font-weight: 500;
-      line-height: 27px;
+      // line-height: 27px;
       text-align: justify;
       color: #ffffff;
       max-width: 950px;
       margin: auto;
     }
+  }
+}
+
+
+.back-btn_go{
+  top: -7px;
+  left: 5px;
+}
+
+.ptbtn{
+  padding-top: 14px;
+}
+
+@media screen and (max-width: 554px) {
+  .main-term-text{
+    padding: 0 1.5rem !important;
+  }
+
+  .main-termCond {
+    .main-term-text {
+      h3 {
+        font-size: 26px;
+      }
+      .ptbtn{
+        padding-top: 14px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 434px) {
+  .main-pricacy {
+    .main-term-text {
+      h3 {
+        font-size: 22px;
+      }
+      p{
+        font-size: 12px;
+      }
+    }
+  }
+
+  .main-term-text{
+    padding: 0 0.5rem !important;
   }
 }

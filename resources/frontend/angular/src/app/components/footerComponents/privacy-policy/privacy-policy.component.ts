@@ -1,16 +1,18 @@
-import { Location, NgFor, NgIf } from '@angular/common';
+import { Location, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../../services/crud.service';
 @Component({
   selector: 'app-privacy-policy',
   standalone: true,
-  imports: [NgFor,NgIf],
+  imports: [NgFor,NgIf,NgClass],
   templateUrl: './privacy-policy.component.html',
   styleUrl: './privacy-policy.component.scss'
 })
 export class PrivacyPolicyComponent implements OnInit{
   privacyPolicyData:any;
   title:string;
+  showbackbtn:boolean = true;
+
   constructor(private location:Location,private apiService:CrudService){}
   goBack(): void {
     this.location.back();
@@ -18,6 +20,11 @@ export class PrivacyPolicyComponent implements OnInit{
 
   ngOnInit(): void {
     this.getPrivacyP();
+    if(localStorage.getItem('token')){
+      this.showbackbtn = false;
+    }else{
+      this.showbackbtn = true
+    }
   }
 
 

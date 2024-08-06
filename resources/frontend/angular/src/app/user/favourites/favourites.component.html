@@ -1,15 +1,9 @@
-<div class="landing_carousel_section2 mt-5">
-  <div *ngIf="favListData?.length" class="landing_carousel_section2_top">
+<div class="landing_carousel_section2 mt-5" *ngIf="favListData?.length">
+  <div class="landing_carousel_section2_top">
     Favourite<span class="pointer"> See More >></span>
   </div>
-  <!-- <div class="landing_carousel_section2_bottom mt-3 d-flex">
-            <div class="card_page" *ngFor="let data of [1,2,3,4,5,6,7,8,9,10]">
-                <img src="../../assets/dummy-img/mvf2.png" alt="">
-            </div>
-        </div> -->
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of favListData">
-      <!-- <img src="../../../../assets/dummy-img/mvf2.png" alt=""> -->
       <img
         loading="lazy"
         *ngIf="item.image"
@@ -20,13 +14,6 @@
         alt=""
       />
       <p class="no-img" *ngIf="!item.image">No Image</p>
-
-      <!-- <img [src]="item.logo" alt=""> -->
-      <!-- <img *ngIf="item?.gracenote_data?.assets?.asset?.length" [src]="item?.prgSvcId? 'https://demo.tmsimg.com/'+item?.gracenote_data?.assets?.asset[0].URI :item.logo " alt=""> -->
-
-      <!-- <img *ngIf="!item?.gracenote_data?.assets?.asset?.length || !item?.prgSvcId" [src]="item?.logo" alt=""> -->
-      <!-- <img *ngIf="!item?.prgSvcId" [src]="item.logo" alt=""> -->
-
       <div class="card_content">
         <div class="card_content_text1 d-flex justify-content-between">
           <div
@@ -40,7 +27,6 @@
             />
             <p class="d-flex flex-column">
               Play
-              <!-- <span>S1 E1</span> -->
             </p>
           </div>
           <div class="d-flex gap-2">
@@ -82,6 +68,7 @@
   <div class="landing_carousel_section2_top">
     Recent <span class="pointer"> See More >></span>
   </div>
+
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of recentsPlayData">
       <img
@@ -107,13 +94,9 @@
             />
             <p class="d-flex flex-column">
               Play
-              <!-- <span>S1 E1</span> -->
             </p>
           </div>
           <div class="d-flex gap-2">
-            <!-- <div class="rounded-circle overflow-hidden" (click)="toggleFavorite(item.id)"><img class="rounded-circle" src="../../../assets/dummy-img/heart-circle.svg" alt="" 
-                                [class.favorite]="isFavorite(item.id)"></div> -->
-
             <svg
               [title]="'favorite'"
               class="mt-2 me-2"
@@ -155,6 +138,7 @@
     </div>
   </div>
 </div>
+
 <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>
 </div>

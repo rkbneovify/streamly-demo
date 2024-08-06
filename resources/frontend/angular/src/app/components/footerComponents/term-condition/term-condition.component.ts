@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../../services/crud.service';
-import { Location, NgFor } from '@angular/common';
+import { Location, NgFor, NgIf ,NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-term-condition',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor,NgIf,NgClass],
   templateUrl: './term-condition.component.html',
   styleUrl: './term-condition.component.scss'
 })
 export class TermConditionComponent implements OnInit{
   termsOfUseData:any;
   title:string;
+  showbackbtn:boolean = true;
   constructor(private location:Location,private apiService:CrudService){}
   goBack(): void {
     this.location.back();
@@ -19,6 +20,12 @@ export class TermConditionComponent implements OnInit{
 
   ngOnInit(): void {
     this.getTerms();
+
+    if(localStorage.getItem('token')){
+      this.showbackbtn = false;
+    }else{
+      this.showbackbtn = true
+    }
   }
 
 
