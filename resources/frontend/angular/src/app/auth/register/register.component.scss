@@ -966,6 +966,10 @@
 }
 .completedTab {
   background: #1ec666 !important;
+  &::after,
+  &::before {
+    background-color:  #1ec666 !important;
+  }
 }
 
 .input_standred .ng-select-container {

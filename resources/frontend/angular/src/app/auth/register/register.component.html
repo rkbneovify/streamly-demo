@@ -16,7 +16,7 @@
   <div class="overflow-auto">
     <div class="progressbar">
       <div class="steps" >
-        <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability',}">
+        <div [ngClass]="{'bullet1':true,'activeTab':selectedTab=='Availability','completedTab':completed>0}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/rs-1.svg" alt="" />
           </span>
@@ -24,7 +24,7 @@
         <p class="text-center">Availability</p>
       </div>
       <div class="steps" >
-        <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification',}">
+        <div [ngClass]="{'bullet2':true,'activeTab':selectedTab=='Verification','completedTab':completed>1}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/verificatoin.svg" alt="" />
           </span>
@@ -32,7 +32,7 @@
         <p class="text-center">Verification</p>
       </div>
       <div class="steps" (click)="selectedTab='Plans'" >
-        <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans',}">
+        <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans','completedTab':completed>2}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
           </span>
@@ -40,7 +40,7 @@
         <p class="text-center">Plans</p>
       </div>
       <div class="steps" >
-        <div [ngClass]="{'bullet4':true,'activeTab':selectedTab=='Terms',}">
+        <div [ngClass]="{'bullet4':true,'activeTab':selectedTab=='Terms','completedTab':completed>3}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/temsanscond.svg" alt="" />
           </span>
@@ -48,7 +48,7 @@
         <p class="text-center">T&C</p>
       </div>
       <div class="steps" (click)="selectedTab='Payment'">
-        <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment',}">
+        <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment','completedTab':completed>4}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/payment.svg" alt="" />
           </span>
@@ -56,7 +56,7 @@
         <p class="text-center">Payment</p>
       </div>
       <div class="steps" >
-        <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation',}">
+        <div [ngClass]="{'bullet6':true,'activeTab':selectedTab=='Confirmation','completedTab':completed>5}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/congrats.svg" alt="" />
           </span>
