@@ -86,6 +86,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   showTiredPlan: boolean = false;
   discount:any=0;
   loading:boolean = false;
+  completed:number = 0;
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -542,6 +543,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.checkoutPlans = data;
             console.log('checkout================>', this.checkoutPlans);
             this.selectedTab = 'Payment';
+            this.completed = 4;
             this.paymentFormDetails
               .get('cardEmail')
               ?.setValue(this.availabilityForm.get('email')?.value);
@@ -566,6 +568,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
+            this.completed = 4;
             // this.initiateCardElement();
             this.paymentFormDetails
               .get('cardEmail')
@@ -630,6 +633,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           if (data) {
             this.getAllThePlans();
             this.selectedTab = 'Plans';
+            this.completed = 2;
           }
         }, 1000);
       },
@@ -708,6 +712,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // resent otp
   resendOtp() {
     this.selectedTab = 'Verification';
+    this.completed = 1;
     const email = this.availabilityForm.get('email')?.value;
     if (email) {
       this.getOtpWithMail(email);
@@ -820,9 +825,11 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   backbutton(data: any) {
     if (data == 'Plans') {
       this.selectedTab = 'Plans';
+      this.completed = 2;
       // this.getAllThePlans();
     } else {
       this.selectedTab = 'Terms';
+      this.completed = 3;
     }
   }
 
@@ -860,6 +867,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.ts.success('Plan Selected');
       console.log('===========>', this.selectedPlan);
       this.selectedTab = 'Terms';
+      this.completed = 3;
     }
   }
 
@@ -1033,6 +1041,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         console.log('resdata ======> ', res);
         this.ts.success(res.message);
         this.selectedTab = 'Confirmation';
+        this.completed = 7;
       },
       error: (err: any) => {
         this.loading = false;
