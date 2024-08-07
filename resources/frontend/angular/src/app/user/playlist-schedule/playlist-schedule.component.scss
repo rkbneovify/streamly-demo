@@ -222,8 +222,10 @@
           padding: 10px;
           flex: 1;
           img {
-            width: 100%;
             height: 60px;
+            object-fit: contain;
+            width: 86px;
+            margin: auto;
           }
 
           .history_ch-play-icon{
@@ -239,7 +241,7 @@
             opacity: 0;
             transition: opacity 400ms ease-in-out;
             img{
-              width: min-content;
+              width:48px;
               height: 48px;
             }
           }
@@ -366,8 +368,8 @@
     width: 0;
   }
   .section1_img {
-    width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    width: 100%;
+    height: 100%;
     overflow-y: inherit;
     border-radius: 10px;
     flex: 1;
@@ -633,7 +635,7 @@
   cursor: pointer;
   img{
     object-fit: contain;
-    width: 100%;
+    width: 40px;
   }
 }
 

@@ -292,7 +292,7 @@ button.btn-count{
 
 nav {
   display: flex;
-  padding: 1rem 5rem;
+  padding: 1rem 1rem;
 
   .navlinks {
     display: flex;
