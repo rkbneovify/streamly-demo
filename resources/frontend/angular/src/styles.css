@@ -503,3 +503,10 @@ input:-webkit-autofill:active{
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+@media screen and (max-width: 392px) {
+  ::-webkit-scrollbar{
+    height: 8px;
+  }
+}

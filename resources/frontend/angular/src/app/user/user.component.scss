@@ -877,4 +877,14 @@ footer .contain:first-child {
   }
 
   // contain
+  @media screen and (max-width: 392px) {  
+    .schedule_Container{
+      
+    }
   
+    .animantiontest{
+      .col-12{
+        padding: 1px !important;
+      }
+    }
+  }  
