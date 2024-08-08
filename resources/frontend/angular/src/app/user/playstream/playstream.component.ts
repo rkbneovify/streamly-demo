@@ -2,6 +2,7 @@ import { DatePipe, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -26,6 +27,15 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   Bearer_token: any;
   channelData:any;
 
+  // video
+  @ViewChild('video') videoRef: ElementRef<HTMLVideoElement>;
+  @ViewChild('customControls') customControlsRef: ElementRef<HTMLDivElement>;
+  @ViewChild('videoContainer') videoContainerRef: ElementRef<HTMLDivElement>;
+  playPauseText: string = 'Play';
+  muteText: string = 'Mute';
+  liveText: string = 'Live';
+  progress: number = 0;
+
   constructor(private crud: CrudService,private router:Router) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
@@ -38,6 +48,80 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     this.playerDash();
     this.getPlayerData();
   }
+
+// ======  video player cusmtom Start  =======
+
+togglePlayPause(): void {
+  const video = this.videoRef.nativeElement;
+  if (video.paused) {
+    video.play();
+    this.playPauseText = 'Pause';
+    this.liveText = 'Live';
+  } else {
+    video.pause();
+    this.playPauseText = 'Play';
+    this.liveText = 'Go Live';
+  }
+}
+
+toggleMute(): void {
+  const video = this.videoRef.nativeElement;
+  video.muted = !video.muted;
+  this.muteText = video.muted ? 'Unmute' : 'Mute';
+}
+
+updateProgress(): void {
+  const video = this.videoRef.nativeElement;
+  this.progress = (video.currentTime / video.duration) * 100;
+}
+
+seek(event: MouseEvent): void {
+  const progressBar = this.customControlsRef.nativeElement.querySelector('.progress-bar');
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const newTime = (clickX / rect.width) * this.videoRef.nativeElement.duration;
+  this.videoRef.nativeElement.currentTime = newTime;
+}
+
+toggleFullscreen(): void {
+  const videoContainer = this.videoContainerRef.nativeElement;
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    if (videoContainer.requestFullscreen) {
+      videoContainer.requestFullscreen();
+    }
+    //  else if (videoContainer.webkitRequestFullscreen) {
+    //   videoContainer.webkitRequestFullscreen();
+    // } else if (videoContainer.mozRequestFullScreen) {
+    //   videoContainer.mozRequestFullScreen();
+    // } else if (videoContainer.msRequestFullscreen) {
+    //   videoContainer.msRequestFullscreen();
+    // }
+  }
+}
+
+goLive(): void {
+  const video = this.videoRef.nativeElement;
+  video.currentTime = video.duration;
+  video.play();
+  this.playPauseText = 'Pause';
+  this.liveText = 'Live';
+}
+
+@HostListener('document:fullscreenchange')
+@HostListener('document:webkitfullscreenchange')
+@HostListener('document:mozfullscreenchange')
+@HostListener('document:msfullscreenchange')
+onFullscreenChange(): void {
+  if (document.fullscreenElement) {
+    this.customControlsRef.nativeElement.style.display = 'flex';
+  } else {
+    this.customControlsRef.nativeElement.style.display = 'none';
+  }
+}
+
+// ======  Video player custom end   ========
 
   // Method to convert a date to the specified timezone
   convertTZ(date: any, tzString = Intl.DateTimeFormat().resolvedOptions().timeZone): Date {
@@ -76,7 +160,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         // var controlbar = new ControlBar(player); //Player is instance of Dash.js MediaPlayer;
         // controlbar.initialize();
         player.initialize(this.videoPlayer.nativeElement,this.playerId, true)
-        this.videoPlayer.nativeElement.volume = this.volume;
+        // this.videoPlayer.nativeElement.volume = this.volume;
         // player.updateSettings({
         //   streaming: {
         //     utcSynchronization: {
@@ -108,37 +192,37 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  togglePlayPause() {
-    if (this.videoPlayer.nativeElement.paused) {
-      this.videoPlayer.nativeElement.play();
-    } else {
-      this.videoPlayer.nativeElement.pause();
-    }
-  }
+  // togglePlayPause() {
+  //   if (this.videoPlayer.nativeElement.paused) {
+  //     this.videoPlayer.nativeElement.play();
+  //   } else {
+  //     this.videoPlayer.nativeElement.pause();
+  //   }
+  // }
 
-  toggleMute() {
-    this.videoPlayer.nativeElement.muted = !this.videoPlayer.nativeElement.muted;
-  }
+  // toggleMute() {
+  //   this.videoPlayer.nativeElement.muted = !this.videoPlayer.nativeElement.muted;
+  // }
 
-  toggleFullscreen() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      this.videoPlayer.nativeElement.requestFullscreen();
-    }
-  }
+  // toggleFullscreen() {
+  //   if (document.fullscreenElement) {
+  //     document.exitFullscreen();
+  //   } else {
+  //     this.videoPlayer.nativeElement.requestFullscreen();
+  //   }
+  // }
 
-  volume: number = 1; // Default volume
-  changeVolume(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.volume = parseFloat(input.value);
-    this.videoPlayer.nativeElement.volume = this.volume;
-    if (this.volume === 0) {
-      this.videoPlayer.nativeElement.muted = true;
-    } else {
-      this.videoPlayer.nativeElement.muted = false;
-    }
-  }
+  // volume: number = 1; // Default volume
+  // changeVolume(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   this.volume = parseFloat(input.value);
+  //   this.videoPlayer.nativeElement.volume = this.volume;
+  //   if (this.volume === 0) {
+  //     this.videoPlayer.nativeElement.muted = true;
+  //   } else {
+  //     this.videoPlayer.nativeElement.muted = false;
+  //   }
+  // }
 
   showRecommendedChannels(playerURL:string,channelID:any){
     this.playerId = playerURL;
