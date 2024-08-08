@@ -231,5 +231,83 @@
     }
   }
 }
+video::-webkit-media-controls-timeline {
+  display: none !important;
+}
 
+// video::-webkit-media-controls-timeline {
+//   display: none !important;
+// }
+
+video::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
 // play_btn_container_1
+
+
+#videoContainer {
+  position: relative;
+}
+#changeVideo {
+  position: absolute;
+  // top: 10px;
+  bottom: 16px;
+  left: 48px;
+  width: 25px;
+  height: 25px;
+  // opacity: 0;
+  transition: opacity .3s ease;
+  cursor: pointer;
+  
+  /* Additional styles just to increase visual appeal */
+  border-radius: 50%;
+  // background: #FFFFFFDD;
+  color: red;
+  font-weight: bold;
+  line-height: 25px;
+  text-align: center;
+  /* End */
+}
+
+/* On hovering the video, show the button */
+video:hover~#changeVideo {
+  opacity: 1;
+}
+
+#changeVideo:hover {
+  opacity: 1;
+}
+
+
+.custom-controls {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.custom-button {
+  background: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.progress-bar {
+  width: 100%;
+  background: #555;
+  height: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.progress {
+  width: 0;
+  height: 100%;
+  background: #fff;
+}
