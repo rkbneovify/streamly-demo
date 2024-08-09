@@ -91,11 +91,13 @@ export class LoginComponent implements OnInit {
           if (err.status == 479) {
             this.loading = false;
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+            console.log('479 ===>' ,formData);
+            localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.ts.error(err.error.message,null, {
               closeButton: true, // Enable close button
-              disableTimeOut: true, // Disable auto close
               tapToDismiss: false, // Disable dismiss on click
+              timeOut:3000
             }
               );
 
@@ -108,7 +110,6 @@ export class LoginComponent implements OnInit {
 
           if(err.status == 429){
             this.loading = false;
-            console.log('===============move to login')
             this.router.navigate(['user']);
 
           }
