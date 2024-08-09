@@ -615,4 +615,69 @@
       background-position: top;
       right: 0;
     }
+
+    .centered-content{
+      p:first-child{
+        font-size: 14px;
+      }
+      svg{
+        height: 28px;
+      }
+      p:last-child {
+        font-size: 1rem !important;
+      }
+    }
+  }
+
+  @media screen and (max-width: 660px) {
+    .centered-content{
+      p:last-child {
+        font-size: 0.8rem !important;
+      }
+    }
+
+    .qualities{
+      h2{
+        font-size: 1.2rem;
+      }
+
+      .contain{
+        .btn{
+          padding-inline: 1rem;
+        }
+      }
+
+      main{
+        header{
+          .carousel_height{
+            #carouselExampleControls{
+              height: 250px !important;
+              background-color: green;
+            }
+          }          
+        }
+      }
+    }
+
+    .channels{
+      .contain{
+        h2{
+          font-size: 1.5rem;
+        }
+
+        .channel-types{
+          padding-bottom: 0.5rem;
+          li{
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 475px) {
+    .centered-content{
+      p:last-child {
+        font-size: 0.6rem !important;
+      }
+    }
   }
