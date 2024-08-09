@@ -348,7 +348,7 @@ button.btn {
 
   .plans_other{
     .col_2_s_3{
-      padding: 30px 30px 54px !important;
+      padding: 30px 50px 54px !important;
       gap: 18px !important;
       .otherPlansDetails{
         overflow-x: auto;
@@ -413,6 +413,12 @@ button.btn {
       p{
         line-height: 14px !important;
         font-size: 13px !important;
+      }
+    }
+
+    .plans_other{
+      .col_2_s_3{
+        padding: 30px 30px 54px !important;
       }
     }
 }
