@@ -17,6 +17,7 @@ import {AuthService} from '../../services/authService/authservice.service'
 })
 export class LoginComponent implements OnInit {
   loginFormWithEmail!: FormGroup;
+  loginPasscodeForm!:FormGroup
   selectedTab: string = 'loginwithpassword';
   showPassword: boolean = false;
   showPasscode: boolean = false;
@@ -27,6 +28,10 @@ export class LoginComponent implements OnInit {
     this.loginFormWithEmail = this.fb.group({
       email: ['', [Validators.required, Validators.email,Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
+    this.loginPasscodeForm = this.fb.group({
+      passcode: ['', [Validators.required, Validators.minLength(6)]],
     });
 
     console.log(this.loginFormWithEmail);
@@ -91,11 +96,13 @@ export class LoginComponent implements OnInit {
           if (err.status == 479) {
             this.loading = false;
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+            console.log('479 ===>' ,formData);
+            localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.ts.error(err.error.message,null, {
               closeButton: true, // Enable close button
-              disableTimeOut: true, // Disable auto close
               tapToDismiss: false, // Disable dismiss on click
+              timeOut:3000
             }
               );
 
@@ -108,12 +115,19 @@ export class LoginComponent implements OnInit {
 
           if(err.status == 429){
             this.loading = false;
-            console.log('===============move to login')
             this.router.navigate(['user']);
 
           }
         }
       });
+    }
+  }
+
+  onSubmitpasscode(){
+    if (this.loginPasscodeForm.valid) {
+      console.log('Form Submitted', this.loginPasscodeForm.value);
+    } else {
+      console.log('Form Invalid');
     }
   }
 
