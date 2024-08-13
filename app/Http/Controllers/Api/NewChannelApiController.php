@@ -117,7 +117,7 @@ class NewChannelApiController extends Controller
             $query->where('channels.status', '=', '1');
             $query->where('recent_channel.user_id', '=', JWTAuth::user()->id);
             $query->orderBy('stationName', 'asc');
-            $record = $query->get()->map(function ($channel) {
+            $record = $query->distinct()->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
                 unset($channel->assets);

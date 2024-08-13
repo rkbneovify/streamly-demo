@@ -78,7 +78,8 @@ class APIController extends Controller
         $response = [
             'success' => true,
             'data' => $data,
-            'message' => 'User retrieved successfully.', 'response_code' => 200,
+            'message' => 'User retrieved successfully.',
+            'response_code' => 200,
         ];
 
         return response()->json($response, 200);
@@ -207,7 +208,8 @@ class APIController extends Controller
                 $response = [
                     'success' => false,
                     'data' => 'Empty',
-                    'message' => 'access token not found.', 'response_code' => 404,
+                    'message' => 'access token not found.',
+                    'response_code' => 404,
                 ];
                 return response()->json($response, 404);
             } else {
@@ -468,7 +470,8 @@ class APIController extends Controller
             $response = [
                 'success' => true,
                 'data' => 'Channel id ' . $channelid . ' added',
-                'message' => 'Successfully added to favourite channel', 'response_code' => 200,
+                'message' => 'Successfully added to favourite channel',
+                'response_code' => 200,
             ];
             return response()->json($response, 200);
         } catch (Exception $exception) {
@@ -498,7 +501,8 @@ class APIController extends Controller
             $response = [
                 'success' => true,
                 'data' => 'Channel id ' . $channelid . ' removed',
-                'message' => 'Successfully removed from favourite channel list', 'response_code' => 200,
+                'message' => 'Successfully removed from favourite channel list',
+                'response_code' => 200,
             ];
             return response()->json($response, 200);
         } catch (Exception $exception) {
@@ -546,7 +550,8 @@ class APIController extends Controller
             $response = [
                 'success' => true,
                 'data' => $myFavorites->unique('id'),
-                'message' => 'My favourites.', 'response_code' => 200,
+                'message' => 'My favourites.',
+                'response_code' => 200,
             ];
             return response()->json($response, 200);
         } catch (Exception $exception) {
@@ -587,12 +592,9 @@ class APIController extends Controller
                 $model->updateOrCreate(
                     [
                         'channels_id' => $value,
-                        'user_id'  => $id,
-                        'updated_at' => $now
+                        'user_id' => $id
                     ],
                     [
-                        'channels_id' => $value,
-                        'user_id' => $id,
                         'created_at' => $now,
                         'updated_at' => $now
                     ]
@@ -605,7 +607,8 @@ class APIController extends Controller
             $response = [
                 'success' => true,
                 'data' => $recentschannel,
-                'message' => 'Added to recent', 'response_code' => 200,
+                'message' => 'Added to recent',
+                'response_code' => 200,
             ];
 
             return response()->json($response, 200);
@@ -659,7 +662,8 @@ class APIController extends Controller
             $response = [
                 'success' => true,
                 'data' => $recentschannel,
-                'message' => 'My Recent.', 'response_code' => 200,
+                'message' => 'My Recent.',
+                'response_code' => 200,
             ];
             return response()->json($response, 200);
         } catch (Exception $exception) {
@@ -684,7 +688,8 @@ class APIController extends Controller
         $response = [
             'success' => true,
             'data' => $imagePath,
-            'message' => 'http://streamlytv.com/', 'response_code' => 200,
+            'message' => 'http://streamlytv.com/',
+            'response_code' => 200,
         ];
         return response()->json($response, 200);
     }
