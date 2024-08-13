@@ -129,7 +129,7 @@
       </div>
   
       <div class="landing_carousel_section2 mt-5" *ngFor="let list of genre_Data">
-          <div class="landing_carousel_section2_top">{{list?.genre_name}} <span class="pointer" [routerLink]="'/user/channels/'+list.genre_name">See More >></span></div>
+          <div class="landing_carousel_section2_top">{{list?.genre_name}} <span *ngIf="list?.channels?.length > 6" class="pointer" [routerLink]="'/user/channels/'+list.genre_name">See More >></span></div>
           <div class="landing_carousel_section2_bottom mt-3 d-flex" >
               <div class="card_page" *ngFor="let data of list?.channels" >
                   <!-- <img loading="lazy" *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt=""> -->
