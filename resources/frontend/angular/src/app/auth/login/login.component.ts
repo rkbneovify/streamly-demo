@@ -17,6 +17,7 @@ import {AuthService} from '../../services/authService/authservice.service'
 })
 export class LoginComponent implements OnInit {
   loginFormWithEmail!: FormGroup;
+  loginPasscodeForm!:FormGroup
   selectedTab: string = 'loginwithpassword';
   showPassword: boolean = false;
   showPasscode: boolean = false;
@@ -27,6 +28,10 @@ export class LoginComponent implements OnInit {
     this.loginFormWithEmail = this.fb.group({
       email: ['', [Validators.required, Validators.email,Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+
+    this.loginPasscodeForm = this.fb.group({
+      passcode: ['', [Validators.required, Validators.minLength(6)]],
     });
 
     console.log(this.loginFormWithEmail);
@@ -115,6 +120,14 @@ export class LoginComponent implements OnInit {
           }
         }
       });
+    }
+  }
+
+  onSubmitpasscode(){
+    if (this.loginPasscodeForm.valid) {
+      console.log('Form Submitted', this.loginPasscodeForm.value);
+    } else {
+      console.log('Form Invalid');
     }
   }
 
