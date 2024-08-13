@@ -251,6 +251,8 @@ total_price:any = 0;
       next: (res: any) => {
           this.router.navigate(['user/plan']);
           this.ts.success('subscription cancel successfully');
+          this.deviceInfo.subscribed = false;
+          localStorage.setItem('deviceInfo',JSON.stringify(this.deviceInfo));
           this.isLoading = false;
       },
       error: err => {this.ts.error(err.error?.error);this.isLoading = false;}

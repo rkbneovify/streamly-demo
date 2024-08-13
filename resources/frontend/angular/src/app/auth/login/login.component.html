@@ -39,7 +39,12 @@
         <h1>Log In</h1>
         <p class="info">Enter the neccessary information to Log In</p>
         <p class="d-flex pointer" routerLink="/">
-          <img src="../../../assets/dummy-img/arrow.svg" alt="" loading="lazy" /> Back
+          <img
+            src="../../../assets/dummy-img/arrow.svg"
+            alt=""
+            loading="lazy"
+          />
+          Back
         </p>
       </header>
 
@@ -63,11 +68,22 @@
               formControlName="email"
               required
             />
-                          <!-- Error message -->
-              <div *ngIf="loginFormWithEmail.get('email').touched && loginFormWithEmail.get('email').invalid" class="text-danger">
-                <small *ngIf="loginFormWithEmail.get('email').errors?.['required']">Email is required.</small>
-                <small *ngIf="loginFormWithEmail.get('email').errors?.['pattern']">Email is not valid.</small>
-              </div>
+            <!-- Error message -->
+            <div
+              *ngIf="
+                loginFormWithEmail.get('email').touched &&
+                loginFormWithEmail.get('email').invalid
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="loginFormWithEmail.get('email').errors?.['required']"
+                >Email is required.</small
+              >
+              <small *ngIf="loginFormWithEmail.get('email').errors?.['pattern']"
+                >Email is not valid.</small
+              >
+            </div>
           </div>
 
           <div class="login-field">
@@ -83,29 +99,73 @@
                 minlength="6"
                 required
               />
-              <img *ngIf="showPassword" class="pointer" (click)="showPassword=!showPassword" src="../../../assets/dummy-img/eye.svg" alt="" loading="lazy"/>
+              <img
+                *ngIf="showPassword"
+                class="pointer"
+                (click)="showPassword = !showPassword"
+                src="../../../assets/dummy-img/eye.svg"
+                alt=""
+                loading="lazy"
+              />
               <svg
-              *ngIf="!showPassword" (click)="showPassword=!showPassword"
-               xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash pointer" viewBox="0 0 16 16">
-                <path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
-                <path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
-                <path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+                *ngIf="!showPassword"
+                (click)="showPassword = !showPassword"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-eye-slash pointer"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+                />
+                <path
+                  d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+                />
+                <path
+                  d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+                />
               </svg>
             </div>
-              <!-- Error message -->
-                <div *ngIf="loginFormWithEmail.get('password').touched && loginFormWithEmail.get('password').invalid" class="text-danger">
-                  <small *ngIf="loginFormWithEmail.get('password').errors?.['required']">Password is required.</small>
-                  <small *ngIf="loginFormWithEmail.get('password').errors?.['minlength']">Password must be at least 6 characters long.</small>
-                </div>
-            <p class="login-fpass mt-2 pointer" routerLink="/auth/forget-password">Forgot Password ?</p>
+            <!-- Error message -->
+            <div
+              *ngIf="
+                loginFormWithEmail.get('password').touched &&
+                loginFormWithEmail.get('password').invalid
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="loginFormWithEmail.get('password').errors?.['required']"
+                >Password is required.</small
+              >
+              <small
+                *ngIf="loginFormWithEmail.get('password').errors?.['minlength']"
+                >Password must be at least 6 characters long.</small
+              >
+            </div>
+            <p
+              class="login-fpass mt-2 pointer"
+              routerLink="/auth/forget-password"
+            >
+              Forgot Password ?
+            </p>
           </div>
           <div class="login-field">
-            <button [class.spinner]="loading" 
-            [disabled]="loading"
-            [ngClass]="{'btn_2 position-relative':true,'mb-2':true,'btn-bg-gold':loginFormWithEmail.valid}" 
-            type="submit" placeholder=""> 
-            <span *ngIf="!loading">Log In</span>
-          </button>
+            <button
+              [class.spinner]="loading"
+              [disabled]="loading"
+              [ngClass]="{
+                'btn_2 position-relative': true,
+                'mb-2': true,
+                'btn-bg-gold': loginFormWithEmail.valid
+              }"
+              type="submit"
+              placeholder=""
+            >
+              <span *ngIf="!loading">Log In</span>
+            </button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer ms-2"
@@ -121,6 +181,8 @@
         <!-- ===========================login with passcode start=======================-->
         <form
           *ngIf="selectedTab == 'loginwithpasscode'"
+          [formGroup]="loginPasscodeForm"
+          (ngSubmit)="onSubmitpasscode()"
           class="login-form d-flex flex-column gap-4"
         >
           <div class="login-field">
@@ -131,21 +193,56 @@
               <input
                 id="Passcode"
                 placeholder="Enter Passcode"
-                type="{{showPasscode?'text':'password'}}"
+                type="{{ showPasscode ? 'text' : 'password' }}"
+                formControlName="passcode"
               />
-              <img class="pointer" (click)="showPasscode=!showPasscode" src="../../../assets/dummy-img/eye.svg" alt="" loading="lazy"/>
+              <img
+                *ngIf="showPasscode"
+                class="pointer"
+                (click)="showPasscode = !showPasscode"
+                src="../../../assets/dummy-img/eye.svg"
+                alt=""
+                loading="lazy"
+              />
+              <svg
+                *ngIf="!showPasscode"
+                (click)="showPasscode = !showPasscode"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-eye-slash pointer"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+                />
+                <path
+                  d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+                />
+                <path
+                  d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c-.335.48-.83 1.12-1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+                />
+              </svg>
             </div>
+            <p
+              class="text-danger"
+              *ngIf="
+                loginPasscodeForm.get('passcode')?.touched &&
+                loginPasscodeForm.get('passcode')?.invalid
+              "
+            >
+              Passcode is required.
+            </p>
             <p class="login-fpass mt-2">Forgot Password ?</p>
           </div>
           <div class="login-field">
-            <button class="mb-2 btn_2" type="submit" placeholder="">Log In</button>
+            <button class="mb-2 btn_2" type="submit">Log In</button>
             <p class="login_noac">
-              Don't have an account ?<span
-                class="pointer ms-2"
-                routerLink="/auth/register"
-              >
-                Start Your Trial Now!</span
-              >
+              Don't have an account ?
+              <span class="pointer ms-2" routerLink="/auth/register">
+                Start Your Trial Now!
+              </span>
             </p>
           </div>
         </form>
@@ -157,10 +254,16 @@
           class="login-form d-flex flex-column gap-4"
         >
           <div class="login-field-qrcode">
-            <img src="../../../assets/dummy-img/qr-code.svg" alt="" loading="lazy" />
+            <img
+              src="../../../assets/dummy-img/qr-code.svg"
+              alt=""
+              loading="lazy"
+            />
           </div>
           <div class="login-field">
-            <button class="mb-2 btn_2" type="submit" placeholder="">Log In</button>
+            <button class="mb-2 btn_2" type="submit" placeholder="">
+              Log In
+            </button>
             <p class="login_noac">
               Don't have an account ?<span
                 class="pointer ms-2"
@@ -214,24 +317,36 @@
             (click)="selectedTab = 'loginwithpassword'"
             class="btn btn_2 neutral text-nowrap"
           >
-            <img src="../../../assets/dummy-img/lock.svg" alt="" loading="lazy" /> Log In with
-            Password
+            <img
+              src="../../../assets/dummy-img/lock.svg"
+              alt=""
+              loading="lazy"
+            />
+            Log In with Password
           </button>
           <button
             *ngIf="selectedTab !== 'loginwithpasscode'"
             (click)="selectedTab = 'loginwithpasscode'"
             class="btn neutral btn_pd_310 text-nowrap"
           >
-            <img src="../../../assets/dummy-img/visibility.svg" alt="" loading="lazy"/> Log In
-            with Passcode
+            <img
+              src="../../../assets/dummy-img/visibility.svg"
+              alt=""
+              loading="lazy"
+            />
+            Log In with Passcode
           </button>
           <button
             *ngIf="selectedTab !== 'loginwithqr'"
             (click)="selectedTab = 'loginwithqr'"
             class="btn btn_2 neutral bt-61 text-nowrap"
           >
-            <img src="../../../assets/dummy-img/qrcode.svg" alt="" loading="lazy"/> Log In
-            with QR
+            <img
+              src="../../../assets/dummy-img/qrcode.svg"
+              alt=""
+              loading="lazy"
+            />
+            Log In with QR
           </button>
           <!-- <button
             *ngIf="selectedTab !== 'loginwithzipcode'"
