@@ -260,10 +260,13 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       )
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
-        console.log('API Response:', apiResponse);
-      });
-
-    // this.searchZipTerms
+        if(apiResponse.length == 1 && apiResponse[0].city && apiResponse[0].state){
+          console.log('set==>');
+          this.availabilityForm.get('city')?.setValue(apiResponse[0].city);
+          this.availabilityForm.get('state')?.setValue(apiResponse[0].state);
+        }
+        console.log('API Response:====>', apiResponse ,apiResponse.length == 1, apiResponse[0].city , apiResponse[0].state);
+      }),    // this.searc ,pTerms
     // .pipe(
     //   debounceTime(300),
     //   distinctUntilChanged(), // ignore if next search term is same as previous

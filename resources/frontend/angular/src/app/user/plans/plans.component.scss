@@ -130,7 +130,7 @@ button.btn {
       font-family: Poppins;
       font-size: 40px;
       font-weight: 700;
-      line-height: 60px;
+      // line-height: 60px;
       color: #ffffff;
       margin-bottom: 20px;
     }
@@ -163,10 +163,10 @@ button.btn {
     }
   }
 
-  .plans_categories {
+  .plans_categories1 {
     display: flex;
     justify-content: space-evenly;
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     .col_2_s_3 {
       background-image: url("../../../assets/dummy-img/res_s3.png");
@@ -176,7 +176,7 @@ button.btn {
       gap: 28px;
       background-position: center;
       overflow: hidden;
-      width: 275px;
+      max-width:275px;
       transition: transform 0.5s ease-in-out;
       .col_2_gap {
         gap: 2.5rem;
@@ -270,6 +270,7 @@ button.btn {
 
 .plans_other{
   .col_2_s_3{
+    max-width: 530px !important;
     width: 530px !important;
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -295,7 +296,7 @@ button.btn {
   }
 }
 @media screen and (max-width: 825px) {
-  .plans_categories{
+  .plans_categories1{
     flex-wrap: wrap;
     gap: 5px;
     row-gap: 1rem;
@@ -319,4 +320,105 @@ button.btn {
       row-gap: 0.5em;
     }
   }
+}
+
+
+@media screen and (max-width: 575px) {
+  .main-container{
+    .plans_container{
+      .plans_options{
+        h1{
+          font-size: 25px;
+        }
+
+        .plans_buttons{
+          width: 200px;
+          height: 43px;
+          .plan_btn_1,.plan_btn_2{
+            padding: 8px 0;
+            height: 38px;
+          }
+          .plan_btn_2{
+
+          }
+        }
+      }
+    }
+  }
+
+  .plans_other{
+    .col_2_s_3{
+      padding: 30px 50px 54px !important;
+      gap: 18px !important;
+      .otherPlansDetails{
+        overflow-x: auto;
+        &::-webkit-scrollbar{
+          height: 8px;
+        }
+        .other_plan_tier{
+          min-width: 300px;
+        }
+      }
+    }
+  }
+}
+// col_2_s_3
+
+@media screen and (max-width: 375px) {
+  .main-container{
+    .plans_container{
+      .plans_options{
+        h1{
+        }
+
+        .plans_buttons{
+          width: 185px;
+          .plan_btn_1,.plan_btn_2{
+
+          }
+          .plan_btn_2{
+
+          }
+        }
+      }
+    }
+  }
+
+  .col_2_s_3{
+    .col_2_gap{
+      gap: 1.5rem !important;
+      div{
+        h3{
+          font-size: 16px !important;
+        }
+        p{
+          font-size: 14px !important;
+          span{
+            font-size: 13px !important;
+          }
+        }
+      }
+    }
+  }
+
+  .col_2_subblock{
+    div{
+      div{
+        img{
+          min-width: 20px !important;
+          height: 20px !important;
+      }
+        }
+      }
+      p{
+        line-height: 14px !important;
+        font-size: 13px !important;
+      }
+    }
+
+    .plans_other{
+      .col_2_s_3{
+        padding: 30px 30px 54px !important;
+      }
+    }
 }

@@ -26,7 +26,7 @@
 
     <div
       *ngIf="selectTab == 'basicPlans'"
-      [ngClass]="{ plans_categories: true }"
+      [ngClass]="{ plans_categories1: true }"
     >
       <!-- daily start -->
       <div
@@ -192,12 +192,14 @@
 
     </div>
 
-    <div *ngIf="selectTab == 'otherPlans'" class="plans_categories plans_other">
+    <div *ngIf="selectTab == 'otherPlans'" class="plans_categories1 plans_other mt-0">
       <!-- daily start -->
       <div *ngFor="let data of Tiered_plans" class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
         <div class="col_2_gap pb-4">
           <div class="d-flex flex-column justify-content-between">
             <h3 class="text-center my-3">Tiers 1 Months</h3>
+            
+            <div class="otherPlansDetails">
             <div class="other_plan_tier row my-2">
               <div class="col-4 text-nowrap">Quantity</div>
               <div class="col-4 text-nowrap">Price per unit</div>
@@ -236,6 +238,8 @@
               <div class="col-4 text-nowrap">${{ +tPlans.unit_amount / 100 }}</div>
               <div class="col-4 text-nowrap">${{ +tPlans.flat_amount / 100 }}</div>
             </div>
+          </div>
+
           </div>
         </div>
 
