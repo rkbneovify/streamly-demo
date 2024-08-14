@@ -43,11 +43,11 @@ const routes: Routes = [
       { path: 'connected-device', component: TotalaccountComponent,canActivate: [authguardGuard]  },
       { path: 'subscription-expired', component: SubscriptionExpiredComponent,canActivate: [authguardGuard]  },
       { path: 'payment-subscription', component: SubPaymentComponent,canActivate: [authguardGuard]  },
-      { path: 'channel/all', component: AllChannelComponent },
-      { path: 'channel/news', component: NewsComponent },
-      { path: 'channel/family', component: FamilyComponent },
-      { path: 'channel/comedy', component: ComedyComponent },
-      { path: 'channels/:genreName', component: CommonChannelComponent },
+      { path: 'channel/all', component: AllChannelComponent ,canActivate: [authguardGuard]},
+      { path: 'channel/news', component: NewsComponent ,canActivate: [authguardGuard]},
+      { path: 'channel/family', component: FamilyComponent ,canActivate: [authguardGuard]},
+      { path: 'channel/comedy', component: ComedyComponent ,canActivate: [authguardGuard]},
+      { path: 'channels/:genreName', component: CommonChannelComponent ,canActivate: [authguardGuard] },
       {path:'help-and-support',component:HelpAndSupportComponent},
       {path:'term-condition',component:TermConditionComponent},
       {path:'privacy-policy',component:PrivacyPolicyComponent},
@@ -55,7 +55,7 @@ const routes: Routes = [
       {path:'contact-us',component:ContactUsComponent},
       {path:'report',component:ReportFormComponent},
       {path:'supported-devices',component:SupportedDevicesComponent},
-      {path:'search',component:SearchComponent},
+      {path:'search',component:SearchComponent,canActivate: [authguardGuard]},
     ]
   }
 ];

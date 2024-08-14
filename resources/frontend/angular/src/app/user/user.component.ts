@@ -11,15 +11,28 @@ import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { DurationISOFormatPipe, TruncatePipe } from '../pipe/duration-format.pipe';
+import {
+  DurationISOFormatPipe,
+  TruncatePipe,
+} from '../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [NgClass, NgFor , FormsModule , ScheduleFormatterPipe, NgIf, RouterOutlet, RouterLink, SearchComponent,DurationISOFormatPipe,TruncatePipe],
+  imports: [
+    NgClass,
+    NgFor,
+    FormsModule,
+    ScheduleFormatterPipe,
+    NgIf,
+    RouterOutlet,
+    RouterLink,
+    SearchComponent,
+    DurationISOFormatPipe,
+    TruncatePipe,
+  ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -34,7 +47,8 @@ export class UserComponent implements OnInit {
   searchResults: any[] = [];
   favChannelList: any;
   favoriteChannels: number[] = [];
-  searchTerm:any='';
+  searchTerm: any = '';
+  subscribed: boolean;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -60,8 +74,10 @@ export class UserComponent implements OnInit {
         this.performSearch(searchTerm);
       });
 
-      // get the fav. list 
-     this.getFavoriteList();
+    // get the fav. list
+    this.getFavoriteList();
+    this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
+    console.log('subscribed ==>', this.subscribed);
   }
 
   sideBarAnimation() {
@@ -78,8 +94,7 @@ export class UserComponent implements OnInit {
         });
         this.crud
           .getRequest('auth/channel-sliders', headers)
-          .subscribe((res: any) => {
-          });
+          .subscribe((res: any) => {});
       } catch (error) {
         console.error(error);
       }
@@ -99,14 +114,16 @@ export class UserComponent implements OnInit {
       this.submenu = false;
     }
 
-    const isSearchfalse = target.classList.contains('.submenu1') || target.classList.contains('.submenu2') || target.classList.contains('.submenu3') ;
+    const isSearchfalse =
+      target.classList.contains('.submenu1') ||
+      target.classList.contains('.submenu2') ||
+      target.classList.contains('.submenu3');
     console.log(isSearchfalse);
-    if(isSearchfalse){
+    if (isSearchfalse) {
       this.searchTerm = '';
       console.log('Search False ');
     }
   }
-
 
   toggleSidebar(): void {
     this.isExpanded = !this.isExpanded;
@@ -180,12 +197,13 @@ export class UserComponent implements OnInit {
   }
 
   onSearch(searchTerm: any): void {
-    this.searchSubject.next(searchTerm.value);
-    if(searchTerm){
+    if(this.subscribed)
+      {this.searchSubject.next(searchTerm.value);
+    if (searchTerm) {
       this.searchShow = true;
-    }else{
+    } else {
       this.searchShow = false;
-    }
+    }}
   }
 
   performSearch(searchTerm: string): void {
@@ -196,7 +214,7 @@ export class UserComponent implements OnInit {
 
     const term = {
       search: searchTerm,
-      "typeurl": "mpd"
+      typeurl: 'mpd',
     };
 
     this.crud.postRequest('auth/new-search', term).subscribe({
@@ -239,8 +257,10 @@ export class UserComponent implements OnInit {
 
   // searchShow=!searchShow
   checkData() {
-    if (!this.allChannelDataList.length) {
-      this.get_All_Channels();
+    if (this.subscribed) {
+      if (!this.allChannelDataList.length) {
+        this.get_All_Channels();
+      }
     }
   }
 
@@ -261,20 +281,20 @@ export class UserComponent implements OnInit {
   }
 
   // Fetch favorite list
-getFavoriteList(): void {
+  getFavoriteList(): void {
     const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
     if (storedFavoriteChannels) {
-        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+      this.favoriteChannels = JSON.parse(storedFavoriteChannels);
     } else {
-        // Fetch from API if not found in local storage
-        this.crud.getRequest('auth/my_favorites').subscribe((res: any) => {
-            if (res.response_code === 200) {
-                this.favoriteChannels = res.data.map((channel: any) => channel.id);
-                this.updateFavoriteChannels(); // Update local storage
-            }
-        });
+      // Fetch from API if not found in local storage
+      this.crud.getRequest('auth/my_favorites').subscribe((res: any) => {
+        if (res.response_code === 200) {
+          this.favoriteChannels = res.data.map((channel: any) => channel.id);
+          this.updateFavoriteChannels(); // Update local storage
+        }
+      });
     }
-}
+  }
 
   // Add channel to favorites
   addFavoriteChannel(channelId: number): void {
@@ -317,7 +337,7 @@ getFavoriteList(): void {
   // set player data in local
   setplayerData(channelUrl: string, playerChannelId?: any) {
     localStorage.setItem('playerId', channelUrl);
-    localStorage.setItem('playerChannelId',playerChannelId);
+    localStorage.setItem('playerChannelId', playerChannelId);
     this.router.navigateByUrl('/user/playstream');
     this.searchShow = !this.searchShow;
   }
@@ -325,33 +345,29 @@ getFavoriteList(): void {
   closeSearchData() {
     this.searchShow = !this.searchShow;
     this.allChannelDataList = [];
-    this.searchTerm = ''
-
+    this.searchTerm = '';
   }
 
+  playlist_details_show: boolean = false;
 
-  playlist_details_show:boolean=false;
-
-
-  showPlaylist(){
-    this.playlist_details_show= !this.playlist_details_show;
+  showPlaylist() {
+    this.playlist_details_show = !this.playlist_details_show;
   }
 
-
-    // program-details data 
-    programDetailData:any;
-    getProgramDetailData(tmsId?: string) {
-      const body = {
-        "TMSId": tmsId
-      };
-      this.crud.postRequest('auth/program-details', body).subscribe({
-        next: (res: any) => {
-          this.showPlaylist()
-          this.programDetailData = res.data;
-        },
-        error: (err: any) => {
-          console.error(err);
-        },
-      });
-    }
+  // program-details data
+  programDetailData: any;
+  getProgramDetailData(tmsId?: string) {
+    const body = {
+      TMSId: tmsId,
+    };
+    this.crud.postRequest('auth/program-details', body).subscribe({
+      next: (res: any) => {
+        this.showPlaylist();
+        this.programDetailData = res.data;
+      },
+      error: (err: any) => {
+        console.error(err);
+      },
+    });
+  }
 }
