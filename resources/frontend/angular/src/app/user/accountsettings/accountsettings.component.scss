@@ -321,6 +321,19 @@
   }
 }
 
+.acoount_user_currtimezone{
+  p{
+    svg{
+      top: 0;
+      right: 0;
+    }
+    img{
+      top: 0;
+      right: 0;
+    }
+  }
+}
+
 @media screen and  (max-width:460px){
   .accountbtn_container{
     flex-direction: column !important;
@@ -337,6 +350,17 @@
       height: auto !important;
       p{
         opacity: 0.8;
+      }
+    }
+  }
+
+  .acoount_user_currtimezone{
+    p{
+      svg{
+        right: -100px;
+      }
+      img{
+        right: -100px;
       }
     }
   }

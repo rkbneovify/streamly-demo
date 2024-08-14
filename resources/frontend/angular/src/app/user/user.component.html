@@ -5,17 +5,17 @@
     </div>
     <div class="sidebar_2  flex-column justify-content-between align-items-center mt-5" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
       
-      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('home')" routerLink="/user" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu1.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">Home</p>
       </div>
 
-      <div *ngIf="!showSubMenu" (click)="activeTab='fav'" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('fav')" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu2.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">My Stuff</p>
       </div>
 
-      <div *ngIf="!showSubMenu" (click)="activeTab='playsh'" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('playsh')" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/side_menu3.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">Guide</p>
       </div>
@@ -25,7 +25,7 @@
         <span class="back"> back</span>
       </div> -->
 
-      <div (click)="activeTab='allChannel'"  routerLink="/user/channel/all" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='allChannel'}">
+      <div (click)="changeSideBarTab('allChannel')"  routerLink="/user/channel/all" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='allChannel'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/All.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">All</p>
       </div>
