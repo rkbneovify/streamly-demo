@@ -44,6 +44,8 @@ export class AccountsettingsComponent implements OnInit {
   qunantity:any;
   qunantity_t:any;
   isLoading:boolean = false;
+  userinfo:any;
+  togglePasscode:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -182,6 +184,7 @@ export class AccountsettingsComponent implements OnInit {
         const plan3rd = res?.plan?.interval;
         this.planInterval = plan3rd;
         this.interval_count = res?.plan?.interval_count;
+        this.userinfo = res.userinfo;
 
         // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;        
         
