@@ -31,7 +31,7 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <div class="steps" (click)="selectedTab='Plans'" >
+      <div class="steps">
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans','completedTab':completed>2}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -47,7 +47,7 @@
         </div>
         <p class="text-center">T&C</p>
       </div>
-      <div class="steps" (click)="selectedTab='Payment'">
+      <div class="steps">
         <div [ngClass]="{'bullet5':true,'activeTab':selectedTab=='Payment','completedTab':completed>4}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/payment.svg" alt="" />
