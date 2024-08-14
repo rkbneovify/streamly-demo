@@ -340,7 +340,8 @@ class GracenoteCronController extends Controller
     public function gracenoteScheduleProgramCron2(Request $request)
     {
         ini_set('memory_limit', '512M');
-
+        // phpinfo();
+        // die;
         $prgSvcIds = Channel::whereNotNull('prgSvcId')->pluck('prgSvcId')->toArray();
 
         // Create a Guzzle client instance
@@ -396,7 +397,7 @@ class GracenoteCronController extends Controller
                 ];
             }
         }
-
+        unset($scheduleXml, $scheduleData); // Clear memory
         // Batch the TMSIds into smaller groups to avoid the 414 error
         $chunkedTmsIds = array_chunk($tmsIds, 50); // Adjust the chunk size as needed
         $programMap = [];
@@ -417,7 +418,7 @@ class GracenoteCronController extends Controller
                 $programMap[$program->TMSId] = $program;
             }
         }
-
+        unset($programXml, $programData); // Clear memory
         // Map program details to events
         foreach ($dataArray as $index => &$data) {
             if (isset($programMap[$data['TMSId']])) {
@@ -435,6 +436,7 @@ class GracenoteCronController extends Controller
                 gc_collect_cycles();
             }
         }
+        unset($programMap); // Clear memory
 
         if (!empty($dataArray)) {
             GracenoteScheduleProgram::truncate();
