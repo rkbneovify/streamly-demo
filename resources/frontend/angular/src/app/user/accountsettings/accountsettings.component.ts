@@ -151,6 +151,7 @@ export class AccountsettingsComponent implements OnInit {
             },
             error:(err:any)=>{
               this.loading = false;
+              this.ts.error(err.error.message);
               err.error.message.password.forEach(element => {
                 this.ts.error(element);
               });

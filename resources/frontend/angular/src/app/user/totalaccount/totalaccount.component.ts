@@ -187,6 +187,7 @@ removedevices(id: any): void {
           this.connectedDevice = this.connectedDevice.filter((data: any) => data.session_id !== id)
           this.response = this.connectedDevice;
           localStorage.setItem('loggedInDeviceDetails', JSON.stringify(this.response));
+          this.get_all_device ()
         }
       },
       error: err => this.toastr.error(err.error?.error)
