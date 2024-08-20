@@ -61,7 +61,7 @@
         "
         [ngClass]="{ 'object-fill': item?.type == 'event' }"
       />
-    <p class="no-img" *ngIf="!item.image">No Image</p>
+    <p class="no-img" *ngIf="!item?.image">No Image</p>
       
         <div class="card_content">
           <div class="card_content_text1 d-flex justify-content-between">
