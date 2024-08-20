@@ -50,8 +50,8 @@
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
-      <div *ngIf="!go_Live" class="schedule_Live  pointer">Live</div>
-      <div *ngIf="go_Live" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
+      <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live  pointer">Live</div>
+      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
       <div class="pointer" (click)="scrollContent(100)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
@@ -106,7 +106,7 @@
       </div>
 
       <div class="schedule_time_programs_container position-relative">
-        <div class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
+        <div *ngIf="selectedDay == 'Today'" class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
         </div>
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">

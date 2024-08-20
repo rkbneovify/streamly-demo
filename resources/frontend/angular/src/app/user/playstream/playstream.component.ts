@@ -137,9 +137,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     if (this.player) {
       this.player.dispose();
     }
-    if (this.playerChannelId) {
-      localStorage.setItem('playerChannelId', '');
-    }
+    // if (this.playerChannelId) {
+    //   localStorage.setItem('playerChannelId', '');
+    // }
   }
 
   getCurrentFormattedDateTime() {

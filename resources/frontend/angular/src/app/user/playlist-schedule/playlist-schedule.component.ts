@@ -277,14 +277,14 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       next: (res: any) => {
         this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
         this.filteredPrograms = res.data;
-  this.isLoading = false;
+        this.isLoading = false;
         // this.getAllScheduleData = res.data;
         // this.getScheduleProgram = res.data;
         // this.filterPrograms(res);
       },
       error: (err: any) => {
         console.error(err);
-  this.isLoading = false;
+        this.isLoading = false;
       },
     });
   }
@@ -399,7 +399,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     let width = 0;
     let margin_left = 0;
   
-    if (index === 0) {
+    if (index === 0 && this.selectedDay =='Today') {
       if (startDate.getTime() < currentTime) {
         // The event has already started
         if (endDate.getTime() < currentTime) {

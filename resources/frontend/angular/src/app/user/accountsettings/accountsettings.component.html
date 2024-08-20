@@ -22,7 +22,7 @@
         <!-- <input class="input_plane" formControlName="email" type="text"> -->
         <p>{{ updateuserDetatils.get("email")?.value }}</p>
       </div>
-      <div [ngClass]="{'acoount_user_password':true}">
+      <div [ngClass]="{'acoount_user_password':true,'h-auto':editMode}">
         <label for="">Password</label>
         <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
         <ng-container *ngIf="editMode; else displayModePassword">
