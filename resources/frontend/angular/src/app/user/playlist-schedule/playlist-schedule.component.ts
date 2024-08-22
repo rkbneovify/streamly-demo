@@ -388,18 +388,28 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   // }
 
   calculateWidth(start: any, end: any, index: any) {
+    
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
     }
   
+    this.selectedDay
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
-    const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+    let currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+
+    if (this.selectedDay === 'Tomorrow') {
+      // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
+      tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
+      currentTime = tomorrow.getTime(); // Use this as current time
+    }
   
     let width = 0;
     let margin_left = 0;
   
-    if (index === 0 && this.selectedDay =='Today') {
+    if (index === 0) {
       if (startDate.getTime() < currentTime) {
         // The event has already started
         if (endDate.getTime() < currentTime) {
