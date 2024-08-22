@@ -129,9 +129,7 @@ main {
 .sidebar_container {
   max-width: 140px;
   min-width: 80px;
-  // background: linear-gradient(94.09deg, #001325 31.4%, rgb(0 19 37 / 84%) 81%);
   background: linear-gradient(90deg, #001325cc 31.4%, rgb(0 19 37 / 15%) 81%);
-  // background: linear-gradient(94.09deg, #001325 28.4%, rgba(0, 19, 37, 0.07) 97%);
   /* For full height */
   height: -moz-available; /* Firefox-specific */
   height: -webkit-fill-available; /* Chrome-specific */
@@ -171,6 +169,7 @@ main {
     // max-width: ;
   }
 }
+
 
 .expanded{
   width: 140px !important;
@@ -876,6 +875,43 @@ footer .contain:first-child {
     }
   }
 
+
+  @media screen and (max-width: 450px){
+    .schedule_Container{
+      padding-left: 4.5rem;
+    }
+    .sidebar_container {
+      max-width: 100px;
+      min-width: 54px;
+      width:54px;
+      .sidebar_1 {
+      }
+    }
+    
+    .sidebar_2{
+      div{
+        padding-left: 1rem;
+      }
+      .submenu1,.submenu2,.submenu3,.submenu4{
+        img{
+          width: 18px;
+          min-width: 18px;
+        }
+      }
+
+      .submenuAll{
+        img{
+          width: 20px;
+          min-width: 20px;
+        }
+      }
+    }
+
+    footer{
+      padding-left: 3rem;
+    }
+  }
+
   // contain
   @media screen and (max-width: 392px) {  
     .schedule_Container{
@@ -887,8 +923,6 @@ footer .contain:first-child {
         padding: 1px !important;
       }
     }
-
-
   }  
 
 
@@ -916,3 +950,5 @@ footer .contain:first-child {
       }
     }
   }
+
+

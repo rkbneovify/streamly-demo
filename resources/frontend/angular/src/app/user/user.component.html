@@ -25,7 +25,7 @@
         <span class="back"> back</span>
       </div> -->
 
-      <div (click)="changeSideBarTab('allChannel')"  routerLink="/user/channel/all" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='allChannel'}">
+      <div (click)="changeSideBarTab('allChannel')"  routerLink="/user/channel/all" [ngClass]="{'submenu3 submenuAll pointer':true,'activeTab':activeTab==='allChannel'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/All.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">All</p>
       </div>
