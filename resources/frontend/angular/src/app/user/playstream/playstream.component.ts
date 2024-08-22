@@ -9,9 +9,10 @@ import {
 import { CrudService } from '../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import * as dashjs from 'dashjs';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Hls from 'hls.js'; // Import Hls.js
+import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-playstream',
@@ -28,6 +29,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   Bearer_token: any;
   channelData: any;
   playerChannelId: number = null;
+  private subscription: Subscription = new Subscription();
+  private routerSubscription: Subscription = new Subscription();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private crud: CrudService, private router: Router) {
     this.playerId = localStorage.getItem('playerId');
@@ -35,8 +39,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     if (this.playerChannelId) {
       this.addToRecentChannel(this.playerChannelId);
     }
-  }
 
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.ngOnDestroy();
+      }
+    });
+
+  }
   ngOnInit() {
     this.initializePlayer();
     this.getPlayerData();
@@ -71,11 +81,11 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   playerDash() {
-    this.getDRMKeys().subscribe((response: any) => {
+    this.getDRMKeys().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
       if (response.success && response.data) {
         const player = dashjs.MediaPlayer().create();
         const data = atob(response.data);
-        player.initialize(this.videoPlayer.nativeElement, this.playerId, true);
+        player.initialize(this.videoPlayer.nativeElement, this.playerId, true, response);
         player.setProtectionData({
           'com.widevine.alpha': {
             serverURL: response.widevinelicense,
@@ -84,8 +94,19 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
             }
           }
         });
+
+      // Listen for dash.js errors
+      player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+        console.log('DASH error: ', e);
+        alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
+        this.router.navigateByUrl('/user/playlistschedule')
+      });
       } else {
         console.error('Error retrieving DRM authentication key:', response.message);
+      }
+
+      if(response.error){
+        console.log('erro',response.error);
       }
     });
   }
@@ -136,10 +157,22 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.player) {
       this.player.dispose();
+      this.player = null;
     }
-    // if (this.playerChannelId) {
-    //   localStorage.setItem('playerChannelId', '');
-    // }
+
+    // Emit a value to complete the observable and unsubscribe
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    if (this.subscription) {
+      console.log('unSub')
+      this.subscription.unsubscribe();
+    }
+
+    if (this.routerSubscription) {
+      console.log('Router unSub');
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   getCurrentFormattedDateTime() {
@@ -160,11 +193,11 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
     this.crud.postRequest('auth/player-details', body).subscribe({
       next: (res: any) => {
-        console.log(res);
+        console.log('Player Data',res);
         this.channelData = res.data;
       },
       error: (err: any) => {
-        console.log(err);
+        console.error(err);
       }
     })
   }
