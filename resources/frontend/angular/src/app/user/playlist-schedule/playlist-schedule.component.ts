@@ -14,7 +14,11 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
-import { DurationFormatPipe,DurationISOFormatPipe,TruncatePipe } from '../../pipe/duration-format.pipe';
+import {
+  DurationFormatPipe,
+  DurationISOFormatPipe,
+  TruncatePipe,
+} from '../../pipe/duration-format.pipe';
 import { TimeFormatPipe } from '../../pipe/time-format.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
@@ -34,7 +38,7 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
     TruncatePipe,
     ScheduleFormatterPipe,
     JsonPipe,
-    NgClass
+    NgClass,
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -50,12 +54,14 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
     ]),
   ],
 })
-export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestroy {
+export class PlaylistScheduleComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   playlist_details_show: boolean = false;
-  isLoading:boolean = false;
+  isLoading: boolean = false;
   liveCurrentTime: number = 0;
   intervalLiveWidth: any;
-  toggleLeftArrow:boolean = false;
+  toggleLeftArrow: boolean = false;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -113,66 +119,78 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     '11:00 PM',
     '11:30 PM',
   ];
-  dayfilter:string = 'today';
+  dayfilter: string = 'today';
   categories: any;
   // get category list
-  getAllCategories(){
-  this.isLoading = true;
+  getAllCategories() {
+    this.isLoading = true;
     this.apiService.getRequest('auth/all-genre').subscribe({
-      next:(res:any)=>{
-        this.categories=res.data;
+      next: (res: any) => {
+        this.categories = res.data;
         // this.categories.unshift({name:'All',image:'../../../assets/dummy-img/All.svg'})
         // this.categories.push({name:'Others',image:''})
 
-      // Add 'All' category at the beginning if it doesn't already exist
-      const allCategory = { name: 'All', image: '../../../assets/dummy-img/All.svg' };
-      if (!this.categories.some(category => category.name === 'All')) {
-        this.categories.unshift(allCategory);
-      }
+        // Add 'All' category at the beginning if it doesn't already exist
+        const allCategory = {
+          name: 'All',
+          image: '../../../assets/dummy-img/All.svg',
+        };
+        if (!this.categories.some((category) => category.name === 'All')) {
+          this.categories.unshift(allCategory);
+        }
 
-      // Add 'Others' category at the end if it doesn't already exist
-      const othersCategory = { name: 'Others', image: '' };
-      if (!this.categories.some(category => category.name === 'Others')) {
-        this.categories.push(othersCategory);
-      }
+        // Add 'Others' category at the end if it doesn't already exist
+        const othersCategory = { name: 'Others', image: '' };
+        if (!this.categories.some((category) => category.name === 'Others')) {
+          this.categories.push(othersCategory);
+        }
         this.isLoading = true;
       },
-      error:(err:any)=>{
+      error: (err: any) => {
         console.log(err);
-  this.isLoading = true;
-      }
-    })
+        this.isLoading = true;
+      },
+    });
   }
 
   // filter time acc to currnet time
-  getCurrentTimeDate:any;
-  getCurrentTimeDataFirstIndex:any;
-  getCurrentTimeSlot(dayFilter?:string) {
-  if(dayFilter != 'tomorrow'){
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-    let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
-      currentMinute < 30 ? 0 : 30
-    )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
+  getCurrentTimeDate: any;
+  getCurrentTimeDataFirstIndex: any;
+  getCurrentTimeSlot(dayFilter?: string) {
+    if (dayFilter != 'tomorrow') {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
+        currentMinute < 30 ? 0 : 30
+      )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
 
-    const closestIndex = this.scheduleHours.indexOf(closestTime);
+      const closestIndex = this.scheduleHours.indexOf(closestTime);
 
-    // Return the schedule starting from the closest time slot
+      // Return the schedule starting from the closest time slot
 
-    this.getCurrentTimeDate = [
-      ...this.scheduleHours.slice(closestIndex),
-      ...this.scheduleHours.slice(0, closestIndex),
-    ];
-  }else{
-    this.getCurrentTimeDate = [...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM'))];
+      this.getCurrentTimeDate = [
+        ...this.scheduleHours.slice(closestIndex),
+        ...this.scheduleHours.slice(0, closestIndex),
+      ];
+    } else {
+      this.getCurrentTimeDate = [
+        ...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM')),
+        ...this.scheduleHours,
+      ];
+      this.count = 0;
+      this.scrollContent(0);
+    }
+
+    this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
+    console.log(this.getCurrentTimeDataFirstIndex);
+    console.log(
+      'Get Date lenght==>',
+      this.getCurrentTimeDate?.length,
+      this.getCurrentTimeDate?.length * 150
+    );
   }
-
-  this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
-  console.log(this.getCurrentTimeDataFirstIndex);
-
-  }
-  // 
+  //
   padZero(num: number): string {
     return num < 10 ? '0' + num : num.toString();
   }
@@ -180,7 +198,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   constructor(
     private apiService: CrudService,
     private toaster: ToastrService,
-    private router:Router,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
   ngOnInit(): void {
@@ -192,14 +210,17 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     // setInterval(()=>{
     //   this.liveCurrentTime+=10
     // },1000)
-        // Update marginLeft every 1 minute (60,000 milliseconds)
-        this.setLiveMinWith();
-        if(this.liveCurrentTime){
-          this.intervalLiveWidth = setInterval(() => {
-            this.liveCurrentTime += 5;
-            this.cdr.detectChanges();
-          }, 60000); // 60000 milliseconds = 1 minute
-        }
+    // Update marginLeft every 1 minute (60,000 milliseconds)
+    this.setLiveMinWith();
+    if (this.liveCurrentTime) {
+      this.intervalLiveWidth = setInterval(() => {
+        this.liveCurrentTime += 5;
+        this.cdr.detectChanges();
+      }, 60000); // 60000 milliseconds = 1 minute
+    }
+
+    const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
+    console.log(data);
   }
 
   ngAfterViewInit() {
@@ -208,7 +229,6 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       console.log(`Element ${index}:`, element.nativeElement);
     });
   }
-
 
   showPlaylist() {
     this.playlist_details_show = !this.playlist_details_show;
@@ -224,40 +244,59 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       this.scrollablecategory.nativeElement.scrollLeft -= offset;
     }
   }
-  go_Live:boolean = false;
-  count:number = 0;
+  go_Live: boolean = false;
+  count: number = 0;
   scrollContent(position: number) {
-      if (position != 0) {
-        this.changeColorBackgroung = true;
-        this.toggleLeftArrow = true
-        this.go_Live = true
-        if (
-          this.scrollableContent.nativeElement &&
-          this.scrollableContent.nativeElement
-        ) {
-          this.scrollableContent.nativeElement.scrollLeft += position;
-          this.scrollableContent1.nativeElement.scrollLeft += position;
-          if(position > 0){
-            this.count += 1;
-          }else{
-            this.count -= 1;
+    // console.log('getCurrentTimeDate =>',this.getCurrentTimeDate?.length,'count =>',this.count);
+    // if (this.count <= this.getCurrentTimeDate?.length) {
+    console.log('Current Time =>> ', this.getCurrentTimeDate[this.count]);
+    console.log(this.count);
+    if (position != 0) {
+      this.changeColorBackgroung = true;
+      this.toggleLeftArrow = true;
+      this.go_Live = true;
+      let indexNumber;
+      if (
+        this.scrollableContent.nativeElement &&
+        this.scrollableContent.nativeElement
+      ) {
+        this.scrollableContent.nativeElement.scrollLeft += position;
+        this.scrollableContent1.nativeElement.scrollLeft += position;
+        if (position > 0) {
+          if ('12:00 AM' == this.getCurrentTimeDate[this.count + 1]) {
+            indexNumber = this.count;
           }
+          if (this.count >= indexNumber) {
+            console.log('===>', indexNumber);
+            this.changeDays('Today', false);
+          }
+          this.count += 1;
+        } else {
+          if (this.count < indexNumber) {
+            console.log('===>', indexNumber);
+            this.changeDays('Today');
+          }
+          this.count -= 1;
         }
-      } else {
-        this.scrollableContent.nativeElement.scrollLeft = 0;
-        this.scrollableContent1.nativeElement.scrollLeft = 0;
-        this.changeColorBackgroung = false;
-        this.toggleLeftArrow = false;
-        this.go_Live = false;
-        this.count = 0
       }
-    if(this.count == 0){
+    } else {
+      this.scrollableContent.nativeElement.scrollLeft = 0;
+      this.scrollableContent1.nativeElement.scrollLeft = 0;
+      this.changeColorBackgroung = false;
+      this.toggleLeftArrow = false;
+      this.go_Live = false;
+      this.count = 0;
+    }
+    if (this.count == 0) {
       this.scrollableContent.nativeElement.scrollLeft = 0;
       this.scrollableContent1.nativeElement.scrollLeft = 0;
       this.toggleLeftArrow = false;
       this.changeColorBackgroung = false;
       this.go_Live = false;
-      }
+    }
+    // }else{
+    //   this.count -= 1;
+    // }
   }
 
   // getScheduleProgram: any;
@@ -265,13 +304,13 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   getScheduleChannelLogo: any;
   // filterProgram
   filteredPrograms: any = [];
-  getScheduleData(genre?: string,dayFilter:string=this.dayfilter) {
-  this.isLoading = true;
-    this.active_categories((genre == '' || genre == 'All' ?'All':genre));
+  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+    this.isLoading = true;
+    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
     const body = {
       typeurl: 'mpd',
-      genre: genre == 'All'?'':genre,
-      day: dayFilter
+      genre: genre == 'All' ? '' : genre,
+      day: dayFilter,
     };
     this.apiService.postRequest('auth/epg-guide', body).subscribe({
       next: (res: any) => {
@@ -329,39 +368,40 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   //   return {width:durationMinutes * 10,magin_left:timeDifferenceMinutes}
 
   // }
-  
+
   // // If start time is not less than current time, return difference in minutes multiplied by 5
   // // const timeDifferenceMs = currentTime - startDate.getTime();
   // // const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
   // // return timeDifferenceMinutes * 5;
-
 
   // const durationMs = endDate.getTime() - startDate.getTime();
   // const durationMinutes = Math.floor(durationMs / (1000 * 60));
   // return {width:durationMinutes * 10,magin_left:0}
   // }
 
-  setLiveMinWith(){
-    const currentTimeIndex = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+  setLiveMinWith() {
+    const currentTimeIndex = this.getDateTimeWithProvidedTime(
+      this.getCurrentTimeDataFirstIndex
+    ).getTime();
     const currentTime = new Date().getTime();
     const timeDifferenceMs = currentTime - currentTimeIndex;
-      const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-       this.liveCurrentTime = timeDifferenceMinutes * 5;
-       console.log('liveCurrentTime ==> ',this.liveCurrentTime)
+    const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+    this.liveCurrentTime = timeDifferenceMinutes * 5;
+    console.log('liveCurrentTime ==> ', this.liveCurrentTime);
   }
-  
+
   // calculateWidth(start: any, end: any, index: any) {
   //   if (!start || !end) {
   //     return { width: 0, margin_left: 0 };
   //   }
-    
+
   //   const startDate = new Date(start * 1000);
   //   const endDate = new Date(end * 1000);
   //   const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
-  
+
   //   let width = 0;
   //   let margin_left = 0;
-  
+
   //   if (index == 0 && startDate.getTime() < currentTime) {
   //     const timeDifferenceMs = currentTime - startDate.getTime();
   //     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
@@ -383,20 +423,21 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   //     margin_left = 0;
   //     // console.log('Without con =>> ',{ width, margin_left })
   //   }
-  
+
   //   return { width, margin_left };
   // }
 
   calculateWidth(start: any, end: any, index: any) {
-    
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
     }
-  
-    this.selectedDay
+
+    this.selectedDay;
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
-    let currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
+    let currentTime = this.getDateTimeWithProvidedTime(
+      this.getCurrentTimeDataFirstIndex
+    ).getTime();
 
     if (this.selectedDay === 'Tomorrow') {
       // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
@@ -405,10 +446,10 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
       currentTime = tomorrow.getTime(); // Use this as current time
     }
-  
+
     let width = 0;
     let margin_left = 0;
-  
+
     if (index === 0) {
       if (startDate.getTime() < currentTime) {
         // The event has already started
@@ -428,7 +469,9 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
         const durationMs = endDate.getTime() - startDate.getTime();
         const durationMinutes = Math.floor(durationMs / (1000 * 60));
         const timeDifferenceMs = startDate.getTime() - currentTime;
-        const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+        const timeDifferenceMinutes = Math.floor(
+          timeDifferenceMs / (1000 * 60)
+        );
         width = durationMinutes * 5;
         margin_left = timeDifferenceMinutes * 5;
       }
@@ -442,52 +485,50 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
     return { width, margin_left };
   }
-  
-  
 
-  getDateTimeWithProvidedTime(timeStr:string) {
-  // Get the current date
-  const currentDate = new Date();
-  
-  // Extract hours and minutes from the provided time string
-  const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
-  let hours = parseInt(timeParts[1]);
-  const minutes = parseInt(timeParts[2]);
-  const period = timeParts[3];
+  getDateTimeWithProvidedTime(timeStr: string) {
+    // Get the current date
+    const currentDate = new Date();
 
-  // Convert to 24-hour format if necessary
-  if (period === 'PM' && hours !== 12) {
-    hours += 12;
-  } else if (period === 'AM' && hours === 12) {
-    hours = 0;
-  }
+    // Extract hours and minutes from the provided time string
+    const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
+    let hours = parseInt(timeParts[1]);
+    const minutes = parseInt(timeParts[2]);
+    const period = timeParts[3];
 
-  // Create a new date object with the provided time for the current date in local time
-  currentDate.setHours(hours, minutes, 0, 0);
-  // console.log(currentDate);
-  return currentDate;
+    // Convert to 24-hour format if necessary
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+
+    // Create a new date object with the provided time for the current date in local time
+    currentDate.setHours(hours, minutes, 0, 0);
+    // console.log(currentDate);
+    return currentDate;
   }
 
   // (timeStr) {
   //   // Get the current date
   //   const currentDate = new Date();
-    
+
   //   // Extract hours and minutes from the provided time string
   //   const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
   //   let hours = parseInt(timeParts[1]);
   //   const minutes = parseInt(timeParts[2]);
   //   const period = timeParts[3];
-  
+
   //   // Convert to 24-hour format if necessary
   //   if (period === 'PM' && hours !== 12) {
   //     hours += 12;
   //   } else if (period === 'AM' && hours === 12) {
   //     hours = 0;
   //   }
-  
+
   //   // Create a new date object with the provided time for the current date in local time
   //   currentDate.setHours(hours, minutes, 0, 0);
-  
+
   //   // Convert the current date with provided time to a UTC timestamp in milliseconds
   //   const utcDate = new Date(Date.UTC(
   //     currentDate.getFullYear(),
@@ -498,54 +539,54 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   //     currentDate.getSeconds(),
   //     currentDate.getMilliseconds()
   //   ));
-  
+
   //   // Return the timestamp in milliseconds
   //   return utcDate.getTime();
   // }
 
+  // program-details data
 
+  programDetailData: any;
+  programPlayable: boolean = false;
+  programChannelId: string;
+  programChannelUrl: string;
 
-  // program-details data 
-  
-  programDetailData:any;
-  programPlayable:boolean=false;
-  programChannelId:string;
-  programChannelUrl:string;
-
-  getProgramDetailData(tmsId?: string,index?:any,channelId?:string,channelUrl?:string) {
-  this.isLoading = true;
-    if(index == 0){
+  getProgramDetailData(
+    tmsId?: string,
+    index?: any,
+    channelId?: string,
+    channelUrl?: string
+  ) {
+    this.isLoading = true;
+    if (index == 0) {
       this.programPlayable = true;
-      this.programChannelId=channelId;
-      this.programChannelUrl=channelUrl;
-    }else{
+      this.programChannelId = channelId;
+      this.programChannelUrl = channelUrl;
+    } else {
       this.programPlayable = false;
     }
     const body = {
-      "TMSId": tmsId
+      TMSId: tmsId,
     };
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
-        if(!! res?.data){
+        if (!!res?.data) {
           this.showPlaylist();
           this.programDetailData = res.data;
-        }else{
-          this.toaster.error('No Program details found.')
+        } else {
+          this.toaster.error('No Program details found.');
         }
 
-  this.isLoading = false;
-  // localStorage.setItem('playerChannelId',res.data)
-
+        this.isLoading = false;
+        // localStorage.setItem('playerChannelId',res.data);
       },
       error: (err: any) => {
         this.toaster.error(err.message);
         console.error(err);
-  this.isLoading = false;
+        this.isLoading = false;
       },
     });
   }
-
-
 
   ngOnDestroy(): void {
     // this.clearInterval();
@@ -568,13 +609,11 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
   //   }
   // }
 
-  setChannelId(id:string,url:string){
-    localStorage.setItem('playerChannelId',id);
-    localStorage.setItem('playerId',url);
-    this.router.navigateByUrl('user/playstream')
+  setChannelId(id: string, url: string) {
+    localStorage.setItem('playerChannelId', id);
+    localStorage.setItem('playerId', url);
+    this.router.navigateByUrl('user/playstream');
   }
-
-
 
   // filter according to days
   days: string[] = ['Today', 'Tomorrow'];
@@ -582,22 +621,38 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
 
   setDefaultDay() {
     const today = new Date().getDay();
-    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNames = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
     const todayName = dayNames[today];
     this.days.push(todayName);
     this.selectedDay = todayName;
-    
   }
 
   // filter according to today and tommorrow
-  changeDays(day: string) {
-    this.dayfilter = day != 'Tomorrow'?'today':'tomorrow'
-    if(this.selectedDay != 'Tomorrow'){
-      this.getScheduleData(this.selected_category,this.dayfilter);
-      this.getCurrentTimeSlot(this.dayfilter);
-    }else{
-      this.getScheduleData(this.selected_category,this.dayfilter);
-      this.getCurrentTimeSlot(this.dayfilter);
+  changeDays(day: string, isDataChange = true) {
+    this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
+
+    if (isDataChange) {
+      if (this.selectedDay != 'Tomorrow') {
+        this.getScheduleData(this.selected_category, this.dayfilter);
+        this.getCurrentTimeSlot(this.dayfilter);
+      } else {
+        this.getScheduleData(this.selected_category, this.dayfilter);
+        this.getCurrentTimeSlot(this.dayfilter);
+      }
+    }
+    if (isDataChange) {
+      this.selectedDay = 'Today';
+    } else {
+      this.selectedDay = 'Tomorrow';
+      console.log('False selectedDay');
     }
   }
 
@@ -611,7 +666,7 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
       // getAllScheduleData
     } else {
       targetDate = today;
-    const now = Math.floor(Date.now() / 1000);
+      const now = Math.floor(Date.now() / 1000);
     }
     // const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
     // const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
@@ -646,84 +701,119 @@ export class PlaylistScheduleComponent implements OnInit, AfterViewInit,OnDestro
     // });
   }
 
-  changeColorBackgroung:boolean= false;
+  changeColorBackgroung: boolean = false;
   favoriteChannels: any;
 
-    // Check if a channel is marked as favorite
-    isFavorite(channelId: number): boolean {
-      return this.favoriteChannels.includes(channelId);
+  // Check if a channel is marked as favorite
+  isFavorite(channelId: number): boolean {
+    return this.favoriteChannels.includes(channelId);
+  }
+  // Toggle favorite status
+  toggleFavorite(channelId: number): void {
+    // If channel is already favorite, remove it
+    if (this.isFavorite(channelId)) {
+      this.removeFavoriteChannel(channelId);
+    } else {
+      // add it to favorites
+      this.addFavoriteChannel(channelId);
     }
-    // Toggle favorite status
-    toggleFavorite(channelId: number): void {
-      // If channel is already favorite, remove it
-      if (this.isFavorite(channelId)) {
-        this.removeFavoriteChannel(channelId);
-      } else {
-        // add it to favorites
-        this.addFavoriteChannel(channelId);
-      }
-    }
-    // Add channel to favorites
-    addFavoriteChannel(channelId: number): void {
-      // Call API to add channel to favorites
-      this.apiService
-        .postRequest('auth/addtofavorite', { channelid: channelId })
-        .subscribe((res: any) => {
-          if (res.response_code === 200) {
-            this.favoriteChannels.push(channelId); // Update local favorite list
-            this.updateFavoriteChannels(); // Update local storage
-            this.toaster.success(res.message);
-          }
-        });
-    }
-    // Remove channel from favorites
-    removeFavoriteChannel(channelId: number): void {
-      // Call API to remove channel from favorites
-      this.apiService
-        .postRequest('auth/unfavorite', { channelid: channelId })
-        .subscribe((res: any) => {
-          if (res.response_code === 200) {
-            this.favoriteChannels = this.favoriteChannels.filter(
-              (id) => id !== channelId
-            ); // Update local favorite list
-  
-            this.updateFavoriteChannels(); // Update local storage
-            this.toaster.success(res.message);
-          }
-        });
-    }
-    favListData: any;
-    // Fetch favorite list
-    getFavoriteList(): void {
-  this.isLoading = true;
-      const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
-      if (storedFavoriteChannels) {
-        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
-      } else {
-        // Fetch from API if not found in local storage
-        this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
-          if (res.response_code === 200) {
-            // this.favListData = res;
-            this.favoriteChannels = res.data.map((channel: any) => channel.id);
-            this.updateFavoriteChannels(); // Update local storage
-          }
-  this.isLoading = false;
-        });
-      }
-    }
-    // Update local storage with current favorite channels
-    updateFavoriteChannels(): void {
-      localStorage.setItem(
-        'favoriteChannels',
-        JSON.stringify(this.favoriteChannels)
-      );
-    }
+  }
+  // Add channel to favorites
+  addFavoriteChannel(channelId: number): void {
+    // Call API to add channel to favorites
+    this.apiService
+      .postRequest('auth/addtofavorite', { channelid: channelId })
+      .subscribe((res: any) => {
+        if (res.response_code === 200) {
+          this.favoriteChannels.push(channelId); // Update local favorite list
+          this.updateFavoriteChannels(); // Update local storage
+          this.toaster.success(res.message);
+        }
+      });
+  }
+  // Remove channel from favorites
+  removeFavoriteChannel(channelId: number): void {
+    // Call API to remove channel from favorites
+    this.apiService
+      .postRequest('auth/unfavorite', { channelid: channelId })
+      .subscribe((res: any) => {
+        if (res.response_code === 200) {
+          this.favoriteChannels = this.favoriteChannels.filter(
+            (id) => id !== channelId
+          ); // Update local favorite list
 
-
-    // active_categories
-    selected_category:string='All';
-
-    active_categories(category:string){
-      this.selected_category = category;
+          this.updateFavoriteChannels(); // Update local storage
+          this.toaster.success(res.message);
+        }
+      });
+  }
+  favListData: any;
+  // Fetch favorite list
+  getFavoriteList(): void {
+    this.isLoading = true;
+    const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+    if (storedFavoriteChannels) {
+      this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+    } else {
+      // Fetch from API if not found in local storage
+      this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
+        if (res.response_code === 200) {
+          // this.favListData = res;
+          this.favoriteChannels = res.data.map((channel: any) => channel.id);
+          this.updateFavoriteChannels(); // Update local storage
+        }
+        this.isLoading = false;
+      });
     }
+  }
+  // Update local storage with current favorite channels
+  updateFavoriteChannels(): void {
+    localStorage.setItem(
+      'favoriteChannels',
+      JSON.stringify(this.favoriteChannels)
+    );
+  }
+
+  // active_categories
+  selected_category: string = 'All';
+
+  active_categories(category: string) {
+    this.selected_category = category;
+  }
+
+  async generateTimeArray(
+    currentTime: string = new Date().toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }),
+    endTime: string,
+    isBoolean: boolean = false
+  ): Promise<string[]> {
+    const timeArray: string[] = [];
+
+    // Convert the time string to Date objects for easier manipulation
+    let start: Date = isBoolean
+      ? new Date()
+      : new Date(`1970-01-01T${currentTime}`);
+    const end: Date = new Date(`1970-01-01T${endTime}`);
+
+    // Function to format time as "hh:mm AM/PM"
+    const formatTime = (date: Date): string => {
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      });
+    };
+
+    // Loop through time from start to end, adding 15 minutes on each iteration
+    while (start <= end) {
+      timeArray.push(formatTime(start));
+      // Add 15 minutes to the start time
+      start = new Date(start.getTime() + 30 * 60000); // 30 minutes = 900,000 ms
+    }
+    const timeData = await timeArray;
+    return timeData;
+  }
 }

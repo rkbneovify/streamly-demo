@@ -135,6 +135,8 @@
     .schedule_GoLive_container {
       gap: 1.4rem;
       margin-left: 4px;
+      right: 0;
+      top: 8px;
       .schedule_Live{
         color: white;
         font-weight: bold;
@@ -147,6 +149,12 @@
       .schedule_GoLive {
         color: #ffdb4e;
         text-wrap: nowrap;
+        backdrop-filter: blur(1px);
+      }
+      div{
+        img{
+        backdrop-filter: blur(1px);
+        }
       }
     }
   }
