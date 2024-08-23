@@ -20,7 +20,7 @@
   </div>
   
 
-  <div class="schedule_time_container">
+  <div class="schedule_time_container position-relative">
     <!-- <div class="schedule_days">
       <select name="" id="">
         <option value="Today">Today</option>
@@ -39,7 +39,7 @@
         <option *ngFor="let day of days" [value]="day">{{ day }}</option>
       </select>
     </div>
-    <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-100)">
+    <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-150)">
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
     </div>
     
@@ -49,10 +49,10 @@
       <div class="schedule_hour">01:30 PM</div>
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
-    <div class="schedule_GoLive_container d-flex align-items-center">
-      <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live  pointer">Live</div>
+    <div class="schedule_GoLive_container d-flex align-items-center position-absolute">
+      <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
       <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div class="pointer" (click)="scrollContent(100)">
+      <div class="pointer" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
     </div>
@@ -114,7 +114,7 @@
             [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
             class="schedule_time"  
             *ngFor="let program of data.program; let index = index"  
-            [ngClass]="{'hover-active': index == 0}" 
+            [ngClass]="{'hover-active': index == 0,'px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
             (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url)">
                 <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
                 <p class="program_time my-2 overflow-hidden">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
@@ -129,7 +129,10 @@
                 No Data Available
               </p>
             </div>
-        </ng-container>
+            </ng-container>
+            <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150-5,'width.px':getCurrentTimeDate?.length*150-5,'height.px':0}">
+              total
+            </div>
         <!-- <div class="schedule_time_programs">
           <div class="schedule_time">
             <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
