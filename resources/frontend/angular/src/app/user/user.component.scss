@@ -246,6 +246,7 @@ main {
   }
 }
 
+
 @media screen and (min-width: 850px) {
   .navbar_Schedule {
     margin-right: 0rem;
@@ -701,7 +702,11 @@ footer .contain:first-child {
       .playstream_desc {
         color: #ffffffcc;
         font-size: 14px;
-        text-align: justify;
+        word-wrap: break-word;
+      }
+
+      .playstream_title{
+        color: white;
       }
   
       .play_btn_container_2 {

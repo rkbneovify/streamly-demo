@@ -216,6 +216,30 @@
     }
   }
 
+
+.live-indicator{
+  bottom: 18px;
+  left: 43px;
+  font-size: 13px;
+  padding: 0 0.3rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.live-go{
+  background-color: red;
+  color: white ;
+}
+
+.not-live{
+  background: gray;
+  color: black;
+}
+
+// ::-webkit-media-controls {
+//   display:none !important;
+// }
+
 @media screen and (max-width: 992px){
   .play_container_top {
     .playstream_1 {

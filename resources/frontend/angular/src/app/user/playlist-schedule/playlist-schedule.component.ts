@@ -263,19 +263,20 @@ export class PlaylistScheduleComponent
         this.scrollableContent.nativeElement.scrollLeft += position;
         this.scrollableContent1.nativeElement.scrollLeft += position;
         if (position > 0) {
-          if ('12:00 AM' == this.getCurrentTimeDate[this.count + 1]) {
-            indexNumber = this.count;
-          }
-          if (this.count >= indexNumber) {
-            console.log('===>', indexNumber);
-            this.changeDays('Today', false);
-          }
+          // if ('12:00 AM' == this.getCurrentTimeDate[this.count + 1]) {
+          //   indexNumber = this.count;
+          //   console.log('Set ===>', indexNumber);
+          // }
+          // if (this.count >= indexNumber) {
+          //   console.log('===>', indexNumber);
+          //   this.changeDays('Today', false);
+          // }
           this.count += 1;
         } else {
-          if (this.count < indexNumber) {
-            console.log('===>', indexNumber);
-            this.changeDays('Today');
-          }
+          // if (this.count < indexNumber) {
+          //   console.log('===>', indexNumber);
+          //   this.changeDays('Today');
+          // }
           this.count -= 1;
         }
       }
@@ -431,21 +432,22 @@ export class PlaylistScheduleComponent
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
     }
-
-    this.selectedDay;
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
     let currentTime = this.getDateTimeWithProvidedTime(
       this.getCurrentTimeDataFirstIndex
     ).getTime();
 
+    // console.log('selectedDay before==>',this.selectedDay);
     if (this.selectedDay === 'Tomorrow') {
       // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
+      // console.log('this.selectedDay==>',this.selectedDay);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
       tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
       currentTime = tomorrow.getTime(); // Use this as current time
     }
+    // console.log('selectedDay after==>',this.selectedDay);
 
     let width = 0;
     let margin_left = 0;
@@ -638,21 +640,19 @@ export class PlaylistScheduleComponent
   // filter according to today and tommorrow
   changeDays(day: string, isDataChange = true) {
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
-
+    console.log('Day change===>',day);
+    this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
+    console.log('this if .selectedDay==>',this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
+        this.scrollContent(0);
       } else {
+    console.log('this else .selectedDay==>',this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
       }
-    }
-    if (isDataChange) {
-      this.selectedDay = 'Today';
-    } else {
-      this.selectedDay = 'Tomorrow';
-      console.log('False selectedDay');
     }
   }
 
