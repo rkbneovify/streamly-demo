@@ -176,10 +176,10 @@
       <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
         <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
       <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
-      <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p>
+      <!-- <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p> -->
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1 [title]="programDetailData?.title">{{programDetailData?.title | truncate:20}}</h1>
+        <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
         <div (click)="setChannelId(programChannelId,programChannelUrl)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
@@ -191,7 +191,8 @@
             <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
-        <p class="playstream_desc my-3">
+        <p class="my-1 playstream_title">{{programDetailData?.title | truncate:20}}</p>
+        <p class="playstream_desc my-2">
           {{programDetailData?.description}}
         </p>
   

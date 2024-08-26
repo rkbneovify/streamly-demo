@@ -162,11 +162,8 @@
           <div class="col-4 section1_img">
             <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
           </div>
-          <div class="col-lg-4 col-12 playstream_2">
-            <h1>{{programDetailData?.title}}</h1>
-            <p class="my-3">
-              {{programDetailData?.quals}}
-            </p>
+          <div class="col-lg-4 col-12 playstream_2 my-1 mt-2">
+            <h1>{{programDetailData?.stationName}}</h1>
             <div class="play_btn_container_1">
               <button class="playbtn_time text-nowrap">{{programDetailData?.duration | durationISOFormat}}</button>
               <button class="playbtn_hd">
@@ -174,7 +171,10 @@
                 <span>{{programDetailData?.quals}}</span>
               </button>
             </div>
-            <p class="playstream_desc my-3">
+            <p class="my-1 playstream_title">
+              {{programDetailData?.title}}
+            </p>
+            <p class="playstream_desc my-2">
               {{programDetailData?.description}}
             </p>
     
