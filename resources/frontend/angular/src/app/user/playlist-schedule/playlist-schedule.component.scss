@@ -476,7 +476,10 @@
     .playstream_desc {
       color: #ffffffcc;
       font-size: 14px;
-      text-align: justify;
+      word-break: break-word;
+    }
+    .playstream_title{
+      color: white;
     }
 
     .play_btn_container_2 {
