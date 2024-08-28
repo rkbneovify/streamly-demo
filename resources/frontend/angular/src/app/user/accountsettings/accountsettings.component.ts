@@ -109,6 +109,7 @@ export class AccountsettingsComponent implements OnInit {
   saveChanges() {
     // saving changes here
     this.loading = true;
+    console.log('saveChanges')
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
@@ -169,9 +170,6 @@ export class AccountsettingsComponent implements OnInit {
     );
     this.updateuserDetatils.controls['oldpassword'].setValue('');
     this.updateuserDetatils.controls['newpassword'].setValue('');
-    
-    
-
     // user detials
   }
 
@@ -200,7 +198,7 @@ export class AccountsettingsComponent implements OnInit {
         this.qunantity = res.subscription.quantity
 
         this.get_price(this.qunantity,this.tiredPlansDetails)
-    this.isLoading = true;
+    this.isLoading = false;
       },
       error:(err)=>{console.log(err); this.isLoading = true;}
     })
@@ -268,10 +266,13 @@ total_price:any = 0;
   deleteAccountForm: FormGroup;
   showPopDeleteAccount(){
     document.getElementById('btnShowPopDeleteAccount').click();
+    console.log('show dele')
+
   }
 
   deleteUserAccount(): void {
     this.isLoading = true;
+    console.log('Start the Deleting')
     this.crud.postRequest('auth/user/delete',{password:this.deleteAccountForm.get('password').value}).subscribe({
       next: (res: any) => {
           this.ts.success('Account delete successfully');
@@ -288,5 +289,6 @@ total_price:any = 0;
 
   showPopConf(){
     document.getElementById('btnShowPopConf').click();
+    console.log('show pop')
   }
 }
