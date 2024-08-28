@@ -11,7 +11,8 @@ main {
   background-size: cover;
   width: 100%;
   // min-height: -webkit-fill-available;
-  min-height: 100vh;
+  min-height: 90vh;
+  height: 100%;
   // overflow-y: auto;
   padding: 0 1rem;
   &::-webkit-scrollbar {

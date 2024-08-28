@@ -776,11 +776,10 @@ export class PlaylistScheduleComponent
 
   // active_categories
   selected_category: string = 'All';
-
   active_categories(category: string) {
     this.selected_category = category;
   }
-
+  
   async generateTimeArray(
     currentTime: string = new Date().toLocaleTimeString('en-US', {
       hour: '2-digit',
