@@ -12,7 +12,7 @@ import * as dashjs from 'dashjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Hls from 'hls.js'; // Import Hls.js
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-playstream',
@@ -101,24 +101,18 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       // Listen for the 'pause' event
       this.videoPlayer.nativeElement.addEventListener('pause', () => {
         this.isAtLiveEdge = !this.isAtLiveEdge;
-        console.log('Live stream paused',this.isAtLiveEdge);
       });
           // Listen for the 'play' event
     this.videoPlayer.nativeElement.addEventListener('play', () => {
       this.seekToLiveEdge();
     });
 
-    this.videoPlayer.nativeElement.addEventListener('onemptied', () => {
-      console.log('onstalled Error ===>')
-    });
-    
-
       // Listen for dash.js errors
-      // this.player.on(dashjs.MediaPlayer.events.STREAM_UPDATED, (e: any) => {
-      //   console.log('DASH error: ', e);
-      //   // alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
-      //   // this.router.navigateByUrl('/user/playlistschedule')
-      // });
+      this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+        console.error('DASH error:', e);
+        alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+        this.router.navigateByUrl('/user/playlistschedule');
+      });
       } else {
         console.error('Error retrieving DRM authentication key:', response.message);
       }
@@ -201,14 +195,25 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDRMKeys(): any {
-    return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders());
-  }
+  // getDRMKeys(): any {
+  //   return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders());
+  // }
+
+getDRMKeys(): any {
+  return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders()).pipe(
+    catchError((error) => {
+      if (error.status === 404) {
+        alert("Error 404: The requested resource was not found.");
+        this.router.navigateByUrl('/error-page'); // Redirect if needed
+      }
+      return throwError(() => new Error(error));
+    })
+  );
+}
 
   ngOnDestroy() {
     if (this.player) {
       this.player.reset();
-      this.player = null;
     }
 
     // Emit a value to complete the observable and unsubscribe
@@ -218,11 +223,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       console.log('unSub')
       this.subscription.unsubscribe();
-    }
-
-    if (this.routerSubscription) {
-      console.log('Router unSub');
-      this.routerSubscription.unsubscribe();
     }
   }
 
@@ -246,6 +246,12 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         console.log('Player Data',res);
         this.channelData = res.data;
+
+        if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
+          alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
+          this.router.navigateByUrl('/user/playlistschedule');
+          console.log('Not Program details');
+        }
       },
       error: (err: any) => {
         console.error(err);
