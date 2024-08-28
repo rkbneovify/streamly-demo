@@ -39,7 +39,7 @@ export class CommonChannelComponent implements OnInit {
     this.route.url.subscribe((urlSegments) => {
       this.keyword = urlSegments[urlSegments.length - 1].path;
 
-      if (this.keyword == 'recents-channels' || this.keyword == 'favourites') {
+      if (this.keyword == 'recents' || this.keyword == 'favourites') {
         if (this.keyword == 'favourites') {
           this.apiService
             .getRequest('auth/my_favorites', this.getAuthHeaders())
@@ -54,7 +54,7 @@ export class CommonChannelComponent implements OnInit {
             });
         }
 
-        if (this.keyword == 'recents-channels') {
+        if (this.keyword == 'recents') {
           const body = { typeurl: 'mpd' };
           this.apiService
             .postRequest('auth/recent-channels', body)
