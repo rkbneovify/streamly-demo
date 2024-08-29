@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -9,25 +9,30 @@ import {
 import { CrudService } from '../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import * as dashjs from 'dashjs';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import Hls from 'hls.js'; // Import Hls.js
+import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-playstream',
   standalone: true,
-  imports: [NgFor, DatePipe, NgIf, FormsModule],
+  imports: [NgFor, DatePipe, NgIf, FormsModule,NgClass],
   templateUrl: './playstream.component.html',
   styleUrls: ['./playstream.component.scss'],
 })
 export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef;
-  player: any;
+  player: dashjs.MediaPlayerClass;
+
   playerId!: any;
   tokenkey: any;
   Bearer_token: any;
   channelData: any;
   playerChannelId: number = null;
+  private subscription: Subscription = new Subscription();
+  private routerSubscription: Subscription = new Subscription();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(private crud: CrudService, private router: Router) {
     this.playerId = localStorage.getItem('playerId');
@@ -35,8 +40,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     if (this.playerChannelId) {
       this.addToRecentChannel(this.playerChannelId);
     }
-  }
 
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.ngOnDestroy();
+      }
+    });
+
+  }
   ngOnInit() {
     this.initializePlayer();
     this.getPlayerData();
@@ -70,13 +81,15 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
   }
 
+  isAtLiveEdge:boolean = false;
+
   playerDash() {
-    this.getDRMKeys().subscribe((response: any) => {
+    this.getDRMKeys().pipe(takeUntil(this.destroy$)).subscribe((response: any) => {
       if (response.success && response.data) {
-        const player = dashjs.MediaPlayer().create();
+        this.player = dashjs.MediaPlayer().create();
         const data = atob(response.data);
-        player.initialize(this.videoPlayer.nativeElement, this.playerId, true);
-        player.setProtectionData({
+        this.player.initialize(this.videoPlayer.nativeElement, this.playerId, true, response);
+        this.player.setProtectionData({
           'com.widevine.alpha': {
             serverURL: response.widevinelicense,
             httpRequestHeaders: {
@@ -84,9 +97,62 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
             }
           }
         });
+
+      // Listen for the 'pause' event
+      this.videoPlayer.nativeElement.addEventListener('pause', () => {
+        this.isAtLiveEdge = !this.isAtLiveEdge;
+      });
+          // Listen for the 'play' event
+    this.videoPlayer.nativeElement.addEventListener('play', () => {
+      this.seekToLiveEdge();
+    });
+
+      // Listen for dash.js errors
+      this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+        console.error('DASH error:', e);
+        alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+        this.router.navigateByUrl('/user/playlistschedule');
+      });
       } else {
         console.error('Error retrieving DRM authentication key:', response.message);
       }
+
+      if(response.error){
+        console.log('erro',response.error);
+      }
+    });
+  }
+
+    // Function to seek to the live edge when the stream is resumed
+    seekToLiveEdge() {
+      this.isAtLiveEdge = !this.isAtLiveEdge;
+      if (this.player.isDynamic()) {
+        const liveEdge = this.player.getCurrentLiveLatency();
+        const currentTime = this.player.time();
+        const liveDelay = liveEdge - currentTime;
+        if (liveDelay > 0) {
+          this.player.seek(liveEdge);
+          console.log('Seeked to live edge:', liveEdge);
+        } else {
+          console.log('Already at live edge');
+        }
+        console.log('Seeked to live edge:');
+
+      }
+    }
+    goToLive(){
+      console.log('Live stream resumed',this.isAtLiveEdge);
+      this.videoPlayer.nativeElement.play();
+        this.seekToLiveEdge();
+  
+    }
+  // Monitor if the player is at the live edge and enable/disable the "Live" button
+  checkIfLiveEdge() {
+    this.player.on(dashjs.MediaPlayer.events.PLAYBACK_TIME_UPDATED, () => {
+      const liveLatency = this.player.getCurrentLiveLatency();
+      const currentTime = this.player.time();
+      const liveThreshold = 1; // 1 second threshold for considering "live"
+      this.isAtLiveEdge = (liveLatency - currentTime) <= liveThreshold;
     });
   }
 
@@ -129,16 +195,34 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDRMKeys(): any {
-    return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders());
-  }
+  // getDRMKeys(): any {
+  //   return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders());
+  // }
+
+getDRMKeys(): any {
+  return this.crud.getRequest('auth/getdrmkey', this.getAuthHeaders()).pipe(
+    catchError((error) => {
+      if (error.status === 404) {
+        alert("Error 404: The requested resource was not found.");
+        this.router.navigateByUrl('/error-page'); // Redirect if needed
+      }
+      return throwError(() => new Error(error));
+    })
+  );
+}
 
   ngOnDestroy() {
     if (this.player) {
-      this.player.dispose();
+      this.player.reset();
     }
-    if (this.playerChannelId) {
-      localStorage.setItem('playerChannelId', '');
+
+    // Emit a value to complete the observable and unsubscribe
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    if (this.subscription) {
+      console.log('unSub')
+      this.subscription.unsubscribe();
     }
   }
 
@@ -160,11 +244,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
     this.crud.postRequest('auth/player-details', body).subscribe({
       next: (res: any) => {
-        console.log(res);
+        console.log('Player Data',res);
         this.channelData = res.data;
+
+        if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
+          alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
+          this.router.navigateByUrl('/user/playlistschedule');
+          console.log('Not Program details');
+        }
       },
       error: (err: any) => {
-        console.log(err);
+        console.error(err);
       }
     })
   }

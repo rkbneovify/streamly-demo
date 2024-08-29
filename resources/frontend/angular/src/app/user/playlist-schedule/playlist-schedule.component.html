@@ -20,7 +20,7 @@
   </div>
   
 
-  <div class="schedule_time_container">
+  <div class="schedule_time_container position-relative">
     <!-- <div class="schedule_days">
       <select name="" id="">
         <option value="Today">Today</option>
@@ -39,7 +39,7 @@
         <option *ngFor="let day of days" [value]="day">{{ day }}</option>
       </select>
     </div>
-    <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-100)">
+    <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-150)">
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
     </div>
     
@@ -49,10 +49,10 @@
       <div class="schedule_hour">01:30 PM</div>
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
-    <div class="schedule_GoLive_container d-flex align-items-center">
-      <div *ngIf="!go_Live" class="schedule_Live  pointer">Live</div>
-      <div *ngIf="go_Live" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div class="pointer" (click)="scrollContent(100)">
+    <div class="schedule_GoLive_container d-flex align-items-center position-absolute">
+      <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
+      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
+      <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
     </div>
@@ -106,7 +106,7 @@
       </div>
 
       <div class="schedule_time_programs_container position-relative">
-        <div class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
+        <div *ngIf="selectedDay == 'Today'" class="position-absolute h-100 livetimecounter" [ngStyle]="{'min-width.px': liveCurrentTime}">
         </div>
         <ng-container *ngFor="let data of filteredPrograms">
           <div class="schedule_time_programs" *ngIf="data?.prgSvcId">
@@ -114,7 +114,7 @@
             [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
             class="schedule_time"  
             *ngFor="let program of data.program; let index = index"  
-            [ngClass]="{'hover-active': index == 0}" 
+            [ngClass]="{'hover-active': index == 0,'px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
             (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url)">
                 <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
                 <p class="program_time my-2 overflow-hidden">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>
@@ -129,7 +129,10 @@
                 No Data Available
               </p>
             </div>
-        </ng-container>
+            </ng-container>
+            <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150-5,'width.px':getCurrentTimeDate?.length*150-5,'height.px':0}">
+              total
+            </div>
         <!-- <div class="schedule_time_programs">
           <div class="schedule_time">
             <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
@@ -173,10 +176,10 @@
       <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
         <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
       <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
-      <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p>
+      <!-- <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p> -->
       </div>
       <div class="col-lg-4 col-12 playstream_2">
-        <h1 [title]="programDetailData?.title">{{programDetailData?.title | truncate:20}}</h1>
+        <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
         <div (click)="setChannelId(programChannelId,programChannelUrl)" class="d-flex playstream_Play_icon my-2" *ngIf="programPlayable">
           <img class="" src="../../../assets/dummy-img/play-circle.png">
           <p>Play</p>
@@ -188,7 +191,8 @@
             <span>{{programDetailData?.quals}}</span>
           </button>
         </div>
-        <p class="playstream_desc my-3">
+        <p class="my-1 playstream_title">{{programDetailData?.title | truncate:20}}</p>
+        <p class="playstream_desc my-2">
           {{programDetailData?.description}}
         </p>
   
