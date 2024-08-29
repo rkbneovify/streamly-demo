@@ -2,8 +2,8 @@
     <div class="remove_Device-Container">
             <h1>Connected Devices</h1>
             <div class="toatlcheck-device my-3 my-sm-4 d-flex gap-3 align-items-center">
-                <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
-                <p class="d-inline-block">Device {{connectedDevice.length}}/5</p>
+                <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId?.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()">
+                <p class="d-inline-block">Device {{connectedDevice?.length}}/5</p>
             </div>
             <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
                 
