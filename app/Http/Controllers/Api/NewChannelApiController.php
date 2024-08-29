@@ -11,6 +11,7 @@ use App\Models\FavouriteChannel;
 use App\Models\Genre;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -550,6 +551,22 @@ class NewChannelApiController extends Controller
             } else {
                 $data = NULL;
             }
+            $PrevNext = $channel_id;
+            $all = DB::table('channels')->where('status', '=', 1)->orderBy('id', 'desc')->select('id')->first();
+            $nextChannel = $PrevNext;
+            if ($PrevNext == 1) {
+                $PrevNext = 2;
+                $nextChannel = 1;
+            }
+            if ($PrevNext == $all->id) {
+                $nextChannel = $all->id - 1;
+            }
+
+            $prev = DB::table('channels')->where('id', '<', $PrevNext)->where('status', '1')->max('id');
+            $prevChannel = DB::table('channels')->where('id', $prev)->where('status', '1')->select('id', 'name',  'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
+            $next = DB::table('channels')->where('id', '>', $nextChannel)->where('status', '1')->min('id');
+            $nextChannel = DB::table('channels')->where('id', $next)->where('status', '1')->select('id', 'name', 'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
+
             $response = [
                 'success' => true,
                 'response_code' => 200,
@@ -557,7 +574,9 @@ class NewChannelApiController extends Controller
                 'data' => [
                     "channel" => $record[0],
                     "recommended_channels" => $recommended_channels,
-                    "program_details" => $data
+                    "program_details" => $data,
+                    "prevChannel" => $prevChannel,
+                    "nextChannel" => $nextChannel
                 ],
 
             ];
