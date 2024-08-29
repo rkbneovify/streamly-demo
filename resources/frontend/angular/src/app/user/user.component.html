@@ -5,17 +5,17 @@
     </div>
     <div class="sidebar_2  flex-column justify-content-between align-items-center mt-5" [ngClass]="{'align-self-start  sidebar_2_ext':isExpanded}">
       
-      <div *ngIf="!showSubMenu" (click)="activeTab='home'" routerLink="/user" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('home')" routerLink="/user" [ngClass]="{'submenu1 pointer ':true,'activeTab':activeTab==='home'}" >
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu1.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">Home</p>
       </div>
 
-      <div *ngIf="!showSubMenu" (click)="activeTab='fav'" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('fav')" routerLink="/user/my-stuff" [ngClass]="{'submenu3 pointer ':true, 'activeTab':activeTab==='fav'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/sidemenu2.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">My Stuff</p>
       </div>
 
-      <div *ngIf="!showSubMenu" (click)="activeTab='playsh'" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
+      <div *ngIf="!showSubMenu" (click)="changeSideBarTab('playsh')" routerLink="/user/playlistschedule" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='playsh'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/side_menu3.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">Guide</p>
       </div>
@@ -25,7 +25,7 @@
         <span class="back"> back</span>
       </div> -->
 
-      <div (click)="activeTab='allChannel'"  routerLink="/user/channel/all" [ngClass]="{'submenu3 pointer':true,'activeTab':activeTab==='allChannel'}">
+      <div (click)="changeSideBarTab('allChannel')"  routerLink="/user/channel/all" [ngClass]="{'submenu3 submenuAll pointer':true,'activeTab':activeTab==='allChannel'}">
         <img loading="lazy" [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/All.svg" alt="" />
         <p class="display-none" [ngClass]="{'display-block':isExpanded}">All</p>
       </div>
@@ -162,11 +162,8 @@
           <div class="col-4 section1_img">
             <img loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/Rectangle 1078.png'" alt="" />
           </div>
-          <div class="col-lg-4 col-12 playstream_2">
-            <h1>{{programDetailData?.title}}</h1>
-            <p class="my-3">
-              {{programDetailData?.quals}}
-            </p>
+          <div class="col-lg-4 col-12 playstream_2 my-1 mt-2">
+            <h1>{{programDetailData?.stationName}}</h1>
             <div class="play_btn_container_1">
               <button class="playbtn_time text-nowrap">{{programDetailData?.duration | durationISOFormat}}</button>
               <button class="playbtn_hd">
@@ -174,7 +171,10 @@
                 <span>{{programDetailData?.quals}}</span>
               </button>
             </div>
-            <p class="playstream_desc my-3">
+            <p class="my-1 playstream_title">
+              {{programDetailData?.title}}
+            </p>
+            <p class="playstream_desc my-2">
               {{programDetailData?.description}}
             </p>
     
@@ -331,7 +331,7 @@
             <li><a routerLink="/user/channels/Sports">Sports</a></li>
             <li><a routerLink="/user/channels/Kids">Kids</a></li>
             <li><a routerLink="/user/channels/Talk">Talk</a></li>
-            <li><a routerLink="/user/channels/Other">Other</a></li>
+            <li><a routerLink="/user/channels/Others">Others</a></li>
           </ul>
         </div>
         <div>

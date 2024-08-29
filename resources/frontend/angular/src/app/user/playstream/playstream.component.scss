@@ -1,12 +1,20 @@
 .play_container_top {
   .playstream_1 {
+    .dash-video-player{
+      height: 100%;
+      .videoContainer{
+        height: 100%;
+      }
+    }
     video {
       width: 100% !important;
-      height: 450.61px;
+      height: 100%;
+      // height: 450.61px;
+      // object-fit: fill;
     }
     .vjs-big-play-centered {
-      width: 100% !important;
-      height: 450.61px;
+      // width: 100% !important;
+      // height: 450.61px;
     }
   }
 
@@ -62,7 +70,7 @@
         gap: 5px;
         width: min-content;
         height: 36px;
-        padding: 8px 20px 8px 20px;
+        padding: 4px 17px 4px 17px;
         border-radius: 40px;
         background-color: #ffdb4e;
         outline: none;
@@ -207,6 +215,30 @@
       }
     }
   }
+
+
+.live-indicator{
+  bottom: 18px;
+  left: 43px;
+  font-size: 13px;
+  padding: 0 0.3rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.live-go{
+  background-color: red;
+  color: white ;
+}
+
+.not-live{
+  background: gray;
+  color: black;
+}
+
+// ::-webkit-media-controls {
+//   display:none !important;
+// }
 
 @media screen and (max-width: 992px){
   .play_container_top {

@@ -197,6 +197,7 @@ export class UserComponent implements OnInit {
   }
 
   onSearch(searchTerm: any): void {
+    console.log(this.subscribed)
     if(this.subscribed)
       {this.searchSubject.next(searchTerm.value);
     if (searchTerm) {
@@ -369,5 +370,22 @@ export class UserComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  changeSideBarTab(type:string){
+    if(type === 'home')
+    {
+      this.activeTab = type;
+    }else if(type === 'fav'){
+      this.activeTab = type;
+    }else if(type === 'playsh'){
+      this.activeTab = type;
+    }else if(type === 'allChannel'){
+      this.activeTab = type;
+    }else if(type === 'fav'){
+      this.activeTab = type;
+    }
+
+    this.searchTerm = '';
   }
 }

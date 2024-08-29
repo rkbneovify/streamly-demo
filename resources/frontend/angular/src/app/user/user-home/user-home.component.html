@@ -5,7 +5,7 @@
       <div
         id="carouselExampleIndicators"
         class="carousel slide"
-        data-bs-ride="false"
+        data-bs-ride="carousel"
         >
           <div class="carousel-indicators">
             <button *ngFor="let index of sldierData; let i = index"
@@ -18,7 +18,7 @@
           </div>
           
           <div class="carousel-inner">
-              <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}">
+              <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}" data-bs-interval="2000">
                   <div class="landing_carousel_section1">
                       <div class="landing_carousel_section1_img">
                       <img src={{data.image}} alt="" loading="lazy" /> 
@@ -69,7 +69,10 @@
       </app-skeleton-loader> -->
       
       <div class="landing_carousel_section2 mt-5" *ngIf="recentsPlayData?.length">
-          <div  class="landing_carousel_section2_top">Recently Played</div>
+          <div  class="landing_carousel_section2_top">Recently Played
+            <span class="pointer" *ngIf="recentsPlayData?.length > 6"
+              [routerLink]="'/user/channels/recents'"> See More >></span>
+          </div>
           <div class="landing_carousel_section2_bottom mt-3 d-flex">
             <div class="card_page" *ngFor="let item of recentsPlayData">
               <img

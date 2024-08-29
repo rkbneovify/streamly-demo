@@ -44,6 +44,8 @@ export class AccountsettingsComponent implements OnInit {
   qunantity:any;
   qunantity_t:any;
   isLoading:boolean = false;
+  userinfo:any;
+  togglePasscode:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -107,6 +109,7 @@ export class AccountsettingsComponent implements OnInit {
   saveChanges() {
     // saving changes here
     this.loading = true;
+    console.log('saveChanges')
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
@@ -149,6 +152,7 @@ export class AccountsettingsComponent implements OnInit {
             },
             error:(err:any)=>{
               this.loading = false;
+              this.ts.error(err.error.message);
               err.error.message.password.forEach(element => {
                 this.ts.error(element);
               });
@@ -166,9 +170,6 @@ export class AccountsettingsComponent implements OnInit {
     );
     this.updateuserDetatils.controls['oldpassword'].setValue('');
     this.updateuserDetatils.controls['newpassword'].setValue('');
-    
-    
-
     // user detials
   }
 
@@ -182,6 +183,7 @@ export class AccountsettingsComponent implements OnInit {
         const plan3rd = res?.plan?.interval;
         this.planInterval = plan3rd;
         this.interval_count = res?.plan?.interval_count;
+        this.userinfo = res.userinfo;
 
         // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;        
         
@@ -196,7 +198,7 @@ export class AccountsettingsComponent implements OnInit {
         this.qunantity = res.subscription.quantity
 
         this.get_price(this.qunantity,this.tiredPlansDetails)
-    this.isLoading = true;
+    this.isLoading = false;
       },
       error:(err)=>{console.log(err); this.isLoading = true;}
     })
@@ -264,10 +266,13 @@ total_price:any = 0;
   deleteAccountForm: FormGroup;
   showPopDeleteAccount(){
     document.getElementById('btnShowPopDeleteAccount').click();
+    console.log('show dele')
+
   }
 
   deleteUserAccount(): void {
     this.isLoading = true;
+    console.log('Start the Deleting')
     this.crud.postRequest('auth/user/delete',{password:this.deleteAccountForm.get('password').value}).subscribe({
       next: (res: any) => {
           this.ts.success('Account delete successfully');
@@ -284,5 +289,6 @@ total_price:any = 0;
 
   showPopConf(){
     document.getElementById('btnShowPopConf').click();
+    console.log('show pop')
   }
 }

@@ -8,6 +8,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
   console.log('auth guard works');
 
   const jsonData = localStorage.getItem('deviceInfo');
+  const token_access = localStorage.getItem('token');
   if (jsonData !== null) {
     try {
       user = JSON.parse(jsonData);
@@ -16,7 +17,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
     }
   }
 
-  if (user?.access_token) {
+  if (token_access) {
     console.log(user.subscribed, '=======sub====');
     if (user?.subscribed) {
       console.log('subscription true, if block executed');
@@ -50,6 +51,7 @@ export const authguardGuard: CanActivateFn = (route, state) => {
       }
     }
   } else {
+    localStorage.clear();
     router.navigateByUrl('auth/login');
     return false;
   }
