@@ -1,13 +1,17 @@
 import { NgIf, NgFor, KeyValuePipe, DatePipe } from '@angular/common';
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
+  Input,
   NgModule,
+  OnChanges,
   OnInit,
   Renderer2,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { NgClass } from '@angular/common';
@@ -60,7 +64,7 @@ import {
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent implements OnInit, AfterViewInit {
+export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked {
   // stripe: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
@@ -146,110 +150,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       ],
       couponCode: [''],
       address1: ['', Validators.required],
-      address2: ['',Validators.required],
+      address2: [''],
       paymentCity: ['', Validators.required],
       paymentState: ['', Validators.required],
       country: ['', Validators.required],
     });
   }
-
-  // async ngAfterViewInit(){
-  //   // if(this.selectedTab == 'Payment'){
-  //     this.stripe = await loadStripe(environment.stripe.publicKey);
-  //   console.log(this.stripe);
-
-  //   const el = this.stripe?.elements();
-
-  //   const card = el.create('card');
-
-  //   card.mount('#card-data');
-
-  //   card.on('change', (ev: any) => {
-  //     const displayError: any = document.getElementById('card-errors');
-  //     ev.error
-  //       ? (displayError.textContent = ev.error.message)
-  //       : (displayError.textContent = '');
-  //   });
-
-  //   const button = document.getElementById('button');
-  //   button?.addEventListener('click', async (event) => {
-  //     event.preventDefault();
-  //     const ownerInfo = {
-  //       owner: { name: 'Deepak' },
-  //       amount: 1000,
-  //       currency: 'USD',
-  //     };
-
-  //     try {
-  //       const result: any = await this.stripe.createPaymentMethod({
-  //         type: 'card',
-  //         card,
-  //         billing_details: { name: 'Deepak' },
-  //       });
-  //       const tokenInfo = await this.stripe.createToken(card, ownerInfo);
-  //       console.log('payment Method', result);
-  //       console.log('Token Created', tokenInfo);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   });
-  //   // }
-  // }
-
-  // ============================== ngOnIt==========================
-
-  // async ngAfterViewInit() {
-
-  //   if (this.selectedTab == 'Payment') {
-
-  //     try {
-  //       this.stripe = await loadStripe(environment.stripe.publicKey);
-  //       const el = this.stripe?.elements();
-  //       const card = el.create('card');
-
-  //       // Check if the card-data element exists before mounting
-  //       const cardDataElement = document.getElementById('card-data');
-  //       if (cardDataElement) {
-  //         card.mount('#card-data');
-
-  //         card.on('change', (ev: any) => {
-  //           const displayError: any = document.getElementById('card-errors');
-  //           ev.error
-  //             ? (displayError.textContent = ev.error.message)
-  //             : (displayError.textContent = '');
-  //         });
-
-  //         const button = document.getElementById('button');
-  //         button?.addEventListener('click', async (event) => {
-  //           event.preventDefault();
-  //           const ownerInfo = {
-  //             owner: { name: 'Deepak' },
-  //             amount: 1000,
-  //             currency: 'USD',
-  //           };
-
-  //           try {
-  //             const result: any = await this.stripe.createPaymentMethod({
-  //               type: 'card',
-  //               card,
-  //               billing_details: { name: 'Deepak' },
-  //             });
-  //             const tokenInfo = await this.stripe.createToken(card, ownerInfo);
-  //             console.log('payment Method', result);
-  //             console.log('Token Created', tokenInfo);
-  //           } catch (error) {
-  //             console.log(error);
-  //           }
-  //         });
-  //       } else {
-  //         console.error('Element with ID card-data not found in the DOM.');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error loading Stripe:', error);
-  //     }
-
-  //   }
-  // }
 
   async ngOnInit() {
     this.searchTerms
@@ -261,33 +167,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
         if(apiResponse.length == 1 && apiResponse[0].city && apiResponse[0].state){
-          console.log('set==>');
           this.availabilityForm.get('city')?.setValue(apiResponse[0].city);
           this.availabilityForm.get('state')?.setValue(apiResponse[0].state);
         }
-        console.log('API Response:====>', apiResponse ,apiResponse.length == 1, apiResponse[0].city , apiResponse[0].state);
-      }),    // this.searc ,pTerms
-    // .pipe(
-    //   debounceTime(300),
-    //   distinctUntilChanged(), // ignore if next search term is same as previous
-    //   switchMap((term: string) => this.getZipcode(term))
-    // )
-    // .subscribe((apiResponse: any) => {
-    //   this.zipcodedata = [...apiResponse];
-    //   console.log('API Response:', apiResponse);
-    // });
-
-    // this.searchZipTerms
-    // .pipe(debounceTime(3000)) // Delay API request by 3 seconds
-    // .subscribe((value: string) => {
-    //   this.getZipcode(value).subscribe({
-    //     next:(res:any)=>{
-    //       console.log('======= res>',res);
-    //     },
-    //     error:(err:any)=>{console.log(err)}
-    //   });
-    // });
-
+      }),
     this.searchZipTerms
       .pipe(
         debounceTime(3000), // Delay API request by 3 seconds
@@ -301,28 +184,20 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       )
       .subscribe({
         next: (res: any) => {
-          console.log('======= res>', res);
           this.cardZipData = res.some((zcode: any) => {
-            console.log(
-              zcode.value,
-              '==========================',
-              this.paymentFormDetails.value.cardZip
-            );
             return zcode.value === this.paymentFormDetails.value.cardZip;
           });
 
           if (this.cardZipData) {
-            console.log(this.cardZipData, 'data in if');
             this.ts.success('ZipCode is valid');
             this.paymentFormDetails.get('paymentState')?.setValue(res[0].state);
             this.paymentFormDetails.get('paymentCity')?.setValue(res[0].city);
           } else {
             this.ts.error('ZipCode is not valid');
           }
-          console.log(this.cardZipData, '========>cardzip');
         },
         error: (err: any) => {
-          console.log(err);
+          console.error(err);
         },
       });
 
@@ -338,91 +213,12 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     
     this.couponFormControl.valueChanges.subscribe(() => {
       if (this.couponFormControl.value === '') {
-        // this.applyCoupon();
         this.validateCoupon();
-        console.log('touched');
       }
-      // this.touchedOnce = true;
     });
-    // stripe call
-    // this.addStripe();
-    // addStripe() {
-    //   this.STRIPE = Stripe(environment.stripe.publicKey);
-    //   console.log(this.STRIPE);
-
-    //   const elements = this.STRIPE.elements();
-    //   const cardElement = elements.create('card', { hidePostalCode: true });
-
-    //   cardElement.mount('#card-element');
-
-    //  const cardHolderName = document.getElementById('name');
-    //  const cardButton = document.getElementById('card-button');
-    //  const clientSecret = cardButton.dataset.secret;
-    //  let validCard = false;
-    //  const cardError = document.getElementById('card-errors');
-
-    //  cardElement.addEventListener('change', function(event) {
-
-    //      if (event.error) {
-    //          validCard = false;
-    //          cardError.textContent = event.error.message;
-    //      } else {
-    //          validCard = true;
-    //          cardError.textContent = '';
-    //      }
-    //  });
-    // if(this.selectedTab == 'Payment'){
-    //   this.stripe = await loadStripe(environment.stripe.publicKey);
-    // console.log(this.stripe);
-
-    // const el = this.stripe?.elements();
-
-    // const card = el.create('card');
-
-    // card.mount('#card-data');
-
-    // card.on('change', (ev: any) => {
-    //   const displayError: any = document.getElementById('card-errors');
-    //   ev.error
-    //     ? (displayError.textContent = ev.error.message)
-    //     : (displayError.textContent = '');
-    // });
-
-    // const button = document.getElementById('button');
-    // button?.addEventListener('click', async (event) => {
-    //   event.preventDefault();
-    //   const ownerInfo = {
-    //     owner: { name: 'Deepak' },
-    //     amount: 1000,
-    //     currency: 'USD',
-    //   };
-
-    //   try {
-    //     const result: any = await this.stripe.createPaymentMethod({
-    //       type: 'card',
-    //       card,
-    //       billing_details: { name: 'Deepak' },
-    //     });
-    //     const tokenInfo = await this.stripe.createToken(card, ownerInfo);
-    //     console.log('payment Method', result);
-    //     console.log('Token Created', tokenInfo);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // });
-    // }
-
-    // $(document).ready(function(){
-    //   $('#myCarousel').on('slid.bs.carousel', function () {
-    //     // Your custom code to execute when the slide changes
-    //     console.log('Slide changed');
-    //     // You can put any code here that you want to execute on slide change
-    //   });
-    // });
   }
 
   onSearch(searchTerm: any): void {
-    console.log(searchTerm.term);
     this.searchTerms.next(searchTerm.term);
     if (this.selectedTab == 'Payment') {
       this.paymentFormDetails.get('cardZip')?.setValue(searchTerm.term);
@@ -442,9 +238,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   onSelect(selectedValue: any): void {
-    console.log('54545454545454==========================',selectedValue);
     if(typeof selectedValue !== 'undefined' && selectedValue !== null){
-    console.log('54545454545454============iffff==============',selectedValue);
       if (this.selectedTab == 'Payment') {
         this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
         this.paymentFormDetails
@@ -461,8 +255,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         this.searchZipInput = selectedValue.value;
       }
     }else{
-    console.log('54545454545454=========else=================',selectedValue);
-
       if (this.selectedTab == 'Payment') {
         this.paymentFormDetails.get('paymentCity')?.setValue('');
         this.paymentFormDetails
@@ -481,7 +273,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.isWidth767 = window.innerWidth;
-    // console.log(this.isWidth767);
   }
 
   // click to open the login popup
@@ -491,7 +282,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // click to open the correct zipcode popup
   showCorrectZipcode(): void {
     const currentEmail = this.availabilityForm.get('email')?.value;
-    console.log('current email-->', currentEmail);
     if (currentEmail) {
       this.otpVerificationForm.get('email')?.setValue(currentEmail);
     }
@@ -503,7 +293,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   applyclassForAva(): boolean {
-    // console.log(this.isWidth767 === 767 && this.selectedTab === 'Availability');
     return this.isWidth767 <= 767 && this.selectedTab === 'Availability';
   }
   applyclassForVer(): boolean {
@@ -516,8 +305,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       next: (res) => {
         this.all_Plans = res;
         if (this.all_Plans.length > 0) {
-          console.log('Plans data --> ', this.all_Plans);
-
           this.all_Plans[0].forEach((el: any) => {
             console.log(
               el.id,
@@ -530,7 +317,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
           });
         }
       },
-      error: (err) => console.log('Plans error --> ', err),
+      error: (err) => {
+        console.error(err.error);
+        this.ts.error(err.error);
+      },
     });
   }
 
@@ -542,25 +332,16 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       if (this.selectedPlanType == 'per_unit') {
         this.crud.getRequest('get-basic-plan/' + id).subscribe({
           next: (data: any) => {
-            console.log('===========basic plan>', data);
             this.checkoutPlans = data;
-            console.log('checkout================>', this.checkoutPlans);
             this.selectedTab = 'Payment';
             this.completed = 4;
             this.paymentFormDetails
               .get('cardEmail')
               ?.setValue(this.availabilityForm.get('email')?.value);
-            console.log(
-              'avail email',
-              this.availabilityForm.get('email')?.value
-            );
-            console.log('avail email 2', this.availabilityForm.value.email);
-
             this.initializeKey(data.STRIPE_KEY);
-            // this.initiateCardElement();
           },
           error: (err: any) => {
-            console.log(err);
+            console.error(err.error);
           },
         });
       }
@@ -568,7 +349,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       if (this.selectedPlanType == 'tiered') {
         this.crud.getRequest('get-tier-plan/' + id).subscribe({
           next: (data: any) => {
-            console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
             this.completed = 4;
@@ -576,15 +356,10 @@ export class RegisterComponent implements OnInit, AfterViewInit {
             this.paymentFormDetails
               .get('cardEmail')
               ?.setValue(this.availabilityForm.get('email')?.value);
-            console.log(
-              'avail email',
-              this.availabilityForm.get('email')?.value
-            );
-            console.log('avail email 2', this.availabilityForm.value.email);
             this.initializeKey(data.STRIPE_KEY);
           },
           error: (err: any) => {
-            console.log(err);
+            console.error(err);
           },
         });
       }
@@ -599,7 +374,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       city: this.userCity,
       state: this.userState,
     };
-    console.log(userDetails);
     this.crud.postRequest('auth/zipcodeInquery', userDetails).subscribe({
       next: (data: any) => {
         this.ts.success(data.success);
@@ -611,17 +385,15 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   // getotp
   getOtpWithMail(verifiMailDetails: any) {
-    console.log('hello im here', verifiMailDetails);
     this.crud
       .postRequest('auth/send-otp', { email: verifiMailDetails })
       .subscribe({
         next: (data: any) => {
-          console.log('otpdata-->', data);
           this.ts.success(data.message);
         },
         error: (err: any) => {
           this.ts.success(err.message);
-          console.log('otp-error-->', err);
+          console.error(err);
         },
       });
   }
@@ -629,7 +401,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   verifyOtpWithMail(verifyDetails: any) {
     this.crud.postRequest('auth/verify-otp', verifyDetails).subscribe({
       next: (data: any) => {
-        console.log('otpdata verify-->', data);
         this.ts.success(data.message);
         this.loading = false;
         setTimeout(() => {
@@ -658,11 +429,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   onInputChange() {
     // Handle OTP input change if needed
     const otpValue = this.getOtpValue();
-    console.log('Email:', this.otpVerificationForm.get('email')?.value);
-    console.log('OTP:', otpValue);
     // Move focus to the next input box
     const currentControlName = this.getCurrentControlName();
-    console.log('currentControlName--->', currentControlName);
     const currentDigit = parseInt(
       currentControlName.charAt(currentControlName.length - 1)
     );
@@ -719,7 +487,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     const email = this.availabilityForm.get('email')?.value;
     if (email) {
       this.getOtpWithMail(email);
-      console.log('Working');
       this.resendButtonDisabled = true;
       const timer = setInterval(() => {
         if (this.countdown > 0) {
@@ -739,7 +506,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   checkZipCodeValid(zipcode: any): boolean {
     const search = zipcode;
     return this.zipcodedata.some((zcode: any) => {
-      console.log(zcode.value, '==========================', search);
       return zcode.value === search;
     });
   }
@@ -748,7 +514,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   checkcardZipCodeValid(zipcode: any): boolean {
     const search = zipcode;
     return this.cardZipData.some((zcode: any) => {
-      console.log(zcode.value, '==========================', search);
       if (zcode.value === search) {
         this.paymentFormDetails.get('paymentState')?.setValue('');
       }
@@ -776,34 +541,23 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         const isUserExist = resp.exists;
         const message = resp.message;
         if (isUserExist) {
-          console.log('register function', message);
           this.loading = false;
           this.showAlreadyUserModal();
         } else {
-          console.log('register function', 'check zip code');
-          console.log(
-            'register function',
-            'value',
-            this.checkZipCodeValid(this.searchZipInput),
-            'zipInput',
-            this.searchZipInput
-          );
           const isZipCodeValid = this.checkZipCodeValid(this.searchZipInput);
           if (isZipCodeValid) {
             this.showCorrectZipcode();
             this.loading = false;
           } else {
             this.showWrongZipcode();
-            console.log('register function', 'Invalid zip code.');
             this.loading = false;
           }
           this.loading = false;
         }
-        console.log(resp);
       },
       error: (error) => {
         this.loading = false;
-        console.log(error);
+        console.error(error);
       },
     });
   }
@@ -813,7 +567,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       const data = this.availabilityForm.value;
       this.loading = true;
       this.checkEmailRegistration(data);
-      console.log('form Data :', this.availabilityForm.value);
     } else {
       this.loading = false;
       console.log(this.availabilityForm.errors);
@@ -822,7 +575,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
 
   submitFormWrong() {
     this.getZipCodeInvalid(this.wrong_zipcodeDetials.value);
-    console.log('wrong_zipcode value -->>', this.wrong_zipcodeDetials.value);
   }
 
   backbutton(data: any) {
@@ -868,7 +620,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       this.selectedPlanType = data.type;
       this.selectedPlan = data;
       this.ts.success('Plan Selected');
-      console.log('===========>', this.selectedPlan);
       this.selectedTab = 'Terms';
       this.completed = 3;
     }
@@ -914,7 +665,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
         next: (data: any) => {
           if (data.message != `No such coupon: '${coupon}'`) {
             this.couponValidationResult = data;
-            console.log('Coupon validation data:', data);
             this.ts.success(data.message);
             this.couponDataDetails = data;
             this.grandTotalPrice = this.totalPrice;
@@ -951,10 +701,8 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   // }
 
   discountCode() {
-    console.log(this.couponDataDetails, '============ifout============>');
     this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
-      console.log(this.couponDataDetails, '==============ifin==========>');
       this.discount=this.couponDataDetails?.amountoff
       if (this.couponDataDetails?.amountoff) {
         this.grandTotalPrice =this.totalPrice - this.discount;
@@ -1002,21 +750,9 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     const formData = this.paymentFormDetails.value;
     let trial_day;
     let quantity = this.device_per_unit;
-    console.log(
-      '===out-trial====>',
-      this.checkoutPlans.plandetails?.trial_period_days
-    );
     if (this.checkoutPlans.plandetails?.trial_period_days) {
-      console.log(
-        '===intrial====>',
-        this.checkoutPlans.plandetails?.trial_period_days
-      );
       trial_day = this.checkoutPlans.plandetails?.trial_period_days;
     } else {
-      console.log(
-        '=else==trial=====>',
-        this.checkoutPlans.plandetails?.trial_period_days
-      );
       trial_day = 0;
     }
 
@@ -1041,24 +777,21 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     this.crud.postRequest('auth/register', body).subscribe({
       next: (res: any) => {
         this.loading = false;
-        console.log('resdata ======> ', res);
         this.ts.success(res.message);
         this.selectedTab = 'Confirmation';
         this.completed = 7;
       },
       error: (err: any) => {
         this.loading = false;
-        console.log('errdata ======> ', err);
-        this.ts.success(err.message);
+        console.error( err);
+        this.ts.error(err.error.error);
       },
     });
-    console.log('==Body======>', body);
   }
 
   paymentShowData() {
     const formData = this.paymentFormDetails.value;
     this.loading = false;
-    console.log('========paymentData==========>', formData);
   }
 
 
@@ -1125,7 +858,6 @@ export class RegisterComponent implements OnInit, AfterViewInit {
       };
       setTimeout(() => {
         this.card = this.elements.create('card', cards);
-        console.log(this.card);
         this.card.mount(this.cardInfo.nativeElement);
         this.card.addEventListener('change', this.cardHandler);
       }, 4000);
@@ -1142,17 +874,18 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   }
 
   async createStripeToken() {
-    this.loading = true;
-    console.log(this.card, 'card');
+    this.checkCardDetails();
+if(this.paymentFormDetails.valid)
+{    this.loading = true;
     const { token, error } = await this.stripe.createToken(this.card);
-    console.log(token, 'token');
 
     this.submitPaymentDetails(token);
     if (token) {
       this.onSuccess(token);
     } else {
       this.onError(error);
-    }
+    }}
+
   }
 
   onSuccess(token: any) {}
@@ -1168,34 +901,20 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   checkCardDetails(){
     if(this.selectedTab == 'Payment'){
         const element= this.cardInfo.nativeElement;
+      if(this.paymentFormDetails.valid && element){
         const hasClassComplete = element.classList.contains('StripeElement--complete');
-        console.log('hasClassComplete',hasClassComplete);
         if(hasClassComplete){
           this.checkCardDetail = true;
         }else{
           this.checkCardDetail = false
         }
+      }
       }else{
         this.checkCardDetail = false;
       }
   }
 
-  //   curl --location 'http://127.0.0.1:8000api/auth/register' \
-  // --data-raw '{
-  //     "name": "AnnuStripeTest1",,
-  //     "email": "annu.sehrawat+AnnuStripeTest1@oodles.io",
-  //     "password": "12345678",
-  //     "stripeToken": "tok_visa",
-  //     "trial_days": "1",
-  //     "plan_id": "FJZCNhouM8Nr",
-  //     "quantity": "1",
-  //     "line1": "H. No. 265",
-  //     "line2": "abc",
-  //     "city": "Chesterfield",
-  //     "state": "Massachusetts",
-  //     "country": "United States",
-  //     "card_brand": "visa",
-  //     "card_last_four": "4242",
-  //     "zip_code": "01012"
-  // }'
+  ngAfterViewChecked(): void {
+    this.checkCardDetails();
+  }
 }
