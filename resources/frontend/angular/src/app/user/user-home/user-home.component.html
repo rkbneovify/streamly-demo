@@ -18,7 +18,7 @@
           </div>
           
           <div class="carousel-inner">
-              <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}" data-bs-interval="2000">
+              <div *ngFor="let data of sldierData; let i = index;" [ngClass]="{'carousel-item':true, 'active':i==0}" data-bs-interval="3000">
                   <div class="landing_carousel_section1">
                       <div class="landing_carousel_section1_img">
                       <img src={{data.image}} alt="" loading="lazy" /> 
@@ -58,7 +58,7 @@
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <button #nextBtn class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>

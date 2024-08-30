@@ -15,11 +15,17 @@ import { ToastrService } from 'ngx-toastr';
 export class ResetPasswordComponent {
   showPassword1: boolean = false;
   showPassword2: boolean = false;
+  loading:boolean = false;
   resetPasswordForm!: FormGroup;
   token: any = this.ar.snapshot.paramMap.get('token');
-  email: any =this.ar.queryParams;
+  email: any;
+
   constructor(private fb: FormBuilder, private ar: ActivatedRoute,private crud:CrudService, private router: Router,
     private toastr: ToastrService) {
+      this.ar.queryParams.subscribe(params => {
+        this.email = params['email'];
+      });
+
     this.resetPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password1: ['', [Validators.required, Validators.minLength(6)]],
@@ -28,7 +34,7 @@ export class ResetPasswordComponent {
     
   }
   ngOnInit(){
-    this.resetPasswordForm.controls['email'].setValue(this.email['_value'].email);
+    this.resetPasswordForm.controls['email'].setValue(this.email);
   }
 
   passwordMatchValidator(formGroup: FormGroup) {
@@ -43,6 +49,7 @@ export class ResetPasswordComponent {
   }
 
   resetPassword_Link() {
+    this.loading = true;
     console.log('Email -->', this.resetPasswordForm.get('email')?.value);
     console.log('Email -->', this.resetPasswordForm.value.email);
     console.log('Token -->', this.token);
@@ -56,8 +63,9 @@ export class ResetPasswordComponent {
     this.crud.postRequest('password/reset',data).subscribe({
       next:(res:any)=>{this.toastr.success(res.message)
         this.router.navigateByUrl('/auth/login');
+        this.loading = false;
       },
-      error:(err)=>{this.toastr.error(err.error.message)},
+      error:(err)=>{this.toastr.error(err.error.message);this.loading = false;},
     });
   }
 

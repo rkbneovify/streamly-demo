@@ -46,9 +46,9 @@
       </div> -->
     </div>
     
-    <div class="sidebar_3 pointer pb-4">
-      <!-- <img src="../../assets/dummy-img/side_setting.svg" alt="" />
-      <p *ngIf="isExpanded">Settings</p> -->
+    <div class="sidebar_3 pointer pb-4" >
+      <img [ngClass]="{'d-inline-block min-20':true}" src="../../assets/dummy-img/side_setting.svg" alt="" />
+      <p class="display-none" [ngClass]="{'display-block':isExpanded}">Settings</p>
     </div>
   </div>
 
