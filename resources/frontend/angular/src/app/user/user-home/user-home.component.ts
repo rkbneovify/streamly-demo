@@ -1,5 +1,5 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
@@ -20,6 +20,7 @@ export class UserHomeComponent implements OnInit {
   favChannelList:any;
   favoriteChannels: number[] = [];
   isLoading:boolean = false;
+  @ViewChild('nextBtn') sliderNexrButton!: ElementRef;
 
 
   constructor( private crud: CrudService,private router: Router, private ts: ToastrService){}
@@ -29,7 +30,15 @@ export class UserHomeComponent implements OnInit {
     this.getRecentsListData();
     this.channelsWithGenre();
   }
-
+  
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.sliderNexrButton) {
+        console.log('start slider')
+        this.sliderNexrButton.nativeElement.click();
+      }
+    }, 0);
+  }
 
   loginSliders (){
   this.isLoading = true;
