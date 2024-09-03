@@ -17,7 +17,7 @@ import { HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-sub-payment',
   standalone: true,
-  imports: [    NgIf,
+  imports: [NgIf,
     NgFor,
     NgClass,
     FormsModule,
@@ -99,7 +99,7 @@ export class SubPaymentComponent implements OnInit {
       this.paymentFormDetailSub = this.fb.group({
         nameOnCard: ['', Validators.required],
         // cardNumber: ['', Validators.required],
-        cardZip: ['01012', Validators.required],
+        cardZip: [null, Validators.required],
         cardEmail: [
           '',
           [Validators.required, Validators.email],
@@ -365,6 +365,7 @@ export class SubPaymentComponent implements OnInit {
 
 
     async createStripeToken() {
+      this.paymentFormDetailSub.markAllAsTouched();
       this.loading = true;
       console.log(this.card, 'card');
       const { token, error } = await this.stripe.createToken(this.card);
@@ -463,7 +464,7 @@ export class SubPaymentComponent implements OnInit {
         error: (err: any) => {
           this.loading = false;
           console.log('errdata ======> ', err);
-          this.ts.success(err.message);
+          this.ts.error(err.error.error);
         },
       });
       console.log('==Body======>', body);
@@ -584,5 +585,24 @@ export class SubPaymentComponent implements OnInit {
           .get('paymentState')
           ?.setValue('');
     }
+  }
+
+  checkCardDetail:boolean = false;
+  checkCardDetails(){
+        const element= this.cardInfo.nativeElement;
+      if(this.paymentFormDetailSub.valid && element){
+        const hasClassComplete = element.classList.contains('StripeElement--complete');
+        if(hasClassComplete){
+          this.checkCardDetail = true;
+        }else{
+          this.checkCardDetail = false
+        }
+      }else{
+        
+      }
+    }
+
+  ngAfterViewChecked(): void {
+    this.checkCardDetails();
   }
 }

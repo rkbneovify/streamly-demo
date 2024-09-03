@@ -192,9 +192,13 @@
       class="col-12 col-md-8 px-4 carts-details">
       <div class="row gy-2 row1">
         <div class="col-6 col-md-6 ps-0">
-          <p>Name on Card</p>
+          <p>Name on Card <span class="text-danger">*</span></p>
           <div class="card-input">
             <input form type="text" placeholder="Enter Name" formControlName="nameOnCard" />
+            <!--validation error -->
+            <div *ngIf="paymentFormDetailSub.get('nameOnCard').touched && paymentFormDetailSub.get('nameOnCard').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetailSub.get('nameOnCard').errors?.['required']">Name is required.</small>
+            </div>
           </div>
         </div>
         <!-- <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
@@ -204,7 +208,7 @@
           </div>
         </div> -->
         <div class="col-6 col-md-6 px-md-0 ps-0 pe-3">
-          <p>Credit Card Zip</p>
+          <p>Credit Card Zip <span class="text-danger">*</span></p>
           <div class="card-input">
             <!-- <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" /> -->
             <!-- <img
@@ -217,6 +221,10 @@
              (search)="onSearch($event)"
               (change)="onSelect($event)" [searchable]="true" bindLabel="label">
               </ng-select>
+                                <!--validation error -->
+            <div *ngIf="paymentFormDetailSub.get('cardZip').touched && paymentFormDetailSub.get('cardZip').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetailSub.get('cardZip').errors?.['required']">Card Zip is required.</small>
+            </div>
           </div>
           </div>
 
@@ -225,9 +233,13 @@
 
       <div class="row gy-2 row2">
         <div class="col-12 col-md-12 ps-0">
-          <p>Email</p>
+          <p>Email <span class="text-danger">*</span></p>
           <div class="card-input">
             <input type="email" placeholder="Enter Email" required formControlName="cardEmail" />
+            <!--validation error -->
+            <div *ngIf="paymentFormDetailSub.get('cardEmail').touched && paymentFormDetailSub.get('cardEmail').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetailSub.get('cardEmail').errors?.['required']">Email is required.</small>
+            </div>
           </div>
         </div>
       </div>
@@ -235,9 +247,13 @@
       <div class="row gy-2 mt-4">
         <div class="col-6 ps-0">
           <!-- <button (click)="paymentShowData()"></button> -->
-          <p >Address 1</p>
+          <p >Address 1 <span class="text-danger">*</span></p>
           <div class="card-input">
             <input type="text" placeholder="Enter Address 1" formControlName="address1" />
+            <!--validation error -->
+            <div *ngIf="paymentFormDetailSub.get('address1').touched && paymentFormDetailSub.get('address1').invalid" class="text-danger">
+              <small *ngIf="paymentFormDetailSub.get('address1').errors?.['required']">Address 1 is required.</small>
+            </div>
           </div>
         </div>
         <div class="col-6 px-0">
@@ -250,21 +266,33 @@
 
       <div class="row gy-2">
         <div class="col-6 col-md-4 ps-0">
-          <p>City</p>
+          <p>City <span class="text-danger">*</span></p>
           <div class="card-input">
             <input type="text" placeholder="Enter City" formControlName="paymentCity" />
+          <!--validation error -->
+          <div *ngIf="paymentFormDetailSub.get('paymentCity').touched && paymentFormDetailSub.get('paymentCity').invalid" class="text-danger">
+            <small *ngIf="paymentFormDetailSub.get('paymentCity').errors?.['required']">City is required.</small>
+          </div>
           </div>
         </div>
         <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
-          <p>State</p>
+          <p>State <span class="text-danger">*</span></p>
           <div class="card-input">
             <input type="text" placeholder="Enter State" formControlName="paymentState" />
+                         <!--validation error -->
+                         <div *ngIf="paymentFormDetailSub.get('paymentState').touched && paymentFormDetailSub.get('paymentState').invalid" class="text-danger">
+                          <small *ngIf="paymentFormDetailSub.get('paymentState').errors?.['required']">State is required.</small>
+                        </div>
           </div>
         </div>
         <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
-          <p>Country</p>
+          <p>Country <span class="text-danger">*</span></p>
           <div class="card-input">
             <input type="text" placeholder="Enter Country" formControlName="country" />
+                          <!--validation error -->
+                          <div *ngIf="paymentFormDetailSub.get('country').touched && paymentFormDetailSub.get('country').invalid" class="text-danger">
+                            <small *ngIf="paymentFormDetailSub.get('country').errors?.['required']">country is required.</small>
+                          </div>
           </div>
         </div>
       </div>
@@ -275,7 +303,7 @@
       </div> -->
       <div class="row gy-2">
         <div class="col-12 p-0">
-        <p>Card Details</p>
+        <p>Card Details <span class="text-danger">*</span></p>
         <div id="form-field">
           <div class="input_standred " id="card-info" #cardInfo></div>
           <!-- <button id="submit-button" type="submit">
@@ -286,7 +314,13 @@
       </div>
       <div class="row gy-2 justify-content-end">
         <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
-          <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetailSub.valid" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetailSub.valid }"  (click)="createStripeToken()">
+          <!-- <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetailSub.valid" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetailSub.valid }"  (click)="createStripeToken()">
+            <span *ngIf="!loading">
+              
+            </span>
+          </button> -->
+
+          <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetailSub.valid || !checkCardDetail" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetailSub.valid && checkCardDetail,'cursor-not-allow': !paymentFormDetailSub.valid || !checkCardDetail}"  (click)="createStripeToken()">
             <span *ngIf="!loading">
               Subscribe Now
             </span>
