@@ -56,9 +56,6 @@ export class ChangepasswordComponent {
 
   resetPassword_Link() {
     this.loading = true;
-    console.log('Email -->', this.resetPasswordForm.get('email')?.value);
-    console.log('Email -->', this.resetPasswordForm.value.email);
-    console.log('Token -->', this.token);
     let data = {
       email: this.resetPasswordForm.get('email')?.value,
       old_password: this.resetPasswordForm.get('oldPassword')?.value,
@@ -71,9 +68,6 @@ export class ChangepasswordComponent {
         Authorization: `Bearer ${this.token}`,
         Accept: 'application/json',
       });
-
-      console.log(this.token);
-
       this.crud
         .postRequest('auth/force-change-password', data, headers)
         .subscribe({

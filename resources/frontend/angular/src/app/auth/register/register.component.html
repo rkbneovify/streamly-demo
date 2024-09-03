@@ -31,7 +31,7 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <div class="steps">
+      <div class="steps" (click)="selectedTab = 'Plans'">
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans','completedTab':completed>2}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -767,7 +767,7 @@
         class="col-12 col-md-8 px-4 carts-details">
         <div class="row gy-2 row1">
           <div class="col-6 col-md-6 ps-0">
-            <p>Name on Card</p>
+            <p>Name on Card <span class="text-danger">*</span></p>
             <div class="card-input">
               <input form type="text" placeholder="Enter Name" formControlName="nameOnCard" />
               <!--validation error -->
@@ -783,7 +783,7 @@
             </div>
           </div> -->
           <div class="col-6 col-md-6 px-md-0 ps-0 pe-3">
-            <p>Credit Card Zip</p>
+            <p>Credit Card Zip <span class="text-danger">*</span></p>
             <div class="card-input">
               <!-- <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" /> -->
               <!-- <img
@@ -806,7 +806,7 @@
 
         <div class="row gy-2 row2">
           <div class="col-12 col-md-12 ps-0">
-            <p>Email</p>
+            <p>Email <span class="text-danger">*</span></p>
             <div class="card-input">
               <input type="email" placeholder="Enter Email" required formControlName="cardEmail" readonly/>
               <!--validation error -->
@@ -830,7 +830,7 @@
         <div class="row gy-2 mt-4">
           <div class="col-6 ps-0">
             <!-- <button (click)="paymentShowData()"></button> -->
-            <p >Address 1</p>
+            <p >Address 1 <span class="text-danger">*</span></p>
             <div class="card-input">
               <input type="text" placeholder="Enter Address 1" formControlName="address1" />
               <!--validation error -->
@@ -853,7 +853,7 @@
 
         <div class="row gy-2">
           <div class="col-6 col-md-4 ps-0">
-            <p>City</p>
+            <p>City <span class="text-danger">*</span></p>
             <div class="card-input">
               <input type="text" placeholder="Enter City" formControlName="paymentCity" />
               <!--validation error -->
@@ -863,7 +863,7 @@
             </div>
           </div>
           <div class="col-6 col-md-4 ps-0 pe-md-3 pe-0">
-            <p>State</p>
+            <p>State <span class="text-danger">*</span></p>
             <div class="card-input">
               <input type="text" placeholder="Enter State" formControlName="paymentState" />
               <!--validation error -->
@@ -873,7 +873,7 @@
             </div>
           </div>
           <div class="col-6 col-md-4 px-md-0 ps-0 pe-3">
-            <p>Country</p>
+            <p>Country <span class="text-danger">*</span></p>
             <div class="card-input">
               <input type="text" placeholder="Enter Country" formControlName="country" />
               <!--validation error -->
@@ -890,7 +890,7 @@
         </div> -->
         <div class="row gy-2">
           <div class="col-12 p-0">
-          <p>Card Details</p>
+          <p>Card Details <span class="text-danger">*</span></p>
           <div id="form-field">
             <div class="input_standred " id="card-info" #cardInfo></div>
             <!-- <button id="submit-button" type="submit">
@@ -901,7 +901,7 @@
         </div>
         <div class="row gy-2 justify-content-end">
           <div class="col-12 col-md-5 px-0 d-flex btn-trial pe-md-3">
-            <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetails.valid && checkCardDetail" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetails.valid }"  (click)="createStripeToken()">
+            <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetails.valid || !checkCardDetail" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetails.valid && checkCardDetail,'cursor-not-allow': !paymentFormDetails.valid || !checkCardDetail}"  (click)="createStripeToken()">
               <span *ngIf="!loading">
                 Start your 7 days trial
               </span>

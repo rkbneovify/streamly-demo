@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -14,13 +14,28 @@ export class SubContentComponent implements OnInit{
 
   categoryList:any = ['Movies','News','Kids','Comedy','Family','Others'];
   activeCategoryTab = 'Movies';
+  @ViewChild('nextBtn') sliderNexrButton!: ElementRef;
+
 
   constructor(private apiService:CrudService){}
 
   ngOnInit(): void {
     this.getAllCategories("Movies");
+    this.moveSlide()
   }
 
+  moveSlide(){
+    // this.sliderNexrButton.nativeElement.click();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.sliderNexrButton) {
+        console.log('start slider')
+        this.sliderNexrButton.nativeElement.click(); // Simulate click after DOM is fully rendered
+      }
+    }, 0);
+  }
 
   changeActiveTab(category:string){
     this.activeCategoryTab = category;
