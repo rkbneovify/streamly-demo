@@ -18,6 +18,8 @@ use App\Http\Controllers\NotificationController;
 Route::get('/', function (Request $request) {
     return 'Working';
 });
+Route::match(['get', 'post'], '/botman', 'BotManController@handle');
+
 // For api Registration, confirmations and verification
 Route::get('/front', 'APIController@index')->name('front');
 Route::get('/unhash/{id}', 'APIController@unhashid')->name('unhashid');
@@ -87,12 +89,12 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
     Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify']);
-    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify']);
+    Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
     Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify']);
     Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify']);
     Route::get('all-genre', 'Api\NewChannelApiController@allGenre')->middleware(['jwt.verify']);
     Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify']);
-    Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify']);
+    Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify', 'subscribed']);
     Route::post('channel-program-details', 'Api\NewChannelApiController@ChannelProgramDetails')->middleware(['jwt.verify']);
     Route::get('faq', 'Api\User\FooterApiController@faq');
     Route::post('bugReport', 'Api\User\FooterApiController@sendBugReportAPI');
