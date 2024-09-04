@@ -1,4 +1,4 @@
-<div class="landing_carousel_section2 mt-5" *ngIf="favListData?.length">
+<div class="landing_carousel_section2 mt-5" >
   <div class="landing_carousel_section2_top">
     Favourite Channel
     <span class="pointer" *ngIf="favListData?.length > 6" 
@@ -64,9 +64,15 @@
       </div>
     </div>
   </div>
+
+  <div *ngIf="!favListData?.length" style="min-height: 230px;" class="no-Data">
+    <p class="m-auto">
+      No Favourite Channel
+    </p>
+  </div>
 </div>
 
-<div class="landing_carousel_section2 mt-5" *ngIf="recentsPlayData?.length">
+<div class="landing_carousel_section2 mt-5">
   <div class="landing_carousel_section2_top">
     Recently Played
     <span class="pointer" *ngIf="recentsPlayData?.length > 6"
@@ -141,13 +147,20 @@
       </div>
     </div>
   </div>
+
+
+  <div *ngIf="!recentsPlayData?.length" style="min-height: 230px;" class="no-Data">
+    <p class="m-auto">
+      No Recent Channel
+    </p>
+  </div>
 </div>
 
-<div class="noData" *ngIf="!recentsPlayData?.length && !favListData?.length">
+<!-- <div class="noData" *ngIf="!recentsPlayData?.length && !favListData?.length">
   <p class="m-auto">
     No Data
   </p>
-</div>
+</div> -->
 
 
 <div *ngIf="isLoading" class="loader-overlay">

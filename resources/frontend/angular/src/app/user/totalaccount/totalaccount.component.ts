@@ -17,6 +17,7 @@ export class TotalaccountComponent {
   connectedDevice!: any;
   access_Token!:any;
   current_device:any;
+  numOfDevice:number=0
   deviceId:Array<string>=[];
   constructor(private apiService: CrudService, private toastr: ToastrService ) { 
     this.get_all_device();
@@ -109,6 +110,7 @@ export class TotalaccountComponent {
           console.log('get all device ->>',res);
           if(res.response_code == 200){
             let data = res.data;
+            this.numOfDevice = +res.numofdevice;
             // Sort the connected devices array based on the current user's device ID
             data = data.sort((a: any, b: any) => {
               // If the session ID matches the current user's device ID, move it to the top

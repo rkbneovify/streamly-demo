@@ -113,15 +113,15 @@ export class UserComponent implements OnInit {
       console.log('helllo');
       this.submenu = false;
     }
-
-    const isSearchfalse =
-      target.classList.contains('.submenu1') ||
-      target.classList.contains('.submenu2') ||
-      target.classList.contains('.submenu3');
-    console.log(isSearchfalse);
-    if (isSearchfalse) {
+    const isInsideSearch = target.closest('.card_page');
+    const isCloseButton = target.closest('.close-search img');
+    const searchField = target.closest('.search_Bar');
+    const isSchedule_details_container = target.closest('.schedule_details_container');
+    // If clicked outside of search container and it's not the close button, hide search modal
+    if (!isInsideSearch && !isCloseButton && !searchField && !isSchedule_details_container) {
+      this.searchShow = false;
       this.searchTerm = '';
-      console.log('Search False ');
+      this.allChannelDataList = [];
     }
   }
 
@@ -197,14 +197,15 @@ export class UserComponent implements OnInit {
   }
 
   onSearch(searchTerm: any): void {
-    console.log(this.subscribed)
-    if(this.subscribed)
-      {this.searchSubject.next(searchTerm.value);
-    if (searchTerm) {
-      this.searchShow = true;
-    } else {
-      this.searchShow = false;
-    }}
+    console.log(this.subscribed);
+    if (this.subscribed) {
+      this.searchSubject.next(searchTerm.value);
+      if (searchTerm) {
+        this.searchShow = true;
+      } else {
+        this.searchShow = false;
+      }
+    }
   }
 
   performSearch(searchTerm: string): void {
@@ -372,20 +373,17 @@ export class UserComponent implements OnInit {
     });
   }
 
-  changeSideBarTab(type:string){
-    if(type === 'home')
-    {
+  changeSideBarTab(type: string) {
+    if (type === 'home') {
       this.activeTab = type;
-    }else if(type === 'fav'){
+    } else if (type === 'fav') {
       this.activeTab = type;
-    }else if(type === 'playsh'){
+    } else if (type === 'playsh') {
       this.activeTab = type;
-    }else if(type === 'allChannel'){
+    } else if (type === 'allChannel') {
       this.activeTab = type;
-    }else if(type === 'fav'){
+    } else if (type === 'fav') {
       this.activeTab = type;
     }
-
-    this.searchTerm = '';
   }
 }

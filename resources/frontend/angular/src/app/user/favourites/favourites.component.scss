@@ -181,7 +181,16 @@ main {
       }
     }
   }
-
+  .no-Data{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    p{
+      color: #ffffffd1;
+      font-size: 1.3rem;
+      
+    }
+  }
 
   @media screen and (max-width: 765px) {
     .search_Bar{
