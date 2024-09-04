@@ -49,7 +49,7 @@
       <div class="schedule_hour">01:30 PM</div>
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
-    <div class="schedule_GoLive_container d-flex align-items-center position-absolute">
+    <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
       <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
@@ -130,7 +130,7 @@
               </p>
             </div>
             </ng-container>
-            <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150-5,'width.px':getCurrentTimeDate?.length*150-5,'height.px':0}">
+            <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150+95,'width.px':getCurrentTimeDate?.length*150+95,'height.px':0}">
               total
             </div>
         <!-- <div class="schedule_time_programs">
