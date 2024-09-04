@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
-import { Component, HostListener, NgModule, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, NgModule, OnInit } from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -10,7 +10,7 @@ import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import {
   DurationISOFormatPipe,
   TruncatePipe,
@@ -55,7 +55,6 @@ export class UserComponent implements OnInit {
     private crud: CrudService,
     private router: Router,
     private ts: ToastrService,
-    // private search:SearchComponent
     private viewportScroller: ViewportScroller
   ) {
     this.router.events.subscribe((event) => {
@@ -66,19 +65,24 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getRecentsListData();
-    this.setActiveTabBasedOnUrl();
+        // Listen for route changes
+        this.setActiveTabBasedOnUrl();
+        this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          // Call your function here
+          this.setActiveTabBasedOnUrl();
+        });
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
         this.performSearch(searchTerm);
       });
-
-    // get the fav. list
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
   }
+
 
   sideBarAnimation() {
     const userToken = localStorage.getItem('deviceInfo');
@@ -193,6 +197,8 @@ export class UserComponent implements OnInit {
       this.activeTab = 'playsh';
     } else if (url.includes('/user/channel/all')) {
       this.activeTab = 'allChannel';
+    }else{
+      this.activeTab = 'null';
     }
   }
 
