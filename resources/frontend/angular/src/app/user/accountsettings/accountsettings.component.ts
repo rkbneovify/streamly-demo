@@ -122,12 +122,20 @@ export class AccountsettingsComponent implements OnInit {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
+        let body:any = {};
         // if (this.updated_data) {
-        let body = {
+        if(this.updateuserDetatils.value.fullname){
+          body = {
+            name: this.updateuserDetatils.value.fullname
+          }
+        }
+        if(this.updateuserDetatils.value.oldpassword){
+          body = {
           name: this.updateuserDetatils.value.fullname,
           old_password: this.updateuserDetatils.value.oldpassword,
           password: this.updateuserDetatils.value.newpassword,
-        };
+          }
+        }
         this.crud
           .postRequest('auth/account-edit', body, headers)
           .subscribe({
@@ -135,7 +143,7 @@ export class AccountsettingsComponent implements OnInit {
               if(res.response_code == 200){
                 this.loading = false;
                             // Update name in local storage
-              this.usersdetail.name = body.name;
+              this.usersdetail.name = body?.name;
               localStorage.setItem(
                 'userDetails',
                 JSON.stringify(this.usersdetail)
