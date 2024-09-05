@@ -392,6 +392,8 @@ footer .contain:first-child {
     }
 
     .right {
+      position: relative;
+      z-index: 1;
       flex-wrap: wrap;
       row-gap: 3rem;
       justify-content: space-between;
