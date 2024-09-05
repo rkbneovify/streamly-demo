@@ -499,7 +499,8 @@ class NewChannelApiController extends Controller
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
+                ->where('channels.id', '!=', $channel_id);
             if (!empty($genre_ids)) {
                 $query1->whereIn('channels_genre.genre_id', $genre_ids);
             } else {
