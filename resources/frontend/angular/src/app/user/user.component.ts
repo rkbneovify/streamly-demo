@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
-import { Component, HostListener, NgModule, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, NgModule, OnInit } from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -10,7 +10,7 @@ import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
 import {
   DurationISOFormatPipe,
   TruncatePipe,
@@ -55,7 +55,6 @@ export class UserComponent implements OnInit {
     private crud: CrudService,
     private router: Router,
     private ts: ToastrService,
-    // private search:SearchComponent
     private viewportScroller: ViewportScroller
   ) {
     this.router.events.subscribe((event) => {
@@ -66,19 +65,24 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.getRecentsListData();
-    this.setActiveTabBasedOnUrl();
+        // Listen for route changes
+        this.setActiveTabBasedOnUrl();
+        this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe((event: NavigationEnd) => {
+          // Call your function here
+          this.setActiveTabBasedOnUrl();
+        });
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
         this.performSearch(searchTerm);
       });
-
-    // get the fav. list
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
   }
+
 
   sideBarAnimation() {
     const userToken = localStorage.getItem('deviceInfo');
@@ -113,15 +117,15 @@ export class UserComponent implements OnInit {
       console.log('helllo');
       this.submenu = false;
     }
-
-    const isSearchfalse =
-      target.classList.contains('.submenu1') ||
-      target.classList.contains('.submenu2') ||
-      target.classList.contains('.submenu3');
-    console.log(isSearchfalse);
-    if (isSearchfalse) {
+    const isInsideSearch = target.closest('.card_page');
+    const isCloseButton = target.closest('.close-search img');
+    const searchField = target.closest('.search_Bar');
+    const isSchedule_details_container = target.closest('.schedule_details_container');
+    // If clicked outside of search container and it's not the close button, hide search modal
+    if (!isInsideSearch && !isCloseButton && !searchField && !isSchedule_details_container) {
+      this.searchShow = false;
       this.searchTerm = '';
-      console.log('Search False ');
+      this.allChannelDataList = [];
     }
   }
 
@@ -193,18 +197,21 @@ export class UserComponent implements OnInit {
       this.activeTab = 'playsh';
     } else if (url.includes('/user/channel/all')) {
       this.activeTab = 'allChannel';
+    }else{
+      this.activeTab = 'null';
     }
   }
 
   onSearch(searchTerm: any): void {
-    console.log(this.subscribed)
-    if(this.subscribed)
-      {this.searchSubject.next(searchTerm.value);
-    if (searchTerm) {
-      this.searchShow = true;
-    } else {
-      this.searchShow = false;
-    }}
+    console.log(this.subscribed);
+    if (this.subscribed) {
+      this.searchSubject.next(searchTerm.value);
+      if (searchTerm) {
+        this.searchShow = true;
+      } else {
+        this.searchShow = false;
+      }
+    }
   }
 
   performSearch(searchTerm: string): void {
@@ -372,20 +379,17 @@ export class UserComponent implements OnInit {
     });
   }
 
-  changeSideBarTab(type:string){
-    if(type === 'home')
-    {
+  changeSideBarTab(type: string) {
+    if (type === 'home') {
       this.activeTab = type;
-    }else if(type === 'fav'){
+    } else if (type === 'fav') {
       this.activeTab = type;
-    }else if(type === 'playsh'){
+    } else if (type === 'playsh') {
       this.activeTab = type;
-    }else if(type === 'allChannel'){
+    } else if (type === 'allChannel') {
       this.activeTab = type;
-    }else if(type === 'fav'){
+    } else if (type === 'fav') {
       this.activeTab = type;
     }
-
-    this.searchTerm = '';
   }
 }
