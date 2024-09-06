@@ -105,6 +105,7 @@ export class UserComponent implements OnInit {
     }
   }
 
+  // change the tab when click
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
@@ -113,9 +114,11 @@ export class UserComponent implements OnInit {
       target.classList.contains('schedule_profile') ||
       target.classList.contains('userProfileImage') ||
       target.classList.contains('nologout');
+      console.log('envet');
     if (!isInsideMenu) {
       console.log('helllo');
       this.submenu = false;
+      return;
     }
     const isInsideSearch = target.closest('.card_page');
     const isCloseButton = target.closest('.close-search img');

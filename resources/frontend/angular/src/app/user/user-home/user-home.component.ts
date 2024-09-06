@@ -1,5 +1,5 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
@@ -186,4 +186,19 @@ getRecentsListData(): void {
     }
   });
 }
+submenu:boolean = false;
+  // change the tab when click
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const isInsideMenu =
+      target.classList.contains('schedule_profile') ||
+      target.classList.contains('userProfileImage');
+      console.log('envet');
+    if (isInsideMenu) {
+      console.log('helllo true');
+      this.submenu = true;
+      return;
+    }
+  }
 }
