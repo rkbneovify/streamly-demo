@@ -270,14 +270,28 @@
 
       <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000000000"
         data-pause="hover">
-        <div class="carousel-indicators">
+        <!-- ================= slider indicators============  -->
+        <!-- <div class="carousel-indicators" *ngIf="all_Plans[0].length < 4 ">
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
             aria-current="true" aria-label="Slide 1"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
             aria-label="Slide 2"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
             aria-label="Slide 3"></button>
+        </div>         -->
+
+        <div class="carousel-indicators">
+          <button *ngFor="let data of all_Plans[0]; let i = index"
+                  type="button" 
+                  [attr.data-bs-target]="'#carouselExampleIndicators'"
+                  [attr.data-bs-slide-to]="i" 
+                  [class.active]="i === 0" 
+                  [attr.aria-current]="i === 0 ? 'true' : null"
+                  [attr.aria-label]="'Slide ' + (i + 1)">
+          </button>
         </div>
+        
+
         <div class="carousel-inner">
           <div *ngFor="let data of all_Plans[0]; let i = index" [ngClass]="{ 'carousel-item': true, active: i === 0 }">
             <div class="col_2_s_3 my-auto d-flex flex-column justify-content-between">
@@ -493,6 +507,8 @@
             </div>
           </div>-->
         </div>
+
+        <!-- ================ next and prevoius button========-->
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
           data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -510,9 +526,9 @@
     <div class="row_4 my-4 position-relative" *ngIf="selectedTab == 'Terms'">
       <div style="top: -10px; left: 12px" (click)="backbutton('Plans')"
         class="pointer position-absolute d-flex justify-content-center align-item-center">
-        <img loading="lazy" *ngIf="!acceptTerm" src="../../../assets/dummy-img/backArrow.svg" alt="" />
-        <img loading="lazy" *ngIf="acceptTerm" src="../../../assets/dummy-img/arrow.svg" alt="" />
-        <div [ngClass]="{ 'backbtn ms-2': true, backbtnwhite: acceptTerm }">
+        <!-- <img loading="lazy"  src="../../../assets/dummy-img/backArrow.svg" alt="" /> -->
+        <img loading="lazy" src="../../../assets/dummy-img/arrow.svg" alt="" />
+        <div [ngClass]="{ 'backbtn ms-2 backbtnwhite': true}">
           Back
         </div>
       </div>
