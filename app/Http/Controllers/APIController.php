@@ -330,7 +330,7 @@ class APIController extends Controller
         $numofdevice = $prevConnectDevicecount->count();
 
         //  dd($s);
-        $response = array('success' => true, 'response_code' => 200, 'numofdevice' => $numofdevice, 'message' => 'Connected device found successfully', 'data' => $s);
+        $response = array('success' => true, 'response_code' => 200, 'numofdevice' => $numofdevice, 'userDeviceLimit' => GetLimitForUser($uid), 'message' => 'Connected device found successfully', 'data' => $s);
         return response()->json($response, 200);
     }
 
