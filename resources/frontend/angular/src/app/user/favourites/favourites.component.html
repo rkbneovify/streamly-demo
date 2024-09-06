@@ -66,7 +66,7 @@
   </div>
 
   <div *ngIf="!favListData?.length" style="min-height: 230px;" class="no-Data">
-    <p class="m-auto">
+    <p class="m-auto" *ngIf="!isLoading">
       No Favourite Channel
     </p>
   </div>
@@ -150,9 +150,11 @@
 
 
   <div *ngIf="!recentsPlayData?.length" style="min-height: 230px;" class="no-Data">
-    <p class="m-auto">
+
+    <p *ngIf="!isLoading" class="m-auto">
       No Recent Channel
     </p>
+
   </div>
 </div>
 
