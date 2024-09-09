@@ -560,7 +560,7 @@ export class PlaylistScheduleComponent
     channelUrl?: string
   ) {
     this.isLoading = true;
-    if (index == 0) {
+    if (index == 0 && this.selectedDay == 'Today') {
       this.programPlayable = true;
       this.programChannelId = channelId;
       this.programChannelUrl = channelUrl;

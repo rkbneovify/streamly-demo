@@ -59,12 +59,14 @@ import {
     RouterLink,
     ReactiveFormsModule,
     KeyValuePipe,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
-export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked {
+export class RegisterComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   // stripe: any;
   selectedTab: string = 'Availability';
   isWidth767: number = window.innerWidth;
@@ -74,7 +76,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   searchZipInput: string = '';
-  searchZipCardInput:string = '';
+  searchZipCardInput: string = '';
   city_state_readonly: boolean = false;
   resendButtonDisabled = false;
   countdown = 60;
@@ -88,9 +90,9 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
   zipcardShow: boolean = false;
   cardZipData!: any;
   showTiredPlan: boolean = false;
-  discount:any=0;
-  loading:boolean = false;
-  completed:number = 0;
+  discount: any = 0;
+  loading: boolean = false;
+  completed: number = 0;
   private searchCoupnTerm = new Subject<string>();
   private searchZipTerms = new Subject<string>();
 
@@ -100,7 +102,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
   wrong_zipcodeDetials!: FormGroup;
   availabilityForm!: FormGroup;
   otpVerificationForm!: FormGroup;
-  couponFormControl!:FormControl;
+  couponFormControl!: FormControl;
   selectedPlan: any;
   selectedPlanType: string = '';
   acceptTerm: boolean = false;
@@ -166,11 +168,28 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
       )
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
-        if(apiResponse.length == 1 && apiResponse[0].city && apiResponse[0].state){
-          this.availabilityForm.get('city')?.setValue(apiResponse[0].city);
-          this.availabilityForm.get('state')?.setValue(apiResponse[0].state);
+        console.log('ZipCode Data =>', this.zipcodedata);
+        if (
+          apiResponse.length == 1 &&
+          apiResponse[0].city &&
+          apiResponse[0].state
+        ) {
+          console.log('ZipCode Data inside the if =>', this.zipcodedata);
+          if (this.selectedTab === 'Availability') {
+            this.availabilityForm.get('city')?.setValue(apiResponse[0].city);
+            this.availabilityForm.get('state')?.setValue(apiResponse[0].state);
+          }
+          if (this.selectedTab === 'Payment') {
+            this.paymentFormDetails
+              .get('paymentState')
+              ?.setValue(apiResponse[0].state);
+            this.paymentFormDetails
+              .get('paymentCity')
+              ?.setValue(apiResponse[0].city);
+          }
+        } else {
         }
-      }),
+      });
     this.searchZipTerms
       .pipe(
         debounceTime(3000), // Delay API request by 3 seconds
@@ -185,6 +204,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
       .subscribe({
         next: (res: any) => {
           this.cardZipData = res.some((zcode: any) => {
+            this.ts.success('ZipCode is valid');
             return zcode.value === this.paymentFormDetails.value.cardZip;
           });
 
@@ -210,7 +230,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
 
     this.counterControl = this.fb.control(1, [Validators.min(1)]);
     this.couponFormControl = this.fb.control('');
-    
+
     this.couponFormControl.valueChanges.subscribe(() => {
       if (this.couponFormControl.value === '') {
         this.validateCoupon();
@@ -222,10 +242,10 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
     this.searchTerms.next(searchTerm.term);
     if (this.selectedTab == 'Payment') {
       this.paymentFormDetails.get('cardZip')?.setValue(searchTerm.term);
-      this.searchZipCardInput =searchTerm.term;
+      this.searchZipCardInput = searchTerm.term;
     }
 
-    if(this.selectedTab == 'Availability'){ 
+    if (this.selectedTab == 'Availability') {
       this.availabilityForm.get('zipcode')?.setValue(searchTerm.term);
       this.searchZipInput = searchTerm.term;
     }
@@ -238,30 +258,30 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
   }
 
   onSelect(selectedValue: any): void {
-    if(typeof selectedValue !== 'undefined' && selectedValue !== null){
+    if (typeof selectedValue !== 'undefined' && selectedValue !== null) {
       if (this.selectedTab == 'Payment') {
-        this.paymentFormDetails.get('paymentCity')?.setValue(selectedValue.city);
+        this.paymentFormDetails
+          .get('paymentCity')
+          ?.setValue(selectedValue.city);
         this.paymentFormDetails
           .get('paymentState')
           ?.setValue(selectedValue.state);
         this.paymentFormDetails.get('cardZip')?.setValue(selectedValue.value);
         this.searchZipInput = selectedValue.value;
       }
-      if(this.selectedTab == 'Availability'){
+      if (this.selectedTab == 'Availability') {
         this.availabilityForm.get('city')?.setValue(selectedValue.city);
         this.availabilityForm.get('state')?.setValue(selectedValue.state);
         this.availabilityForm.get('zipcode')?.setValue(selectedValue.value);
         this.city_state_readonly = true;
         this.searchZipInput = selectedValue.value;
       }
-    }else{
+    } else {
       if (this.selectedTab == 'Payment') {
         this.paymentFormDetails.get('paymentCity')?.setValue('');
-        this.paymentFormDetails
-          .get('paymentState')
-          ?.setValue('');
+        this.paymentFormDetails.get('paymentState')?.setValue('');
       }
-      if(this.selectedTab == 'Availability'){
+      if (this.selectedTab == 'Availability') {
         this.availabilityForm.get('city')?.setValue('');
         this.availabilityForm.get('state')?.setValue('');
         this.city_state_readonly = false;
@@ -335,6 +355,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
             this.completed = 4;
+            this.grandTotalPrice = this.checkoutPlans.plandetails.amount / 100;
             this.paymentFormDetails
               .get('cardEmail')
               ?.setValue(this.availabilityForm.get('email')?.value);
@@ -660,7 +681,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
 
   validateCoupon() {
     const coupon = this.couponFormControl.value;
-    if(coupon){
+    if (coupon) {
       this.crud.postRequest('validate-coupon', { coupon }).subscribe({
         next: (data: any) => {
           if (data.message != `No such coupon: '${coupon}'`) {
@@ -673,7 +694,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
             }
           } else {
             this.ts.error(data.message);
-            this.discount=0;
+            this.discount = 0;
             this.couponDataDetails = null;
             this.grandTotalPrice = this.totalPrice;
           }
@@ -685,10 +706,10 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
           this.couponDataDetails = null;
         },
       });
-    }else{
+    } else {
       this.ts.error('Enter Coupon');
       this.couponDataDetails = null;
-      this.discount=0;
+      this.discount = 0;
       this.grandTotalPrice = this.totalPrice;
     }
     // }
@@ -703,16 +724,16 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
   discountCode() {
     this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
-      this.discount=this.couponDataDetails?.amountoff
+      this.discount = this.couponDataDetails?.amountoff;
       if (this.couponDataDetails?.amountoff) {
-        this.grandTotalPrice =this.totalPrice - this.discount;
-      } else if (this.couponDataDetails?.percentoff) {
-        this.discount = this.totalPrice * (this.couponDataDetails?.percentoff / 100);
         this.grandTotalPrice = this.totalPrice - this.discount;
-          
+      } else if (this.couponDataDetails?.percentoff) {
+        this.discount =
+          this.totalPrice * (this.couponDataDetails?.percentoff / 100);
+        this.grandTotalPrice = this.totalPrice - this.discount;
       }
-    }else{
-      this.discount=0
+    } else {
+      this.discount = 0;
     }
   }
 
@@ -771,7 +792,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
       card_brand: token.card.brand,
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetails.value.cardZip,
-      coupon:this.discount
+      coupon: this.discount,
     };
 
     this.crud.postRequest('auth/register', body).subscribe({
@@ -783,7 +804,7 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
       },
       error: (err: any) => {
         this.loading = false;
-        console.error( err);
+        console.error(err);
         this.ts.error(err.error.error);
       },
     });
@@ -793,8 +814,6 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
     const formData = this.paymentFormDetails.value;
     this.loading = false;
   }
-
-
 
   stripe: any;
   elements: any;
@@ -875,17 +894,17 @@ export class RegisterComponent implements OnInit, AfterViewInit,AfterViewChecked
 
   async createStripeToken() {
     this.checkCardDetails();
-if(this.paymentFormDetails.valid)
-{    this.loading = true;
-    const { token, error } = await this.stripe.createToken(this.card);
+    if (this.paymentFormDetails.valid) {
+      this.loading = true;
+      const { token, error } = await this.stripe.createToken(this.card);
 
-    this.submitPaymentDetails(token);
-    if (token) {
-      this.onSuccess(token);
-    } else {
-      this.onError(error);
-    }}
-
+      this.submitPaymentDetails(token);
+      if (token) {
+        this.onSuccess(token);
+      } else {
+        this.onError(error);
+      }
+    }
   }
 
   onSuccess(token: any) {}
@@ -895,23 +914,23 @@ if(this.paymentFormDetails.valid)
     }
   }
 
-
-
-  checkCardDetail:boolean = false;
-  checkCardDetails(){
-    if(this.selectedTab == 'Payment'){
-        const element= this.cardInfo.nativeElement;
-      if(this.paymentFormDetails.valid && element){
-        const hasClassComplete = element.classList.contains('StripeElement--complete');
-        if(hasClassComplete){
+  checkCardDetail: boolean = false;
+  checkCardDetails() {
+    if (this.selectedTab == 'Payment') {
+      const element = this.cardInfo.nativeElement;
+      if (this.paymentFormDetails.valid && element) {
+        const hasClassComplete = element.classList.contains(
+          'StripeElement--complete'
+        );
+        if (hasClassComplete) {
           this.checkCardDetail = true;
-        }else{
-          this.checkCardDetail = false
+        } else {
+          this.checkCardDetail = false;
         }
       }
-      }else{
-        this.checkCardDetail = false;
-      }
+    } else {
+      this.checkCardDetail = false;
+    }
   }
 
   ngAfterViewChecked(): void {
