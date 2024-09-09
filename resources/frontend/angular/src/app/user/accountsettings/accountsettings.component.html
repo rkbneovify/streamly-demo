@@ -4,7 +4,7 @@
     <p class="account-heading mb-4">Account Details</p>
     <div class="accountdetails">
       <div class="acoount_user_name">
-        <label [ngClass]="{'m-r-20':editMode}">Name</label>
+        <label [ngClass]="{ 'm-r-20': editMode }">Name</label>
         <ng-container *ngIf="editMode; else displayMode">
           <input
             required
@@ -22,14 +22,16 @@
         <!-- <input class="input_plane" formControlName="email" type="text"> -->
         <p>{{ updateuserDetatils.get("email")?.value }}</p>
       </div>
-      <div [ngClass]="{'acoount_user_password':true,'h-auto':editMode}">
+      <div [ngClass]="{ acoount_user_password: true, 'h-auto': editMode }">
         <label for="">Password</label>
         <!-- <input class="input_plane" formControlName="password" type="text" name="" id=""> -->
         <ng-container *ngIf="editMode; else displayModePassword">
           <div
             *ngIf="editMode"
-            [ngClass]="{'d-flex flex-column  old-password mt-2 gap-2':true,'password-height':editMode}"
-
+            [ngClass]="{
+              'd-flex flex-column  old-password mt-2 gap-2': true,
+              'password-height': editMode
+            }"
           >
             <input
               required
@@ -65,7 +67,7 @@
 
       <div class="acoount_user_timezone my-3">
         <label for="">Home Timezone</label>
-        <p>{{homeTimeZone}}</p>
+        <p>{{ homeTimeZone }}</p>
       </div>
       <div class="acoount_user_currtimezone my-3">
         <label for=""> Current Timezone </label>
@@ -73,38 +75,37 @@
       </div>
       <div class="acoount_user_currtimezone my-3">
         <label for=""> passcode</label>
-        <p class="position-relative">{{togglePasscode ?userinfo?.passcode:'********'}}
+        <p class="position-relative">
+          {{ togglePasscode ? userinfo?.passcode : "********" }}
           <img
-          *ngIf="togglePasscode"
-          class="pointer position-absolute"
-          (click)="togglePasscode = !togglePasscode"
-          src="../../../assets/dummy-img/eye.svg"
-          alt=""
-          loading="lazy"
-
-        />
-        <svg
-          *ngIf="!togglePasscode"
-          (click)="togglePasscode = !togglePasscode"
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          fill="currentColor"
-          class="bi bi-eye-slash pointer position-absolute"
-          viewBox="0 0 16 16"
-          style="color: white;
-          "
-        >
-          <path
-            d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+            *ngIf="togglePasscode"
+            class="pointer position-absolute"
+            (click)="togglePasscode = !togglePasscode"
+            src="../../../assets/dummy-img/eye.svg"
+            alt=""
+            loading="lazy"
           />
-          <path
-            d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
-          />
-          <path
-            d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c-.335.48-.83 1.12-1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
-          />
-        </svg>
+          <svg
+            *ngIf="!togglePasscode"
+            (click)="togglePasscode = !togglePasscode"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-eye-slash pointer position-absolute"
+            viewBox="0 0 16 16"
+            style="color: white"
+          >
+            <path
+              d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"
+            />
+            <path
+              d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"
+            />
+            <path
+              d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c-.335.48-.83 1.12-1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"
+            />
+          </svg>
         </p>
       </div>
       <div class="acoount_user_zipcode my-3">
@@ -114,7 +115,11 @@
       </div>
     </div>
     <div class="accountbtn_container">
-      <button (click)="showPopDeleteAccount()" *ngIf="!editMode" class="plan_btn btn-delete text-nowrap">
+      <button
+        (click)="showPopDeleteAccount()"
+        *ngIf="!editMode"
+        class="plan_btn btn-delete text-nowrap"
+      >
         Account Delete
       </button>
       <button
@@ -127,13 +132,11 @@
       <button
         *ngIf="editMode"
         class="plan_btn btn-edit position-relative"
-        [class.spinner]="loading" [disabled]="loading"
+        [class.spinner]="loading"
+        [disabled]="loading"
         (click)="saveChanges()"
-
       >
-      <span *ngIf="!loading">
-        Save
-      </span>
+        <span *ngIf="!loading"> Save </span>
       </button>
       <button
         *ngIf="editMode"
@@ -145,32 +148,62 @@
     </div>
   </form>
 
-  <div class="account_details_container account_subscription_container mb-4" *ngIf="subscribed">
+  <div
+    class="account_details_container account_subscription_container mb-4"
+    *ngIf="subscribed"
+  >
     <p class="account-heading mb-4">Subscription</p>
     <div class="accountdetails">
-      <div class="acoount_user_name ">
+      <div class="acoount_user_name">
         <label>Current Plan</label>
-        <p>{{planName}}</p>
+        <p>{{ planName }}</p>
       </div>
-      <div [ngClass]="{'acoount_user_name my-4':true,'h-auto-min':billingScheme == 'tiered'}">
-        <label [ngClass]="{'flex-1':billingScheme == 'tiered'}">Current Plan Type</label>
-        <p *ngIf="billingScheme == 'per_unit'">{{billingScheme}}</p>
-        <div *ngIf="billingScheme == 'tiered'" [ngClass]="{'row_total align-items-start flex-column justify-content-between':true,'h-auto-min flex-1':billingScheme == 'tiered'}">
-          <div class="pointer"  (click)="showTiredPlan = !showTiredPlan">
-            <img loading="lazy" [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
-              src="../../../assets/dummy-img/chevron-down.svg" alt="" />
-            <div class="text-center tiers def-color">Tiers {{interval_count}} {{planInterval}}</div>
+      <div
+        [ngClass]="{
+          'acoount_user_name my-4': true,
+          'h-auto-min': billingScheme == 'tiered'
+        }"
+      >
+        <label [ngClass]="{ 'flex-1': billingScheme == 'tiered' }"
+          >Current Plan Type</label
+        >
+        <p *ngIf="billingScheme == 'per_unit'">{{ billingScheme }}</p>
+        <div
+          *ngIf="billingScheme == 'tiered'"
+          [ngClass]="{
+            'row_total align-items-start flex-column justify-content-between': true,
+            'h-auto-min flex-1': billingScheme == 'tiered'
+          }"
+        >
+          <div class="pointer" (click)="showTiredPlan = !showTiredPlan">
+            <img
+              loading="lazy"
+              [ngClass]="{ 'm-auto': true, 'rotate-90': showTiredPlan }"
+              src="../../../assets/dummy-img/chevron-down.svg"
+              alt=""
+            />
+            <div class="text-center tiers def-color">
+              Tiers {{ interval_count }} {{ planInterval }}
+            </div>
           </div>
 
-          <div [ngClass]="{'tiers_plan_dec':true,'h-auto-min':billingScheme == 'tiered'}" *ngIf="showTiredPlan">
+          <div
+            [ngClass]="{
+              tiers_plan_dec: true,
+              'h-auto-min': billingScheme == 'tiered'
+            }"
+            *ngIf="showTiredPlan"
+          >
             <div class="tier_plan tier_heading d-flex flex-nowrap m-0 p-0">
               <div class="h-auto py-3">Quantity</div>
               <div class="h-auto py-3">Price per unit</div>
               <div class="h-auto py-3">Flat amount</div>
             </div>
 
-            <div *ngFor="let tPlans of tiredPlansDetails"
-              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0">
+            <div
+              *ngFor="let tPlans of tiredPlansDetails"
+              class="tier_plan tier_plan_price d-flex flex-nowrap m-0 p-0"
+            >
               <div *ngIf="tPlans.up_to">
                 For the first {{ +tPlans.up_to > 10 ? "11" : "1" }} to
                 {{ tPlans.up_to }}
@@ -185,38 +218,57 @@
 
       <div class="acoount_user_email my-4">
         <label>Current Pack</label>
-        <p>{{billingScheme}} with {{qunantity}} quantity ${{total_price}} per {{interval_count}} {{planInterval}}</p>
+        <p>
+          {{ billingScheme }} with {{ qunantity }} quantity ${{
+            total_price
+          }}
+          per {{ interval_count }} {{ planInterval }}
+        </p>
       </div>
       <!-- Silver 34fn sd  -->
       <div class="acoount_user_email my-4">
         <label>Plan Renewal Date</label>
-        <p>{{renewalDate | date}}</p>
+        <p *ngIf="isString(renewalDate); else formatDate">{{ renewalDate }}</p>
+        <ng-template #formatDate>
+          <p>{{ renewalDate | date }}</p>
+        </ng-template>
       </div>
       <div class="acoount_user_password">
         <label for="">Payment Method</label>
-        <p>{{cardDetails}}</p>
+        <p>{{ cardDetails }}</p>
       </div>
     </div>
-    <div class="accountbtn_container my-4  ">
-      <button class="plan_btn btn-delete w-auto text-nowrap" (click)="showPopConf()">Cancel Subscription</button>
+    <div class="accountbtn_container my-4">
+      <button
+        class="plan_btn btn-delete w-auto text-nowrap"
+        (click)="showPopConf()"
+      >
+        Cancel Subscription
+      </button>
     </div>
   </div>
 
-  <div class="account_details_container account_subscription_container" *ngIf="subscribed">
+  <div
+    class="account_details_container account_subscription_container"
+    *ngIf="subscribed"
+  >
     <p class="account-heading mb-4">Card Details</p>
     <div class="accountdetails">
       <div class="acoount_user_name">
         <label>Card Type</label>
-        <p>{{cardDetails1?.card_brand}}</p>
+        <p>{{ cardDetails1?.card_brand }}</p>
       </div>
       <div class="acoount_user_email my-4">
         <label>Card Number</label>
-        <p>*********{{cardDetails1?.card_last_four}}</p>
+        <p>*********{{ cardDetails1?.card_last_four }}</p>
       </div>
     </div>
   </div>
 
-  <div class="account_details_container mt-4 account_Invoices_container overflow-auto py-2" *ngIf="subscribed">
+  <div
+    class="account_details_container mt-4 account_Invoices_container overflow-auto py-2"
+    *ngIf="subscribed"
+  >
     <p class="account-heading">Invoices</p>
     <div class="invoicesdetails_main">
       <div class="invoicesdetails invoicesdetail_heading">
@@ -226,10 +278,10 @@
         <p>Download</p>
       </div>
       <div *ngFor="let data of invoices" class="invoicesdetails">
-        <p>{{data?.id}}</p>
-        <p>{{data?.amount}}</p>
-        <p>{{data?.date | date}}</p>
-        <p class="pointer" >
+        <p>{{ data?.id }}</p>
+        <p>{{ data?.amount }}</p>
+        <p>{{ data?.date | date }}</p>
+        <p class="pointer">
           <a [href]="data.receipt_link" target="_blank">Invoices</a>
         </p>
       </div>
@@ -242,24 +294,39 @@
   </div>
 </div>
 
-
 <!-- Modal for zipcode-correct-->
-<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticZipCorrect"
-  id="btnShowPopConf"></button>
-<div class="modal fade" id="staticZipCorrect" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+<button
+  type="button"
+  class="btn btn-primary d-none"
+  data-bs-toggle="modal"
+  data-bs-target="#staticZipCorrect"
+  id="btnShowPopConf"
+></button>
+<div
+  class="modal fade"
+  id="staticZipCorrect"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content showPopConf popup_bg ms-5">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <i class="bi bi-x "></i>
+          <i class="bi bi-x"></i>
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2 mt-2">
             <span class="d-flex gap-2">
-              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              <img
+                loading="lazy"
+                src="../../../assets/dummy-img/check-circle-broken.svg"
+                alt=""
+              />
               Do you want to cancel the subscription
             </span>
           </h3>
@@ -275,10 +342,14 @@
             <p><span>City : </span>hello</p>
             <p><span>State :</span>helo</p>
           </div> -->
-          <button class="btn_2 btn-bg-gold w-auto" data-bs-dismiss="modal" (click)="deleteSub()">
+          <button
+            class="btn_2 btn-bg-gold w-auto"
+            data-bs-dismiss="modal"
+            (click)="deleteSub()"
+          >
             Yes
           </button>
-          <button class="btn_2 btn-bg-gold w-auto " data-bs-dismiss="modal">
+          <button class="btn_2 btn-bg-gold w-auto" data-bs-dismiss="modal">
             No
           </button>
         </div>
@@ -287,42 +358,80 @@
   </div>
 </div>
 
-
-
 <!-- Modal for zipcode-correct-->
-<button type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#showPopDeleteAccount"
-  id="btnShowPopDeleteAccount"></button>
-<div class="modal fade" id="showPopDeleteAccount" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticZipCorrectLabel" aria-hidden="true">
+<button
+  type="button"
+  class="btn btn-primary d-none"
+  data-bs-toggle="modal"
+  data-bs-target="#showPopDeleteAccount"
+  id="btnShowPopDeleteAccount"
+></button>
+<div
+  class="modal fade"
+  id="showPopDeleteAccount"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-dialog-centered zipcode_correct">
     <div class="modal-content showPopConf popup_bg ms-5">
       <div class="modal-header p-0 m-0 d-flex justify-content-end">
         <div class="btn-cl">
-          <img loading="lazy" class="pointer" data-bs-dismiss="modal" aria-label="Close" src="../../../assets/dummy-img/x-circle.svg"
-            alt="" />
+          <img
+            loading="lazy"
+            class="pointer"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg"
+            alt=""
+          />
         </div>
       </div>
       <div class="modal-body p-0 m-0">
         <div class="zip_top">
           <h3 class="d-flex gap-2 mt-2 mb-0">
             <span class="d-flex gap-2">
-              <img loading="lazy" src="../../../assets/dummy-img/check-circle-broken.svg" alt="" />
+              <img
+                loading="lazy"
+                src="../../../assets/dummy-img/check-circle-broken.svg"
+                alt=""
+              />
               Enter password to delete your account
             </span>
           </h3>
         </div>
         <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
           <div class="zip_bottom_p">
-            <form class="d-flex flex-column gap-2 justify-content-evenly" [formGroup]="deleteAccountForm" (ngSubmit)="deleteUserAccount()">
-              <input type="text" class="input_standred" placeholder="Enter Password" formControlName="password">
-              <button class="btn_2 w-auto align-self-center" [ngClass]="{'btn-bg-gold':!deleteAccountForm.invalid}" data-bs-dismiss="modal" type="submit" [disabled]="deleteAccountForm.invalid">Delete Account</button>
+            <form
+              class="d-flex flex-column gap-2 justify-content-evenly"
+              [formGroup]="deleteAccountForm"
+              (ngSubmit)="deleteUserAccount()"
+            >
+              <input
+                type="text"
+                class="input_standred"
+                placeholder="Enter Password"
+                formControlName="password"
+              />
+              <button
+                class="btn_2 w-auto align-self-center"
+                [ngClass]="{ 'btn-bg-gold': !deleteAccountForm.invalid }"
+                data-bs-dismiss="modal"
+                type="submit"
+                [disabled]="deleteAccountForm.invalid"
+              >
+                Delete Account
+              </button>
             </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div *ngIf="isLoading" class="loader-overlay">
-  <div class="loader"></div>
+  <div *ngIf="isLoading" class="loader-overlay">
+    <div class="loader"></div>
+  </div>
 </div>

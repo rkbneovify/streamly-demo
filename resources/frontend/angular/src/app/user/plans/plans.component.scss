@@ -165,9 +165,11 @@ button.btn {
 
   .plans_categories1 {
     display: flex;
-    justify-content: space-evenly;
     margin-top: 1rem;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
     .col_2_s_3 {
       background-image: url("../../../assets/dummy-img/res_s3.png");
       height: fit-content;
@@ -205,6 +207,7 @@ button.btn {
             letter-spacing: 0em;
             text-align: left;
             color: #ffffff;
+            max-width: 70px;
             span {
               font-size: 16px;
               font-weight: 500;
