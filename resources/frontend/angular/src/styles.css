@@ -407,7 +407,7 @@ nav {
 
 ::-webkit-scrollbar-thumb {
   background: #002749; 
-  border-radius: 10px; 
+  border-radius: 8px; 
 }
 
 ::-webkit-scrollbar-thumb:hover {
