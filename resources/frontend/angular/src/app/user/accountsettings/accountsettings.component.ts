@@ -46,6 +46,7 @@ export class AccountsettingsComponent implements OnInit {
   isLoading:boolean = false;
   userinfo:any;
   togglePasscode:boolean = false;
+  total_price:any = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -203,7 +204,9 @@ export class AccountsettingsComponent implements OnInit {
         this.cardDetails = res?.subscription.payment_method;
         this.cardDetails1 = res.card_details;
         this.tiredPlansDetails = res.plan.tiers;
-        this.qunantity = res.subscription.quantity
+        this.qunantity = res.subscription.plan_type == 'per_unit'?1:res.subscription.quantity;
+        this.total_price = res.subscription.plan_type == 'per_unit'?Math.floor(res.plan.amount/100):0;
+
 
         this.get_price(this.qunantity,this.tiredPlansDetails)
     this.isLoading = false;
@@ -223,7 +226,7 @@ export class AccountsettingsComponent implements OnInit {
     });
   }
 
-total_price:any = 0;
+
 
 
   get_price(quant:any,value:any){
@@ -293,7 +296,9 @@ total_price:any = 0;
     });
   }
 
-  
+  isString(value: any): boolean {
+    return typeof value === 'string';
+  }
 
   showPopConf(){
     document.getElementById('btnShowPopConf').click();
