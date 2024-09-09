@@ -85,13 +85,13 @@ Route::group(['prefix' => 'auth'], function ($router) {
 
     Route::post('contactForm', 'Api\User\FooterApiController@contactForm')->middleware(['jwt.verify']);
 
-    Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify']);
+    Route::post('channel-list', 'Api\User\GracenoteChannelApiController@channelList')->middleware(['jwt.verify', 'subscribed']);
     Route::post('channel-list-before-login', 'Api\User\GracenoteChannelApiController@channelListBeforeLogin');
     Route::post('recent-channels', 'Api\NewChannelApiController@recentChannels')->middleware(['jwt.verify']);
-    Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify']);
+    Route::post('favourite-channels', 'Api\NewChannelApiController@favouriteChannels')->middleware(['jwt.verify', 'subscribed']);
     Route::post('epg-guide', 'Api\NewChannelApiController@epgGuide')->middleware(['jwt.verify', 'subscribed']);
     Route::post('new-search', 'Api\NewChannelApiController@searchChannelProgram')->middleware(['jwt.verify']);
-    Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify']);
+    Route::post('all-channel-list', 'Api\User\GracenoteChannelApiController@allChannelList')->middleware(['jwt.verify', 'subscribed']);
     Route::get('all-genre', 'Api\NewChannelApiController@allGenre')->middleware(['jwt.verify']);
     Route::post('program-details', 'Api\NewChannelApiController@programDetails')->middleware(['jwt.verify']);
     Route::post('player-details', 'Api\NewChannelApiController@playerDetails')->middleware(['jwt.verify', 'subscribed']);
@@ -165,7 +165,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/get-hotelrooms', 'Admin\HotelController@getHotelRooms')->middleware(['jwt.verify']);
 
     /** Channel SLider API */
-    Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify']);
+    Route::get('channel-sliders', 'Api\ChannelSliderApiController@getChannelSliders')->middleware(['jwt.verify', 'subscribed']);
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 });
 
