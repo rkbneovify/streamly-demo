@@ -15,8 +15,14 @@ export class UtilsService {
     this.router.navigateByUrl('user/playstream');
   }
   
-}
-
-export function log() {
-  console.log('test')
+  setLocalStorage(keyName:string,data:any){
+    try {
+      localStorage.setItem(keyName,JSON.stringify(data));
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+    
+  }
 }
