@@ -27,6 +27,7 @@ import { ReportFormComponent } from '../components/footerComponents/report-form/
 import { SupportedDevicesComponent } from '../components/footerComponents/supported-devices/supported-devices.component';
 import { SearchComponent } from './search/search.component';
 import { CommonChannelComponent } from './channels/common-channel/common-channel.component';
+import { SubscriptionCancelComponent } from './subscription-cancel/subscription-cancel.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
       { path: 'downloadapp', component: DownloadappComponent,canActivate: [authguardGuard]  },
       { path: 'connected-device', component: TotalaccountComponent,canActivate: [authguardGuard]  },
       { path: 'subscription-expired', component: SubscriptionExpiredComponent,canActivate: [authguardGuard]  },
+      { path: 'subscription-cancel', component: SubscriptionCancelComponent,canActivate: [authguardGuard]  },
       { path: 'payment-subscription', component: SubPaymentComponent,canActivate: [authguardGuard]  },
       { path: 'channel/all', component: AllChannelComponent ,canActivate: [authguardGuard]},
       { path: 'channel/news', component: NewsComponent ,canActivate: [authguardGuard]},
