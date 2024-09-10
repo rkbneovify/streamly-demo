@@ -30,7 +30,19 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
             toast.success('You are logged out');
           console.error('HTTP error:', err);
           // You might trigger a re-authentication flow or redirect the user here
-        } else {
+        } else if(err.error.response_code === 410){
+          const deviceInfoData = JSON.parse(localStorage.getItem('deviceInfo') || '');
+          if (deviceInfoData !== null) {
+            try {
+              route.navigateByUrl('user/subscription-expired');
+              deviceInfoData.subscribed = false;
+              localStorage.setItem('deviceInfo',JSON.stringify(deviceInfoData));
+            } catch (error) {
+              console.error('Error parsing JSON data:', error);
+            }
+          }
+          console.log('=========>  subscription cancel...')
+        } {
           // Handle other HTTP error codes
           console.error('HTTP error:', err);
         }
