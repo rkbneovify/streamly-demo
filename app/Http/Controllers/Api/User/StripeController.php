@@ -447,7 +447,7 @@ class StripeController extends Controller
         } */
         $subscription_data = [
             'id' => $subscription->id,
-            'name' => $plan_name,
+            'name' => $plan_name ?? null,
             'plan_type' => $plan_type,
             'renewaldatetime' => $renewaldatetime,
             'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
