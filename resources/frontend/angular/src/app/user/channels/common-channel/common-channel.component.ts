@@ -41,8 +41,9 @@ export class CommonChannelComponent implements OnInit {
 
       if (this.keyword == 'recents' || this.keyword == 'favourites') {
         if (this.keyword == 'favourites') {
+          this.body
           this.apiService
-            .getRequest('auth/my_favorites', this.getAuthHeaders())
+            .postRequest('auth/favourite-channels', { typeurl: 'mpd' })
             .subscribe((res: any) => {
               if (res.response_code === 200) {
                 console.log('fav ===>', res.data);
