@@ -198,18 +198,20 @@ export class AccountsettingsComponent implements OnInit {
           const plan3rd = res?.plan?.interval;
           this.planInterval = plan3rd;
           this.interval_count = res?.plan?.interval_count;
-          this.userinfo = res.userinfo;
+          this.userinfo = res?.userinfo;
 
           // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;
 
-          this.billingScheme = res.plan.billing_scheme;
+          this.billingScheme = res?.plan?.billing_scheme;
           this.invoices = res?.invoices;
-          this.invoicesDate = new Date(this.invoices?.created * 1000);
+          if(this.invoices){
+            this.invoicesDate = new Date(this.invoices?.created * 1000);
+          }
           this.renewalDate = res?.subscription.renewaldatetime;
-          this.planName = res.subscription.name;
-          this.cardDetails = res?.subscription.payment_method;
-          this.cardDetails1 = res.card_details;
-          this.tiredPlansDetails = res.plan.tiers;
+          this.planName = res.subscription?.name;
+          this.cardDetails = res?.subscription?.payment_method;
+          this.cardDetails1 = res?.card_details;
+          this.tiredPlansDetails = res?.plan.tiers;
           this.qunantity =
             res.subscription.plan_type == 'per_unit'
               ? 1
@@ -219,7 +221,7 @@ export class AccountsettingsComponent implements OnInit {
               ? Math.floor(res.plan.amount / 100)
               : 0;
 
-          if(res.subscription.plan_type != 'per_unit'){
+          if(res.subscription.plan_type == 'tiered'){
             this.get_price(this.qunantity, this.tiredPlansDetails);
           }
           this.isLoading = false;

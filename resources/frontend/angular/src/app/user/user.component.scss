@@ -735,7 +735,8 @@ footer .contain:first-child {
         .playbtn_genre {
           display: flex;
           align-items: center;
-          width: 140px;
+          min-width: 160px;
+          width: auto;
           height: 34px;
           padding: 12px 20px 12px 20px;
           border-radius: 40px;
