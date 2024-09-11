@@ -40,6 +40,12 @@
               placeholder="Enter old password"
               type="text"
             />
+            <!--validation error -->
+            <div *ngIf="updateuserDetatils.get('oldpassword').hasError('whitespace') && updateuserDetatils.get('oldpassword').touched" class="text-danger align-self-start">
+              <small>
+                Old password cannot contain only spaces.
+              </small>
+            </div>
             <input
               required
               class="input_standred"
@@ -47,6 +53,13 @@
               placeholder="Enter new Password"
               type="text"
             />
+
+            <!--validation error -->
+            <div *ngIf="updateuserDetatils.get('newpassword').hasError('whitespace') && updateuserDetatils.get('newpassword').touched" class="text-danger align-self-start">
+              <small>
+              New password cannot contain only spaces.
+              </small>
+            </div>
           </div>
         </ng-container>
         <ng-template #displayModePassword>
@@ -430,8 +443,7 @@
       </div>
     </div>
   </div>
-
-  <div *ngIf="isLoading" class="loader-overlay">
-    <div class="loader"></div>
   </div>
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="loader"></div>
 </div>

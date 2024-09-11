@@ -55,6 +55,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    
     // setTimeout(() => {
     //   if (this.sliderNexrButton) {
     //     console.log('start slider')
