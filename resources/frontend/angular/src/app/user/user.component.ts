@@ -1,5 +1,11 @@
 import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
-import { AfterViewInit, Component, HostListener, NgModule, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  NgModule,
+  OnInit,
+} from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -65,14 +71,14 @@ export class UserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-        // Listen for route changes
+    // Listen for route changes
+    this.setActiveTabBasedOnUrl();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        // Call your function here
         this.setActiveTabBasedOnUrl();
-        this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe((event: NavigationEnd) => {
-          // Call your function here
-          this.setActiveTabBasedOnUrl();
-        });
+      });
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
@@ -82,7 +88,6 @@ export class UserComponent implements OnInit {
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
   }
-
 
   sideBarAnimation() {
     const userToken = localStorage.getItem('deviceInfo');
@@ -114,21 +119,25 @@ export class UserComponent implements OnInit {
       target.classList.contains('schedule_profile') ||
       target.classList.contains('userProfileImage') ||
       target.classList.contains('nologout');
-      console.log('envet');
-    if (!isInsideMenu) {
-      console.log('helllo');
-      this.submenu = false;
-      return;
-    }
-    const isInsideSearch = target.closest('.card_page');
-    const isCloseButton = target.closest('.close-search img');
-    const searchField = target.closest('.search_Bar');
-    const isSchedule_details_container = target.closest('.schedule_details_container');
+    console.log('envet');
+
+    const isInsideSearch =
+      target.closest('.card_page') &&
+      target.closest('.close-search img') &&
+      target.closest('.search_Bar') &&
+      target.closest('.schedule_details_container');
+
     // If clicked outside of search container and it's not the close button, hide search modal
-    if (!isInsideSearch && !isCloseButton && !searchField && !isSchedule_details_container) {
+    if (!isInsideSearch) {
       this.searchShow = false;
       this.searchTerm = '';
       this.allChannelDataList = [];
+    }
+
+    if (!isInsideMenu) {
+      console.log('outside menu');
+      this.submenu = false;
+      return;
     }
   }
 
@@ -200,7 +209,7 @@ export class UserComponent implements OnInit {
       this.activeTab = 'playsh';
     } else if (url.includes('/user/channel/all')) {
       this.activeTab = 'allChannel';
-    }else{
+    } else {
       this.activeTab = 'null';
     }
   }
