@@ -313,7 +313,7 @@ export class UserHomeComponent implements OnInit {
     this.crud.postRequest('auth/player-details', body).subscribe({
       next: (res: any) => {
         this.currentProgramDetail = !this.currentProgramDetail;
-        this.programDetailData = res.data.program_details;
+        this.programDetailData = res.data;
         this.isLoading = false;
       },
       error: (err: any) => {
