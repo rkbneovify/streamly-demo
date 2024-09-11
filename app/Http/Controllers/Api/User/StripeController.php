@@ -448,8 +448,8 @@ class StripeController extends Controller
         $subscription_data = [
             'id' => $subscription->id,
             'name' => $plan_name ?? null,
-            'plan_type' => $plan_type,
-            'renewaldatetime' => $renewaldatetime,
+            'plan_type' => $plan_type ?? null,
+            'renewaldatetime' => $renewaldatetime ?? null,
             'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
 
         ];
@@ -469,7 +469,7 @@ class StripeController extends Controller
         $response_to_send['response_code'] = 200;
         $response_to_send['message'] = "Setting details successfully retrieved";
         $response_to_send['subscription'] = $subscription_data;
-        $response_to_send['plan'] = $plan;
+        $response_to_send['plan'] = $plan ?? [];
         $response_to_send['userinfo'] = $user_data;
         $response_to_send['invoices'] = $invoices;
         $response_to_send['card_details'] = $card_details;
