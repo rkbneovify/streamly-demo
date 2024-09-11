@@ -6,12 +6,18 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { UtilsService } from '../services/utils/utils.service';
+import { DataSharingService } from '../services/data-sharing.service';
+
+
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) => {
   const authService = inject(AuthService);
   const authToken = authService.getAuthorizationToken();
   const toast = inject(ToastrService);
   const route = inject(Router);
+  const setLocal = inject(UtilsService);
+  const sendData = inject(DataSharingService);
 
   let authReq = req;
   if (authToken) {
@@ -25,7 +31,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
       if (err instanceof HttpErrorResponse) {
         // Handle HTTP errors
         if (err.error.response_code === 401 && err.error.message == 'Token is Invalid') {   
-            localStorage.clear(); 
+            localStorage.clear();
              route.navigateByUrl('/auth/login');
             toast.success('You are logged out');
           console.error('HTTP error:', err);
@@ -34,14 +40,16 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
           const deviceInfoData = JSON.parse(localStorage.getItem('deviceInfo') || '');
           if (deviceInfoData !== null) {
             try {
-              route.navigateByUrl('user/subscription-expired');
+              console.log('=================410========>',err.error.message);
+              // setLocal.setLocalStorage('cancelMessage',err.error.message);    
+              sendData.changeData(err.error.message);          
+              route.navigateByUrl('user/subscription-cancel');
               deviceInfoData.subscribed = false;
               localStorage.setItem('deviceInfo',JSON.stringify(deviceInfoData));
             } catch (error) {
               console.error('Error parsing JSON data:', error);
             }
           }
-          console.log('=========>  subscription cancel...')
         } {
           // Handle other HTTP error codes
           console.error('HTTP error:', err);
@@ -56,4 +64,3 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
     })
   );
 };
-
