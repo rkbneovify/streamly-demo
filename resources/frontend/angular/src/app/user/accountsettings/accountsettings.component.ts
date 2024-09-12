@@ -191,9 +191,10 @@ export class AccountsettingsComponent implements OnInit {
       .getRequest('auth/setting-details', this.getAuthHeaders())
       .subscribe({
         next: (res: any) => {
-          console.log('Auth setting Api Start')
+          try {
+            console.log('Auth setting Api Start')
           let planFullName;
-          const plan1st = res?.plan.nickname;
+          const plan1st = res?.plan?.nickname;
           const plan2nd = res?.plan?.currency;
           const plan3rd = res?.plan?.interval;
           this.planInterval = plan3rd;
@@ -226,6 +227,11 @@ export class AccountsettingsComponent implements OnInit {
           }
           this.isLoading = false;
           console.log('Auth setting Api End')
+          } catch (error) {
+            console.log(error)
+          }finally{
+            this.isLoading = false;
+          }
         },
         error: (err) => {
           console.log(err);
