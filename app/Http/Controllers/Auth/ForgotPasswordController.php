@@ -46,7 +46,7 @@ class ForgotPasswordController extends Controller
 
             $token = $this->broker()->createToken($user);
 
-            $FRONTEND_URL = env('FRONTE  ND_URL');
+            $FRONTEND_URL = env('FRONTEND_URL');
 
             $password_reset_link = $FRONTEND_URL . '/password-reset/' . $token . '?email=' . $request->email;
 
