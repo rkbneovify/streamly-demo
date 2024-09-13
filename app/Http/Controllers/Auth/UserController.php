@@ -183,4 +183,43 @@ class UserController extends Controller
             }
         }
     }
+
+    public function verifyPassword(Request $request)
+    {
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+
+            // Retrieve the authenticated user
+            $user = JWTAuth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            // Verify the given password against the user's hashed password
+            if (Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password is correct',
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Password is incorrect',
+                ], 401);
+            }
+        }
+    }
 }

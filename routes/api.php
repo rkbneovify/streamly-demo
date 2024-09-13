@@ -98,6 +98,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('channel-program-details', 'Api\NewChannelApiController@ChannelProgramDetails')->middleware(['jwt.verify']);
     Route::get('faq', 'Api\User\FooterApiController@faq');
     Route::post('bugReport', 'Api\User\FooterApiController@sendBugReportAPI');
+    Route::post('verify-password', 'Auth\UserController@verifyPassword')->middleware(['jwt.verify']);
 
     /** Angular Frontend APIs code ends here */
 
