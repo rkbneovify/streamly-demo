@@ -330,11 +330,13 @@
         // grid-auto-flow: column;
         cursor: pointer;
         height: 100px;
-        border-top: 1px solid #ffffff1a;
         border-bottom: 1px solid #ffffff1a;
         // overflow: hidden;
         // padding: 0 2px;
         white-space: nowrap;
+        .child:not(:first-child){
+          border-top: 1px solid #ffffff1a;
+        }
         .schedule_time {
           display: inline-block;
           padding: 12px 11px 12px 11px;
@@ -377,6 +379,15 @@
       }
     }
   }
+}
+
+.tom-style{
+  top: 0px;
+    left: 0px;
+    background: #00122c;
+    max-width: 149px;
+    width: 100%;
+    padding: 8px 32px;
 }
 
 .schedule_container_content::-webkit-scrollbar {

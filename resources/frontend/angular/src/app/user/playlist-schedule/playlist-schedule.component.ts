@@ -244,12 +244,15 @@ export class PlaylistScheduleComponent
       this.scrollablecategory.nativeElement.scrollLeft -= offset;
     }
   }
+
+  showTomorrowDate:boolean = false;
+
   go_Live: boolean = false;
   count: number = 0;
   scrollContent(position: number) {
     // console.log('getCurrentTimeDate =>',this.getCurrentTimeDate?.length,'count =>',this.count);
     // if (this.count <= this.getCurrentTimeDate?.length) {
-    console.log('Current Time =>> ', this.getCurrentTimeDate[this.count]);
+    console.log('Current Time =>> ', this.getCurrentTimeDate[this.count+1]);
     console.log(this.count);
     if (position != 0) {
       this.changeColorBackgroung = true;
