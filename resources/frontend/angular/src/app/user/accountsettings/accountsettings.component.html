@@ -41,10 +41,14 @@
               type="text"
             />
             <!--validation error -->
-            <div *ngIf="updateuserDetatils.get('oldpassword').hasError('whitespace') && updateuserDetatils.get('oldpassword').touched" class="text-danger align-self-start">
-              <small>
-                Old password cannot contain only spaces.
-              </small>
+            <div
+              *ngIf="
+                updateuserDetatils.get('oldpassword').hasError('whitespace') &&
+                updateuserDetatils.get('oldpassword').touched
+              "
+              class="text-danger align-self-start"
+            >
+              <small> Old password cannot contain only spaces. </small>
             </div>
             <input
               required
@@ -55,10 +59,14 @@
             />
 
             <!--validation error -->
-            <div *ngIf="updateuserDetatils.get('newpassword').hasError('whitespace') && updateuserDetatils.get('newpassword').touched" class="text-danger align-self-start">
-              <small>
-              New password cannot contain only spaces.
-              </small>
+            <div
+              *ngIf="
+                updateuserDetatils.get('newpassword').hasError('whitespace') &&
+                updateuserDetatils.get('newpassword').touched
+              "
+              class="text-danger align-self-start"
+            >
+              <small> New password cannot contain only spaces. </small>
             </div>
           </div>
         </ng-container>
@@ -145,11 +153,12 @@
       <button
         *ngIf="editMode"
         class="plan_btn btn-edit position-relative"
-        [class.spinner]="loading"
-        [disabled]="loading"
+        [ngClass]="{ 'form-valid-bg': updateuserDetatils.valid }"
+        [disabled]="isLoading"
         (click)="saveChanges()"
+        [disabled]="!updateuserDetatils.valid"
       >
-        <span *ngIf="!loading"> Save </span>
+        <span> Save </span>
       </button>
       <button
         *ngIf="editMode"
@@ -254,7 +263,7 @@
     <div class="accountbtn_container my-4">
       <button
         class="plan_btn btn-delete w-auto text-nowrap"
-        (click)="showPopConf()"
+        (click)="showPopCancelSubc()"
       >
         Cancel Subscription
       </button>
@@ -307,7 +316,7 @@
   </div>
 </div>
 
-<!-- Modal for zipcode-correct-->
+<!-- Modal for delete sub yes or no-correct-->
 <button
   type="button"
   class="btn btn-primary d-none"
@@ -371,7 +380,7 @@
   </div>
 </div>
 
-<!-- Modal for zipcode-correct-->
+<!-- Modal for delete-Account-->
 <button
   type="button"
   class="btn btn-primary d-none"
@@ -443,7 +452,82 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<!-- Modal for Cancel-subsc-->
+<button
+  type="button"
+  class="btn btn-primary d-none"
+  data-bs-toggle="modal"
+  data-bs-target="#ShowPopCancelSubsc"
+  id="btnShowPopCancelSubsc"
+></button>
+<div
+  class="modal fade"
+  id="ShowPopCancelSubsc"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered zipcode_correct">
+    <div class="modal-content showPopConf popup_bg ms-5">
+      <div class="modal-header p-0 m-0 d-flex justify-content-end">
+        <div class="btn-cl">
+          <img
+            loading="lazy"
+            class="pointer"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="modal-body p-0 m-0">
+        <div class="zip_top">
+          <h3 class="d-flex gap-2 mt-2 mb-0">
+            <span class="d-flex gap-2">
+              <img
+                loading="lazy"
+                src="../../../assets/dummy-img/check-circle-broken.svg"
+                alt=""
+              />
+              Enter password to cancel your subscription.
+            </span>
+          </h3>
+        </div>
+        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+          <div class="zip_bottom_p">
+            <form
+              class="d-flex flex-column gap-2 justify-content-evenly"
+              [formGroup]="cancelSubscription"
+              (ngSubmit)="cancelSubscriptionUserAccount()"
+            >
+              <input
+                type="text"
+                class="input_standred"
+                placeholder="Enter Password"
+                formControlName="password"
+              />
+              <button
+                class="btn_2 w-auto align-self-center"
+                [ngClass]="{ 'btn-bg-gold': !cancelSubscription.invalid }"
+                data-bs-dismiss="modal"
+                type="submit"
+                [disabled]="cancelSubscription.invalid"
+              >
+                Cancel Subscription
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>
 </div>
