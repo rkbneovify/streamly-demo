@@ -38,7 +38,6 @@ export class AccountsettingsComponent implements OnInit {
   tiredPlansDetails: any;
   invoicesDate!: any;
   showTiredPlan: boolean = false;
-  loading: boolean = false;
   subscribed: boolean;
   planInterval: any;
   interval_count: any;
@@ -48,6 +47,7 @@ export class AccountsettingsComponent implements OnInit {
   userinfo: any;
   togglePasscode: boolean = false;
   total_price: any = 0;
+  cancelSubscription:FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +67,14 @@ export class AccountsettingsComponent implements OnInit {
     this.deleteAccountForm = this.fb.group({
       password: ['', [Validators.required]],
     });
+
+      // delete user account form
+      this.cancelSubscription = this.fb.group({
+        password: ['', [Validators.required]],
+      });
   }
+
+
 
   ngOnInit(): void {
     this.getAllDetails();
@@ -112,7 +119,7 @@ export class AccountsettingsComponent implements OnInit {
 
   saveChanges() {
     // saving changes here
-    this.loading = true;
+    this.isLoading = true;
     console.log('saveChanges');
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
@@ -140,10 +147,11 @@ export class AccountsettingsComponent implements OnInit {
             password: this.updateuserDetatils.value.newpassword,
           };
         }
+
         this.crud.postRequest('auth/account-edit', body, headers).subscribe({
           next: (res: any) => {
             if (res.response_code == 200) {
-              this.loading = false;
+              this.isLoading = false;
               // Update name in local storage
               this.usersdetail.name = body?.name;
               localStorage.setItem(
@@ -154,19 +162,20 @@ export class AccountsettingsComponent implements OnInit {
               this.ts.success(res.message);
               this.toggleEditMode();
             } else {
-              this.loading = false;
+              this.isLoading = false;
               this.ts.error(res.message);
             }
             this.isLoading = false;
             console.log('account end')
           },
           error: (err: any) => {
-            this.loading = false;
-            this.ts.error(err.error.message);
-
-            err.error.message.password.forEach((element) => {
+            this.isLoading = false;
+            if(Array.isArray(err.error.message.password)){err.error.message.password.forEach((element) => {
               this.ts.error(element);
-            });
+            })}
+            if(!Array.isArray(err.error.message.password)){
+              this.ts.error(err.error.message);
+            }
             
           },
         });
@@ -296,6 +305,11 @@ export class AccountsettingsComponent implements OnInit {
     console.log('show dele');
   }
 
+  showPopCancelSubc() {
+    document.getElementById('btnShowPopCancelSubsc').click();
+    console.log('show cancel');
+  }
+
   deleteUserAccount(): void {
     this.isLoading = true;
     console.log('Start the Deleting');
@@ -309,6 +323,27 @@ export class AccountsettingsComponent implements OnInit {
           localStorage.clear();
           this.isLoading = false;
           this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.ts.error(err.error?.message);
+          this.isLoading = false;
+        },
+      });
+  }
+
+  cancelSubscriptionUserAccount(): void {
+    this.isLoading = true;
+    console.log('Start the Cancel sub.');
+    this.crud
+      .postRequest('auth/verify-password', {
+        password: this.cancelSubscription.get('password').value,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.isLoading = false;
+          if(res){
+            this.showPopConf();
+          }
         },
         error: (err) => {
           this.ts.error(err.error?.message);
