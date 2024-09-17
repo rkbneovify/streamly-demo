@@ -61,7 +61,9 @@ export class ResetPasswordComponent {
       "password_confirmation": this.resetPasswordForm.get('password2')?.value
   }
     this.crud.postRequest('password/reset',data).subscribe({
-      next:(res:any)=>{this.toastr.success(res.message)
+      next:(res:any)=>{
+        this.toastr.success('Your password has been successfully reset. Please log in to continue.')
+        // this.toastr.success(res.message)
         this.router.navigateByUrl('/auth/login');
         this.loading = false;
       },

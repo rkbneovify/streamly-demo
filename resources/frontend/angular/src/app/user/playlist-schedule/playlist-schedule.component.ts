@@ -247,43 +247,42 @@ export class PlaylistScheduleComponent
 
   showTomorrowDate:boolean = false;
 
+  isNextDay:boolean=false;
   go_Live: boolean = false;
   count: number = 0;
+  isProcessing:boolean = false;
   scrollContent(position: number) {
-    // console.log('getCurrentTimeDate =>',this.getCurrentTimeDate?.length,'count =>',this.count);
-    // if (this.count <= this.getCurrentTimeDate?.length) {
-    console.log('Current Time =>> ', this.getCurrentTimeDate[this.count+1]);
-    console.log(this.count);
-    if (position != 0) {
+    // Prevent the function from running again if it's already processing
+    if (this.isProcessing) {
+      return;
+    }
+  
+    this.isProcessing = true; // Set the processing flag
+    console.log('Scrolling started');
+  
+    if (position !== 0) {
       this.changeColorBackgroung = true;
       this.toggleLeftArrow = true;
       this.go_Live = true;
+  
       let indexNumber;
-      if (
-        this.scrollableContent.nativeElement &&
-        this.scrollableContent.nativeElement
-      ) {
+      if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+        // Perform the scroll
         this.scrollableContent.nativeElement.scrollLeft += position;
         this.scrollableContent1.nativeElement.scrollLeft += position;
+  
         if (position > 0) {
-          // if ('12:00 AM' == this.getCurrentTimeDate[this.count + 1]) {
-          //   indexNumber = this.count;
-          //   console.log('Set ===>', indexNumber);
-          // }
-          // if (this.count >= indexNumber) {
-          //   console.log('===>', indexNumber);
-          //   this.changeDays('Today', false);
-          // }
+          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]) ? true : false;
+          console.log('Current Time =>> ', this.getCurrentTimeDate[this.count + 1], this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]));
           this.count += 1;
         } else {
-          // if (this.count < indexNumber) {
-          //   console.log('===>', indexNumber);
-          //   this.changeDays('Today');
-          // }
           this.count -= 1;
+          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) ? true : false;
+          console.log('Current Time =>> ', this.getCurrentTimeDate[this.count], this.checkIfNextDay(this.getCurrentTimeDate[this.count]));
         }
       }
     } else {
+      // Reset the scroll and counters if position is 0
       this.scrollableContent.nativeElement.scrollLeft = 0;
       this.scrollableContent1.nativeElement.scrollLeft = 0;
       this.changeColorBackgroung = false;
@@ -291,6 +290,7 @@ export class PlaylistScheduleComponent
       this.go_Live = false;
       this.count = 0;
     }
+  
     if (this.count == 0) {
       this.scrollableContent.nativeElement.scrollLeft = 0;
       this.scrollableContent1.nativeElement.scrollLeft = 0;
@@ -298,10 +298,14 @@ export class PlaylistScheduleComponent
       this.changeColorBackgroung = false;
       this.go_Live = false;
     }
-    // }else{
-    //   this.count -= 1;
-    // }
+  
+    // Simulate a short delay to represent the completion of the scroll
+    setTimeout(() => {
+      this.isProcessing = false; // Set the flag back to false after scroll finishes
+      console.log('Scrolling finished');
+    }, 500); // Adjust the delay as per your actual processing time
   }
+  
 
   // getScheduleProgram: any;
   // getAllScheduleData:any;
@@ -818,4 +822,54 @@ export class PlaylistScheduleComponent
     const timeData = await timeArray;
     return timeData;
   }
+
+  checkIfNextDay(timeStr: string): boolean {
+    // Get the current date and time
+    const currentDate = new Date();
+  
+    // Extract hours and minutes from the provided time string
+    const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
+    if (!timeParts) {
+      throw new Error('Invalid time format');
+    }
+  
+    let hours = parseInt(timeParts[1], 10);
+    const minutes = parseInt(timeParts[2], 10);
+    const period = timeParts[3];
+  
+    // Convert to 24-hour format if necessary
+    if (period === 'PM' && hours !== 12) {
+      hours += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+  
+    // Create a date object with the provided time for the current date
+    const providedDate = new Date(currentDate);
+    providedDate.setHours(hours, minutes, 0, 0);
+  
+    // Find the closest hour based on current time
+    const currentHours = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+  
+    // Determine the nearest hour rounding up or down
+    const roundedHours = Math.round((currentMinutes / 60) + currentHours);
+    const closestHourDate = new Date(currentDate);
+    closestHourDate.setHours(roundedHours, 0, 0, 0);
+  
+    // If the provided time is earlier than the current time, consider it as the next day
+    if (providedDate.getTime() < closestHourDate.getTime()) {
+      providedDate.setDate(providedDate.getDate() + 1);
+    }
+  
+    // Compare if the provided time is on the next day relative to the current date
+    const isNextDay = providedDate.getDate() > currentDate.getDate() ||
+                       (providedDate.getDate() === currentDate.getDate() &&
+                        providedDate.getMonth() > currentDate.getMonth());
+  
+    return isNextDay;
+  }
+  
+  
+  
 }
