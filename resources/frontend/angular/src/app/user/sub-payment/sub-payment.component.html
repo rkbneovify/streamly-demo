@@ -208,7 +208,7 @@
           </div>
         </div> -->
         <div class="col-6 col-md-6 px-md-0 ps-0 pe-3">
-          <p>Credit Card Zip <span class="text-danger">*</span></p>
+          <p>Credit Card Zip11 <span class="text-danger">*</span></p>
           <div class="card-input">
             <!-- <input formControlName="cardZip" type="text" placeholder="Enter Zip" (input)="onZipChange($event)" /> -->
             <!-- <img
@@ -217,6 +217,7 @@
               (click)="zipcardShow = !zipcardShow"
             /> -->
             <ng-select class="res-ngselect" formControlName="cardZip" [items]="zipcodedata" 
+            (keypress)="onZipcodeInput($event)"
              placeholder="Search zipcode"
              (search)="onSearch($event)"
               (change)="onSelect($event)" [searchable]="true" bindLabel="label">
@@ -224,6 +225,8 @@
                                 <!--validation error -->
             <div *ngIf="paymentFormDetailSub.get('cardZip').touched && paymentFormDetailSub.get('cardZip').invalid" class="text-danger">
               <small *ngIf="paymentFormDetailSub.get('cardZip').errors?.['required']">Card Zip is required.</small>
+              <small *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['minlength']">Please enter a valid 5-digit zipcode.</small>
+              <small *ngIf="paymentFormDetailSub.get('cardZip')?.errors?.['maxlength']">Please enter a valid 5-digit zipcode.</small>
             </div>
           </div>
           </div>
@@ -235,7 +238,7 @@
         <div class="col-12 col-md-12 ps-0">
           <p>Email <span class="text-danger">*</span></p>
           <div class="card-input">
-            <input type="email" placeholder="Enter Email" required formControlName="cardEmail" />
+            <input type="email" placeholder="Enter Email" required formControlName="cardEmail"/>
             <!--validation error -->
             <div *ngIf="paymentFormDetailSub.get('cardEmail').touched && paymentFormDetailSub.get('cardEmail').invalid" class="text-danger">
               <small *ngIf="paymentFormDetailSub.get('cardEmail').errors?.['required']">Email is required.</small>

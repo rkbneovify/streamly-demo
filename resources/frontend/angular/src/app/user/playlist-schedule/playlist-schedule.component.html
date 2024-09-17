@@ -36,9 +36,10 @@
     </div> -->
     <div class="schedule_days">
       <select class="position-relative" [(ngModel)]="selectedDay" (ngModelChange)="changeDays(selectedDay)">
+        <option [selected]="isNextDay" disabled *ngIf="isNextDay" style="display: none;">Tomorrow</option>
         <option *ngFor="let day of days" [value]="day">{{ day }}</option>
         </select>
-      <!-- <div class="tom-style position-absolute">Tomorrow</div> -->
+      <!-- <div *ngIf="isNextDay" class="tom-style position-absolute">Tomorrow</div> -->
     </div>
     <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-150)">
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
