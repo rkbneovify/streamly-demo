@@ -9,7 +9,7 @@ import { DashjstestComponent } from './dashjstest/dashjstest.component';
 
 export const routes: Routes = [
   {path:'',canActivate:[authGuarRedirectToUser],component:LandingPageComponent,loadChildren:()=>import('./landing-page/landing-page.module').then(m=>m.LandingPageModule)},
-  {path:'password/reset/:token',component:ResetPasswordComponent},
+  {path:'password-reset/:token',component:ResetPasswordComponent},
   {path:'schedule',component:ScheduleChartComponent},
   {path:'demo',component:DashjstestComponent},
   {path:'payment',component:PaymentComponent},
