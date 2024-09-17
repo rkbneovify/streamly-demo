@@ -123,7 +123,7 @@ export class RegisterComponent
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', Validators.required],
-      zipcode: [null, Validators.required],
+      zipcode: [null, [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
       city: ['', Validators.required],
       state: ['', Validators.required],
     });
@@ -145,7 +145,7 @@ export class RegisterComponent
     this.paymentFormDetails = this.fb.group({
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
-      cardZip: ['', Validators.required],
+      cardZip: ['', [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
       cardEmail: [
         this.availabilityForm.value.email,
         [Validators.required, Validators.email],
@@ -936,4 +936,13 @@ export class RegisterComponent
   ngAfterViewChecked(): void {
     this.checkCardDetails();
   }
+
+
+  // Function to prevent input of more than 5 digits
+onZipcodeInput(event: any) {
+  const input = event.target.value;
+  if (input.length >= 5) {
+    event.preventDefault(); // Prevents user from entering more than 5 characters
+  }
+}
 }

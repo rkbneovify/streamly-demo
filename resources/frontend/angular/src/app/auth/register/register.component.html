@@ -31,8 +31,8 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <div class="steps">
-      <!-- <div class="steps" (click)="selectedTab = 'Plans'"> -->
+      <!-- <div class="steps"> -->
+      <div class="steps" (click)="selectedTab = 'Plans'">
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans','completedTab':completed>2}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -125,11 +125,14 @@
           <!-- <div class="flex flex-col country-control"> -->
           <!-- <label class="labels">Company Assigned</label> -->
           <ng-select class="res-ngselect" formControlName="zipcode" [items]="zipcodedata" (search)="onSearch($event)"
-            (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
+            (change)="onSelect($event)" placeholder="Search zipcode"
+            (keypress)="onZipcodeInput($event)"
+             [searchable]="true" bindLabel="label" [maxlength]="5">
           </ng-select>
 
           <div *ngIf="availabilityForm.get('zipcode').touched && availabilityForm.get('zipcode').invalid" class="text-danger">
             <small *ngIf="availabilityForm.get('zipcode').errors?.['required']">Zip code is required.</small>
+          <small *ngIf="availabilityForm.get('zipcode')?.errors?.['minlength']">Please enter a valid 5-digit zipcode.</small>
           </div>
           <!-- </div> -->
         </div>
@@ -262,8 +265,8 @@
 
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
-        <div class="step1-imgs-2">
-        <!-- <div class="step1-imgs-2" (click)="getAllThePlans()"> -->
+        <!-- <div class="step1-imgs-2"> -->
+        <div class="step1-imgs-2" (click)="getAllThePlans()">
           <img loading="lazy" class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
         </div>
       </div>
@@ -787,12 +790,15 @@
                 alt=""
                 (click)="zipcardShow = !zipcardShow"
               /> -->
-              <ng-select class="res-ngselect" formControlName="cardZip" [items]="zipcodedata" (search)="onSearch($event)"
+              <ng-select class="res-ngselect" formControlName="cardZip"
+              (keypress)="onZipcodeInput($event)"
+               [items]="zipcodedata" (search)="onSearch($event)"
               (change)="onSelect($event)" placeholder="Search zipcode" [searchable]="true" bindLabel="label">
                 </ng-select>
                   <!--validation error -->
             <div *ngIf="paymentFormDetails.get('cardZip').touched && paymentFormDetails.get('cardZip').invalid" class="text-danger">
               <small *ngIf="paymentFormDetails.get('cardZip').errors?.['required']">Card Zip is required.</small>
+              <small *ngIf="paymentFormDetails.get('cardZip')?.errors?.['minlength']">Please enter a valid 5-digit zipcode.</small>
             </div>
             </div>
             </div>

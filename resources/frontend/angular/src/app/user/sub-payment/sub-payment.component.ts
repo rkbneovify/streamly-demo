@@ -117,7 +117,7 @@ export class SubPaymentComponent implements OnInit {
     this.paymentFormDetailSub = this.fb.group({
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
-      cardZip: [null, Validators.required],
+      cardZip: [null, [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
       cardEmail: ['', [Validators.required, Validators.email]],
       couponCode: [''],
       address1: ['', Validators.required],
@@ -621,4 +621,13 @@ export class SubPaymentComponent implements OnInit {
   ngAfterViewChecked(): void {
     this.checkCardDetails();
   }
+
+    // Function to prevent input of more than 5 digits
+onZipcodeInput(event: any) {
+  const input = event.target.value;
+  if (input.length >= 5) {
+    console.log(input.length)
+    event.preventDefault(); // Prevents user from entering more than 5 characters
+  }
+}
 }
