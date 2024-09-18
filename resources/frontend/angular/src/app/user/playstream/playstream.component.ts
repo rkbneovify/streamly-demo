@@ -108,11 +108,11 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
 
       // Listen for dash.js errors
-      this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
-        console.error('DASH error:', e);
-        alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
-        this.router.navigateByUrl('/user/playlistschedule');
-      });
+      // this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+      //   console.error('DASH error:', e);
+      //   alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+      //   this.router.navigateByUrl('/user/playlistschedule');
+      // });
       } else {
         console.error('Error retrieving DRM authentication key:', response.message);
       }
@@ -247,11 +247,11 @@ getDRMKeys(): any {
         console.log('Player Data',res);
         this.channelData = res.data;
 
-        if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
-          alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
-          this.router.navigateByUrl('/user/playlistschedule');
-          console.log('Not Program details');
-        }
+        // if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
+        //   alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
+        //   this.router.navigateByUrl('/user/playlistschedule');
+        //   console.log('Not Program details');
+        // }
       },
       error: (err: any) => {
         console.error(err);

@@ -7,7 +7,6 @@
     </div>
 </div> -->
 
-
 <!-- <div class="landing_carousel_section2 mt-5">
     <div class="landing_carousel_section2_top">{{keyword}} Channels</div>
     <div class="landing_carousel_section2_bottom my-4 d-flex flex-wrap" >
@@ -37,76 +36,141 @@
     </div>
 </div> -->
 
-
 <div class="landing_carousel_section2 mt-1">
-    <div class="landing_carousel_section2_top text-capitalize">{{keyword}} Channels</div>
-    <div class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap" *ngFor="let row of data">
-      <div class="card_page" *ngFor="let item of row">
-        <img
-          loading="lazy"
-          *ngIf="item?.gracenote_data?.assets?.asset?.length"
-          [src]="
-            item?.prgSvcId
-              ? 'https://demo.tmsimg.com/' +
-                item?.gracenote_data?.assets?.asset[0].URI
-              : item.logo
-          "
-          alt=""
-        />
-        <img
+  <div class="landing_carousel_section2_top text-capitalize">
+    {{ keyword }} Channels
+  </div>
+  <div
+    class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap"
+    *ngFor="let row of data"
+  >
+    <div class="card_page" *ngFor="let item of row">
+      <img
+        loading="lazy"
+        *ngIf="item?.gracenote_data?.assets?.asset?.length"
+        [src]="
+          item?.prgSvcId
+            ? 'https://demo.tmsimg.com/' +
+              item?.gracenote_data?.assets?.asset[0].URI
+            : item.logo
+        "
+        alt=""
+      />
+      <img
         *ngIf="item?.image"
         loading="lazy"
-        [src]="
-          item?.image ? item?.image : '../../../assets/dummy-img/inf.png'
-        "
+        [src]="item?.image ? item?.image : '../../../assets/dummy-img/inf.png'"
         [ngClass]="{ 'object-fill': item?.type == 'event' }"
       />
-    <p class="no-img" *ngIf="!item?.image">No Image</p>
-      
-        <div class="card_content">
-          <div class="card_content_text1 d-flex justify-content-between">
-            <div
-              class="play_img d-flex align-items-center gap-2"
-              (click)="setplayerData(item?.url)"
-            >
+      <p class="no-img" *ngIf="!item?.image">No Image</p>
+
+      <div class="card_content">
+        <div class="card_content_text1 d-flex justify-content-between">
+          <div
+            class="play_img d-flex align-items-center gap-2"
+            (click)="setplayerData(item?.url)"
+          >
+            <img
+              loading="lazy"
+              src="../../../assets/dummy-img/play_icon.svg"
+              alt=""
+            />
+            <p class="d-flex flex-column">Play</p>
+          </div>
+          <div class="d-flex gap-2">
+            <div class="rounded-circle" (click)="toggleFavorite(item.id)">
               <img
                 loading="lazy"
-                src="../../../assets/dummy-img/play_icon.svg"
+                class="rounded-circle"
+                src="../../../assets/dummy-img/heart-circle.svg"
+                alt=""
+                [class.favorite]="isFavorite(item.id)"
+              />
+            </div>
+            <div (click)="getCurrentProgram(item?.url, item?.id)">
+              <img
+                loading="lazy"
+                src="../../../assets/dummy-img/more-circle.svg"
                 alt=""
               />
-              <p class="d-flex flex-column">Play</p>
-            </div>
-            <div class="d-flex gap-2">
-              <div
-                class="rounded-circle"
-                (click)="toggleFavorite(item.id)"
-              >
-                <img
-                loading="lazy"
-                  class="rounded-circle"
-                  src="../../../assets/dummy-img/heart-circle.svg"
-                  alt=""
-                  [class.favorite]="isFavorite(item.id)"
-                />
-              </div>
-              <div>
-                <img
-                  loading="lazy"
-                  src="../../../assets/dummy-img/more-circle.svg"
-                  alt=""
-                />
-              </div>
             </div>
           </div>
-          <div class="card_content_text2 mt-5">
-            <p class="mb-2" *ngIf="item.stationName">{{ item.stationName}}</p>
-            <p class="mb-2 card_content_text3" *ngIf="item.callSign">{{ item.callSign }}</p>  
-            <p class="mb-2 card_content_text3" *ngIf="item.timeZone"> {{ item.timeZone }}</p>  
-          </div>
+        </div>
+        <div class="card_content_text2 mt-5">
+          <p class="mb-2" *ngIf="item.stationName">{{ item.stationName }}</p>
+          <p class="mb-2 card_content_text3" *ngIf="item.callSign">
+            {{ item.callSign }}
+          </p>
+          <p class="mb-2 card_content_text3" *ngIf="item.timeZone">
+            {{ item.timeZone }}
+          </p>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="isLoading" class="loader-overlay">
-    <div class="loader"></div>
+</div>
+
+
+<!-- =========================================== Start Current program more details ====================== -->
+
+
+<div *ngIf="currentProgramDetail" class="modal-overlay"></div>
+<div *ngIf="currentProgramDetail" class="row schedule_details_container1">
+  <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!currentprogramDetailData?.program_details?.image}">
+    <img *ngIf="currentprogramDetailData?.program_details?.image" loading="lazy" [src]="currentprogramDetailData?.program_details?.image?currentprogramDetailData?.program_details?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
+  <p class="no-img" *ngIf="!currentprogramDetailData?.program_details?.image">No Image</p>
+  <!-- <p class="currentprogramDetailDataStationName" [title]="currentprogramDetailData?.stationName">{{currentprogramDetailData?.stationName | truncate:20}}</p> -->
   </div>
+  <div class="col-lg-4 col-12 playstream_2">
+    <h1 [title]="currentprogramDetailData?.channel?.stationName">{{currentprogramDetailData?.channel?.stationName | truncate:20}}</h1>
+    <div (click)="setplayerData(programChannelUrl,programChannelId)" class="d-flex playstream_Play_icon my-2" >
+      <img class="" src="../../../assets/dummy-img/play-circle.png">
+      <p>Play</p>
+    </div>
+    <div class="play_btn_container_1 mt-2 flex-wrap">
+      <button class="playbtn_time text-nowrap">{{currentprogramDetailData?.program_details?.duration | durationISOFormat}}</button>
+      <button class="playbtn_hd">
+        <img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt="" />
+        <span>{{currentprogramDetailData?.program_details?.quals}}</span>
+      </button>
+    </div>
+    <p class="my-1 playstream_title">{{currentprogramDetailData?.program_details?.title | truncate:20}}</p>
+    <p class="playstream_desc my-2">
+      {{currentprogramDetailData?.program_details?.description}}
+    </p>
+
+    <div class="play_btn_container_2">
+      <button class="plan_btn playbtn_genre">
+        <span class="text-nowrap">Genre :</span
+        ><span class="text-nowrap pe-1" *ngFor="let genre of currentprogramDetailData?.program_details?.genre">{{genre}}</span>
+      </button>
+
+    </div>
+  </div>
+  <div class="col-4 schedule_details_section3">
+    <div class="playstream_bottom_child mt-3" >
+      <h2>Up Next</h2>
+      <div class="playstream_liveTime d-flex align-items-baseline gap-3 mt-3" *ngFor="let up_next of currentprogramDetailData?.program_details?.up_next">
+          <div class="text-nowrap text-program-time">
+              {{formatTime(up_next?.time)}}
+          </div>
+          <div class="taj">
+              {{up_next?.title}}
+          </div>
+      </div>
+  </div>
+  </div>
+
+  <div (click)="currentProgramDetail=false" class="close_menu_details pointer">
+    <img loading="lazy" src="../../../assets/dummy-img/close-circle.svg" alt="">
+  </div>
+</div>
+
+<!-- ===========================================End Current program more details ====================== -->
+
+
+
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="loader"></div>
+</div>
