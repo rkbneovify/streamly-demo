@@ -539,7 +539,7 @@
       .playbtn_genre {
         display: flex;
         align-items: center;
-        width: 140px;
+        width: auto;
         height: 34px;
         padding: 12px 20px 12px 20px;
         border-radius: 40px;
@@ -651,7 +651,7 @@
     top: 8px;
     position: absolute;
     width: fit-content;
-    right: 13px;
+    right: 0;
   }
 }
 
