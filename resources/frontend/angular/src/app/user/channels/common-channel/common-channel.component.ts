@@ -207,6 +207,7 @@ export class CommonChannelComponent implements OnInit {
 
     // set player data in local
     setplayerData(channelUrl: string, playerChannelId?: any) {
+      console.log('chanelURL =>',channelUrl,'playerChannelId =>',playerChannelId);
       localStorage.setItem('playerId', channelUrl);
       localStorage.setItem('playerChannelId', playerChannelId);
       this.router.navigateByUrl('/user/playstream');
