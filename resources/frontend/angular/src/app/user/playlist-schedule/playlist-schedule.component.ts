@@ -273,12 +273,12 @@ export class PlaylistScheduleComponent
   
         if (position > 0) {
           this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]) ? true : false;
-          console.log('Current Time =>> ', this.getCurrentTimeDate[this.count + 1], this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]));
+          // console.log('Current Time =>> ', this.getCurrentTimeDate[this.count + 1], this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]));
           this.count += 1;
         } else {
           this.count -= 1;
           this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) ? true : false;
-          console.log('Current Time =>> ', this.getCurrentTimeDate[this.count], this.checkIfNextDay(this.getCurrentTimeDate[this.count]));
+          // console.log('Current Time =>> ', this.getCurrentTimeDate[this.count], this.checkIfNextDay(this.getCurrentTimeDate[this.count]));
         }
       }
     } else {
@@ -289,6 +289,7 @@ export class PlaylistScheduleComponent
       this.toggleLeftArrow = false;
       this.go_Live = false;
       this.count = 0;
+      this.isNextDay = false;
     }
   
     if (this.count == 0) {
@@ -297,6 +298,8 @@ export class PlaylistScheduleComponent
       this.toggleLeftArrow = false;
       this.changeColorBackgroung = false;
       this.go_Live = false;
+      this.isNextDay = false;
+
     }
   
     // Simulate a short delay to represent the completion of the scroll
@@ -822,6 +825,7 @@ export class PlaylistScheduleComponent
     const timeData = await timeArray;
     return timeData;
   }
+
 
   checkIfNextDay(timeStr: string): boolean {
     // Get the current date and time

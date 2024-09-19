@@ -211,6 +211,317 @@ main {
   }
 
 
+    // =======================================Program details start 
+
+.schedule_details_container1 {
+  row-gap: 3rem;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #004480;
+  overflow: auto;
+  padding: 30px 40px 40px 30px;
+  border-radius: 20px;
+  gap: 0.6rem;
+  width: 100%;
+  z-index: 135;
+  height: 85%;
+  margin: auto;
+  position: fixed;
+  max-width: 90%;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  .section1_img {
+    width: 100%;
+    height: 100%;
+    overflow-y: inherit;
+    border-radius: 10px;
+    flex: 1;
+    background-image: url('../../../../assets/dummy-img/bg.png');
+    position: relative;
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5rem;
+    }
+
+    .programDetailDataStationName{
+      position: absolute;
+      top: 4px;
+      background-color: #00000061;
+      padding-left: 2px;
+
+    }
+  }
+
+  .playstream_2 {
+    flex: 1;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    font-family: Poppins;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+    h1 {
+      color: #ffffff;
+      font-size: 24px;
+    }
+    p {
+      font-family: Poppins;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+      text-align: left;
+      color: #ffffffe5;
+    }
+
+    .play_btn_container_1 {
+      display: flex;
+      gap: 1rem;
+      .playbtn_time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: min-content;
+        height: 35px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+        background-color: #ffffff29;
+        outline: none;
+        border: none;
+        font-family: Poppins;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #ffffff;
+      }
+
+      .playbtn_hd {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: min-content;
+        height: 36px;
+        padding: 8px 20px 8px 20px;
+        border-radius: 40px;
+        background-color: #ffdb4e;
+        outline: none;
+        border: none;
+        text-wrap: nowrap;
+        img {
+          width: 16.67px;
+          height: 15px;
+        }
+        span {
+          font-family: Poppins;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 20px;
+        }
+      }
+    }
+
+    .playstream_desc {
+      color: #ffffffcc;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .playstream_title{
+      color: white;
+    }
+
+    .play_btn_container_2 {
+      span {
+        font-family: Poppins;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: left;
+        color: #ffffff;
+      }
+      .playbtn_genre,
+      .playbtn_aired {
+        background-color: #ffffff29;
+      }
+      .playbtn_genre {
+        display: flex;
+        align-items: center;
+        width: auto;
+        height: 34px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+        &:first-child {
+          font-weight: 600;
+        }
+      }
+      .playbtn_aired {
+        display: flex;
+        align-items: center;
+        width: 214px;
+        height: 34px;
+        padding: 12px 20px 12px 20px;
+        border-radius: 40px;
+      }
+    }
+
+    .playstream_onNow_container {
+      h2 {
+        border-bottom: 1px solid #ffffff66;
+        padding-bottom: 1rem;
+      }
+      margin-top: 30px;
+      .play_stream_now {
+        font-family: Poppins;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 20px;
+        text-align: left;
+        color: #ffffff;
+      }
+      p {
+        font-family: Poppins;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 26px;
+        text-align: left;
+        color: #ffffff;
+      }
+
+      .playstream_bottom_child {
+        h2 {
+          font-family: Poppins;
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 20px;
+          text-align: left;
+          color: #ffffffb2;
+          border-bottom: 1px solid #ffffff66;
+        }
+        .playstream_liveTime {
+          div {
+            font-family: Poppins;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 26px;
+            text-align: left;
+            color: #ffffffb2;
+          }
+        }
+      }
+    }
+  }
+
+
+
+  .schedule_details_section3 {
+    flex: 1;
+    width: 385px;
+    height: auto;
+    padding: 24px;
+    border-radius: 10px;
+    background: #ffffff26;
+    max-height: 100%;
+    overflow: auto;
+    .schedule_details_data {
+      h3 {
+        font-family: Poppins;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 20px;
+        color: #ffffff;
+      }
+    }
+
+    .schedule_details_time-container {
+      .schedule_details_time {
+        .schedule_details_day {
+          font-family: Poppins;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 20px;
+          text-align: left;
+          color: #ffffff;
+        }
+        .schedule_details_hr {
+          font-family: Poppins;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+          text-align: left;
+          color: #ffffff99;
+        }
+      }
+    }
+  }
+
+  .close_menu_details {
+    top: 8px;
+    position: absolute;
+    width: fit-content;
+    right: 13px;
+  }
+}
+.playstream_Play_icon{
+  width: 40px;
+  align-items: center;
+  cursor: pointer;
+  img{
+    object-fit: contain;
+    width: 40px;
+  }
+}
+
+.playstream_bottom_child {
+  h2 {
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+    color: #ffffffb2;
+    border-bottom: 1px solid #ffffff66;
+  }
+  .playstream_liveTime {
+    div {
+      font-family: Poppins;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+      text-align: left;
+      color: #ffffffb2;
+    }
+
+    .text-program-time{
+      min-width: 72px;
+    }
+  }
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 134;
+}
+
+// =======================================program details end
+
+
 
   @media screen and (max-width: 765px) {
     .search_Bar{
