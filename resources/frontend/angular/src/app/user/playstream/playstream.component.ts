@@ -33,6 +33,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   private routerSubscription: Subscription = new Subscription();
   private destroy$: Subject<void> = new Subject();
+  isLoading:boolean = false;
 
   constructor(private crud: CrudService, private router: Router) {
     this.playerId = localStorage.getItem('playerId');
@@ -238,6 +239,7 @@ getDRMKeys(): any {
   }
 
   getPlayerData() {
+  this.isLoading= true;
     const body = {
       "channel_id": this.playerChannelId,
       "current_datetime": this.getCurrentFormattedDateTime()
@@ -246,6 +248,7 @@ getDRMKeys(): any {
       next: (res: any) => {
         console.log('Player Data',res);
         this.channelData = res.data;
+        this.isLoading= false;
 
         // if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
         //   alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
@@ -255,6 +258,7 @@ getDRMKeys(): any {
       },
       error: (err: any) => {
         console.error(err);
+        this.isLoading= false;
       }
     })
   }
