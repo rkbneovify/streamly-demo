@@ -45,7 +45,7 @@ class UserController extends Controller
                     $credentials = ['email' => $user->email, 'password' => $request->old_password];
                     $token = JWTAuth::attempt($credentials);
                     if (!$token) {
-                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
+                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Old password is incorrect. Please try again');
                         return response()->json($response, 401);
                     }
                 }

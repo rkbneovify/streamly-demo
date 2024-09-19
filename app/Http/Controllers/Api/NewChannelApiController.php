@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class NewChannelApiController extends Controller
 {
@@ -193,6 +195,11 @@ class NewChannelApiController extends Controller
                 'message' => $validator->errors()
             ], 400);
         } else {
+            // Define the storage path for the folder
+            $folderPath = storage_path('app/public/channel_roku_images/');
+            // Clear the folder before storing the new image
+            $this->clearFolder($folderPath);
+
             $user = JWTAuth::user();
             $urlType = $request->get('typeurl');
             $zipcode = $request->get('zipcode');
@@ -243,6 +250,7 @@ class NewChannelApiController extends Controller
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->roku_image = $channel->image != null ? $this->resizeAndStoreImage($channel->image) : null;
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
                 if ($channel->stationName == null) {
@@ -649,6 +657,107 @@ class NewChannelApiController extends Controller
 
             ];
             return response()->json($response, 200);
+        }
+    }
+    // Function to resize an image to 100x100 pixels
+    /* public function resizeImage($url = 'https://demo.tmsimg.com/assets/s57391_ld_h8_ae.png', $width = 100, $height = 100)
+    {
+        // $imageUrl = 'https://demo.tmsimg.com/assets/s57391_ld_h8_ae.png';
+
+        // Load the image from the URL
+        $image = imagecreatefrompng($url);
+
+        // Create a blank image with the desired dimensions
+        $resizedImage = imagecreatetruecolor($width, $height);
+
+        // Preserve transparency
+        imagealphablending($resizedImage, false);
+        imagesavealpha($resizedImage, true);
+
+        // Get original image dimensions
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Resize the original image into the new one
+        imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $width, $height, $originalWidth, $originalHeight);
+
+        // Output the resized image to the browser
+        header('Content-Type: image/png');
+        imagepng($resizedImage);
+
+        // Clean up memory
+        imagedestroy($image);
+        imagedestroy($resizedImage);
+    } */
+
+    public function resizeAndStoreImage($imageUrl)
+    {
+        // The URL of the image you want to resize
+        // $imageUrl = 'https://demo.tmsimg.com/assets/s57391_ld_h8_ae.png';
+
+        // Desired width and height
+        $targetWidth = 100;
+        $targetHeight = 70;
+
+        // Define the storage path for the folder
+        $folderPath = storage_path('app/public/channel_roku_images/');
+
+        // Load the image from the URL
+        $image = imagecreatefrompng($imageUrl);
+
+        if (!$image) {
+            return 'Unable to load image';
+        }
+
+        // Create a blank image with the desired dimensions
+        $resizedImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
+        // Preserve transparency
+        imagealphablending($resizedImage, false);
+        imagesavealpha($resizedImage, true);
+
+        // Get original image dimensions
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Resize the original image into the new one
+        imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+
+        // // Define the file name for the new image
+        // $filename = 'resized_image_' . time() . '.png';
+
+        // Extract the original filename
+        $originalFilename = basename($imageUrl);
+
+        // Define the new file name with the prefix
+        $newFilename = 'resized_image_' . $originalFilename;
+        // Save the resized image in the folder
+        $filePath = $folderPath . $newFilename;
+        imagepng($resizedImage, $filePath);
+
+        // Clean up the memory
+        imagedestroy($image);
+        imagedestroy($resizedImage);
+
+        // Return the image URL as an API response
+        $imageUrl = url('storage/channel_roku_images/' . $newFilename);
+        return $imageUrl;
+        // return response()->json(['image_url' => $imageUrl], 200);
+    }
+
+    // Helper function to clear the folder
+    private function clearFolder($folderPath)
+    {
+        // Check if the folder exists
+        if (File::exists($folderPath)) {
+            // Get all files in the folder and delete them
+            $files = File::files($folderPath);
+            foreach ($files as $file) {
+                File::delete($file);
+            }
+        } else {
+            // If folder doesn't exist, create it
+            File::makeDirectory($folderPath, 0755, true);
         }
     }
 }
