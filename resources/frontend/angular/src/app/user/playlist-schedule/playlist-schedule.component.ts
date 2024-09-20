@@ -580,7 +580,7 @@ export class PlaylistScheduleComponent
     }
     const body = {
       TMSId: tmsId,
-      channelId:channelId
+      channel_id:channelId
     };
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
