@@ -427,6 +427,7 @@ class NewChannelApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'TMSId' => 'required',
+            'channel_id' => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -441,6 +442,7 @@ class NewChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_schedule_program.prgSvcId', '=', 'gracenote_sources.prgSvcId')
+                ->where('channels.id', $request->channel_id)
                 ->groupBy('gracenote_schedule_program.id')
                 ->first();
 
