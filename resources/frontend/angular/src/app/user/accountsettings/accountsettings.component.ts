@@ -360,4 +360,23 @@ export class AccountsettingsComponent implements OnInit {
     document.getElementById('btnShowPopConf').click();
     console.log('show pop');
   }
+
+
+  // get currnet time zone 
+  getUserTimezoneName(): string {
+    try {
+      // Get the full timezone name using Intl.DateTimeFormat API
+      const date = new Date();
+      const timeZoneName = new Intl.DateTimeFormat('en-US', {
+        timeZoneName: 'long',
+      }).formatToParts(date).find(part => part.type === 'timeZoneName')?.value;
+  
+      // Return the timezone name or a fallback if not found
+      return timeZoneName || 'Timezone not detected';
+    } catch (error) {
+      console.error('Error detecting timezone:', error);
+      return 'Timezone detection failed';
+    }
+  }
+  
 }
