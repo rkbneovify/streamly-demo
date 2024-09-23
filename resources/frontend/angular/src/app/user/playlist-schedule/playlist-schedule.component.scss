@@ -660,11 +660,21 @@
 //   display: none;
 // }
 
-.hover-active:hover{
+.hover-active:hover {
           display: none;
         }
 
+.play-icon-container{
+  display: none;
+  transition: display ease-in;
+  &:hover{
+    display: flex;
+  }
+}
 
+.hover-active:hover .play-icon-container{
+  display: flex;
+}
 
 .modal-overlay {
   position: fixed;

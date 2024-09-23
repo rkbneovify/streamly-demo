@@ -2,17 +2,17 @@
     <div class="col-lg-7 col-12 playstream_1">
         <div class="dash-video-player ">
             <div class="videoContainer" id="videoContainer" #videoContainer>
-                <video *ngIf="!isIOS()" data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
+                <video data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
                 type="application/dash+xml"
                 > 
             </video>
-            <video
+            <!-- <video
             *ngIf="isIOS()"
             id="videoPlayeVjs"
             class="video-js vjs-default-skin vjs-big-play-centered"
             controls
             preload="auto"
-          ></video>
+          ></video> -->
                 <!-- <div class="position-absolute live-indicator" [ngClass]="{'live-go':isAtLiveEdge,'not-live':!isAtLiveEdge}" (click)="goToLive()">LIVE</div> -->
                 <!-- <div class="custom-controls" #customControls>
                     <button class="custom-button" (click)="togglePlayPause()">{{ playPauseText }}</button>
