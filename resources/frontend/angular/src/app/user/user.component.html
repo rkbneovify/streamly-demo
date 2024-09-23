@@ -340,7 +340,7 @@
                     <p
                       *ngIf="item?.type == 'event'"
                       class="btn-see-deatisl mt-2"
-                      (click)="getProgramDetailData(item?.TMSId)"
+                      (click)="getProgramDetailData(item?.TMSId,item?.id)"
                     >
                       See Details
                     </p>
