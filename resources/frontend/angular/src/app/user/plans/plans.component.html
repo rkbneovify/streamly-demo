@@ -49,7 +49,7 @@
               <img loading="lazy" src="../../../assets/dummy-img/check.svg" alt="" />
             </div>
             <p *ngIf="plan.trial_period_days ">
-              Trial days: 7 days
+              Trial days: {{plan.trial_period_days?plan.trial_period_days + (plan.trial_period_days >1? ' Days':' Day') :'No trial Days'}}
             </p>
             <p *ngIf="plan.nickname == null">
               Trial days: No trial Days.

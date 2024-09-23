@@ -377,17 +377,21 @@ export class UserComponent implements OnInit {
 
   // program-details data
   programDetailData: any;
-  getProgramDetailData(tmsId?: string) {
+  getProgramDetailData(tmsId?: string,channelId?:any) {
+    this.isLoading = true;
     const body = {
       TMSId: tmsId,
+      channel_id:channelId
     };
     this.crud.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
         this.showPlaylist();
         this.programDetailData = res.data;
+    this.isLoading = false;
       },
       error: (err: any) => {
         console.error(err);
+    this.isLoading = false;
       },
     });
   }

@@ -345,6 +345,7 @@ export class PlaylistScheduleComponent
       .map((station) => ({
         id: station.id,
         image: station.image,
+        roku_image:station.roku_image,
         channel_url: station.channel_url,
         url: station.url,
       }));
@@ -579,6 +580,7 @@ export class PlaylistScheduleComponent
     }
     const body = {
       TMSId: tmsId,
+      channel_id:channelId
     };
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
