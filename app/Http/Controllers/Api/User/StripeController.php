@@ -366,7 +366,7 @@ class StripeController extends Controller
         // die;
         if (!$userinfo->subscribed('main')) {
             $plan = (object) ['amount' => '0'];
-            $invoices = '';
+            $invoices = $this->get_user_invoices($customerId);
             $renewaldatetime = '';
         } else {
             // $stripe_plan = $subscription->plan->id;
@@ -377,21 +377,8 @@ class StripeController extends Controller
                 // $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
                 $plan = $subscription->plan ??  \Stripe\Plan::retrieve(['id' => $subscription->stripe_plan, 'expand' => ["tiers"]]);
                 $invoices_data =  \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
-                $invoices = [];
-                foreach ($invoices_data->data as $invoice) {
-                    $amount = Cashier::formatAmount($invoice->total ?? '0', $invoice->currency ?? 'USD');
-                    $invoice_id = $invoice->id;
-                    // $date = date('Y-m-d H:i:s', $invoice->created);
-                    $date = date('Y-m-d H:i:s', $invoice->status_transitions->paid_at);
-                    $receipt_link = $invoice->charge->receipt_url ?? null;
 
-                    $invoices[] = [
-                        'id' => $invoice_id,
-                        'amount' => $amount,
-                        'date' => $date,
-                        'receipt_link' => $receipt_link
-                    ];
-                }
+                $invoices = $this->get_user_invoices($customerId);
                 // for renewal date
                 if ($subscription->cancel_at) {
                     $renewaldatetime = 'Plan Expired';
@@ -640,5 +627,27 @@ class StripeController extends Controller
                 $user->roles()->sync([$tieruserrole->id]);
             }
         }
+    }
+
+    private function get_user_invoices($customerId)
+    {
+        $invoices_data =  \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
+        $invoices = [];
+        foreach ($invoices_data->data as $invoice) {
+            $amount = Cashier::formatAmount($invoice->total ?? '0', $invoice->currency ?? 'USD');
+            $invoice_id = $invoice->id;
+            // $date = date('Y-m-d H:i:s', $invoice->created);
+            $date = date('Y-m-d H:i:s', $invoice->status_transitions->paid_at);
+            $receipt_link = $invoice->charge->receipt_url ?? null;
+
+            $invoices[] = [
+                'id' => $invoice_id,
+                'amount' => $amount,
+                'date' => $date,
+                'receipt_link' => $receipt_link
+            ];
+        }
+
+        return $invoices;
     }
 }
