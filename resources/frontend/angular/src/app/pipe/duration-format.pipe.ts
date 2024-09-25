@@ -20,9 +20,13 @@ export class DurationFormatPipe implements PipeTransform {
     const minutes = durationMinutes % 60;
 
     if (hours > 0) {
-      return `${hours} hour${hours !== 1 ? 's' : ''} ${minutes > 0?minutes+' min':''}`;
+      // return `${hours} Hour${hours !== 1 ? 's' : ''} ${minutes > 0?minutes+' Min':''}`;
+      return `${hours} Hour ${minutes > 0?minutes+' Min':''}`;
+
     } else {
-      return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+      // return `${minutes} Minute${minutes !== 1 ? 's' : ''}`;
+      return `${minutes} Minute`;
+
     }
 
     // return `${hours} hour${hours !== 1 ? 's' : ''} ${minutes} minute${minutes !== 1 ? 's' : ''}`;
@@ -54,10 +58,10 @@ export class DurationISOFormatPipe implements PipeTransform {
 
     let result = '';
     if (hours > 0) {
-      result += hours + ' hr' + (hours > 1 ? 's' : '') + ' ';
+      result += hours + ' HR' + ' ';
     }
     if (minutes > 0) {
-      result += minutes + ' m' + (minutes > 1 ? 's' : '');
+      result += minutes + ' MIN';
     }
 
     return result.trim();
