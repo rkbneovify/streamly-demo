@@ -1,10 +1,12 @@
 import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CrudService } from '../../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import {  Router } from '@angular/router';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { DurationISOFormatPipe, TruncatePipe } from '../../../pipe/duration-format.pipe';
+import { ScreenSizeService } from '../../../services/screenSize/screen-size.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-all-channel',
@@ -13,14 +15,16 @@ import { DurationISOFormatPipe, TruncatePipe } from '../../../pipe/duration-form
   templateUrl: './all-channel.component.html',
   styleUrl: './all-channel.component.scss'
 })
-export class AllChannelComponent implements OnInit{
+export class AllChannelComponent implements OnInit, OnDestroy{
   Bearer_token:any;
   favChannelList:any;
   favoriteChannels: number[] = [];
   isLoading:boolean = false;
+  private screenSizeSubscription!: Subscription;
+  currentWidth: number = 0;
 
   data:any;
-  constructor(private apiService:CrudService,private router:Router,private ts:ToastrService){}
+  constructor(private apiService:CrudService,private router:Router,private ts:ToastrService,private screenSizeService: ScreenSizeService){}
   ngOnInit(): void {
     if(JSON.parse(localStorage.getItem('allChannel'))){
       this.data = JSON.parse(localStorage.getItem('allChannel'));
@@ -28,8 +32,32 @@ export class AllChannelComponent implements OnInit{
       this.getPrivacyP();
     }
     this.getFavoriteList();
+
+        // Subscribe to screen width changes
+        this.screenSizeSubscription = this.screenSizeService
+        .getScreenWidth()
+        .subscribe((width) => {
+          this.currentWidth = width;
+          console.log(`Screen width is: ${this.currentWidth}`);
+  
+          // Recalculate chunk size based on screen width
+          if (this.data) {
+            const chunkSize = Math.floor(this.currentWidth / 190);
+            this.data = this.chunkArray(
+              this.data.flat(),
+              chunkSize
+            );
+          }
+        });
   }
 
+
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed to avoid memory leaks
+    if (this.screenSizeSubscription) {
+      this.screenSizeSubscription.unsubscribe();
+    }
+  }
 
   getAuthHeaders(): HttpHeaders {
     const tokenData = JSON.parse(
@@ -63,7 +91,7 @@ export class AllChannelComponent implements OnInit{
 
     this.apiService.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
-        const list = this.chunkArray(res.data,6);
+        const list = this.chunkArray(res.data,this.currentWidth/190);
         localStorage.setItem('allChannel',JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
         console.log(res.data,"==============>", res?.data[2]?.gracenote_data?.url+'/'+res.data?.gracenote_data?.url?.assets?.asset[0]?.URI);

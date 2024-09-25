@@ -68,13 +68,13 @@
 
     </div>
     <div class="col-lg-5 col-12 playstream_2" *ngIf="channelData?.program_details; else noProgram">
-        <h1 (click)="getPlayerData()">{{channelData?.channel?.stationName}}</h1>
+        <h1 title="Channel Name">{{channelData?.channel?.stationName}}</h1>
         <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
         <div class="play_btn_container_1 mt-2">
             <button class="playbtn_time">{{channelData?.program_details?.duration}}</button>
             <button class="playbtn_hd"><img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt=""> <span>{{channelData?.program_details?.quals}}</span></button>
         </div>
-        <h1 class="playstream_desc my-3">
+        <h1 class="playstream_desc my-3" title="Program Name">
             {{channelData?.program_details?.title}}
         </h1>
 
@@ -100,7 +100,7 @@
                     <div class="text-nowrap">
                         {{formatTime(up_next?.time)}}
                     </div>
-                    <div class="taj">
+                    <div class="">
                         {{up_next?.title}}
                     </div>
                 </div>
