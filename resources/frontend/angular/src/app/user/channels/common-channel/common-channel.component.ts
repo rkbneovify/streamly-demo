@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CrudService } from '../../../services/crud.service';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { DurationISOFormatPipe, TruncatePipe } from '../../../pipe/duration-format.pipe';
+import {
+  DurationISOFormatPipe,
+  TruncatePipe,
+} from '../../../pipe/duration-format.pipe';
+import { ScreenSizeService } from '../../../services/screenSize/screen-size.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-common-channel',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf,DurationISOFormatPipe,TruncatePipe],
+  imports: [NgClass, NgFor, NgIf, DurationISOFormatPipe, TruncatePipe],
   templateUrl: './common-channel.component.html',
   styleUrl: './common-channel.component.scss',
 })
-export class CommonChannelComponent implements OnInit {
+export class CommonChannelComponent implements OnInit, OnDestroy {
   keyword: string;
   isLoading: boolean = false;
   body: any = {
@@ -24,15 +29,29 @@ export class CommonChannelComponent implements OnInit {
   Bearer_token: any;
   favChannelList: any;
   favoriteChannels: number[] = [];
+  currentWidth: number = 0;
+  private screenSizeSubscription!: Subscription;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private apiService: CrudService,
-    private ts: ToastrService
+    private ts: ToastrService,
+    private screenSizeService: ScreenSizeService
   ) {}
 
   ngOnInit(): void {
     this.getChannelData();
+    // Subscribe to screen width changes
+    this.screenSizeSubscription = this.screenSizeService.getScreenWidth().subscribe(width => {
+      this.currentWidth = width;
+      // console.log(`Screen width is: ${this.currentWidth}`);
+
+      // Recalculate chunk size based on screen width
+      if (this.data) {
+        const chunkSize = Math.floor(this.currentWidth / 190);
+        this.data = this.chunkArray(this.data.flat(), chunkSize);
+      }
+    });
   }
 
   getChannelData() {
@@ -42,7 +61,7 @@ export class CommonChannelComponent implements OnInit {
 
       if (this.keyword == 'recents' || this.keyword == 'favourites') {
         if (this.keyword == 'favourites') {
-          this.body
+          this.body;
           this.apiService
             .postRequest('auth/favourite-channels', { typeurl: 'mpd' })
             .subscribe((res: any) => {
@@ -77,19 +96,29 @@ export class CommonChannelComponent implements OnInit {
           };
           this.apiService.filterChannelResponse(body).subscribe({
             next: (res: any) => {
-              this.data = this.chunkArray(res.data, 6);
+              this.data = this.chunkArray(
+                res.data,
+                Math.floor(this.currentWidth / 190)
+              );
               this.getFavoriteList();
               this.isLoading = false;
             },
-            error:(err)=>{
+            error: (err) => {
               this.isLoading = false;
-              this.ts.error(err.error.message)
-            }
+              this.ts.error(err.error.message);
+            },
           });
         }
         console.log(this.keyword);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed to avoid memory leaks
+    if (this.screenSizeSubscription) {
+      this.screenSizeSubscription.unsubscribe();
+    }
   }
 
   getAuthHeaders(): HttpHeaders {
@@ -205,21 +234,25 @@ export class CommonChannelComponent implements OnInit {
   //   this.router.navigateByUrl('/user/playstream');
   // }
 
-    // set player data in local
-    setplayerData(channelUrl: string, playerChannelId?: any) {
-      console.log('chanelURL =>',channelUrl,'playerChannelId =>',playerChannelId);
-      localStorage.setItem('playerId', channelUrl);
-      localStorage.setItem('playerChannelId', playerChannelId);
-      this.router.navigateByUrl('/user/playstream');
-      // this.searchShow = !this.searchShow;
-    }
-
+  // set player data in local
+  setplayerData(channelUrl: string, playerChannelId?: any) {
+    console.log(
+      'chanelURL =>',
+      channelUrl,
+      'playerChannelId =>',
+      playerChannelId
+    );
+    localStorage.setItem('playerId', channelUrl);
+    localStorage.setItem('playerChannelId', playerChannelId);
+    this.router.navigateByUrl('/user/playstream');
+    // this.searchShow = !this.searchShow;
+  }
 
   // current Programs
   currentProgramDetail: boolean = false;
   programChannelId: string;
   programChannelUrl: string;
-  currentprogramDetailData:any;
+  currentprogramDetailData: any;
 
   formatTime(timeStr: any): string {
     const currentDate = new Date();
