@@ -4,6 +4,7 @@ import {
   Component,
   HostListener,
   NgModule,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
 import {
@@ -16,13 +17,20 @@ import { CrudService } from '../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { SearchComponent } from './search/search.component';
-import { Subject, debounceTime, distinctUntilChanged, filter } from 'rxjs';
+import {
+  Subject,
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+} from 'rxjs';
 import {
   DurationISOFormatPipe,
   TruncatePipe,
 } from '../pipe/duration-format.pipe';
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
+import { ScreenSizeService } from '../services/screenSize/screen-size.service';
 
 @Component({
   selector: 'app-user',
@@ -42,7 +50,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
-export class UserComponent implements OnInit {
+export class UserComponent implements OnInit, OnDestroy {
   submenu: boolean = false;
   activeTab: string = 'home';
   access_Token!: any;
@@ -55,13 +63,16 @@ export class UserComponent implements OnInit {
   favoriteChannels: number[] = [];
   searchTerm: any = '';
   subscribed: boolean;
+  private screenSizeSubscription!: Subscription;
+  currentWidth: number = 0;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
     private crud: CrudService,
     private router: Router,
     private ts: ToastrService,
-    private viewportScroller: ViewportScroller
+    private viewportScroller: ViewportScroller,
+    private screenSizeService: ScreenSizeService
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -87,6 +98,30 @@ export class UserComponent implements OnInit {
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
+
+    // Subscribe to screen width changes
+    this.screenSizeSubscription = this.screenSizeService
+      .getScreenWidth()
+      .subscribe((width) => {
+        this.currentWidth = width;
+        console.log(`Screen width is: ${this.currentWidth}`);
+
+        // Recalculate chunk size based on screen width
+        if (this.allChannelDataList) {
+          const chunkSize = Math.floor(this.currentWidth / 190);
+          this.allChannelDataList = this.chunkArray(
+            this.allChannelDataList.flat(),
+            chunkSize
+          );
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe when the component is destroyed to avoid memory leaks
+    if (this.screenSizeSubscription) {
+      this.screenSizeSubscription.unsubscribe();
+    }
   }
 
   sideBarAnimation() {
@@ -124,7 +159,7 @@ export class UserComponent implements OnInit {
       !target.closest('.card_page') &&
       !target.closest('.close-search img') &&
       !target.closest('.search_Bar') &&
-      !target.closest('.schedule_details_container')&&
+      !target.closest('.schedule_details_container') &&
       !target.closest('.schedule_details_container1');
 
     // If clicked outside of search container and it's not the close button, hide search modal
@@ -240,7 +275,10 @@ export class UserComponent implements OnInit {
 
     this.crud.postRequest('auth/new-search', term).subscribe({
       next: (res: any) => {
-        this.allChannelDataList = this.chunkArray(res.data, 6);
+        this.allChannelDataList = this.chunkArray(
+          res.data,
+          this.currentWidth / 190
+        );
         this.ts.success(res.message);
       },
       error: (err: any) => {
@@ -259,7 +297,10 @@ export class UserComponent implements OnInit {
     };
     this.crud.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
-        this.allChannelDataList = this.chunkArray(res.data, 6);
+        this.allChannelDataList = this.chunkArray(
+          res.data,
+          this.currentWidth / 190
+        );
         this.searchShow = !this.searchShow;
       },
       error: (error: any) => {
@@ -377,21 +418,21 @@ export class UserComponent implements OnInit {
 
   // program-details data
   programDetailData: any;
-  getProgramDetailData(tmsId?: string,channelId?:any) {
+  getProgramDetailData(tmsId?: string, channelId?: any) {
     this.isLoading = true;
     const body = {
       TMSId: tmsId,
-      channel_id:channelId
+      channel_id: channelId,
     };
     this.crud.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
         this.showPlaylist();
         this.programDetailData = res.data;
-    this.isLoading = false;
+        this.isLoading = false;
       },
       error: (err: any) => {
         console.error(err);
-    this.isLoading = false;
+        this.isLoading = false;
       },
     });
   }
@@ -410,13 +451,12 @@ export class UserComponent implements OnInit {
     }
   }
 
-
   // current Programs
   currentProgramDetail: boolean = false;
   programChannelId: string;
   programChannelUrl: string;
-  isLoading:boolean = false;
-  currentprogramDetailData:any;
+  isLoading: boolean = false;
+  currentprogramDetailData: any;
 
   formatTime(timeStr: any): string {
     const currentDate = new Date();

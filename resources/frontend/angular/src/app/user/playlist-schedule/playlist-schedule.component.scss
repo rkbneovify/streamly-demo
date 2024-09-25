@@ -215,7 +215,9 @@
 
 .schedule_container_content {
   overflow: auto;
-  height: 90vh;
+  min-height: 50vh;
+  max-height: 90vh;
+  height: 100%;
   border-radius: 0px 0px 11px 11px;
   position: relative;
   .schedule_content {
@@ -667,6 +669,14 @@
 .play-icon-container{
   display: none;
   transition: display ease-in;
+  background: rgba(255, 255, 255, 0.0509803922);
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  align-items: end;
+  width: 600px;
+  padding-left: 14px;
+  padding-bottom: 9px;
   &:hover{
     display: flex;
   }
@@ -675,6 +685,17 @@
 .hover-active:hover .play-icon-container{
   display: flex;
 }
+
+.hover-active:hover .program_ep{
+  // display: none !important;
+  visibility: hidden;
+}
+
+.hover-active:hover .program_time{
+  // display: none !important;
+  visibility: hidden;
+}
+
 
 .modal-overlay {
   position: fixed;
