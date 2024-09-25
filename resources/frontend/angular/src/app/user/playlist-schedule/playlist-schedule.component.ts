@@ -312,40 +312,68 @@ export class PlaylistScheduleComponent
 
   // getScheduleProgram: any;
   // getAllScheduleData:any;
-  getScheduleChannelLogo: any;
+  getScheduleChannelLogo: any =[];
   // filterProgram
   filteredPrograms: any = [];
-  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-    this.isLoading = true;
-    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
-    const body = {
-      typeurl: 'mpd',
-      genre: genre == 'All' ? '' : genre,
-      day: dayFilter,
-    };
-    this.apiService.postRequest('auth/epg-guide', body).subscribe({
-      next: (res: any) => {
-        this.getScheduleChannelLogo = this.filterchannelAnd(res.data);
-        this.filteredPrograms = res.data;
-        this.isLoading = false;
-        // this.getAllScheduleData = res.data;
-        // this.getScheduleProgram = res.data;
-        // this.filterPrograms(res);
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.isLoading = false;
-      },
-    });
+// Assuming 'start' and 'limit' are new parameters for lazy loading
+startIndex: number = 0;
+limit: number = 10;
+
+getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+  this.isLoading = true;
+  this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
+
+  const body = {
+    typeurl: 'mpd',
+    genre: genre == 'All' ? '' : genre,
+    day: dayFilter,
+    start: this.startIndex,
+    limit: this.limit
+  };
+
+  this.apiService.postRequest('auth/epg-guide', body).subscribe({
+    next: (res: any) => {
+      // Append new data to the existing list for lazy loading
+      // console.log('getScheduleChannelLogo res  ===>',res.data);
+      this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
+      // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
+      this.filteredPrograms = [...res.data];
+      this.isLoading = false;
+    },
+    error: (err: any) => {
+      console.error(err);
+      this.isLoading = false;
+    },
+  });
+}
+
+// Listen to scroll event
+onScroll() {
+  if (this.isNearBottom()) {
+    // Increase the startIndex for the next batch of data
+    this.startIndex += this.limit;
+    this.getScheduleData(this.selected_category, this.selectedDay);
   }
+}
+
+// Check if the user has scrolled near the bottom
+isNearBottom(): boolean {
+  const scrollable = document.querySelector('.schedule_content');
+  return scrollable.scrollHeight - scrollable.scrollTop <= scrollable.clientHeight + 50;
+}
+
+
+
+
+
+
   // get the channels log and id
   filterchannelAnd(stations: any) {
     return stations
-      .filter((station) => station.prgSvcId !== null)
-      .map((station) => ({
+      .filter((station:any) => station.prgSvcId !== null)
+      .map((station:any) => ({
         id: station.id,
         image: station.image,
-        roku_image:station.roku_image,
         channel_url: station.channel_url,
         url: station.url,
       }));
