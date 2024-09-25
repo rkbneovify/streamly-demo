@@ -418,5 +418,5 @@ Route::get('/success', 'PaymentlinkController@paymentsuccess');
 Route::get('/fail', 'PaymentlinkController@paymentfail');
 
 Route::any('/{any}', [AngularController::class, 'index'])
-    ->where('any', '^(?!api|admin).*$')
+    ->where('any', '^(?!api|admin|stripe).*$')
     ->name('angular');
