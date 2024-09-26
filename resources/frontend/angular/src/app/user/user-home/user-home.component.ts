@@ -3,9 +3,11 @@ import {
   Component,
   ElementRef,
   HostListener,
+  NgZone,
   OnInit,
   ViewChild,
 } from '@angular/core';
+declare var bootstrap: any; // Declare bootstrap globally
 import { Router, RouterLink } from '@angular/router';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
@@ -45,7 +47,8 @@ export class UserHomeComponent implements OnInit {
   constructor(
     private crud: CrudService,
     private router: Router,
-    private ts: ToastrService
+    private ts: ToastrService,
+    private ngZone: NgZone
   ) {}
   ngOnInit(): void {
     this.loginSliders();
@@ -54,14 +57,23 @@ export class UserHomeComponent implements OnInit {
     this.channelsWithGenre();
   }
 
-  ngAfterViewInit(): void {
+  // ngAfterViewInit(): void {
     
-    // setTimeout(() => {
-    //   if (this.sliderNexrButton) {
-    //     console.log('start slider')
-    //     this.sliderNexrButton.nativeElement.click();
-    //   }
-    // }, 0);
+  //   // setTimeout(() => {
+  //   //   if (this.sliderNexrButton) {
+  //   //     console.log('start slider')
+  //   //     this.sliderNexrButton.nativeElement.click();
+  //   //   }
+  //   // }, 0);
+  // }
+
+  ngAfterViewInit() {
+    this.ngZone.runOutsideAngular(() => {
+      const carousel = new bootstrap.Carousel(document.getElementById('carouselExampleIndicators'), {
+        interval: 3000, // Auto slide interval in milliseconds
+        ride: 'carousel' // Ensures the auto-slide behavior is enabled
+      });
+    });
   }
 
   loginSliders() {
