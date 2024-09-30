@@ -72,17 +72,18 @@ export class SubPaymentComponent implements OnInit {
   couponFormControl!: FormControl;
   selectedPlan: any;
   acceptTerm: boolean = false;
+  userEmail: string = '';
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   cardZipData!: any;
   device_per_unit: number = 1;
-  userDetails: any = '';
 
   @ViewChild('cardInfo') public cardInfo!: ElementRef;
   _totalAmount: number = 10;
   card: any;
   cardHandler = this.onChange.bind(this);
   cardError: any;
+  subscribeNowBtn:string = 'Subscribe Now';
 
   constructor(
     private crud: CrudService,
@@ -92,6 +93,9 @@ export class SubPaymentComponent implements OnInit {
     private ts: ToastrService,
     private cd: ChangeDetectorRef
   ) {
+
+    const UserEmail = JSON.parse(localStorage.getItem('userDetails')).email?JSON.parse(localStorage.getItem('userDetails')).email:'';
+
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', Validators.required],
@@ -114,11 +118,16 @@ export class SubPaymentComponent implements OnInit {
       digit6: ['', Validators.required],
     });
 
+    console.log('this.userEmail',this.userEmail)
+
     this.paymentFormDetailSub = this.fb.group({
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
-      cardZip: [null, [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
-      cardEmail: ['', [Validators.required, Validators.email]],
+      cardZip: [
+        null,
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5)],
+      ],
+      cardEmail: [UserEmail, [Validators.required, Validators.email]],
       couponCode: [''],
       address1: ['', Validators.required],
       address2: [''],
@@ -146,11 +155,12 @@ export class SubPaymentComponent implements OnInit {
           apiResponse[0].state
         ) {
           console.log('ZipCode Data inside the if =>', this.zipcodedata);
-          this.paymentFormDetailSub.get('paymentState')
-          ?.setValue(apiResponse[0].state);
-        this.paymentFormDetailSub
-          .get('paymentCity')
-          ?.setValue(apiResponse[0].city);
+          this.paymentFormDetailSub
+            .get('paymentState')
+            ?.setValue(apiResponse[0].state);
+          this.paymentFormDetailSub
+            .get('paymentCity')
+            ?.setValue(apiResponse[0].city);
         }
       });
 
@@ -505,9 +515,6 @@ export class SubPaymentComponent implements OnInit {
             console.log('===========basic plan>', data);
             this.checkoutPlans = data;
             console.log('checkout================>', this.checkoutPlans);
-            this.paymentFormDetailSub
-              .get('cardEmail')
-              ?.setValue(this.availabilityForm.get('email')?.value);
             console.log(
               'avail email',
               this.availabilityForm.get('email')?.value
@@ -622,12 +629,12 @@ export class SubPaymentComponent implements OnInit {
     this.checkCardDetails();
   }
 
-    // Function to prevent input of more than 5 digits
-onZipcodeInput(event: any) {
-  const input = event.target.value;
-  if (input.length >= 5) {
-    console.log(input.length)
-    event.preventDefault(); // Prevents user from entering more than 5 characters
+  // Function to prevent input of more than 5 digits
+  onZipcodeInput(event: any) {
+    const input = event.target.value;
+    if (input.length >= 5) {
+      console.log(input.length);
+      event.preventDefault(); // Prevents user from entering more than 5 characters
+    }
   }
-}
 }
