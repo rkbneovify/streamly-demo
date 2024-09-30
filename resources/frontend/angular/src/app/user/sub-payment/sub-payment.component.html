@@ -238,7 +238,7 @@
         <div class="col-12 col-md-12 ps-0">
           <p>Email <span class="text-danger">*</span></p>
           <div class="card-input">
-            <input type="email" placeholder="Enter Email" required formControlName="cardEmail"/>
+            <input type="email" placeholder="Enter Email" required formControlName="cardEmail" readonly/>
             <!--validation error -->
             <div *ngIf="paymentFormDetailSub.get('cardEmail').touched && paymentFormDetailSub.get('cardEmail').invalid" class="text-danger">
               <small *ngIf="paymentFormDetailSub.get('cardEmail').errors?.['required']">Email is required.</small>
@@ -325,7 +325,7 @@
 
           <button  [class.spinner]="loading" [disabled]="loading" [disabled]="!paymentFormDetailSub.valid || !checkCardDetail" type="submit" [ngClass]="{'flex-fill position-relative':true,'btn-bg-gold':paymentFormDetailSub.valid && checkCardDetail,'cursor-not-allow': !paymentFormDetailSub.valid || !checkCardDetail}"  (click)="createStripeToken()">
             <span *ngIf="!loading">
-              Subscribe Now
+              {{(checkoutPlans.plandetails?.trial_period_days && checkoutPlans.plandetails?.trial_period_days >0)?'Start your ' + checkoutPlans.plandetails?.trial_period_days + ' days trial': 'Subscribe Now'}}
             </span>
           </button>
         </div>
