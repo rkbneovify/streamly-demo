@@ -537,13 +537,13 @@ export class SubPaymentComponent implements OnInit {
             console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             // this.initiateCardElement();
-            this.paymentFormDetailSub
-              .get('cardEmail')
-              ?.setValue(this.availabilityForm.get('email')?.value);
-            console.log(
-              'avail email',
-              this.availabilityForm.get('email')?.value
-            );
+            // this.paymentFormDetailSub
+            //   .get('cardEmail')
+            //   ?.setValue(this.availabilityForm.get('email')?.value);
+            // console.log(
+            //   'avail email',
+            //   this.availabilityForm.get('email')?.value
+            // );
             console.log('avail email 2', this.availabilityForm.value.email);
             this.initializeKey(data.STRIPE_KEY);
           },
