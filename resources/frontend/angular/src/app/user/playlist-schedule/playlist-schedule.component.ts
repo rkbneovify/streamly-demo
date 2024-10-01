@@ -22,6 +22,7 @@ import {
 import { TimeFormatPipe } from '../../pipe/time-format.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
+import { InactivityService } from '../../services/inactive/inactive.service';
 
 @Component({
   selector: 'app-playlist-schedule',
@@ -199,7 +200,8 @@ export class PlaylistScheduleComponent
     private apiService: CrudService,
     private toaster: ToastrService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private inactivityService: InactivityService
   ) {}
   ngOnInit(): void {
     this.getAllCategories();
