@@ -361,6 +361,10 @@ export class AccountsettingsComponent implements OnInit {
     console.log('show pop');
   }
 
+  clearDetails(){
+    this.deleteAccountForm.get('password').reset();
+    this.cancelSubscription.get('password').reset();
+  }
 
   // get currnet time zone 
   getUserTimezoneName(): string {
