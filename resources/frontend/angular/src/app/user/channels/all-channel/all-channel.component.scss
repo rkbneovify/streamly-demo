@@ -63,27 +63,27 @@ main {
 
 
 .landing_carousel_section2 {
-  overflow-y: auto;
-  height: calc(100vh - 98px);
-  &::-webkit-scrollbar {
-    width: 5px;
-  }
-  &::-webkit-scrollbar {
-    height: 0px;
-  }
+  // overflow-y: auto;
+  height: auto;
+  // &::-webkit-scrollbar {
+  //   width: 5px;
+  // }
+  // &::-webkit-scrollbar {
+  //   height: 0px;
+  // }
 
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #234b69e5;
-    border-radius: 5px;
-  }
+  // &::-webkit-scrollbar-track {
+  //   background: #f1f1f1;
+  //   border-radius: 5px;
+  // }
+  // &::-webkit-scrollbar-thumb {
+  //   background: #234b69e5;
+  //   border-radius: 5px;
+  // }
 
-  &::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+  // &::-webkit-scrollbar-thumb:hover {
+  //   background: #555;
+  // }
     .landing_carousel_section2_top {
       font-family: Poppins;
       font-size: 18px;
@@ -106,9 +106,12 @@ main {
       flex-basis: 160px;
       gap: 36px;
       overflow-x: auto;
+      padding-bottom: 10px;
       &::-webkit-scrollbar {
-        width: 0px;
-        height: 0px;
+        width: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #234b69e5;
       }
 
       .card_page {

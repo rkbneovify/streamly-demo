@@ -1,8 +1,8 @@
 <div class="landing_carousel_section2 mt-5" >
   <div class="landing_carousel_section2_top">
-    Favourite Channel
+    Favorite Channel
     <span class="pointer" *ngIf="favListData?.length > 6" 
-      [routerLink]="'/user/channels/favourites'"> See More >></span>
+      [routerLink]="'/user/channels/favorites'"> See More >></span>
   </div>
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of favListData">
@@ -67,12 +67,13 @@
 
   <div *ngIf="!favListData?.length" style="min-height: 230px;" class="no-Data">
     <p class="m-auto" *ngIf="!isLoading">
-      No Favourite Channel
+      No Favorite Channel
     </p>
   </div>
 </div>
 
 <div class="landing_carousel_section2 mt-5">
+
   <div class="landing_carousel_section2_top">
     Recently Played
     <span class="pointer" *ngIf="recentsPlayData?.length > 6"

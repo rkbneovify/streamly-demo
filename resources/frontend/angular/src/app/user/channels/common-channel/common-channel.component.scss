@@ -108,9 +108,12 @@ main {
       flex-basis: 160px;
       gap: 36px;
       overflow-x: auto;
+      padding-bottom: 10px;
       &::-webkit-scrollbar {
-        width: 0px;
-        height: 0px;
+        width: 10px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #234b69e5;
       }
 
       .card_page {

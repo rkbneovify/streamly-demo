@@ -167,10 +167,11 @@ export class TotalaccountComponent {
     }
   }
 
-  removedevices(id: any): void {
+  removedevices(id: any[]): void {
     this.isLoading = true;
     const userToken = localStorage.getItem('deviceInfo');
     let headers;
+  
     if (userToken !== null) {
       this.access_Token = JSON.parse(localStorage.getItem('deviceInfo') || '');
       const tokenData = this.access_Token?.access_token;
@@ -180,30 +181,38 @@ export class TotalaccountComponent {
         Accept: 'application/json',
       });
     }
+  
     this.apiService
       .postRequest('auth/multi-session-destroy', { id: id }, headers)
       .subscribe({
         next: (res: any) => {
           if (res.jwterror == 'no error') {
             this.toastr.success('Devices removed successfully');
-            this.connectedDevice = this.connectedDevice.filter(
-              (data: any) => data.session_id !== id
-            );
+  
+            // Filter out the removed devices from the connectedDevice array
+            id.forEach(sessionId => {
+              this.connectedDevice = this.connectedDevice.filter(
+                (device: any) => device.session_id !== sessionId
+              );
+            });
+  
             this.response = this.connectedDevice;
             localStorage.setItem(
               'loggedInDeviceDetails',
               JSON.stringify(this.response)
             );
-          this.isLoading = false;
+  
+            this.isLoading = false;
           }
         },
         error: (err) => {
           this.toastr.error(err.error?.error);
-          console.log(err);
           this.isLoading = false;
         },
       });
   }
+  
+  
 
   removedevice(id: any): void {
     this.isLoading = true;

@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +18,7 @@ import { HttpHeaders } from '@angular/common/http';
   templateUrl: './changepassword.component.html',
   styleUrl: './changepassword.component.scss',
 })
-export class ChangepasswordComponent {
+export class ChangepasswordComponent implements OnDestroy {
   showPassword1: boolean = false;
   showPassword2: boolean = false;
   showPassword3: boolean = false;
@@ -89,5 +89,25 @@ export class ChangepasswordComponent {
     } else {
       this.loading = false;
     }
+  }
+
+  logoutUser(){
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+      Accept: 'application/json',
+    });
+    this.crud.postRequest('auth/logout',{},headers).subscribe({
+      next:(res)=>{
+        console.log('Log out');
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.logoutUser();
+    localStorage.removeItem('changeToken');
   }
 }

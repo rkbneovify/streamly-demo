@@ -63,13 +63,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
   isIOS(): boolean {
     const userAgent = navigator.userAgent;
-
     // Check if the device is iOS (iPhone, iPad, or iPod)
     const isIOSDevice = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-
     // Check if the browser is Safari (including Safari on macOS, iOS, and excluding Chrome/Android)
     const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
-
     console.log('is Safari => ', isIOSDevice || isSafari);
     return isIOSDevice || isSafari;
   }
