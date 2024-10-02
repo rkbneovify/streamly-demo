@@ -116,12 +116,12 @@
             [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width, 'margin-left.px': calculateWidth(+program.start,+program.end,index).margin_left}"
             class="schedule_time"
             *ngFor="let program of data.program; let index = index"  
-            [ngClass]="{'hover-active position-relative': index == 0,'px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
+            [ngClass]="{'hover-active position-relative': index == 0 && this.selectedDay == 'Today','px-0':calculateWidth(+program.start,+program.end,index).width<50}" 
             (click)="getProgramDetailData(program?.TMSId, index, data.id, data.url)"
             >
             <div class="position-absolute play-icon-container" [ngStyle]="{'width.px': calculateWidth(+program.start,+program.end,index).width}"
             *ngIf="index == 0">
-              <img class="play-icon-img " style="width: 45px;" loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
+              <img class="play-icon-img mt-auto" style="width: 45px;" loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
             </div>
                 <h4 class="program_title p-0 m-0 overflow-hidden">{{program?.title}}</h4>
                 <p class="program_time my-2 overflow-hidden">{{program.start | timeFormat}} - {{program.end | timeFormat}}</p>

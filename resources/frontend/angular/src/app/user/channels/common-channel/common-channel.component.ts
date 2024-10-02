@@ -59,15 +59,15 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
     this.route.url.subscribe((urlSegments) => {
       this.keyword = urlSegments[urlSegments.length - 1].path;
 
-      if (this.keyword == 'recents' || this.keyword == 'favourites') {
-        if (this.keyword == 'favourites') {
+      if (this.keyword == 'recents' || this.keyword == 'favorites') {
+        if (this.keyword == 'favorites') {
           this.body;
           this.apiService
             .postRequest('auth/favourite-channels', { typeurl: 'mpd' })
             .subscribe((res: any) => {
               if (res.response_code === 200) {
                 console.log('fav ===>', res.data);
-                this.data = this.chunkArray(res.data, 6);
+                this.data = this.chunkArray(res.data, Math.floor(this.currentWidth / 190));
                 this.isLoading = false;
                 this.getFavoriteList();
                 return;
@@ -81,7 +81,7 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
             .postRequest('auth/recent-channels', body)
             .subscribe((res: any) => {
               if (res.response_code === 200) {
-                this.data = this.chunkArray(res.data, 6);
+                this.data = this.chunkArray(res.data, Math.floor(this.currentWidth / 190));
                 this.isLoading = false;
                 this.getFavoriteList();
               }
