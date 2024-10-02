@@ -22,6 +22,8 @@ import {
 import { TimeFormatPipe } from '../../pipe/time-format.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
+import { InactivityService } from '../../services/inactive/inactive.service';
+import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 
 @Component({
   selector: 'app-playlist-schedule',
@@ -199,7 +201,9 @@ export class PlaylistScheduleComponent
     private apiService: CrudService,
     private toaster: ToastrService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private inactivityService: InactivityService,
+    private tabInactivityService: TabInactivityService
   ) {}
   ngOnInit(): void {
     this.getAllCategories();
@@ -218,9 +222,13 @@ export class PlaylistScheduleComponent
         this.cdr.detectChanges();
       }, 60000); // 60000 milliseconds = 1 minute
     }
-
     const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
+    setTimeout(() => {
+      
+    }, 10000*60*30);
     console.log(data);
+
+    this.tabInactivityService.startTabInactivityCheck();
   }
 
   ngAfterViewInit() {
@@ -245,39 +253,55 @@ export class PlaylistScheduleComponent
     }
   }
 
-  showTomorrowDate:boolean = false;
+  showTomorrowDate: boolean = false;
 
-  isNextDay:boolean=false;
+  isNextDay: boolean = false;
   go_Live: boolean = false;
   count: number = 0;
-  isProcessing:boolean = false;
+  isProcessing: boolean = false;
   scrollContent(position: number) {
     // Prevent the function from running again if it's already processing
     if (this.isProcessing) {
       return;
     }
-  
+
     this.isProcessing = true; // Set the processing flag
     console.log('Scrolling started');
-  
+
     if (position !== 0) {
       this.changeColorBackgroung = true;
       this.toggleLeftArrow = true;
       this.go_Live = true;
-  
+
       let indexNumber;
-      if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+      if (
+        this.scrollableContent.nativeElement &&
+        this.scrollableContent1.nativeElement
+      ) {
         // Perform the scroll
         this.scrollableContent.nativeElement.scrollLeft += position;
         this.scrollableContent1.nativeElement.scrollLeft += position;
-  
+
         if (position > 0) {
-          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]) ? true : false;
-          // console.log('Current Time =>> ', this.getCurrentTimeDate[this.count + 1], this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]));
+          this.isNextDay = this.checkIfNextDay(
+            this.getCurrentTimeDate[this.count + 1]
+          )
+            ? true
+            : false;
+          console.log(
+            'Current Time =>> ',
+            this.getCurrentTimeDate[this.count + 1],
+            this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]),
+            this.isNextDay
+          );
           this.count += 1;
         } else {
           this.count -= 1;
-          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) ? true : false;
+          this.isNextDay = this.checkIfNextDay(
+            this.getCurrentTimeDate[this.count]
+          )
+            ? true
+            : false;
           // console.log('Current Time =>> ', this.getCurrentTimeDate[this.count], this.checkIfNextDay(this.getCurrentTimeDate[this.count]));
         }
       }
@@ -291,7 +315,7 @@ export class PlaylistScheduleComponent
       this.count = 0;
       this.isNextDay = false;
     }
-  
+
     if (this.count == 0) {
       this.scrollableContent.nativeElement.scrollLeft = 0;
       this.scrollableContent1.nativeElement.scrollLeft = 0;
@@ -299,79 +323,75 @@ export class PlaylistScheduleComponent
       this.changeColorBackgroung = false;
       this.go_Live = false;
       this.isNextDay = false;
-
     }
-  
+
     // Simulate a short delay to represent the completion of the scroll
     setTimeout(() => {
       this.isProcessing = false; // Set the flag back to false after scroll finishes
       console.log('Scrolling finished');
     }, 500); // Adjust the delay as per your actual processing time
   }
-  
 
   // getScheduleProgram: any;
   // getAllScheduleData:any;
-  getScheduleChannelLogo: any =[];
+  getScheduleChannelLogo: any = [];
   // filterProgram
   filteredPrograms: any = [];
-// Assuming 'start' and 'limit' are new parameters for lazy loading
-startIndex: number = 0;
-limit: number = 10;
+  // Assuming 'start' and 'limit' are new parameters for lazy loading
+  startIndex: number = 0;
+  limit: number = 10;
 
-getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-  this.isLoading = true;
-  this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
+  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+    this.isLoading = true;
+    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
 
-  const body = {
-    typeurl: 'mpd',
-    genre: genre == 'All' ? '' : genre,
-    day: dayFilter,
-    start: this.startIndex,
-    limit: this.limit
-  };
+    const body = {
+      typeurl: 'mpd',
+      genre: genre == 'All' ? '' : genre,
+      day: dayFilter,
+      start: this.startIndex,
+      limit: this.limit,
+    };
 
-  this.apiService.postRequest('auth/epg-guide', body).subscribe({
-    next: (res: any) => {
-      // Append new data to the existing list for lazy loading
-      // console.log('getScheduleChannelLogo res  ===>',res.data);
-      this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
-      // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
-      this.filteredPrograms = [...res.data];
-      this.isLoading = false;
-    },
-    error: (err: any) => {
-      console.error(err);
-      this.isLoading = false;
-    },
-  });
-}
-
-// Listen to scroll event
-onScroll() {
-  if (this.isNearBottom()) {
-    // Increase the startIndex for the next batch of data
-    this.startIndex += this.limit;
-    this.getScheduleData(this.selected_category, this.selectedDay);
+    this.apiService.postRequest('auth/epg-guide', body).subscribe({
+      next: (res: any) => {
+        // Append new data to the existing list for lazy loading
+        // console.log('getScheduleChannelLogo res  ===>',res.data);
+        this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
+        // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
+        this.filteredPrograms = [...res.data];
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
   }
-}
 
-// Check if the user has scrolled near the bottom
-isNearBottom(): boolean {
-  const scrollable = document.querySelector('.schedule_content');
-  return scrollable.scrollHeight - scrollable.scrollTop <= scrollable.clientHeight + 50;
-}
+  // Listen to scroll event
+  onScroll() {
+    if (this.isNearBottom()) {
+      // Increase the startIndex for the next batch of data
+      this.startIndex += this.limit;
+      this.getScheduleData(this.selected_category, this.selectedDay);
+    }
+  }
 
-
-
-
-
+  // Check if the user has scrolled near the bottom
+  isNearBottom(): boolean {
+    const scrollable = document.querySelector('.schedule_content');
+    return (
+      scrollable.scrollHeight - scrollable.scrollTop <=
+      scrollable.clientHeight + 50
+    );
+  }
 
   // get the channels log and id
   filterchannelAnd(stations: any) {
     return stations
-      .filter((station:any) => station.prgSvcId !== null)
-      .map((station:any) => ({
+      .filter((station: any) => station.prgSvcId !== null)
+      .map((station: any) => ({
         id: station.id,
         image: station.image,
         channel_url: station.channel_url,
@@ -608,7 +628,7 @@ isNearBottom(): boolean {
     }
     const body = {
       TMSId: tmsId,
-      channel_id:channelId
+      channel_id: channelId,
     };
     this.apiService.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
@@ -635,6 +655,7 @@ isNearBottom(): boolean {
     if (this.intervalLiveWidth) {
       clearInterval(this.intervalLiveWidth);
     }
+    this.tabInactivityService.resetTimer();
   }
 
   // // show live timer
@@ -680,16 +701,16 @@ isNearBottom(): boolean {
   // filter according to today and tommorrow
   changeDays(day: string, isDataChange = true) {
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
-    console.log('Day change===>',day);
+    console.log('Day change===>', day);
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
-    console.log('this if .selectedDay==>',this.selectedDay);
+        console.log('this if .selectedDay==>', this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
         this.scrollContent(0);
       } else {
-    console.log('this else .selectedDay==>',this.selectedDay);
+        console.log('this else .selectedDay==>', this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
       }
@@ -819,7 +840,7 @@ isNearBottom(): boolean {
   active_categories(category: string) {
     this.selected_category = category;
   }
-  
+
   async generateTimeArray(
     currentTime: string = new Date().toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -856,12 +877,11 @@ isNearBottom(): boolean {
     return timeData;
   }
 
-
   checkIfNextDay(timeStr: string): boolean {
     // Get the current date and time
     const currentDate = new Date();
   
-    // Extract hours and minutes from the provided time string
+    // Extract hours, minutes, and period (AM/PM) from the provided time string
     const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
     if (!timeParts) {
       throw new Error('Invalid time format');
@@ -869,7 +889,7 @@ isNearBottom(): boolean {
   
     let hours = parseInt(timeParts[1], 10);
     const minutes = parseInt(timeParts[2], 10);
-    const period = timeParts[3];
+    const period = timeParts[3].toUpperCase();
   
     // Convert to 24-hour format if necessary
     if (period === 'PM' && hours !== 12) {
@@ -878,32 +898,17 @@ isNearBottom(): boolean {
       hours = 0;
     }
   
-    // Create a date object with the provided time for the current date
+    // Create a date object for the provided time on the current day
     const providedDate = new Date(currentDate);
     providedDate.setHours(hours, minutes, 0, 0);
   
-    // Find the closest hour based on current time
-    const currentHours = currentDate.getHours();
-    const currentMinutes = currentDate.getMinutes();
-  
-    // Determine the nearest hour rounding up or down
-    const roundedHours = Math.round((currentMinutes / 60) + currentHours);
-    const closestHourDate = new Date(currentDate);
-    closestHourDate.setHours(roundedHours, 0, 0, 0);
-  
     // If the provided time is earlier than the current time, consider it as the next day
-    if (providedDate.getTime() < closestHourDate.getTime()) {
-      providedDate.setDate(providedDate.getDate() + 1);
+    if (providedDate.getTime() <= currentDate.getTime()) {
+      return true; // It is considered as the next day
     }
   
-    // Compare if the provided time is on the next day relative to the current date
-    const isNextDay = providedDate.getDate() > currentDate.getDate() ||
-                       (providedDate.getDate() === currentDate.getDate() &&
-                        providedDate.getMonth() > currentDate.getMonth());
-  
-    return isNextDay;
+    // Otherwise, it is the same day
+    return false;
   }
-  
-  
   
 }

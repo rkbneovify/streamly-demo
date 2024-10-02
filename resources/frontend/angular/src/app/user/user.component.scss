@@ -862,7 +862,7 @@ footer .contain:first-child {
   .display-none{
     display: inline-block;
     vertical-align: middle;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     width: 0px;
     overflow: hidden;
     opacity: 0;
@@ -1195,6 +1195,12 @@ footer .contain:first-child {
 // =======================================program details end
 
 
+.submenu3{
+  div{
+    display: flex;
+  }
+}
+
 
   @media screen and (max-width: 1212px) {
     .footer{
@@ -1220,6 +1226,7 @@ footer .contain:first-child {
     .sidebar_2{
       div{
         padding-left: 1rem;
+        display: flex;
       }
       .submenu1,.submenu2,.submenu3,.submenu4{
         img{
