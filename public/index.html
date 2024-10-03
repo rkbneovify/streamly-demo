@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="assets/dummy-img/streamy_favicon_32@2x.png">
   <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
   <script src="https://js.stripe.com/v3/"></script>
   <script type="text/javascript">

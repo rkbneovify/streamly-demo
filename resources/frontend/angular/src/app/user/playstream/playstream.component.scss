@@ -343,3 +343,56 @@ video:hover~#changeVideo {
   height: 100%;
   background: #fff;
 }
+
+
+
+
+// =====================================
+/* Position the video container relative so that we can absolutely position buttons */
+
+.videoContainer {
+  position: relative;
+}
+
+/* Style the navigation button container */
+.channel-navigation {
+  position: absolute;
+  bottom: 0px; /* Adjust to position above the default controls */
+  left: 44%; /* You can position it on the right if you prefer */
+  z-index: 10;
+  display: flex;
+  gap: 10px; /* Space between the buttons */
+}
+
+/* Style the buttons to look like YouTube player buttons */
+.channel-navigation button {
+  background-color:transparent;
+  color: white;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 7px;
+}
+
+/* Add hover effect to buttons */
+.channel-navigation button:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Adjust the size of the icons */
+.channel-navigation i {
+  font-size: 14px; /* Adjust icon size */
+}
+
+
+.channel-navigation.hidden {
+  opacity: 0;
+  pointer-events: none; /* Make buttons unclickable when hidden */
+}
+
+.channel-navigation.visible {
+  opacity: 1;
+  pointer-events: all;
+}
