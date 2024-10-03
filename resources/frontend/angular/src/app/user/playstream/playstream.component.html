@@ -1,11 +1,107 @@
 <div class="row play_container_top">
     <div class="col-lg-7 col-12 playstream_1">
-        <div class="dash-video-player ">
-            <div class="videoContainer" id="videoContainer" #videoContainer>
-                <video data-dashjs-player #videoPlayer controls autobuffer autoplay playsinline webkit-playsinline="webkit-playsinline"
-                type="application/dash+xml"
-                > 
-            </video>
+        <div class="dash-video-player">
+          <div class="videoContainer" id="videoContainer" #videoContainer>
+            <video #videoPlayer controls autoplay playsinline></video>
+      
+            <!-- Custom channel buttons using icons -->
+             <div class="customContainer">
+                 <div #customBtn id="customBtn" class="channel-navigation" [ngClass]="{'hidden': hideControls}" title="Previous channel">
+                   <button (click)="previousChannel()" class="btn-prev-channel">
+                     <i class="fas fa-step-backward"></i> <!-- FontAwesome step backward icon -->
+                   </button>
+                   <button (click)="nextChannel()" title="Next Channel" class="btn-next-channel">
+                     <i class="fas fa-step-forward"></i> <!-- FontAwesome step forward icon -->
+                   </button>
+                 </div>
+             </div>
+          </div>
+        </div>
+      </div>
+      
+    <div class="col-lg-5 col-12 playstream_2" *ngIf="channelData?.program_details; else noProgram">
+        <h1 title="Channel Name">{{channelData?.channel?.stationName}}</h1>
+        <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
+        <div class="play_btn_container_1 mt-2">
+            <button class="playbtn_time">{{channelData?.program_details?.duration}}</button>
+            <button class="playbtn_hd"><img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt=""> <span>{{channelData?.program_details?.quals}}</span></button>
+        </div>
+        <h1 class="playstream_desc my-3" title="Program Name">
+            {{channelData?.program_details?.title}}
+        </h1>
+
+        <div class="play_btn_container_2 d-flex gap-1  align-items-center">
+            <button class="plan_btn playbtn_genre" *ngFor="let genre of channelData?.program_details?.genre">
+                <span class="text-nowrap" >Genre :</span><span class="text-nowrap">{{genre}}</span>
+            </button>
+            <!-- <button class="plan_btn playbtn_aired"><span class="text-nowrap">Aired :</span><span class="text-nowrap">Starts in 15 mins</span></button> -->
+        </div>
+
+        <div class="playstream_onNow_container">
+            <div>
+                <h2 class="play_stream_now">On Now</h2>
+                <p class="mt-3">
+                    <!-- Dorem ipsum dolor sit amet, consectetur adipiscing elit. -->
+                    {{channelData?.program_details?.description}}
+                </p>
+            </div>
+
+            <div class="playstream_bottom_child mt-3" >
+                <h2>Up Next</h2>
+                <div class="playstream_liveTime d-flex align-items-baseline gap-3 mt-3" *ngFor="let up_next of channelData?.program_details?.up_next">
+                    <div class="text-nowrap">
+                        {{formatTime(up_next?.time)}}
+                    </div>
+                    <div class="">
+                        {{up_next?.title}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #noProgram>
+        <div class="col-12 text-center text-white my-2">
+          <!-- You can add any alternative content here -->
+          <p>No program details available.</p>
+        </div>
+      </ng-template>
+</div>
+
+<div class="row" >
+    <div class="col-12" *ngIf="channelData?.recommended_channels; else recommended_channels">
+        <div class="landing_carousel_section2 mt-5">
+            <div class="landing_carousel_section2_top">Recommended Channels</div>
+            <div class="landing_carousel_section2_bottom gap-5 mt-3 d-flex" >
+                <ng-container *ngFor="let recommended_channels of channelData?.recommended_channels">
+                    <div class="card_page pointer" (click)="switchChannel(recommended_channels)">
+                        <img *ngIf="recommended_channels?.image" loading="lazy" [src]="recommended_channels?.image? recommended_channels?.image:'../../../assets/dummy-img/historyPlay.png'" alt="">   
+                        <p class="no-img" *ngIf="!recommended_channels?.image">No Image</p>
+                    </div>
+                    </ng-container>
+                
+            </div>
+            
+        </div>
+    </div>
+
+    <ng-template #recommended_channels>
+        <div class="col-12 text-center text-white">
+          <!-- You can add any alternative content here -->
+          <p>No recommended channels available.</p>
+        </div>
+      </ng-template>
+</div>
+
+    <!-- channels container end -->
+    <div *ngIf="isLoading" class="loader-overlay">
+        <div class="loader"></div>
+      </div>
+
+<!-- controls  -->
+
+
             <!-- <video
             *ngIf="isIOS()"
             id="videoPlayeVjs"
@@ -63,81 +159,3 @@
                         <input type="range" id="seekbar" value="0" class="seekbar" min="0" step="0.01"/>
                     </div>
                 </div> -->
-            </div>  
-        </div>
-
-    </div>
-    <div class="col-lg-5 col-12 playstream_2" *ngIf="channelData?.program_details; else noProgram">
-        <h1 title="Channel Name">{{channelData?.channel?.stationName}}</h1>
-        <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
-        <div class="play_btn_container_1 mt-2">
-            <button class="playbtn_time">{{channelData?.program_details?.duration}}</button>
-            <button class="playbtn_hd"><img loading="lazy" src="../../../assets/dummy-img/playTv.svg" alt=""> <span>{{channelData?.program_details?.quals}}</span></button>
-        </div>
-        <h1 class="playstream_desc my-3" title="Program Name">
-            {{channelData?.program_details?.title}}
-        </h1>
-
-        <div class="play_btn_container_2 d-flex gap-1  align-items-center">
-            <button class="plan_btn playbtn_genre" *ngFor="let genre of channelData?.program_details?.genre">
-                <span class="text-nowrap" >Genre :</span><span class="text-nowrap">{{genre}}</span>
-            </button>
-            <!-- <button class="plan_btn playbtn_aired"><span class="text-nowrap">Aired :</span><span class="text-nowrap">Starts in 15 mins</span></button> -->
-        </div>
-
-        <div class="playstream_onNow_container">
-            <div>
-                <h2 class="play_stream_now">On Now</h2>
-                <p class="mt-3">
-                    <!-- Dorem ipsum dolor sit amet, consectetur adipiscing elit. -->
-                    {{channelData?.program_details?.description}}
-                </p>
-            </div>
-
-            <div class="playstream_bottom_child mt-3" >
-                <h2>Up Next</h2>
-                <div class="playstream_liveTime d-flex align-items-baseline gap-3 mt-3" *ngFor="let up_next of channelData?.program_details?.up_next">
-                    <div class="text-nowrap">
-                        {{formatTime(up_next?.time)}}
-                    </div>
-                    <div class="">
-                        {{up_next?.title}}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <ng-template #noProgram>
-        <div class="col-12 text-center text-white my-2">
-          <!-- You can add any alternative content here -->
-          <p>No program details available.</p>
-        </div>
-      </ng-template>
-</div>
-
-<div class="row" >
-    <div class="col-12" *ngIf="channelData?.recommended_channels; else recommended_channels">
-        <div class="landing_carousel_section2 mt-5">
-            <div class="landing_carousel_section2_top">Recommended Channels</div>
-            <div class="landing_carousel_section2_bottom gap-5 mt-3 d-flex" >
-                <ng-container *ngFor="let recommended_channels of channelData?.recommended_channels">
-                    <div class="card_page pointer" (click)="showRecommendedChannels(recommended_channels?.dash_url,recommended_channels?.id)">
-                        <img *ngIf="recommended_channels?.image" loading="lazy" [src]="recommended_channels?.image? recommended_channels?.image:'../../../assets/dummy-img/historyPlay.png'" alt="">   
-                        <p class="no-img" *ngIf="!recommended_channels?.image">No Image</p>
-                    </div>
-                    </ng-container>
-                
-            </div>
-            
-        </div>
-    </div>
-
-    <ng-template #recommended_channels>
-        <div class="col-12 text-center text-white">
-          <!-- You can add any alternative content here -->
-          <p>No recommended channels available.</p>
-        </div>
-      </ng-template>
-</div>
