@@ -637,7 +637,7 @@ class StripeController extends Controller
             $amount = Cashier::formatAmount($invoice->total ?? '0', $invoice->currency ?? 'USD');
             $invoice_id = $invoice->id;
             // $date = date('Y-m-d H:i:s', $invoice->created);
-            $date = date('Y-m-d H:i:s', $invoice->status_transitions->paid_at);
+            $date = date('Y-m-d H:i:s', $invoice->status_transitions->paid_at ?? $invoice->created);
             $receipt_link = $invoice->charge->receipt_url ?? null;
 
             $invoices[] = [
