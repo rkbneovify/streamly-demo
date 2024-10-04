@@ -1,8 +1,8 @@
 .play_container_top {
   .playstream_1 {
-    .dash-video-player{
+    .dash-video-player {
       height: 100%;
-      .videoContainer{
+      .videoContainer {
         height: 100%;
       }
     }
@@ -26,8 +26,8 @@
     font-weight: 600;
     line-height: 20px;
     text-align: left;
-    &::-webkit-scrollbar{
-        width: 0px;
+    &::-webkit-scrollbar {
+      width: 0px;
     }
     h1 {
       color: #ffffff;
@@ -130,11 +130,11 @@
     }
 
     .playstream_onNow_container {
-        h2{
-          border-bottom: 1px solid #FFFFFF66;
-          padding-bottom: 1rem;
-        }
-        margin-top: 30px;
+      h2 {
+        border-bottom: 1px solid #ffffff66;
+        padding-bottom: 1rem;
+      }
+      margin-top: 30px;
       .play_stream_now {
         font-family: Poppins;
         font-size: 18px;
@@ -160,7 +160,7 @@
           line-height: 20px;
           text-align: left;
           color: #ffffffb2;
-          border-bottom: 1px solid #FFFFFF66;
+          border-bottom: 1px solid #ffffff66;
         }
         .playstream_liveTime {
           div {
@@ -169,7 +169,7 @@
             font-weight: 400;
             line-height: 26px;
             text-align: left;
-            color: #FFFFFFB2;
+            color: #ffffffb2;
           }
         }
       }
@@ -177,47 +177,45 @@
   }
 }
 
-
 .landing_carousel_section2 {
-    .landing_carousel_section2_top {
-      font-family: Poppins;
-      font-size: 18px;
-      font-weight: 500;
-      line-height: 24px;
-      letter-spacing: 0.01em;
-      color: #ffffff;
-    }
-
-    .landing_carousel_section2_bottom {
-      flex-basis: 160px;
-      overflow-x: auto;
-
-      .card_page {
-        min-width: 160px;
-        width: 160px;
-        height: 240px;
-        border-radius: 10px;
-        position: relative;
-        display: flex;
-        overflow-x: hidden;
-        background-color: #FFFFFF;
-        box-shadow: 0px 4px 4px 0px #4b98db4d;
-        background-image: url("../../../assets/dummy-img/carBG.png");
-        img {
-            width: 103px;
-            height: auto;
-            margin: auto;
-        }
-      }
-
-      &::-webkit-scrollbar {
-        width: 0px;
-      }
-    }
+  .landing_carousel_section2_top {
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: 0.01em;
+    color: #ffffff;
   }
 
+  .landing_carousel_section2_bottom {
+    flex-basis: 160px;
+    overflow-x: auto;
 
-.live-indicator{
+    .card_page {
+      min-width: 160px;
+      width: 160px;
+      height: 240px;
+      border-radius: 10px;
+      position: relative;
+      display: flex;
+      overflow-x: hidden;
+      background-color: #ffffff;
+      box-shadow: 0px 4px 4px 0px #4b98db4d;
+      background-image: url("../../../assets/dummy-img/carBG.png");
+      img {
+        width: 103px;
+        height: auto;
+        margin: auto;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+  }
+}
+
+.live-indicator {
   bottom: 18px;
   left: 43px;
   font-size: 13px;
@@ -226,12 +224,12 @@
   cursor: pointer;
 }
 
-.live-go{
+.live-go {
   background-color: red;
-  color: white ;
+  color: white;
 }
 
-.not-live{
+.not-live {
   background: gray;
   color: black;
 }
@@ -240,7 +238,7 @@
 //   display:none !important;
 // }
 
-@media screen and (max-width: 992px){
+@media screen and (max-width: 992px) {
   .play_container_top {
     .playstream_1 {
       video {
@@ -253,11 +251,11 @@
   }
 }
 
-@media screen and (max-width: 475px){
-  .play_btn_container_1{
+@media screen and (max-width: 475px) {
+  .play_btn_container_1 {
     flex-direction: column;
-    .playbtn_hd{
-      span{
+    .playbtn_hd {
+      span {
         font-size: 12px !important;
       }
     }
@@ -276,7 +274,6 @@ video::-webkit-media-controls-current-time-display {
 }
 // play_btn_container_1
 
-
 #videoContainer {
   position: relative;
 }
@@ -288,9 +285,9 @@ video::-webkit-media-controls-current-time-display {
   width: 25px;
   height: 25px;
   // opacity: 0;
-  transition: opacity .3s ease;
+  transition: opacity 0.3s ease;
   cursor: pointer;
-  
+
   /* Additional styles just to increase visual appeal */
   border-radius: 50%;
   // background: #FFFFFFDD;
@@ -302,14 +299,13 @@ video::-webkit-media-controls-current-time-display {
 }
 
 /* On hovering the video, show the button */
-video:hover~#changeVideo {
+video:hover ~ #changeVideo {
   opacity: 1;
 }
 
 #changeVideo:hover {
   opacity: 1;
 }
-
 
 .custom-controls {
   position: absolute;
@@ -344,9 +340,6 @@ video:hover~#changeVideo {
   background: #fff;
 }
 
-
-
-
 // =====================================
 /* Position the video container relative so that we can absolutely position buttons */
 
@@ -357,16 +350,20 @@ video:hover~#changeVideo {
 /* Style the navigation button container */
 .channel-navigation {
   position: absolute;
-  bottom: 0px; /* Adjust to position above the default controls */
-  left: 44%; /* You can position it on the right if you prefer */
   z-index: 10;
   display: flex;
+  top: 45%;
   gap: 10px; /* Space between the buttons */
+  // width: 100%;
+  justify-content: space-between;
+}
+.channel-navigation-next{
+  right: 0;
 }
 
 /* Style the buttons to look like YouTube player buttons */
 .channel-navigation button {
-  background-color:transparent;
+  background-color: transparent;
   color: white;
   border: none;
   padding: 7px 12px;
@@ -386,7 +383,6 @@ video:hover~#changeVideo {
   font-size: 14px; /* Adjust icon size */
 }
 
-
 .channel-navigation.hidden {
   opacity: 0;
   pointer-events: none; /* Make buttons unclickable when hidden */
@@ -395,4 +391,99 @@ video:hover~#changeVideo {
 .channel-navigation.visible {
   opacity: 1;
   pointer-events: all;
+}
+
+.menu-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 11;
+}
+
+.menu-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list li {
+  margin-bottom: 10px;
+}
+
+.menu-list a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.channelsVideoPlayer {
+  max-width: 237px;
+  max-height: 280px;
+  width: 100%;
+  height: 100%;
+  padding: 16px 20px 16px 20px;
+  gap: 16px;
+  border-radius: 12px;
+  background: rgb(1 78 146 / 37%);
+  backdrop-filter: blur(34px);
+  overflow: hidden;
+  .menuListCloseBtn {
+    top: 8px;
+    right: 12px;
+    cursor: pointer;
+  }
+}
+
+.chanelMenuheading {
+  div {
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .menuPlayerHeading {
+    font-family: Poppins;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: left;
+    color: #fff;
+  }
+}
+
+.submenuContainerList {
+  overflow: auto;
+  max-height: 280px;
+  height: 100%;
+  padding-bottom: 2rem;
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    scroll-behavior: smooth;
+  }
+  .channelMenuContainer {
+
+    .channelMenuList {
+      max-width: 197px;
+      width: 100%;
+      height: 99px;
+      padding: 20px;
+      gap: 33px;
+      border-radius: 8px;
+      border: 1px solid #ffffffcc;
+      background: rgb(255 255 255 / 35%);
+
+      img {
+        width: 100%;
+        height: 100%;
+        max-width: 62px;
+        max-height: 77px;
+      }
+    }
+  }
 }

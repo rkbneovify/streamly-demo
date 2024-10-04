@@ -25,6 +25,8 @@ import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef;
   @ViewChild('customBtn', { static: true }) customBtn!: ElementRef;
+  @ViewChild('customBtnNext', { static: true }) customBtnNext!: ElementRef;
+  
   player: dashjs.MediaPlayerClass;
 
   playerId!: any;
@@ -40,6 +42,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   prevChannelData: any = null;
   hideControls: boolean = false; // Track visibility of controls
   controlVisibilityTimeout: any; // Timeout for hiding controls
+  showMenu = false;
 
   constructor(
     private crud: CrudService,
@@ -63,6 +66,18 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     this.getPlayerData();
     this.initializePlayer();
     this.setUpControlVisibility(); // Set up control visibility behavior
+  }
+
+  ngAfterViewInit() {
+    this.videoPlayer.nativeElement.addEventListener('pause', () => {
+      this.showMenu = true;
+    });
+  }
+
+  hideMenuList(){
+    this.videoPlayer.nativeElement.play()
+    this.seekToLiveEdge();
+    this.showMenu = false;
   }
 
   initializePlayer() {
@@ -385,9 +400,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.showControls();
       this.resetControlVisibilityTimeout();
     });
-
+    // customBtnNext
     // Detect if mouse is over the custom button
     this.customBtn.nativeElement.addEventListener('mouseover', () => {
+      this.showControls();
+      this.isMouseOverCustomBtn = true; // New flag
+      this.cdr.detectChanges(); // Trigger change detection to show controls
+    });
+    this.customBtnNext.nativeElement.addEventListener('mouseover', () => {
       this.showControls();
       this.isMouseOverCustomBtn = true; // New flag
       this.cdr.detectChanges(); // Trigger change detection to show controls
@@ -395,6 +415,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
     // Detect if mouse leaves the custom button
     this.customBtn.nativeElement.addEventListener('mouseleave', () => {
+      this.isMouseOverCustomBtn = false; // Reset the flag
+      this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+    });
+    this.customBtnNext.nativeElement.addEventListener('mouseleave', () => {
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });
