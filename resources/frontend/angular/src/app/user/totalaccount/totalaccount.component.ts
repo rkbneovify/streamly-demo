@@ -201,7 +201,8 @@ export class TotalaccountComponent {
               'loggedInDeviceDetails',
               JSON.stringify(this.response)
             );
-  
+            
+            this.deviceId = null;
             this.isLoading = false;
           }
         },
