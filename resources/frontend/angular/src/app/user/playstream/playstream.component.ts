@@ -68,49 +68,61 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     this.getPlayerData();
     this.initializePlayer();
     this.setUpControlVisibility(); // Set up control visibility behavior
+    this.getAllChannels();
+    this.videoPlayer.nativeElement.addEventListener('play',()=>{
+      if(!this.videoPlayer.nativeElement.paused){
+        console.log('Playing')
+        this.showMenu = false;
+      }else{
+        console.log('Not playing')
+      }
+    })
   }
 
   ngAfterViewInit() {
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
-      console.log('Hello full screen done',this.videoPlayer.nativeElement.paused,document.fullscreenElement)
+      console.log(
+        'Hello full screen done',
+        this.videoPlayer.nativeElement.paused,
+        document.fullscreenElement
+      );
     });
 
-    if(document.fullscreenElement){
+    if (document.fullscreenElement) {
       const menuElement = this.menuList.nativeElement;
-  
+
       // Example styles
       menuElement.style.backgroundColor = '#3498db';
       menuElement.style.color = 'white';
       menuElement.style.padding = '10px';
       menuElement.style.position = 'fixed';
-      menuElement.style.top = '120px'
-
+      menuElement.style.top = '120px';
     }
   }
 
-    // Function to toggle fullscreen for the video element
-    toggleFullScreen() {
-      const videoElement = this.videoPlayer.nativeElement;
-  
-      if (!document.fullscreenElement) {
-        if (videoElement.requestFullscreen) {
-          videoElement.requestFullscreen();  // Standard full-screen API
-        } else if (videoElement.mozRequestFullScreen) {
-          videoElement.mozRequestFullScreen(); // Firefox
-        } else if (videoElement.webkitRequestFullscreen) {
-          videoElement.webkitRequestFullscreen(); // Chrome and Safari
-        } else if (videoElement.msRequestFullscreen) {
-          videoElement.msRequestFullscreen(); // IE/Edge
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();  // Standard API to exit full-screen
-        }
+  // Function to toggle fullscreen for the video element
+  toggleFullScreen() {
+    const videoElement = this.videoPlayer.nativeElement;
+
+    if (!document.fullscreenElement) {
+      if (videoElement.requestFullscreen) {
+        videoElement.requestFullscreen(); // Standard full-screen API
+      } else if (videoElement.mozRequestFullScreen) {
+        videoElement.mozRequestFullScreen(); // Firefox
+      } else if (videoElement.webkitRequestFullscreen) {
+        videoElement.webkitRequestFullscreen(); // Chrome and Safari
+      } else if (videoElement.msRequestFullscreen) {
+        videoElement.msRequestFullscreen(); // IE/Edge
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen(); // Standard API to exit full-screen
       }
     }
+  }
 
-      // Listen for fullscreen changes
+  // Listen for fullscreen changes
   @HostListener('document:fullscreenchange')
   @HostListener('document:webkitfullscreenchange')
   @HostListener('document:mozfullscreenchange')
@@ -123,8 +135,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
   }
 
-   // Function to check the current full-screen status
-   checkFullScreenStatus() {
+  // Function to check the current full-screen status
+  checkFullScreenStatus() {
     if (document.fullscreenElement) {
       console.log('Video is currently in fullscreen mode');
     } else {
@@ -419,6 +431,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
+    console.log(channelData.dash_url,channelData.id)
     const scrollPosition = window.scrollY;
     this.ngOnDestroy();
     const channelID = channelData.id;
@@ -569,5 +582,22 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
+  }
+
+  allChannelList:any;
+  getAllChannels() {
+    const body = {
+      typeurl: 'mpd',
+    };
+    this.crud.postRequest('auth/all-channel-list', body).subscribe({
+      next: (res: any) => {
+        this.allChannelList = res.data;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.isLoading = true;
+      },
+    });
   }
 }

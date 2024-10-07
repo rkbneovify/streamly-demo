@@ -100,7 +100,7 @@ export class AllChannelComponent implements OnInit, OnDestroy{
       },
       error: (err: any) => {
         console.log(err);
-      this.isLoading = true;
+      this.isLoading = false;
       }
     });
   }
