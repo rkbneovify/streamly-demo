@@ -17,7 +17,17 @@
               class="btn-prev-channel"
               title="Previous channel"
             >
-              <i class="fas fa-step-backward"></i>
+              <!-- <i class="fas fa-step-backward"></i> -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="white"
+                width="24px"
+                height="25px"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M18 6l-8.5 6L18 18V6zm-9 0v12H7V6h2z" />
+              </svg>
               <!-- FontAwesome step backward icon -->
             </button>
           </div>
@@ -32,7 +42,18 @@
               title="Next Channel"
               class="btn-next-channel"
             >
-              <i class="fas fa-step-forward"></i>
+              <!-- <i class="fas fa-step-forward"></i> -->
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="white"
+                width="24px"
+                height="25px"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M6 18l8.5-6L6 6v12zm9-12v12h2V6h-2z" />
+              </svg>
+
               <!-- FontAwesome step forward icon -->
             </button>
           </div>
@@ -57,23 +78,15 @@
                 <div
                   class="channelMenuContainer d-flex flex-column justify-content-center align-items-center gap-3"
                 >
-                  <div
-                    class="channelMenuList d-flex justify-content-center align-items-center"
-                  >
-                    <img src="../../../assets/dummy-img/comedy.png" alt="" />
-                  </div>
 
+                @for (channel of allChannelList; track channel.id) {
                   <div
-                    class="channelMenuList d-flex justify-content-center align-items-center"
+                    class="channelMenuList d-flex justify-content-center align-items-center pointer" (click)="switchChannel({'id':channel.id,'dash_url':channel.url})"
                   >
-                    <img src="../../../assets/dummy-img/comedy.png" alt="" />
+                    <img [src]="channel?.image" [alt]="channel?.callSign" />
                   </div>
+                }
 
-                  <div
-                    class="channelMenuList d-flex justify-content-center align-items-center"
-                  >
-                    <img src="../../../assets/dummy-img/comedy.png" alt="" />
-                  </div>
                 </div>
               </div>
 
@@ -122,9 +135,7 @@
 
     <div class="playstream_onNow_container">
       <div>
-        <h2 class="play_stream_now">
-          On Now
-        </h2>
+        <h2 class="play_stream_now">On Now</h2>
         <p class="mt-3">
           <!-- Dorem ipsum dolor sit amet, consectetur adipiscing elit. -->
           {{ channelData?.program_details?.description }}
