@@ -82,8 +82,11 @@ export class ChangepasswordComponent implements OnDestroy {
           },
           error: (err) => {
             this.loading = false;
-
-            this.toastr.error(err.error.message);
+            if(!err.error.message){
+            this.toastr.error(err.error.error);
+            }else{
+              this.toastr.error(err.error.message);
+            }
           },
         });
     } else {

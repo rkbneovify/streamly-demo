@@ -1,7 +1,9 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -23,6 +25,10 @@ import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 })
 export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef;
+  @ViewChild('customBtn', { static: true }) customBtn!: ElementRef;
+  @ViewChild('customBtnNext', { static: true }) customBtnNext!: ElementRef;
+  @ViewChild('menuList', { static: true }) menuList!: ElementRef;
+
   player: dashjs.MediaPlayerClass;
 
   playerId!: any;
@@ -34,8 +40,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   private routerSubscription: Subscription = new Subscription();
   private destroy$: Subject<void> = new Subject();
   isLoading: boolean = false;
+  nextChannelData: any = null;
+  prevChannelData: any = null;
+  hideControls: boolean = false; // Track visibility of controls
+  controlVisibilityTimeout: any; // Timeout for hiding controls
+  showMenu = false;
 
-  constructor(private crud: CrudService, private router: Router) {
+  constructor(
+    private crud: CrudService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
     if (this.playerChannelId) {
@@ -52,6 +67,87 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getPlayerData();
     this.initializePlayer();
+    this.setUpControlVisibility(); // Set up control visibility behavior
+    this.getAllChannels();
+    this.videoPlayer.nativeElement.addEventListener('play',()=>{
+      if(!this.videoPlayer.nativeElement.paused){
+        console.log('Playing')
+        this.showMenu = false;
+      }else{
+        console.log('Not playing')
+      }
+    })
+  }
+
+  ngAfterViewInit() {
+    this.videoPlayer.nativeElement.addEventListener('pause', () => {
+      this.showMenu = true;
+      console.log(
+        'Hello full screen done',
+        this.videoPlayer.nativeElement.paused,
+        document.fullscreenElement
+      );
+    });
+
+    if (document.fullscreenElement) {
+      const menuElement = this.menuList.nativeElement;
+
+      // Example styles
+      menuElement.style.backgroundColor = '#3498db';
+      menuElement.style.color = 'white';
+      menuElement.style.padding = '10px';
+      menuElement.style.position = 'fixed';
+      menuElement.style.top = '120px';
+    }
+  }
+
+  // Function to toggle fullscreen for the video element
+  toggleFullScreen() {
+    const videoElement = this.videoPlayer.nativeElement;
+
+    if (!document.fullscreenElement) {
+      if (videoElement.requestFullscreen) {
+        videoElement.requestFullscreen(); // Standard full-screen API
+      } else if (videoElement.mozRequestFullScreen) {
+        videoElement.mozRequestFullScreen(); // Firefox
+      } else if (videoElement.webkitRequestFullscreen) {
+        videoElement.webkitRequestFullscreen(); // Chrome and Safari
+      } else if (videoElement.msRequestFullscreen) {
+        videoElement.msRequestFullscreen(); // IE/Edge
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen(); // Standard API to exit full-screen
+      }
+    }
+  }
+
+  // Listen for fullscreen changes
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
+  @HostListener('document:mozfullscreenchange')
+  @HostListener('document:MSFullscreenChange')
+  onFullScreenChange() {
+    if (document.fullscreenElement) {
+      console.log('Video is in fullscreen mode');
+    } else {
+      console.log('Video has exited fullscreen mode');
+    }
+  }
+
+  // Function to check the current full-screen status
+  checkFullScreenStatus() {
+    if (document.fullscreenElement) {
+      console.log('Video is currently in fullscreen mode');
+    } else {
+      console.log('Video is not in fullscreen mode');
+    }
+  }
+
+  hideMenuList() {
+    this.videoPlayer.nativeElement.play();
+    this.seekToLiveEdge();
+    this.showMenu = false;
   }
 
   initializePlayer() {
@@ -115,6 +211,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
             },
           });
 
+          this.setupPlayerEvents();
           // Listen for the 'pause' event
           this.videoPlayer.nativeElement.addEventListener('pause', () => {
             this.isAtLiveEdge = !this.isAtLiveEdge;
@@ -123,7 +220,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
           this.videoPlayer.nativeElement.addEventListener('play', () => {
             this.seekToLiveEdge();
           });
-
           // Listen for dash.js errors
           // this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
           //   console.error('DASH error:', e);
@@ -208,21 +304,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  showRecommendedChannels(playerURL: string, channelID: any) {
-    this.playerId = playerURL;
-    this.playerChannelId = channelID;
-    console.log(
-      'showRecommendedChannels =>',
-      this.playerId,
-      this.playerChannelId
-    );
-    if (playerURL && channelID) {
-      localStorage.setItem('playerChannelId', channelID);
-      localStorage.setItem('playerId', playerURL);
-      window.location.reload();
-    }
-  }
-
   getAuthHeaders(): HttpHeaders {
     const tokenData = JSON.parse(
       localStorage.getItem('deviceInfo') || ''
@@ -250,21 +331,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    if (this.player) {
-      this.player.reset();
-    }
-
-    // Emit a value to complete the observable and unsubscribe
-    this.destroy$.next();
-    this.destroy$.complete();
-
-    if (this.subscription) {
-      console.log('unSub');
-      this.subscription.unsubscribe();
-    }
-  }
-
   getCurrentFormattedDateTime() {
     const now = new Date();
     const year = now.getUTCFullYear();
@@ -276,35 +342,61 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-  getPlayerData() {
+  // getPlayerData() {
+  //   this.isLoading = true;
+  //   const body = {
+  //     channel_id: this.playerChannelId,
+  //     current_datetime: this.getCurrentFormattedDateTime(),
+  //   };
+  //   this.crud.postRequest('auth/player-details', body).subscribe({
+  //     next: (res: any) => {
+  //       console.log('Player Data', res);
+  //       this.channelData = res.data;
+  //       this.isLoading = false;
+  //       this.nextChannelData = res.data.nextChannel;
+  //       this.prevChannelData = res.data.prevChannel;
+  //       // if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
+  //       //   alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
+  //       //   this.router.navigateByUrl('/user/playlistschedule');
+  //       //   console.log('Not Program details');
+  //       // }
+  //     },
+  //     error: (err: any) => {
+  //       console.error(err);
+  //       this.isLoading = false;
+  //     },
+  //   });
+  // }
+
+  getPlayerData(): Promise<void> {
     this.isLoading = true;
     const body = {
       channel_id: this.playerChannelId,
       current_datetime: this.getCurrentFormattedDateTime(),
     };
-    this.crud.postRequest('auth/player-details', body).subscribe({
-      next: (res: any) => {
-        console.log('Player Data', res);
-        this.channelData = res.data;
-        this.isLoading = false;
 
-        // if(!this.channelData.channel.prgSvcId && !this.channelData.program_details){
-        //   alert('Due to some technical reasons, the channel gets interrupted. Kindly try again later.');
-        //   this.router.navigateByUrl('/user/playlistschedule');
-        //   console.log('Not Program details');
-        // }
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.isLoading = false;
-      },
+    return new Promise((resolve, reject) => {
+      this.crud.postRequest('auth/player-details', body).subscribe({
+        next: (res: any) => {
+          this.channelData = res?.data;
+          this.nextChannelData = res.data.nextChannel;
+          this.prevChannelData = res.data.prevChannel;
+          this.isLoading = false;
+          resolve(); // Resolve the promise once data is loaded
+        },
+        error: (err) => {
+          console.error(err);
+          this.isLoading = false;
+          reject(err); // Reject in case of an error
+        },
+      });
     });
   }
 
   setChannelId(id: string, url: string) {
     localStorage.setItem('playerChannelId', id);
     localStorage.setItem('playerId', url);
-    this.router.navigateByUrl('user/playstream');
+    // this.router.navigateByUrl('user/playstream');
   }
 
   addToRecentChannel(playerChannelId: any) {
@@ -323,5 +415,189 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     } catch (error) {
       throw new error();
     }
+  }
+
+  previousChannel() {
+    if (this.prevChannelData) {
+      this.switchChannel(this.prevChannelData);
+    }
+  }
+
+  nextChannel() {
+    if (this.nextChannelData) {
+      this.switchChannel(this.nextChannelData);
+    }
+  }
+
+  switchChannel(channelData: any) {
+    // Save current scroll position before UI changes
+    console.log(channelData.dash_url,channelData.id)
+    const scrollPosition = window.scrollY;
+    this.ngOnDestroy();
+    const channelID = channelData.id;
+    const channelURL = this.isIOS() ? channelData.url : channelData.dash_url;
+    this.setChannelId(channelID, channelURL);
+    this.playerChannelId = Number(localStorage.getItem('playerChannelId'));
+    this.playerId = localStorage.getItem('playerId');
+    console.log('channelID ==>', channelID);
+    this.getPlayerData().then(() => {
+      this.initializePlayer();
+      this.cdr.detectChanges();
+      if (scrollPosition > 0) {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
+      console.log('Inside the getplayer', scrollPosition);
+    });
+  }
+
+  setupPlayerEvents() {
+    // Show controls on play, and reset the timeout for hiding controls
+    this.videoPlayer.nativeElement.addEventListener('play', () => {
+      this.hideControls = true;
+      this.resetControlVisibilityTimeout();
+    });
+
+    // Show controls when paused
+    this.videoPlayer.nativeElement.addEventListener('pause', () => {
+      this.hideControls = false;
+      this.showControls();
+    });
+
+    // Reset the timeout to hide controls on mouse movement over the video player
+    this.videoPlayer.nativeElement.addEventListener('mousemove', () => {
+      this.showControls();
+      this.resetControlVisibilityTimeout();
+    });
+    // customBtnNext
+    // Detect if mouse is over the custom button
+    this.customBtn.nativeElement.addEventListener('mouseover', () => {
+      this.showControls();
+      this.isMouseOverCustomBtn = true; // New flag
+      this.cdr.detectChanges(); // Trigger change detection to show controls
+    });
+    this.customBtnNext.nativeElement.addEventListener('mouseover', () => {
+      this.showControls();
+      this.isMouseOverCustomBtn = true; // New flag
+      this.cdr.detectChanges(); // Trigger change detection to show controls
+    });
+
+    // Detect if mouse leaves the custom button
+    this.customBtn.nativeElement.addEventListener('mouseleave', () => {
+      this.isMouseOverCustomBtn = false; // Reset the flag
+      this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+    });
+    this.customBtnNext.nativeElement.addEventListener('mouseleave', () => {
+      this.isMouseOverCustomBtn = false; // Reset the flag
+      this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+    });
+  }
+
+  // Method to show the controls
+  showControls() {
+    this.hideControls = false;
+    if (this.controlVisibilityTimeout) {
+      clearTimeout(this.controlVisibilityTimeout);
+    }
+  }
+
+  checkIfChildContainsClass(
+    parentElement: ElementRef,
+    className: string
+  ): boolean {
+    const children = parentElement.nativeElement.children;
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].classList.contains(className)) {
+        return true; // Found a child with the specified class
+      }
+    }
+    return false; // No child contains the class
+  }
+
+  // New flag to track if mouse is over the custom button
+  isMouseOverCustomBtn: boolean = false;
+
+  resetControlVisibilityTimeout() {
+    if (this.controlVisibilityTimeout) {
+      clearTimeout(this.controlVisibilityTimeout);
+    }
+
+    // Hide controls after 3 seconds of inactivity if the video is playing
+    this.controlVisibilityTimeout = setTimeout(() => {
+      // Check if mouse is NOT over the custom button
+      if (
+        !this.isMouseOverCustomBtn &&
+        !this.videoPlayer.nativeElement.paused
+      ) {
+        this.hideControls = true;
+        this.cdr.detectChanges(); // Trigger change detection to hide controls
+      }
+    }, 3000); // Adjust the delay as necessary
+  }
+
+  resetControlVisibilityMouseOut() {
+    if (this.controlVisibilityTimeout) {
+      clearTimeout(this.controlVisibilityTimeout);
+    }
+
+    // Hide controls after 3 seconds of inactivity if the video is playing
+    this.controlVisibilityTimeout = setTimeout(() => {
+      if (!this.videoPlayer.nativeElement.paused) {
+        this.hideControls = true;
+        this.cdr.detectChanges();
+      }
+    }, 200); // Adjust this delay as necessary
+  }
+
+  // Method to initialize control visibility logic
+  setUpControlVisibility() {
+    this.videoPlayer.nativeElement.addEventListener('play', () => {
+      this.resetControlVisibilityTimeout();
+    });
+
+    this.videoPlayer.nativeElement.addEventListener('pause', () => {
+      this.showControls(); // Show controls on pause
+    });
+
+    this.videoPlayer.nativeElement.addEventListener('mousemove', () => {
+      this.showControls(); // Show controls on mouse movement
+    });
+
+    this.videoPlayer.nativeElement.addEventListener('mouseleave', () => {
+      this.resetControlVisibilityMouseOut();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.player) {
+      this.player.reset(); // Reset the player
+      this.player = null; // Ensure it's cleared for the next channel
+    }
+
+    this.destroy$.next();
+    this.destroy$.complete();
+
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  allChannelList:any;
+  getAllChannels() {
+    const body = {
+      typeurl: 'mpd',
+    };
+    this.crud.postRequest('auth/all-channel-list', body).subscribe({
+      next: (res: any) => {
+        this.allChannelList = res.data;
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.isLoading = true;
+      },
+    });
   }
 }
