@@ -325,6 +325,7 @@ export class AccountsettingsComponent implements OnInit {
           this.router.navigate(['/']);
         },
         error: (err) => {
+          this.deleteAccountForm.get('password').reset();
           this.ts.error(err.error?.message);
           this.isLoading = false;
         },
@@ -346,6 +347,7 @@ export class AccountsettingsComponent implements OnInit {
           }
         },
         error: (err) => {
+          this.cancelSubscription.get('password').reset();
           this.ts.error(err.error?.message);
           this.isLoading = false;
         },

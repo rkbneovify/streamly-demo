@@ -303,7 +303,8 @@
         <p>{{ data?.amount }}</p>
         <p>{{ data?.date | date }}</p>
         <p class="pointer">
-          <a [href]="data.receipt_link" target="_blank">Invoices</a>
+            <a *ngIf="data.receipt_link" [href]="data.receipt_link" title="Click to download" target="_blank">Invoices</a>
+            <span *ngIf="!data.receipt_link" title="No able to download">Invoices</span>
         </p>
       </div>
       <!-- <div class="invoicesdetails">
