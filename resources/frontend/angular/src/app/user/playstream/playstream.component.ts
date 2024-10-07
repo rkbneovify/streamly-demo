@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -26,7 +27,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef;
   @ViewChild('customBtn', { static: true }) customBtn!: ElementRef;
   @ViewChild('customBtnNext', { static: true }) customBtnNext!: ElementRef;
-  
+  @ViewChild('menuList', { static: true }) menuList!: ElementRef;
+
   player: dashjs.MediaPlayerClass;
 
   playerId!: any;
@@ -71,11 +73,67 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
+      console.log('Hello full screen done',this.videoPlayer.nativeElement.paused,document.fullscreenElement)
     });
+
+    if(document.fullscreenElement){
+      const menuElement = this.menuList.nativeElement;
+  
+      // Example styles
+      menuElement.style.backgroundColor = '#3498db';
+      menuElement.style.color = 'white';
+      menuElement.style.padding = '10px';
+      menuElement.style.position = 'fixed';
+      menuElement.style.top = '120px'
+
+    }
   }
 
-  hideMenuList(){
-    this.videoPlayer.nativeElement.play()
+    // Function to toggle fullscreen for the video element
+    toggleFullScreen() {
+      const videoElement = this.videoPlayer.nativeElement;
+  
+      if (!document.fullscreenElement) {
+        if (videoElement.requestFullscreen) {
+          videoElement.requestFullscreen();  // Standard full-screen API
+        } else if (videoElement.mozRequestFullScreen) {
+          videoElement.mozRequestFullScreen(); // Firefox
+        } else if (videoElement.webkitRequestFullscreen) {
+          videoElement.webkitRequestFullscreen(); // Chrome and Safari
+        } else if (videoElement.msRequestFullscreen) {
+          videoElement.msRequestFullscreen(); // IE/Edge
+        }
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();  // Standard API to exit full-screen
+        }
+      }
+    }
+
+      // Listen for fullscreen changes
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
+  @HostListener('document:mozfullscreenchange')
+  @HostListener('document:MSFullscreenChange')
+  onFullScreenChange() {
+    if (document.fullscreenElement) {
+      console.log('Video is in fullscreen mode');
+    } else {
+      console.log('Video has exited fullscreen mode');
+    }
+  }
+
+   // Function to check the current full-screen status
+   checkFullScreenStatus() {
+    if (document.fullscreenElement) {
+      console.log('Video is currently in fullscreen mode');
+    } else {
+      console.log('Video is not in fullscreen mode');
+    }
+  }
+
+  hideMenuList() {
+    this.videoPlayer.nativeElement.play();
     this.seekToLiveEdge();
     this.showMenu = false;
   }
@@ -432,7 +490,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkIfChildContainsClass(parentElement: ElementRef, className: string): boolean {
+  checkIfChildContainsClass(
+    parentElement: ElementRef,
+    className: string
+  ): boolean {
     const children = parentElement.nativeElement.children;
     for (let i = 0; i < children.length; i++) {
       if (children[i].classList.contains(className)) {
