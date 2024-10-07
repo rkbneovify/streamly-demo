@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 
 
@@ -31,17 +33,17 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
     protected function redirectTo()
-    {  
-        $u=Auth::user();
-        $userRole= $u->roles->pluck('name');
-         
-        if($u->forced_change == 1) {
+    {
+        $u = Auth::user();
+        $userRole = $u->roles->pluck('name');
+
+        if ($u->forced_change == 1) {
             return '/update/password';
-        } elseif( @$userRole[0]== 'admin' || @$userRole[0]== 'superadmin' ) {
+        } elseif (@$userRole[0] == 'admin' || @$userRole[0] == 'superadmin') {
             return '/admin';
-        }elseif( @$userRole[0]== 'salesuser' ){
+        } elseif (@$userRole[0] == 'salesuser') {
             return '/salesuser/paymentlink';
-        }else{
+        } else {
             return '/';
         }
     }
@@ -57,24 +59,24 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-{ $user = User::where('email',$request->email)->first();
-    if( $user && !$user->email_verified_at){
-        throw ValidationException::withMessages([$this->username() => __('Verify your email')]);
-    }
-    if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_active' => '1']))
     {
-        // Updated this line
-        return $this->sendLoginResponse($request);
+        $user = User::where('email', $request->email)->with('roles')->first();
+        if ($user && $user->roles->first()->name != 'superadmin') {
+            return Redirect::back()->withErrors([
+                'email' => 'Only Admin can login.'
+            ]);
+        }
+        if ($user && !$user->email_verified_at) {
+            throw ValidationException::withMessages([$this->username() => __('Verify your email')]);
+        }
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'is_active' => '1'])) {
+            // Updated this line
+            return $this->sendLoginResponse($request);
 
-        // OR this one
-        // return $this->authenticated($request, auth()->user());
+            // OR this one
+            // return $this->authenticated($request, auth()->user());
+        } else {
+            return $this->sendFailedLoginResponse($request, 'auth.failed_status');
+        }
     }
-    else
-    {
-        return $this->sendFailedLoginResponse($request, 'auth.failed_status');
-    }
-}
-
-
-
 }
