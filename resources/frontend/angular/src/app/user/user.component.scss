@@ -101,7 +101,7 @@ main {
   z-index: 10001;
   right: 0;
   top: 3rem;
-  div {
+  .submenuOptions {
     display: flex;
     align-items: center;
     width: 200px;
@@ -121,6 +121,14 @@ main {
     &:hover {
       background-color: #ffffff1f;
     }
+  }
+
+  .admin_dashBoard{
+    max-height: 44px;
+    font-size: 14px;
+    max-width: 165px;
+    text-decoration: none;
+    min-height: 40px;
   }
 }
 

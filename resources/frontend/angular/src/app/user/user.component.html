@@ -176,7 +176,7 @@
                 </div>
 
                 <div *ngIf="submenu" class="profileUserMenu position-absolute">
-                  <div (click)="submenu = false" routerLink="user-settings">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="user-settings">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/user.svg"
@@ -184,7 +184,7 @@
                     />
                     <p>Account Settings</p>
                   </div>
-                  <div (click)="submenu = false" routerLink="connected-device">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="connected-device">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/devices.svg"
@@ -192,7 +192,7 @@
                     />
                     <p>Connected Devices</p>
                   </div>
-                  <div (click)="submenu = false" routerLink="downloadapp">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="downloadapp">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/download.svg"
@@ -200,7 +200,12 @@
                     />
                     <p>Download App</p>
                   </div>
-                  <div class="justify-content-center" (click)="logoutUser()">
+                  @if (checkIsAdmin() == 'superadmin') {
+                    <a class="mx-auto my-1 noBtn_hover_gold admin_dashBoard" target="_blank"  href="https://new.staging.streamlytv.com/admin">
+                      Go To Dashboard
+                    </a>
+                  }
+                  <div class="justify-content-center submenuOptions" (click)="logoutUser()">
                     <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
                     <p
                       class="position-relative min-hwl"
