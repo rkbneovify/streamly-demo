@@ -65,6 +65,7 @@ export class UserComponent implements OnInit, OnDestroy {
   subscribed: boolean;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
+  private isAdmin!:string;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -79,6 +80,12 @@ export class UserComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToPosition([0, 0]);
       }
     });
+
+    this.isAdmin = JSON.parse(localStorage.getItem ('userDetails')).roles[0].name;
+  }
+
+  checkIsAdmin():string{
+    return this.isAdmin
   }
 
   ngOnInit(): void {
