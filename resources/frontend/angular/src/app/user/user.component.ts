@@ -31,6 +31,7 @@ import {
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScreenSizeService } from '../services/screenSize/screen-size.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-user',
@@ -49,6 +50,17 @@ import { ScreenSizeService } from '../services/screenSize/screen-size.service';
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
+  animations: [
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ top: '-100%', opacity: 0 }),
+        animate('300ms ease-in', style({ top: '0', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style({ top: '-100%', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class UserComponent implements OnInit, OnDestroy {
   submenu: boolean = false;
@@ -66,6 +78,7 @@ export class UserComponent implements OnInit, OnDestroy {
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
   private isAdmin!:string;
+  navOpen: boolean = false;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -129,6 +142,20 @@ export class UserComponent implements OnInit, OnDestroy {
     if (this.screenSizeSubscription) {
       this.screenSizeSubscription.unsubscribe();
     }
+  }
+
+  // menu animation
+  mobileMenuOpen: boolean = false;
+  toggleNav() {
+    this.navOpen = !this.navOpen;
+  }
+
+  closeNav() {
+    this.navOpen = false;
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
   sideBarAnimation() {

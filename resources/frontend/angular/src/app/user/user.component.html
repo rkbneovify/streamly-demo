@@ -134,11 +134,18 @@
 
   <div class="col-11 p-0 m-0 flex_1">
     <main class="schedule_Container">
-      <div class="row">
+      <div id="nevRow" class="row">
         <div class="col-12">
           <nav
-            class="navbar_Schedule d-flex align-item-center justify-content-between"
+            class="navbar_Schedule position-relative d-flex align-item-center justify-content-between"
           >
+            <!-- Hamburger Icon -->
+            <div class="hamburger" (click)="toggleNav()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            
             <div class="logo-navbarL">
               <img
                 loading="lazy"
@@ -217,6 +224,101 @@
                 </div>
               </div>
             </div>
+
+                      <!-- Fullscreen Menu -->
+          <div class="fullscreen-menu" *ngIf="navOpen" @slideDown (click)="closeNav()">
+            <!-- <ul class="menu-list" (click)="$event.stopPropagation()">
+              <li><a href="#" (click)="closeNav()">Team 1</a></li>
+              <li><a href="#" (click)="closeNav()">Team 2</a></li>
+              <li><a href="#" (click)="closeNav()">Team 3</a></li>
+              <li><a href="#" (click)="closeNav()">Team 4</a></li>
+            </ul> -->
+            <div class="position-absolute closeMenuList" (click)="closeNav()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>              
+            </div>
+            <div class="menu-list">
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('home')"
+              routerLink="/user"
+              [ngClass]="{
+                'submenu1 pointer flex d-flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'home'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/sidemenu1.svg"
+                alt=""
+              />
+              <p>
+                Home
+              </p>
+            </div>
+      
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('fav')"
+              routerLink="/user/my-stuff"
+              [ngClass]="{
+                'submenu3 pointer flex d-flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'fav'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/sidemenu2.svg"
+                alt=""
+              />
+              <p>
+                My Stuff
+              </p>
+            </div>
+      
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('playsh')"
+              routerLink="/user/playlistschedule"
+              [ngClass]="{
+                'submenu3 pointer d-flex flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'playsh'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/side_menu3.svg"
+                alt=""
+              />
+              <p>
+                Guide
+              </p>
+            </div>      
+            <div
+            class="d-flex flex-nowrap menu-list-item"
+              (click)="changeSideBarTab('allChannel')"
+              routerLink="/user/channel/all"
+              [ngClass]="{
+                'submenu3 submenuAll pointer': true,
+                activeTab: activeTab === 'allChannel'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/All.svg"
+                alt=""
+              />
+              <p>
+                All
+              </p>
+            </div>
+          </div>
+          </div>
           </nav>
         </div>
       </div>
