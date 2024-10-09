@@ -573,6 +573,16 @@ footer .contain:first-child {
       width: 0px;
     }
   }
+
+  .card_page_no_data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    h2{
+      color: #fff;
+    }
+  }
 }
 
 // @media screen and (max-width: 765px) {

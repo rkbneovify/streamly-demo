@@ -79,6 +79,7 @@ export class UserComponent implements OnInit, OnDestroy {
   currentWidth: number = 0;
   private isAdmin!:string;
   navOpen: boolean = false;
+  planId!:string;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -110,11 +111,13 @@ export class UserComponent implements OnInit, OnDestroy {
         // Call your function here
         this.setActiveTabBasedOnUrl();
       });
+
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
         this.performSearch(searchTerm);
       });
+
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
@@ -135,6 +138,12 @@ export class UserComponent implements OnInit, OnDestroy {
           );
         }
       });
+
+    this.planId = localStorage.getItem('planId');
+
+    if(!this.planId){
+      this.getPlans()
+    }
   }
 
   ngOnDestroy(): void {
@@ -199,6 +208,7 @@ export class UserComponent implements OnInit, OnDestroy {
     // If clicked outside of search container and it's not the close button, hide search modal
     if (isInsideSearch) {
       this.searchShow = false;
+
       this.searchTerm = '';
       this.allChannelDataList = [];
       console.log('search outside');
@@ -290,15 +300,17 @@ export class UserComponent implements OnInit, OnDestroy {
       this.searchSubject.next(searchTerm.value);
       if (searchTerm) {
         this.searchShow = true;
-      } else {
-        this.searchShow = false;
       }
+      //  else {
+      //   this.searchShow = false;
+      // }
     }
   }
 
   performSearch(searchTerm: string): void {
     if (!searchTerm) {
-      this.allChannelDataList = [];
+      // this.allChannelDataList = [];
+      this.get_All_Channels();
       return;
     }
 
@@ -313,7 +325,12 @@ export class UserComponent implements OnInit, OnDestroy {
           res.data,
           this.currentWidth / 190
         );
-        this.ts.success(res.message);
+
+        if(res.data.length == 0){
+          this.ts.error('No result found.');
+        }else{
+          this.ts.success(res.message);
+        }
       },
       error: (err: any) => {
         console.error(err);
@@ -326,6 +343,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   // get all channels
   get_All_Channels() {
+    this.isLoading = true;
     const body = {
       typeurl: 'mpd',
     };
@@ -335,10 +353,12 @@ export class UserComponent implements OnInit, OnDestroy {
           res.data,
           this.currentWidth / 190
         );
-        this.searchShow = !this.searchShow;
+        this.searchShow = true;
+        this.isLoading = false;
       },
       error: (error: any) => {
         console.log(error);
+        this.isLoading = false;
       },
     });
   }
@@ -353,11 +373,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
   // searchShow=!searchShow
   checkData() {
-    if (this.subscribed) {
-      if (!this.allChannelDataList.length) {
+      if (this.subscribed && !this.searchTerm && !this.allChannelDataList.length) {
         this.get_All_Channels();
       }
-    }
   }
 
   // Check if a channel is marked as favorite
@@ -554,5 +572,24 @@ export class UserComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  getPlans() {
+    this.crud
+      .getRequest('auth/setting-details')
+      .subscribe({
+        next: (res: any) => {
+          try {
+          this.planId = JSON.stringify(res.plan?.id);
+          localStorage.setItem('planId',this.planId);
+          console.log('Auth setting Api End')
+          } catch (error) {
+            console.log(error)
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 }
