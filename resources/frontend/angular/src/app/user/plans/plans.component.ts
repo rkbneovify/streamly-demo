@@ -14,11 +14,14 @@ export class PlansComponent implements OnInit {
 selectTab:string ='basicPlans';
 all_Plans:any;
 basic_plans:any;
-Tiered_plans:any; 
+Tiered_plans:any;
+isPlanId!:string;
 constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
   this.getAllThePlans();
+  this.isPlanId = JSON.parse(localStorage.getItem('planId'));
+  console.log('Plan Id ==>',this.isPlanId);
 }
 
 // Get All The Plans
@@ -45,7 +48,6 @@ getAllThePlans(): void {
 selectedPlanType:string='';
 
 selectedplanData(planId: any,planType:any) {
-
   if(planId && planType){
     localStorage.setItem('planType',planType);
     localStorage.setItem('planId',planId);
