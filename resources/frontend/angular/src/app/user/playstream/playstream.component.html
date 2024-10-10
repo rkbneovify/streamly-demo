@@ -7,18 +7,20 @@
         <!-- Custom channel buttons using icons -->
         <div class="customContainer">
           <div
+          
             #customBtn
             id="customBtn"
             class="channel-navigation"
             [ngClass]="{ hidden: hideControls }"
           >
             <button
+            *ngIf="prevChannelData.id != channelData.channel.id "
               (click)="previousChannel()"
               class="btn-prev-channel"
               title="Previous channel"
             >
               <!-- <i class="fas fa-step-backward"></i> -->
-              <svg
+              <!-- <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="white"
@@ -27,23 +29,31 @@
               >
                 <path d="M0 0h24v24H0V0z" fill="none" />
                 <path d="M18 6l-8.5 6L18 18V6zm-9 0v12H7V6h2z" />
-              </svg>
+              </svg> -->
+              <img
+                width="30px"
+                height="30px"
+                src="../../../assets/dummy-img/prevChannel.png"
+                alt="prev channel"
+              />
               <!-- FontAwesome step backward icon -->
             </button>
           </div>
           <div
+          
             #customBtnNext
             id="customBtn"
             class="channel-navigation channel-navigation-next"
             [ngClass]="{ hidden: hideControls }"
           >
             <button
+            *ngIf="nextChannelData?.id != channelData.channel.id"
               (click)="nextChannel()"
               title="Next Channel"
               class="btn-next-channel"
             >
               <!-- <i class="fas fa-step-forward"></i> -->
-              <svg
+              <!-- <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="white"
@@ -52,9 +62,13 @@
               >
                 <path d="M0 0h24v24H0V0z" fill="none" />
                 <path d="M6 18l8.5-6L6 6v12zm9-12v12h2V6h-2z" />
-              </svg>
-
-              <!-- FontAwesome step forward icon -->
+              </svg> -->
+              <img
+                width="30px"
+                height="30px"
+                src="../../../assets/dummy-img/nextChannel.png"
+                alt="next channel"
+              />
             </button>
           </div>
         </div>
@@ -78,15 +92,16 @@
                 <div
                   class="channelMenuContainer d-flex flex-column justify-content-center align-items-center gap-3"
                 >
-
-                @for (channel of allChannelList; track channel.id) {
+                  @for (channel of allChannelList; track channel.id) {
                   <div
-                    class="channelMenuList d-flex justify-content-center align-items-center pointer" (click)="switchChannel({'id':channel.id,'dash_url':channel.url})"
+                    class="channelMenuList d-flex justify-content-center align-items-center pointer"
+                    (click)="
+                      switchChannel({ id: channel.id, dash_url: channel.url })
+                    "
                   >
                     <img [src]="channel?.image" [alt]="channel?.callSign" />
                   </div>
-                }
-
+                  }
                 </div>
               </div>
 
