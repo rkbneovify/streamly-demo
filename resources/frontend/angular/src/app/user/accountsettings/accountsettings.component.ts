@@ -234,6 +234,9 @@ export class AccountsettingsComponent implements OnInit {
           if(res.subscription.plan_type == 'tiered'){
             this.get_price(this.qunantity, this.tiredPlansDetails);
           }
+
+          const currentPlanID = JSON.stringify(res.plan?.id);
+          localStorage.setItem('planId',currentPlanID);
           this.isLoading = false;
           console.log('Auth setting Api End')
           } catch (error) {
@@ -360,6 +363,11 @@ export class AccountsettingsComponent implements OnInit {
 
   showPopConf() {
     document.getElementById('btnShowPopConf').click();
+    console.log('show pop');
+  }
+
+  showPopupDeleteUserAccount() {
+    document.getElementById('btnShowPopDeleteUserAccount').click();
     console.log('show pop');
   }
 

@@ -42,37 +42,8 @@ main {
   padding: 0;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  margin-right: 1rem;
+  // margin-right: 1rem;
   .searchbar_pro {
-    .search_Bar {
-      position: relative;
-      input {
-        width: auto;
-        height: 40px;
-        gap: 10px;
-        border-radius: 98px;
-        border: none;
-        outline: none;
-        background-color: #d2eaff4d;
-        padding-left: 48px;
-        color: #ffffff;
-        input::placeholder {
-          font-family: Poppins;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 21px;
-          letter-spacing: 0em;
-          text-align: left;
-        }
-      }
-      img {
-        position: absolute;
-        width: 14px;
-        height: 14px;
-        top: 12px;
-        left: 12px;
-      }
-    }
     .schedule_profile {
       border-radius: 50%;
       background-color: #d2eaff4d;
@@ -89,6 +60,36 @@ main {
   }
 }
 
+.search_Bar {
+  position: relative;
+  input {
+    width: auto;
+    height: 40px;
+    gap: 10px;
+    border-radius: 98px;
+    border: none;
+    outline: none;
+    background-color: #d2eaff4d;
+    padding-left: 48px;
+    color: #ffffff;
+    input::placeholder {
+      font-family: Poppins;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 21px;
+      letter-spacing: 0em;
+      text-align: left;
+    }
+  }
+  img {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 12px;
+    left: 12px;
+  }
+}
+
 .profileUserMenu {
   width: 220px;
   height: auto;
@@ -101,7 +102,7 @@ main {
   z-index: 10001;
   right: 0;
   top: 3rem;
-  div {
+  .submenuOptions {
     display: flex;
     align-items: center;
     width: 200px;
@@ -121,6 +122,14 @@ main {
     &:hover {
       background-color: #ffffff1f;
     }
+  }
+
+  .admin_dashBoard {
+    max-height: 44px;
+    font-size: 14px;
+    max-width: 165px;
+    text-decoration: none;
+    min-height: 40px;
   }
 }
 
@@ -562,6 +571,16 @@ footer .contain:first-child {
 
     &::-webkit-scrollbar {
       width: 0px;
+    }
+  }
+
+  .card_page_no_data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    h2{
+      color: #fff;
     }
   }
 }
@@ -1182,6 +1201,111 @@ footer .contain:first-child {
   }
 }
 
+// ===================mobile start ==============
+
+
+  /* Navbar Styles */
+  .navbar-container {
+    position: relative;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+  }
+
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    width: 22px;
+    height: 3px;
+    background-color: #fac700;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+  }
+
+  .closeMenuList{
+    color: #ffffff;
+    top: 48px;
+    right: 30px;
+    cursor: pointer;
+    &:hover{
+      background-color: #00000061;
+      color: #fac700;
+    }
+  }
+
+  .navbar-logo {
+    margin-left: 1rem;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+
+  .navbar-right .search-input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+  }
+
+  .fullscreen-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10005;
+  }
+
+  .menu-list {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .menu-list li {
+    margin: 1rem 0;
+  }
+
+  .menu-list .menu-list-item {
+    color: white;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    gap: 0.5rem;
+    padding-left: 0.5rem;
+    transition: transform 0.3s ease;
+    &:hover{
+      transform: scale(1.1);
+    }
+  }
+
+  .menu-list .menu-list-item:hover {
+    color: #ddd;
+  }
+
+
+// ===================mobile end ===============
+
 @media screen and (max-width: 1212px) {
   .footer {
     .contain {
@@ -1192,9 +1316,13 @@ footer .contain:first-child {
 
 @media screen and (max-width: 450px) {
   .schedule_Container {
-    padding-left: 4.5rem;
+    padding-left: 1rem;
+    #nevRow {
+      // display: none !important;
+    }
   }
   .sidebar_container {
+    display: none !important;
     max-width: 100px;
     min-width: 54px;
     width: 54px;
@@ -1226,7 +1354,12 @@ footer .contain:first-child {
   }
 
   footer {
-    padding-left: 3rem;
+    padding-left: 0rem;
+  }
+
+  .hamburger{
+    display: flex;
+    justify-content: center;
   }
 }
 

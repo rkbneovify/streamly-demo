@@ -31,6 +31,7 @@ import {
 import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScreenSizeService } from '../services/screenSize/screen-size.service';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-user',
@@ -49,6 +50,17 @@ import { ScreenSizeService } from '../services/screenSize/screen-size.service';
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
+  animations: [
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ top: '-100%', opacity: 0 }),
+        animate('300ms ease-in', style({ top: '0', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-out', style({ top: '-100%', opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class UserComponent implements OnInit, OnDestroy {
   submenu: boolean = false;
@@ -65,6 +77,9 @@ export class UserComponent implements OnInit, OnDestroy {
   subscribed: boolean;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
+  private isAdmin!:string;
+  navOpen: boolean = false;
+  setActivePlanId!:string;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -79,6 +94,12 @@ export class UserComponent implements OnInit, OnDestroy {
         this.viewportScroller.scrollToPosition([0, 0]);
       }
     });
+
+    this.isAdmin = JSON.parse(localStorage.getItem ('userDetails')).roles[0].name;
+  }
+
+  checkIsAdmin():string{
+    return this.isAdmin
   }
 
   ngOnInit(): void {
@@ -90,11 +111,13 @@ export class UserComponent implements OnInit, OnDestroy {
         // Call your function here
         this.setActiveTabBasedOnUrl();
       });
+
     this.searchSubject
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
         this.performSearch(searchTerm);
       });
+
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
     console.log('subscribed ==>', this.subscribed);
@@ -115,6 +138,12 @@ export class UserComponent implements OnInit, OnDestroy {
           );
         }
       });
+
+    this.setActivePlanId = localStorage.getItem('setActivePlanId');
+
+    if(!this.setActivePlanId){
+      this.getPlans()
+    }
   }
 
   ngOnDestroy(): void {
@@ -122,6 +151,20 @@ export class UserComponent implements OnInit, OnDestroy {
     if (this.screenSizeSubscription) {
       this.screenSizeSubscription.unsubscribe();
     }
+  }
+
+  // menu animation
+  mobileMenuOpen: boolean = false;
+  toggleNav() {
+    this.navOpen = !this.navOpen;
+  }
+
+  closeNav() {
+    this.navOpen = false;
+  }
+
+  toggleMobileMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
   sideBarAnimation() {
@@ -165,6 +208,7 @@ export class UserComponent implements OnInit, OnDestroy {
     // If clicked outside of search container and it's not the close button, hide search modal
     if (isInsideSearch) {
       this.searchShow = false;
+
       this.searchTerm = '';
       this.allChannelDataList = [];
       console.log('search outside');
@@ -256,15 +300,17 @@ export class UserComponent implements OnInit, OnDestroy {
       this.searchSubject.next(searchTerm.value);
       if (searchTerm) {
         this.searchShow = true;
-      } else {
-        this.searchShow = false;
       }
+      //  else {
+      //   this.searchShow = false;
+      // }
     }
   }
 
   performSearch(searchTerm: string): void {
     if (!searchTerm) {
-      this.allChannelDataList = [];
+      // this.allChannelDataList = [];
+      this.get_All_Channels();
       return;
     }
 
@@ -279,7 +325,12 @@ export class UserComponent implements OnInit, OnDestroy {
           res.data,
           this.currentWidth / 190
         );
-        this.ts.success(res.message);
+
+        if(res.data.length == 0){
+          this.ts.error('No result found.');
+        }else{
+          this.ts.success(res.message);
+        }
       },
       error: (err: any) => {
         console.error(err);
@@ -292,6 +343,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   // get all channels
   get_All_Channels() {
+    this.isLoading = true;
     const body = {
       typeurl: 'mpd',
     };
@@ -301,10 +353,12 @@ export class UserComponent implements OnInit, OnDestroy {
           res.data,
           this.currentWidth / 190
         );
-        this.searchShow = !this.searchShow;
+        this.searchShow = true;
+        this.isLoading = false;
       },
       error: (error: any) => {
         console.log(error);
+        this.isLoading = false;
       },
     });
   }
@@ -319,11 +373,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
   // searchShow=!searchShow
   checkData() {
-    if (this.subscribed) {
-      if (!this.allChannelDataList.length) {
+      if (this.subscribed && !this.searchTerm && !this.allChannelDataList.length) {
         this.get_All_Channels();
       }
-    }
   }
 
   // Check if a channel is marked as favorite
@@ -520,5 +572,24 @@ export class UserComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
     });
+  }
+
+  getPlans() {
+    this.crud
+      .getRequest('auth/setting-details')
+      .subscribe({
+        next: (res: any) => {
+          try {
+          this.setActivePlanId = JSON.stringify(res.plan?.id);
+          localStorage.setItem('setActivePlanId',this.setActivePlanId);
+          console.log('Auth setting Api End')
+          } catch (error) {
+            console.log(error)
+          }
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 }
