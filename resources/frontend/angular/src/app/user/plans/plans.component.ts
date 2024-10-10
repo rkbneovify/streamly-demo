@@ -16,12 +16,14 @@ all_Plans:any;
 basic_plans:any;
 Tiered_plans:any;
 setActivePlanId!:string;
+isSubscribe!:boolean;
 constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
   this.getAllThePlans();
   this.setActivePlanId = JSON.parse(localStorage.getItem('setActivePlanId'));
   console.log('Plan Id ==>',this.setActivePlanId);
+  this.isSubscribe = JSON.parse(localStorage.getItem('deviceInfo'))?.subscribed;
 }
 
 // Get All The Plans
