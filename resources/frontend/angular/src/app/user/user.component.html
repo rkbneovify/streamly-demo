@@ -134,11 +134,18 @@
 
   <div class="col-11 p-0 m-0 flex_1">
     <main class="schedule_Container">
-      <div class="row">
+      <div id="nevRow" class="row">
         <div class="col-12">
           <nav
-            class="navbar_Schedule d-flex align-item-center justify-content-between"
+            class="navbar_Schedule position-relative d-flex align-item-center justify-content-between"
           >
+            <!-- Hamburger Icon -->
+            <div class="hamburger" (click)="toggleNav()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            
             <div class="logo-navbarL">
               <img
                 loading="lazy"
@@ -176,7 +183,7 @@
                 </div>
 
                 <div *ngIf="submenu" class="profileUserMenu position-absolute">
-                  <div (click)="submenu = false" routerLink="user-settings">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="user-settings">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/user.svg"
@@ -184,7 +191,7 @@
                     />
                     <p>Account Settings</p>
                   </div>
-                  <div (click)="submenu = false" routerLink="connected-device">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="connected-device">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/devices.svg"
@@ -192,7 +199,7 @@
                     />
                     <p>Connected Devices</p>
                   </div>
-                  <div (click)="submenu = false" routerLink="downloadapp">
+                  <div class="submenuOptions" (click)="submenu = false" routerLink="downloadapp">
                     <img
                       loading="lazy"
                       src="../../assets/dummy-img/download.svg"
@@ -200,7 +207,12 @@
                     />
                     <p>Download App</p>
                   </div>
-                  <div class="justify-content-center" (click)="logoutUser()">
+                  @if (checkIsAdmin() == 'superadmin') {
+                    <a class="mx-auto my-1 noBtn_hover_gold admin_dashBoard" target="_blank"  href="https://new.staging.streamlytv.com/admin">
+                      Go To Dashboard
+                    </a>
+                  }
+                  <div class="justify-content-center submenuOptions" (click)="logoutUser()">
                     <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
                     <p
                       class="position-relative min-hwl"
@@ -212,6 +224,101 @@
                 </div>
               </div>
             </div>
+
+                      <!-- Fullscreen Menu -->
+          <div class="fullscreen-menu" *ngIf="navOpen" @slideDown (click)="closeNav()">
+            <!-- <ul class="menu-list" (click)="$event.stopPropagation()">
+              <li><a href="#" (click)="closeNav()">Team 1</a></li>
+              <li><a href="#" (click)="closeNav()">Team 2</a></li>
+              <li><a href="#" (click)="closeNav()">Team 3</a></li>
+              <li><a href="#" (click)="closeNav()">Team 4</a></li>
+            </ul> -->
+            <div class="position-absolute closeMenuList" (click)="closeNav()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>              
+            </div>
+            <div class="menu-list">
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('home')"
+              routerLink="/user"
+              [ngClass]="{
+                'submenu1 pointer flex d-flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'home'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/sidemenu1.svg"
+                alt=""
+              />
+              <p>
+                Home
+              </p>
+            </div>
+      
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('fav')"
+              routerLink="/user/my-stuff"
+              [ngClass]="{
+                'submenu3 pointer flex d-flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'fav'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/sidemenu2.svg"
+                alt=""
+              />
+              <p>
+                My Stuff
+              </p>
+            </div>
+      
+            <div
+              *ngIf="!showSubMenu"
+              (click)="changeSideBarTab('playsh')"
+              routerLink="/user/playlistschedule"
+              [ngClass]="{
+                'submenu3 pointer d-flex flex flex-nowrap menu-list-item': true,
+                activeTab: activeTab === 'playsh'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/side_menu3.svg"
+                alt=""
+              />
+              <p>
+                Guide
+              </p>
+            </div>      
+            <div
+            class="d-flex flex-nowrap menu-list-item"
+              (click)="changeSideBarTab('allChannel')"
+              routerLink="/user/channel/all"
+              [ngClass]="{
+                'submenu3 submenuAll pointer': true,
+                activeTab: activeTab === 'allChannel'
+              }"
+            >
+              <img
+                loading="lazy"
+                [ngClass]="{ 'd-inline-block min-20': true }"
+                src="../../assets/dummy-img/All.svg"
+                alt=""
+              />
+              <p>
+                All
+              </p>
+            </div>
+          </div>
+          </div>
           </nav>
         </div>
       </div>
@@ -236,120 +343,130 @@
                 alt=""
               />
             </h1>
-            <div
-              class="allChannelsList my-4 d-flex flex-nowrap"
-              *ngFor="let row of allChannelDataList"
-            >
-              <div class="card_page" *ngFor="let item of row">
-                <img
-                  *ngIf="item.image"
-                  loading="lazy"
-                  [src]="
-                    item?.image
-                      ? item?.image
-                      : '../../../assets/dummy-img/inf.png'
-                  "
-                  [ngClass]="{ 'object-fill': item?.type == 'event' }"
-                />
-                <p class="no-img" *ngIf="!item.image">No Image</p>
 
-                <div class="card_content">
-                  <div
-                    class="card_content_text1 d-flex justify-content-between"
-                  >
+            @if (!searchTerm || allChannelDataList.length != 0 ) {
+              <div
+                class="allChannelsList my-4 d-flex flex-nowrap"
+                *ngFor="let row of allChannelDataList"
+              >
+                <div class="card_page" *ngFor="let item of row">
+                  <img
+                    *ngIf="item.image"
+                    loading="lazy"
+                    [src]="
+                      item?.image
+                        ? item?.image
+                        : '../../../assets/dummy-img/inf.png'
+                    "
+                    [ngClass]="{ 'object-fill': item?.type == 'event' }"
+                  />
+                  <p class="no-img" *ngIf="!item.image">No Image</p>
+  
+                  <div class="card_content">
                     <div
-                      *ngIf="item?.type == 'channel'"
-                      class="play_img d-flex align-items-center gap-2"
-                      (click)="setplayerData(item?.url, item?.id)"
+                      class="card_content_text1 d-flex justify-content-between"
                     >
-                      <img
-                        loading="lazy"
-                        src="../../../assets/dummy-img/play_icon.svg"
-                        alt=""
-                      />
-                      <p class="d-flex flex-column">Play <span></span></p>
-                    </div>
-                    <div
-                      *ngIf="
-                        !(item?.type == 'channel') && !(item?.type == 'event')
-                      "
-                      class="play_img d-flex align-items-center gap-2"
-                      (click)="setplayerData(item?.url, item?.id)"
-                    >
-                      <img
-                        loading="lazy"
-                        src="../../../assets/dummy-img/play_icon.svg"
-                        alt=""
-                      />
-                      <p class="d-flex flex-column">Play <span></span></p>
-                    </div>
-                    <div class="d-flex gap-2" *ngIf="item?.type != 'event'">
                       <div
-                        class="rounded-circle"
-                        (click)="toggleFavorite(item.id)"
+                        *ngIf="item?.type == 'channel'"
+                        class="play_img d-flex align-items-center gap-2"
+                        (click)="setplayerData(item?.url, item?.id)"
                       >
                         <img
-                          class="rounded-circle"
-                          src="../../../assets/dummy-img/heart-circle.svg"
+                          loading="lazy"
+                          src="../../../assets/dummy-img/play_icon.svg"
                           alt=""
-                          [class.favorite]="isFavorite(item.id)"
                         />
+                        <p class="d-flex flex-column">Play <span></span></p>
                       </div>
-                      <div (click)="getCurrentProgram(item?.url, item?.id)">
+                      <div
+                        *ngIf="
+                          !(item?.type == 'channel') && !(item?.type == 'event')
+                        "
+                        class="play_img d-flex align-items-center gap-2"
+                        (click)="setplayerData(item?.url, item?.id)"
+                      >
                         <img
                           loading="lazy"
-                          src="../../../assets/dummy-img/more-circle.svg"
+                          src="../../../assets/dummy-img/play_icon.svg"
                           alt=""
                         />
+                        <p class="d-flex flex-column">Play <span></span></p>
+                      </div>
+                      <div class="d-flex gap-2" *ngIf="item?.type != 'event'">
+                        <div
+                          class="rounded-circle"
+                          (click)="toggleFavorite(item.id)"
+                        >
+                          <img
+                            class="rounded-circle"
+                            src="../../../assets/dummy-img/heart-circle.svg"
+                            alt=""
+                            [class.favorite]="isFavorite(item.id)"
+                          />
+                        </div>
+                        <div (click)="getCurrentProgram(item?.url, item?.id)">
+                          <img
+                            loading="lazy"
+                            src="../../../assets/dummy-img/more-circle.svg"
+                            alt=""
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    *ngIf="item?.type != 'event'"
-                    class="card_content_text2 my-5"
-                  >
-                    <p class="mb-2" *ngIf="item?.stationName">
-                      {{ item.stationName }}
-                    </p>
-                    <p class="mb-2" *ngIf="item?.name">{{ item.name }}</p>
-                    <p class="card_content_text3 mb-2" *ngIf="item?.callSign">
-                      {{ item.callSign }}
-                    </p>
-                    <p class="card_content_text3 mb-2" *ngIf="item.timeZone">
-                      {{ item.timeZone }}
-                    </p>
-                    <p
-                      class="card_content_text3 mx-5"
-                      *ngIf="
-                        !item.timeZone &&
-                        !item?.callSign &&
-                        !item.stationName &&
-                        item?.type != 'event'
-                      "
+                    <div
+                      *ngIf="item?.type != 'event'"
+                      class="card_content_text2 my-5"
                     >
-                      No Details
-                    </p>
-                  </div>
-                  <div *ngIf="item?.type == 'event'" class="card_content_text2">
-                    <p class="mb-2" *ngIf="item?.name">
-                      {{ item.name | truncate : 75 }}
-                    </p>
-                    <p class="card_content_text3" *ngIf="item?.description">
-                      {{ item.description | truncate : 75 }}
-                    </p>
-                    <!-- for shows detail  -->
-                    <p
-                      *ngIf="item?.type == 'event'"
-                      class="btn-see-deatisl mt-2"
-                      (click)="getProgramDetailData(item?.TMSId,item?.id)"
-                    >
-                      See Details
-                    </p>
+                      <p class="mb-2" *ngIf="item?.stationName">
+                        {{ item.stationName }}
+                      </p>
+                      <p class="mb-2" *ngIf="item?.name">{{ item.name }}</p>
+                      <p class="card_content_text3 mb-2" *ngIf="item?.callSign">
+                        {{ item.callSign }}
+                      </p>
+                      <p class="card_content_text3 mb-2" *ngIf="item.timeZone">
+                        {{ item.timeZone }}
+                      </p>
+                      <p
+                        class="card_content_text3 mx-5"
+                        *ngIf="
+                          !item.timeZone &&
+                          !item?.callSign &&
+                          !item.stationName &&
+                          item?.type != 'event'
+                        "
+                      >
+                        No Details
+                      </p>
+                    </div>
+                    <div *ngIf="item?.type == 'event'" class="card_content_text2">
+                      <p class="mb-2" *ngIf="item?.name">
+                        {{ item.name | truncate : 75 }}
+                      </p>
+                      <p class="card_content_text3" *ngIf="item?.description">
+                        {{ item.description | truncate : 75 }}
+                      </p>
+                      <!-- for shows detail  -->
+                      <p
+                        *ngIf="item?.type == 'event'"
+                        class="btn-see-deatisl mt-2"
+                        (click)="getProgramDetailData(item?.TMSId,item?.id)"
+                      >
+                        See Details
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }@else {
+              <div class="card_page_no_data">
+                <h2>
+                No Result Found.
+                </h2>
+              </div>
+            }
           </div>
+
 
           <!-- show channels details detials  -->
           <div *ngIf="playlist_details_show" class="modal-overlay"></div>

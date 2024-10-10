@@ -45,6 +45,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   hideControls: boolean = false; // Track visibility of controls
   controlVisibilityTimeout: any; // Timeout for hiding controls
   showMenu = false;
+  totalchannels:string | Number;
 
   constructor(
     private crud: CrudService,
@@ -77,6 +78,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         console.log('Not playing')
       }
     })
+
+    // this.totalchannels = localStorage.getItem('').
   }
 
   ngAfterViewInit() {
@@ -369,7 +372,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   // }
 
   getPlayerData(): Promise<void> {
-    this.isLoading = true;
+    // this.isLoading = true;
     const body = {
       channel_id: this.playerChannelId,
       current_datetime: this.getCurrentFormattedDateTime(),
@@ -381,12 +384,12 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
           this.channelData = res?.data;
           this.nextChannelData = res.data.nextChannel;
           this.prevChannelData = res.data.prevChannel;
-          this.isLoading = false;
+          // this.isLoading = false;
           resolve(); // Resolve the promise once data is loaded
         },
         error: (err) => {
           console.error(err);
-          this.isLoading = false;
+          // this.isLoading = false;
           reject(err); // Reject in case of an error
         },
       });

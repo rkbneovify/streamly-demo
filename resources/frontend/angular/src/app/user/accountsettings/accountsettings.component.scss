@@ -345,13 +345,17 @@
 
   .accountdetails{
     div{
-      flex-direction: column !important;
       align-items: start !important;
       height: auto !important;
       p{
         opacity: 0.8;
       }
     }
+  }
+
+  .acoount_user_name{
+      flex-wrap: wrap;
+      row-gap: 0.5rem;
   }
 
   .acoount_user_currtimezone{
