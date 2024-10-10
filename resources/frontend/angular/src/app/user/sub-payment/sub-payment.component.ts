@@ -480,6 +480,7 @@ export class SubPaymentComponent implements OnInit {
           let info = JSON.parse(localStorage.getItem('deviceInfo'));
           info.subscribed = true;
           localStorage.setItem('deviceInfo', JSON.stringify(info));
+          localStorage.setItem('setActivePlanId', JSON.stringify(this.selectedPlan));
         },
         error: (err: any) => {
           this.loading = false;

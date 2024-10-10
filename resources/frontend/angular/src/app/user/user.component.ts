@@ -79,7 +79,7 @@ export class UserComponent implements OnInit, OnDestroy {
   currentWidth: number = 0;
   private isAdmin!:string;
   navOpen: boolean = false;
-  planId!:string;
+  setActivePlanId!:string;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -139,9 +139,9 @@ export class UserComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.planId = localStorage.getItem('planId');
+    this.setActivePlanId = localStorage.getItem('setActivePlanId');
 
-    if(!this.planId){
+    if(!this.setActivePlanId){
       this.getPlans()
     }
   }
@@ -580,8 +580,8 @@ export class UserComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           try {
-          this.planId = JSON.stringify(res.plan?.id);
-          localStorage.setItem('planId',this.planId);
+          this.setActivePlanId = JSON.stringify(res.plan?.id);
+          localStorage.setItem('setActivePlanId',this.setActivePlanId);
           console.log('Auth setting Api End')
           } catch (error) {
             console.log(error)
