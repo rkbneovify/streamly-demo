@@ -238,6 +238,71 @@
 //   display:none !important;
 // }
 
+@media screen and (max-width: 992px) {
+  .play_container_top {
+    .playstream_1 {
+      video {
+        height: auto !important;
+      }
+      .vjs-big-play-centered {
+        height: auto !important;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 475px) {
+  .play_btn_container_1 {
+    flex-direction: column;
+    .playbtn_hd {
+      span {
+        font-size: 12px !important;
+      }
+    }
+  }
+
+  .chanelMenuheading {
+    div {
+      img {
+        height: 18px !important;
+      }
+    }
+    .menuPlayerHeading {
+
+    }
+  }
+
+  .channelMenuList {
+    height: 70px;
+    padding: 14px;
+    img {
+      max-width: 90px;
+      max-height: 50px !important;
+    }
+  }
+  
+  .channelsVideoPlayer {
+    padding-top: 8px;
+
+    .menuListCloseBtn {
+      height: 20px;
+    }
+  }
+
+  .submenuContainerList{
+    margin-top: 0.5rem;
+  }
+
+  .channel-navigation button {
+
+    img{
+      width:30px;
+      height:30px;
+    }
+  
+  }
+}
+
 
 video::-webkit-media-controls-timeline {
   display: none !important;
@@ -474,71 +539,6 @@ video:hover ~ #changeVideo {
   }
 }
 
-
-@media screen and (max-width: 992px) {
-  .play_container_top {
-    .playstream_1 {
-      video {
-        height: auto !important;
-      }
-      .vjs-big-play-centered {
-        height: auto !important;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 475px) {
-  .play_btn_container_1 {
-    flex-direction: column;
-    .playbtn_hd {
-      span {
-        font-size: 12px !important;
-      }
-    }
-  }
-
-  .chanelMenuheading {
-    div {
-      img {
-        height: 18px !important;
-      }
-    }
-    .menuPlayerHeading {
-
-    }
-  }
-
-  .channelMenuList {
-    height: 70px;
-    padding: 14px;
-    img {
-      max-width: 90px;
-      max-height: 50px !important;
-    }
-  }
-  
-  .channelsVideoPlayer {
-    padding-top: 8px;
-
-    .menuListCloseBtn {
-      height: 20px;
-    }
-  }
-
-  .submenuContainerList{
-    margin-top: 0.5rem;
-  }
-
-  .channel-navigation button {
-
-    img{
-      width:30px;
-      height:30px;
-    }
-  
-  }
-}
 
 @media screen and (max-width: 650px){
   .channel-navigation {
