@@ -15,13 +15,13 @@ selectTab:string ='basicPlans';
 all_Plans:any;
 basic_plans:any;
 Tiered_plans:any;
-isPlanId!:string;
+setActivePlanId!:string;
 constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
   this.getAllThePlans();
-  this.isPlanId = JSON.parse(localStorage.getItem('planId'));
-  console.log('Plan Id ==>',this.isPlanId);
+  this.setActivePlanId = JSON.parse(localStorage.getItem('setActivePlanId'));
+  console.log('Plan Id ==>',this.setActivePlanId);
 }
 
 // Get All The Plans
