@@ -88,14 +88,14 @@
         </div>
 
         <div class="res-step3-btn">
-          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId}" (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId">
-            <svg class="d-inline-block" *ngIf="plan.id ==this.setActivePlanId" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
+          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId">
+            <svg class="d-inline-block" *ngIf="plan.id ==this.setActivePlanId && isSubscribe" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
               <g fill="none" stroke="#4CAF50" stroke-width="4">
                 <circle cx="32" cy="32" r="30" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 33l8 8 16-16" />
               </g>
             </svg>            
-            {{plan.id ==this.setActivePlanId ?'Active Plan':'Select Plan'}}
+            {{plan.id ==this.setActivePlanId && isSubscribe  ?'Active Plan':'Select Plan'}}
 
           </button>
         </div>
@@ -182,14 +182,14 @@
         </div>
 
         <div class="res-step3-btn">
-          <button [ngClass]="{'cursor-not-allow':data.id ==this.setActivePlanId}" (click)="selectedplanData(data?.id,data?.type)" [disabled]="data.id == this.setActivePlanId" >
-            <svg class="d-inline-block" *ngIf="data.id ==this.setActivePlanId" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
+          <button [ngClass]="{'cursor-not-allow':data.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(data?.id,data?.type)" [disabled]="data.id == this.setActivePlanId && isSubscribe" >
+            <svg class="d-inline-block" *ngIf="data.id ==this.setActivePlanId && isSubscribe" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
               <g fill="none" stroke="#4CAF50" stroke-width="4">
                 <circle cx="32" cy="32" r="30" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 33l8 8 16-16" />
               </g>
             </svg>            
-            {{data.id ==this.setActivePlanId ?'Active Plan':'Select Plan'}}</button>
+            {{data.id ==this.setActivePlanId && isSubscribe ?'Active Plan':'Select Plan'}}</button>
         </div>
       </div>
       <!-- daily ends -->
