@@ -105,9 +105,9 @@ class RokuEpgGuideApiController extends Controller
             ], 400);
         } else {
             // Define the storage path for the folder
-            $folderPath = storage_path('app/public/channel_roku_images/');
+            // $folderPath = storage_path('app/public/channel_roku_images/');
             // Clear the folder before storing the new image
-            $this->clearFolder($folderPath);
+            // $this->clearFolder($folderPath);
 
             $user = JWTAuth::user();
             $urlType = $request->get('typeurl');
@@ -159,7 +159,7 @@ class RokuEpgGuideApiController extends Controller
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
-                $channel->roku_image = $channel->image != null ? $this->resizeAndStoreImage($channel->image) : null;
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
                 if ($channel->stationName == null) {
@@ -179,6 +179,9 @@ class RokuEpgGuideApiController extends Controller
                 }
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
                 }
                 return $channel;
             });
@@ -214,7 +217,7 @@ class RokuEpgGuideApiController extends Controller
 
         return $programs;
     }
-
+    /*
     private function resizeAndStoreImage($imageUrl)
     {
         // The URL of the image you want to resize
@@ -284,5 +287,5 @@ class RokuEpgGuideApiController extends Controller
             // If folder doesn't exist, create it
             File::makeDirectory($folderPath, 0755, true);
         }
-    }
+    } */
 }
