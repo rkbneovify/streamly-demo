@@ -209,6 +209,15 @@ export class AccountsettingsComponent implements OnInit {
           this.planInterval = plan3rd;
           this.interval_count = res?.plan?.interval_count;
           this.userinfo = res?.userinfo;
+          let userData = JSON.parse(localStorage.getItem('userDetails'));
+          userData.name = res?.userinfo?.name
+
+          console.log('User Name is:-',userData);
+
+          localStorage.setItem(
+            'userDetails',
+            JSON.stringify(userData)
+          );
 
           // planFullName = `${plan1st?plan1st:''} ${plan3rd?plan3rd.substring(0, 3):''} ${plan2nd?plan2nd.substring(0,3):''}`;
 
