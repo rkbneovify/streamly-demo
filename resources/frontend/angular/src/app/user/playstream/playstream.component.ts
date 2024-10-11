@@ -431,13 +431,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.switchChannel(this.nextChannelData);
     }
   }
-
+  
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
     console.log(channelData.dash_url,channelData.id)
     const scrollPosition = window.scrollY;
     this.ngOnDestroy();
     const channelID = channelData.id;
+    this.addToRecentChannel(channelID);
     const channelURL = this.isIOS() ? channelData.url : channelData.dash_url;
     this.setChannelId(channelID, channelURL);
     this.playerChannelId = Number(localStorage.getItem('playerChannelId'));
