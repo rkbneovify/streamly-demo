@@ -25,6 +25,10 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 
+
+
+declare let window: Window;
+
 @Component({
   selector: 'app-playlist-schedule',
   standalone: true,
@@ -123,6 +127,7 @@ export class PlaylistScheduleComponent
   ];
   dayfilter: string = 'today';
   categories: any;
+  isTimePassed:boolean = true;
   // get category list
   getAllCategories() {
     this.isLoading = true;
@@ -223,10 +228,10 @@ export class PlaylistScheduleComponent
       }, 60000); // 60000 milliseconds = 1 minute
     }
     const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
-    setTimeout(() => {
-      
-    }, 10000*60*30);
-    console.log(data);
+
+    setInterval(() => {
+      this.isTimePassed = false;
+    }, 1000*60*30);
 
     this.tabInactivityService.startTabInactivityCheck();
   }
@@ -252,6 +257,11 @@ export class PlaylistScheduleComponent
       this.scrollablecategory.nativeElement.scrollLeft -= offset;
     }
   }
+
+  refreshPage(){
+    window.location.reload();
+  }
+
 
   showTomorrowDate: boolean = false;
 
