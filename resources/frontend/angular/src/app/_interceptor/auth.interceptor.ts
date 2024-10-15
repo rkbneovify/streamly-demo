@@ -40,7 +40,6 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next) 
           const deviceInfoData = JSON.parse(localStorage.getItem('deviceInfo') || '');
           if (deviceInfoData !== null) {
             try {
-              console.log('=================410========>',err.error.message);
               // setLocal.setLocalStorage('cancelMessage',err.error.message);    
               sendData.changeData(err.error.message);          
               route.navigateByUrl('user/subscription-cancel');

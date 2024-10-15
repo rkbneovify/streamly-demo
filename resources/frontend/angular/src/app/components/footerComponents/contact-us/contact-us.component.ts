@@ -1,33 +1,3 @@
-// import { Location } from '@angular/common';
-// import { Component } from '@angular/core';
-// import { CrudService } from '../services/crud.service';
-
-// @Component({
-//   selector: 'app-contact-us',
-//   standalone: true,
-//   imports: [],
-//   templateUrl: './contact-us.component.html',
-//   styleUrl: './contact-us.component.scss'
-// })
-// export class ContactUsComponent {
-//   constructor(private location:Location,private crud:CrudService){}
-//   goBack(): void {
-//     this.location.back();
-//   }
-
-//   //auth/contactForm
-
-
-// contacForm(){
-//   this.crud.postRequest('auth/contactForm',  {
-//     "name": "test",
-//     "email": "annu.sehrawat+test@yopmail.com",
-//     "message": "testingggggggggggggg.........."
-// }).subscribe({
-
-//   })
-// }
-// }
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Location, NgIf } from '@angular/common';
@@ -69,12 +39,12 @@ export class ContactUsComponent {
       const formValue = this.contactForm.value;
       this.crud.postRequest('auth/contactForm', formValue,this.getAuthHeaders()).subscribe({
         next: (response:any) => {
-          console.log('Form submitted successfully', response);
           this.toast.success(response?.message);
           this.contactForm.reset()
         },
         error: (error) => {
           console.error('Error submitting form', error);
+          this.toast.error(error.error)
         }
       });
     }

@@ -1,5 +1,18 @@
-import { ChangeDetectorRef, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  NgModule,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgIf } from '@angular/common';
 // interface StripeServerCheckoutOptions {
 //   lineItems: Array<{ price: string; quantity: number }>;
@@ -9,26 +22,25 @@ import { NgIf } from '@angular/common';
 // }
 declare var $: any;
 declare var stripe: any;
-declare var elements: any
+declare var elements: any;
 
 @Component({
   selector: 'app-payment',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, FormsModule],
   templateUrl: './payment.component.html',
-  styleUrl: './payment.component.scss'
+  styleUrl: './payment.component.scss',
 })
 export class PaymentComponent implements OnInit {
-
   @ViewChild('cardInfo') public cardInfo!: ElementRef;
   _totalAmount: number = 10;
   card: any;
   cardHandler = this.onChange.bind(this);
   cardError: any;
 
-  constructor(private cd: ChangeDetectorRef,) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
   ngOnDestroy() {
     if (this.card) {
       this.card.removeEventListener('change', this.cardHandler);
@@ -67,12 +79,9 @@ export class PaymentComponent implements OnInit {
     this.cd.detectChanges();
   }
   async createStripeToken() {
-    debugger
-
-    console.log(this.card, 'card');
+    debugger;
 
     const { token, error } = await stripe.createToken(this.card);
-    console.log(token, 'token');
 
     if (token) {
       this.onSuccess(token);
@@ -80,20 +89,13 @@ export class PaymentComponent implements OnInit {
       this.onError(error);
     }
   }
-  onSuccess(token: any) {
-  }
+  onSuccess(token: any) {}
   onError(error: any) {
     if (error.message) {
       this.cardError = error.message;
     }
   }
 }
-
-
-
-
-
-
 
 // export class PaymentComponent implements OnInit {
 //   stripe:any;
