@@ -314,17 +314,14 @@ export class AccountsettingsComponent implements OnInit {
   deleteAccountForm: FormGroup;
   showPopDeleteAccount() {
     document.getElementById('btnShowPopDeleteAccount').click();
-    console.log('show dele');
   }
 
   showPopCancelSubc() {
     document.getElementById('btnShowPopCancelSubsc').click();
-    console.log('show cancel');
   }
 
   deleteUserAccount(): void {
     this.isLoading = true;
-    console.log('Start the Deleting');
     this.crud
       .postRequest('auth/user/delete', {
         password: this.deleteAccountForm.get('password').value,
@@ -346,7 +343,6 @@ export class AccountsettingsComponent implements OnInit {
 
   cancelSubscriptionUserAccount(): void {
     this.isLoading = true;
-    console.log('Start the Cancel sub.');
     this.crud
       .postRequest('auth/verify-password', {
         password: this.cancelSubscription.get('password').value,
@@ -372,12 +368,10 @@ export class AccountsettingsComponent implements OnInit {
 
   showPopConf() {
     document.getElementById('btnShowPopConf').click();
-    console.log('show pop');
   }
 
   showPopupDeleteUserAccount() {
     document.getElementById('btnShowPopDeleteUserAccount').click();
-    console.log('show pop');
   }
 
   clearDetails(){
@@ -397,7 +391,6 @@ export class AccountsettingsComponent implements OnInit {
       // Return the timezone name or a fallback if not found
       return timeZoneName || 'Timezone not detected';
     } catch (error) {
-      console.error('Error detecting timezone:', error);
       return 'Timezone detection failed';
     }
   }

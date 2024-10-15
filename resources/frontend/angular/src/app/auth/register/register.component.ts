@@ -168,13 +168,11 @@ export class RegisterComponent
       )
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
-        console.log('ZipCode Data =>', this.zipcodedata);
         if (
           apiResponse.length == 1 &&
           apiResponse[0].city &&
           apiResponse[0].state
         ) {
-          console.log('ZipCode Data inside the if =>', this.zipcodedata);
           if (this.selectedTab === 'Availability') {
             this.availabilityForm.get('city')?.setValue(apiResponse[0].city);
             this.availabilityForm.get('state')?.setValue(apiResponse[0].state);
@@ -326,14 +324,6 @@ export class RegisterComponent
         this.all_Plans = res;
         if (this.all_Plans.length > 0) {
           this.all_Plans[0].forEach((el: any) => {
-            console.log(
-              el.id,
-              'name',
-              el.amount,
-              'nikename',
-              el.nickname,
-              el.metadata
-            );
           });
         }
       },

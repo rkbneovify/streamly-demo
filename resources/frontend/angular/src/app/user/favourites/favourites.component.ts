@@ -188,8 +188,6 @@ export class FavouritesComponent implements OnInit {
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
-    console.log('Url ==>', url);
-    console.log('id ==>', id);
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),
