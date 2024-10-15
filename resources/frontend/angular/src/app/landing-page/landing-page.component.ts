@@ -15,17 +15,11 @@ export class LandingPageComponent implements OnInit{
   router = inject(Router);
 
   ngOnInit(): void {
-    console.log(this.router.url,'url');
     const url = this.router.url;
     if(url == '/'){
       // this.stateR = !this.stateR;
     }else{
       // this.stateR = false;
     }
-    
-
-// if(localStorage.getItem('token')){
-//   this.router.navigateByUrl('/user');
-// }
   }
 }

@@ -94,7 +94,6 @@ export class AllChannelComponent implements OnInit, OnDestroy{
         const list = this.chunkArray(res.data,this.currentWidth/190);
         localStorage.setItem('allChannel',JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
-        console.log(res.data,"==============>", res?.data[2]?.gracenote_data?.url+'/'+res.data?.gracenote_data?.url?.assets?.asset[0]?.URI);
         this.isLoading = false;
 
       },
@@ -175,7 +174,6 @@ getFavoriteList(): void {
 }
 // Update local storage with current favorite channels
 updateFavoriteChannels(): void {
-  console.log('favoriteChannels',this.favoriteChannels);
     localStorage.setItem('favoriteChannels', JSON.stringify(this.favoriteChannels));
 }
 
@@ -238,8 +236,6 @@ setplayerData(url:string,id:any){
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
-    console.log('Url ==>', url);
-    console.log('id ==>', id);
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),

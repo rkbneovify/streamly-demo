@@ -239,7 +239,6 @@ export class PlaylistScheduleComponent
   ngAfterViewInit() {
     // Ensure elements are correctly referenced
     this.scrollableElements.forEach((element, index) => {
-      console.log(`Element ${index}:`, element.nativeElement);
     });
   }
 
@@ -276,8 +275,6 @@ export class PlaylistScheduleComponent
     }
 
     this.isProcessing = true; // Set the processing flag
-    console.log('Scrolling started');
-
     if (position !== 0) {
       this.changeColorBackgroung = true;
       this.toggleLeftArrow = true;
@@ -298,12 +295,6 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
-          console.log(
-            'Current Time =>> ',
-            this.getCurrentTimeDate[this.count + 1],
-            this.checkIfNextDay(this.getCurrentTimeDate[this.count + 1]),
-            this.isNextDay
-          );
           this.count += 1;
         } else {
           this.count -= 1;
@@ -312,7 +303,6 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
-          // console.log('Current Time =>> ', this.getCurrentTimeDate[this.count], this.checkIfNextDay(this.getCurrentTimeDate[this.count]));
         }
       }
     } else {
@@ -338,7 +328,6 @@ export class PlaylistScheduleComponent
     // Simulate a short delay to represent the completion of the scroll
     setTimeout(() => {
       this.isProcessing = false; // Set the flag back to false after scroll finishes
-      console.log('Scrolling finished');
     }, 500); // Adjust the delay as per your actual processing time
   }
 
@@ -457,7 +446,6 @@ export class PlaylistScheduleComponent
     const timeDifferenceMs = currentTime - currentTimeIndex;
     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
     this.liveCurrentTime = timeDifferenceMinutes * 5;
-    console.log('liveCurrentTime ==> ', this.liveCurrentTime);
   }
 
   // calculateWidth(start: any, end: any, index: any) {
@@ -711,16 +699,13 @@ export class PlaylistScheduleComponent
   // filter according to today and tommorrow
   changeDays(day: string, isDataChange = true) {
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
-    console.log('Day change===>', day);
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
-        console.log('this if .selectedDay==>', this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
         this.scrollContent(0);
       } else {
-        console.log('this else .selectedDay==>', this.selectedDay);
         this.getScheduleData(this.selected_category, this.dayfilter);
         this.getCurrentTimeSlot(this.dayfilter);
       }

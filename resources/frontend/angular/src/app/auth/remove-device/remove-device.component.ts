@@ -35,17 +35,12 @@ export class RemoveDeviceComponent implements OnInit {
       }
     }
     else
-    console.log('not getting logged device');
-    
-    // this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
-    console.log(this.response,'respose');
-    
+    // this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');   
     this.current_device = localStorage.getItem('deviceId');
     this.connectedDevice = this.response;
   }
 
   removedevice(id: string): void {
-    console.log('---device id loading',this.loading);
     this.loading[id] = true;
     this.apiService.postRequest('auth/same-device-id-logout', { 'id': id }).subscribe({
       next: (res: any) => {
@@ -75,7 +70,6 @@ export class RemoveDeviceComponent implements OnInit {
       // If the checkbox is unchecked, remove the session ID from the deviceId array
       this.deviceId = this.deviceId.filter(id => id !== sessionId);
     }
-    console.log('Device IDs:', this.deviceId);
   }
 
 
@@ -89,14 +83,12 @@ export class RemoveDeviceComponent implements OnInit {
       const formData = data;
       this.apiService.postRequest('auth/login', formData).subscribe({
         next: (res: any) => {
-          console.log(res,'response of login api');
           if (res.response_code == 200) {
             if(res.user.forced_change == 1){
               localStorage.setItem('changeToken',res?.access_token);
               this.router.navigateByUrl(`auth/change-password`);
             }
           else{
-            console.log('login resp-->',res);
             this.toastr.success(res?.message)
             const token = res?.access_token
             let deviceInfo = {
@@ -119,7 +111,6 @@ export class RemoveDeviceComponent implements OnInit {
         error: (err: any) => {
           if (err.status == 479) {
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
-            console.log('479 ===>' ,formData);
             localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.toastr.error(err.error.message,null, {

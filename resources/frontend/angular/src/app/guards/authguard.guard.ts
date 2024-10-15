@@ -4,9 +4,6 @@ import { CanActivateFn, Router } from '@angular/router';
 export const authguardGuard: CanActivateFn = (route, state) => {
   let user;
   const router = inject(Router); // Inject Router
-
-  console.log('auth guard works');
-
   const jsonData = localStorage.getItem('deviceInfo');
   const token_access = localStorage.getItem('token');
   if (jsonData !== null) {
@@ -18,22 +15,10 @@ export const authguardGuard: CanActivateFn = (route, state) => {
   }
 
   if (token_access) {
-    console.log(user.subscribed, '=======sub====');
     if (user?.subscribed) {
-      console.log('subscription true, if block executed');
       return true;
     } else {
       const currentRoute = state?.url;
-      console.log(
-        'current route=>',
-        currentRoute,
-        '====>',
-        currentRoute?.includes('user-settings'),
-        'state = >',
-        state,
-        'route=>',
-        route
-      );
       if (
         currentRoute?.includes('user-settings') ||
         currentRoute?.includes('user/plan') ||
@@ -43,11 +28,9 @@ export const authguardGuard: CanActivateFn = (route, state) => {
         currentRoute?.includes('user/downloadapp') ||
         currentRoute?.includes('user/payment-subscription')
       ) {
-        console.log('if current route matches');
         return true;
       } else {
         router.navigateByUrl('user/subscription-expired');
-        console.log('else plans');
         return false;
       }
     }
@@ -59,20 +42,16 @@ export const authguardGuard: CanActivateFn = (route, state) => {
 };
 
 export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
-  console.log('auth guard works');
-
   const router = inject(Router); // Inject Router
   const token = localStorage.getItem('token');
 
   if (token) {
     if (state.url !== '/user') {
-      console.log('Heman3 =====>', token);
       router.navigateByUrl('/user/home');
       return false; // Block navigation to the requested route
     }
     return true; // Already on /user, allow navigation
   } else {
-    console.log('Heman1 =====>', token);
     return true; // Allow navigation to the requested route
   }
 };
@@ -86,14 +65,12 @@ export const authGuarLoginStatus: CanActivateFn = (route, state) => {
     if (state.url === '/user') {
       return true; // Already on the target route, allow navigation
     }
-    console.log('Heman2 =====>', token);
     router.navigateByUrl('/user');
     return false; // Prevent navigation to the requested route
   } else {
     if (state.url === '/auth/login') {
       return true; // Already on the target route, allow navigation
     }
-    console.log('Heman4 =====>', token);
     if(
       state?.url?.includes('register') ||
       state?.url?.includes('change-password') ||
