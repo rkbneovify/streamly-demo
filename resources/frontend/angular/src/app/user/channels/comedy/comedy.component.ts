@@ -35,13 +35,11 @@ export class ComedyComponent implements OnInit {
       }
         this.apiService.filterChannelResponse(body).subscribe({
           next:(res:any)=>{
-            console.log('Data===>',res)
             this.data = this.chunkArray(res.data,6);
             this.getFavoriteList();
           }
         });
       }
-      console.log(this.keyword);
     });
   }
 
@@ -113,7 +111,6 @@ removeFavoriteChannel(channelId: number): void {
 
 // Fetch favorite list
 getFavoriteList(): void {
-  console.log('==========================================>')
     const storedFavoriteChannels = localStorage.getItem('allFavoriteChannels');
     if (storedFavoriteChannels) {
         this.favoriteChannels = JSON.parse(storedFavoriteChannels);
@@ -130,7 +127,6 @@ getFavoriteList(): void {
 
 // Update local storage with current favorite channels
 updateFavoriteChannels(): void {
-  console.log('favoriteChannels',this.favoriteChannels);
     localStorage.setItem('allFavoriteChannels', JSON.stringify(this.favoriteChannels));
 }
 

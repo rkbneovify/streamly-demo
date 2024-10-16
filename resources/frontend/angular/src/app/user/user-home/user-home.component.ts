@@ -286,9 +286,7 @@ export class UserHomeComponent implements OnInit {
     const isInsideMenu =
       target.classList.contains('schedule_profile') ||
       target.classList.contains('userProfileImage');
-    console.log('envet');
     if (isInsideMenu) {
-      console.log('helllo true');
       this.submenu = true;
       return;
     }
@@ -316,8 +314,6 @@ export class UserHomeComponent implements OnInit {
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
-    console.log('Url ==>', url);
-    console.log('id ==>', id);
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),

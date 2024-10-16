@@ -31,7 +31,6 @@ export class SubContentComponent implements OnInit{
   ngAfterViewInit(): void {
     setTimeout(() => {
       if (this.sliderNexrButton) {
-        console.log('start slider')
         this.sliderNexrButton.nativeElement.click(); // Simulate click after DOM is fully rendered
       }
     }, 0);
@@ -40,7 +39,6 @@ export class SubContentComponent implements OnInit{
   changeActiveTab(category:string){
     this.activeCategoryTab = category;
     this.getChannelsByGenre(category);
-    console.log(this.activeCategoryTab);
   }
 
   categories: any;
@@ -51,7 +49,6 @@ export class SubContentComponent implements OnInit{
       "typeurl" : "mpd"
   }).subscribe({
       next:(res:any)=>{
-        console.log(res);
         this.categoriesData = res;
         if(this.categoriesData){
           this.getChannelsByGenre(genre);
@@ -70,7 +67,6 @@ export class SubContentComponent implements OnInit{
       for (let genre of data.data) {
         if (genre.genre_name === genreName) {
           this.categories = genre.channels.filter((data)=>data.image);
-          console.log(genreName,"===>",this.categories);
         }
       }
     }
