@@ -35,7 +35,6 @@ export class TermConditionComponent implements OnInit{
         const data = res?.data.split('\n');
         this.termsOfUseData = data.slice(2);
         this.title = data[0];
-        console.log(res,'===>',this.termsOfUseData);
       },
       error:(err:any)=>{
         console.log(err);

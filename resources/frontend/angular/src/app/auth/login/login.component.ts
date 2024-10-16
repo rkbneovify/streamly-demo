@@ -33,16 +33,12 @@ export class LoginComponent implements OnInit {
     this.loginPasscodeForm = this.fb.group({
       passcode: ['', [Validators.required, Validators.minLength(6)]],
     });
-
-    console.log(this.loginFormWithEmail);
   }
 
   ngOnInit(): void {
     // Check if device ID is present in local storage
     const storedDeviceId = localStorage.getItem('deviceId');
-    console.log('storedDeviceId--->>', storedDeviceId);
     if (storedDeviceId) {
-      console.log(storedDeviceId);
       this.userDeviceID = storedDeviceId;
       const tokenId = localStorage.getItem('access_token');
       if (tokenId) {
@@ -63,7 +59,6 @@ export class LoginComponent implements OnInit {
       this.crudService.postRequest('auth/login', formData).subscribe({
         next: (res: any) => {
 
-          console.log(res,'response of login api');
           
           if (res.response_code == 200) {
             if(res.user.forced_change == 1){
@@ -72,7 +67,6 @@ export class LoginComponent implements OnInit {
               this.router.navigateByUrl(`auth/change-password`);
             }
           else{
-            console.log('login resp-->',res);
             this.ts.success(res?.message)
             const token = res?.access_token
             let deviceInfo = {
@@ -96,7 +90,6 @@ export class LoginComponent implements OnInit {
           if (err.status == 479) {
             this.loading = false;
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
-            console.log('479 ===>' ,formData);
             localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.ts.error(err.error.message,null, {

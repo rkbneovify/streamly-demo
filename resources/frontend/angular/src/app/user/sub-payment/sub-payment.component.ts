@@ -431,21 +431,10 @@ export class SubPaymentComponent implements OnInit {
     const formData = this.paymentFormDetailSub.value;
     let trial_day;
     let quantity = this.device_per_unit;
-    console.log(
-      '===out-trial====>',
-      this.checkoutPlans.plandetails?.trial_period_days
-    );
+
     if (this.checkoutPlans.plandetails?.trial_period_days) {
-      console.log(
-        '===intrial====>',
-        this.checkoutPlans.plandetails?.trial_period_days
-      );
       trial_day = this.checkoutPlans.plandetails?.trial_period_days;
     } else {
-      console.log(
-        '=else==trial=====>',
-        this.checkoutPlans.plandetails?.trial_period_days
-      );
       trial_day = 0;
     }
 
@@ -472,7 +461,6 @@ export class SubPaymentComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.loading = false;
-          console.log('resdata ======> ', res);
           setTimeout(() => {
             this.router.navigateByUrl('/user');
           }, 1000);
@@ -484,17 +472,14 @@ export class SubPaymentComponent implements OnInit {
         },
         error: (err: any) => {
           this.loading = false;
-          console.log('errdata ======> ', err);
           this.ts.error(err.error.error);
         },
       });
-    console.log('==Body======>', body);
   }
 
   paymentShowData() {
     const formData = this.paymentFormDetailSub.value;
     this.loading = false;
-    console.log('========paymentData==========>', formData);
   }
 
   async initializeKey(key: any) {
@@ -513,15 +498,8 @@ export class SubPaymentComponent implements OnInit {
       if (this.selectedPlanType == 'per_unit') {
         this.crud.getRequest('get-basic-plan/' + id).subscribe({
           next: (data: any) => {
-            console.log('===========basic plan>', data);
             this.checkoutPlans = data;
-            console.log('checkout================>', this.checkoutPlans);
-            console.log(
-              'avail email',
-              this.availabilityForm.get('email')?.value
-            );
             this.grandTotalPrice = this.checkoutPlans.plandetails.amount / 100;
-            console.log('avail email 2', this.availabilityForm.value.email);
 
             this.initializeKey(data.STRIPE_KEY);
             // this.initiateCardElement();
@@ -535,7 +513,6 @@ export class SubPaymentComponent implements OnInit {
       if (this.selectedPlanType == 'tiered') {
         this.crud.getRequest('get-tier-plan/' + id).subscribe({
           next: (data: any) => {
-            console.log('============ tiered plans ==>', data);
             this.checkoutPlans = data;
             // this.initiateCardElement();
             // this.paymentFormDetailSub
@@ -545,7 +522,6 @@ export class SubPaymentComponent implements OnInit {
             //   'avail email',
             //   this.availabilityForm.get('email')?.value
             // );
-            console.log('avail email 2', this.availabilityForm.value.email);
             this.initializeKey(data.STRIPE_KEY);
           },
           error: (err: any) => {
@@ -572,7 +548,6 @@ export class SubPaymentComponent implements OnInit {
   searchZipCardInput: string = '';
 
   onSearch(searchTerm: any): void {
-    console.log(searchTerm.term);
     this.searchTerms.next(searchTerm.term);
     this.paymentFormDetailSub.get('cardZip')?.setValue(searchTerm.term);
     this.searchZipCardInput = searchTerm.term;
@@ -585,12 +560,7 @@ export class SubPaymentComponent implements OnInit {
   }
 
   onSelect(selectedValue: any): void {
-    console.log('54545454545454==========================', selectedValue);
     if (typeof selectedValue !== 'undefined' && selectedValue !== null) {
-      console.log(
-        '54545454545454============iffff==============',
-        selectedValue
-      );
       this.paymentFormDetailSub
         .get('paymentCity')
         ?.setValue(selectedValue.city);
@@ -600,11 +570,6 @@ export class SubPaymentComponent implements OnInit {
       this.paymentFormDetailSub.get('cardZip')?.setValue(selectedValue.value);
       this.searchZipInput = selectedValue.value;
     } else {
-      console.log(
-        '54545454545454=========else=================',
-        selectedValue
-      );
-
       this.paymentFormDetailSub.get('paymentCity')?.setValue('');
       this.paymentFormDetailSub.get('paymentState')?.setValue('');
     }
@@ -634,7 +599,6 @@ export class SubPaymentComponent implements OnInit {
   onZipcodeInput(event: any) {
     const input = event.target.value;
     if (input.length >= 5) {
-      console.log(input.length);
       event.preventDefault(); // Prevents user from entering more than 5 characters
     }
   }

@@ -34,7 +34,6 @@ export class PrivacyPolicyComponent implements OnInit{
         const data = res?.data.split('\n');
         this.privacyPolicyData = data.slice(1);
         this.title = data[0];
-        console.log(res);
       },
       error:(err:any)=>{
         console.log(err);

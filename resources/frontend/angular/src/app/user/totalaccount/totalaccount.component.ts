@@ -31,11 +31,6 @@ export class TotalaccountComponent {
         let data = JSON.parse(
           localStorage.getItem('loggedInDeviceDetails') || ''
         );
-        console.log(
-          data,
-          '===============before ==============> ',
-          this.current_device
-        );
 
         data = data.sort((a: any, b: any) => {
           // If the session ID matches the current user's device ID, move it to the top
@@ -43,11 +38,6 @@ export class TotalaccountComponent {
           if (b.personaldeviceid === this.current_device) return 1;
           return 0;
         });
-        console.log(
-          data,
-          '===============after Data ==============>',
-          this.current_device
-        );
         this.response = data;
       } catch (error) {
         console.error('Error parsing JSON data:', error);
@@ -55,10 +45,8 @@ export class TotalaccountComponent {
     } else console.log('not getting logged device');
 
     // this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
-    console.log(this.response.length, 'respose');
 
     this.connectedDevice = this.response;
-    console.log(this.response.length, '----------data');
     // this.apiService.apiResponse$.subscribe((response) => {
     //   console.log('response api--->',response.error.loggedindeviceinfolist.data);
     //   this.response = response;
@@ -114,11 +102,9 @@ export class TotalaccountComponent {
           Authorization: `Bearer ${tokenData}`,
           Accept: 'application/json',
         });
-        console.log(tokenData, '--------token');
         this.apiService
           .getRequest('auth/connecteddevice', headers)
           .subscribe((res: any) => {
-            console.log('get all device ->>', res);
             if (res.response_code == 200) {
               let data = res.data;
               this.numOfDevice = +res.userDeviceLimit;
@@ -141,11 +127,10 @@ export class TotalaccountComponent {
             }
           });
       } catch (error) {
-        console.error('Error parsing JSON data:--->>>', error);
+        console.error('Error parsing JSON data:', error);
         this.isLoading = false;
       }
     }
-    // console.log('hello');
   }
 
   getDeviceId(event: any, sessionId: string): void {
@@ -156,7 +141,6 @@ export class TotalaccountComponent {
       // If the checkbox is unchecked, remove the session ID from the deviceId array
       this.deviceId = this.deviceId.filter((id) => id !== sessionId);
     }
-    console.log('Device IDs:', this.deviceId);
   }
 
   mutileLogout() {

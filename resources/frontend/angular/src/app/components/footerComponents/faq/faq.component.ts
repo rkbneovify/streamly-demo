@@ -40,7 +40,6 @@ export class FaqComponent implements OnInit{
   getFaq(){
     this.apiResponse.getRequest('auth/faq').subscribe({
       next:(res:any)=>{
-        console.log('data',res);
         this.faqItems = this.getCustomResponse(res.data);
       },
       error:(err:any)=>{

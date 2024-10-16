@@ -50,10 +50,6 @@ export class ResetPasswordComponent {
 
   resetPassword_Link() {
     this.loading = true;
-    console.log('Email -->', this.resetPasswordForm.get('email')?.value);
-    console.log('Email -->', this.resetPasswordForm.value.email);
-    console.log('Token -->', this.token);
-    console.log('Query Params -->', this.email);
     let data =   {
       "token": this.token,
       "email": this.email,

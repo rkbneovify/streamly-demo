@@ -72,7 +72,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     this.getAllChannels();
     this.videoPlayer.nativeElement.addEventListener('play',()=>{
       if(!this.videoPlayer.nativeElement.paused){
-        console.log('Playing')
         this.showMenu = false;
       }else{
         console.log('Not playing')
@@ -85,11 +84,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
-      console.log(
-        'Hello full screen done',
-        this.videoPlayer.nativeElement.paused,
-        document.fullscreenElement
-      );
     });
 
     if (document.fullscreenElement) {
@@ -259,7 +253,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     }
   }
   goToLive() {
-    console.log('Live stream resumed', this.isAtLiveEdge);
     this.videoPlayer.nativeElement.play();
     this.seekToLiveEdge();
   }
@@ -408,8 +401,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
         .postRequest('auth/addtorecent', { channelids: playerChannelId })
         .subscribe({
           next: (res) => {
-            console.log('hello addToRecentChannel =>');
-            console.log(res);
           },
           error: (err) => {
             console.log(err);
@@ -431,18 +422,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.switchChannel(this.nextChannelData);
     }
   }
-
+  
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
-    console.log(channelData.dash_url,channelData.id)
     const scrollPosition = window.scrollY;
     this.ngOnDestroy();
     const channelID = channelData.id;
+    this.addToRecentChannel(channelID);
     const channelURL = this.isIOS() ? channelData.url : channelData.dash_url;
     this.setChannelId(channelID, channelURL);
     this.playerChannelId = Number(localStorage.getItem('playerChannelId'));
     this.playerId = localStorage.getItem('playerId');
-    console.log('channelID ==>', channelID);
     this.getPlayerData().then(() => {
       this.initializePlayer();
       this.cdr.detectChanges();
@@ -452,7 +442,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
           behavior: 'smooth',
         });
       }
-      console.log('Inside the getplayer', scrollPosition);
     });
   }
 
