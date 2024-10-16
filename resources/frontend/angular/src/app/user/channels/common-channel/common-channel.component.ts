@@ -109,7 +109,6 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
             },
           });
         }
-        console.log(this.keyword);
       }
     });
   }
@@ -221,7 +220,6 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
 
   // Update local storage with current favorite channels
   updateFavoriteChannels(): void {
-    console.log('favoriteChannels', this.favoriteChannels);
     localStorage.setItem(
       'favoriteChannels',
       JSON.stringify(this.favoriteChannels)
@@ -236,12 +234,6 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
 
   // set player data in local
   setplayerData(channelUrl: string, playerChannelId?: any) {
-    console.log(
-      'chanelURL =>',
-      channelUrl,
-      'playerChannelId =>',
-      playerChannelId
-    );
     localStorage.setItem('playerId', channelUrl);
     localStorage.setItem('playerChannelId', playerChannelId);
     this.router.navigateByUrl('/user/playstream');
@@ -299,8 +291,6 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
-    console.log('Url ==>', url);
-    console.log('id ==>', id);
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),

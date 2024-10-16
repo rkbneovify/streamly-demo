@@ -120,14 +120,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
     this.getFavoriteList();
     this.subscribed = JSON.parse(localStorage.getItem('deviceInfo')).subscribed;
-    console.log('subscribed ==>', this.subscribed);
-
     // Subscribe to screen width changes
     this.screenSizeSubscription = this.screenSizeService
       .getScreenWidth()
       .subscribe((width) => {
         this.currentWidth = width;
-        console.log(`Screen width is: ${this.currentWidth}`);
 
         // Recalculate chunk size based on screen width
         if (this.allChannelDataList) {
@@ -211,11 +208,9 @@ export class UserComponent implements OnInit, OnDestroy {
 
       this.searchTerm = '';
       this.allChannelDataList = [];
-      console.log('search outside');
     }
 
     if (!isInsideMenu) {
-      console.log('outside menu');
       this.submenu = false;
       return;
     }
@@ -295,7 +290,6 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   onSearch(searchTerm: any): void {
-    console.log(this.subscribed);
     if (this.subscribed) {
       this.searchSubject.next(searchTerm.value);
       if (searchTerm) {
@@ -555,8 +549,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
-    console.log('Url ==>', url);
-    console.log('id ==>', id);
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),
@@ -582,7 +574,6 @@ export class UserComponent implements OnInit, OnDestroy {
           try {
           this.setActivePlanId = JSON.stringify(res.plan?.id);
           localStorage.setItem('setActivePlanId',this.setActivePlanId);
-          console.log('Auth setting Api End')
           } catch (error) {
             console.log(error)
           }

@@ -88,7 +88,7 @@
         </div>
 
         <div class="res-step3-btn">
-          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId">
+          <button [ngClass]="{'cursor-not-allow':plan.id ==this.setActivePlanId && isSubscribe}" (click)="selectedplanData(plan?.id,plan?.type)" [disabled]="plan.id == this.setActivePlanId && isSubscribe">
             <svg class="d-inline-block" *ngIf="plan.id ==this.setActivePlanId && isSubscribe" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 64 64">
               <g fill="none" stroke="#4CAF50" stroke-width="4">
                 <circle cx="32" cy="32" r="30" />

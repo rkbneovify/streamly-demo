@@ -52,8 +52,10 @@
       <div class="schedule_hour">02:00 PM</div> -->
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
-      <div *ngIf="!go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
+      <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
       <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
+      <div *ngIf="!go_Live && !isTimePassed && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live</div>
+      <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>
@@ -214,7 +216,6 @@
           </button> 
           -->
         </div>
-  
         <!-- <div class="playstream_onNow_container">
                 <div>
                     <h2 class="play_stream_now">On Now</h2>
