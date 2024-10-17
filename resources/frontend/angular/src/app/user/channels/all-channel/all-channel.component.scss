@@ -527,11 +527,17 @@ main {
     }
   }
 
-//   @media screen and (max-width: 555px) {
-//     .search_Bar{
-//         input{
-//             margin-left: auto;
-//             width: 50% !important;
-//         }
-//     }
-//   }
+  @media screen and (max-width: 380px) {
+    .landing_carousel_section2_bottom {
+      justify-content: center;
+    }
+  
+    .landing_carousel_section2_bottom .card_page {
+      transition: margin-left 1.5s ease-out;
+    }
+  
+    .landing_carousel_section2_bottom .card_page:hover {
+      margin-left: 8rem;
+    }
+  }
+  
