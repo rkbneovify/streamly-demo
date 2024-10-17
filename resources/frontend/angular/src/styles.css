@@ -543,14 +543,54 @@ input:-webkit-autofill:active{
   100% { transform: rotate(360deg); }
 }
 
+@media screen and (max-width: 392px) {
+  ::-webkit-scrollbar{
+    height: 8px;
+  }
+
+  .playstream_bottom_child  .playstream_liveTime  div  {
+    font-size: 12px !important;
+  }
+}
+
+@media screen and (max-width: 475px){
+  .schedule_details_container .playstream_2 .play_btn_container_1 {
+    flex-direction: column;
+}
+}
+
 @media screen and (max-width: 792px) {
   ::-webkit-scrollbar{
     height: 10px;
   }
 }
 
-@media screen and (max-width: 392px) {
-  ::-webkit-scrollbar{
-    height: 8px;
+
+@media screen and (max-width: 750px) {
+  .schedule_details_container {
+      flex-direction: column;
+      flex-wrap: nowrap;
   }
+
+  .section1_img {
+    overflow-y: visible !important;
+    margin: auto;
+    max-width: 250px !important;
+    min-height: 250px;
+}
+
+.playstream_2 {
+  overflow-y: visible !important;
+  min-height: min-content;
+}
+
+.schedule_details_section3 {
+  /* overflow: visible !important; */
+  width: 100%;
+  min-height: 250px;
+}
+
+.schedule_details_container .close_menu_details{
+  right: 2px;
+}
 }
