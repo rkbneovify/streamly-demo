@@ -31,8 +31,8 @@
         </div>
         <p class="text-center">Verification</p>
       </div>
-      <!-- <div class="steps"> -->
-      <div class="steps" (click)="selectedTab = 'Plans'">
+      <div class="steps">
+      <!-- <div class="steps" (click)="selectedTab = 'Plans'"> -->
         <div [ngClass]="{'bullet3':true,'activeTab':selectedTab=='Plans','completedTab':completed>2}">
           <span>
             <img loading="lazy" src="../../../assets/dummy-img/passport.svg" alt="" />
@@ -265,8 +265,8 @@
 
     <div class="row_1 row_2 row_3" *ngIf="selectedTab == 'Plans'">
       <div class="col_1 d-md-block d-none">
-        <!-- <div class="step1-imgs-2"> -->
-        <div class="step1-imgs-2" (click)="getAllThePlans()">
+        <div class="step1-imgs-2">
+        <!-- <div class="step1-imgs-2" (click)="getAllThePlans()"> -->
           <img loading="lazy" class="step1-img" src="../../../assets/dummy-img/res-step3.png" alt="map" />
         </div>
       </div>
