@@ -463,6 +463,13 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.showControls();
       this.resetControlVisibilityTimeout();
     });
+
+        // Reset the timeout to hide controls on mouse movement over the video player
+        this.videoPlayer.nativeElement.addEventListener('touchstart', () => {
+          this.showControls();
+          this.resetControlVisibilityTimeout();
+        });
+
     // customBtnNext
     // Detect if mouse is over the custom button
     this.customBtn.nativeElement.addEventListener('mouseover', () => {
@@ -481,6 +488,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });
+    
+        // Detect if mouse leaves the custom button
+        this.customBtn.nativeElement.addEventListener('touchend', () => {
+          this.isMouseOverCustomBtn = false; // Reset the flag
+          this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+        });
+
+    
     this.customBtnNext.nativeElement.addEventListener('mouseleave', () => {
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
