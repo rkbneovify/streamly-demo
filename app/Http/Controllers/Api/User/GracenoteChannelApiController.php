@@ -173,6 +173,8 @@ class GracenoteChannelApiController extends Controller
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+
                 unset($channel->assets);
                 return $channel;
             });
