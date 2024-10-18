@@ -1064,6 +1064,9 @@
   }
   .row_4 {
     padding: 0% 2rem;
+    .nextbtn{
+      justify-content: center;
+    }
   }
   .thank_sub_text p {
     text-align: justify;
@@ -1079,6 +1082,9 @@
 @media screen and (max-width: 430px) {
   .row_4 {
     padding: 0% 0.5rem;
+    h1{
+      margin-top: 1.5rem;
+    }
   }
 
   .carts-details {
