@@ -16,7 +16,7 @@
       />
     </div>
     <div
-      class="sidebar_2 flex-column justify-content-between align-items-center mt-5"
+      class="sidebar_2 flex-column justify-content-between align-items-center"
       [ngClass]="{ 'align-self-start  sidebar_2_ext': isExpanded }"
     >
       <div
@@ -120,15 +120,57 @@
       </div> -->
     </div>
 
-    <div class="sidebar_3 pointer pb-4">
+    <div class="sidebar_3 pointer pb-4 position-relative" (click)="submenu = !submenu">
       <img
-        [ngClass]="{ 'd-inline-block min-20': true }"
-        src="../../assets/dummy-img/side_setting.svg"
+        [ngClass]="{ 'd-inline-block min-20 userProfileImage': true }"
+        src="../../assets/dummy-img/settings-02.svg"
         alt=""
       />
-      <p class="display-none" [ngClass]="{ 'display-block': isExpanded }">
+      <p class="display-none userProfileImage" [ngClass]="{ 'display-block': isExpanded }">
         Settings
       </p>
+
+      <div *ngIf="submenu" class="profileUserMenu2 ">
+        <div class="submenuOptions" (click)="submenu = false" routerLink="user-settings">
+          <img
+            loading="lazy"
+            src="../../assets/dummy-img/user.svg"
+            alt=""
+          />
+          <p>Account Settings</p>
+        </div>
+        <div class="submenuOptions" (click)="submenu = false" routerLink="connected-device">
+          <img
+            loading="lazy"
+            src="../../assets/dummy-img/devices.svg"
+            alt=""
+          />
+          <p>Connected Devices</p>
+        </div>
+        <div class="submenuOptions" (click)="submenu = false" routerLink="downloadapp">
+          <img
+            loading="lazy"
+            src="../../assets/dummy-img/download.svg"
+            alt=""
+          />
+          <p>Download App</p>
+        </div>
+        @if (checkIsAdmin() == 'superadmin') {
+          <a class="mx-auto my-1 noBtn_hover_gold admin_dashBoard" target="_blank"  href="https://new.staging.streamlytv.com/admin">
+            Go To Dashboard
+          </a>
+        }
+        <div class="justify-content-center submenuOptions" (click)="logoutUser()">
+          <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
+          <p
+            class="position-relative min-hwl"
+            [class.spinner]="loading"
+          >
+            <span class="nologout" *ngIf="!loading"> Log out </span>
+          </p>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -169,6 +211,7 @@
                   alt=""
                 />
               </div>
+
               <div class="position-relative">
                 <div
                   (click)="submenu = !submenu"
@@ -213,7 +256,6 @@
                     </a>
                   }
                   <div class="justify-content-center submenuOptions" (click)="logoutUser()">
-                    <!-- <img src="../../assets/dummy-img/download.svg" alt="" /> -->
                     <p
                       class="position-relative min-hwl"
                       [class.spinner]="loading"
@@ -222,7 +264,9 @@
                     </p>
                   </div>
                 </div>
+
               </div>
+            
             </div>
 
                       <!-- Fullscreen Menu -->
