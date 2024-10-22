@@ -231,7 +231,7 @@ export class PlaylistScheduleComponent
 
     setInterval(() => {
       this.isTimePassed = false;
-    }, 1000*30);
+    }, 1000*60*30);
 
     this.tabInactivityService.startTabInactivityCheck();
   }
@@ -295,7 +295,7 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
-          console.log('isNext data next=>',this.isNextDay,this.getCurrentTimeDate[this.count + 1])
+          console.log('isNext data=>',this.isNextDay,this.getCurrentTimeDate[this.count + 1])
 
           this.count += 1;
         } else {
@@ -305,8 +305,6 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
-
-          console.log('isNext data prev=>',this.isNextDay)
         }
       }
     } else {
