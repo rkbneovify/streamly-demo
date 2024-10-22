@@ -14,7 +14,7 @@
             [ngClass]="{ hidden: hideControls }"
           >
             <button
-            *ngIf="prevChannelData.id != channelData?.channel?.id "
+            *ngIf="prevChannelData?.id != channelData?.channel?.id "
               (click)="previousChannel()"
               class="btn-prev-channel"
               title="Previous channel"
