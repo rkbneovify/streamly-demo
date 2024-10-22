@@ -231,7 +231,7 @@ export class PlaylistScheduleComponent
 
     setInterval(() => {
       this.isTimePassed = false;
-    }, 1000*60*30);
+    }, 1000*30);
 
     this.tabInactivityService.startTabInactivityCheck();
   }
@@ -295,6 +295,8 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
+          console.log('isNext data next=>',this.isNextDay,this.getCurrentTimeDate[this.count + 1])
+
           this.count += 1;
         } else {
           this.count -= 1;
@@ -303,6 +305,8 @@ export class PlaylistScheduleComponent
           )
             ? true
             : false;
+
+          console.log('isNext data prev=>',this.isNextDay)
         }
       }
     } else {
@@ -323,6 +327,10 @@ export class PlaylistScheduleComponent
       this.changeColorBackgroung = false;
       this.go_Live = false;
       this.isNextDay = false;
+
+      if(!this.isTimePassed){
+        this.refreshPage()
+      }
     }
 
     // Simulate a short delay to represent the completion of the scroll
