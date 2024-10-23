@@ -218,11 +218,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
             this.seekToLiveEdge();
           });
           // Listen for dash.js errors
-          // this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
-          //   console.error('DASH error:', e);
-          //   alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
-          //   this.router.navigateByUrl('/user/playlistschedule');
-          // });
+          this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+            console.error('DASH error:', e);
+            alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+            this.router.navigateByUrl('/user/playlistschedule');
+          });
+          this.player.on('error',(e)=>{
+            console.log('Error===>',e)
+          })
         } else {
           console.error(
             'Error retrieving DRM authentication key:',

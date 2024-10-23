@@ -21,12 +21,15 @@ export class RemoveDeviceComponent implements OnInit {
   access_Token!:any;
   current_device:any;
   deviceId:Array<string>=[];
+  totalDevices:number;
   loading: { [key: string]: boolean } = {};
   
   constructor(private apiService: CrudService, private toastr: ToastrService, private router: Router,private setToken:AuthService) { }
 
   ngOnInit() {
     const jsonData = localStorage.getItem('loggedInDeviceDetail');
+    this.totalDevices = Number(localStorage.getItem('numberOfDevices') || 0);
+
     if (jsonData !== null) {
       try {
         this.response = JSON.parse(localStorage.getItem('loggedInDeviceDetail') || '');
@@ -111,6 +114,7 @@ export class RemoveDeviceComponent implements OnInit {
         error: (err: any) => {
           if (err.status == 479) {
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+            localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
             localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.toastr.error(err.error.message,null, {
