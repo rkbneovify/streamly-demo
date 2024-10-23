@@ -1,6 +1,6 @@
 import { DatePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -11,7 +11,10 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CrudService } from '../../services/crud.service';
 import { noWhitespaceValidator } from '../../services/validators/no-whitespace.validator';
+// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+
+declare var bootstrap: any;
 @Component({
   selector: 'app-accountsettings',
   standalone: true,
@@ -19,7 +22,7 @@ import { noWhitespaceValidator } from '../../services/validators/no-whitespace.v
   templateUrl: './accountsettings.component.html',
   styleUrl: './accountsettings.component.scss',
 })
-export class AccountsettingsComponent implements OnInit {
+export class AccountsettingsComponent implements OnInit ,OnDestroy {
   updateuserDetatils!: FormGroup;
   editMode: boolean = false;
   showPassword: boolean = false;
@@ -53,7 +56,8 @@ export class AccountsettingsComponent implements OnInit {
     private fb: FormBuilder,
     private crud: CrudService,
     private ts: ToastrService,
-    private router: Router
+    private router: Router,
+    private renderer: Renderer2
   ) {
     this.updateuserDetatils = this.fb.group({
       fullname: ['', Validators.required],
@@ -394,5 +398,17 @@ export class AccountsettingsComponent implements OnInit {
       return 'Timezone detection failed';
     }
   }
+ 
   
+  ngOnDestroy(): void {
+    // Close all open modals on component destroy
+    const modals = document.querySelectorAll('.modal.show');
+    modals.forEach(modal => {
+      console.log('Hi model')
+      const modalInstance = bootstrap.Modal.getInstance(modal);
+      if (modalInstance) {
+        modalInstance.hide();
+      }
+    });
+  }
 }
