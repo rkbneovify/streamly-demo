@@ -46,7 +46,7 @@
                 <div class="toatlcheck-device my-4 d-flex gap-3 align-items-center">
                     <!-- <input type="checkbox"> -->
                     <!-- <input class="noBtn_hover w-auto" [ngClass]="{'btn-bg-gold':deviceId.length >0}" type="button" value="Log-out Devices" (click)="mutileLogout()"> -->
-                    <p class="d-inline-block">Device {{connectedDevice.length}}/5</p>
+                    <p class="d-inline-block">Device {{connectedDevice.length}}/{{totalDevices}}</p>
                 </div>
                 <div class="devices-container row gap-3 justify-content-center justify-content-lg-start ">
                     <div *ngFor="let data of connectedDevice;" class="col-4 card_device">

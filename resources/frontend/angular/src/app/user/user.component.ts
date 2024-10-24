@@ -1,6 +1,7 @@
 import { NgClass, NgFor, NgIf, ViewportScroller } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   HostListener,
   NgModule,
@@ -62,7 +63,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ])
   ]
 })
-export class UserComponent implements OnInit, OnDestroy {
+export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   submenu: boolean = false;
   activeTab: string = 'home';
   access_Token!: any;
@@ -87,7 +88,8 @@ export class UserComponent implements OnInit, OnDestroy {
     private router: Router,
     private ts: ToastrService,
     private viewportScroller: ViewportScroller,
-    private screenSizeService: ScreenSizeService
+    private screenSizeService: ScreenSizeService,
+    private cdr: ChangeDetectorRef
   ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -141,6 +143,10 @@ export class UserComponent implements OnInit, OnDestroy {
     if(!this.setActivePlanId){
       this.getPlans()
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.getFavoriteList();
   }
 
   ngOnDestroy(): void {
@@ -369,6 +375,7 @@ export class UserComponent implements OnInit, OnDestroy {
   checkData() {
       if (this.subscribed && !this.searchTerm && !this.allChannelDataList.length) {
         this.get_All_Channels();
+        this.getFavoriteList();
       }
   }
 
@@ -414,6 +421,8 @@ export class UserComponent implements OnInit, OnDestroy {
           this.favoriteChannels.push(channelId); // Update local favorite list
           this.updateFavoriteChannels(); // Update local storage
           this.ts.success(res.message);
+          this.cdr.detectChanges();
+
         }
       });
   }
@@ -430,6 +439,8 @@ export class UserComponent implements OnInit, OnDestroy {
           ); // Update local favorite list
           this.updateFavoriteChannels(); // Update local storage
           this.ts.success(res.message);
+          this.cdr.detectChanges();
+
         }
       });
   }
