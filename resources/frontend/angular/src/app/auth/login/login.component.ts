@@ -90,6 +90,7 @@ export class LoginComponent implements OnInit {
           if (err.status == 479) {
             this.loading = false;
             localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+            localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
             localStorage.setItem('loginDetails',JSON.stringify(formData));
             this.router.navigate(['auth/remove-device']);
             this.ts.error(err.error.message,null, {

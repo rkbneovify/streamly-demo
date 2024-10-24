@@ -218,11 +218,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
             this.seekToLiveEdge();
           });
           // Listen for dash.js errors
-          // this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
-          //   console.error('DASH error:', e);
-          //   alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
-          //   this.router.navigateByUrl('/user/playlistschedule');
-          // });
+          this.player.on(dashjs.MediaPlayer.events.ERROR, (e: any) => {
+            console.error('DASH error:', e);
+            alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+            this.router.navigateByUrl('/user/playlistschedule');
+          });
+          this.player.on('error',(e)=>{
+            console.log('Error===>',e)
+          })
         } else {
           console.error(
             'Error retrieving DRM authentication key:',
@@ -463,6 +466,13 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.showControls();
       this.resetControlVisibilityTimeout();
     });
+
+        // Reset the timeout to hide controls on mouse movement over the video player
+        this.videoPlayer.nativeElement.addEventListener('touchstart', () => {
+          this.showControls();
+          this.resetControlVisibilityTimeout();
+        });
+
     // customBtnNext
     // Detect if mouse is over the custom button
     this.customBtn.nativeElement.addEventListener('mouseover', () => {
@@ -481,6 +491,14 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });
+    
+        // Detect if mouse leaves the custom button
+        this.customBtn.nativeElement.addEventListener('touchend', () => {
+          this.isMouseOverCustomBtn = false; // Reset the flag
+          this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+        });
+
+    
     this.customBtnNext.nativeElement.addEventListener('mouseleave', () => {
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
