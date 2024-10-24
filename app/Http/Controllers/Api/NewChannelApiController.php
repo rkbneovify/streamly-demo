@@ -488,7 +488,13 @@ class NewChannelApiController extends Controller
             ], 400);
         } else {
             $channel_id = $request->channel_id;
+            $zipcode = $request->get('zipcode');
             $current_datetime = $request->current_datetime;
+            $validate = 0;
+            $user = JWTAuth::user();
+            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+                $validate = 1;
+            }
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(genre.id), ',', '\",\"'), '\"]') as genre_ids")
@@ -503,8 +509,14 @@ class NewChannelApiController extends Controller
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
-                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
-                ->where('channels.id', '!=', $channel_id);
+                ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
+            if ($validate) {
+                if (!empty($zipcode)) {
+                    $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                }
+            }
+            $query1->where('channels.status', '=', '1');
+            $query1->where('channels.id', '!=', $channel_id);
             if (!empty($genre_ids)) {
                 $query1->whereIn('channels_genre.genre_id', $genre_ids);
             } else {
