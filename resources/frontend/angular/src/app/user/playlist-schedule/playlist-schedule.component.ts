@@ -68,6 +68,7 @@ export class PlaylistScheduleComponent
   liveCurrentTime: number = 0;
   intervalLiveWidth: any;
   toggleLeftArrow: boolean = false;
+  isMacChrome:boolean = false;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -227,7 +228,15 @@ export class PlaylistScheduleComponent
         this.cdr.detectChanges();
       }, 60000); // 60000 milliseconds = 1 minute
     }
+    
     const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
+
+     this.isMacChrome = navigator.userAgent.includes('Mac') && navigator.userAgent.includes('Chrome');
+    if (this.isMacChrome) {
+      console.log('this is mac chrome');
+    }else{
+      console.log('This is onther browser')
+    }
 
     setInterval(() => {
       this.isTimePassed = false;
