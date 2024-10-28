@@ -8,6 +8,10 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use App\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ResetPasswordController extends Controller
 {
@@ -48,24 +52,25 @@ class ResetPasswordController extends Controller
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
+            $this->credentials($request),
+            function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
         );
         if ($request->wantsJson()) {
             if ($response == Password::PASSWORD_RESET) {
-                $response = array('success' => false,'message'=>trans('passwords.reset'));
+                $response = array('success' => false, 'message' => trans('passwords.reset'));
                 return response()->json($response, 200);
             } else {
-                $response = array('success' => false,'message'=>'Password reset token is invalid');
-                return response()->json($response, 400);                
+                $response = array('success' => false, 'message' => 'Password reset token is invalid');
+                return response()->json($response, 400);
             }
         } else {
             if ($response == Password::PASSWORD_RESET) {
                 Auth::logout();
-                return redirect('/')->with('reset-success', 'Your password has been successfully reset. Please login to continue.');    
-            }    else {
-                return redirect('/')->with('message', 'Password reset token is invalid.');           
+                return redirect('/')->with('reset-success', 'Your password has been successfully reset. Please login to continue.');
+            } else {
+                return redirect('/')->with('message', 'Password reset token is invalid.');
             }
         }
         // If the password was successfully reset, we will redirect the user back to
@@ -79,7 +84,7 @@ class ResetPasswordController extends Controller
     public function showResetForm(Request $request, $token = null)
     {
 
-        if($request->has('email')) {
+        if ($request->has('email')) {
             $user = User::where('email', $request->email)->first();
 
             if (!$user) {
@@ -100,7 +105,7 @@ class ResetPasswordController extends Controller
                 );
             }
         } else {
-            return redirect('/')->with('reseterror', 'Password reset token is invalid');    
+            return redirect('/')->with('reseterror', 'Password reset token is invalid');
         }
     }
 
@@ -111,5 +116,59 @@ class ResetPasswordController extends Controller
             'email' => 'required|email',
             'password' => 'required|confirmed|min:6',
         ];
+    }
+
+    public function validateToken(Request $request)
+    {
+        // Define validation rules based on the existing validation logic
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        $token = $request->input('token');
+        $email = $request->input('email');
+
+        // Retrieve the record from the password_resets table
+        $passwordReset = DB::table('password_resets')->where('email', $email)->first();
+
+        // Check if the record exists and validate the token hash
+        if (!$passwordReset || !Hash::check($token, $passwordReset->token)) {
+            return response()->json(['success' => false, 'message' => 'Invalid or expired token.'], 400);
+        }
+
+        // Check if the token is expired (assuming a 60-minute lifespan)
+        if (Carbon::parse($passwordReset->created_at)->addMinutes(60)->isPast()) {
+            return response()->json(['success' => false, 'message' => 'Token has expired.'], 400);
+        }
+
+        // Token is valid
+        return response()->json(['success' => true, 'message' => 'Token is valid.'], 200);
+
+        /*
+        // Retrieve the token and email entry from the password_resets table
+        $passwordReset = DB::table('password_resets')->where('email', $email)
+            ->where('token', $token)
+            ->first();
+
+        // Check token validity and expiration
+        if (!$passwordReset || Carbon::parse($passwordReset->created_at)->addMinutes(60)->isPast()) {
+            $response = [
+                'success' => false,
+                'message' => 'Password reset token is invalid or has expired.'
+            ];
+            return response()->json($response, 400);
+        }
+
+        $response = [
+            'success' => true,
+            'message' => 'Token is valid.'
+        ];
+        return response()->json($response, 200);
+        */
     }
 }
