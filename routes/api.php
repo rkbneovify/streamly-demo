@@ -34,6 +34,7 @@ Route::delete('auth/userdelete/{id}', 'APIController@userdelete');
 // Registration, confirmations and verification
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::post('/validate-token', 'Auth\ResetPasswordController@validateToken');
 Route::post('auth/register', 'Auth\AuthController@register');
 Route::get('auth/verify', 'Auth\AuthController@verify')->middleware(['web']);
 // Route::post('auth/location', 'HomeController@location');
