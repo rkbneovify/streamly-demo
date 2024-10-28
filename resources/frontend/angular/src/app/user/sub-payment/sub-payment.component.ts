@@ -76,7 +76,7 @@ export class SubPaymentComponent implements OnInit {
   private searchTerms = new Subject<string>();
   zipcodedata: any = [];
   cardZipData!: any;
-  device_per_unit: number = 1;
+  device_per_unit: number = 5;
 
   @ViewChild('cardInfo') public cardInfo!: ElementRef;
   _totalAmount: number = 10;
@@ -211,7 +211,7 @@ export class SubPaymentComponent implements OnInit {
         this.validateCoupon();
       });
 
-    this.counterControl = this.fb.control(1, [Validators.min(1)]);
+    this.counterControl = this.fb.control(5, [Validators.min(5)]);
     this.couponFormControl = this.fb.control('');
 
     this.couponFormControl.valueChanges.subscribe(() => {
@@ -292,10 +292,13 @@ export class SubPaymentComponent implements OnInit {
   }
 
   decrement() {
-    if (this.counterControl.value > 1) {
+    if (this.counterControl.value > 5) {
       this.counterControl.setValue(+this.counterControl.value - 1);
       this.device_per_unit = Number(+this.counterControl.value);
       this.getTotalPrice();
+    }
+    else{
+      this.ts.error('Devices in not less then 5.')
     }
   }
 
