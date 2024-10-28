@@ -82,7 +82,7 @@ export class RegisterComponent
   countdown = 60;
   all_Plans: any = [];
   checkoutPlans: any;
-  device_per_unit: number = 1;
+  device_per_unit: number = 5;
   planAmount!: number;
   devicePlanAmount: number = 0;
   couponValidationResult: any;
@@ -226,7 +226,7 @@ export class RegisterComponent
         this.validateCoupon();
       });
 
-    this.counterControl = this.fb.control(1, [Validators.min(1)]);
+    this.counterControl = this.fb.control(5, [Validators.min(5)]);
     this.couponFormControl = this.fb.control('');
 
     this.couponFormControl.valueChanges.subscribe(() => {
@@ -618,7 +618,7 @@ export class RegisterComponent
   }
 
   decrement() {
-    if (this.counterControl.value > 1) {
+    if (this.counterControl.value > 5) {
       this.counterControl.setValue(+this.counterControl.value - 1);
       this.device_per_unit = Number(+this.counterControl.value);
       this.getTotalPrice();
