@@ -24,8 +24,7 @@ import { FormsModule } from '@angular/forms';
 import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
-
-
+import { UtilsService } from '../../services/utils/utils.service';
 
 declare let window: Window;
 
@@ -209,7 +208,8 @@ export class PlaylistScheduleComponent
     private router: Router,
     private cdr: ChangeDetectorRef,
     private inactivityService: InactivityService,
-    private tabInactivityService: TabInactivityService
+    private tabInactivityService: TabInactivityService,
+    private utilsService:UtilsService
   ) {}
   ngOnInit(): void {
     this.getAllCategories();
@@ -238,9 +238,12 @@ export class PlaylistScheduleComponent
       console.log('This is onther browser')
     }
 
+    this.utilsService.timeDifferenceInMinutes('02:00 PM')
+    console.log(this.getCurrentTimeDate[1]);
+
     setInterval(() => {
       this.isTimePassed = false;
-    }, 1000*60*30);
+    }, 1000*60*this.utilsService.timeDifferenceInMinutes(this.getCurrentTimeDate[1]));
 
     this.tabInactivityService.startTabInactivityCheck();
   }
