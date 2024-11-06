@@ -22,7 +22,7 @@ import { Component, OnInit, ElementRef, AfterViewInit, OnDestroy } from '@angula
 
 @Component({
   selector: 'app-video-player',
-  template: `<video #videoPlayer controls preload="auto" width="960"></video>`,
+  template: `<video #videoPlayer controls preload="auto" width="960"></video> <h1>hello Buddy</h1>`,
   standalone: true,
 })
 export class DashjstestComponent implements OnInit, AfterViewInit, OnDestroy {
