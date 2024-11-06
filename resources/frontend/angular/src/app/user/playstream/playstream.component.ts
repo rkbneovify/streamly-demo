@@ -52,7 +52,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   constructor(
     private crud: CrudService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private elRef: ElementRef
   ) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
@@ -69,7 +70,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getPlayerData();
-    this.initializePlayer();
     this.setUpControlVisibility(); // Set up control visibility behavior
     this.getAllChannels();
     this.videoPlayer.nativeElement.addEventListener('play',()=>{
@@ -84,6 +84,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.videoElement = this.elRef.nativeElement.querySelector('video');
+    this.initializePlayer();
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
     });
@@ -152,7 +154,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   initializePlayer() {
     if (this.isIOS()) {
       console.log('Safari player')
-      this.initializeHLSPlayer();
+      this.startVideo()
     } else {
       console.log('Chrome player')
       this.playerDash();
@@ -245,55 +247,216 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 //   }
   
 
-initializeHLSPlayer() {
-  this.player = videojs(this.videoPlayer.nativeElement, {
-    autoplay: true,
-    controls: true,
-    sources: [
-      {
-        src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-        type: 'application/x-mpegURL'
-      }
-    ]
-  });
+// initializeHLSPlayer() {
+//   this.player = videojs(this.videoPlayer.nativeElement, {
+//     autoplay: true,
+//     controls: true,
+//     sources: [
+//       {
+//         src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
+//         type: 'application/x-mpegURL'
+//       }
+//     ]
+//   });
 
-  this.player.ready(() => {
-    const decodedToken = base64js.toByteArray('PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTAxIDEyOjE2OjA4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDIgMTI6MTY6MDguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YmVlMGYyZTZhNzA0NjQzM2Q5YmI2MTJkYmI0MmY2YmM8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+bllONURYUzAvL1BkMk5HN3lCOUp5YTZpTWhpazhpaE5JdHdKM0ZvVXkxbzRGeWw0aDhrQjZ5aEYrSHkxVVc1eUdhOERHaU01WGpUNXJ4R3RXVTVNK05GcXlORTUrb3c3L3Jhb1BTVnptRUF4N01XczQ0eTZod1BVWVJxVDFsSVhrTVA3MHhoQmxOdHkrVXJPbCtkaXFNNjVCeEpPdHpkOGQxbTZCeWlOSTFPaG9Wc3Z2c1dYVkxadEJtcUdrL0hNV1hDR0E2dFM1Tktid1JEa29YS2xZelhxZnh2QU5iVVNXbVNHT2szRXZjTEUyeGgvZWZaUFc3NjkwOGVWMlk0dU9mL1Y3U1pPK1AvcGhYK0JLVFVaaDEzeEN1ek03NkNsamNGWmhONmNRWHJZMXQzbWs1bmMwUG1NRTJvcFJZbnJLTCsxUEw2V2lwWlRwTlgzZEl6c3V3PT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==');
+//   this.player.ready(() => {
+//     const decodedToken = base64js.toByteArray('PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTAxIDEyOjE2OjA4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDIgMTI6MTY6MDguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YmVlMGYyZTZhNzA0NjQzM2Q5YmI2MTJkYmI0MmY2YmM8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+bllONURYUzAvL1BkMk5HN3lCOUp5YTZpTWhpazhpaE5JdHdKM0ZvVXkxbzRGeWw0aDhrQjZ5aEYrSHkxVVc1eUdhOERHaU01WGpUNXJ4R3RXVTVNK05GcXlORTUrb3c3L3Jhb1BTVnptRUF4N01XczQ0eTZod1BVWVJxVDFsSVhrTVA3MHhoQmxOdHkrVXJPbCtkaXFNNjVCeEpPdHpkOGQxbTZCeWlOSTFPaG9Wc3Z2c1dYVkxadEJtcUdrL0hNV1hDR0E2dFM1Tktid1JEa29YS2xZelhxZnh2QU5iVVNXbVNHT2szRXZjTEUyeGgvZWZaUFc3NjkwOGVWMlk0dU9mL1Y3U1pPK1AvcGhYK0JLVFVaaDEzeEN1ek03NkNsamNGWmhONmNRWHJZMXQzbWs1bmMwUG1NRTJvcFJZbnJLTCsxUEw2V2lwWlRwTlgzZEl6c3V3PT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==');
 
-    this.player.src({
-      // src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-      src: 'https://d36lryb1dm4mg4.cloudfront.net/MTV2/index.m3u8',
-      type: 'application/x-mpegURL',
-      keySystems: {
-        'com.apple.fps.1_0': {
-          // certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=9754e0cfddc682c21216de3eb4d11885.der',
-          certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
-          // licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
-          licenseUri:'https://fp-keyos.licensekeyserver.com/getkey',
-          getLicense: (emeOptions, callback) => {
-            // fetch('https://fairplay.keyos.com/api/v4/getLicense', {
-            fetch('https://fp-keyos.licensekeyserver.com/getkey', {
-              method: 'POST', //https://fp-keyos.licensekeyserver.com/getkey
-              headers: {
-                'Content-Type': 'application/octet-stream',
-                Authorization: `Bearer ${decodedToken}`
-              },
-              body: emeOptions.keyMessage
-            })
-            .then(response => response.arrayBuffer())
-            .then(license => callback(null, new Uint8Array(license)))
-            .catch(error => callback(error, null));
-          }
-        }
-      }
-    });
+//     this.player.src({
+//       src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
+//       // src: 'https://d36lryb1dm4mg4.cloudfront.net/MTV2/index.m3u8',
+//       type: 'application/x-mpegURL',
+//       keySystems: {
+//         'com.apple.fps.1_0': {
+//           certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb.der',
+//           // certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
+//           licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
+//           // licenseUri:'https://fp-keyos.licensekeyserver.com/getkey',
+//           getLicense: (emeOptions, callback) => {
+            
+//              fetch('https://fairplay.keyos.com/api/v4/getLicense', {
+//             // fetch('https://fp-keyos.licensekeyserver.com/getkey', {
+//               method: 'POST', //https://fp-keyos.licensekeyserver.com/getkey
+//               headers: {
+//                 'Content-Type': 'application/octet-stream',
+//                 Authorization: `Bearer ${decodedToken}`
+//               },
+//               body: emeOptions.keyMessage
+//             })
+//             .then(response => response.arrayBuffer())
+//             .then(license => callback(null, new Uint8Array(license)))
+//             .catch(error => callback(error, null));
+//           }
 
-    this.player.on('error', (error) => {
-      console.error('Video.js player error:', error);
-    });
-  });
+//         }
+//       }
+//     });
+
+//     this.player.on('error', (error) => {
+//       console.error('Video.js player error:', error);
+//     });
+//   });
+// }
+
+// private initializePlayer1(): void {
+//   this.player = videojs(this.videoPlayer.nativeElement.querySelector('#videoPlayer'), {
+//     techOrder: ['html5'],
+//     controls: true,
+//     autoplay: false,
+//     sources: [{ src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8', type: 'application/x-mpegURL' }],
+//   });
+
+//   this.setupFairPlayDRM();
+// }
+
+// private setupFairPlayDRM(): void {
+//   if (!this.player) return;
+
+//   // Set up FairPlay DRM settings
+//   this.player.ready(() => {
+//     this.player.eme();
+
+//     this.player.src({
+//       src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
+//       type: 'application/x-mpegURL',
+//       keySystems: {
+//         'com.apple.fps.1_0': {
+//           certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb.der',
+//           licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
+//           getContentId: (url: string) => {
+//             // Custom function to generate content ID
+//             return 'my_content_id';
+//           },
+//           getLicense: async (spcMessage: ArrayBuffer) => {
+//             try {
+//               const response = await fetch('https://fairplay.keyos.com/api/v4/getLicense', {
+//                 method: 'POST',
+//                 headers: {
+//                   'Content-Type': 'application/x-www-form-urlencoded',
+//                   'customdata': 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTA5LTI0IDA1OjQ2OjA4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMDktMjUgMDU6NDY6MDguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZmI4NTQzZGI0N2ZlNjM0MzdlNTJlNTI2YWY1YTI3Zjk8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+WlowYnRiT2ZyeWt4ZXFhVURJSS95QWNRU3RHU21mSSs0VXpRbXdhVnV3RmpEU2NRU1BiV2JzNHl0dTNLTkpPL2dqUm1GTDVXTWlJcHplRklPOW8vZk1pb2hRMXhQTFJhTXFhYm5BNzNuUGdlOWxrV2huTnR1OTRpRkZOcUVwVmdXZU81bTQ5SC9xSlB2VnhqaGVNRHhPWU0vUTFydzNtc0RIdXk1N3BHRmpGVVRaUGdFb2M0UmY1K3lVMExYYkkreGhOc2tiZ2RBUFBnQmJqRjhQNUF0SmFlVjdzZWUvVFpmbEt1OGNwZFliNVhyK0VUbXdHbDJ4N1ZGT2RMZ045cXo4QTIrTUlJWGM1dWMwcEk4c1JWYnFyU3NmYkQzWUw0NUpsZGZGcUZxZWZOT1dkUTdnSnh0REQ1Z3hHbUtpMDFwamc5SmRuRGNXQU8xaXRpK3JoWlNBPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==',
+//                 },
+//                 body: spcMessage,
+//               });
+//               const licenseData = await response.arrayBuffer();
+//               console.log(licenseData);
+//               return new Uint8Array(licenseData);
+//             } catch (error) {
+//               console.error('Error retrieving FairPlay license:', error);
+//               return null;
+//             }
+//           },
+//         },
+//       },
+//     });
+//   });
+// }
+private videoElement!: HTMLVideoElement;
+private certificateUrl = 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb';
+private licenseUrl = 'https://fairplay.keyos.com/api/v4/getLicense';
+ private customData = 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTA1IDA4OjM5OjEwLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDYgMDg6Mzk6MTAuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZGY5MDJmOWE1YzNjMTI5ZGRiZWJmMzA0MDM0MzYwMDU8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+cXdCd2lMVE1GNitBTUpLVUQ2YTVQYXpyeVJjN1lnTllsYVFNT1hORVVyUzlDaWI4OTlGUlVGVGl1bFNRalUyTXlVY3JpWGZaN1Fkd3JzKzF2czFHR2pCc0UxeVh2SXZYMERuK21ackFwSThxWHpzZkpKTUdzNU9GODN4MHRJdUx6Y0tsMWg3RXNZWXF5MVo5YmFwS1g2dnFHYWpXSFJ2dWJ2OGV2Sy9mOFFtQlVlQ0lFKzFNWW5mQjFwcGpxNGNZaGNuY3JSRTV6a0ZWRlFUN1Vjbm1lQ3JBUmtCTHBFaEFON0RheFpkYXJlVGFPUHdnUm5ITmNsSnh2clNwcVNXVHppOE50d0RUeUF4QjNneTIvU3JMWk9TU0J6ZHhNNGwrRDl5dVIxdVVtK3dHZlhKSjBISzlNVkNVTjFpYjVVaDU3TjJDblBMV3gzM21mcktkQSs2V2NRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=='
+
+ private async loadCertificate(): Promise<ArrayBuffer | null> {
+  try {
+    const response = await fetch(this.certificateUrl);
+    return await response.arrayBuffer();
+  } catch (e) {
+    console.error(`Could not load certificate at ${this.certificateUrl}`, e);
+    return null;
+  }
 }
 
+private async startVideo(): Promise<void> {
+  console.log('url ==>',this.playerId)
+  const certificate = await this.loadCertificate();
+  if (!certificate) {
+    console.error('Certificate could not be loaded.');
+    return;
+  }
+
+  this.videoElement.src = this.playerId;
+  this.videoElement.addEventListener('encrypted', (event) => this.onEncrypted(event, certificate));
+  this.videoElement.addEventListener('error', (e) => console.error('Video error:', e));
+}
+
+private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer): Promise<void> {
+  const initDataType = event.initDataType;
+  if (initDataType !== 'skd') {
+    console.error(`Received unexpected initialization data type "${initDataType}"`);
+    return;
+  }
+
+  if (!this.videoElement.mediaKeys) {
+    const access = await navigator.requestMediaKeySystemAccess('com.apple.fps', [{
+      initDataTypes: [initDataType],
+      videoCapabilities: [{ contentType: 'application/vnd.apple.mpegurl', robustness: '' }],
+      distinctiveIdentifier: 'not-allowed',
+      persistentState: 'not-allowed',
+      sessionTypes: ['temporary'],
+    }]);
+
+    const mediaKeys = await access.createMediaKeys();
+    await mediaKeys.setServerCertificate(certificate);
+    await this.videoElement.setMediaKeys(mediaKeys);
+  }
+
+  const initData = event.initData;
+  if (initData) {
+    const session = this.videoElement.mediaKeys!.createSession();
+    session.addEventListener('message', async (msgEvent) => {
+      const license = await this.getLicenseResponse(msgEvent.message);
+      if (license) await session.update(license);
+    });
+    session.generateRequest(initDataType, initData).catch(e => console.error('Failed to generate request:', e));
+  }
+}
+
+private arrayBufferToBase64(buffer: ArrayBuffer): string {
+const bytes = new Uint8Array(buffer);
+let binary = '';
+for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+}
+const base64 = btoa(binary); // Encode the binary string as Base64
+console.log('Base64-encoded SPC:', base64); // Log the Base64-encoded SPC
+return base64;
+}
+
+private async getLicenseResponse(spcMessage: ArrayBuffer): Promise<Uint8Array | null> {
+const spcBase64 = this.arrayBufferToBase64(spcMessage); // Convert SPC to Base64
+
+const bodyData = new URLSearchParams({
+    spc: spcBase64,
+    customdata: this.customData,
+}).toString();
+
+console.log('Request Body Data:', bodyData); // Log the body data being sent
+
+try {
+    const response = await fetch(this.licenseUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'customdata': this.customData,
+        },
+        body: bodyData,
+    });
+
+    if (!response.ok) {
+        console.error(`License request failed with status ${response.status}: ${response.statusText}`);
+        return null;
+    }
+
+    const responseText = await response.text();
+    console.log('Response from License Server:', responseText); // Log the response
+    return Uint8Array.from(atob(responseText), c => c.charCodeAt(0));
+} catch (error) {
+    console.error('License request failed due to exception:', error);
+    return null;
+}
+}
+
+
+// ==============end of fairplay==============
 
 
 
