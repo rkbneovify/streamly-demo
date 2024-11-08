@@ -482,6 +482,7 @@ video:hover ~ #changeVideo {
   background: rgb(1 78 146 / 37%);
   backdrop-filter: blur(34px);
   overflow: hidden;
+  position: relative;
   .menuListCloseBtn {
     top: 8px;
     right: 12px;
