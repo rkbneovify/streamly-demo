@@ -638,6 +638,7 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
     // customBtnNext
     // Detect if mouse is over the custom button
     this.customBtn.nativeElement.addEventListener('mouseover', () => {
+      console.log('Hii over')
       this.showControls();
       this.isMouseOverCustomBtn = true; // New flag
       this.cdr.detectChanges(); // Trigger change detection to show controls
@@ -650,6 +651,7 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
 
     // Detect if mouse leaves the custom button
     this.customBtn.nativeElement.addEventListener('mouseleave', () => {
+      console.log('Move out')
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });
