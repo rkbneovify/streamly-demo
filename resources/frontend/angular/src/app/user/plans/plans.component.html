@@ -236,7 +236,7 @@
         <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
           <div class="zip_bottom_p d-flex align-items-center justify-content-center flex-column gap-2 p-3" >
             <h3 class="d-flex gap-2 mt-2 mb-0">
-              <span class="d-flex gap-2">
+              <span class="d-flex gap-3">
                 <img
                   loading="lazy"
                   src="../../../assets/dummy-img/check-circle-broken.svg"
@@ -261,4 +261,8 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="loader"></div>
 </div>

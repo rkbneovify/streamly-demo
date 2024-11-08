@@ -18,6 +18,7 @@ Tiered_plans:any;
 setActivePlanId!:string;
 isSubscribe!:boolean;
 showMessage:boolean = false;
+isLoading: boolean = false;
 constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
@@ -28,6 +29,7 @@ ngOnInit(): void {
 
 // Get All The Plans
 getAllThePlans(): void {
+  this.isLoading= true;
   this.crud.getRequest('stripe/plans').subscribe({
     next: (res) => {
       this.all_Plans = res[0]; // Access the inner array
@@ -43,8 +45,17 @@ getAllThePlans(): void {
           this.Tiered_plans = [plan]; // Assign plan to Tiered_plans (assuming there's only one tiered plan)
         }
       });
+
+  this.isLoading= false;
+
     },
-    error: (err) => console.log(err),
+    error: (err) => 
+      {
+        console.log(err) ; 
+        this.isLoading= false;
+
+    },
+
   });
 }
 selectedPlanType:string='';
