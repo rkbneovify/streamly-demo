@@ -94,7 +94,10 @@
       >
     </div>
     <div class="landing_carousel_section2_bottom mt-3 d-flex">
-      <div class="card_page" *ngFor="let item of recentsPlayData">
+      <div class="card_page" *ngFor="let item of recentsPlayData ; let i = index"
+      [ngClass]="{ 'expanded': expandedCardIndex === recentsPlayData.length - 1 && i === recentsPlayData.length - 1 }"
+      (mouseenter)="i === recentsPlayData.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+      (click)="closeExpandedCard()">
         <img
           *ngIf="item.image"
           loading="lazy"
@@ -171,7 +174,10 @@
       >
     </div>
     <div class="landing_carousel_section2_bottom mt-3 d-flex">
-      <div class="card_page" *ngFor="let data of list?.channels">
+      <div class="card_page" *ngFor="let data of list?.channels ; let i = index"
+      [ngClass]="{ 'expanded': expandedCardIndex === list?.channels.length - 1 && i === list?.channels.length - 1 }"
+      (mouseenter)="i === list?.channels.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+      (click)="closeExpandedCard()">
         <!-- <img loading="lazy" *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt=""> -->
         <img loading="lazy" *ngIf="data?.image" [src]="data?.image" alt="" />
         <p class="no-img" *ngIf="!data.image">No Image</p>

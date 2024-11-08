@@ -1,41 +1,3 @@
-<!-- <div class="landing_carousel_section2 mt-5">
-    <div class="landing_carousel_section2_top">News</div>
-    <div class="landing_carousel_section2_bottom my-3 d-flex" >
-        <div class="card_page" *ngFor="let data of [1,2,3,4,5,6,7,8,9,10]">
-            <img src="../../../assets/dummy-img/mvf2.png" alt="">
-        </div>
-    </div>
-</div> -->
-
-<!-- <div class="landing_carousel_section2 mt-5">
-    <div class="landing_carousel_section2_top">{{keyword}} Channels</div>
-    <div class="landing_carousel_section2_bottom my-4 d-flex flex-wrap" >
-        <div class="card_page" *ngFor="let item of data">
-            <img *ngIf="item?.gracenote_data?.assets?.asset?.length" [src]="item?.prgSvcId? 'https://demo.tmsimg.com/'+item?.gracenote_data?.assets?.asset[4].URI :item.logo " alt="">
-
-            <img *ngIf="!item?.gracenote_data?.assets?.asset?.length || !item?.prgSvcId" [src]="item?.logo" alt="">
-            <div class="card_content">
-                <div class="card_content_text1 d-flex justify-content-between">
-                    <div class="play_img d-flex align-items-center gap-2" (click)="setplayerData(item?.url)">
-                        <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
-                        <p class="d-flex flex-column">Play <span></span></p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <div class="rounded-circle overflow-hidden" (click)="toggleFavorite(item.id)"><img class="rounded-circle" src="../../../assets/dummy-img/heart-circle.svg" alt="" 
-                            [class.favorite]="isFavorite(item.id)"></div>
-                        <div><img src="../../../assets/dummy-img/more-circle.svg" alt=""></div>
-                    </div>
-                </div>
-                <div class="card_content_text2 my-5">
-                    <p class="mb-4">{{item.stationName}}</p>
-                    <p *ngIf="item?.gracenote_data" class="fw-light"><span class="fw-bold">Video Type :- </span> {{item?.gracenote_data?.videoQuality?.videoType}}</p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div> -->
-
 <div class="landing_carousel_section2 mt-1">
   <div class="landing_carousel_section2_top text-capitalize">
     {{ keyword }} Channels
@@ -44,7 +6,10 @@
     class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap"
     *ngFor="let row of data"
   >
-    <div class="card_page" *ngFor="let item of row">
+    <div class="card_page" *ngFor="let item of row ; let i = index"
+    [ngClass]="{ 'expanded': expandedCardIndex === row.length - 1 && i === row.length - 1 }"
+    (mouseenter)="i === row.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+    (click)="closeExpandedCard()">
       <img
         loading="lazy"
         *ngIf="item?.gracenote_data?.assets?.asset?.length"
