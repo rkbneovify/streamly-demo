@@ -13,10 +13,9 @@ import { HttpHeaders } from '@angular/common/http';
 import * as dashjs from 'dashjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import Hls from 'hls.js'; // Import Hls.js
 import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 import videojs from 'video.js';
-import * as base64js from 'base64-js';
+
 
 @Component({
   selector: 'app-playstream',
@@ -53,7 +52,6 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     private crud: CrudService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private elRef: ElementRef
   ) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
@@ -69,7 +67,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getPlayerData();
+    if(!this.isIOS()){
+      this.getPlayerData();
+    }
     this.setUpControlVisibility(); // Set up control visibility behavior
     this.getAllChannels();
     this.videoPlayer.nativeElement.addEventListener('play',()=>{
@@ -84,12 +84,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.videoElement = this.elRef.nativeElement.querySelector('video');
-    this.initializePlayer();
+    this.videoElement = this.videoPlayer.nativeElement
+    console.log('vieo eleme',this.videoElement)
+    if(this.videoElement){
+      this.initializePlayer();
+      this.videoElement.addEventListener('error', this.handleVideoError.bind(this));
+      console.log('start');
+    }
+
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
     });
-
     if (document.fullscreenElement) {
       const menuElement = this.menuList.nativeElement;
 
@@ -99,6 +104,29 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       menuElement.style.padding = '10px';
       menuElement.style.position = 'fixed';
       menuElement.style.top = '120px';
+    }
+  }
+
+  private handleVideoError(event: Event) {
+    const error = (event.target as HTMLVideoElement).error;
+    if (error) {
+      switch (error.code) {
+        case MediaError.MEDIA_ERR_ABORTED:
+          console.error('Video playback was aborted.');
+          break;
+        case MediaError.MEDIA_ERR_NETWORK:
+          console.error('A network error caused the video download to fail.');
+          break;
+        case MediaError.MEDIA_ERR_DECODE:
+          console.error('The video playback was aborted due to a corruption issue or because the video used features your browser did not support.');
+          break;
+        case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          console.error('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+          break;
+        default:
+          console.error('An unknown error occurred.');
+          break;
+      }
     }
   }
 
@@ -153,10 +181,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   initializePlayer() {
     if (this.isIOS()) {
-      console.log('Safari player')
-      this.startVideo()
+      console.log('Safari player');
+      this.initializePlayertesr();
     } else {
-      console.log('Chrome player')
+      console.log('Chrome player');
       this.playerDash();
     }
   }
@@ -171,189 +199,25 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     return isIOSDevice || isSafari;
   }
 
-  // initializeHLSPlayer() {
-  //   this.player = videojs(this.videoPlayer.nativeElement, {
-  //     autoplay: true,
-  //     controls: true,
-  //     sources: [
-  //       {
-  //         src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8', //"https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8"
-  //         type: 'application/x-mpegURL'
-  //       }
-  //     ]
-  //   });
-
-  //   // Configure FairPlay DRM for Safari
-  //   this.player.ready(() => {
-  //     // this.player.eme();
-  //     this.player.src({
-  //       src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-  //       type: 'application/x-mpegURL',
-  //       keySystems: {
-  //         'com.apple.fps.1_0': {
-  //           certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=9754e0cfddc682c21216de3eb4d11885.der', // https://fairplay.keyos.com/api/v4/getCertificate?certHash=9754e0cfddc682c21216de3eb4d11885.der
-  //           licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense'
-  //         }
-  //       }
-  //     });
-  //   });
-  // }
-
-//   initializeHLSPlayer() {
-//     this.player = videojs(this.videoPlayer.nativeElement, {
-//       autoplay: true,
-//       controls: true,
-//       sources: [
-//         {
-//           src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-//           type: 'application/x-mpegURL'
-//         }
-//       ]
-//     });
-  
-//     // Configure FairPlay DRM for Safari using video.js and HLS.js
-//     this.player.ready(() => {
-//       // Set up FairPlay DRM configurations
-//       this.player.src({
-//         src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-//         type: 'application/x-mpegURL',
-//         keySystems: {
-//           'com.apple.fps.1_0': {
-//             certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=9754e0cfddc682c21216de3eb4d11885.der',
-//             licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
-//             getLicense: (emeOptions, callback) => {
-//               const contentId = emeOptions.keyMessage; // Content ID for FairPlay
-//               fetch('https://fairplay.keyos.com/api/v4/getLicense', {
-//                 method: 'POST',
-//                 headers: {
-//                   'Content-Type': 'application/octet-stream',
-//                   Authorization: `PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTAxIDA5OjEyOjUxLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDIgMDk6MTI6NTEuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YjgyMWJkM2ViMDgzZjk3OGNlMzIwM2JjOGI1ZGZiMzk8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+VlVYTWpMenhieGQ4QTUvY1FRY0oyNDdkbjUxYUZnNXVNNWxjT2Z4eVE3ME5neGtIWHhsN2ppS3ROQTVkc3hKdWE1TlhZVnptQXlnb2pNdU9DTnlMc05LR3NFS29qMks3WXVxMnZqY0pzYnVVZnNtZ1JPTWlkaFEzK2k3NlJJMXNQR2RWQlI1dWZsS1ZHcEh4anFWMHVLcXE3QU0xWDRReWJ0djg5WGhDYkU5SzBPS1BmU1hDN2ZyMW5QUHNDYmc3SitEMEFIYkFRZkN6bFhHdk9ubjU2bkNTcm9GNDFWcGRmVE9Gc2NBcVRLcmFiTlNoTHJNOGRnYWUwR3JpUEFMTWRTbmZKK3ZJTlUvNDMwZ3NRSEM2RFJvcWlPR3RML3hlSVNWeExnQm1JdVNtaXZzZnlRaEg0b3VOSDBZczB6bExVRjhkVzlVRDRuU3kvOHRXWVpYU1hnPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==
-// `
-//                 },
-//                 body: emeOptions.keyMessage // Use keyMessage as the FairPlay challenge
-//               })
-//               .then(response => response.arrayBuffer())
-//               .then(license => callback(null, new Uint8Array(license)))
-//               .catch(error => callback(error, null));
-//             }
-//           }
-//         }
-//       });
-  
-//       this.player.on('error', (error) => {
-//         console.error('Video.js player error:', error);
-//       });
-//     });
-//   }
-  
-
-// initializeHLSPlayer() {
-//   this.player = videojs(this.videoPlayer.nativeElement, {
-//     autoplay: true,
-//     controls: true,
-//     sources: [
-//       {
-//         src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-//         type: 'application/x-mpegURL'
-//       }
-//     ]
-//   });
-
-//   this.player.ready(() => {
-//     const decodedToken = base64js.toByteArray('PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTAxIDEyOjE2OjA4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDIgMTI6MTY6MDguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+YmVlMGYyZTZhNzA0NjQzM2Q5YmI2MTJkYmI0MmY2YmM8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+bllONURYUzAvL1BkMk5HN3lCOUp5YTZpTWhpazhpaE5JdHdKM0ZvVXkxbzRGeWw0aDhrQjZ5aEYrSHkxVVc1eUdhOERHaU01WGpUNXJ4R3RXVTVNK05GcXlORTUrb3c3L3Jhb1BTVnptRUF4N01XczQ0eTZod1BVWVJxVDFsSVhrTVA3MHhoQmxOdHkrVXJPbCtkaXFNNjVCeEpPdHpkOGQxbTZCeWlOSTFPaG9Wc3Z2c1dYVkxadEJtcUdrL0hNV1hDR0E2dFM1Tktid1JEa29YS2xZelhxZnh2QU5iVVNXbVNHT2szRXZjTEUyeGgvZWZaUFc3NjkwOGVWMlk0dU9mL1Y3U1pPK1AvcGhYK0JLVFVaaDEzeEN1ek03NkNsamNGWmhONmNRWHJZMXQzbWs1bmMwUG1NRTJvcFJZbnJLTCsxUEw2V2lwWlRwTlgzZEl6c3V3PT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==');
-
-//     this.player.src({
-//       src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-//       // src: 'https://d36lryb1dm4mg4.cloudfront.net/MTV2/index.m3u8',
-//       type: 'application/x-mpegURL',
-//       keySystems: {
-//         'com.apple.fps.1_0': {
-//           certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb.der',
-//           // certificateUri: 'https://fp-keyos.licensekeyserver.com/cert/9754e0cfddc682c21216de3eb4d11885.der',
-//           licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
-//           // licenseUri:'https://fp-keyos.licensekeyserver.com/getkey',
-//           getLicense: (emeOptions, callback) => {
-            
-//              fetch('https://fairplay.keyos.com/api/v4/getLicense', {
-//             // fetch('https://fp-keyos.licensekeyserver.com/getkey', {
-//               method: 'POST', //https://fp-keyos.licensekeyserver.com/getkey
-//               headers: {
-//                 'Content-Type': 'application/octet-stream',
-//                 Authorization: `Bearer ${decodedToken}`
-//               },
-//               body: emeOptions.keyMessage
-//             })
-//             .then(response => response.arrayBuffer())
-//             .then(license => callback(null, new Uint8Array(license)))
-//             .catch(error => callback(error, null));
-//           }
-
-//         }
-//       }
-//     });
-
-//     this.player.on('error', (error) => {
-//       console.error('Video.js player error:', error);
-//     });
-//   });
-// }
-
-// private initializePlayer1(): void {
-//   this.player = videojs(this.videoPlayer.nativeElement.querySelector('#videoPlayer'), {
-//     techOrder: ['html5'],
-//     controls: true,
-//     autoplay: false,
-//     sources: [{ src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8', type: 'application/x-mpegURL' }],
-//   });
-
-//   this.setupFairPlayDRM();
-// }
-
-// private setupFairPlayDRM(): void {
-//   if (!this.player) return;
-
-//   // Set up FairPlay DRM settings
-//   this.player.ready(() => {
-//     this.player.eme();
-
-//     this.player.src({
-//       src: 'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8',
-//       type: 'application/x-mpegURL',
-//       keySystems: {
-//         'com.apple.fps.1_0': {
-//           certificateUri: 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb.der',
-//           licenseUri: 'https://fairplay.keyos.com/api/v4/getLicense',
-//           getContentId: (url: string) => {
-//             // Custom function to generate content ID
-//             return 'my_content_id';
-//           },
-//           getLicense: async (spcMessage: ArrayBuffer) => {
-//             try {
-//               const response = await fetch('https://fairplay.keyos.com/api/v4/getLicense', {
-//                 method: 'POST',
-//                 headers: {
-//                   'Content-Type': 'application/x-www-form-urlencoded',
-//                   'customdata': 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTA5LTI0IDA1OjQ2OjA4LjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMDktMjUgMDU6NDY6MDguMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZmI4NTQzZGI0N2ZlNjM0MzdlNTJlNTI2YWY1YTI3Zjk8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+WlowYnRiT2ZyeWt4ZXFhVURJSS95QWNRU3RHU21mSSs0VXpRbXdhVnV3RmpEU2NRU1BiV2JzNHl0dTNLTkpPL2dqUm1GTDVXTWlJcHplRklPOW8vZk1pb2hRMXhQTFJhTXFhYm5BNzNuUGdlOWxrV2huTnR1OTRpRkZOcUVwVmdXZU81bTQ5SC9xSlB2VnhqaGVNRHhPWU0vUTFydzNtc0RIdXk1N3BHRmpGVVRaUGdFb2M0UmY1K3lVMExYYkkreGhOc2tiZ2RBUFBnQmJqRjhQNUF0SmFlVjdzZWUvVFpmbEt1OGNwZFliNVhyK0VUbXdHbDJ4N1ZGT2RMZ045cXo4QTIrTUlJWGM1dWMwcEk4c1JWYnFyU3NmYkQzWUw0NUpsZGZGcUZxZWZOT1dkUTdnSnh0REQ1Z3hHbUtpMDFwamc5SmRuRGNXQU8xaXRpK3JoWlNBPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg==',
-//                 },
-//                 body: spcMessage,
-//               });
-//               const licenseData = await response.arrayBuffer();
-//               console.log(licenseData);
-//               return new Uint8Array(licenseData);
-//             } catch (error) {
-//               console.error('Error retrieving FairPlay license:', error);
-//               return null;
-//             }
-//           },
-//         },
-//       },
-//     });
-//   });
-// }
 private videoElement!: HTMLVideoElement;
 private certificateUrl = 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb';
 private licenseUrl = 'https://fairplay.keyos.com/api/v4/getLicense';
- private customData = 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTA1IDA4OjM5OjEwLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDYgMDg6Mzk6MTAuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZGY5MDJmOWE1YzNjMTI5ZGRiZWJmMzA0MDM0MzYwMDU8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+cXdCd2lMVE1GNitBTUpLVUQ2YTVQYXpyeVJjN1lnTllsYVFNT1hORVVyUzlDaWI4OTlGUlVGVGl1bFNRalUyTXlVY3JpWGZaN1Fkd3JzKzF2czFHR2pCc0UxeVh2SXZYMERuK21ackFwSThxWHpzZkpKTUdzNU9GODN4MHRJdUx6Y0tsMWg3RXNZWXF5MVo5YmFwS1g2dnFHYWpXSFJ2dWJ2OGV2Sy9mOFFtQlVlQ0lFKzFNWW5mQjFwcGpxNGNZaGNuY3JSRTV6a0ZWRlFUN1Vjbm1lQ3JBUmtCTHBFaEFON0RheFpkYXJlVGFPUHdnUm5ITmNsSnh2clNwcVNXVHppOE50d0RUeUF4QjNneTIvU3JMWk9TU0J6ZHhNNGwrRDl5dVIxdVVtK3dHZlhKSjBISzlNVkNVTjFpYjVVaDU3TjJDblBMV3gzM21mcktkQSs2V2NRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=='
+private playbackUrl =  'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8';
+// private customData = 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTA1IDA4OjM5OjEwLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDYgMDg6Mzk6MTAuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZGY5MDJmOWE1YzNjMTI5ZGRiZWJmMzA0MDM0MzYwMDU8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+cXdCd2lMVE1GNitBTUpLVUQ2YTVQYXpyeVJjN1lnTllsYVFNT1hORVVyUzlDaWI4OTlGUlVGVGl1bFNRalUyTXlVY3JpWGZaN1Fkd3JzKzF2czFHR2pCc0UxeVh2SXZYMERuK21ackFwSThxWHpzZkpKTUdzNU9GODN4MHRJdUx6Y0tsMWg3RXNZWXF5MVo5YmFwS1g2dnFHYWpXSFJ2dWJ2OGV2Sy9mOFFtQlVlQ0lFKzFNWW5mQjFwcGpxNGNZaGNuY3JSRTV6a0ZWRlFUN1Vjbm1lQ3JBUmtCTHBFaEFON0RheFpkYXJlVGFPUHdnUm5ITmNsSnh2clNwcVNXVHppOE50d0RUeUF4QjNneTIvU3JMWk9TU0J6ZHhNNGwrRDl5dVIxdVVtK3dHZlhKSjBISzlNVkNVTjFpYjVVaDU3TjJDblBMV3gzM21mcktkQSs2V2NRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=='
+
+private initializePlayertesr() {
+  // Fetch DRM Key and Video Source in parallel
+  Promise.all([this.getDRMKeys().toPromise(), this.getPlayerData()])
+    .then(([drmKeyRes, playerDataRes]) => {
+      const authKey:any = drmKeyRes.data; // Ensure this matches your API response
+      const videoSrc:any = playerDataRes.data.channel.url; // Ensure this matches your API response
+      console.log(authKey,videoSrc);
+      this.startVideo(authKey,videoSrc)
+    })
+    .catch((error) => {
+      console.error('Error initializing player:', error);
+    });
+}
 
  private async loadCertificate(): Promise<ArrayBuffer | null> {
   try {
@@ -365,20 +229,21 @@ private licenseUrl = 'https://fairplay.keyos.com/api/v4/getLicense';
   }
 }
 
-private async startVideo(): Promise<void> {
-  console.log('url ==>',this.playerId)
+private async startVideo(authKey:any,videoSrc:any): Promise<void> {
+  console.log('step 1')
   const certificate = await this.loadCertificate();
   if (!certificate) {
     console.error('Certificate could not be loaded.');
     return;
   }
-
-  this.videoElement.src = this.playerId;
-  this.videoElement.addEventListener('encrypted', (event) => this.onEncrypted(event, certificate));
+  console.log('video url link ==> ',videoSrc)
+  console.log('video element ==>',this.videoElement.src);
+  this.videoElement.src = videoSrc;
+  this.videoElement.addEventListener('encrypted', (event) => this.onEncrypted(event, certificate,authKey,videoSrc));
   this.videoElement.addEventListener('error', (e) => console.error('Video error:', e));
 }
 
-private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer): Promise<void> {
+private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer,authKey:any,videoSrc:any): Promise<void> {
   const initDataType = event.initDataType;
   if (initDataType !== 'skd') {
     console.error(`Received unexpected initialization data type "${initDataType}"`);
@@ -401,58 +266,69 @@ private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer):
 
   const initData = event.initData;
   if (initData) {
+    const contentId = this.extractContentIdFromInitData(initData);
     const session = this.videoElement.mediaKeys!.createSession();
     session.addEventListener('message', async (msgEvent) => {
-      const license = await this.getLicenseResponse(msgEvent.message);
+      const license = await this.getLicenseResponse(msgEvent.message, contentId ,authKey,videoSrc);
       if (license) await session.update(license);
     });
     session.generateRequest(initDataType, initData).catch(e => console.error('Failed to generate request:', e));
   }
 }
 
+private extractContentIdFromInitData(initData: ArrayBuffer): string {
+  const uint8Array = new Uint8Array(initData);
+  const initDataStr = new TextDecoder().decode(uint8Array);
+
+  // Extract the part after "skd://"
+  const contentIdMatch = initDataStr.match(/^skd:\/\/(.+)/);
+  if (contentIdMatch && contentIdMatch[1]) {
+      const contentId = contentIdMatch[1];
+      console.log('Extracted Content ID:', contentId);
+      return contentId;
+  }
+
+  console.warn('Content ID not found in initData.');
+  return '';
+}
 private arrayBufferToBase64(buffer: ArrayBuffer): string {
-const bytes = new Uint8Array(buffer);
-let binary = '';
-for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-}
-const base64 = btoa(binary); // Encode the binary string as Base64
-console.log('Base64-encoded SPC:', base64); // Log the Base64-encoded SPC
-return base64;
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
 }
 
-private async getLicenseResponse(spcMessage: ArrayBuffer): Promise<Uint8Array | null> {
-const spcBase64 = this.arrayBufferToBase64(spcMessage); // Convert SPC to Base64
+private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,authKey:any,videoSrc:any): Promise<Uint8Array | null> {
 
-const bodyData = new URLSearchParams({
-    spc: spcBase64,
-    customdata: this.customData,
-}).toString();
+  const spcBase64 = this.arrayBufferToBase64(spcMessage);
 
-console.log('Request Body Data:', bodyData); // Log the body data being sent
+  const bodyData = `spc=${spcBase64}&assetId=${contentId}`;
+  console.log('Request Body Data:', bodyData);
 
-try {
+  try {
     const response = await fetch(this.licenseUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'customdata': this.customData,
-        },
-        body: bodyData,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'customdata': authKey, // Use dynamic customData here
+      },
+      body: bodyData,
     });
 
     if (!response.ok) {
-        console.error(`License request failed with status ${response.status}: ${response.statusText}`);
-        return null;
+      console.error(`License request failed with status ${response.status}: ${response.statusText}`);
+      return null;
     }
 
     const responseText = await response.text();
-    console.log('Response from License Server:', responseText); // Log the response
+    console.log('Response from License Server:', responseText);
     return Uint8Array.from(atob(responseText), c => c.charCodeAt(0));
-} catch (error) {
+  } catch (error) {
     console.error('License request failed due to exception:', error);
     return null;
-}
+  }
 }
 
 
@@ -644,7 +520,7 @@ try {
   //   });
   // }
 
-  getPlayerData(): Promise<void> {
+  getPlayerData(): Promise<any> {
     // this.isLoading = true;
     const body = {
       channel_id: this.playerChannelId,
@@ -658,7 +534,7 @@ try {
           this.nextChannelData = res.data.nextChannel;
           this.prevChannelData = res.data.prevChannel;
           // this.isLoading = false;
-          resolve(); // Resolve the promise once data is loaded
+          resolve(res); // Resolve the promise once data is loaded
         },
         error: (err) => {
           console.error(err);
@@ -705,6 +581,7 @@ try {
   
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
+    console.log('channel change')
     const scrollPosition = window.scrollY;
     this.ngOnDestroy();
     const channelID = channelData.id;
@@ -713,16 +590,24 @@ try {
     this.setChannelId(channelID, channelURL);
     this.playerChannelId = Number(localStorage.getItem('playerChannelId'));
     this.playerId = localStorage.getItem('playerId');
-    this.getPlayerData().then(() => {
-      this.initializePlayer();
-      this.cdr.detectChanges();
-      if (scrollPosition > 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
-      }
-    });
+
+    if(this.isIOS()){
+      
+      this.initializePlayertesr();
+      window.location.reload()
+    }else{
+      this.getPlayerData().then(() => {
+        this.initializePlayer();
+        this.cdr.detectChanges();
+        if (scrollPosition > 0) {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      });
+    }
+
   }
 
   setupPlayerEvents() {
