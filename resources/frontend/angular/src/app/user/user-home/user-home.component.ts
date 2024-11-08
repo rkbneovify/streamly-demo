@@ -43,6 +43,8 @@ export class UserHomeComponent implements OnInit {
   @ViewChild('nextBtn') sliderNexrButton!: ElementRef;
   currentProgramDetail: boolean = false;
   programDetailData: any;
+  expandedCardIndex: number | null = null;
+
 
   constructor(
     private crud: CrudService,
@@ -75,6 +77,16 @@ export class UserHomeComponent implements OnInit {
       });
     });
   }
+
+  // Function to expand the last card
+expandLastCard(index: number) {
+  this.expandedCardIndex = index;
+}
+
+// Function to close the expanded card when another card is clicked
+closeExpandedCard() {
+  this.expandedCardIndex = null;
+}
 
   loginSliders() {
     this.isLoading = true;
