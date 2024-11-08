@@ -17,6 +17,7 @@ basic_plans:any;
 Tiered_plans:any;
 setActivePlanId!:string;
 isSubscribe!:boolean;
+showMessage:boolean = false;
 constructor(private crud:CrudService,private router:Router){}
 
 ngOnInit(): void {
@@ -48,7 +49,16 @@ getAllThePlans(): void {
 }
 selectedPlanType:string='';
 
+showPopCancelSubc() {
+  document.getElementById('btnShowPopCancelSubsc').click();
+}
 selectedplanData(planId: any,planType:any) {
+  if(this.isSubscribe){
+    
+    console.log('Start..')
+    this.showPopCancelSubc()
+    return;
+  }
   if(planId && planType){
     localStorage.setItem('planType',planType);
     localStorage.setItem('planId',planId);
