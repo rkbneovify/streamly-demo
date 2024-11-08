@@ -224,6 +224,10 @@ button.btn {
         }
       }
 
+
+
+
+
       @media screen and (max-width: 825px) {
         col_2_subblock {
           height: 250px;
@@ -274,6 +278,12 @@ button.btn {
     }
   }
 }
+
+.text-color-white{
+  color: #d2eaff !important;
+}
+
+
 @media screen and (max-width: 980px) {
   header .tags {
     gap: 3rem;
