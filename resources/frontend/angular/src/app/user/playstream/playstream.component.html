@@ -13,7 +13,8 @@
             class="channel-navigation"
             [ngClass]="{ hidden: hideControls }"
           >
-            <button
+            <button 
+            #customBtnprev
             *ngIf="prevChannelData?.id != channelData?.channel?.id "
               (click)="previousChannel()"
               class="btn-prev-channel"

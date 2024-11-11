@@ -28,6 +28,8 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('videoPlayer', { static: true }) videoPlayer!: ElementRef;
   @ViewChild('customBtn', { static: true }) customBtn!: ElementRef;
   @ViewChild('customBtnNext', { static: true }) customBtnNext!: ElementRef;
+  @ViewChild('customBtnprev', { static: true }) customBtnprev!: ElementRef;
+
   @ViewChild('menuList', { static: true }) menuList!: ElementRef;
 
   player: any;
@@ -240,9 +242,16 @@ private async startVideo(authKey:any,videoSrc:any): Promise<void> {
   console.log('video element ==>',this.videoElement.src);
   this.videoElement.src = videoSrc;
   this.videoElement.addEventListener('encrypted', (event) => this.onEncrypted(event, certificate,authKey,videoSrc));
-  this.videoElement.addEventListener('error', (e) => console.error('Video error:', e));
-}
+  this.videoElement.addEventListener('error', (e) => {
+    console.error('Video error:', e)
+    alert("Due to some technical reasons, the channel gets interrupted. Kindly try again later.");
+    this.router.navigateByUrl('/user/playlistschedule');
+  });
+  
+  
+  this.setupPlayerEvents();
 
+}
 private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer,authKey:any,videoSrc:any): Promise<void> {
   const initDataType = event.initDataType;
   if (initDataType !== 'skd') {
@@ -275,7 +284,6 @@ private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer,a
     session.generateRequest(initDataType, initData).catch(e => console.error('Failed to generate request:', e));
   }
 }
-
 private extractContentIdFromInitData(initData: ArrayBuffer): string {
   const uint8Array = new Uint8Array(initData);
   const initDataStr = new TextDecoder().decode(uint8Array);
@@ -299,7 +307,6 @@ private arrayBufferToBase64(buffer: ArrayBuffer): string {
   }
   return btoa(binary);
 }
-
 private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,authKey:any,videoSrc:any): Promise<Uint8Array | null> {
 
   const spcBase64 = this.arrayBufferToBase64(spcMessage);
@@ -330,13 +337,7 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
     return null;
   }
 }
-
-
 // ==============end of fairplay==============
-
-
-
-
   isAtLiveEdge: boolean = false;
 
   playerDash() {
@@ -644,6 +645,15 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
       this.cdr.detectChanges(); // Trigger change detection to show controls
     });
     this.customBtnNext.nativeElement.addEventListener('mouseover', () => {
+      console.log('customBtnNext')
+      this.showControls();
+      this.isMouseOverCustomBtn = true; // New flag
+      this.cdr.detectChanges(); // Trigger change detection to show controls
+    });
+
+    // customBtnprev
+    this.customBtnprev.nativeElement.addEventListener('mouseover', () => {
+      console.log('customBtnprev')
       this.showControls();
       this.isMouseOverCustomBtn = true; // New flag
       this.cdr.detectChanges(); // Trigger change detection to show controls
@@ -651,6 +661,7 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
 
     // Detect if mouse leaves the custom button
     this.customBtn.nativeElement.addEventListener('mouseleave', () => {
+      console.log('customBtn leave')
       console.log('Move out')
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
@@ -664,6 +675,14 @@ private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,auth
 
     
     this.customBtnNext.nativeElement.addEventListener('mouseleave', () => {
+      console.log('customBtnNext leave')
+      this.isMouseOverCustomBtn = false; // Reset the flag
+      this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
+    });
+
+    // customBtnprev
+    this.customBtnprev.nativeElement.addEventListener('mouseleave', () => {
+      console.log('customBtnprev leave')
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });
