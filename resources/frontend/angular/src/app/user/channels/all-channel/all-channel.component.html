@@ -1,32 +1,11 @@
-<!-- <div class="landing_carousel_section2 mt-5">
-        <div class="landing_carousel_section2_top">All Channels</div>
-        <div class="landing_carousel_section2_bottom my-3 d-flex" >
-            <div class="card_page" *ngFor="let data of [1,2,3,4,5,6,7,8,9,10]">
-                <img src="../../../../assets/dummy-img/mvf2.png" alt="">
-            </div>
-        </div>
-    </div> -->
-
-<!-- <main class="schedule_Container"> -->
-<!-- <nav class="navbar_Schedule d-flex align-item-center justify-content-between">
-      <div>
-        <img src="../../../../assets/dummy-img/nav-logo.svg" alt="" srcset="" />
-      </div>
-      <div class="searchbar_pro d-flex gap-2">
-        <div class="search_Bar">
-          <input type="text" placeholder="" />
-          <img src="../../../../assets/dummy-img/search-md.svg" alt="" />
-        </div>
-        <div class="schedule_profile pointer">
-          <img src="../../../../assets/dummy-img/user-circle.svg" alt="" />
-        </div>
-      </div>
-    </nav> -->
-
 <div class="landing_carousel_section2 mt-1">
   <div class="landing_carousel_section2_top">All Channels</div>
   <div id="card_page_parent" class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap" *ngFor="let row of data">
-    <div class="card_page" *ngFor="let item of row">
+    <div class="card_page" *ngFor="let item of row; let i = index" 
+    [ngClass]="{ 'expanded': isLastCardExpanded && i === row.length - 1 }"
+    (mouseenter)="i === row.length - 1 ? toggleLastCardExpansion() : closeLastCard()"
+    (click)="closeLastCard()">
+    >
       <img
         loading="lazy"
         *ngIf="item?.gracenote_data?.assets?.asset?.length"
@@ -38,16 +17,6 @@
         "
         alt=""
       />
-
-      <!-- <img
-        loading="lazy"
-        *ngIf="!item?.gracenote_data?.assets?.asset?.length || !item?.prgSvcId"
-        [src]="
-          item?.logo ? item?.logo : '../../../../assets/dummy-img/Subtract.png'
-        "
-        alt=""
-      /> -->
-
       <img
       *ngIf="item.image"
       loading="lazy"
@@ -114,60 +83,6 @@
 </div>
 
 
-<!-- 
-<div class="landing_carousel_section2 mt-1">
-  <div
-    class="allChannelsList my-4 d-flex flex-nowrap"
-    *ngFor="let row of data"
-  >
-    <div class="card_page" *ngFor="let item of row">
-      <img
-        [src]="
-          item?.image ? item?.image : '../../../assets/dummy-img/Subtract-2.png'
-        "
-        [ngClass]="{ 'object-fill': item?.type == 'event' }"
-      />
-      <div class="card_content">
-        <div class="card_content_text1 d-flex justify-content-between">
-          <div
-            class="play_img d-flex align-items-center gap-2"
-            (click)="setplayerData(item?.url)"
-          >
-            <img src="../../../assets/dummy-img/play_icon.svg" alt="" />
-            <p class="d-flex flex-column">Play <span></span></p>
-          </div>
-
-          <div class="d-flex gap-2">
-            <div
-              class="rounded-circle overflow-hidden"
-              (click)="toggleFavorite(item.id)"
-            >
-              <img
-                class="rounded-circle"
-                src="../../../assets/dummy-img/heart-circle.svg"
-                alt=""
-                [class.favorite]="isFavorite(item.id)"
-              />
-            </div>
-            <div>
-              <img src="../../../assets/dummy-img/more-circle.svg" alt="" />
-            </div>
-          </div>
-        </div>
-        <div class="card_content_text2 my-5">
-          <p class="mb-4">{{ item.stationName }}</p>
-          <p *ngIf="item?.gracenote_data" class="fw-light">
-            <span class="fw-bold">Video Type :- </span>
-            {{ item?.gracenote_data?.videoQuality?.videoType }}
-          </p>
-        </div>
-        <div *ngIf="item.description" class="card_content_text3">
-          {{ item.description }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 
 <!-- =========================================== Start Current program more details ====================== -->

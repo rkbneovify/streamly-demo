@@ -30,6 +30,7 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
   favChannelList: any;
   favoriteChannels: number[] = [];
   currentWidth: number = 0;
+  expandedCardIndex: number | null = null;
   private screenSizeSubscription!: Subscription;
   constructor(
     private router: Router,
@@ -53,6 +54,17 @@ export class CommonChannelComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+
+// Function to expand the last card
+expandLastCard(index: number) {
+  this.expandedCardIndex = index;
+}
+
+// Function to close the expanded card when another card is clicked
+closeExpandedCard() {
+  this.expandedCardIndex = null;
+}
 
   getChannelData() {
     this.isLoading = true;

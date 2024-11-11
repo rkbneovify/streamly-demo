@@ -193,6 +193,12 @@ main {
           }
         }
 
+        &.expanded {
+          min-width: 426px;
+          width: 426px;
+          overflow: visible;
+        }
+
         &:hover {
                 min-width:426px !important;
                 width: 426px !important;
@@ -205,6 +211,8 @@ main {
                     margin-left: -1px;
                 }
         }
+
+
       }
 
       &::-webkit-scrollbar {

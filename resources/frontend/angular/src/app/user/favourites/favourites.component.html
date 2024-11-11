@@ -5,7 +5,10 @@
       [routerLink]="'/user/channels/favorites'"> See More >></span>
   </div>
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
-    <div class="card_page" *ngFor="let item of favListData">
+    <div class="card_page" *ngFor="let item of favListData ; let i = index"
+    [ngClass]="{ 'expanded': expandedCardIndex === favListData.length - 1 && i === favListData.length - 1 }"
+    (mouseenter)="i === favListData.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+    (click)="closeExpandedCard()">
       <img
         loading="lazy"
         *ngIf="item.image"
@@ -81,7 +84,10 @@
   </div>
 
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
-    <div class="card_page" *ngFor="let item of recentsPlayData">
+    <div class="card_page" *ngFor="let item of recentsPlayData ; let i = index"
+    [ngClass]="{ 'expanded': expandedCardIndex === recentsPlayData.length - 1 && i === recentsPlayData.length - 1 }"
+    (mouseenter)="i === recentsPlayData.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+    (click)="closeExpandedCard()">
       <img
         *ngIf="item.image"
         loading="lazy"

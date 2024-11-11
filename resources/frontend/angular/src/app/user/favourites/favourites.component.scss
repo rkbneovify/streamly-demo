@@ -99,6 +99,12 @@ main {
         background-image: url("../../../assets/dummy-img/carBG.png");
         transition: width 1.2s ease-out,min-width 1s ease-in-out,overflow-x 2s ease-in-out;
 
+        &.expanded {
+          min-width: 426px;
+          width: 426px;
+          overflow: visible;
+        }
+
         img {
           max-width: 160px;
           height: 100%;
