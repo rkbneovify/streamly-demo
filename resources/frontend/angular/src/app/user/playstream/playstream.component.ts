@@ -13,8 +13,9 @@ import { HttpHeaders } from '@angular/common/http';
 import * as dashjs from 'dashjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import Hls from 'hls.js'; // Import Hls.js
 import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
+import videojs from 'video.js';
+
 
 @Component({
   selector: 'app-playstream',
@@ -29,7 +30,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   @ViewChild('customBtnNext', { static: true }) customBtnNext!: ElementRef;
   @ViewChild('menuList', { static: true }) menuList!: ElementRef;
 
-  player: dashjs.MediaPlayerClass;
+  player: any;
 
   playerId!: any;
   tokenkey: any;
@@ -50,7 +51,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   constructor(
     private crud: CrudService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.playerId = localStorage.getItem('playerId');
     this.playerChannelId = +localStorage.getItem('playerChannelId');
@@ -66,8 +67,9 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getPlayerData();
-    this.initializePlayer();
+    if(!this.isIOS()){
+      this.getPlayerData();
+    }
     this.setUpControlVisibility(); // Set up control visibility behavior
     this.getAllChannels();
     this.videoPlayer.nativeElement.addEventListener('play',()=>{
@@ -82,10 +84,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.videoElement = this.videoPlayer.nativeElement
+    console.log('vieo eleme',this.videoElement)
+    if(this.videoElement){
+      this.initializePlayer();
+      this.videoElement.addEventListener('error', this.handleVideoError.bind(this));
+      console.log('start');
+    }
+
     this.videoPlayer.nativeElement.addEventListener('pause', () => {
       this.showMenu = true;
     });
-
     if (document.fullscreenElement) {
       const menuElement = this.menuList.nativeElement;
 
@@ -95,6 +104,29 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
       menuElement.style.padding = '10px';
       menuElement.style.position = 'fixed';
       menuElement.style.top = '120px';
+    }
+  }
+
+  private handleVideoError(event: Event) {
+    const error = (event.target as HTMLVideoElement).error;
+    if (error) {
+      switch (error.code) {
+        case MediaError.MEDIA_ERR_ABORTED:
+          console.error('Video playback was aborted.');
+          break;
+        case MediaError.MEDIA_ERR_NETWORK:
+          console.error('A network error caused the video download to fail.');
+          break;
+        case MediaError.MEDIA_ERR_DECODE:
+          console.error('The video playback was aborted due to a corruption issue or because the video used features your browser did not support.');
+          break;
+        case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+          console.error('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+          break;
+        default:
+          console.error('An unknown error occurred.');
+          break;
+      }
     }
   }
 
@@ -149,8 +181,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   initializePlayer() {
     if (this.isIOS()) {
-      this.initializeHLSPlayer();
+      console.log('Safari player');
+      this.initializePlayertesr();
     } else {
+      console.log('Chrome player');
       this.playerDash();
     }
   }
@@ -161,28 +195,147 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     // Check if the browser is Safari (including Safari on macOS, iOS, and excluding Chrome/Android)
     const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
     console.log('is Safari => ', isIOSDevice || isSafari);
+    console.log('isIOSDevice ==>',isIOSDevice || isSafari);
     return isIOSDevice || isSafari;
   }
 
-  initializeHLSPlayer() {
-    if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(this.playerId); // Assuming playerId is the HLS URL
-      hls.attachMedia(this.videoPlayer.nativeElement);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        this.videoPlayer.nativeElement.play();
-      });
-    } else if (
-      this.videoPlayer.nativeElement.canPlayType(
-        'application/vnd.apple.mpegurl'
-      )
-    ) {
-      this.videoPlayer.nativeElement.src = this.playerId; // Assuming playerId is the HLS URL
-      this.videoPlayer.nativeElement.addEventListener('loadedmetadata', () => {
-        this.videoPlayer.nativeElement.play();
-      });
-    }
+private videoElement!: HTMLVideoElement;
+private certificateUrl = 'https://fairplay.keyos.com/api/v4/getCertificate?certHash=49c8c068c152dfa009ef1c44b99410bb';
+private licenseUrl = 'https://fairplay.keyos.com/api/v4/getLicense';
+private playbackUrl =  'https://d2t3s7h1wasu4l.cloudfront.net/DJCHP/index.m3u8';
+// private customData = 'PD94bWwgdmVyc2lvbj0iMS4wIj8+CjxLZXlPU0F1dGhlbnRpY2F0aW9uWE1MPjxEYXRhPjxXaWRldmluZVBvbGljeSBmbF9DYW5QZXJzaXN0PSJmYWxzZSIgZmxfQ2FuUGxheT0idHJ1ZSIvPjxXaWRldmluZUNvbnRlbnRLZXlTcGVjIFRyYWNrVHlwZT0iSEQiPjxTZWN1cml0eUxldmVsPjE8L1NlY3VyaXR5TGV2ZWw+PC9XaWRldmluZUNvbnRlbnRLZXlTcGVjPjxGYWlyUGxheVBvbGljeSBwZXJzaXN0ZW50PSJmYWxzZSIvPjxMaWNlbnNlIHR5cGU9InNpbXBsZSIvPjxHZW5lcmF0aW9uVGltZT4yMDI0LTExLTA1IDA4OjM5OjEwLjAwMDwvR2VuZXJhdGlvblRpbWU+PEV4cGlyYXRpb25UaW1lPjIwMjQtMTEtMDYgMDg6Mzk6MTAuMDAwPC9FeHBpcmF0aW9uVGltZT48VW5pcXVlSWQ+ZGY5MDJmOWE1YzNjMTI5ZGRiZWJmMzA0MDM0MzYwMDU8L1VuaXF1ZUlkPjxSU0FQdWJLZXlJZD45NzU0ZTBjZmRkYzY4MmMyMTIxNmRlM2ViNGQxMTg4NTwvUlNBUHViS2V5SWQ+PC9EYXRhPjxTaWduYXR1cmU+cXdCd2lMVE1GNitBTUpLVUQ2YTVQYXpyeVJjN1lnTllsYVFNT1hORVVyUzlDaWI4OTlGUlVGVGl1bFNRalUyTXlVY3JpWGZaN1Fkd3JzKzF2czFHR2pCc0UxeVh2SXZYMERuK21ackFwSThxWHpzZkpKTUdzNU9GODN4MHRJdUx6Y0tsMWg3RXNZWXF5MVo5YmFwS1g2dnFHYWpXSFJ2dWJ2OGV2Sy9mOFFtQlVlQ0lFKzFNWW5mQjFwcGpxNGNZaGNuY3JSRTV6a0ZWRlFUN1Vjbm1lQ3JBUmtCTHBFaEFON0RheFpkYXJlVGFPUHdnUm5ITmNsSnh2clNwcVNXVHppOE50d0RUeUF4QjNneTIvU3JMWk9TU0J6ZHhNNGwrRDl5dVIxdVVtK3dHZlhKSjBISzlNVkNVTjFpYjVVaDU3TjJDblBMV3gzM21mcktkQSs2V2NRPT08L1NpZ25hdHVyZT48L0tleU9TQXV0aGVudGljYXRpb25YTUw+Cg=='
+
+private initializePlayertesr() {
+  // Fetch DRM Key and Video Source in parallel
+  Promise.all([this.getDRMKeys().toPromise(), this.getPlayerData()])
+    .then(([drmKeyRes, playerDataRes]) => {
+      const authKey:any = drmKeyRes.data; // Ensure this matches your API response
+      const videoSrc:any = playerDataRes.data.channel.url; // Ensure this matches your API response
+      console.log(authKey,videoSrc);
+      this.startVideo(authKey,videoSrc)
+    })
+    .catch((error) => {
+      console.error('Error initializing player:', error);
+    });
+}
+
+ private async loadCertificate(): Promise<ArrayBuffer | null> {
+  try {
+    const response = await fetch(this.certificateUrl);
+    return await response.arrayBuffer();
+  } catch (e) {
+    console.error(`Could not load certificate at ${this.certificateUrl}`, e);
+    return null;
   }
+}
+
+private async startVideo(authKey:any,videoSrc:any): Promise<void> {
+  console.log('step 1')
+  const certificate = await this.loadCertificate();
+  if (!certificate) {
+    console.error('Certificate could not be loaded.');
+    return;
+  }
+  console.log('video url link ==> ',videoSrc)
+  console.log('video element ==>',this.videoElement.src);
+  this.videoElement.src = videoSrc;
+  this.videoElement.addEventListener('encrypted', (event) => this.onEncrypted(event, certificate,authKey,videoSrc));
+  this.videoElement.addEventListener('error', (e) => console.error('Video error:', e));
+}
+
+private async onEncrypted(event: MediaEncryptedEvent, certificate: ArrayBuffer,authKey:any,videoSrc:any): Promise<void> {
+  const initDataType = event.initDataType;
+  if (initDataType !== 'skd') {
+    console.error(`Received unexpected initialization data type "${initDataType}"`);
+    return;
+  }
+
+  if (!this.videoElement.mediaKeys) {
+    const access = await navigator.requestMediaKeySystemAccess('com.apple.fps', [{
+      initDataTypes: [initDataType],
+      videoCapabilities: [{ contentType: 'application/vnd.apple.mpegurl', robustness: '' }],
+      distinctiveIdentifier: 'not-allowed',
+      persistentState: 'not-allowed',
+      sessionTypes: ['temporary'],
+    }]);
+
+    const mediaKeys = await access.createMediaKeys();
+    await mediaKeys.setServerCertificate(certificate);
+    await this.videoElement.setMediaKeys(mediaKeys);
+  }
+
+  const initData = event.initData;
+  if (initData) {
+    const contentId = this.extractContentIdFromInitData(initData);
+    const session = this.videoElement.mediaKeys!.createSession();
+    session.addEventListener('message', async (msgEvent) => {
+      const license = await this.getLicenseResponse(msgEvent.message, contentId ,authKey,videoSrc);
+      if (license) await session.update(license);
+    });
+    session.generateRequest(initDataType, initData).catch(e => console.error('Failed to generate request:', e));
+  }
+}
+
+private extractContentIdFromInitData(initData: ArrayBuffer): string {
+  const uint8Array = new Uint8Array(initData);
+  const initDataStr = new TextDecoder().decode(uint8Array);
+
+  // Extract the part after "skd://"
+  const contentIdMatch = initDataStr.match(/^skd:\/\/(.+)/);
+  if (contentIdMatch && contentIdMatch[1]) {
+      const contentId = contentIdMatch[1];
+      console.log('Extracted Content ID:', contentId);
+      return contentId;
+  }
+
+  console.warn('Content ID not found in initData.');
+  return '';
+}
+private arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+private async getLicenseResponse(spcMessage: ArrayBuffer, contentId: string,authKey:any,videoSrc:any): Promise<Uint8Array | null> {
+
+  const spcBase64 = this.arrayBufferToBase64(spcMessage);
+
+  const bodyData = `spc=${spcBase64}&assetId=${contentId}`;
+  console.log('Request Body Data:', bodyData);
+
+  try {
+    const response = await fetch(this.licenseUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'customdata': authKey, // Use dynamic customData here
+      },
+      body: bodyData,
+    });
+
+    if (!response.ok) {
+      console.error(`License request failed with status ${response.status}: ${response.statusText}`);
+      return null;
+    }
+
+    const responseText = await response.text();
+    console.log('Response from License Server:', responseText);
+    return Uint8Array.from(atob(responseText), c => c.charCodeAt(0));
+  } catch (error) {
+    console.error('License request failed due to exception:', error);
+    return null;
+  }
+}
+
+
+// ==============end of fairplay==============
+
+
+
 
   isAtLiveEdge: boolean = false;
 
@@ -367,7 +520,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   //   });
   // }
 
-  getPlayerData(): Promise<void> {
+  getPlayerData(): Promise<any> {
     // this.isLoading = true;
     const body = {
       channel_id: this.playerChannelId,
@@ -381,7 +534,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
           this.nextChannelData = res.data.nextChannel;
           this.prevChannelData = res.data.prevChannel;
           // this.isLoading = false;
-          resolve(); // Resolve the promise once data is loaded
+          resolve(res); // Resolve the promise once data is loaded
         },
         error: (err) => {
           console.error(err);
@@ -428,6 +581,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   
   switchChannel(channelData: any) {
     // Save current scroll position before UI changes
+    console.log('channel change')
     const scrollPosition = window.scrollY;
     this.ngOnDestroy();
     const channelID = channelData.id;
@@ -436,16 +590,24 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     this.setChannelId(channelID, channelURL);
     this.playerChannelId = Number(localStorage.getItem('playerChannelId'));
     this.playerId = localStorage.getItem('playerId');
-    this.getPlayerData().then(() => {
-      this.initializePlayer();
-      this.cdr.detectChanges();
-      if (scrollPosition > 0) {
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth',
-        });
-      }
-    });
+
+    if(this.isIOS()){
+      
+      this.initializePlayertesr();
+      window.location.reload()
+    }else{
+      this.getPlayerData().then(() => {
+        this.initializePlayer();
+        this.cdr.detectChanges();
+        if (scrollPosition > 0) {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      });
+    }
+
   }
 
   setupPlayerEvents() {
@@ -476,6 +638,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
     // customBtnNext
     // Detect if mouse is over the custom button
     this.customBtn.nativeElement.addEventListener('mouseover', () => {
+      console.log('Hii over')
       this.showControls();
       this.isMouseOverCustomBtn = true; // New flag
       this.cdr.detectChanges(); // Trigger change detection to show controls
@@ -488,6 +651,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
     // Detect if mouse leaves the custom button
     this.customBtn.nativeElement.addEventListener('mouseleave', () => {
+      console.log('Move out')
       this.isMouseOverCustomBtn = false; // Reset the flag
       this.resetControlVisibilityTimeout(); // Reset the timeout after mouse leaves
     });

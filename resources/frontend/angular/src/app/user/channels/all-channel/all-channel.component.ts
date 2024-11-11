@@ -1,5 +1,5 @@
 import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrudService } from '../../../services/crud.service';
 import { HttpHeaders } from '@angular/common/http';
 import {  Router } from '@angular/router';
@@ -15,13 +15,16 @@ import { Subscription } from 'rxjs';
   templateUrl: './all-channel.component.html',
   styleUrl: './all-channel.component.scss'
 })
-export class AllChannelComponent implements OnInit, OnDestroy{
+export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
   Bearer_token:any;
   favChannelList:any;
   favoriteChannels: number[] = [];
   isLoading:boolean = false;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
+  isLastCardExpanded: boolean = false;
+  @ViewChildren('card') cards!: QueryList<ElementRef>; // Access each card element
+
 
   data:any;
   constructor(private apiService:CrudService,private router:Router,private ts:ToastrService,private screenSizeService: ScreenSizeService){}
@@ -50,12 +53,30 @@ export class AllChannelComponent implements OnInit, OnDestroy{
           }
         });
   }
-
-
   ngOnDestroy(): void {
     // Unsubscribe when the component is destroyed to avoid memory leaks
     if (this.screenSizeSubscription) {
       this.screenSizeSubscription.unsubscribe();
+    }
+  }
+
+
+  ngAfterViewInit(): void {
+    this.cards.forEach((card, index) => {
+      const element = card.nativeElement as HTMLElement;
+      element.addEventListener('mouseenter', () => this.adjustHoverPosition(element));
+    });
+  }
+
+  adjustHoverPosition(cardElement: HTMLElement) {
+    const cardRect = cardElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const isNearRightEdge = cardRect.right + 266 > viewportWidth;
+
+    if (isNearRightEdge) {
+      cardElement.classList.add('open-left');
+    } else {
+      cardElement.classList.remove('open-left');
     }
   }
 
@@ -75,27 +96,12 @@ export class AllChannelComponent implements OnInit, OnDestroy{
     const body = {
       "typeurl": "mpd",
   }
-
-  // this.crud.postRequest('auth/all-channel-list', body).subscribe({
-  //   next: (res: any) => {
-  //     this.allChannelDataList = this.chunkArray(res.data, 6);
-  //     console.log(this.chunkArray(res.data, 6));
-  //     this.searchShow = !this.searchShow;
-  //     console.log(res);
-  //   },
-  //   error: (error: any) => {
-  //     console.log(error);
-  //   },
-  // });
-
-
     this.apiService.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
         const list = this.chunkArray(res.data,this.currentWidth/190);
         localStorage.setItem('allChannel',JSON.stringify(list));
         this.data = JSON.parse(localStorage.getItem('allChannel'));
         this.isLoading = false;
-
       },
       error: (err: any) => {
         console.log(err);
@@ -103,7 +109,6 @@ export class AllChannelComponent implements OnInit, OnDestroy{
       }
     });
   }
-
   // 
   chunkArray(array: any, chunkSize: any): any {
     const result: any = [];
@@ -252,4 +257,14 @@ setplayerData(url:string,id:any){
       },
     });
   }
+
+  // Toggle the expansion state for the last card
+toggleLastCardExpansion() {
+  this.isLastCardExpanded = !this.isLastCardExpanded;
+}
+
+// Close the last card when another card is clicked
+closeLastCard() {
+  this.isLastCardExpanded = false;
+}
 }

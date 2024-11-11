@@ -197,3 +197,72 @@
     
   </div>
 </main>
+
+
+
+<!-- Modal for Cancel-subsc-->
+<button
+  type="button"
+  class="btn btn-primary d-none"
+  data-bs-toggle="modal"
+  data-bs-target="#ShowPopCancelSubsc"
+  id="btnShowPopCancelSubsc"
+></button>
+<div
+  class="modal fade"
+  id="ShowPopCancelSubsc"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="staticZipCorrectLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog m-auto modal-dialog-centered zipcode_correct">
+    <div class="modal-content showPopConf popup_bg margin-left-3">
+      <div class="modal-header border-0 p-0 mt-2 me-2 d-flex justify-content-end">
+        <div class="btn-cl">
+          <img
+            loading="lazy"
+            class="pointer"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            src="../../../assets/dummy-img/x-circle.svg"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="modal-body p-0 m-0">
+        <div class="zip_top">
+        <div class="zip_bottom d-flex flex-column gap-2 justify-content-evenly">
+          <div class="zip_bottom_p d-flex align-items-center justify-content-center flex-column gap-2 p-3" >
+            <h3 class="d-flex gap-2 mt-2 mb-0">
+              <span class="d-flex gap-3">
+                <img
+                  loading="lazy"
+                  src="../../../assets/dummy-img/check-circle-broken.svg"
+                  alt=""
+                />
+                <span class="text-color-white">
+                  Cancel your subscription then you can purchase a new plan.
+                </span>
+              </span>
+            </h3>
+            <button
+            class="btn_2 w-auto align-self-center"
+            [ngClass]="{ 'btn-bg-gold':true }"
+            data-bs-dismiss="modal"
+            type="submit"
+          >
+            Okay
+          </button>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loader-overlay">
+  <div class="loader"></div>
+</div>

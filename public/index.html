@@ -18,7 +18,19 @@
 </style><link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.css"></noscript><link rel="modulepreload" href="chunk-SB4WYGT6.js"><link rel="modulepreload" href="chunk-3I6PP2JX.js"><link rel="modulepreload" href="chunk-YO6O7OS3.js"><link rel="modulepreload" href="chunk-P732PLM7.js"></head>
 <body>
   <app-root></app-root>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>   
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ 
+  <!--Video.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/6.6.3/video.min.js"></script>
+ 
+  <!--HLS plugin for Video.js-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js"></script>
+ 
+  <!--FairPlay support-->
+  <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-eme@3.9.0/dist/videojs-contrib-eme.min.js"></script>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+ 
   <!-- <script src="yourPathToDash/dash.all.min.js"></script> -->
   <!-- <script src="http://vjs.zencdn.net/6.6.3/video.js"></script> -->
 
