@@ -15,6 +15,7 @@ import { DurationISOFormatPipe, TruncatePipe } from '../../pipe/duration-format.
 export class FavouritesComponent implements OnInit {
   favoriteChannels: any;
   isLoading: boolean = false;
+  expandedCardIndex: number | null = null;
   constructor(
     private apiService: CrudService,
     private router: Router,
@@ -25,6 +26,16 @@ export class FavouritesComponent implements OnInit {
     this.getRecentsListData();
     this.getFavoriteList();
   }
+
+// Function to expand the last card
+expandLastCard(index: number) {
+  this.expandedCardIndex = index;
+}
+
+// Function to close the expanded card when another card is clicked
+closeExpandedCard() {
+  this.expandedCardIndex = null;
+}
 
   // Check if a channel is marked as favorite
   isFavorite(channelId: number): boolean {

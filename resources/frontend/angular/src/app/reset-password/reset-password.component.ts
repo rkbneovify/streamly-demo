@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CrudService } from '../services/crud.service';
@@ -12,13 +12,14 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit {
   showPassword1: boolean = false;
   showPassword2: boolean = false;
   loading:boolean = false;
   resetPasswordForm!: FormGroup;
   token: any = this.ar.snapshot.paramMap.get('token');
   email: any;
+  isTokenValid:boolean = false;
 
   constructor(private fb: FormBuilder, private ar: ActivatedRoute,private crud:CrudService, private router: Router,
     private toastr: ToastrService) {
@@ -35,6 +36,11 @@ export class ResetPasswordComponent {
   }
   ngOnInit(){
     this.resetPasswordForm.controls['email'].setValue(this.email);
+    console.log('Token ==>',this.token)
+    if(this.token && this.email){
+      console.log('verify User Token');
+      this.veriftyUserToken();
+    }
   }
 
   passwordMatchValidator(formGroup: FormGroup) {
@@ -49,6 +55,12 @@ export class ResetPasswordComponent {
   }
 
   resetPassword_Link() {
+    if(this.isTokenValid){
+      this.toastr.error('Token is not valid.')
+      return;
+    }else{
+      console.log('Hello it else')
+    }
     this.loading = true;
     let data =   {
       "token": this.token,
@@ -64,6 +76,29 @@ export class ResetPasswordComponent {
         this.loading = false;
       },
       error:(err)=>{this.toastr.error(err.error.message);this.loading = false;},
+    });
+  }
+
+   veriftyUserToken(){
+    console.log('Token start')
+    this.loading = true;
+    let data =   {
+      "token": this.token,
+      "email": this.email,
+  }
+    this.crud.postRequest('validate-token',data).subscribe({
+      next:(res:any)=>{
+        // this.toastr.success('Token is ')
+        // this.toastr.success(res.message)
+        // this.router.navigateByUrl('/auth/login');
+        this.loading = false;
+      },
+      error:(err)=>{
+        this.toastr.error(err.error.message);
+        console.log('Token res==>',err,err.error.message);
+        this.isTokenValid = true;
+        this.loading = false;
+      },
     });
   }
 
