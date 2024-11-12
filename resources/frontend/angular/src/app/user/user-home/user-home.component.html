@@ -95,8 +95,8 @@
     </div>
     <div class="landing_carousel_section2_bottom mt-3 d-flex">
       <div class="card_page" *ngFor="let item of recentsPlayData ; let i = index"
-      [ngClass]="{ 'expanded': expandedCardIndex === recentsPlayData.length - 1 && i === recentsPlayData.length - 1 }"
-      (mouseenter)="i === recentsPlayData.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+      [ngClass]="{ 'expanded': expandedCardIndexR === recentsPlayData.length - 1 && i === recentsPlayData.length - 1 }"
+      (mouseenter)="i === recentsPlayData.length - 1 ? expandLastCardR(i) : closeExpandedCard()"
       (click)="closeExpandedCard()">
         <img
           *ngIf="item.image"
