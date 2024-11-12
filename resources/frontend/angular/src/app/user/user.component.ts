@@ -81,6 +81,8 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   private isAdmin!:string;
   navOpen: boolean = false;
   setActivePlanId!:string;
+  expandedCardIndex: number | null = null;
+
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -103,6 +105,19 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   checkIsAdmin():string{
     return this.isAdmin
   }
+
+  // Function to expand the last card
+expandLastCard(index: number) {
+  console.log('IsExpand',index);
+  this.expandedCardIndex = index;
+}
+
+// Function to close the expanded card when another card is clicked
+closeExpandedCard() {
+  console.log('IsClose');
+
+  this.expandedCardIndex = null;
+}
 
   ngOnInit(): void {
     // Listen for route changes

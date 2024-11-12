@@ -393,7 +393,10 @@
                 class="allChannelsList my-4 d-flex flex-nowrap"
                 *ngFor="let row of allChannelDataList"
               >
-                <div class="card_page" *ngFor="let item of row">
+                <div class="card_page" *ngFor="let item of row ; let i = index"
+                [ngClass]="{ 'expanded': ((expandedCardIndex === row.length - 2 && i === row.length - 2) || expandedCardIndex === row.length - 1 && i === row.length - 1) }"
+                (mouseenter)=" (i === row.length - 2 || i === row.length - 1) ? expandLastCard(i) : closeExpandedCard()"
+                (click)="closeExpandedCard()">
                   <img
                     *ngIf="item.image"
                     loading="lazy"
