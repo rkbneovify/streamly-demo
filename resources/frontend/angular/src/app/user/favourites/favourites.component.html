@@ -7,7 +7,7 @@
   <div class="landing_carousel_section2_bottom mt-3 d-flex">
     <div class="card_page" *ngFor="let item of favListData ; let i = index"
     [ngClass]="{ 'expanded': ((expandedCardIndex === favListData.length - 2 && i === favListData.length - 2) || expandedCardIndex === favListData.length - 1 && i === favListData.length - 1) }"
-    (mouseenter)="i === (favListData.length - 2 || favListData.length - 1) ? expandLastCard(i) : closeExpandedCard()"
+    (mouseenter)=" (i === favListData.length - 2 || i === favListData.length - 1) ? expandLastCard(i) : closeExpandedCard()"
     (click)="closeExpandedCard()">
       <img
         loading="lazy"
