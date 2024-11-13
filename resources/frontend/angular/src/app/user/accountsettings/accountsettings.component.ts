@@ -360,7 +360,11 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
         },
         error: (err) => {
           this.cancelSubscription.get('password').reset();
-          this.ts.error(err.error?.message);
+          if(err.error?.message.password){
+            this.ts.error(err.error?.message.password[0]);
+          }else{
+            this.ts.error(err.error?.message);
+          }
           this.isLoading = false;
         },
       });
