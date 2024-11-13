@@ -363,11 +363,13 @@ class NewChannelApiController extends Controller
             $programs = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%")
+                ->distinct('gracenote_schedule_program.TMSId')
                 ->get();
 
             // Process each program to add image URI and type, and remove assets
             $programs->map(function ($program) {
                 $program->image = $this->getURIFromAssetForProgram($program->assets);
+                $program->roku_image = $program->image;
                 $program->type = 'event';
                 $program->callSign = null;
                 $program->url = null;
@@ -378,11 +380,14 @@ class NewChannelApiController extends Controller
             $channels = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%")
+                ->where('channels.status', '=', '1')
                 ->get();
 
             // Process each channel to add image URI and type, and remove assets
             $channels->map(function ($channel) {
                 $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                unset($channel->assets);
                 $channel->type = 'channel';
                 $channel->description = null;
                 $channel->TMSId = null;
