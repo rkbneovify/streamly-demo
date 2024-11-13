@@ -7,8 +7,8 @@
     *ngFor="let row of data"
   >
     <div class="card_page" *ngFor="let item of row ; let i = index"
-    [ngClass]="{ 'expanded': expandedCardIndex === row.length - 1 && i === row.length - 1 }"
-    (mouseenter)="i === row.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+    [ngClass]="{ 'expanded': ((expandedCardIndex === row.length - 2 && i === row.length - 2) || expandedCardIndex === row.length - 1 && i === row.length - 1) }"
+    (mouseenter)="(i === row.length - 2 || i === row.length - 1) ? expandLastCard(i) : closeExpandedCard()"
     (click)="closeExpandedCard()">
       <img
         loading="lazy"

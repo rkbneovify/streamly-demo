@@ -580,7 +580,7 @@ input:-webkit-autofill:active {
   }
 
   .playstream_2 {
-    overflow-y: visible !important;
+    /* overflow-y: visible !important; */
     min-height: min-content;
   }
 
