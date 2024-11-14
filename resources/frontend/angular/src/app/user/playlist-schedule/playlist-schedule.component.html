@@ -2,7 +2,7 @@
   <div class="schedule_heading_container">
     <div class="schedule_channels">Streamly Channels</div>
     
-    <div class="schedule_categories" [@slideInOut]="'active'" #scrollablecategory>
+    <div class="schedule_categories" [@slideInOut]="'active'" [class.isMacCh]="isMobileChrom" #scrollablecategory>
       <div class="schedule_category" [class.active_categories]="selected_category == category.name" *ngFor="let category of categories" (click)="getScheduleData(category.name)">
         <img *ngIf="category?.image" loading="lazy" class="me-1" [src]="category?.image" [alt]="category.name">
         {{ category?.name }}
