@@ -250,8 +250,7 @@ export class PlaylistScheduleComponent
     if (this.isMacChrome) {
       console.log('this is mac chrome');
     }else{
-      console.log('This is onther browser')
-      if(this.currentWidth < 450 ){
+      if( navigator.userAgent.includes('Chrome') && this.currentWidth < 450 ){
       console.log('This is isMobileChrom')
         this.isMobileChrom = true;
       }
