@@ -252,6 +252,7 @@ export class PlaylistScheduleComponent
     }else{
       console.log('This is onther browser')
       if(this.currentWidth < 450 ){
+      console.log('This is isMobileChrom')
         this.isMobileChrom = true;
       }
     }

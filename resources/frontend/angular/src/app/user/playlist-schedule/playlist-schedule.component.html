@@ -45,7 +45,7 @@
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
     </div>
     
-    <div class="schedule_hours scrollByRight d-flex position-relative"[class.isMacCh]="isMobileChrom" [class.isMacCh]="isMacChrome" [@slideInOut]="'active'" #scrollableContent>
+    <div class="schedule_hours scrollByRight d-flex position-relative" [ngClass]="{'isMacCh':isMobileChrom}" [class.isMacCh]="isMacChrome" [@slideInOut]="'active'" #scrollableContent>
       <div class="schedule_hour" *ngFor="let hour of getCurrentTimeDate" #scrollItem>{{hour}}</div>
       <!-- <div class="schedule_hour">01:00 PM</div>
       <div class="schedule_hour">01:30 PM</div>
