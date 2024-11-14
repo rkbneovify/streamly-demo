@@ -25,6 +25,8 @@ import { ScheduleFormatterPipe } from '../../pipe/schedule-formatter.pipe';
 import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
+import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
+import { Subscription } from 'rxjs';
 
 declare let window: Window;
 
@@ -68,6 +70,10 @@ export class PlaylistScheduleComponent
   intervalLiveWidth: any;
   toggleLeftArrow: boolean = false;
   isMacChrome:boolean = false;
+  isMobileChrom:boolean = false;
+  currentWidth: number = 0;
+  
+  private screenSizeSubscription!: Subscription;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
@@ -209,7 +215,8 @@ export class PlaylistScheduleComponent
     private cdr: ChangeDetectorRef,
     private inactivityService: InactivityService,
     private tabInactivityService: TabInactivityService,
-    private utilsService:UtilsService
+    private utilsService:UtilsService,
+    private screenSizeService: ScreenSizeService
   ) {}
   ngOnInit(): void {
     this.getAllCategories();
@@ -231,11 +238,22 @@ export class PlaylistScheduleComponent
     
     const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
 
-     this.isMacChrome = navigator.userAgent.includes('Mac') && navigator.userAgent.includes('Chrome');
+    // Subscribe to screen width changes
+    this.screenSizeSubscription = this.screenSizeService
+    .getScreenWidth()
+    .subscribe((width) => {
+      this.currentWidth = width;
+      console.log(`Screen width is: ${this.currentWidth}`);
+    });
+
+     this.isMacChrome = navigator.userAgent.includes('Mac') && navigator.userAgent.includes('Chrome') ;
     if (this.isMacChrome) {
       console.log('this is mac chrome');
     }else{
       console.log('This is onther browser')
+      if(this.currentWidth < 450 ){
+        this.isMobileChrom = true;
+      }
     }
 
     this.utilsService.timeDifferenceInMinutes('02:00 PM')
