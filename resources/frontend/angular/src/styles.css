@@ -48,6 +48,10 @@ section {
 
 /* ------------------------ Utilities ----------------------------- */
 
+.text-White{
+  color: #ffffff;
+}
+
 .contain {
   width: min(1040px, 90%);
   margin-inline: auto;
