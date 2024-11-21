@@ -32,10 +32,10 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   updated_data: any;
   homeTimeZone!: string;
   Bearer_token: any;
-  planName!: string;
+  planName: string = null;
   renewalDate: any;
   cardDetails!: any;
-  cardDetails1: any;
+  cardDetails1: any = null;
   invoices: any;
   billingScheme!: string;
   tiredPlansDetails: any;
@@ -124,7 +124,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   saveChanges() {
     // saving changes here
     this.isLoading = true;
-    console.log('saveChanges');
     const userToken = localStorage.getItem('deviceInfo');
     if (userToken !== null) {
       try {
@@ -170,7 +169,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
               this.ts.error(res.message);
             }
             this.isLoading = false;
-            console.log('account end')
           },
           error: (err: any) => {
             this.isLoading = false;
@@ -185,7 +183,7 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
         });
         // }
       } catch (error) {
-        console.error('Error parsing JSON data:--->>>', error);
+        console.error('Error parsing JSON data', error);
         this.isLoading = false;
       }
     }
@@ -205,7 +203,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
       .subscribe({
         next: (res: any) => {
           try {
-            console.log('Auth setting Api Start')
           let planFullName;
           const plan1st = res?.plan?.nickname;
           const plan2nd = res?.plan?.currency;
@@ -215,9 +212,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
           this.userinfo = res?.userinfo;
           let userData = JSON.parse(localStorage.getItem('userDetails'));
           userData.name = res?.userinfo?.name
-
-          console.log('User Name is:-',userData);
-
           localStorage.setItem(
             'userDetails',
             JSON.stringify(userData)
@@ -251,7 +245,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
           const currentPlanID = JSON.stringify(res.plan?.id);
           localStorage.setItem('planId',currentPlanID);
           this.isLoading = false;
-          console.log('Auth setting Api End')
           } catch (error) {
             console.log(error)
           }finally{
@@ -281,8 +274,8 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
     const amount18 = +value[1]?.unit_amount / 100;
     const amount16 = +value[2]?.unit_amount / 100;
 
-    const upto10 = value[0].up_to;
-    const upto18 = value[1].up_to;
+    const upto10 = value[0]?.up_to;
+    const upto18 = value[1]?.up_to;
     if (value) {
       if (quant <= upto10) {
         this.total_price = quant * amount10;
@@ -408,7 +401,6 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
     // Close all open modals on component destroy
     const modals = document.querySelectorAll('.modal.show');
     modals.forEach(modal => {
-      console.log('Hi model')
       const modalInstance = bootstrap.Modal.getInstance(modal);
       if (modalInstance) {
         modalInstance.hide();
