@@ -351,8 +351,8 @@ Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
-Route::get('/react', 'Pages\LiveTv@webReact');
-Route::get('/vue', 'EpgController@staticepg');
+// Route::get('/react', 'Pages\LiveTv@webReact');
+// Route::get('/vue', 'EpgController@staticepg');
 Route::get('/vuehtml', 'EpgController@vuehtml');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check'); //check coupon
 
