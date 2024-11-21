@@ -314,12 +314,16 @@
       </div> -->
     </div>
   </div>
+
   <div
   class="account_details_container account_subscription_container"
   *ngIf="subscribed && !(!!planName) && !(!!cardDetails1)"
   >
-  <h3 class="account-heading mb-4 text-danger text-start">Other user details are not visible since your account is a test user account, and our site is operating in live mode.</h3>
+  <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
+    <span class="text-red-500 font-bold text-danger">**</span>
+    Other user details are not visible since your account is a test user account, and our site is operating in live mode.</p>
   </div>
+  
 </div>
 
 

@@ -175,8 +175,8 @@
     </div>
     <div class="landing_carousel_section2_bottom mt-3 d-flex">
       <div class="card_page" *ngFor="let data of list?.channels ; let i = index"
-      [ngClass]="{ 'expanded': expandedCardIndex === list?.channels.length - 1 && i === list?.channels.length - 1 }"
-      (mouseenter)="i === list?.channels.length - 1 ? expandLastCard(i) : closeExpandedCard()"
+      [ngClass]="{ 'expanded': (expandedCardIndex === list?.channels.length - 1 && i === list?.channels.length - 1) || (expandedCardIndex === list?.channels.length - 2 && i === list?.channels.length - 2) }"
+      (mouseenter)="(i === list?.channels.length - 1 || i === list?.channels.length - 2 ) ? expandLastCard(i) : closeExpandedCard()"
       (click)="closeExpandedCard()">
         <!-- <img loading="lazy" *ngIf="!data?.image" src="../../../assets/dummy-img/inf.png" alt=""> -->
         <img loading="lazy" *ngIf="data?.image" [src]="data?.image" alt="" />
