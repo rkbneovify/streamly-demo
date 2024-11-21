@@ -252,7 +252,7 @@ Route::get('logActivity', 'HomeTwoController@logActivity');
 
 
 
-
+/*
 Route::get('/logout', 'HomeTwoController@logout')->name('logout');
 Route::get('/login/google', 'HomeTwoController@rediretToGoogleLogin')->name('google.login');
 
@@ -313,7 +313,7 @@ Route::post('/insertpay/{StripeplanId}', 'Pages\Payment@pay')->name('insertpay')
 Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');
 Route::post('unfavorite/', 'Pages\LiveTv@unFavoriteChannel');
 Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
-
+*/
 
 Route::get('api/vuechannellist', 'EpgController@channellist');
 Route::post('api/vueremovefav', 'EpgController@removeFav');
@@ -351,8 +351,8 @@ Route::get('/qrtesting2', 'Admin\DashboardController@qr')->name('qrtesting2');;
 Route::get('/qrscanner', 'Admin\DashboardController@qrscanner');
 Route::get('/qrscanner2', 'Admin\DashboardController@qrscanner2');
 
-Route::get('/react', 'Pages\LiveTv@webReact');
-Route::get('/vue', 'EpgController@staticepg');
+// Route::get('/react', 'Pages\LiveTv@webReact');
+// Route::get('/vue', 'EpgController@staticepg');
 Route::get('/vuehtml', 'EpgController@vuehtml');
 Route::get('ajax-check', 'Admin\SubscriptionController@ajaxCheck')->name('ajax-check'); //check coupon
 
