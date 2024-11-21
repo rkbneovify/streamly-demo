@@ -252,7 +252,7 @@ Route::get('logActivity', 'HomeTwoController@logActivity');
 
 
 
-
+/*
 Route::get('/logout', 'HomeTwoController@logout')->name('logout');
 Route::get('/login/google', 'HomeTwoController@rediretToGoogleLogin')->name('google.login');
 
@@ -313,7 +313,7 @@ Route::post('/insertpay/{StripeplanId}', 'Pages\Payment@pay')->name('insertpay')
 Route::post('favorite/', 'Pages\LiveTv@favoriteChannel');
 Route::post('unfavorite/', 'Pages\LiveTv@unFavoriteChannel');
 Route::get('my_favorites', 'Pages\LiveTv@myFavorites');
-
+*/
 
 Route::get('api/vuechannellist', 'EpgController@channellist');
 Route::post('api/vueremovefav', 'EpgController@removeFav');
