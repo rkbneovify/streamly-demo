@@ -1,11 +1,9 @@
 <div class="landing_carousel_section2 mt-1">
   <div class="landing_carousel_section2_top">All Channels</div>
-  <div id="card_page_parent" class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap" *ngFor="let row of data">
-    <div class="card_page" *ngFor="let item of row; let i = index" 
-    [ngClass]="{ 'expanded': ((isLastCardExpanded && 2 === row.length - 2) || isLastCardExpanded && i === row.length - 1) }"
-    (mouseenter)="(i === row.length - 2 || i === row.length - 1) ? toggleLastCardExpansion() : closeLastCard()"
-    (click)="closeLastCard()">
-    >
+  <div id="card_page_parent" class="landing_carousel_section2_bottom my-4 d-flex flex-nowrap" *ngFor="let row of data; let r = index">
+    <div class="card_page" *ngFor="let item of row;  let i = index"
+    [ngClass]="{ 'expanded': (expandedCardIndex === row.length - 1 && i === row.length - 1) || (expandedCardIndex === row.length - 2 && i === row.length - 2) && r == expandedCardIndexRow }"
+    (mouseenter)="(i === row.length - 1 || i === row.length - 2 ) ? expandLastCard(i,r) : closeExpandedCard()">
       <img
         loading="lazy"
         *ngIf="item?.gracenote_data?.assets?.asset?.length"
