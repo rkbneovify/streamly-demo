@@ -787,10 +787,17 @@ export class RegisterComponent
 
     this.crud.postRequest('auth/register', body).subscribe({
       next: (res: any) => {
-        this.loading = false;
-        this.ts.success(res.message);
-        this.selectedTab = 'Confirmation';
-        this.completed = 7;
+        // message:"Your card was declined."
+        console.log(res)
+        if(res.message != 'Your card was declined.'){
+          this.loading = false;
+          this.ts.success(res.message);
+          this.selectedTab = 'Confirmation';
+          this.completed = 7;
+        }else{
+          this.ts.error(res.message);
+          this.loading = false;
+        }
       },
       error: (err: any) => {
         this.loading = false;
@@ -887,8 +894,10 @@ export class RegisterComponent
     if (this.paymentFormDetails.valid) {
       this.loading = true;
       const { token, error } = await this.stripe.createToken(this.card);
+      if(token){
+        this.submitPaymentDetails(token);
+      }
 
-      this.submitPaymentDetails(token);
       if (token) {
         this.onSuccess(token);
       } else {
@@ -897,10 +906,14 @@ export class RegisterComponent
     }
   }
 
-  onSuccess(token: any) {}
+  onSuccess(token: any) {
+    console.log('token card :-',token);
+  }
   onError(error: any) {
     if (error.message) {
       this.cardError = error.message;
+      this.ts.error(this.cardError);
+      this.loading = false;
     }
   }
 
