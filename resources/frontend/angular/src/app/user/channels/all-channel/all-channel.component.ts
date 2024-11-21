@@ -22,7 +22,8 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
   isLoading:boolean = false;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
-  isLastCardExpanded: boolean = false;
+  expandedCardIndexRow: number | null = null;
+  expandedCardIndex: number | null = null;
   @ViewChildren('card') cards!: QueryList<ElementRef>; // Access each card element
 
 
@@ -258,13 +259,16 @@ setplayerData(url:string,id:any){
     });
   }
 
-  // Toggle the expansion state for the last card
-toggleLastCardExpansion() {
-  this.isLastCardExpanded = !this.isLastCardExpanded;
-}
+  // Function to expand the last card
+  expandLastCard(index: number,row) {
+    this.expandedCardIndex = index;
+    this.expandedCardIndexRow = row;
+  }
+  
+  // Function to close the expanded card when another card is clicked
+  closeExpandedCard() {
+    this.expandedCardIndex = null;
+    this.expandedCardIndexRow = null;
 
-// Close the last card when another card is clicked
-closeLastCard() {
-  this.isLastCardExpanded = false;
-}
+  }
 }
