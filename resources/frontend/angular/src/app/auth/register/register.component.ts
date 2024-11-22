@@ -789,7 +789,7 @@ export class RegisterComponent
       next: (res: any) => {
         // message:"Your card was declined."
         console.log(res)
-        if(res.message != 'Your card was declined.'){
+        if(res.message == 'Payment successful !'){
           this.loading = false;
           this.ts.success(res.message);
           this.selectedTab = 'Confirmation';
