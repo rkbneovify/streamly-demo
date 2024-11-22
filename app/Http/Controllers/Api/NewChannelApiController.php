@@ -447,7 +447,7 @@ class NewChannelApiController extends Controller
                 ->first();
 
             if (!empty($program)) {
-                $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration')
+                $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration', 'start')
                     ->where('title', 'like', "%{$program->title}%")
                     ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
                     ->orderBy('start')
