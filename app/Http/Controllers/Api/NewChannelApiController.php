@@ -188,7 +188,7 @@ class NewChannelApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'typeurl' => 'required',
-            'day' => 'required',
+            'day' => 'nullable',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -291,7 +291,11 @@ class NewChannelApiController extends Controller
         } else if ($day == 'tomorrow') {
             $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
         }
-        $query->where('date', $gmdate);
+        if (!empty($day)) {
+            $query->where('date', $gmdate);
+        } else {
+            $query->where('end', '>=', $current_timestamp);
+        }
         $programs = $query->get();
         $programs->map(function ($program) {
             $program->image = $this->getURIFromAssetForProgram($program->assets);
