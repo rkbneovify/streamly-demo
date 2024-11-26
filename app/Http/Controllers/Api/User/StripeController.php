@@ -351,121 +351,105 @@ class StripeController extends Controller
     public function showUserDetails(Request $request)
     {
         $response_to_send = [];
-
         $userinfo = JWTAuth::user();
         $resultoffset = $userinfo->zipcode;
         $timezoneData = fetchHomeTimezoneUsingZip($resultoffset);
-        $timezone = $timezoneData[0];
-        $customerId = JWTAuth::user()->stripe_id;
+        $timezone = $timezoneData[0] ?? null;
 
-        // $subscription = JWTAuth::user()->subscriptions()->first();
-
-        $customer = \Stripe\Customer::retrieve($customerId);
-        $subscription = $customer->subscriptions->data[0] ?? JWTAuth::user()->subscriptions()->first();
-        // return ($subscription);
-        // die;
-        if (!$userinfo->subscribed('main')) {
-            $plan = (object) ['amount' => '0'];
-            $invoices = $this->get_user_invoices($customerId);
-            $renewaldatetime = '';
-        } else {
-            // $stripe_plan = $subscription->plan->id;
-
-            $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
-
-            if ($STRIPE_KEY[0]->type == $userinfo->mode) {
-                // $plan = \Stripe\Plan::retrieve(['id' => $stripe_plan, 'expand' => ["tiers"]]);
-                $plan = $subscription->plan ??  \Stripe\Plan::retrieve(['id' => $subscription->stripe_plan, 'expand' => ["tiers"]]);
-                $invoices_data =  \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
-
-                $invoices = $this->get_user_invoices($customerId);
-                // for renewal date
-                if ($subscription->cancel_at) {
-                    $renewaldatetime = 'Plan Expired';
-                } else {
-                    // dd(date('Y-m-d H:i:s', $subscription->current_period_end));
-                    $renewaldatetime = isset($subscription->current_period_end) ? date('Y-m-d H:i:s', $subscription->current_period_end) : 'No upcoming invoices';
-                }
-                // for subscription details
-                if (!empty($plan->tiers)) {
-                    $plan_name = ($plan->nickname ?? '') . ' ' . ('with ' . $subscription->quantity . ' quantity' ?? '') . ' ' . (Cashier::formatAmount($invoices_data->data[0]->total ?? '0', $invoices_data->data[0]->currency ?? 'USD')) . ' per ' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
-                    $plan_type = "Tiers" . ' ' . $plan->interval_count . ' ' . $plan->interval;
-                } else {
-                    $plan_name = ($plan->nickname ?? '') . ' ' . (Cashier::formatAmount($plan->amount ?? '0', $plan->currency ?? 'USD')) . '/' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
-                    $plan_type = $plan->billing_scheme;
-                }
-            } else {
-                $plan = null;
-                $invoices = '';
-                $renewaldatetime = '';
-            };
-        }
-
-        /*
-        if ($subscription) {
-            if ($subscription->ends_at) {
-                $renewaldatetime = 'Plan Expired';
-            } else {
-                $STRIPE_SECRET = DB::table('Stripe_keys')->where('status', 'active')->value('stripe_secret');
-
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://api.stripe.com//v1/invoices/upcoming?customer=' . $userinfo->stripe_id . '',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'GET',
-                    CURLOPT_HTTPHEADER => array(
-                        'Content-Type: application/x-www-form-urlencoded',
-                        'Authorization: Bearer ' . $STRIPE_SECRET . ''
-                    ),
-                ));
-
-                $response = curl_exec($curl);
-                // print_r($response);
-                // die;
-                $renewalDatestripe = json_decode($response);
-                curl_close($curl);
-                $renewaldatetime = property_exists($renewalDatestripe, 'next_payment_attempt') ? date('Y-m-d H:i:s', $renewalDatestripe->next_payment_attempt) : 'No upcoming invoices';
-                // $renewaldatetime = 'No upcoming invoices';
-            }
-        } else {
-            $renewaldatetime = '';
-        } */
-        $subscription_data = [
-            'id' => $subscription->id,
-            'name' => $plan_name ?? null,
-            'plan_type' => $plan_type ?? null,
-            'renewaldatetime' => $renewaldatetime ?? null,
-            'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
-
-        ];
+        $response_to_send['success'] = true;
+        $response_to_send['response_code'] = 200;
+        $response_to_send['message'] = "Setting details successfully retrieved";
+        // Always include user data
         $user_data = [
             "id" => $userinfo->id,
             "name" => $userinfo->name,
             "email" => $userinfo->email,
             "zipcode" => $resultoffset,
-            "timezone" => $timezone ?? null,
+            "timezone" => $timezone,
             "passcode" => HashUserID($userinfo->id)
         ];
+
+        $response_to_send['userinfo'] = $user_data;
+
+        try {
+            $customerId = $userinfo->stripe_id;
+
+            if (!$customerId) {
+                throw new \Exception("Stripe ID is null or invalid.");
+            }
+
+            $customer = \Stripe\Customer::retrieve($customerId);
+
+            // Retrieve subscription and plan
+            $subscription = $customer->subscriptions->data[0] ?? $userinfo->subscriptions()->first();
+
+            if (!$userinfo->subscribed('main')) {
+                $plan = (object) ['amount' => '0'];
+                $invoices = $this->get_user_invoices($customerId);
+                $renewaldatetime = '';
+            } else {
+                $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
+
+                if ($STRIPE_KEY[0]->type == $userinfo->mode) {
+                    $plan = $subscription->plan ?? \Stripe\Plan::retrieve(['id' => $subscription->stripe_plan, 'expand' => ["tiers"]]);
+                    $invoices_data = \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
+
+                    $invoices = $this->get_user_invoices($customerId);
+                    // For renewal date
+                    if ($subscription->cancel_at) {
+                        $renewaldatetime = 'Plan Expired';
+                    } else {
+                        $renewaldatetime = isset($subscription->current_period_end) ? date('Y-m-d H:i:s', $subscription->current_period_end) : 'No upcoming invoices';
+                    }
+
+                    // For subscription details
+                    if (!empty($plan->tiers)) {
+                        $plan_name = ($plan->nickname ?? '') . ' ' . ('with ' . $subscription->quantity . ' quantity' ?? '') . ' ' . (Cashier::formatAmount($invoices_data->data[0]->total ?? '0', $invoices_data->data[0]->currency ?? 'USD')) . ' per ' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                        $plan_type = "Tiers" . ' ' . $plan->interval_count . ' ' . $plan->interval;
+                    } else {
+                        $plan_name = ($plan->nickname ?? '') . ' ' . (Cashier::formatAmount($plan->amount ?? '0', $plan->currency ?? 'USD')) . '/' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                        $plan_type = $plan->billing_scheme;
+                    }
+                } else {
+                    $plan = null;
+                    $invoices = '';
+                    $renewaldatetime = '';
+                }
+            }
+
+            $subscription_data = [
+                'id' => $subscription->id,
+                'name' => $plan_name ?? null,
+                'plan_type' => $plan_type ?? null,
+                'renewaldatetime' => $renewaldatetime ?? null,
+                'payment_method' => ($userinfo->card_brand ?? '') . ' ' . ($userinfo->card_last_four ?? ''),
+            ];
+
+            $response_to_send['subscription'] = $subscription_data;
+            $response_to_send['plan'] = $plan ?? [];
+            $response_to_send['invoices'] = $invoices;
+        } catch (\Exception $e) {
+            // Handle errors from Stripe or invalid customer ID
+            $response_to_send['subscription'] = [];
+            $response_to_send['plan'] = [];
+            $response_to_send['invoices'] = [];
+            $response_to_send['error'] = $e->getMessage();
+        }
+
         $card_details = [
             "card_brand" => $userinfo->card_brand ?? null,
             "card_last_four" => $userinfo->card_last_four ?? null
         ];
-        $response_to_send['success'] = true;
-        $response_to_send['response_code'] = 200;
-        $response_to_send['message'] = "Setting details successfully retrieved";
-        $response_to_send['subscription'] = $subscription_data;
-        $response_to_send['plan'] = $plan ?? [];
-        $response_to_send['userinfo'] = $user_data;
-        $response_to_send['invoices'] = $invoices;
-        $response_to_send['card_details'] = $card_details;
-        // $response_to_send['timezone'] = $timezone;
-        // $response_to_send['renewaldatetime'] = $renewaldatetime;
-        // $response_to_send['zipcode'] = $resultoffset;
+
+        if (!empty($userinfo->card_brand)) {
+            $response_to_send['card_details'] = $card_details;
+        } else {
+            $response_to_send['card_details'] = [];
+        }
 
         return response()->json($response_to_send);
     }
+
 
     public function destroy($id)
     {
