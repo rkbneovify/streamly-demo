@@ -242,6 +242,7 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
             this.get_price(this.qunantity, this.tiredPlansDetails);
           }
 
+          console.log('===================>',this.subscribed+ '!(!!cardDetails1) ' + !(!!this.cardDetails1) + '   '+this.cardDetails1)
           const currentPlanID = JSON.stringify(res.plan?.id);
           localStorage.setItem('planId',currentPlanID);
           this.isLoading = false;
