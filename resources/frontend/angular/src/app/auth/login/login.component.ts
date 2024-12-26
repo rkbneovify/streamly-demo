@@ -4,132 +4,153 @@ import { NgClass, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
-import { log } from 'console';
-import { HttpHeaders } from '@angular/common/http';
-import {AuthService} from '../../services/authService/authservice.service'
+import { AuthService } from '../../services/authService/authservice.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, NgIf, ReactiveFormsModule, NgClass],
+  imports: [NgIf, ReactiveFormsModule, NgClass,RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   loginFormWithEmail!: FormGroup;
-  loginPasscodeForm!:FormGroup
+  loginPasscodeForm!: FormGroup;
   selectedTab: string = 'loginwithpassword';
-  showPassword: boolean = false;
-  showPasscode: boolean = false;
+  showPassword = false;
+  showPasscode = false;
   userDeviceID!: string;
-  loading:boolean = false;
-  userToken!: string;
-  constructor(private fb: FormBuilder, private crudService: CrudService, private router: Router, private ts: ToastrService,private setToken:AuthService) {
+  loading = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private crudService: CrudService,
+    private router: Router,
+    private toastr: ToastrService,
+    private authService: AuthService
+  ) {
+    this.initializeForms();
+  }
+
+  ngOnInit(): void {
+    this.checkStoredDeviceId();
+  }
+
+  private initializeForms() {
     this.loginFormWithEmail = this.fb.group({
-      email: ['', [Validators.required, Validators.email,Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i)]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i),
+        ],
+      ],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
     this.loginPasscodeForm = this.fb.group({
-      passcode: ['', [Validators.required, Validators.minLength(6)]],
+      passcode: ['', Validators.required],
     });
   }
 
-  ngOnInit(): void {
-    // Check if device ID is present in local storage
+  private checkStoredDeviceId() {
     const storedDeviceId = localStorage.getItem('deviceId');
     if (storedDeviceId) {
       this.userDeviceID = storedDeviceId;
       const tokenId = localStorage.getItem('access_token');
-      if (tokenId) {
-        this.router.navigate(['/']);
-      }
+      if (tokenId) this.router.navigate(['/']);
     } else {
       this.generateDeviceId();
-
     }
   }
-
 
   onSubmit() {
     if (this.loginFormWithEmail.valid) {
-      this.loading = true;
-      const formData = this.loginFormWithEmail.value;
-      formData.deviceid = this.userDeviceID;// Call the function to generate Device ID
-      this.crudService.postRequest('auth/login', formData).subscribe({
-        next: (res: any) => {
-
-          
-          if (res.response_code == 200) {
-            if(res.user.forced_change == 1){
-              this.loading = false;
-              localStorage.setItem('changeToken',res?.access_token);
-              this.router.navigateByUrl(`auth/change-password`);
-            }
-          else{
-            this.ts.success(res?.message)
-            const token = res?.access_token
-            let deviceInfo = {
-              access_token : res?.access_token,
-              device_info: res?.device_info,
-              personaldeviceid: res?.personaldeviceid,
-              sessionid: res?.sessionid,
-              timezone: res?.timezone,
-              token_type: res?.token_type,
-              userrole: res?.userrole,
-              subscribed:res?.subscribed
-            }
-            localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
-            this.setToken.setAuthorizationToken(token);
-            localStorage.setItem('userDetails', JSON.stringify(res?.user));
-            this.router.navigateByUrl('/user');
-          }
-          }
-        },
-        error: (err: any) => {
-          if (err.status == 479) {
-            this.loading = false;
-            localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
-            localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
-            localStorage.setItem('loginDetails',JSON.stringify(formData));
-            this.router.navigate(['auth/remove-device']);
-            this.ts.error(err.error.message,null, {
-              closeButton: true, // Enable close button
-              tapToDismiss: false, // Disable dismiss on click
-              timeOut:3000
-            }
-              );
-
-            // this.crudService.sendResponse(err.error.loggedindeviceinfolist.data);
-            // this.router.navigate(['auth/remove-device']);
-          } else {
-            this.loading = false;
-            this.ts.error(err.error.message);
-          }
-
-          if(err.status == 429){
-            this.loading = false;
-            this.router.navigate(['user']);
-
-          }
-        }
-      });
+      const formData = { ...this.loginFormWithEmail.value, deviceid: this.userDeviceID };
+      this.authenticateUser('auth/login', formData);
     }
   }
 
-  onSubmitpasscode(){
+  onSubmitpasscode() {
     if (this.loginPasscodeForm.valid) {
-      console.log('Form Submitted', this.loginPasscodeForm.value);
-    } else {
-      console.log('Form Invalid');
+      const formData = { ...this.loginPasscodeForm.value, deviceid: this.userDeviceID };
+      this.authenticateUser('auth/login-with-passcode', formData);
     }
+  }
+
+  private authenticateUser(apiEndpoint: string, formData: any) {
+    this.loading = true;
+
+    this.crudService.postRequest(apiEndpoint, formData).subscribe({
+      next: (res: any) => this.handleSuccessResponse(res),
+      error: (err: any) => this.handleErrorResponse(err, formData),
+    });
+  }
+
+  private handleSuccessResponse(res: any) {
+    if (res.response_code === 200) {
+      if (res.user.forced_change === 1) {
+        this.loading = false;
+        localStorage.setItem('changeToken', res.access_token);
+        this.router.navigateByUrl('auth/change-password');
+      } else {
+        this.storeUserData(res);
+        this.toastr.success(res.message);
+        this.router.navigateByUrl('/user');
+      }
+    }
+  }
+
+  private handleErrorResponse(err: any, formData: any) {
+    this.loading = false;
+
+    if (err.status === 479) {
+      this.handleDeviceLimitError(err, formData);
+    } else if (err.status === 429) {
+      this.router.navigate(['user']);
+    } else {
+      this.toastr.error(err.error.message);
+    }
+  }
+
+  private handleDeviceLimitError(err: any, formData: any) {
+    localStorage.setItem('loggedInDeviceDetail', JSON.stringify(err.error.loggedindeviceinfolist.data));
+    localStorage.setItem('numberOfDevices', JSON.stringify(err.error.loggedindeviceinfolist.numofdevice));
+    localStorage.setItem('loginDetails', JSON.stringify(formData));
+    this.router.navigate(['auth/remove-device']);
+    this.toastr.error(err.error.message, null, {
+      closeButton: true,
+      tapToDismiss: false,
+      timeOut: 3000,
+    });
+  }
+
+  private storeUserData(res: any) {
+    const token = res.access_token;
+    const deviceInfo = {
+      access_token: res.access_token,
+      device_info: res.device_info,
+      personaldeviceid: res.personaldeviceid,
+      sessionid: res.sessionid,
+      timezone: res.timezone,
+      token_type: res.token_type,
+      userrole: res.userrole,
+      subscribed: res.subscribed,
+    };
+
+    localStorage.setItem('deviceInfo', JSON.stringify(deviceInfo));
+    this.authService.setAuthorizationToken(token);
+    localStorage.setItem('userDetails', JSON.stringify(res.user));
   }
 
   private generateDeviceId() {
-    // this.userDeviceID = 'f5sd6f5sd5f4s65f4ew98fwe8fwe95dfd5f6def8'; localStorage.setItem('deviceId', this.userDeviceID);
     this.crudService.getRequest('auth/devicedetail').subscribe({
-      next: (res: any) => { console.log('hey'); this.userDeviceID = res?.deviceid; localStorage.setItem('deviceId', this.userDeviceID); },
-      error: err => console.log(err)
+      next: (res: any) => {
+        this.userDeviceID = res.deviceid;
+        localStorage.setItem('deviceId', this.userDeviceID);
+      },
+      error: (err) => console.error('Error generating device ID:', err),
     });
   }
 }

@@ -288,7 +288,7 @@
 
   <div
     class="account_details_container mt-4 account_Invoices_container overflow-auto py-2"
-    *ngIf="invoices"
+    *ngIf="invoices.lenght"
   >
     <p class="account-heading">Invoices</p>
     <div class="invoicesdetails_main">
@@ -317,7 +317,7 @@
 
   <div
   class="account_details_container account_subscription_container"
-  *ngIf="subscribed && !(!!planName) && !(!!cardDetails1)"
+  *ngIf="subscribed && !(!!planName) && !(!!cardDetails1.lenght)"
   >
   <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
     <span class="text-red-500 font-bold text-danger">**</span>
