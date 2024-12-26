@@ -348,40 +348,55 @@ class StripeController extends Controller
                 $paymentIntent = $event->data->object;
 
                 if ($paymentIntent->status == "active") {
-
                     $user = DB::table('users')->where('stripe_id', $paymentIntent->customer)->get();
 
                     $subscriptions = Subscription::where([
                         ['user_id', '=', $user[0]->id],
                         ['stripe_status', '=', 'trialing'],
-                        ['ends_at', '=', Null],
-                    ])->get('id');
+                        ['ends_at', '=', null],
+                    ])->get();
 
                     if ($subscriptions) {
-                        $updateSubscription = DB::table('subscriptions')
-                            ->where('id', $subscriptions[0]['id'])
-                            ->update(array(
+                        $subscriptionDetails = $subscriptions[0];
+
+                        // Fetch subscription details from Stripe
+                        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                        $stripeSubscription = \Stripe\Subscription::retrieve($paymentIntent->id);
+
+                        $plan = $stripeSubscription->items->data[0]->plan;
+                        $amount = number_format($plan->amount / 100, 2); // Convert cents to dollars
+                        $interval = $plan->interval; // e.g., "month", "year"
+                        $quantity = $stripeSubscription->items->data[0]->quantity; // Subscription quantity
+                        $planName = $plan->nickname ?: 'Default Plan'; // Assuming the plan has a nickname
+
+                        DB::table('subscriptions')
+                            ->where('id', $subscriptionDetails->id)
+                            ->update([
                                 'stripe_status' => 'active',
                                 'updated_at' => date("Y/m/d h:i:s"),
-                            ));
+                            ]);
 
                         $website_link = env('WEBSITE_URL');
 
-                        $html = '<html>
-                            Hi, ' . ucwords($user[0]->name) . '<br><br>
-                            Your trail period is end now and you have charged as per your subscription.
-                            thankyou for choosing to stay with us.<br><br>
-                            If you have any questions or if you find an error, please contact us at contact@streamlytv.com.
-                            <br><br>
-                            <b>Thanks,<br>
-                            Team Streamly<b>
+                        $html = '
+                                <html>
+                                    Hi, ' . ucwords($user[0]->name) . '<br><br>
+                                    Your trial period has ended, and your subscription is now active. You have been charged as per the following details:<br><br>
+                                    <b>Subscription Details:</b><br>
+                                    Plan: ' . htmlspecialchars($planName) . '<br>
+                                    Amount: $' . $amount . '<br>
+                                    Quantity: ' . $quantity . '<br>
+                                    Billing Interval: ' . ucfirst($interval) . '<br><br>
+                                    Thank you for choosing to stay with us!<br><br>
+                                    If you have any questions or find an error, please contact us at contact@streamlytv.com.<br><br>
+                                    <b>Thanks,<br>
+                                    Team Streamly</b>
+                                </html>';
 
-                        </html>';
-
-                        Mail::send('emails.general', ["html" => $html], function ($message) use ($request, $user) {
-                            $message->to($user[0]->email, $user[0]->name);
-                            $message->bcc('annu.sehrawat@oodles.io')
-                                ->subject('Subscription Activated ' . env('APP_NAME'));
+                        Mail::send('emails.general', ["html" => $html], function ($message) use ($user) {
+                            $message->to($user[0]->email, $user[0]->name)
+                                ->bcc('annu.sehrawat@oodles.io')
+                                ->subject('Subscription Activated - ' . env('APP_NAME'));
                         });
                     }
                 }
