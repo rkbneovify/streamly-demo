@@ -123,7 +123,10 @@ export class RegisterComponent
     this.availabilityForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', Validators.required],
-      zipcode: [null, [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
+      zipcode: [
+        null,
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5)],
+      ],
       city: ['', Validators.required],
       state: ['', Validators.required],
     });
@@ -145,7 +148,10 @@ export class RegisterComponent
     this.paymentFormDetails = this.fb.group({
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
-      cardZip: ['', [Validators.required,Validators.maxLength(5),Validators.minLength(5)]],
+      cardZip: [
+        '',
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5)],
+      ],
       cardEmail: [
         this.availabilityForm.value.email,
         [Validators.required, Validators.email],
@@ -323,8 +329,7 @@ export class RegisterComponent
       next: (res) => {
         this.all_Plans = res;
         if (this.all_Plans.length > 0) {
-          this.all_Plans[0].forEach((el: any) => {
-          });
+          this.all_Plans[0].forEach((el: any) => {});
         }
       },
       error: (err) => {
@@ -788,14 +793,20 @@ export class RegisterComponent
     this.crud.postRequest('auth/register', body).subscribe({
       next: (res: any) => {
         // message:"Your card was declined."
-        console.log(res)
-        if(res.message == 'Payment successful !'){
+        console.log(res);
+        // Check for success based on status or message
+        if (
+          res?.status === 200 ||
+          res?.message === 'Payment successful !' ||
+          res?.message === 'User Registered Successfully !'
+        ) {
           this.loading = false;
-          this.ts.success(res.message);
+          this.ts.success(res.message || 'Payment successful!');
           this.selectedTab = 'Confirmation';
           this.completed = 7;
-        }else{
-          this.ts.error(res.message);
+        } else {
+          const errorMessage = res?.message || 'Something went wrong. Please try again.';
+        this.ts.error(errorMessage);
           this.loading = false;
         }
       },
@@ -894,7 +905,7 @@ export class RegisterComponent
     if (this.paymentFormDetails.valid) {
       this.loading = true;
       const { token, error } = await this.stripe.createToken(this.card);
-      if(token){
+      if (token) {
         this.submitPaymentDetails(token);
       }
 
@@ -907,7 +918,7 @@ export class RegisterComponent
   }
 
   onSuccess(token: any) {
-    console.log('token card :-',token);
+    console.log('token card :-', token);
   }
   onError(error: any) {
     if (error.message) {
@@ -940,12 +951,11 @@ export class RegisterComponent
     this.checkCardDetails();
   }
 
-
   // Function to prevent input of more than 5 digits
-onZipcodeInput(event: any) {
-  const input = event.target.value;
-  if (input.length >= 5) {
-    event.preventDefault(); // Prevents user from entering more than 5 characters
+  onZipcodeInput(event: any) {
+    const input = event.target.value;
+    if (input.length >= 5) {
+      event.preventDefault(); // Prevents user from entering more than 5 characters
+    }
   }
-}
 }
