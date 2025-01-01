@@ -36,7 +36,7 @@ export class AccountsettingsComponent implements OnInit ,OnDestroy {
   renewalDate: any;
   cardDetails!: any;
   cardDetails1: any = null;
-  invoices: any;
+  invoices: any = [];
   billingScheme!: string;
   tiredPlansDetails: any;
   invoicesDate!: any;
