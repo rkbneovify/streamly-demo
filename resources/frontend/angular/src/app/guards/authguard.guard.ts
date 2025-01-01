@@ -1,11 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/authService/authservice.service';
 
 export const authguardGuard: CanActivateFn = (route, state) => {
   let user;
   const router = inject(Router); // Inject Router
-  const jsonData = localStorage.getItem('deviceInfo');
-  const token_access = localStorage.getItem('token');
+  const getlocalData = inject(AuthService);
+  
+  // const jsonData = localStorage.getItem('deviceInfo');
+  const jsonData = getlocalData.getlocalData('deviceInfo');
+  // const token_access = localStorage.getItem('token');
+  const token_access = getlocalData.getAuthorizationToken();
   if (jsonData !== null) {
     try {
       user = JSON.parse(jsonData);
@@ -43,7 +48,9 @@ export const authguardGuard: CanActivateFn = (route, state) => {
 
 export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
   const router = inject(Router); // Inject Router
-  const token = localStorage.getItem('token');
+  const getlocalData = inject(AuthService);
+
+  const token = getlocalData.getAuthorizationToken();
 
   if (token) {
     if (state.url !== '/user') {
@@ -59,7 +66,8 @@ export const authGuarRedirectToUser: CanActivateFn = (route, state) => {
 // Check user login status
 export const authGuarLoginStatus: CanActivateFn = (route, state) => {
   const router = inject(Router); // Inject Router
-  const token = localStorage.getItem('token');
+  const getlocalData = inject(AuthService);
+  const token = getlocalData.getAuthorizationToken();
 
   if (token) {
     if (state.url === '/user') {
