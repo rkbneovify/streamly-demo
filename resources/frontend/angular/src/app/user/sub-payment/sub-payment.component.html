@@ -37,7 +37,7 @@
             </div>
             <div class="d-flex justify-content-between">
               <p class="fw-bolder">Coupon</p>
-              <p>$ {{discount>0?discount + ' off':discount}}</p>
+              <p>$ {{ discount > 0 ? (discount | number:'1.2-2') + ' off' : (discount | number:'1.2-2') }}</p>
             </div>
             <div class="d-flex justify-content-between mt-2">
               <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
@@ -47,7 +47,7 @@
           <div class="row_total d-flex justify-content-between ">
             <p class="fw-bolder">Total</p>
             <p class="total">
-              ${{grandTotalPrice}}
+              ${{grandTotalPrice | number:'1.2-2'}}
             </p>
           </div>
         </div>
