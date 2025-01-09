@@ -259,7 +259,7 @@ class StripeController extends Controller
                             Hi ' . ucwords($user[0]->name) . ',<br><br>
                             Your card is expired.<br>
                             Please visit my accounts by visiting<br>
-                            ' . env('APP_URL') . '/account/settings
+                            ' . env('APP_URL') . '/user/user-settings
                             <br><br>
                             <b>Thanks,<br>
                             Team Streamly<b>

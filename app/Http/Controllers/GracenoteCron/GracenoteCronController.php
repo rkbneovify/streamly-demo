@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class GracenoteCronController extends Controller
 {
@@ -414,8 +415,29 @@ class GracenoteCronController extends Controller
             $programXml = $programResponse->getBody()->getContents();
             $programData = $this->xmlToJson($programXml);
 
-            foreach ($programData->programs->program as $program) {
-                $programMap[$program->TMSId] = $program;
+            if (isset($programData->programs)) {
+                // Extract programs from standard or nested structure
+                $programList = $programData->programs->program ?? $programData->programs->stdClass->program ?? null;
+
+                if (is_array($programList)) {
+                    foreach ($programList as $program) {
+                        if (isset($program->TMSId)) {
+                            $programMap[$program->TMSId] = $program;
+                        } else {
+                            Log::warning('Program object missing TMSId:', (array)$program);
+                        }
+                    }
+                } elseif (is_object($programList)) {
+                    if (isset($programList->TMSId)) {
+                        $programMap[$programList->TMSId] = $programList;
+                    } else {
+                        Log::warning('Program object missing TMSId:', (array)$programList);
+                    }
+                } else {
+                    Log::error('Invalid program data structure: Missing or invalid program list', (array)$programData);
+                }
+            } else {
+                Log::error('Invalid program data structure: Missing programs property', (array)$programData);
             }
         }
         unset($programXml, $programData); // Clear memory
