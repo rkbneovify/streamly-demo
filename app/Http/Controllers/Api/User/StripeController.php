@@ -295,6 +295,7 @@ class StripeController extends Controller
 
             //send user email after successfull payment
             // Send confirmation email Trail
+
             $this->sendSubscriptionConfirmationEmailTrail($user);
         } else {
             $newSubscription = $user->newSubscription('main', $StripeplanId)
@@ -314,10 +315,24 @@ class StripeController extends Controller
         // Send user email after successful payment
         $website_link = env('APP_URL');
 
+        $subscriptionDetails = $this->getSubscriptionDetails($user);
+        $subscription_data = $subscriptionDetails['subscription_data'];
+
+        $subscription_details = '';
+        if (!empty($subscription_data)) {
+            foreach ($subscription_data as $key => $value) {
+                $subscription_details .= '<br><b>' . ucfirst(str_replace('_', ' ', $key)) . ':</b> ' . $value;
+            }
+        } else {
+            $subscription_details = '<br><b>No subscription details available.</b><br>Error Message:' . $subscriptionDetails['error'];
+        }
+
         $html = '<html>
                     Hi, ' . $user->name . '<br><br>
                     Thanks for Subscribing! ' . env('APP_NAME') . '.<br>Your subscription is now active.<br>
-                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    <br><br>
+                    <b>Subscription Details:</b>' . $subscription_details . '
                     <br><br>
                     Thanks!<br>
                     Team Streamly
@@ -329,14 +344,28 @@ class StripeController extends Controller
         });
     }
 
+
     private function sendSubscriptionConfirmationEmailTrail($user)
     {
         $website_link = env('APP_URL');
-
+        $subscriptionDetails = $this->getSubscriptionDetails($user);
+        $subscription_data = $subscriptionDetails['subscription_data'];
+        // print_r($subscriptionDetails);
+        // die;
+        $subscription_details = '';
+        if (!empty($subscription_data)) {
+            foreach ($subscription_data as $key => $value) {
+                $subscription_details .= '<br><b>' . ucfirst(str_replace('_', ' ', $key)) . ':</b> ' . $value;
+            }
+        } else {
+            $subscription_details = '<br><b>No subscription details available.</b><br>Error Message:' . $subscriptionDetails['error'];
+        }
         $html = '<html>
                     Hi, ' . $user->name . '<br><br>
                     Thanks for Subscribing! ' . env('APP_NAME') . '.<br>Your FREE TRIAL PERIOD is now active. After the trial period ends, your credit card will be billed the monthly subscription amount. <br>
-                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a><br><br>, or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    Start watching StreamlyTV right here by visiting the link <a href="' . $website_link . '" target=_blank >' . $website_link . '</a> ,<br>or by downloading the StreamlyTV App from Apple, AppleTV, Android, Amazon Fire, Roku, or some SmartTV stores!
+                    <br><br>
+                    <b>Subscription Details:</b>' . $subscription_details . '
                     <br><br>
                     Thanks!<br>
                     Team Streamly
@@ -633,5 +662,66 @@ class StripeController extends Controller
         }
 
         return $invoices;
+    }
+
+    private function getSubscriptionDetails($user)
+    {
+        try {
+            $customerId = $user->stripe_id;
+            if (!$customerId) {
+                throw new \Exception("Stripe ID is null or invalid.");
+            }
+
+            $customer = \Stripe\Customer::retrieve($customerId);
+            $subscription = $customer->subscriptions->data[0] ?? $user->subscriptions()->first();
+
+            // print_r($subscription);
+            // var_dump($user->subscribed('main'));
+            // die;
+            // if (!$user->subscribed('main')) {
+            //     return [
+            //         'subscription_data' => [],
+            //         'error' => ''
+            //     ];
+            // }
+
+            $STRIPE_KEY = DB::table('Stripe_keys')->where('status', 'active')->get();
+            if ($STRIPE_KEY[0]->type != $user->mode) {
+                return [
+                    'subscription_data' => [],
+                    'error' => ''
+                ];
+            }
+
+            $plan = $subscription->plan ?? \Stripe\Plan::retrieve(['id' => $subscription->stripe_plan, 'expand' => ["tiers"]]);
+            $invoices_data = \Stripe\Invoice::all(['customer' => $customerId, 'expand' => ['data.charge']]);
+            $renewaldatetime = $subscription->cancel_at
+                ? 'Plan Expired'
+                : (isset($subscription->current_period_end) ? date('Y-m-d H:i:s', $subscription->current_period_end) : 'No upcoming invoices');
+
+            // For subscription details
+            if (!empty($plan->tiers)) {
+                $plan_name = ($plan->nickname ?? '') . ' ' . ('with ' . $subscription->quantity . ' quantity' ?? '') . ' ' . (Cashier::formatAmount($invoices_data->data[0]->total ?? '0', $invoices_data->data[0]->currency ?? 'USD')) . ' per ' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                $plan_type = "Tiers" . ' ' . $plan->interval_count . ' ' . $plan->interval;
+            } else {
+                $plan_name = ($plan->nickname ?? '') . ' ' . (Cashier::formatAmount($plan->amount ?? '0', $plan->currency ?? 'USD')) . '/' . ($plan->interval_count ?? '') . ' ' . ($plan->interval ?? '');
+                $plan_type = $plan->billing_scheme;
+            }
+            return [
+                'subscription_data' => [
+                    'id' => $subscription->id,
+                    'name' => $plan_name,
+                    'plan_type' => $plan_type,
+                    'renewaldatetime' => $renewaldatetime,
+                    'payment_method' => ($user->card_brand ?? '') . ' ' . ($user->card_last_four ?? ''),
+                ],
+                'error' => ''
+            ];
+        } catch (\Exception $e) {
+            return [
+                'subscription_data' => [],
+                'error' => $e->getMessage(),
+            ];
+        }
     }
 }
