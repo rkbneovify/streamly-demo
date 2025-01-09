@@ -317,7 +317,7 @@
 
   <div
   class="account_details_container account_subscription_container"
-  *ngIf="subscribed && !(!!planName) && !(!!cardDetails1.lenght)"
+  *ngIf="subscribed && !(!!planName) && !(!!cardDetails1?.lenght)"
   >
   <p class="text-gray-300 text-lg font-medium d-flex text-white gap-1">
     <span class="text-red-500 font-bold text-danger">**</span>

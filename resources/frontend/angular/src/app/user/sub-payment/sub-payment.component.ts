@@ -1,4 +1,4 @@
-import { DatePipe, KeyValuePipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { DatePipe, DecimalPipe, KeyValuePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -47,6 +47,7 @@ import { HttpHeaders } from '@angular/common/http';
     ReactiveFormsModule,
     KeyValuePipe,
     DatePipe,
+    DecimalPipe
   ],
   templateUrl: './sub-payment.component.html',
   styleUrl: './sub-payment.component.scss',
@@ -118,8 +119,6 @@ export class SubPaymentComponent implements OnInit {
       digit6: ['', Validators.required],
     });
 
-    console.log('this.userEmail',this.userEmail)
-
     this.paymentFormDetailSub = this.fb.group({
       nameOnCard: ['', Validators.required],
       // cardNumber: ['', Validators.required],
@@ -135,8 +134,6 @@ export class SubPaymentComponent implements OnInit {
       paymentState: ['', Validators.required],
       country: ['', Validators.required],
     });
-    // this.userDetails = JSON.parse(localStorage.getItem('userDetails')|| '').email;
-    // console.log(this.userDetails,'===================emial=============');
   }
 
   async ngOnInit() {
@@ -148,13 +145,11 @@ export class SubPaymentComponent implements OnInit {
       )
       .subscribe((apiResponse: any) => {
         this.zipcodedata = [...apiResponse];
-        console.log('API Response:', apiResponse);
         if (
           apiResponse.length == 1 &&
           apiResponse[0].city &&
           apiResponse[0].state
         ) {
-          console.log('ZipCode Data inside the if =>', this.zipcodedata);
           this.paymentFormDetailSub
             .get('paymentState')
             ?.setValue(apiResponse[0].state);
@@ -177,18 +172,11 @@ export class SubPaymentComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => {
-          console.log('======= res>', res);
           this.cardZipData = res.some((zcode: any) => {
-            console.log(
-              zcode.value,
-              '==========================',
-              this.paymentFormDetailSub.value.cardZip
-            );
             return zcode.value === this.paymentFormDetailSub.value.cardZip;
           });
 
           if (this.cardZipData) {
-            console.log(this.cardZipData, 'data in if');
             this.ts.success('ZipCode is valid');
             this.paymentFormDetailSub
               .get('paymentState')
@@ -197,7 +185,6 @@ export class SubPaymentComponent implements OnInit {
           } else {
             this.ts.error('ZipCode is not valid');
           }
-          console.log(this.cardZipData, '========>cardzip');
         },
         error: (err: any) => {
           console.log(err);
@@ -218,7 +205,6 @@ export class SubPaymentComponent implements OnInit {
       if (this.couponFormControl.value === '') {
         // this.applyCoupon();
         this.validateCoupon();
-        console.log('touched');
       }
       // this.touchedOnce = true;
     });
@@ -245,6 +231,7 @@ export class SubPaymentComponent implements OnInit {
   basicPrice: any = 20;
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
+  couponCode:string = '';
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -252,9 +239,9 @@ export class SubPaymentComponent implements OnInit {
         next: (data: any) => {
           if (data.message != `No such coupon: '${coupon}'`) {
             this.couponValidationResult = data;
-            console.log('Coupon validation data:', data);
             this.ts.success(data.message);
             this.couponDataDetails = data;
+            this.couponCode = coupon;
             this.grandTotalPrice = this.totalPrice;
             if (this.couponDataDetails) {
               this.discountCode();
@@ -271,11 +258,16 @@ export class SubPaymentComponent implements OnInit {
           this.ts.error(err.error.message.coupon[0]);
           this.grandTotalPrice = this.totalPrice;
           this.couponDataDetails = null;
+          this.couponCode = '';
         },
+        complete:()=>{
+          this.couponFormControl.reset();
+        }
       });
     } else {
       this.ts.error('Enter Coupon');
       this.couponDataDetails = null;
+      this.couponCode = ''
       this.discount = 0;
       this.grandTotalPrice = this.totalPrice;
     }
@@ -383,7 +375,6 @@ export class SubPaymentComponent implements OnInit {
       };
       setTimeout(() => {
         this.card = this.elements.create('card', cards);
-        console.log(this.card);
         this.card.mount(this.cardInfo.nativeElement);
         this.card.addEventListener('change', this.cardHandler);
       }, 4000);
@@ -393,36 +384,35 @@ export class SubPaymentComponent implements OnInit {
   async createStripeToken() {
     this.paymentFormDetailSub.markAllAsTouched();
     this.loading = true;
-    console.log(this.card, 'card');
     const { token, error } = await this.stripe.createToken(this.card);
-    console.log(token, 'token');
-
-    this.submitPaymentDetails(token);
-    if (token) {
-      this.onSuccess(token);
-    } else {
-      this.onError(error);
-    }
+      if (token) {
+        this.submitPaymentDetails(token);
+      }
+      if (token) {
+        this.onSuccess(token);
+      } else {
+        this.onError(error);
+      }
   }
 
   onSuccess(token: any) {}
   onError(error: any) {
     if (error.message) {
       this.cardError = error.message;
+      this.ts.error(this.cardError);
+      this.loading = false;
     }
   }
 
   discountCode() {
-    console.log(this.couponDataDetails, '============ifout============>');
     this.grandTotalPrice = this.totalPrice;
     if (this.couponDataDetails) {
-      console.log(this.couponDataDetails, '==============ifin==========>');
       this.discount = this.couponDataDetails?.amountoff;
       if (this.couponDataDetails?.amountoff) {
         this.grandTotalPrice = this.totalPrice - this.discount;
       } else if (this.couponDataDetails?.percentoff) {
         this.discount =
-          this.totalPrice * (this.couponDataDetails?.percentoff / 100);
+        this.totalPrice * (this.couponDataDetails?.percentoff / 100);
         this.grandTotalPrice = this.totalPrice - this.discount;
       }
     } else {
@@ -456,7 +446,7 @@ export class SubPaymentComponent implements OnInit {
       card_brand: token.card.brand,
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetailSub.value.cardZip,
-      coupon: this.discount,
+      coupon:  this.couponCode,
     };
 
     this.crud
@@ -502,6 +492,7 @@ export class SubPaymentComponent implements OnInit {
         this.crud.getRequest('get-basic-plan/' + id).subscribe({
           next: (data: any) => {
             this.checkoutPlans = data;
+            this.totalPrice = this.checkoutPlans.plandetails.amount / 100;
             this.grandTotalPrice = this.checkoutPlans.plandetails.amount / 100;
 
             this.initializeKey(data.STRIPE_KEY);
