@@ -1,4 +1,4 @@
-import { NgIf, NgFor, KeyValuePipe, DatePipe } from '@angular/common';
+import { NgIf, NgFor, KeyValuePipe, DatePipe, DecimalPipe } from '@angular/common';
 import {
   AfterViewChecked,
   AfterViewInit,
@@ -60,6 +60,7 @@ import {
     ReactiveFormsModule,
     KeyValuePipe,
     DatePipe,
+    DecimalPipe
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
@@ -350,6 +351,7 @@ export class RegisterComponent
             this.checkoutPlans = data;
             this.selectedTab = 'Payment';
             this.completed = 4;
+            this.totalPrice = this.checkoutPlans.plandetails.amount / 100;
             this.grandTotalPrice = this.checkoutPlans.plandetails.amount / 100;
             this.paymentFormDetails
               .get('cardEmail')
@@ -674,6 +676,7 @@ export class RegisterComponent
     this.searchCoupnTerm.next(event.target.value);
   }
 
+  couponCode:string = '';
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -683,6 +686,7 @@ export class RegisterComponent
             this.couponValidationResult = data;
             this.ts.success(data.message);
             this.couponDataDetails = data;
+            this.couponCode = coupon;
             this.grandTotalPrice = this.totalPrice;
             if (this.couponDataDetails) {
               this.discountCode();
@@ -699,12 +703,17 @@ export class RegisterComponent
           this.ts.error(err.error.message.coupon[0]);
           this.grandTotalPrice = this.totalPrice;
           this.couponDataDetails = null;
+          this.couponCode = '';
         },
+        complete:()=>{
+          this.couponFormControl.reset();
+        }
       });
     } else {
       this.ts.error('Enter Coupon');
       this.couponDataDetails = null;
       this.discount = 0;
+      this.couponCode = ''
       this.grandTotalPrice = this.totalPrice;
     }
     // }
@@ -787,14 +796,11 @@ export class RegisterComponent
       card_brand: token.card.brand,
       card_last_four: token.card.last4,
       zip_code: this.paymentFormDetails.value.cardZip,
-      coupon: this.discount,
+      coupon: this.couponCode,
     };
 
     this.crud.postRequest('auth/register', body).subscribe({
       next: (res: any) => {
-        // message:"Your card was declined."
-        console.log(res);
-        // Check for success based on status or message
         if (
           res?.status === 200 ||
           res?.message === 'Payment successful !' ||
@@ -918,7 +924,6 @@ export class RegisterComponent
   }
 
   onSuccess(token: any) {
-    console.log('token card :-', token);
   }
   onError(error: any) {
     if (error.message) {
