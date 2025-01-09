@@ -221,18 +221,30 @@ class StripeController extends Controller
                             Thank you!<br>
                             The ' . env('APP_NAME') . ' Team!
                         </html>';
+
+                try {
+                    if ($coupon = $request->get('coupon')) {
+                        $subscription_details = $this->withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                    } else {
+                        $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
+                    }
+                } catch (\Exception $e) {
+
+                    if (isset($user->id)) {
+
+                        $user->delete();
+                    }
+                    return response()->json([
+                        'error' => 'Something Went Wrong.',
+                        'message' => $e->getMessage()
+
+                    ]);
+                }
                 // Send email
                 Mail::send('emails.general', ["html" => $html], function ($message) use ($request) {
                     $message->to($request->input('email'), $request->input('name'))
                         ->subject(env('APP_NAME') . ': Account Registration');
                 });
-
-                if ($coupon = $request->get('coupon')) {
-                    $subscription_details = $this->withCouponCheckTrialDays($user, $request, $coupon, $StripeplanId, $quantity, $trial_days, $paymentMethod);
-                } else {
-                    $subscription_details = $this->withoutCouponCheckTrialDays($user, $request, $StripeplanId, $quantity, $trial_days, $paymentMethod);
-                }
-
                 return response()->json([
                     'message' => 'User Registered Successfully !',
                     'subscription_details' => $subscription_details
