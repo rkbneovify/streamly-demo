@@ -24,6 +24,7 @@ import {
   Validators,
   ReactiveFormsModule,
   NgModel,
+  AbstractControl,
 } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterLink } from '@angular/router';
@@ -122,14 +123,14 @@ export class RegisterComponent
     private cd: ChangeDetectorRef
   ) {
     this.availabilityForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', Validators.required],
+      fullName: ['', [Validators.required, this.noWhitespaceValidator]],
+      email: ['', [Validators.required, Validators.email, this.noWhitespaceValidator]],
       zipcode: [
         null,
-        [Validators.required, Validators.maxLength(5), Validators.minLength(5)],
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5),this.noWhitespaceValidator,],
       ],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
+      city: ['', [Validators.required, this.noWhitespaceValidator]],
+      state: ['', [Validators.required, this.noWhitespaceValidator]],
     });
 
     this.wrong_zipcodeDetials = new FormGroup({
@@ -164,6 +165,11 @@ export class RegisterComponent
       paymentState: ['', Validators.required],
       country: ['', Validators.required],
     });
+  }
+
+  noWhitespaceValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    return isWhitespace ? { whitespace: true } : null;
   }
 
   async ngOnInit() {
