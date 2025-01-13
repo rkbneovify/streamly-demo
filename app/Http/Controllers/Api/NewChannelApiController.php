@@ -269,13 +269,17 @@ class NewChannelApiController extends Controller
                 return $channel;
             });
 
-            $response = [
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Epg Guide Retrieved successfully.',
-                'data' => $record,
-
-            ];
+            $response = [];
+            $response['success'] = true;
+            $response['response_code'] = 200;
+            $response['message'] = 'Epg Guide Retrieved successfully.';
+            if ($day == 'tomorrow') {
+                $gmdate = gmdate('Y-m-d', strtotime('+1 day'));
+                $start_time = GracenoteScheduleProgram::select('start')->where('date', $gmdate)->orderBy('start', 'asc')->first();
+                // var_dump($start_time);
+                $response['start'] = $start_time->start;
+            }
+            $response['data'] = $record;
             return response()->json($response, 200);
         }
     }
