@@ -232,6 +232,7 @@ export class SubPaymentComponent implements OnInit {
   totalPrice: any = this.basicPrice;
   grandTotalPrice: any = this.basicPrice;
   couponCode:string = '';
+  isCouPonApply:boolean = false;
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -252,6 +253,9 @@ export class SubPaymentComponent implements OnInit {
             this.couponDataDetails = null;
             this.grandTotalPrice = this.totalPrice;
           }
+
+          this.isCouPonApply = true;
+          console.log(this.isCouPonApply,'====>')
         },
         error: (err: any) => {
           console.error('Error validating coupon:', err);
@@ -259,19 +263,29 @@ export class SubPaymentComponent implements OnInit {
           this.grandTotalPrice = this.totalPrice;
           this.couponDataDetails = null;
           this.couponCode = '';
-        },
+        }
+        ,
         complete:()=>{
-          this.couponFormControl.reset();
+          // this.couponFormControl.reset();
         }
       });
     } else {
       this.ts.error('Enter Coupon');
-      this.couponDataDetails = null;
+      // this.couponDataDetails = null;
+      // this.couponCode = ''
+      // this.discount = 0;
+      // this.grandTotalPrice = this.totalPrice;
+      // this.isCouPonApply = true;
+    }
+    // }
+  }
+
+  cancelDisCount(){
+    this.couponDataDetails = null;
       this.couponCode = ''
       this.discount = 0;
       this.grandTotalPrice = this.totalPrice;
-    }
-    // }
+      this.isCouPonApply = false;
   }
 
   // counter inc

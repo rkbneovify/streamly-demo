@@ -40,8 +40,10 @@
               <p>$ {{ discount > 0 ? (discount | number:'1.2-2') + ' off' : (discount | number:'1.2-2') }}</p>
             </div>
             <div class="d-flex justify-content-between mt-2">
-              <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
-              <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button>
+              <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" [readOnly]="isCouPonApply"/>
+              <!-- <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button> -->
+              <button *ngIf="!isCouPonApply" class="btn_hover btn-coupon" [class.btn-bg-gold]="couponFormControl.value != ''" (click)="validateCoupon()">Apply</button>
+              <button *ngIf="isCouPonApply" class="btn-coupon btn_hover btn-bg-gold" (click)="cancelDisCount()">Cancel</button>
             </div>
           </div>
           <div class="row_total d-flex justify-content-between ">
@@ -111,8 +113,9 @@
 
             </div>
             <div class="d-flex justify-content-between">
-              <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" />
-              <button class="btn_hover btn-coupon" (click)="validateCoupon()">Apply</button>
+              <input [formControl]="couponFormControl" type="text" class="input_standred input-coupon" placeholder="Coupon Code" [readOnly]="isCouPonApply"/>
+              <button *ngIf="!isCouPonApply" class="btn_hover btn-coupon" [class.btn-bg-gold]="couponFormControl.value != ''" (click)="validateCoupon()">Apply</button>
+              <button *ngIf="isCouPonApply" class="btn-coupon btn_hover btn-bg-gold" (click)="cancelDisCount()">Cancel</button>
             </div>
           </div>
 
