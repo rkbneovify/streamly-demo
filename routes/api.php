@@ -177,7 +177,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('epg-banner', 'Api\ChannelSliderApiController@getEpgBanner')->middleware(['jwt.verify']);
 });
 
-Route::get('check-update', 'Api\VersionUpdateController@checkUpdate');
+Route::post('check-update', 'Api\VersionUpdateController@checkUpdate');
 
 // Superadmin Routes
 Route::group(['middleware' => ['jwt.verify', 'role:superadmin|admin'], 'prefix' => 'sadmin', 'namespace' => 'Admin'], function ($router) {
