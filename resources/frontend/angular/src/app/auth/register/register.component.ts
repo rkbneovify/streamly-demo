@@ -683,6 +683,7 @@ export class RegisterComponent
   }
 
   couponCode:string = '';
+  isCouPonApply:boolean = false;
   validateCoupon() {
     const coupon = this.couponFormControl.value;
     if (coupon) {
@@ -703,16 +704,20 @@ export class RegisterComponent
             this.couponDataDetails = null;
             this.grandTotalPrice = this.totalPrice;
           }
+
+          this.isCouPonApply = true;
         },
         error: (err: any) => {
           console.error('Error validating coupon:', err);
           this.ts.error(err.error.message.coupon[0]);
           this.grandTotalPrice = this.totalPrice;
           this.couponDataDetails = null;
+          this.isCouPonApply = false;
+
           this.couponCode = '';
         },
         complete:()=>{
-          this.couponFormControl.reset();
+          // this.couponFormControl.reset();
         }
       });
     } else {
@@ -723,6 +728,14 @@ export class RegisterComponent
       this.grandTotalPrice = this.totalPrice;
     }
     // }
+  }
+
+  cancelDisCount(){
+    this.couponDataDetails = null;
+      this.couponCode = ''
+      this.discount = 0;
+      this.grandTotalPrice = this.totalPrice;
+      this.isCouPonApply = false;
   }
 
   // {
