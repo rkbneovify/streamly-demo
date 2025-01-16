@@ -166,7 +166,29 @@ export class PlaylistScheduleComponent
     });
   }
 
+  getTwoDaysSchedule(utcStartTime: number, scheduleHours: string[]): string[] {
+    // Convert UTC start time to local time
+    const localTime = new Date(utcStartTime * 1000); // Convert seconds to milliseconds
+    const localHours = localTime.getHours();
+    const localMinutes = localTime.getMinutes();
+
+    // Format the local time to match the scheduleHours format
+    const formattedTime = `${localHours % 12 || 12}:${localMinutes
+      .toString()
+      .padStart(2, '0')} ${localHours >= 12 ? 'PM' : 'AM'}`;
+
+    // Find the index of the formatted local time in the scheduleHours array
+    const startIndex = scheduleHours.indexOf(formattedTime);
+    if (startIndex === -1) {
+      throw new Error('Start time not found in the schedule hours.');
+    }
+
+    // Splice the array to get data for two days (48 entries)
+    return scheduleHours.slice(startIndex, startIndex + 48);
+  }
+
   // filter time acc to currnet time
+  startTimeT:number;
   getCurrentTimeDate: any;
   getCurrentTimeDataFirstIndex: any;
   getCurrentTimeSlot(dayFilter?: string) {
@@ -188,7 +210,7 @@ export class PlaylistScheduleComponent
       ];
     } else {
       this.getCurrentTimeDate = [
-        ...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM')),
+        ...this.scheduleHours.slice(this.scheduleHours.indexOf(this.convertUtcToLocalTime(this.startTimeT))),
         ...this.scheduleHours,
       ];
       this.count = 0;
@@ -223,6 +245,7 @@ export class PlaylistScheduleComponent
     this.getScheduleData('');
     this.getFavoriteList();
     this.getCurrentTimeSlot();
+    this.getScheduleT();
     // this.intervalLiveWidth()
     // setInterval(()=>{
     //   this.liveCurrentTime+=10
@@ -264,6 +287,28 @@ export class PlaylistScheduleComponent
     }, 1000*60*this.utilsService.timeDifferenceInMinutes(this.getCurrentTimeDate[1]));
 
     this.tabInactivityService.startTabInactivityCheck();
+
+    console.log('Data ==>',this.convertUtcToLocalTime(1736812800))
+  }
+
+  convertUtcToLocalTime(utcTimestamp: number): string {
+    // Convert UTC seconds to milliseconds
+    const date = new Date(utcTimestamp * 1000);
+
+    // Format the time to the local timezone
+    const options: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    };
+
+    // Get the local time string
+    let timeString = date.toLocaleTimeString(undefined, options);
+
+    // Ensure AM/PM is uppercase
+    timeString = timeString.replace(/\s*(am|pm)$/i, (match) => match.toUpperCase());
+
+    return timeString;
   }
 
   ngAfterViewInit() {
@@ -299,73 +344,83 @@ export class PlaylistScheduleComponent
   count: number = 0;
   isProcessing: boolean = false;
   scrollContent(position: number) {
-    // Prevent the function from running again if it's already processing
+    // Prevent multiple executions
     if (this.isProcessing) {
       return;
     }
-
+  
+    // Early return for invalid `position` values
+    if (position === 0 && this.count === 0) {
+      this.resetScroll();
+      return;
+    }
+  
     this.isProcessing = true; // Set the processing flag
-    if (position !== 0) {
-      this.changeColorBackgroung = true;
-      this.toggleLeftArrow = true;
-      this.go_Live = true;
-
-      let indexNumber;
-      if (
-        this.scrollableContent.nativeElement &&
-        this.scrollableContent1.nativeElement
-      ) {
-        // Perform the scroll
-        this.scrollableContent.nativeElement.scrollLeft += position;
-        this.scrollableContent1.nativeElement.scrollLeft += position;
-
-        if (position > 0) {
-          this.isNextDay = this.checkIfNextDay(
-            this.getCurrentTimeDate[this.count + 1]
-          )
-            ? true
-            : false;
-          console.log('isNext data=>',this.isNextDay,this.getCurrentTimeDate[this.count + 1])
-
-          this.count += 1;
-        } else {
-          this.count -= 1;
-          this.isNextDay = this.checkIfNextDay(
-            this.getCurrentTimeDate[this.count]
-          )
-            ? true
-            : false;
+  
+    try {
+      if (position !== 0) {
+        // Enable controls when scrolling
+        this.changeColorBackgroung = true;
+        this.toggleLeftArrow = true;
+        this.go_Live = true;
+  
+        if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+          // Perform scrolling
+          this.scrollableContent.nativeElement.scrollLeft += position;
+          this.scrollableContent1.nativeElement.scrollLeft += position;
+  
+          // Update counters and check if it's the next day
+          if (position > 0) {
+            this.count++;
+          } else {
+            this.count--;
+          }
+  
+          // Boundary check for `count`
+          if (this.count < 0) {
+            this.count = 0;
+          } else if (this.count >= this.getCurrentTimeDate.length) {
+            this.count = this.getCurrentTimeDate.length - 1;
+          }
+  
+          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
+          console.log('isNext data =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+        }
+      } else {
+        this.resetScroll(); // Reset when position is 0
+      }
+  
+      // Handle edge case: count is 0
+      if (this.count === 0) {
+        this.resetScroll();
+  
+        if (!this.isTimePassed) {
+          this.refreshPage(); // Refresh if needed
         }
       }
-    } else {
-      // Reset the scroll and counters if position is 0
-      this.scrollableContent.nativeElement.scrollLeft = 0;
-      this.scrollableContent1.nativeElement.scrollLeft = 0;
-      this.changeColorBackgroung = false;
-      this.toggleLeftArrow = false;
-      this.go_Live = false;
-      this.count = 0;
-      this.isNextDay = false;
+    } catch (error) {
+      console.error("Error during scrollContent execution:", error);
+    } finally {
+      // Ensure `isProcessing` is reset after processing
+      setTimeout(() => {
+        this.isProcessing = false;
+      }, 500);
     }
-
-    if (this.count == 0) {
-      this.scrollableContent.nativeElement.scrollLeft = 0;
-      this.scrollableContent1.nativeElement.scrollLeft = 0;
-      this.toggleLeftArrow = false;
-      this.changeColorBackgroung = false;
-      this.go_Live = false;
-      this.isNextDay = false;
-
-      if(!this.isTimePassed){
-        this.refreshPage()
-      }
-    }
-
-    // Simulate a short delay to represent the completion of the scroll
-    setTimeout(() => {
-      this.isProcessing = false; // Set the flag back to false after scroll finishes
-    }, 500); // Adjust the delay as per your actual processing time
   }
+  
+  // Helper method to reset scroll and state
+  private resetScroll() {
+    if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+      this.scrollableContent.nativeElement.scrollLeft = 0;
+      this.scrollableContent1.nativeElement.scrollLeft = 0;
+    }
+    this.changeColorBackgroung = false;
+    this.toggleLeftArrow = false;
+    this.go_Live = false;
+    this.count = 0;
+    this.isNextDay = false;
+  }
+
 
   // getScheduleProgram: any;
   // getAllScheduleData:any;
@@ -392,10 +447,34 @@ export class PlaylistScheduleComponent
       next: (res: any) => {
         // Append new data to the existing list for lazy loading
         // console.log('getScheduleChannelLogo res  ===>',res.data);
+        this.startTimeT = +res?.start
         this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
         // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
         this.filteredPrograms = [...res.data];
         this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
+  getScheduleT(genre?: string, dayFilter: string = 'tomorrow') {
+    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
+
+    const body = {
+      typeurl: 'mpd',
+      genre: genre == 'All' ? '' : genre,
+      day: dayFilter,
+      start: this.startIndex,
+      limit: this.limit,
+    };
+
+    this.apiService.postRequest('auth/epg-guide', body).subscribe({
+      next: (res: any) => {
+        console.log('====>',res.start);
+        this.startTimeT = +res?.start
+        console.log(this.startTimeT)
       },
       error: (err: any) => {
         console.error(err);
@@ -521,65 +600,127 @@ export class PlaylistScheduleComponent
   //   return { width, margin_left };
   // }
 
+  // calculateWidth(start: any, end: any, index: any) {
+  //   if (!start || !end) {
+  //     return { width: 0, margin_left: 0 };
+  //   }
+  //   const startDate = new Date(start * 1000);
+  //   const endDate = new Date(end * 1000);
+  //   let currentTime = this.getDateTimeWithProvidedTime(
+  //     this.getCurrentTimeDataFirstIndex
+  //   ).getTime();
+
+  //   // console.log('selectedDay before==>',this.selectedDay);
+  //   if (this.selectedDay === 'Tomorrow') {
+  //     // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
+  //     // console.log('this.selectedDay==>',this.selectedDay);
+  //     const tomorrow = new Date();
+  //     tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
+  //     tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
+  //     currentTime = tomorrow.getTime(); // Use this as current time
+  //   }
+  //   // console.log('selectedDay after==>',this.selectedDay);
+
+  //   let width = 0;
+  //   let margin_left = 0;
+
+  //   if (index === 0) {
+  //     if (startDate.getTime() < currentTime) {
+  //       // The event has already started
+  //       if (endDate.getTime() < currentTime) {
+  //         // The event has also ended
+  //         width = 0; // No width because the event has passed
+  //         margin_left = 0;
+  //       } else {
+  //         // The event is currently ongoing
+  //         const durationMs = endDate.getTime() - currentTime;
+  //         const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //         width = durationMinutes * 5;
+  //         margin_left = 0;
+  //       }
+  //     } else {
+  //       // The event has not started yet
+  //       const durationMs = endDate.getTime() - startDate.getTime();
+  //       const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //       const timeDifferenceMs = startDate.getTime() - currentTime;
+  //       const timeDifferenceMinutes = Math.floor(
+  //         timeDifferenceMs / (1000 * 60)
+  //       );
+  //       width = durationMinutes * 5;
+  //       margin_left = timeDifferenceMinutes * 5;
+  //     }
+  //   } else {
+  //     // For all other indices (not the first one)
+  //     const durationMs = endDate.getTime() - startDate.getTime();
+  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
+  //     width = durationMinutes * 5;
+  //     margin_left = 0;
+  //   }
+
+  //   return { width, margin_left };
+  // }
   calculateWidth(start: any, end: any, index: any) {
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
     }
+  
     const startDate = new Date(start * 1000);
     const endDate = new Date(end * 1000);
+  
     let currentTime = this.getDateTimeWithProvidedTime(
       this.getCurrentTimeDataFirstIndex
     ).getTime();
-
-    // console.log('selectedDay before==>',this.selectedDay);
+  
+    // Adjust `currentTime` if `selectedDay` is 'Tomorrow'
     if (this.selectedDay === 'Tomorrow') {
-      // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
-      // console.log('this.selectedDay==>',this.selectedDay);
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
-      tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
-      currentTime = tomorrow.getTime(); // Use this as current time
+      tomorrow.setHours(5, 30, 0, 0); // Set to 5:30 AM
+      currentTime = tomorrow.getTime();
     }
-    // console.log('selectedDay after==>',this.selectedDay);
-
+  
     let width = 0;
     let margin_left = 0;
-
+  
     if (index === 0) {
-      if (startDate.getTime() < currentTime) {
-        // The event has already started
-        if (endDate.getTime() < currentTime) {
-          // The event has also ended
-          width = 0; // No width because the event has passed
+      if (startDate.getTime() <= currentTime) {
+        // The event has already started or is ongoing
+        if (endDate.getTime() <= currentTime) {
+          // Event has ended
+          width = 0;
           margin_left = 0;
         } else {
-          // The event is currently ongoing
-          const durationMs = endDate.getTime() - currentTime;
-          const durationMinutes = Math.floor(durationMs / (1000 * 60));
-          width = durationMinutes * 5;
+          // Event is currently ongoing
+          const remainingDurationMs = endDate.getTime() - currentTime;
+          const remainingDurationMinutes = Math.floor(remainingDurationMs / (1000 * 60));
+          width = remainingDurationMinutes * 5; // Calculate width based on remaining time
           margin_left = 0;
         }
       } else {
-        // The event has not started yet
-        const durationMs = endDate.getTime() - startDate.getTime();
-        const durationMinutes = Math.floor(durationMs / (1000 * 60));
+        // Event has not started yet
+        const totalDurationMs = endDate.getTime() - startDate.getTime();
+        const totalDurationMinutes = Math.floor(totalDurationMs / (1000 * 60));
         const timeDifferenceMs = startDate.getTime() - currentTime;
-        const timeDifferenceMinutes = Math.floor(
-          timeDifferenceMs / (1000 * 60)
-        );
-        width = durationMinutes * 5;
-        margin_left = timeDifferenceMinutes * 5;
+        const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
+  
+        width = totalDurationMinutes * 5; // Full width of the event
+        margin_left = timeDifferenceMinutes * 5; // Offset for the event
       }
     } else {
-      // For all other indices (not the first one)
-      const durationMs = endDate.getTime() - startDate.getTime();
-      const durationMinutes = Math.floor(durationMs / (1000 * 60));
-      width = durationMinutes * 5;
-      margin_left = 0;
+      // For all other indices
+      const totalDurationMs = endDate.getTime() - startDate.getTime();
+      const totalDurationMinutes = Math.floor(totalDurationMs / (1000 * 60));
+      width = totalDurationMinutes * 5; // Full width of the event
+      margin_left = 0; // No margin for other indices
     }
-
+  
+    // Prevent negative widths or margins
+    width = Math.max(0, width);
+    margin_left = Math.max(0, margin_left);
+  
     return { width, margin_left };
   }
+  
 
   getDateTimeWithProvidedTime(timeStr: string) {
     // Get the current date
@@ -734,6 +875,7 @@ export class PlaylistScheduleComponent
 
   // filter according to today and tommorrow
   changeDays(day: string, isDataChange = true) {
+    console.log(day);
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     if (isDataChange) {
@@ -760,37 +902,6 @@ export class PlaylistScheduleComponent
       targetDate = today;
       const now = Math.floor(Date.now() / 1000);
     }
-    // const targetStart = new Date(targetDate.setHours(0, 0, 0, 0)).getTime() / 1000;
-    // const targetEnd = new Date(targetDate.setHours(23, 59, 59, 999)).getTime() / 1000;
-
-    // this.filteredPrograms = [];
-    // this.apiService.getRequest('auth/epg-guide').subscribe({
-    //   next: (res: any) => {
-    //     res.data.forEach((service: any) => {
-    //       if (service.prgSvcId) {
-    //         const currentPrograms = service.program.filter((program: any) => {
-    //           const programStart = new Date(program.start * 1000).getTime() / 1000;
-    //           const programEnd = new Date(program.end * 1000).getTime() / 1000;
-    //           return (
-    //             (programStart >= targetStart && programStart <= targetEnd) ||
-    //             (programEnd >= targetStart && programEnd <= targetEnd) ||
-    //             (programStart <= targetStart && programEnd >= targetEnd)
-    //           );
-    //         });
-
-    //         if (currentPrograms.length > 0) {
-    //           this.filteredPrograms.push({
-    //             ...service,
-    //         program: currentPrograms,
-    //           });
-    //         }
-    //       }
-    //     });
-    //   },
-    //   error: (err: any) => {
-    //     console.error(err);
-    //   },
-    // });
   }
 
   changeColorBackgroung: boolean = false;
@@ -839,6 +950,7 @@ export class PlaylistScheduleComponent
         }
       });
   }
+
   favListData: any;
   // Fetch favorite list
   getFavoriteList(): void {
