@@ -97,6 +97,7 @@
     }
     .schedule_days {
       width: 168px;
+
       height: 40px;
       background-color: transparent;
       select {
@@ -118,7 +119,8 @@
     .schedule_days select option {
       background-color:rgb(0 39 73) !important;
       line-height: 24px !important;
-      padding: 8px 20px 8px 20px !important;
+      padding: 8px 20px 8px 20px;
+
 
     }
 
@@ -176,6 +178,7 @@
 
       .righ-side-move{
       padding-top: 8px;
+
         height: 40px;
         will-change: box-shadow, transform;
         // box-shadow: 0px 2px 4px rgba(45, 35, 66, 0.4), 0px 7px 13px -3px rgba(45, 35, 66, 0.3);
@@ -283,6 +286,8 @@
             align-items: center;
             background-color: #000000a9;
             opacity: 0;
+            flex-direction: column;
+            float: inline-end;
             transition: opacity 400ms ease-in-out;
             img{
               width:48px;
@@ -312,6 +317,7 @@
           left: 15px;
           font-size: 1.3rem;
           filter: contrast(0.6);
+          
         }
       }
     }

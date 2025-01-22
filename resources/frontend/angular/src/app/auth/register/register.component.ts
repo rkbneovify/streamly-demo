@@ -123,14 +123,14 @@ export class RegisterComponent
     private cd: ChangeDetectorRef
   ) {
     this.availabilityForm = this.fb.group({
-      fullName: ['', [Validators.required, this.noWhitespaceValidator]],
+      fullName: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
       email: ['', [Validators.required, Validators.email, this.noWhitespaceValidator]],
       zipcode: [
         null,
-        [Validators.required, Validators.maxLength(5), Validators.minLength(5),this.noWhitespaceValidator,],
+        [Validators.required, Validators.maxLength(5), Validators.minLength(5),this.noWhitespaceValidator,this.onlyDigitValidator],
       ],
-      city: ['', [Validators.required, this.noWhitespaceValidator]],
-      state: ['', [Validators.required, this.noWhitespaceValidator]],
+      city: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
+      state: ['', [Validators.required, this.noWhitespaceValidator, this.onlyStringWithSpacesValidator]],
     });
 
     this.wrong_zipcodeDetials = new FormGroup({
@@ -167,10 +167,27 @@ export class RegisterComponent
     });
   }
 
+
+
   noWhitespaceValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const isWhitespace = (control.value || '').trim().length === 0;
     return isWhitespace ? { whitespace: true } : null;
   }
+
+  onlyDigitValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const isDigit = /^[0-9]*$/.test(control.value || '');
+    return isDigit ? null : { digit: true };
+  }
+
+  onlyStringWithSpacesValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const isValid = /^[a-zA-Z\s]*$/.test(control.value || '');
+    return isValid ? null : { onlyString: true };
+  }
+
+  replaceNonDigits(input:any) {
+    return input.replace(/\D/g, ''); // Replace any non-digit character with ''
+}
+  
 
   async ngOnInit() {
     this.searchTerms
@@ -250,7 +267,8 @@ export class RegisterComponent
   }
 
   onSearch(searchTerm: any): void {
-    this.searchTerms.next(searchTerm.term);
+    console.log(this.replaceNonDigits(searchTerm.term));
+    this.searchTerms.next(this.replaceNonDigits(searchTerm.term));
     if (this.selectedTab == 'Payment') {
       this.paymentFormDetails.get('cardZip')?.setValue(searchTerm.term);
       this.searchZipCardInput = searchTerm.term;
@@ -407,6 +425,29 @@ export class RegisterComponent
     });
   }
 
+  allowOnlyDigits(event: KeyboardEvent): void {
+    const charCode = event.charCode || event.keyCode || event.which;
+    if (charCode < 48 || charCode > 57) {
+      // Prevent input if it's not a digit (ASCII range for digits: 48-57)
+      event.preventDefault();
+    }
+  }
+
+  allowOnlyStrings(event: KeyboardEvent): void {
+    const charCode = event.charCode || event.keyCode || event.which;
+  
+    // Allow only alphabet characters (A-Z, a-z)
+    if (
+      !(charCode >= 65 && charCode <= 90) && // Uppercase A-Z
+      !(charCode >= 97 && charCode <= 122) && // Lowercase a-z
+      charCode !== 32 // Space character
+    ) {
+      event.preventDefault();
+    }
+  }
+  
+  
+
   // getotp
   getOtpWithMail(verifiMailDetails: any) {
     this.crud
@@ -555,6 +596,8 @@ export class RegisterComponent
     }
   }
 
+
+
   // check the mail is already register or not
   checkEmailRegistration(data: any) {
     this.userState = data.state;
@@ -698,6 +741,7 @@ export class RegisterComponent
             if (this.couponDataDetails) {
               this.discountCode();
             }
+            this.isCouPonApply = true;
           } else {
             this.ts.error(data.message);
             this.discount = 0;
@@ -705,7 +749,7 @@ export class RegisterComponent
             this.grandTotalPrice = this.totalPrice;
           }
 
-          this.isCouPonApply = true;
+
         },
         error: (err: any) => {
           console.error('Error validating coupon:', err);
@@ -736,6 +780,7 @@ export class RegisterComponent
       this.discount = 0;
       this.grandTotalPrice = this.totalPrice;
       this.isCouPonApply = false;
+      this.couponFormControl.reset();
   }
 
   // {
@@ -976,10 +1021,37 @@ export class RegisterComponent
   }
 
   // Function to prevent input of more than 5 digits
-  onZipcodeInput(event: any) {
-    const input = event.target.value;
-    if (input.length >= 5) {
-      event.preventDefault(); // Prevents user from entering more than 5 characters
+  // onZipcodeInput(event: any) {
+  //   const input = event.target.value;
+  //   console.log('===',input)
+  //   if (input.length >= 5) {
+  //     event.preventDefault(); // Prevents user from entering more than 5 characters
+  //   }
+  // }
+
+        // Function to prevent input of more than 5 digits
+        onZipcodeKeyPress(event: any) {
+          const input = event.target.value;
+          console.log('===',input)
+          if (input.length >= 5) {
+            event.preventDefault(); // Prevents user from entering more than 5 characters
+          }
+        }
+    
+    onZipcodeInput(event: any): void {
+      const input = event.target.value;
+    
+      // Remove any non-numeric characters
+      const sanitizedInput = input.replace(/[^0-9]/g, '');
+      
+      // Limit input to 5 characters
+      if (input > 5) {
+        event.target.value = sanitizedInput.substring(0, 5);
+      } else {
+        event.target.value = sanitizedInput;
+      }
+      this.paymentFormDetails.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
+      console.log('Sanitized Input:', event.target.value);
     }
-  }
+  
 }
