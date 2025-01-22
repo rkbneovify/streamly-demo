@@ -267,6 +267,7 @@ export class PlaylistScheduleComponent
     .subscribe((width) => {
       this.currentWidth = width;
       console.log(`Screen width is: ${this.currentWidth}`);
+
     });
 
      this.isMacChrome = navigator.userAgent.includes('Mac') && navigator.userAgent.includes('Chrome') ;
@@ -374,6 +375,7 @@ export class PlaylistScheduleComponent
             this.count++;
           } else {
             this.count--;
+
           }
   
           // Boundary check for `count`
@@ -687,6 +689,7 @@ export class PlaylistScheduleComponent
         // The event has already started or is ongoing
         if (endDate.getTime() <= currentTime) {
           // Event has ended
+          
           width = 0;
           margin_left = 0;
         } else {
@@ -811,6 +814,7 @@ export class PlaylistScheduleComponent
           this.showPlaylist();
           this.programDetailData = res.data;
         } else {
+          
           this.toaster.error('No Program details found.');
         }
 
