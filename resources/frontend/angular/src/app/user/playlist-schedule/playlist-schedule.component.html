@@ -185,6 +185,7 @@
       <div class="col-4 section1_img p-0" [ngClass]="{'d-flex':!programDetailData.image}">
         <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
       <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
+      
       <!-- <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p> -->
       </div>
       <div class="col-lg-4 col-12 playstream_2">

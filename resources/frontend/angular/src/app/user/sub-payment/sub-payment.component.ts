@@ -136,6 +136,27 @@ export class SubPaymentComponent implements OnInit {
     });
   }
 
+  allowOnlyDigits(event: KeyboardEvent): void {
+    const charCode = event.charCode || event.keyCode || event.which;
+    if (charCode < 48 || charCode > 57) {
+      // Prevent input if it's not a digit (ASCII range for digits: 48-57)
+      event.preventDefault();
+    }
+  }
+
+  allowOnlyStrings(event: KeyboardEvent): void {
+    const charCode = event.charCode || event.keyCode || event.which;
+  
+    // Allow only alphabet characters (A-Z, a-z)
+    if (
+      !(charCode >= 65 && charCode <= 90) && // Uppercase A-Z
+      !(charCode >= 97 && charCode <= 122) && // Lowercase a-z
+      charCode !== 32 // Space character
+    ) {
+      event.preventDefault();
+    }
+  }
+
   async ngOnInit() {
     this.searchTerms
       .pipe(
@@ -247,6 +268,7 @@ export class SubPaymentComponent implements OnInit {
             if (this.couponDataDetails) {
               this.discountCode();
             }
+          this.isCouPonApply = true;
           } else {
             this.ts.error(data.message);
             this.discount = 0;
@@ -254,7 +276,6 @@ export class SubPaymentComponent implements OnInit {
             this.grandTotalPrice = this.totalPrice;
           }
 
-          this.isCouPonApply = true;
           console.log(this.isCouPonApply,'====>')
         },
         error: (err: any) => {
@@ -286,6 +307,7 @@ export class SubPaymentComponent implements OnInit {
       this.discount = 0;
       this.grandTotalPrice = this.totalPrice;
       this.isCouPonApply = false;
+      this.couponFormControl.reset();
   }
 
   // counter inc
@@ -604,10 +626,31 @@ export class SubPaymentComponent implements OnInit {
   }
 
   // Function to prevent input of more than 5 digits
-  onZipcodeInput(event: any) {
-    const input = event.target.value;
-    if (input.length >= 5) {
-      event.preventDefault(); // Prevents user from entering more than 5 characters
+
+    // Function to prevent input of more than 5 digits
+    onZipcodeKeyPress(event: any) {
+      const input = event.target.value;
+      console.log('===',input)
+      if (input.length >= 5) {
+        event.preventDefault(); // Prevents user from entering more than 5 characters
+      }
     }
+
+onZipcodeInput(event: any): void {
+  const input = event.target.value;
+
+  // Remove any non-numeric characters
+  const sanitizedInput = input.replace(/[^0-9]/g, '');
+  
+  // Limit input to 5 characters
+  if (input > 5) {
+    event.target.value = sanitizedInput.substring(0, 5);
+  } else {
+    event.target.value = sanitizedInput;
   }
+  this.paymentFormDetailSub.get('cardZip').setValue(sanitizedInput, { emitEvent: false });
+  console.log('Sanitized Input:', event.target.value);
 }
+
+}
+// this.paymentFormDetailSub.get('cardZip').setValue(sanitizedValue, { emitEvent: false });
