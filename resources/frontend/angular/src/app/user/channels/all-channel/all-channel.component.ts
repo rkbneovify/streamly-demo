@@ -6,7 +6,7 @@ import {  Router } from '@angular/router';
 import { Toast, ToastrService } from 'ngx-toastr';
 import { DurationISOFormatPipe, TruncatePipe } from '../../../pipe/duration-format.pipe';
 import { ScreenSizeService } from '../../../services/screenSize/screen-size.service';
-import { Subscription } from 'rxjs';
+import { Subscription, zip } from 'rxjs';
 
 @Component({
   selector: 'app-all-channel',
@@ -94,8 +94,10 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
 
   getPrivacyP() {
   this.isLoading = true;
+  const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
     const body = {
       "typeurl": "mpd",
+      zipcode:zipcode
   }
     this.apiService.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
