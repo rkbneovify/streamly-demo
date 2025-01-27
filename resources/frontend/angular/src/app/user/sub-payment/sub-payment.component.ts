@@ -459,7 +459,7 @@ export class SubPaymentComponent implements OnInit {
   submitPaymentDetails(token: any) {
     const formData = this.paymentFormDetailSub.value;
     let trial_day;
-    let quantity = this.device_per_unit;
+    let quantity = this.selectedPlanType == 'per_unit' ? 1:this.device_per_unit;
 
     if (this.checkoutPlans.plandetails?.trial_period_days) {
       trial_day = this.checkoutPlans.plandetails?.trial_period_days;
