@@ -128,6 +128,10 @@ class RokuEpgGuideApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 1;
+                $zipcode = "18344";
+            }
             if ($urlType == 'manifest') {
                 $type = 'smooth_url';
             } else if ($urlType == 'm3u8') {
@@ -145,7 +149,11 @@ class RokuEpgGuideApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
             if ($validate) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    $query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
                 }
             }
             $query->where('channels.status', '=', '1');
