@@ -564,9 +564,12 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   getPlayerData(): Promise<any> {
     // this.isLoading = true;
+  const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+
     const body = {
       channel_id: this.playerChannelId,
       current_datetime: this.getCurrentFormattedDateTime(),
+      zipcode:zipcode
     };
 
     return new Promise((resolve, reject) => {
@@ -817,8 +820,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   allChannelList: any;
   getAllChannels() {
+    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
     const body = {
       typeurl: 'mpd',
+      zipcode:zipcode
     };
     this.crud.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
