@@ -329,9 +329,12 @@ closeExpandedCard() {
       return;
     }
 
+    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+
     const term = {
       search: searchTerm,
       typeurl: 'mpd',
+      zipcode
     };
 
     this.crud.postRequest('auth/new-search', term).subscribe({
