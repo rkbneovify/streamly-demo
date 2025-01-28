@@ -47,7 +47,8 @@ class RokuChannelImagesCronController extends Controller
     {
         // $query = Channel::select('gracenote_sources.assets')
         //     ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-
+        $folderPath = storage_path('app/public/channel_roku_images/');
+        $this->clearFolder($folderPath);
         $query = GracenoteSource::select('assets');
 
         // return $query->get();
