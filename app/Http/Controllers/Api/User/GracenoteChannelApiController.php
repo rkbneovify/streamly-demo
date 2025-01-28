@@ -33,6 +33,10 @@ class GracenoteChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 1;
+                $zipcode = "18344";
+            }
             $imagePath = url("/uploads/channellogo/");
 
             if ($urlType == 'manifest') {
@@ -52,7 +56,11 @@ class GracenoteChannelApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
             if ($validate) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    $query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -141,6 +149,10 @@ class GracenoteChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 1;
+                $zipcode = "18344";
+            }
             $imagePath = url("/uploads/channellogo/");
 
             if ($urlType == 'manifest') {
@@ -160,7 +172,11 @@ class GracenoteChannelApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
             if ($validate) {
                 if (!empty($zipcode)) {
-                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    $query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
                 }
             }
             if (!empty($genre) && $genre != 'Others') {
