@@ -317,6 +317,102 @@ class NewChannelApiController extends Controller
         return $programs;
     }
 
+    public function searchChannelProgram(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'search' => 'required',
+            'typeurl' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'validation_error',
+                'message' => $validator->errors()
+            ], 400);
+        } else {
+            $user = JWTAuth::user();
+            $zipcode = $request->get('zipcode');
+            $search = $request->input('search');
+            $urlType = $request->typeurl;
+            if ($urlType == 'manifest') {
+                $type = 'smooth_url';
+            } else if ($urlType == 'm3u8') {
+                $type = 'url';
+            } else if ($urlType == "mpd") {
+                $type = 'dash_url';
+            } else {
+                $type = 'dash_url';
+            }
+            $validate = 0;
+            if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
+                $validate = 1;
+            }
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 1;
+                $zipcode = "18344";
+            }
+            // Fetch programs matching the search query
+            $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
+                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
+                ->where('title', 'like', "%{$search}%");
+            if ($validate) {
+                if (!empty($zipcode)) {
+                    $pquery->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            }
+            $pquery->distinct('gracenote_schedule_program.TMSId');
+            $programs = $pquery->get();
+            // Process each program to add image URI and type, and remove assets
+            $programs->map(function ($program) {
+                $program->image = $this->getURIFromAssetForProgram($program->assets);
+                $program->roku_image = $program->image;
+                $program->type = 'event';
+                $program->callSign = null;
+                $program->url = null;
+                unset($program->assets);
+            });
+
+            // Fetch channels matching the search query
+            $query = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
+                ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
+                ->where('gracenote_sources.stationName', 'like', "%{$search}%");
+            if ($validate) {
+                if (!empty($zipcode)) {
+                    $query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            }
+            $query->where('channels.status', '=', '1');
+            $channels = $query->get();
+
+            // Process each channel to add image URI and type, and remove assets
+            $channels->map(function ($channel) {
+                $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                unset($channel->assets);
+                $channel->type = 'channel';
+                $channel->description = null;
+                $channel->TMSId = null;
+                unset($channel->assets);
+            });
+
+            // $programs = ($programs->unique('name')->toArray());
+            $data = collect(array_merge($channels->toArray(), $programs->toArray()));
+
+            $response = [
+                'success' => true,
+                'response_code' => 200,
+                'message' => 'Search Results Retrieved successfully.',
+                'data' => $data
+            ];
+            return response()->json($response);
+        }
+    }
+
     // public function searchChannelProgram(Request $request)
     // {
     //     $search = $request->input('search');
@@ -352,76 +448,6 @@ class NewChannelApiController extends Controller
 
     //     return response()->json($data);
     // }
-    public function searchChannelProgram(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'search' => 'required',
-            'typeurl' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => 'validation_error',
-                'message' => $validator->errors()
-            ], 400);
-        } else {
-            $search = $request->input('search');
-            $urlType = $request->typeurl;
-            if ($urlType == 'manifest') {
-                $type = 'smooth_url';
-            } else if ($urlType == 'm3u8') {
-                $type = 'url';
-            } else if ($urlType == "mpd") {
-                $type = 'dash_url';
-            } else {
-                $type = 'dash_url';
-            }
-            // Fetch programs matching the search query
-            $programs = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
-                ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
-                ->where('title', 'like', "%{$search}%")
-                ->distinct('gracenote_schedule_program.TMSId')
-                ->get();
-
-            // Process each program to add image URI and type, and remove assets
-            $programs->map(function ($program) {
-                $program->image = $this->getURIFromAssetForProgram($program->assets);
-                $program->roku_image = $program->image;
-                $program->type = 'event';
-                $program->callSign = null;
-                $program->url = null;
-                unset($program->assets);
-            });
-
-            // Fetch channels matching the search query
-            $channels = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
-                ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
-                ->where('gracenote_sources.stationName', 'like', "%{$search}%")
-                ->where('channels.status', '=', '1')
-                ->get();
-
-            // Process each channel to add image URI and type, and remove assets
-            $channels->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
-                unset($channel->assets);
-                $channel->type = 'channel';
-                $channel->description = null;
-                $channel->TMSId = null;
-                unset($channel->assets);
-            });
-
-            // $programs = ($programs->unique('name')->toArray());
-            $data = collect(array_merge($channels->toArray(), $programs->toArray()));
-
-            $response = [
-                'success' => true,
-                'response_code' => 200,
-                'message' => 'Search Results Retrieved successfully.',
-                'data' => $data
-            ];
-            return response()->json($response);
-        }
-    }
 
     public function allGenre()
     {
