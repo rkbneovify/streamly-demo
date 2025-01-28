@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
     if (!!savedLocation) {
       this.isLocaiton = false;
     } else {
-      alert('Hello')
+      // alert('Hello')
       console.log(data.access_token && data.subscribed,data.access_Token ,data.subscribed)
       if(!!data.access_token && data.subscribed){
         this.isLocaiton = true;
