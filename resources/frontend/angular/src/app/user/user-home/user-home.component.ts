@@ -45,6 +45,7 @@ export class UserHomeComponent implements OnInit {
   programDetailData: any;
   expandedCardIndexR: number | null = null;
   expandedCardIndex: number | null = null;
+  zipcode:any;
 
 
 
@@ -55,6 +56,7 @@ export class UserHomeComponent implements OnInit {
     private ngZone: NgZone
   ) {}
   ngOnInit(): void {
+    this.zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
     this.loginSliders();
     this.getFavoriteList();
     this.getRecentsListData();
@@ -233,9 +235,10 @@ expandLastCardR(index: number) {
   // get genre channel
   channelsWithGenre() {
     this.isLoading = true;
+    console.log('this.zipcode',this.zipcode)
     const body = {
       typeurl: 'mpd',
-      zipcode: '',
+      zipcode: this.zipcode,
     };
     this.crud
       .postRequest('auth/channel-list', body, this.getAuthHeaders())

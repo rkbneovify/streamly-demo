@@ -191,6 +191,7 @@ export class PlaylistScheduleComponent
   startTimeT:number;
   getCurrentTimeDate: any;
   getCurrentTimeDataFirstIndex: any;
+  getClosetTime:any;
   getCurrentTimeSlot(dayFilter?: string) {
     if (dayFilter != 'tomorrow') {
       const now = new Date();
@@ -199,7 +200,8 @@ export class PlaylistScheduleComponent
       let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
         currentMinute < 30 ? 0 : 30
       )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
-
+      this.getClosetTime =closestTime; 
+      
       const closestIndex = this.scheduleHours.indexOf(closestTime);
 
       // Return the schedule starting from the closest time slot
@@ -436,13 +438,14 @@ export class PlaylistScheduleComponent
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
     this.isLoading = true;
     this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
-
+    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
     const body = {
       typeurl: 'mpd',
       genre: genre == 'All' ? '' : genre,
       day: dayFilter,
       start: this.startIndex,
       limit: this.limit,
+      zipcode:zipcode
     };
 
     this.apiService.postRequest('auth/epg-guide', body).subscribe({
@@ -888,8 +891,13 @@ export class PlaylistScheduleComponent
         this.getCurrentTimeSlot(this.dayfilter);
         this.scrollContent(0);
       } else {
-        this.getScheduleData(this.selected_category, this.dayfilter);
-        this.getCurrentTimeSlot(this.dayfilter);
+        // this.getScheduleData(this.selected_category, this.dayfilter);
+        // this.getCurrentTimeSlot(this.dayfilter);
+        this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
+        this.isNextDay = true;
+        const totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime))
+        this.scrollContent(totalScroll * 150 )
+        console.log('=====+>',this.count ,+this.calculateIntervalsRemaining(this.getClosetTime)*150)
       }
     }
   }
@@ -1058,4 +1066,38 @@ export class PlaylistScheduleComponent
     return false;
   }
   
+
+  calculateIntervalsRemaining(currentTime: string): number {
+    // Parse the input time
+    const timeParts = currentTime.match(/(\d+):(\d+) (AM|PM)/);
+    if (!timeParts) {
+      throw new Error('Invalid time format. Please use "hh:mm AM/PM".');
+    }
+  
+    let [_, hoursStr, minutesStr, period] = timeParts;
+    let hours = parseInt(hoursStr, 10);
+    const minutes = parseInt(minutesStr, 10);
+  
+    // Convert 12-hour format to 24-hour format
+    if (period === 'PM' && hours < 12) {
+      hours += 12;
+    }
+    if (period === 'AM' && hours === 12) {
+      hours = 0;
+    }
+  
+    // Calculate the total minutes since the start of the day
+    const currentTotalMinutes = hours * 60 + minutes;
+  
+    // Total minutes in a day
+    const totalMinutesInDay = 24 * 60;
+  
+    // Calculate the remaining minutes
+    const remainingMinutes = totalMinutesInDay - currentTotalMinutes;
+  
+    // Calculate the number of 30-minute intervals
+    const intervals = Math.ceil(remainingMinutes / 30);
+  
+    return intervals;
+  }
 }
