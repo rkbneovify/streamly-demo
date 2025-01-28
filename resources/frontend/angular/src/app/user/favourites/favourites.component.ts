@@ -16,12 +16,14 @@ export class FavouritesComponent implements OnInit {
   favoriteChannels: any;
   isLoading: boolean = false;
   expandedCardIndex: number | null = null;
+  zipcode:any;
   constructor(
     private apiService: CrudService,
     private router: Router,
     private ts: ToastrService
   ) {}
   ngOnInit(): void {
+  this.zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
     this.getFavoriteListData();
     this.getRecentsListData();
     this.getFavoriteList();
@@ -115,7 +117,7 @@ closeExpandedCard() {
 
   getFavoriteListData(): void {
     this.isLoading = true;
-    const body = { typeurl: 'mpd' };
+    const body = { typeurl: 'mpd',zipcode:this.zipcode };
     this.apiService
       .postRequest('auth/favourite-channels', body)
       .subscribe((res: any) => {
@@ -130,7 +132,7 @@ closeExpandedCard() {
   getRecentsListData(): void {
     this.isLoading = true;
     // Fetch from API if not found in local storage
-    const body = { typeurl: 'mpd' };
+    const body = { typeurl: 'mpd',zipcode:this.zipcode };
     this.apiService
       .postRequest('auth/recent-channels', body)
       .subscribe((res: any) => {
@@ -199,9 +201,11 @@ closeExpandedCard() {
     this.isLoading = true;
     this.programChannelId = id;
     this.programChannelUrl = url;
+
     const body = {
       channel_id: id,
       current_datetime: this.getCurrentFormattedDateTime(),
+      zipcode:this.zipcode
     };
     this.apiService.postRequest('auth/player-details', body).subscribe({
       next: (res: any) => {
