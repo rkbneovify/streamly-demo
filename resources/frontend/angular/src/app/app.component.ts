@@ -36,6 +36,10 @@ export class AppComponent implements OnInit {
       }
     }
   }
+  refreshPage() {
+    window.location.reload();
+  }
+  
 
   async getLocation() {
     const location = await this.locationService.getLocation();
@@ -45,5 +49,7 @@ export class AppComponent implements OnInit {
     );
     this.locationService.saveLocation(location, zipcode);
     console.log(location);
+
+    this.refreshPage();
   }
 }
