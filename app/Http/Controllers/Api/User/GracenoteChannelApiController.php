@@ -48,7 +48,7 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -68,7 +68,14 @@ class GracenoteChannelApiController extends Controller
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
+                }
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
@@ -164,7 +171,7 @@ class GracenoteChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -190,8 +197,14 @@ class GracenoteChannelApiController extends Controller
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
-
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
+                }
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
@@ -227,7 +240,7 @@ class GracenoteChannelApiController extends Controller
             ], 400);
         } else {
 
-            $query = Channel::select('channels.id', 'gracenote_sources.stationName', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'gracenote_sources.stationName', 'gracenote_sources.assets')
                 // ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -236,7 +249,8 @@ class GracenoteChannelApiController extends Controller
             $query->where('channels.status', '=', '1');
             $query->orderBy('genre_name', 'asc');
             $record = $query->get()->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
