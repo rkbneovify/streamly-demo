@@ -23,7 +23,7 @@ export class FavouritesComponent implements OnInit {
     private ts: ToastrService
   ) {}
   ngOnInit(): void {
-  this.zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+  this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     this.getFavoriteListData();
     this.getRecentsListData();
     this.getFavoriteList();
