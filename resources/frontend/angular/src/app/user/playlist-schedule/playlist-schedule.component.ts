@@ -438,7 +438,7 @@ export class PlaylistScheduleComponent
   getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
     this.isLoading = true;
     this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
-    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+    const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
       typeurl: 'mpd',
       genre: genre == 'All' ? '' : genre,

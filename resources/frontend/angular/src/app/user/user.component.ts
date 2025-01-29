@@ -82,6 +82,7 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   navOpen: boolean = false;
   setActivePlanId!:string;
   expandedCardIndex: number | null = null;
+  zipcode:any;
 
 
   private searchSubject: Subject<string> = new Subject();
@@ -120,7 +121,9 @@ closeExpandedCard() {
 }
 
   ngOnInit(): void {
+    this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     // Listen for route changes
+    if(!this.zipcode) return
     this.setActiveTabBasedOnUrl();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -329,12 +332,12 @@ closeExpandedCard() {
       return;
     }
 
-    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+    
 
     const term = {
       search: searchTerm,
       typeurl: 'mpd',
-      zipcode
+      zipcode:this.zipcode
     };
 
     this.crud.postRequest('auth/new-search', term).subscribe({
@@ -364,6 +367,7 @@ closeExpandedCard() {
     this.isLoading = true;
     const body = {
       typeurl: 'mpd',
+      zipcode:this.zipcode
     };
     this.crud.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
