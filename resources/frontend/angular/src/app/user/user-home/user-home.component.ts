@@ -56,7 +56,7 @@ export class UserHomeComponent implements OnInit {
     private ngZone: NgZone
   ) {}
   ngOnInit(): void {
-    this.zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+    this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     this.loginSliders();
     this.getFavoriteList();
     this.getRecentsListData();

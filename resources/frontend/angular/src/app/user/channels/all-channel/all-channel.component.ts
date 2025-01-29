@@ -94,7 +94,7 @@ export class AllChannelComponent implements OnInit, AfterViewInit , OnDestroy{
 
   getPrivacyP() {
   this.isLoading = true;
-  const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+  const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
       "typeurl": "mpd",
       zipcode:zipcode
