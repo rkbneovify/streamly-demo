@@ -564,7 +564,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   getPlayerData(): Promise<any> {
     // this.isLoading = true;
-  const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+  const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
 
     const body = {
       channel_id: this.playerChannelId,
@@ -820,7 +820,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
 
   allChannelList: any;
   getAllChannels() {
-    const zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+    const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     const body = {
       typeurl: 'mpd',
       zipcode:zipcode
