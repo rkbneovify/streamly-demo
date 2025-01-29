@@ -121,8 +121,9 @@ closeExpandedCard() {
 }
 
   ngOnInit(): void {
-    this.zipcode = JSON.parse(localStorage.getItem('userLocation')).zipcode;
+    this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     // Listen for route changes
+    if(!this.zipcode) return
     this.setActiveTabBasedOnUrl();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
