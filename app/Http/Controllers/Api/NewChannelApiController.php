@@ -562,6 +562,10 @@ class NewChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 1;
+                $zipcode = "18344";
+            }
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(genre.id), ',', '\",\"'), '\"]') as genre_ids")
@@ -580,7 +584,7 @@ class NewChannelApiController extends Controller
             if ($validate) {
                 if (!empty($zipcode)) {
                     // $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
-                    $query->where(function ($q) use ($zipcode) {
+                    $query1->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
