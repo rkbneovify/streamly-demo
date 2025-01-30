@@ -388,7 +388,7 @@ class NewChannelApiController extends Controller
             });
 
             // Fetch channels matching the search query
-            $query = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
+            $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
             if ($validate) {
@@ -405,7 +405,13 @@ class NewChannelApiController extends Controller
             // Process each channel to add image URI and type, and remove assets
             $channels->map(function ($channel) {
                 $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
+                }
                 unset($channel->assets);
                 $channel->type = 'channel';
                 $channel->description = null;
@@ -573,7 +579,11 @@ class NewChannelApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
             if ($validate) {
                 if (!empty($zipcode)) {
-                    $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    $query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
                 }
             }
             $query1->where('channels.status', '=', '1');
