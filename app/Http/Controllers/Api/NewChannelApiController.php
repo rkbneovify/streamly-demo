@@ -228,9 +228,10 @@ class NewChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
+
             if ($urlType == 'manifest') {
                 $type = 'smooth_url';
             } else if ($urlType == 'm3u8') {
@@ -246,13 +247,17 @@ class NewChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -360,19 +365,23 @@ class NewChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
             // Fetch programs matching the search query
             $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%");
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     $pquery->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $pquery->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $pquery->distinct('gracenote_schedule_program.TMSId');
@@ -391,12 +400,16 @@ class NewChannelApiController extends Controller
             $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -563,7 +576,7 @@ class NewChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
             $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
@@ -581,13 +594,17 @@ class NewChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     $query1->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query1->where('channels.status', '=', '1');
