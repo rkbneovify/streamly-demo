@@ -66,18 +66,23 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.loginFormWithEmail.valid) {
-      const formData = { ...this.loginFormWithEmail.value, deviceid: this.userDeviceID };
-      this.authenticateUser('auth/login', formData);
-    }
+    this.checkLocationAccess(() => {
+      if (this.loginFormWithEmail.valid) {
+        const formData = { ...this.loginFormWithEmail.value, deviceid: this.userDeviceID };
+        this.authenticateUser('auth/login', formData);
+      }
+    });
   }
-
+  
   onSubmitpasscode() {
-    if (this.loginPasscodeForm.valid) {
-      const formData = { ...this.loginPasscodeForm.value, deviceid: this.userDeviceID };
-      this.authenticateUser('auth/login-with-passcode', formData);
-    }
+    this.checkLocationAccess(() => {
+      if (this.loginPasscodeForm.valid) {
+        const formData = { ...this.loginPasscodeForm.value, deviceid: this.userDeviceID };
+        this.authenticateUser('auth/login-with-passcode', formData);
+      }
+    });
   }
+  
 
   private authenticateUser(apiEndpoint: string, formData: any) {
     this.loading = true;
@@ -101,6 +106,120 @@ export class LoginComponent implements OnInit {
       }
     }
   }
+
+  private checkLocationAccess(callback: () => void) {
+    const locationData = localStorage.getItem('userLocation');
+    const locationDenied = localStorage.getItem('locationDenied');
+  
+    if (locationData) {
+      callback(); // Location is already available, proceed with login
+    } else if (locationDenied) {
+      // User previously denied location, prompt them to enable it
+      this.toastr.warning('Location access is disabled. Please enable it in your browser settings.', null, {
+        closeButton: true, // Show close button
+        timeOut: 0, // Prevent auto-close
+        tapToDismiss: false, // Disable closing on click anywhere
+        extendedTimeOut: 0, // Prevent closing after some delay
+      });
+      
+    } else {
+      // First time asking for location
+      this.requestLocationPermission(callback);
+    }
+  }
+  
+
+  // private checkLocationAccess(callback: () => void) {
+  //   const storedLocation = localStorage.getItem('userLocation');
+  
+  //   if (storedLocation) {
+  //     callback(); // Location exists, proceed with login
+  //   } else {
+  //     this.requestLocationPermission(callback);
+  //   }
+  // }
+  
+  private async getZipcodeFromCoordinates(latitude: number, longitude: number): Promise<string> {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+  
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.address.postcode || 'Unknown';
+    } catch (error) {
+      console.error('Error fetching zipcode:', error);
+      throw error;
+    }
+  }
+  
+  private requestLocationPermission(callback: () => void) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const zipcode = await this.getZipcodeFromCoordinates(latitude, longitude);
+            const locationData = { latitude, longitude, zipcode };
+  
+            localStorage.setItem('userLocation', JSON.stringify(locationData));
+            localStorage.removeItem('locationDenied'); // Clear flag if granted
+            callback(); // Proceed with login
+          } catch (error) {
+            this.toastr.error('Failed to fetch location details. Please try again.');
+          }
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            localStorage.setItem('locationDenied', 'true'); // Store denial flag
+            this.toastr.error('Location access is required. Enable it in browser settings.', 'Error', {
+              closeButton: true, // Show close button
+              timeOut: 0, // Prevent auto-close
+              tapToDismiss: false, // Disable closing on click anywhere
+              extendedTimeOut: 0,
+            });
+          } else {
+            this.toastr.error('Unable to retrieve location. Please try again.');
+          }
+        }
+      );
+    } else {
+      this.toastr.error('Geolocation is not supported by your browser.');
+    }
+  }
+  
+
+
+  // private requestLocationPermission(callback: () => void) {
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       async (position) => {
+  //         const { latitude, longitude } = position.coords;
+  
+  //         try {
+  //           const zipcode = await this.getZipcodeFromCoordinates(latitude, longitude);
+  //           const locationData = { latitude, longitude, zipcode };
+  
+  //           localStorage.setItem('userLocation', JSON.stringify(locationData));
+  //           // this.toastr.success(`Location access granted. Zipcode: ${zipcode}`);
+  //           callback(); // Proceed with login after location is obtained
+  //         } catch (error) {
+  //           this.toastr.error('Failed to fetch location details. Please try again.');
+  //         }
+  //       },
+  //       (error) => {
+  //         if (error.code === error.PERMISSION_DENIED) {
+  //           this.toastr.error('Location access is required to log in. Please enable it in browser settings.');
+  //         } else {
+  //           this.toastr.error('Unable to retrieve location. Please try again.');
+  //         }
+  //       }
+  //     );
+  //   } else {
+  //     this.toastr.error('Geolocation is not supported by your browser.');
+  //   }
+  // }
+  
+  
 
   private handleErrorResponse(err: any, formData: any) {
     this.loading = false;
