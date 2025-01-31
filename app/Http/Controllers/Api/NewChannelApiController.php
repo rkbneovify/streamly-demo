@@ -267,7 +267,11 @@ class NewChannelApiController extends Controller
                 $query->whereNull('genre.name');
             }
             $query->groupBy('channels.id');
-            $query->orderBy('channels.id', 'asc');
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $query->orderBy('channels.id', 'desc');
+            } else {
+                $query->orderBy('channels.id', 'asc');
+            }
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
