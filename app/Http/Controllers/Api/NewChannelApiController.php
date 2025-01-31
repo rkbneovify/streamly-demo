@@ -11,6 +11,7 @@ use App\Models\FavouriteChannel;
 use App\Models\Genre;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Log;
@@ -113,7 +114,7 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets', 'channels.zip_code')
+            $query = Channel::select('channels.id',  'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets', 'channels.zip_code')
                 ->rightJoin('recent_channel', 'channels.id', '=', 'recent_channel.channels_id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
@@ -123,7 +124,14 @@ class NewChannelApiController extends Controller
             $record = $query->distinct()->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
                 $channel->image = $this->getURIFromAsset($channel->assets);
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
+                }
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
@@ -159,7 +167,7 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->rightJoin('favourite_channel', 'channels.id', '=', 'favourite_channel.channels_id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
 
@@ -168,7 +176,11 @@ class NewChannelApiController extends Controller
             $query->orderBy('stationName', 'asc');
             $record = $query->get()->map(function ($channel) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
@@ -216,9 +228,10 @@ class NewChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
+
             if ($urlType == 'manifest') {
                 $type = 'smooth_url';
             } else if ($urlType == 'm3u8') {
@@ -228,19 +241,23 @@ class NewChannelApiController extends Controller
             } else {
                 $type = 'dash_url';
             }
-            $query = Channel::select('channels.id', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
+            $query = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', "channels.$type as url", 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.timeZone', 'gracenote_sources.url as channel_url', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw('CAST(IFNULL(genre.name,"Others") AS CHAR) AS genre_name')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -253,7 +270,7 @@ class NewChannelApiController extends Controller
             $query->orderBy('channels.id', 'asc');
             $record = $query->get()->map(function ($channel) use ($day) {
                 $channel->favourite = FavouriteChannel::where('channels_id', $channel->id)->where('user_id', JWTAuth::user()->id)->exists();
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->program = $this->getProgramScheduleById($channel->prgSvcId, $day);
                 unset($channel->assets);
                 if ($channel->stationName == null) {
@@ -274,6 +291,7 @@ class NewChannelApiController extends Controller
                 if ($channel->image == null) {
                     $channel->image = env('APP_URL') . '/uploads/No Image.png';
                 }
+                unset($channel->db_image);
                 return $channel;
             });
 
@@ -347,19 +365,23 @@ class NewChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
             // Fetch programs matching the search query
             $pquery = GracenoteScheduleProgram::select('channels.id', 'gracenote_schedule_program.prgSvcId', 'title as name', 'description', 'assets', 'TMSId')
                 ->join('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('title', 'like', "%{$search}%");
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     $pquery->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $pquery->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $pquery->distinct('gracenote_schedule_program.TMSId');
@@ -375,15 +397,19 @@ class NewChannelApiController extends Controller
             });
 
             // Fetch channels matching the search query
-            $query = GracenoteSource::select('channels.id', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
+            $query = GracenoteSource::select('channels.id', 'channels.image as db_image', 'gracenote_sources.prgSvcId', 'gracenote_sources.stationName as name', 'gracenote_sources.callSign', 'assets',  "channels.$type as url",)
                 ->join('channels', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId')
                 ->where('gracenote_sources.stationName', 'like', "%{$search}%");
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -392,7 +418,13 @@ class NewChannelApiController extends Controller
             // Process each channel to add image URI and type, and remove assets
             $channels->map(function ($channel) {
                 $channel->image = $this->getURIFromAsset(json_encode($channel->assets));
-                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : null;
+                $channel->roku_image = $channel->image != null ? url('storage/channel_roku_images/resized_image_' . basename($channel->image)) : env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                if ($channel->image == null) {
+                    $channel->image = env('APP_URL') . '/uploads/channellogo/' . $channel->db_image ?? env('APP_URL') . '/uploads/No Image.png';
+                }
+                if ($channel->roku_image == null) {
+                    $channel->roku_image = env('APP_URL') . '/uploads/No Image.png';
+                }
                 unset($channel->assets);
                 $channel->type = 'channel';
                 $channel->description = null;
@@ -543,7 +575,11 @@ class NewChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+            if ($user->email == "streamlymtairy@gmail.com") {
+                $validate = 2;
+                $zipcode = "18344";
+            }
+            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(genre.id), ',', '\",\"'), '\"]') as genre_ids")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -553,14 +589,22 @@ class NewChannelApiController extends Controller
             $record = $query->get();
 
             $genre_ids = json_decode($record[0]->genre_ids);
-            $query1 = Channel::select('channels.id', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+            $query1 = Channel::select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'channels.url', 'dash_url', 'smooth_url', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
-                    $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    // $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    $query1->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query1->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query1->where('channels.status', '=', '1');
@@ -572,13 +616,15 @@ class NewChannelApiController extends Controller
             }
             $query1->groupBy('channels.id');
             $recommended_channels = $query1->get()->unique()->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });
             $record->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
                 $channel->genre_ids = json_decode($channel->genre_ids);
+                unset($channel->db_image);
                 unset($channel->assets);
                 unset($channel->genre_ids);
                 return $channel;
@@ -663,7 +709,7 @@ class NewChannelApiController extends Controller
         } else {
             $channel_id = $request->channel_id;
             $current_datetime = $request->current_datetime;
-            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.prgSvcId', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
+            $query = Channel::where('channels.id', $channel_id)->select('channels.id', 'channels.image as db_image', 'channels.prgSvcId', 'gracenote_sources.stationName', 'gracenote_sources.callSign', 'gracenote_sources.assets')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genrename")
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
@@ -672,7 +718,8 @@ class NewChannelApiController extends Controller
             $record = $query->get();
 
             $record->map(function ($channel) {
-                $channel->image = $this->getURIFromAsset($channel->assets);
+                $channel->image = $this->getURIFromAsset($channel->assets) ?? env('APP_URL') . '/uploads/channellogo/' . $channel->db_image;
+                unset($channel->db_image);
                 unset($channel->assets);
                 return $channel;
             });

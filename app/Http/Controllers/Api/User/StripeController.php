@@ -528,6 +528,10 @@ class StripeController extends Controller
             ], 400);
         } else {
             try {
+                // fetch user
+                $user = JWTAuth::user();
+                // dd($user);
+                $request->merge(['email' => $user->email]); // Change this dynamically if needed
                 $trial_days = $request->trial_days;
                 $StripeplanId = $request->plan_id;
                 $quantity = $request->quantity ?? 1;
@@ -539,9 +543,7 @@ class StripeController extends Controller
                         'token' => $request->stripeToken,
                     ],
                 ]);
-                // fetch user
-                $user = JWTAuth::user();
-                // dd($user);
+
                 $customer = $this->updateStripeCustomer($request, $paymentMethod, $user->stripe_id);
 
                 $user->mode = DB::table('Stripe_keys')->where('status', 'active')->value('type');
@@ -590,9 +592,15 @@ class StripeController extends Controller
     {
         // Attach the payment method to the customer if it's not already attached
         $paymentMethodId = $paymentMethod->id; // Replace with the actual payment method ID
-        $customer = \Stripe\Customer::retrieve($customerId);
-        $paymentMethods = $customer->payment_methods;
-
+        try {
+            $customer = \Stripe\Customer::retrieve($customerId);
+            $paymentMethods = $customer->payment_methods;
+        } catch (\Exception $e) {
+            // 1. Create Payment Method
+            $customer = $this->createStripeCustomer($request, $paymentMethod);
+            $customerId = $customer->id;
+            $paymentMethods = $customer->payment_methods;
+        }
         if ($paymentMethods) {
             $attached = false;
             foreach ($paymentMethods as $paymentMethod) {
@@ -615,6 +623,7 @@ class StripeController extends Controller
             $customerId,
             [
                 'name' => $request->name,
+                'email' => $request->email,
                 'invoice_settings' => [
                     'default_payment_method' => $paymentMethod->id
                 ],
