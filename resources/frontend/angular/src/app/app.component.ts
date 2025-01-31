@@ -16,40 +16,40 @@ import { LocationService } from './services/location/location.service';
   styleUrl: './app.component.css',
   imports: [RouterOutlet, HttpClientModule, GetLocationComponent],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   isLocaiton: boolean = false;
-  constructor(private locationService: LocationService) {}
+  // constructor(private locationService: LocationService) {}
   title = 'angular';
   sripePromise = loadStripe(environment.stripe.publicKey);
 
-  ngOnInit(): void {
-    const savedLocation = this.locationService.getSavedLocation();
-    const data = JSON.parse(localStorage.getItem('deviceInfo'));
-    console.log(!!savedLocation);
-    if (!!savedLocation) {
-      this.isLocaiton = false;
-    } else {
-      // alert('Hello')
-      console.log(data.access_token && data.subscribed,data.access_Token ,data.subscribed)
-      if(!!data.access_token && data.subscribed){
-        this.isLocaiton = true;
-      }
-    }
-  }
-  refreshPage() {
-    window.location.reload();
-  }
+  // ngOnInit(): void {
+  //   const savedLocation = this.locationService.getSavedLocation();
+  //   const data = JSON.parse(localStorage.getItem('deviceInfo'));
+  //   console.log(!!savedLocation);
+  //   if (!!savedLocation) {
+  //     this.isLocaiton = false;
+  //   } else {
+  //     // alert('Hello')
+  //     console.log(data.access_token && data.subscribed,data.access_Token ,data.subscribed)
+  //     if(!!data.access_token && data.subscribed){
+  //       this.isLocaiton = true;
+  //     }
+  //   }
+  // }
+  // refreshPage() {
+  //   window.location.reload();
+  // }
   
 
-  async getLocation() {
-    const location = await this.locationService.getLocation();
-    const zipcode = await this.locationService.getZipcode(
-      location.latitude,
-      location.longitude
-    );
-    this.locationService.saveLocation(location, zipcode);
-    console.log(location);
+  // async getLocation() {
+  //   const location = await this.locationService.getLocation();
+  //   const zipcode = await this.locationService.getZipcode(
+  //     location.latitude,
+  //     location.longitude
+  //   );
+  //   this.locationService.saveLocation(location, zipcode);
+  //   console.log(location);
 
-    this.refreshPage();
-  }
+  //   this.refreshPage();
+  // }
 }
