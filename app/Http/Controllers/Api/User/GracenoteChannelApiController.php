@@ -34,7 +34,7 @@ class GracenoteChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
             $imagePath = url("/uploads/channellogo/");
@@ -54,13 +54,17 @@ class GracenoteChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             $query->where('channels.status', '=', '1');
@@ -157,7 +161,7 @@ class GracenoteChannelApiController extends Controller
                 $validate = 1;
             }
             if ($user->email == "streamlymtairy@gmail.com") {
-                $validate = 1;
+                $validate = 2;
                 $zipcode = "18344";
             }
             $imagePath = url("/uploads/channellogo/");
@@ -177,13 +181,17 @@ class GracenoteChannelApiController extends Controller
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
                 ->leftJoin('genre', 'channels_genre.genre_id', '=', 'genre.id')
                 ->leftJoin('gracenote_sources', 'gracenote_sources.prgSvcId', '=', 'channels.prgSvcId');
-            if ($validate) {
+            if ($validate == 1) {
                 if (!empty($zipcode)) {
                     // $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"') OR JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     $query->where(function ($q) use ($zipcode) {
                         $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
                             ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
                     });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
             if (!empty($genre) && $genre != 'Others') {
