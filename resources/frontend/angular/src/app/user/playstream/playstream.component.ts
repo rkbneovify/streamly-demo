@@ -597,9 +597,10 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   }
 
   addToRecentChannel(playerChannelId: any) {
+    const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     try {
       this.crud
-        .postRequest('auth/addtorecent', { channelids: playerChannelId })
+        .postRequest('auth/addtorecent', { channelids: playerChannelId ,zipcode})
         .subscribe({
           next: (res) => {},
           error: (err) => {

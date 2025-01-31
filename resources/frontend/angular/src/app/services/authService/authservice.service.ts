@@ -10,6 +10,7 @@ export class AuthService {
   private session_Storage: Storage;
 
   private tokenKey = 'token';
+  private loaction = 'userLocation'
   token: string = '';
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -38,6 +39,11 @@ export class AuthService {
 
   getAuthorizationToken(): string {
     this.token = this.local_Storage.getItem(this.tokenKey) || '';
+    return this.token;
+  }
+
+  getLocarionAccess(): string {
+    this.token = this.local_Storage.getItem(this.loaction) || '';
     return this.token;
   }
 

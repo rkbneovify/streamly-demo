@@ -28,6 +28,7 @@ import { SupportedDevicesComponent } from '../components/footerComponents/suppor
 import { SearchComponent } from './search/search.component';
 import { CommonChannelComponent } from './channels/common-channel/common-channel.component';
 import { SubscriptionCancelComponent } from './subscription-cancel/subscription-cancel.component';
+import { LocationAccessComponent } from './location-access/location-access.component';
 // import { PlansComponent } from './plans/plans.component';
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const routes: Routes = [
       {path:'contact-us',component:ContactUsComponent},
       {path:'report',component:ReportFormComponent},
       {path:'supported-devices',component:SupportedDevicesComponent},
+      {path:'location-access',component:LocationAccessComponent},
       {path:'search',component:SearchComponent,canActivate: [authguardGuard]},
     ]
   }

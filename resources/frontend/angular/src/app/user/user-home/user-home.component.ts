@@ -261,7 +261,7 @@ expandLastCardR(index: number) {
   getRecentsListData(): void {
     // Fetch from API if not found in local storage
     this.isLoading = true;
-    const body = { typeurl: 'mpd' };
+    const body = { typeurl: 'mpd' ,zipcode:this.zipcode};
     this.crud
       .postRequest('auth/recent-channels', body)
       .subscribe((res: any) => {
