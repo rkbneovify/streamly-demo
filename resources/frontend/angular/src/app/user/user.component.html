@@ -156,7 +156,7 @@
           <p>Download App</p>
         </div>
         @if (checkIsAdmin() == 'superadmin') {
-          <a class="mx-auto my-1 noBtn_hover_gold admin_dashBoard" target="_blank"  href="https://new.staging.streamlytv.com/admin">
+          <a class="mx-auto my-1 noBtn_hover_gold admin_dashBoard" target="_blank"  [href]="dash_board_link">
             Go To Dashboard
           </a>
         }
