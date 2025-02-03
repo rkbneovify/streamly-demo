@@ -102,9 +102,11 @@ closeExpandedCard() {
         }
       } else {
         if (this.keyword) {
+          const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
           const body = {
             typeurl: 'mpd',
             genre: this.keyword,
+            zipcode:zipcode
           };
           this.apiService.filterChannelResponse(body).subscribe({
             next: (res: any) => {
