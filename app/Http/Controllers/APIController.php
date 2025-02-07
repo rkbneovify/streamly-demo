@@ -925,8 +925,8 @@ class APIController extends Controller
                     $credentials = ['email' => $User->email, 'password' => $request->password];
                     $token = JWTAuth::attempt($credentials);
                     if (!$token) {
-                        $response = array('success' => false, 'response_code' => 401, 'message' => 'Wrong old password');
-                        return response()->json($response, 401);
+                        $response = array('success' => false, 'response_code' => 400, 'message' => 'Wrong old password');
+                        return response()->json($response, 400);
                     }
 
                     DB::table('users')
@@ -958,18 +958,18 @@ class APIController extends Controller
                         ->where('status', "1")
                         ->update(['status' => "0"]);
 
-                    $response = array('status' => true, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
+                    $response = array('status' => true, 'response_code' => 200, 'message' => 'User with account name: ' . $UserName . ' Is Deleted Sucessfully.', 'User_email' => $UserEmail);
                     return response()->json($response, 200);
                 } else {
-                    return response()->json(['success' => false, 'response_code' => 401, 'message' => 'password is required to delete'], 401);
+                    return response()->json(['success' => false, 'response_code' => 400, 'message' => 'password is required to delete'], 400);
                 }
             } else {
-                $response = array('status' => false, 'message' => 'User Already Deleted.');
+                $response = array('status' => false, 'response_code' => 200, 'message' => 'User Already Deleted.');
                 return response()->json($response, 200);
             }
         } else {
-            $response = array('status' => false, 'message' => 'User with Id: ' . $id . ' Does Not Exist.', 'UserID' => $id);
-            return response()->json($response, 200);
+            $response = array('status' => false, 'response_code' => 404, 'message' => 'User with Id: ' . $id . ' Does Not Exist.', 'UserID' => $id);
+            return response()->json($response, 404);
         }
     }
 
