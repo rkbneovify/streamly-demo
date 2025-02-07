@@ -33,7 +33,7 @@ import { ScheduleFormatterPipe } from '../pipe/schedule-formatter.pipe';
 import { FormsModule } from '@angular/forms';
 import { ScreenSizeService } from '../services/screenSize/screen-size.service';
 import { animate, style, transition, trigger } from '@angular/animations';
-
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -83,6 +83,7 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   setActivePlanId!:string;
   expandedCardIndex: number | null = null;
   zipcode:any;
+  dash_board_link:string = environment.baseUrl;
 
 
   private searchSubject: Subject<string> = new Subject();
