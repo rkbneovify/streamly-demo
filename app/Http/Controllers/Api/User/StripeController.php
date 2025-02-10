@@ -498,9 +498,9 @@ class StripeController extends Controller
         $user = JWTAuth::user();
         try {
             $user->subscription('main')->skipTrial()->cancelNow();
-            return response()->json(['message' => 'Subscription Cancelled Successfully'], 200);
+            return response()->json(['response_code' => 200, 'message' => 'Subscription Cancelled Successfully'], 200);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Error: ' . $e->getMessage()], 500);
+            return response()->json(['response_code' => 500, 'error' => 'Error: ' . $e->getMessage()], 500);
         }
     }
 
