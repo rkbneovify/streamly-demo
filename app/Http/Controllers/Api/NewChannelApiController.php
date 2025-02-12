@@ -666,9 +666,29 @@ class NewChannelApiController extends Controller
             } else {
                 $data = NULL;
             }
+            // Previous and Next Channel Logic with ZIP Code Filtering
             $PrevNext = $channel_id;
-            $all = DB::table('channels')->where('status', '=', 1)->orderBy('id', 'desc')->select('id')->first();
+
+            $all_channel_query = DB::table('channels')
+                ->where('status', '=', 1);
+            if ($validate == 1) {
+                if (!empty($zipcode)) {
+                    $all_channel_query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $all_channel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                }
+            }
+            $all_channel_query->orderBy('id', 'desc');
+            $all_channel_query->select('id');
+            $all = $all_channel_query->first();
+
             $nextChannel = $PrevNext;
+
             if ($PrevNext == 1) {
                 $PrevNext = 2;
                 $nextChannel = 1;
@@ -677,11 +697,40 @@ class NewChannelApiController extends Controller
                 $nextChannel = $all->id - 1;
             }
 
-            $prev = DB::table('channels')->where('id', '<', $PrevNext)->where('status', '1')->max('id');
+            $prevChannel_query = DB::table('channels')
+                ->where('id', '<', $PrevNext)
+                ->where('status', '1');
+            if ($validate == 1) {
+                if (!empty($zipcode)) {
+                    $prevChannel_query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $prevChannel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                }
+            }
+            $prev = $prevChannel_query->max('id');
             $prevChannel = DB::table('channels')->where('id', $prev)->where('status', '1')->select('id', 'name',  'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
-            $next = DB::table('channels')->where('id', '>', $nextChannel)->where('status', '1')->min('id');
+            $nextChannel_query = DB::table('channels')
+                ->where('id', '>', $nextChannel)
+                ->where('status', '1');
+            if ($validate == 1) {
+                if (!empty($zipcode)) {
+                    $nextChannel_query->where(function ($q) use ($zipcode) {
+                        $q->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')")
+                            ->orWhereRaw("JSON_CONTAINS(channels.zip_code, '\"All\"')");
+                    });
+                }
+            } elseif ($validate == 2) {
+                if (!empty($zipcode)) {
+                    $nextChannel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
+                }
+            }
+            $next = $nextChannel_query->min('id');
             $nextChannel = DB::table('channels')->where('id', $next)->where('status', '1')->select('id', 'name', 'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
-
             $response = [
                 'success' => true,
                 'response_code' => 200,
