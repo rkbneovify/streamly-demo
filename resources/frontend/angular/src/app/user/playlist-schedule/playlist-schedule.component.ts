@@ -2,9 +2,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  NgZone,
   OnDestroy,
   OnInit,
   QueryList,
@@ -212,7 +214,7 @@ export class PlaylistScheduleComponent
       ];
     } else {
       this.getCurrentTimeDate = [
-        ...this.scheduleHours.slice(this.scheduleHours.indexOf(this.convertUtcToLocalTime(this.startTimeT))),
+        ...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM')),
         ...this.scheduleHours,
       ];
       this.count = 0;
@@ -240,14 +242,14 @@ export class PlaylistScheduleComponent
     private inactivityService: InactivityService,
     private tabInactivityService: TabInactivityService,
     private utilsService:UtilsService,
-    private screenSizeService: ScreenSizeService
+    private screenSizeService: ScreenSizeService,
+     private ngZone: NgZone
   ) {}
   ngOnInit(): void {
     this.getAllCategories();
     this.getScheduleData('');
     this.getFavoriteList();
     this.getCurrentTimeSlot();
-    this.getScheduleT();
     // this.intervalLiveWidth()
     // setInterval(()=>{
     //   this.liveCurrentTime+=10
@@ -291,7 +293,8 @@ export class PlaylistScheduleComponent
 
     this.tabInactivityService.startTabInactivityCheck();
 
-    console.log('Data ==>',this.convertUtcToLocalTime(1736812800))
+    console.log('Data ==>',this.convertUtcToLocalTime(1736812800));
+    console.log("==>golive",!this.go_Live ,"==>timepass", !this.isTimePassed ,"==>today", this.selectedDay == 'Today',"===con==>",!this.go_Live && !this.isTimePassed && this.selectedDay == 'Today',this.getCurrentTimeDate);
   }
 
   convertUtcToLocalTime(utcTimestamp: number): string {
@@ -346,73 +349,154 @@ export class PlaylistScheduleComponent
   go_Live: boolean = false;
   count: number = 0;
   isProcessing: boolean = false;
-  scrollContent(position: number) {
-    // Prevent multiple executions
-    if (this.isProcessing) {
-      return;
-    }
+
+  // scrollContent(position: number) {
+  //   // Prevent multiple executions
+  //   if (this.isProcessing) {
+  //     return;
+  //   }
+
+
+
+  //   console.log("==inside==>",this.count,position);
   
-    // Early return for invalid `position` values
+  //   // Early return for invalid `position` values
+  //   if (position === 0 && this.count === 0) {
+  //     this.resetScroll();
+  //     return;
+  //   }
+  
+  //   this.isProcessing = true; // Set the processing flag
+  
+  //   try {
+  //     if (position !== 0) {
+  //       // Enable controls when scrolling
+  //       this.changeColorBackgroung = true;
+  //       this.toggleLeftArrow = true;
+  //       this.go_Live = true;
+  
+  //       if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+  //         // Perform scrolling
+  //         this.scrollableContent.nativeElement.scrollLeft += position;
+  //         this.scrollableContent1.nativeElement.scrollLeft += position;
+  
+  //         // Update counters and check if it's the next day
+  //         if (position > 0) {
+  //           this.count++;
+  //         } else {
+  //           this.count--;
+
+  //         }
+  
+  //         // Boundary check for `count`
+  //         if (this.count < 0) {
+  //           this.count = 0;
+  //         } else if (this.count >= this.getCurrentTimeDate.length) {
+  //           this.count = this.getCurrentTimeDate.length - 1;
+  //         }
+  
+  //         this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
+  //             this.cdr.detectChanges();
+  //         console.log('isNext data =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+  //       }
+  //     } else {
+  //       this.resetScroll(); // Reset when position is 0
+  //     }
+  
+  //     // Handle edge case: count is 0
+  //     if (this.count === 0) {
+  //       this.resetScroll();
+  
+  //       if (!this.isTimePassed) {
+  //         this.refreshPage(); // Refresh if needed
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during scrollContent execution:", error);
+  //   } finally {
+  //     // Ensure `isProcessing` is reset after processing
+  //     setTimeout(() => {
+  //       this.isProcessing = false;
+  //     }, 500);
+  //   }
+  // }
+  
+  // Helper method to reset scroll and state
+  
+  scrollContent(position: number) {
+    if (this.isProcessing) return; 
+  
+    console.log("==inside==>", this.count, position);
+  
     if (position === 0 && this.count === 0) {
       this.resetScroll();
       return;
     }
   
-    this.isProcessing = true; // Set the processing flag
+    this.isProcessing = true; 
   
     try {
       if (position !== 0) {
-        // Enable controls when scrolling
         this.changeColorBackgroung = true;
         this.toggleLeftArrow = true;
         this.go_Live = true;
   
         if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
-          // Perform scrolling
           this.scrollableContent.nativeElement.scrollLeft += position;
           this.scrollableContent1.nativeElement.scrollLeft += position;
   
-          // Update counters and check if it's the next day
           if (position > 0) {
             this.count++;
           } else {
             this.count--;
-
           }
   
-          // Boundary check for `count`
+          // Prevent negative count
           if (this.count < 0) {
             this.count = 0;
           } else if (this.count >= this.getCurrentTimeDate.length) {
             this.count = this.getCurrentTimeDate.length - 1;
           }
   
+          // Update isNextDay status
           this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
-          console.log('isNext data =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+  
+          // ✅ Fix: Reset when scrolling back to "Today"
+          if (!this.isNextDay) {
+            this.isNextDay = false;
+            this.selectedDay = 'Today';
+            
+            setTimeout(() => {
+              this.changeDays('Today', false); // ✅ Update UI binding
+              this.getCurrentTimeSlot('today'); // ✅ Refresh data
+              this.cdr.markForCheck();  // ✅ Force UI update
+            }, 100);
+          }
+  
+          this.cdr.markForCheck();
+          console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
         }
       } else {
-        this.resetScroll(); // Reset when position is 0
+        this.resetScroll();
       }
   
-      // Handle edge case: count is 0
       if (this.count === 0) {
         this.resetScroll();
-  
         if (!this.isTimePassed) {
-          this.refreshPage(); // Refresh if needed
+          this.refreshPage();
         }
       }
     } catch (error) {
       console.error("Error during scrollContent execution:", error);
     } finally {
-      // Ensure `isProcessing` is reset after processing
       setTimeout(() => {
         this.isProcessing = false;
       }, 500);
     }
   }
   
-  // Helper method to reset scroll and state
+  
+
   private resetScroll() {
     if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
       this.scrollableContent.nativeElement.scrollLeft = 0;
@@ -442,7 +526,6 @@ export class PlaylistScheduleComponent
     const body = {
       typeurl: 'mpd',
       genre: genre == 'All' ? '' : genre,
-      day: dayFilter,
       start: this.startIndex,
       limit: this.limit,
       zipcode:zipcode
@@ -464,29 +547,7 @@ export class PlaylistScheduleComponent
       },
     });
   }
-  getScheduleT(genre?: string, dayFilter: string = 'tomorrow') {
-    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
 
-    const body = {
-      typeurl: 'mpd',
-      genre: genre == 'All' ? '' : genre,
-      day: dayFilter,
-      start: this.startIndex,
-      limit: this.limit,
-    };
-
-    this.apiService.postRequest('auth/epg-guide', body).subscribe({
-      next: (res: any) => {
-        console.log('====>',res.start);
-        this.startTimeT = +res?.start
-        console.log(this.startTimeT)
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.isLoading = false;
-      },
-    });
-  }
 
   // Listen to scroll event
   onScroll() {
@@ -840,19 +901,7 @@ export class PlaylistScheduleComponent
     this.tabInactivityService.resetTimer();
   }
 
-  // // show live timer
-  // private intervalId: any;
-  // startTimer(): void {
-  //   this.intervalId = setInterval(() => {
-  //     this.scrollContent(100);
-  //   }, 60000); // 60000 milliseconds = 1 minute
-  // }
 
-  // clearInterval(): void {
-  //   if (this.intervalId) {
-  //     clearInterval(this.intervalId);
-  //   }
-  // }
 
   setChannelId(id: string, url: string) {
     localStorage.setItem('playerChannelId', id);
@@ -881,23 +930,35 @@ export class PlaylistScheduleComponent
   }
 
   // filter according to today and tommorrow
+  totalScroll:number = 0;
   changeDays(day: string, isDataChange = true) {
     console.log(day);
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
-        this.getScheduleData(this.selected_category, this.dayfilter);
+        // this.getScheduleData(this.selected_category);
         this.getCurrentTimeSlot(this.dayfilter);
         this.scrollContent(0);
       } else {
-        // this.getScheduleData(this.selected_category, this.dayfilter);
-        // this.getCurrentTimeSlot(this.dayfilter);
-        this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
-        this.isNextDay = true;
-        const totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime))
-        this.scrollContent(totalScroll * 150 )
-        console.log('=====+>',this.count ,+this.calculateIntervalsRemaining(this.getClosetTime)*150)
+
+        if(!this.isNextDay){
+
+          if(this.count != 0){
+            this.scrollContent((this.totalScroll - this.count)  * 150 );
+            console.log(this.count,this.totalScroll ,"===>",this.totalScroll - this.count,this.totalScroll - this.count  * 150)
+          }
+  
+          if(this.count == 0){          
+            this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
+            console.log(this.count);
+            this.isNextDay = true;
+            this.totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime))
+            this.scrollContent(this.totalScroll * 150 )
+            console.log(this.totalScroll,'=====+==>',this.count ,+this.calculateIntervalsRemaining(this.getClosetTime)*150)
+          }
+        }
+
       }
     }
   }
