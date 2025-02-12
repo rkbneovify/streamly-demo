@@ -712,8 +712,8 @@ class NewChannelApiController extends Controller
                     $prevChannel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
-            $prevChannel = $prevChannel_query->max('id');
-
+            $prev = $prevChannel_query->max('id');
+            $prevChannel = DB::table('channels')->where('id', $prev)->where('status', '1')->select('id', 'name',  'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
             $nextChannel_query = DB::table('channels')
                 ->where('id', '>', $nextChannel)
                 ->where('status', '1');
@@ -729,8 +729,8 @@ class NewChannelApiController extends Controller
                     $nextChannel_query->whereRaw("JSON_CONTAINS(channels.zip_code, '\"$zipcode\"')");
                 }
             }
-            $nextChannel = $nextChannel_query->min('id');
-
+            $next = $nextChannel_query->min('id');
+            $nextChannel = DB::table('channels')->where('id', $next)->where('status', '1')->select('id', 'name', 'callSign', 'channels.url', 'dash_url', 'smooth_url')->first();
             $response = [
                 'success' => true,
                 'response_code' => 200,
