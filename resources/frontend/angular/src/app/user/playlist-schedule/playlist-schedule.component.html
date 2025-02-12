@@ -18,22 +18,7 @@
       </div>
     </div>
   </div>
-  
-
   <div class="schedule_time_container position-relative">
-    <!-- <div class="schedule_days">
-      <select name="" id="">
-        <option value="Today">Today</option>
-        <option value="Tomorrow">Tomorrow</option>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Friday">Sunday</option>
-      </select>
-    </div> -->
     <div class="schedule_days">
       <select class="position-relative" [(ngModel)]="selectedDay" (ngModelChange)="changeDays(selectedDay)">
         <option [selected]="isNextDay" disabled *ngIf="isNextDay" style="display: none;">Tomorrow</option>
@@ -57,7 +42,7 @@
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
       <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div *ngIf="!go_Live && !isTimePassed && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live</div>
+      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live2</div>
       <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
