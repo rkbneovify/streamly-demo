@@ -74,7 +74,7 @@ export class PlaylistScheduleComponent
   isMacChrome:boolean = false;
   isMobileChrom:boolean = false;
   currentWidth: number = 0;
-  
+
   private screenSizeSubscription!: Subscription;
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
@@ -195,40 +195,56 @@ export class PlaylistScheduleComponent
   getCurrentTimeDataFirstIndex: any;
   getClosetTime:any;
   getCurrentTimeSlot(dayFilter?: string) {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
+      currentMinute < 30 ? 0 : 30
+    )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
+    this.getClosetTime = closestTime;
+  
+    const closestIndex = this.scheduleHours.indexOf(closestTime);
+  
     if (dayFilter != 'tomorrow') {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
-        currentMinute < 30 ? 0 : 30
-      )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
-      this.getClosetTime =closestTime; 
+      // Current day schedule starting from the closest time slot
+      const currentDaySchedule = this.scheduleHours.slice(closestIndex);
+  
+      // Next day schedule (full day)
+      const nextDaySchedule = this.scheduleHours;
+  
+      // Day after tomorrow schedule (full day)
       
-      const closestIndex = this.scheduleHours.indexOf(closestTime);
-
-      // Return the schedule starting from the closest time slot
-
+  const thirdDaySchedule = this.scheduleHours.slice(0, this.scheduleHours.indexOf('12:00 PM') + 1);
+  
+      // Combine all schedules
       this.getCurrentTimeDate = [
-        ...this.scheduleHours.slice(closestIndex),
-        ...this.scheduleHours.slice(0, closestIndex),
+        ...currentDaySchedule,
+        ...nextDaySchedule,
+        ...thirdDaySchedule
       ];
     } else {
+      // If 'tomorrow' is selected, start from '05:30 AM' and include the next two full days
       this.getCurrentTimeDate = [
         ...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM')),
         ...this.scheduleHours,
+        ...this.scheduleHours
       ];
-      this.count = 0;
-      this.scrollContent(0);
     }
-
+  
     this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
+  
     console.log(this.getCurrentTimeDataFirstIndex);
     console.log(
-      'Get Date lenght==>',
+      'Get Date length ==>',
       this.getCurrentTimeDate?.length,
       this.getCurrentTimeDate?.length * 150
     );
+
+    this.totalTomNumber= (this.calculateIntervalsRemaining(this.getClosetTime)-1);
   }
+
+  totalTomNumber :any;
+
   //
   padZero(num: number): string {
     return num < 10 ? '0' + num : num.toString();
@@ -459,7 +475,7 @@ export class PlaylistScheduleComponent
           }
   
           // Update isNextDay status
-          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
+          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
   
           // ✅ Fix: Reset when scrolling back to "Today"
           if (!this.isNextDay) {
