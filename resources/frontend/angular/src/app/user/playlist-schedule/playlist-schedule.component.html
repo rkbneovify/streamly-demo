@@ -42,7 +42,7 @@
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
       <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live2</div>
+      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live</div>
       <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
@@ -51,7 +51,7 @@
   </div>
 
   <!-- channels container start -->
-  <div class="schedule_container_content position-relative">
+  <div class="schedule_container_content position-relative" #channelList (scroll)="onScrollChannelPostion()">
     <div class="schedule_time_programs_counter_timer"></div>
     <div class="schedule_content scrollByRight" [@slideInOut]="'active'" #scrollableContent1>
 
