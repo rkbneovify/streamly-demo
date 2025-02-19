@@ -459,7 +459,7 @@ class StripeController extends Controller
             }
 
             $subscription_data = [
-                'id' => $subscription->id,
+                'id' => (string)$subscription->id,
                 'name' => $plan_name ?? null,
                 'plan_type' => $plan_type ?? null,
                 'renewaldatetime' => $renewaldatetime ?? null,
