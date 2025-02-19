@@ -47,6 +47,7 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   controlVisibilityTimeout: any; // Timeout for hiding controls
   showMenu = false;
   totalchannels: string | Number;
+  isMiniPlayer:boolean = false;
 
   constructor(
     private crud: CrudService,
@@ -621,6 +622,17 @@ export class PlaystreamComponent implements OnInit, OnDestroy {
   nextChannel() {
     if (this.nextChannelData) {
       this.switchChannel(this.nextChannelData);
+    }
+  }
+
+  toggleFullScreen1(): void {
+    const container = document.getElementById('play_container_top');
+
+    console.log('!document.fullscreenElement =>',!document.fullscreenElement)
+    if (!document.fullscreenElement) {
+      container?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
   }
 
