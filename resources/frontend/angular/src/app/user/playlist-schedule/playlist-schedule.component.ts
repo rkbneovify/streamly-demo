@@ -28,7 +28,9 @@ import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
+import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
+
 
 declare let window: Window;
 
@@ -73,15 +75,19 @@ export class PlaylistScheduleComponent
   toggleLeftArrow: boolean = false;
   isMacChrome:boolean = false;
   isMobileChrom:boolean = false;
-  currentWidth: number = 0;
-  
+  currentWidth: number = 0;  
   private screenSizeSubscription!: Subscription;
+
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
   @ViewChild('scrollableContent') scrollableContent: ElementRef;
   @ViewChild('scrollableContent1') scrollableContent1: ElementRef;
 
   @ViewChildren('scrollByRight') scrollableElements: QueryList<ElementRef>;
+
+  // focus previous
+  @ViewChild('channelList', { static: false }) channelList1: ElementRef;
+
 
   scheduleHours = [
     '12:00 AM',
@@ -159,6 +165,8 @@ export class PlaylistScheduleComponent
         if (!this.categories.some((category) => category.name === 'Others')) {
           this.categories.push(othersCategory);
         }
+
+        this.cacheService.setCategories(this.categories);
         this.isLoading = true;
       },
       error: (err: any) => {
@@ -195,40 +203,70 @@ export class PlaylistScheduleComponent
   getCurrentTimeDataFirstIndex: any;
   getClosetTime:any;
   getCurrentTimeSlot(dayFilter?: string) {
+        // Check if current time slot is cached
+        const cachedTimeSlot = this.cacheService.getCurrentTimeSlot();
+        if (cachedTimeSlot && (!dayFilter || cachedTimeSlot.dayFilter === dayFilter)) {
+          this.getCurrentTimeDate = cachedTimeSlot.data;
+          this.getCurrentTimeDataFirstIndex = cachedTimeSlot.firstIndex;
+          return;
+        }
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
+      currentMinute < 30 ? 0 : 30
+    )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
+    this.getClosetTime = closestTime;
+  
+    const closestIndex = this.scheduleHours.indexOf(closestTime);
+  
     if (dayFilter != 'tomorrow') {
-      const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      let closestTime = `${this.padZero(currentHour % 12 || 12)}:${this.padZero(
-        currentMinute < 30 ? 0 : 30
-      )} ${currentHour >= 12 ? 'PM' : 'AM'}`;
-      this.getClosetTime =closestTime; 
+      // Current day schedule starting from the closest time slot
+      const currentDaySchedule = this.scheduleHours.slice(closestIndex);
+  
+      // Next day schedule (full day)
+      const nextDaySchedule = this.scheduleHours;
+  
+      // Day after tomorrow schedule (full day)
       
-      const closestIndex = this.scheduleHours.indexOf(closestTime);
-
-      // Return the schedule starting from the closest time slot
-
+  const thirdDaySchedule = this.scheduleHours.slice(0, this.scheduleHours.indexOf('12:00 PM') + 1);
+  
+      // Combine all schedules
       this.getCurrentTimeDate = [
-        ...this.scheduleHours.slice(closestIndex),
-        ...this.scheduleHours.slice(0, closestIndex),
+        ...currentDaySchedule,
+        ...nextDaySchedule,
+        ...thirdDaySchedule
       ];
     } else {
+      // If 'tomorrow' is selected, start from '05:30 AM' and include the next two full days
       this.getCurrentTimeDate = [
         ...this.scheduleHours.slice(this.scheduleHours.indexOf('05:30 AM')),
         ...this.scheduleHours,
+        ...this.scheduleHours
       ];
-      this.count = 0;
-      this.scrollContent(0);
     }
-
+  
     this.getCurrentTimeDataFirstIndex = this.getCurrentTimeDate[0];
+
+        // Cache the current time slot data
+        this.cacheService.setCurrentTimeSlot({
+          dayFilter,
+          data: this.getCurrentTimeDate,
+          firstIndex: this.getCurrentTimeDataFirstIndex,
+        });
+  
     console.log(this.getCurrentTimeDataFirstIndex);
     console.log(
-      'Get Date lenght==>',
+      'Get Date length ==>',
       this.getCurrentTimeDate?.length,
       this.getCurrentTimeDate?.length * 150
     );
+
+    this.totalTomNumber= (this.calculateIntervalsRemaining(this.getClosetTime)-1);
   }
+
+  totalTomNumber :any;
+
   //
   padZero(num: number): string {
     return num < 10 ? '0' + num : num.toString();
@@ -243,9 +281,31 @@ export class PlaylistScheduleComponent
     private tabInactivityService: TabInactivityService,
     private utilsService:UtilsService,
     private screenSizeService: ScreenSizeService,
-     private ngZone: NgZone
+    private ngZone: NgZone,
+    private cacheService: PlaylistCacheService
+
   ) {}
   ngOnInit(): void {
+
+            // Check for cached data
+            const cachedCategories = this.cacheService.getCategories();
+            const cachedSchedule = this.cacheService.getSchedule();
+            const filterData = this.cacheService.getFilterData()
+    
+            console.log(cachedCategories,cachedSchedule)
+            if (cachedCategories) {
+              this.categories = cachedCategories; // Load categories from cache
+            } else {
+              this.getAllCategories(); // Fetch categories if not cached
+            }
+    
+            if (cachedSchedule && filterData) {
+              this.getScheduleChannelLogo = cachedSchedule; // Load schedule from cache
+              this.filteredPrograms = filterData
+            } else {
+              this.getScheduleData(''); // Fetch schedule if not cached
+            }
+
     this.getAllCategories();
     this.getScheduleData('');
     this.getFavoriteList();
@@ -264,6 +324,14 @@ export class PlaylistScheduleComponent
     }
     
     const data = this.generateTimeArray('10:00 AM', '11:30 AM', true);
+
+        // Subscribe to screen width changes
+        this.screenSizeSubscription = this.screenSizeService
+        .getScreenWidth()
+        .subscribe((width) => {
+          this.currentWidth = width;
+          console.log(`Screen width is: ${this.currentWidth}`);
+        });
 
     // Subscribe to screen width changes
     this.screenSizeSubscription = this.screenSizeService
@@ -321,6 +389,14 @@ export class PlaylistScheduleComponent
     // Ensure elements are correctly referenced
     this.scrollableElements.forEach((element, index) => {
     });
+
+
+    const savedScrollPos = localStorage.getItem('scrollPosition');
+    if (savedScrollPos) {
+      console.log(savedScrollPos);
+      console.log(this.channelList1.nativeElement.scrollTop);
+      this.channelList1.nativeElement.scrollTop = parseInt(savedScrollPos, 10);
+    }
   }
 
   showPlaylist() {
@@ -423,6 +499,14 @@ export class PlaylistScheduleComponent
   
   // Helper method to reset scroll and state
   
+
+  // scroll to add the previ channel
+  onScrollChannelPostion(): void {
+    // Store the current scroll position whenever the user scrolls
+    localStorage.setItem('scrollPosition', this.channelList1.nativeElement.scrollTop.toString());
+  }
+
+
   scrollContent(position: number) {
     if (this.isProcessing) return; 
   
@@ -459,7 +543,7 @@ export class PlaylistScheduleComponent
           }
   
           // Update isNextDay status
-          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
+          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
   
           // ✅ Fix: Reset when scrolling back to "Today"
           if (!this.isNextDay) {
@@ -467,9 +551,9 @@ export class PlaylistScheduleComponent
             this.selectedDay = 'Today';
             
             setTimeout(() => {
-              this.changeDays('Today', false); // ✅ Update UI binding
-              this.getCurrentTimeSlot('today'); // ✅ Refresh data
-              this.cdr.markForCheck();  // ✅ Force UI update
+              this.changeDays('Today', false); //  Update UI binding
+              this.getCurrentTimeSlot('today'); //  Refresh data
+              this.cdr.markForCheck();  // Force UI update
             }, 100);
           }
   
@@ -539,6 +623,8 @@ export class PlaylistScheduleComponent
         this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
         // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
         this.filteredPrograms = [...res.data];
+        this.cacheService.setFilterData(this.filteredPrograms);
+        this.cacheService.setSchedule(this.getScheduleChannelLogo); // Cache the schedule
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -906,7 +992,9 @@ export class PlaylistScheduleComponent
   setChannelId(id: string, url: string) {
     localStorage.setItem('playerChannelId', id);
     localStorage.setItem('playerId', url);
-    this.router.navigateByUrl('user/playstream');
+    this.router.navigateByUrl('user/playstream', {
+      state: { channelId: id, playerUrl: url },
+    });
   }
 
   // filter according to days
@@ -1026,23 +1114,52 @@ export class PlaylistScheduleComponent
 
   favListData: any;
   // Fetch favorite list
+  // getFavoriteList(): void {
+  //   this.isLoading = true;
+  //   const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+  //   if (storedFavoriteChannels) {
+  //     this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+  //   } else {
+  //     // Fetch from API if not found in local storage
+  //     this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
+  //       if (res.response_code === 200) {
+  //         // this.favListData = res;
+  //         this.favoriteChannels = res.data.map((channel: any) => channel.id);
+  //         this.updateFavoriteChannels(); // Update local storage
+  //       }
+  //       this.isLoading = false;
+  //     });
+  //   }
+  // }
   getFavoriteList(): void {
     this.isLoading = true;
-    const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
-    if (storedFavoriteChannels) {
-      this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+
+    // Check if favorite list is cached
+    const cachedFavorites = this.cacheService.getFavoriteList();
+    if (cachedFavorites) {
+      this.favoriteChannels = cachedFavorites;
+      this.isLoading = false;
     } else {
-      // Fetch from API if not found in local storage
-      this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
-        if (res.response_code === 200) {
-          // this.favListData = res;
-          this.favoriteChannels = res.data.map((channel: any) => channel.id);
-          this.updateFavoriteChannels(); // Update local storage
-        }
+      const storedFavoriteChannels = localStorage.getItem('favoriteChannels');
+      if (storedFavoriteChannels) {
+        this.favoriteChannels = JSON.parse(storedFavoriteChannels);
+        this.cacheService.setFavoriteList(this.favoriteChannels); // Cache data
         this.isLoading = false;
-      });
+      } else {
+        // Fetch from API if not cached
+        this.apiService.getRequest('auth/my_favorites').subscribe((res: any) => {
+          if (res.response_code === 200) {
+            this.favoriteChannels = res.data.map((channel: any) => channel.id);
+            this.updateFavoriteChannels(); // Update local storage
+            this.cacheService.setFavoriteList(this.favoriteChannels); // Cache data
+          }
+          this.isLoading = false;
+        });
+      }
     }
   }
+
+
   // Update local storage with current favorite channels
   updateFavoriteChannels(): void {
     localStorage.setItem(
