@@ -128,7 +128,7 @@ class RokuEpgGuideApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "dvitti@mvmtechnology.com") {
                 $validate = 2;
                 $zipcode = "18344";
             }
@@ -167,7 +167,7 @@ class RokuEpgGuideApiController extends Controller
                 $query->whereNull('genre.name');
             }
             $query->groupBy('channels.id');
-            if ($user->email == "streamlymtairy@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "dvitti@mvmtechnology.com") {
                 $query->orderBy('channels.id', 'desc');
             } else {
                 $query->orderBy('channels.id', 'asc');
