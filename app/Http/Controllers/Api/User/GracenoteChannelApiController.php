@@ -33,7 +33,7 @@ class GracenoteChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "dvitti@mvmtechnology.com") {
                 $validate = 2;
                 $zipcode = "18344";
             }
@@ -160,7 +160,7 @@ class GracenoteChannelApiController extends Controller
             if (!in_array($user->email, $this->exculdedUsers) && $request->has('zipcode')) {
                 $validate = 1;
             }
-            if ($user->email == "streamlymtairy@gmail.com") {
+            if ($user->email == "streamlymtairy@gmail.com" || $user->email == "dvitti@mvmtechnology.com") {
                 $validate = 2;
                 $zipcode = "18344";
             }
