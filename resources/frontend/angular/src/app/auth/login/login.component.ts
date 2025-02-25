@@ -5,6 +5,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
+import { error } from 'node:console';
+
+interface QrCode{
+  key:string;
+  msg:string;
+  status:number;
+}
 
 @Component({
   selector: 'app-login',
@@ -22,6 +29,8 @@ export class LoginComponent implements OnInit {
   userDeviceID!: string;
   loading = false;
 
+  qrCodeImage:string = null;
+
   constructor(
     private fb: FormBuilder,
     private crudService: CrudService,
@@ -34,6 +43,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkStoredDeviceId();
+    this.createQRCode();
   }
 
   private initializeForms() {
@@ -271,5 +281,16 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => console.error('Error generating device ID:', err),
     });
+  }
+
+  createQRCode(){
+    this.crudService.postRequest('login/create/qrcode',{}).subscribe({
+      next:(res:QrCode)=>{
+        this.qrCodeImage = res.msg;
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
   }
 }
