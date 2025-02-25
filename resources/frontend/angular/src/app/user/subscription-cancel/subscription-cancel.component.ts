@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DataSharingService } from '../../services/data-sharing.service';
 import { NgIf } from '@angular/common';
+import { CrudService } from '../../services/crud.service';
+import { HttpHeaders } from '@angular/common/http';
+import { AuthService } from '../../services/authService/authservice.service';
 
 @Component({
   selector: 'app-subscription-cancel',
@@ -12,13 +15,35 @@ import { NgIf } from '@angular/common';
 })
 export class SubscriptionCancelComponent implements OnInit {
   receivedData: string;
+  access_Token: any;
 
-  constructor(private route:Router, private currentData:DataSharingService){}
+  constructor(private route:Router, private currentData:DataSharingService,private crud: CrudService,private setLocalData:AuthService){
+  }
   
-
+  // setData
   ngOnInit() {
     this.currentData.currentData.subscribe(data => {
       this.receivedData = data;
     });
+      this.loginSliders();
+  }
+
+  
+  
+  loginSliders() {
+    this.crud.getRequest('auth/channel-sliders')
+    .subscribe({
+      next:()=>{
+        alert('hello')
+        let info = JSON.parse(localStorage.getItem('deviceInfo'));
+        // console.log(info);
+        info.subscribed = true;
+        localStorage.setItem('deviceInfo', JSON.stringify(info));
+        setTimeout(() => {
+          this.route.navigateByUrl('/user');
+        }, 1000);
+      }
+    });
   }
 }
+
