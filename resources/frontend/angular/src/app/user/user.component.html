@@ -390,8 +390,9 @@
 
             @if (!searchTerm || allChannelDataList.length != 0 ) {
               <div
-                class="allChannelsList my-4 d-flex flex-nowrap"
-                *ngFor="let row of allChannelDataList"
+              *ngFor="let row of allChannelDataList"
+              class="allChannelsList my-4 d-flex flex-nowrap"
+              [ngClass]="row.length == 1 ? 'justify-content-center' : ''"
               >
                 <div class="card_page" *ngFor="let item of row ; let i = index"
                 [ngClass]="{ 'expanded': ((expandedCardIndex === row.length - 2 && i === row.length - 2) || expandedCardIndex === row.length - 1 && i === row.length - 1) }"
