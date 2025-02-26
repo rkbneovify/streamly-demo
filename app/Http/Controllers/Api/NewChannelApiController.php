@@ -389,6 +389,8 @@ class NewChannelApiController extends Controller
                 }
             }
             $pquery->distinct('gracenote_schedule_program.TMSId');
+            $pquery->where('channels.status', '=', '1');
+
             $programs = $pquery->get();
             // Process each program to add image URI and type, and remove assets
             $programs->map(function ($program) {
