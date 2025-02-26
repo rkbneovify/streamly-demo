@@ -52,6 +52,11 @@ export class AuthService {
     // localStorage.setItem(this.tokenKey, token);
   }
 
+  setData(key:any,value: any) {
+    this.local_Storage.setItem(key, value);
+    // localStorage.setItem(this.tokenKey, token);
+  }
+
   getlocalData(key:string) {
     const localData = this.local_Storage.getItem(key);
     return localData;
