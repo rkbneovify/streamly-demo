@@ -28,7 +28,6 @@ export class SubscriptionExpiredComponent implements OnInit {
     this.crud.getRequest('auth/channel-sliders')
     .subscribe({
       next:()=>{
-        alert('hello1')
         let info = JSON.parse(localStorage.getItem('deviceInfo'));
         // console.log(info);
         info.subscribed = true;

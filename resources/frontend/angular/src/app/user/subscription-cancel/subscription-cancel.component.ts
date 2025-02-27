@@ -34,7 +34,6 @@ export class SubscriptionCancelComponent implements OnInit {
     this.crud.getRequest('auth/channel-sliders')
     .subscribe({
       next:()=>{
-        alert('hello')
         let info = JSON.parse(localStorage.getItem('deviceInfo'));
         // console.log(info);
         info.subscribed = true;
