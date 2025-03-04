@@ -2,6 +2,7 @@ import { CommonModule, KeyValuePipe, NgClass, NgFor, NgIf } from '@angular/commo
 import { Component, OnInit } from '@angular/core';
 import { CrudService } from '../../services/crud.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-plans',
@@ -14,12 +15,12 @@ export class PlansComponent implements OnInit {
 selectTab:string ='basicPlans';
 all_Plans:any;
 basic_plans:any;
-Tiered_plans:any;
+Tiered_plans:any =[];
 setActivePlanId!:string;
 isSubscribe!:boolean;
 showMessage:boolean = false;
 isLoading: boolean = false;
-constructor(private crud:CrudService,private router:Router){}
+constructor(private crud:CrudService,private router:Router,private toaster:ToastrService){}
 
 ngOnInit(): void {
   this.getAllThePlans();
@@ -77,4 +78,13 @@ selectedplanData(planId: any,planType:any) {
   }
 }
 
+
+otherPlan(){
+  if(this.Tiered_plans.length == 0){
+    this.toaster.info("No other plans");
+    return
+  }
+  this.selectTab = 'otherPlans'
+
+}
 }
