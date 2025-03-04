@@ -606,7 +606,7 @@ export class PlaylistScheduleComponent
   limit: number = 10;
 
 getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-  console.log("SET TRUE");
+  console.log("SET TRUE",genre);
   
   setTimeout(() => {
     this.isLoading = true;
@@ -645,6 +645,13 @@ getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
       });
     }
   });
+}
+
+
+changeCategory(genre?: string){
+  this.cacheService.clearCache();
+  this.getScheduleData(genre);
+  this.active_categories(genre);
 }
 
 

@@ -3,7 +3,7 @@
     <div class="schedule_channels">Streamly Channels</div>
     
     <div class="schedule_categories" [@slideInOut]="'active'" [class.isMacCh]="isMobileChrom" #scrollablecategory>
-      <div class="schedule_category" [class.active_categories]="selected_category == category.name" *ngFor="let category of categories" (click)="getScheduleData(category.name)">
+      <div class="schedule_category" [class.active_categories]="selected_category == category.name" *ngFor="let category of categories" (click)="changeCategory(category.name)">
         <img *ngIf="category?.image" loading="lazy" class="me-1" [src]="category?.image" [alt]="category.name">
         {{ category?.name }}
       </div>
@@ -130,43 +130,7 @@
             <div [ngStyle]="{'min-width.px':getCurrentTimeDate?.length*150+79,'width.px':getCurrentTimeDate?.length*150+79,'height.px':0}">
               total
             </div>
-        <!-- <div class="schedule_time_programs">
-          <div class="schedule_time">
-            <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-            <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-            <div
-              class="program_ep d-flex justify-content-between align-items-center"
-            >
-              <p>EP</p>
-              <p>45 mins</p>
-            </div>
-          </div>
-          <div class="schedule_time">
-            <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-            <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-            <div
-              class="program_ep d-flex justify-content-between align-items-center"
-            >
-              <p>EP</p>
-              <p>45 mins</p>
-            </div>
-          </div>
-          <div class="schedule_time">
-            <h4 class="program_title p-0 m-0">Lorem Ipsum</h4>
-            <p class="program_time my-2">12:30 PM - 01:15 PM</p>
-            <div
-              class="program_ep d-flex justify-content-between align-items-center"
-            >
-              <p>EP</p>
-              <p>45 mins</p>
-            </div>
-          </div>
-        </div> -->
       </div>
-
-      <!-- <div class="m-auto h-100 text-center" [class.spinner]="true" *ngIf="!filteredPrograms?.length">
-      </div> -->
-
     </div>
     <div *ngIf="playlist_details_show" class="modal-overlay"></div>
     <div *ngIf="playlist_details_show" class="row schedule_details_container">
@@ -174,7 +138,6 @@
         <img *ngIf="programDetailData.image" loading="lazy" [src]="programDetailData.image?programDetailData?.image:'../../../../assets/dummy-img/inf.png'" alt="" />
       <p class="no-img" *ngIf="!programDetailData.image">No Image</p>
       
-      <!-- <p class="programDetailDataStationName" [title]="programDetailData?.stationName">{{programDetailData?.stationName | truncate:20}}</p> -->
       </div>
       <div class="col-lg-4 col-12 playstream_2">
         <h1 [title]="programDetailData?.title">{{programDetailData?.stationName | truncate:20}}</h1>
