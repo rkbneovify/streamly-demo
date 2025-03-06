@@ -507,7 +507,8 @@ class NewChannelApiController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'TMSId' => 'required',
-            'channel_id' => 'required'
+            'channel_id' => 'required',
+            'timezone' => 'nullable'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -516,7 +517,8 @@ class NewChannelApiController extends Controller
             ], 400);
         } else {
             $TMSId = $request->TMSId;
-            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets')
+            $timezone = $request->timezone ?? 'UTC'; // Default to UTC if no timezone is provided
+            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets', 'gracenote_schedule_program.start', 'gracenote_schedule_program.end')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
                 ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -527,6 +529,16 @@ class NewChannelApiController extends Controller
                 ->first();
 
             if (!empty($program)) {
+                // Convert start and end timestamps to Carbon instances
+                $startTime = Carbon::parse($program->start, 'UTC')->setTimezone($timezone);
+                $endTime = Carbon::parse($program->end, 'UTC')->setTimezone($timezone);
+
+                // Get the current timestamp in the requested timezone
+                $currentTimestamp = Carbon::now($timezone);
+
+                // Determine if play_icon should be true or false
+                $program->play_icon = $currentTimestamp->between($startTime, $endTime);
+
                 $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration', 'start')
                     ->where('title', 'like', "%{$program->title}%")
                     ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
@@ -534,6 +546,7 @@ class NewChannelApiController extends Controller
                     ->get();
                 $data = [
                     'channel_id' => $program->channel_id,
+                    'play_icon' => $program->play_icon,
                     'stationName' => $program->stationName,
                     'url' => $program->url,
                     'dash_url' => $program->dash_url,
