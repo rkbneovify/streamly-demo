@@ -10,8 +10,6 @@ export class PlaylistCacheService {
   private currentTimeSlotCache: any = null;
   private filterData:any = null;
 
-  constructor() {}
-
   // Categories
   setCategories(data: any) {
     this.categoriesCache = data;
@@ -63,6 +61,8 @@ export class PlaylistCacheService {
     this.favoriteListCache = null;
     this.currentTimeSlotCache = null;
     this.filterData = null;
-    localStorage.getItem('scrollPosition') ? localStorage.removeItem('scrollPosition') :"";
+    if (localStorage.getItem('scrollPosition')) {
+      localStorage.removeItem('scrollPosition');
+    }    
   }
 }

@@ -35,9 +35,6 @@
     
     <div class="schedule_hours scrollByRight d-flex position-relative" [ngClass]="{'isMacCh':isMobileChrom}" [class.isMacCh]="isMacChrome" [@slideInOut]="'active'" #scrollableContent>
       <div class="schedule_hour" *ngFor="let hour of getCurrentTimeDate" #scrollItem>{{hour}}</div>
-      <!-- <div class="schedule_hour">01:00 PM</div>
-      <div class="schedule_hour">01:30 PM</div>
-      <div class="schedule_hour">02:00 PM</div> -->
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
@@ -118,7 +115,7 @@
                 <div
                   class="program_ep d-flex justify-content-between align-items-center"
                 >
-                  <p class="">EP</p>
+                  <p class="">{{program?.TMSId | extractFirstTwo}}</p>
                   <p class="overflow-hidden">{{program?.start | durationFormat:program?.end}}</p>
                 </div>
               </div>

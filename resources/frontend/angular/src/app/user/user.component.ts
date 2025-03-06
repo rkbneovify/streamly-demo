@@ -483,6 +483,7 @@ closeExpandedCard() {
     this.router.navigateByUrl('/user/playstream');
     this.searchShow = !this.searchShow;
     this.currentProgramDetail=false;
+    this.playlist_details_show = false;
   }
 
   closeSearchData() {
@@ -504,6 +505,7 @@ closeExpandedCard() {
     const body = {
       TMSId: tmsId,
       channel_id: channelId,
+      timezone:this.getUserTimezone()
     };
     this.crud.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
@@ -516,6 +518,10 @@ closeExpandedCard() {
         this.isLoading = false;
       },
     });
+  }
+
+  getUserTimezone(): string {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone;
   }
 
   changeSideBarTab(type: string) {
