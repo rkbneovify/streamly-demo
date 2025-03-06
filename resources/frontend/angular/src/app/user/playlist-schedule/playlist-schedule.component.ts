@@ -2,7 +2,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { JsonPipe, NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -28,9 +27,10 @@ import { InactivityService } from '../../services/inactive/inactive.service';
 import { TabInactivityService } from '../../services/tabInactive/tab-inactive.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
-import { filter, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
 import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
+import { ExtractFirstTwoPipe } from '../../pipe/extract-first-two.pipe';
 
 
 declare let window: Window;
@@ -51,6 +51,7 @@ declare let window: Window;
     ScheduleFormatterPipe,
     JsonPipe,
     NgClass,
+    ExtractFirstTwoPipe
   ],
   templateUrl: './playlist-schedule.component.html',
   styleUrl: './playlist-schedule.component.scss',
@@ -428,158 +429,172 @@ export class PlaylistScheduleComponent
   count: number = 0;
   isProcessing: boolean = false;
 
-  // scrollContent(position: number) {
-  //   // Prevent multiple executions
-  //   if (this.isProcessing) {
-  //     return;
-  //   }
-
-
-
-  //   console.log("==inside==>",this.count,position);
-  
-  //   // Early return for invalid `position` values
-  //   if (position === 0 && this.count === 0) {
-  //     this.resetScroll();
-  //     return;
-  //   }
-  
-  //   this.isProcessing = true; // Set the processing flag
-  
-  //   try {
-  //     if (position !== 0) {
-  //       // Enable controls when scrolling
-  //       this.changeColorBackgroung = true;
-  //       this.toggleLeftArrow = true;
-  //       this.go_Live = true;
-  
-  //       if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
-  //         // Perform scrolling
-  //         this.scrollableContent.nativeElement.scrollLeft += position;
-  //         this.scrollableContent1.nativeElement.scrollLeft += position;
-  
-  //         // Update counters and check if it's the next day
-  //         if (position > 0) {
-  //           this.count++;
-  //         } else {
-  //           this.count--;
-
-  //         }
-  
-  //         // Boundary check for `count`
-  //         if (this.count < 0) {
-  //           this.count = 0;
-  //         } else if (this.count >= this.getCurrentTimeDate.length) {
-  //           this.count = this.getCurrentTimeDate.length - 1;
-  //         }
-  
-  //         this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]);
-  //             this.cdr.detectChanges();
-  //         console.log('isNext data =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
-  //       }
-  //     } else {
-  //       this.resetScroll(); // Reset when position is 0
-  //     }
-  
-  //     // Handle edge case: count is 0
-  //     if (this.count === 0) {
-  //       this.resetScroll();
-  
-  //       if (!this.isTimePassed) {
-  //         this.refreshPage(); // Refresh if needed
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during scrollContent execution:", error);
-  //   } finally {
-  //     // Ensure `isProcessing` is reset after processing
-  //     setTimeout(() => {
-  //       this.isProcessing = false;
-  //     }, 500);
-  //   }
-  // }
-  
-  // Helper method to reset scroll and state
-  
-
-  // scroll to add the previ channel
   onScrollChannelPostion(): void {
     // Store the current scroll position whenever the user scrolls
     localStorage.setItem('scrollPosition', this.channelList1.nativeElement.scrollTop.toString());
   }
 
 
+  // scrollContent(position: number) {
+  //   if (this.isProcessing) return; 
+  
+  //   console.log("==inside==>", this.count, position);
+  
+  //   if (position === 0 && this.count === 0) {
+  //     this.resetScroll();
+  //     return;
+  //   }
+  
+  //   this.isProcessing = true; 
+  
+  //   try {
+  //     if (position !== 0) {
+  //       this.changeColorBackgroung = true;
+  //       this.toggleLeftArrow = true;
+  //       this.go_Live = true;
+  
+  //       if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
+  //         this.scrollableContent.nativeElement.scrollLeft += position;
+  //         this.scrollableContent1.nativeElement.scrollLeft += position;
+  
+  //         if (position > 0) {
+  //           this.count++;
+  //         } else {
+  //           this.count--;
+  //         }
+  
+  //         // Prevent negative count
+  //         if (this.count < 0) {
+  //           this.count = 0;
+  //         } else if (this.count >= this.getCurrentTimeDate.length) {
+  //           this.count = this.getCurrentTimeDate.length - 1;
+  //         }
+  
+  //         // Update isNextDay status
+  //         this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
+  
+  //         // ✅ Fix: Reset when scrolling back to "Today"
+  //         if (!this.isNextDay) {
+  //           this.isNextDay = false;
+  //           this.selectedDay = 'Today';
+            
+  //           setTimeout(() => {
+  //             this.changeDays('Today', false); //  Update UI binding
+  //             this.getCurrentTimeSlot('today'); //  Refresh data
+  //             this.cdr.markForCheck();  // Force UI update
+  //           }, 100);
+  //         }
+  
+  //         this.cdr.markForCheck();
+  //         console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+  //       }
+  //     } else {
+  //       this.resetScroll();
+  //     }
+  
+  //     if (this.count === 0) {
+  //       this.resetScroll();
+  //       if (!this.isTimePassed) {
+  //         this.refreshPage();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during scrollContent execution:", error);
+  //   } finally {
+  //     setTimeout(() => {
+  //       this.isProcessing = false;
+  //     }, 500);
+  //   }
+  // }
+
   scrollContent(position: number) {
     if (this.isProcessing) return; 
   
     console.log("==inside==>", this.count, position);
-  
-    if (position === 0 && this.count === 0) {
-      this.resetScroll();
-      return;
-    }
-  
+    
+    if (this.shouldResetScroll(position)) return;
+    
     this.isProcessing = true; 
   
     try {
       if (position !== 0) {
-        this.changeColorBackgroung = true;
-        this.toggleLeftArrow = true;
-        this.go_Live = true;
-  
-        if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
-          this.scrollableContent.nativeElement.scrollLeft += position;
-          this.scrollableContent1.nativeElement.scrollLeft += position;
-  
-          if (position > 0) {
-            this.count++;
-          } else {
-            this.count--;
-          }
-  
-          // Prevent negative count
-          if (this.count < 0) {
-            this.count = 0;
-          } else if (this.count >= this.getCurrentTimeDate.length) {
-            this.count = this.getCurrentTimeDate.length - 1;
-          }
-  
-          // Update isNextDay status
-          this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
-  
-          // ✅ Fix: Reset when scrolling back to "Today"
-          if (!this.isNextDay) {
-            this.isNextDay = false;
-            this.selectedDay = 'Today';
-            
-            setTimeout(() => {
-              this.changeDays('Today', false); //  Update UI binding
-              this.getCurrentTimeSlot('today'); //  Refresh data
-              this.cdr.markForCheck();  // Force UI update
-            }, 100);
-          }
-  
-          this.cdr.markForCheck();
-          console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
-        }
+        this.handleScroll(position);
       } else {
         this.resetScroll();
       }
   
-      if (this.count === 0) {
-        this.resetScroll();
-        if (!this.isTimePassed) {
-          this.refreshPage();
-        }
-      }
+      this.handlePostScrollActions();
     } catch (error) {
       console.error("Error during scrollContent execution:", error);
     } finally {
-      setTimeout(() => {
-        this.isProcessing = false;
-      }, 500);
+      this.resetProcessingFlag();
     }
   }
+  
+  // Extracted Method: Check if we should reset the scroll
+  private shouldResetScroll(position: number): boolean {
+    if (position === 0 && this.count === 0) {
+      this.resetScroll();
+      return true;
+    }
+    return false;
+  }
+  
+  // Extracted Method: Handle scrolling logic
+  private handleScroll(position: number) {
+    this.changeColorBackgroung = true;
+    this.toggleLeftArrow = true;
+    this.go_Live = true;
+  
+    if (!this.scrollableContent?.nativeElement || !this.scrollableContent1?.nativeElement) return;
+  
+    this.scrollableContent.nativeElement.scrollLeft += position;
+    this.scrollableContent1.nativeElement.scrollLeft += position;
+    this.updateCount(position);
+  }
+  
+  // Extracted Method: Update count & boundary conditions
+  private updateCount(position: number) {
+    this.count += position > 0 ? 1 : -1;
+    this.count = Math.max(0, Math.min(this.count, this.getCurrentTimeDate.length - 1));
+  
+    this.updateDayState();
+  }
+  
+  // Extracted Method: Handle isNextDay & UI updates
+  private updateDayState() {
+    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
+  
+    if (!this.isNextDay) {
+      this.selectedDay = 'Today';
+      setTimeout(() => {
+        this.changeDays('Today', false);
+        this.getCurrentTimeSlot('today');
+        this.cdr.markForCheck();
+      }, 100);
+    }
+  
+    this.cdr.markForCheck();
+    console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+  }
+  
+  // Extracted Method: Handle actions after scrolling
+  private handlePostScrollActions() {
+    if (this.count === 0) {
+      this.resetScroll();
+      if (!this.isTimePassed) {
+        this.refreshPage();
+      }
+    }
+  }
+  
+  // Extracted Method: Reset processing flag with delay
+  private resetProcessingFlag() {
+    setTimeout(() => {
+      this.isProcessing = false;
+    }, 500);
+  }
+  
   
   
 
@@ -821,7 +836,6 @@ changeCategory(genre?: string){
         }
 
         this.isLoading = false;
-        // localStorage.setItem('playerChannelId',res.data);
       },
       error: (err: any) => {
         this.toaster.error(err.message);
@@ -875,6 +889,7 @@ changeCategory(genre?: string){
     console.log(day);
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
+    this.totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime));
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
         // this.getScheduleData(this.selected_category);
@@ -893,7 +908,6 @@ changeCategory(genre?: string){
             this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
             console.log(this.count);
             this.isNextDay = true;
-            this.totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime))
             this.scrollContent(this.totalScroll * 150 )
             console.log(this.totalScroll,'=====+==>',this.count ,+this.calculateIntervalsRemaining(this.getClosetTime)*150)
           }
