@@ -62,5 +62,7 @@ export class PlaylistCacheService {
     this.scheduleCache = null;
     this.favoriteListCache = null;
     this.currentTimeSlotCache = null;
+    this.filterData = null;
+    localStorage.getItem('scrollPosition') ? localStorage.removeItem('scrollPosition') :"";
   }
 }
