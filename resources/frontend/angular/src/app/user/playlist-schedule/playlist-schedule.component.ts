@@ -30,6 +30,7 @@ import { UtilsService } from '../../services/utils/utils.service';
 import { ScreenSizeService } from '../../services/screenSize/screen-size.service';
 import { filter, Subscription } from 'rxjs';
 import { PlaylistCacheService } from '../../services/playlist-cache/playlist-cache.service';
+import { RouteTrackingService } from '../../services/RouteTracking/route-tracking.service';
 
 
 declare let window: Window;
@@ -77,6 +78,8 @@ export class PlaylistScheduleComponent
   isMobileChrom:boolean = false;
   currentWidth: number = 0;  
   private screenSizeSubscription!: Subscription;
+
+  previousRoute: string | null = null;
 
 
   @ViewChild('scrollablecategory') scrollablecategory: ElementRef;
@@ -282,39 +285,38 @@ export class PlaylistScheduleComponent
     private utilsService:UtilsService,
     private screenSizeService: ScreenSizeService,
     private ngZone: NgZone,
-    private cacheService: PlaylistCacheService
+    private cacheService: PlaylistCacheService,
+    private routeTrackingService: RouteTrackingService
 
   ) {}
   ngOnInit(): void {
 
-            // Check for cached data
-            const cachedCategories = this.cacheService.getCategories();
-            const cachedSchedule = this.cacheService.getSchedule();
-            const filterData = this.cacheService.getFilterData()
-    
-            console.log(cachedCategories,cachedSchedule)
-            if (cachedCategories) {
-              this.categories = cachedCategories; // Load categories from cache
-            } else {
-              this.getAllCategories(); // Fetch categories if not cached
-            }
-    
-            if (cachedSchedule && filterData) {
-              this.getScheduleChannelLogo = cachedSchedule; // Load schedule from cache
-              this.filteredPrograms = filterData
-            } else {
-              this.getScheduleData(''); // Fetch schedule if not cached
-            }
+    this.previousRoute = this.routeTrackingService.getPreviousUrl();
+    console.log('Previous Route:', this.previousRoute);
 
-    this.getAllCategories();
-    this.getScheduleData('');
+    if(this.previousRoute !== "/user/playstream"){
+      this.cacheService.clearCache();
+    }
+    // Check for cached data
+    const cachedCategories = this.cacheService.getCategories();
+    const cachedSchedule = this.cacheService.getSchedule();
+    const filterData = this.cacheService.getFilterData()
+
+    if (cachedCategories) {
+      this.categories = cachedCategories; // Load categories from cache
+    } else {
+      this.getAllCategories(); // Fetch categories if not cached
+    }
+
+    if (cachedSchedule && filterData) {
+      this.getScheduleChannelLogo = cachedSchedule; // Load schedule from cache
+      this.filteredPrograms = filterData
+    }else{
+      this.getScheduleData('');    
+    }
+
     this.getFavoriteList();
     this.getCurrentTimeSlot();
-    // this.intervalLiveWidth()
-    // setInterval(()=>{
-    //   this.liveCurrentTime+=10
-    // },1000)
-    // Update marginLeft every 1 minute (60,000 milliseconds)
     this.setLiveMinWith();
     if (this.liveCurrentTime) {
       this.intervalLiveWidth = setInterval(() => {
@@ -603,36 +605,55 @@ export class PlaylistScheduleComponent
   startIndex: number = 0;
   limit: number = 10;
 
-  getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
+  console.log("SET TRUE",genre);
+  
+  setTimeout(() => {
     this.isLoading = true;
-    this.active_categories(genre == '' || genre == 'All' ? 'All' : genre);
-    const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
-    const body = {
-      typeurl: 'mpd',
-      genre: genre == 'All' ? '' : genre,
-      start: this.startIndex,
-      limit: this.limit,
-      zipcode:zipcode
-    };
+    this.cdr.markForCheck();  // Force UI update
+  }, 100);
 
-    this.apiService.postRequest('auth/epg-guide', body).subscribe({
-      next: (res: any) => {
-        // Append new data to the existing list for lazy loading
-        // console.log('getScheduleChannelLogo res  ===>',res.data);
-        this.startTimeT = +res?.start
+  console.log('hello',this.isLoading)
+  
+  this.cdr.markForCheck();
+
+  const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
+  const body = {
+    typeurl: 'mpd',
+    genre: genre === 'All' ? '' : genre,
+    start: this.startIndex,
+    limit: this.limit,
+    zipcode: zipcode
+  };
+
+  this.apiService.postRequest('auth/epg-guide', body).subscribe({
+    next: (res: any) => {
+      this.ngZone.run(() => {
         this.getScheduleChannelLogo = [...this.filterchannelAnd(res.data)];
-        // console.log('getScheduleChannelLogo  ===>',this.getScheduleChannelLogo);
         this.filteredPrograms = [...res.data];
         this.cacheService.setFilterData(this.filteredPrograms);
-        this.cacheService.setSchedule(this.getScheduleChannelLogo); // Cache the schedule
+        this.cacheService.setSchedule(this.getScheduleChannelLogo);
         this.isLoading = false;
-      },
-      error: (err: any) => {
-        console.error(err);
+        this.cdr.detectChanges();
+      });
+    },
+    error: (err: any) => {
+      console.error(err);
+      this.ngZone.run(() => {
         this.isLoading = false;
-      },
-    });
-  }
+        this.cdr.detectChanges();
+      });
+    }
+  });
+}
+
+
+changeCategory(genre?: string){
+  this.cacheService.clearCache();
+  this.getScheduleData(genre);
+  this.active_categories(genre);
+}
+
 
 
   // Listen to scroll event
@@ -665,45 +686,7 @@ export class PlaylistScheduleComponent
       }));
   }
 
-  // // function to change the time into width
-  // calculateWidth(start: any, end: any,index:any) {
-  //   if (!start || !end) {
-  //     return {width:0,magin_left:0};
-  //   }
-  //   const startDate = new Date(start * 1000);
-  //   const endDate = new Date(end * 1000);
-  //   // const currentTime = new Date().getTime();
-  //   const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
 
-  //   // Check if start time is less than current time
-  //   if (index == 0 && startDate.getTime() < currentTime) {
-  //   // console.log('currentTime2 ==>',currentTime2,'currentTime ==>',currentTime)
-  //   // const durationMs = endDate.getTime() - startDate.getTime();
-  //   const timeDifferenceMs = currentTime - startDate.getTime();
-  //   const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  //   // const durationMs = endDate.getTime() - startDate.getTime();
-  //   // const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //   console.log(index,' =  isTrue =>',index == 0 && startDate.getTime() < currentTime,'  timeDifferenceMs ==>',timeDifferenceMs,'  timeDifferenceMinutes => ', timeDifferenceMinutes);
-  //   return {width:timeDifferenceMinutes * 10,magin_left:0}
-  // }
-  // else if(index == 0 && startDate.getTime() > currentTime){
-  //   const durationMs = endDate.getTime() - startDate.getTime();
-  //   const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //   const timeDifferenceMs = currentTime - startDate.getTime();
-  //   const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  //   return {width:durationMinutes * 10,magin_left:timeDifferenceMinutes}
-
-  // }
-
-  // // If start time is not less than current time, return difference in minutes multiplied by 5
-  // // const timeDifferenceMs = currentTime - startDate.getTime();
-  // // const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  // // return timeDifferenceMinutes * 5;
-
-  // const durationMs = endDate.getTime() - startDate.getTime();
-  // const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  // return {width:durationMinutes * 10,magin_left:0}
-  // }
 
   setLiveMinWith() {
     const currentTimeIndex = this.getDateTimeWithProvidedTime(
@@ -715,102 +698,6 @@ export class PlaylistScheduleComponent
     this.liveCurrentTime = timeDifferenceMinutes * 5;
   }
 
-  // calculateWidth(start: any, end: any, index: any) {
-  //   if (!start || !end) {
-  //     return { width: 0, margin_left: 0 };
-  //   }
-
-  //   const startDate = new Date(start * 1000);
-  //   const endDate = new Date(end * 1000);
-  //   const currentTime = this.getDateTimeWithProvidedTime(this.getCurrentTimeDataFirstIndex).getTime();
-
-  //   let width = 0;
-  //   let margin_left = 0;
-
-  //   if (index == 0 && startDate.getTime() < currentTime) {
-  //     const timeDifferenceMs = currentTime - startDate.getTime();
-  //     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  //     width = timeDifferenceMinutes * 10;
-  //     margin_left = 0;
-  //     console.log(index == 0 && startDate.getTime() < currentTime,'timeDifferenceMinutes=>',timeDifferenceMinutes,{ width, margin_left });
-  //   } else if (index == 0 && startDate.getTime() > currentTime) {
-  //     const durationMs = endDate.getTime() - startDate.getTime();
-  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //     const timeDifferenceMs = startDate.getTime() - currentTime;
-  //     const timeDifferenceMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
-  //     width = durationMinutes * 10;
-  //     margin_left = timeDifferenceMinutes * 10;
-  //     console.log(index == 0 && startDate.getTime() > currentTime,'getTime() > currentTime=> ',timeDifferenceMinutes,{ width, margin_left })
-  //   } else {
-  //     const durationMs = endDate.getTime() - startDate.getTime();
-  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //     width = durationMinutes * 10;
-  //     margin_left = 0;
-  //     // console.log('Without con =>> ',{ width, margin_left })
-  //   }
-
-  //   return { width, margin_left };
-  // }
-
-  // calculateWidth(start: any, end: any, index: any) {
-  //   if (!start || !end) {
-  //     return { width: 0, margin_left: 0 };
-  //   }
-  //   const startDate = new Date(start * 1000);
-  //   const endDate = new Date(end * 1000);
-  //   let currentTime = this.getDateTimeWithProvidedTime(
-  //     this.getCurrentTimeDataFirstIndex
-  //   ).getTime();
-
-  //   // console.log('selectedDay before==>',this.selectedDay);
-  //   if (this.selectedDay === 'Tomorrow') {
-  //     // Adjust currentTime to 5:30 AM the next day if selectedDay is tomorrow
-  //     // console.log('this.selectedDay==>',this.selectedDay);
-  //     const tomorrow = new Date();
-  //     tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
-  //     tomorrow.setHours(5, 30, 0, 0); // Set time to 5:30 AM
-  //     currentTime = tomorrow.getTime(); // Use this as current time
-  //   }
-  //   // console.log('selectedDay after==>',this.selectedDay);
-
-  //   let width = 0;
-  //   let margin_left = 0;
-
-  //   if (index === 0) {
-  //     if (startDate.getTime() < currentTime) {
-  //       // The event has already started
-  //       if (endDate.getTime() < currentTime) {
-  //         // The event has also ended
-  //         width = 0; // No width because the event has passed
-  //         margin_left = 0;
-  //       } else {
-  //         // The event is currently ongoing
-  //         const durationMs = endDate.getTime() - currentTime;
-  //         const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //         width = durationMinutes * 5;
-  //         margin_left = 0;
-  //       }
-  //     } else {
-  //       // The event has not started yet
-  //       const durationMs = endDate.getTime() - startDate.getTime();
-  //       const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //       const timeDifferenceMs = startDate.getTime() - currentTime;
-  //       const timeDifferenceMinutes = Math.floor(
-  //         timeDifferenceMs / (1000 * 60)
-  //       );
-  //       width = durationMinutes * 5;
-  //       margin_left = timeDifferenceMinutes * 5;
-  //     }
-  //   } else {
-  //     // For all other indices (not the first one)
-  //     const durationMs = endDate.getTime() - startDate.getTime();
-  //     const durationMinutes = Math.floor(durationMs / (1000 * 60));
-  //     width = durationMinutes * 5;
-  //     margin_left = 0;
-  //   }
-
-  //   return { width, margin_left };
-  // }
   calculateWidth(start: any, end: any, index: any) {
     if (!start || !end) {
       return { width: 0, margin_left: 0 };
@@ -898,42 +785,7 @@ export class PlaylistScheduleComponent
     return currentDate;
   }
 
-  // (timeStr) {
-  //   // Get the current date
-  //   const currentDate = new Date();
 
-  //   // Extract hours and minutes from the provided time string
-  //   const timeParts = timeStr.match(/(\d+):(\d+) (\w+)/);
-  //   let hours = parseInt(timeParts[1]);
-  //   const minutes = parseInt(timeParts[2]);
-  //   const period = timeParts[3];
-
-  //   // Convert to 24-hour format if necessary
-  //   if (period === 'PM' && hours !== 12) {
-  //     hours += 12;
-  //   } else if (period === 'AM' && hours === 12) {
-  //     hours = 0;
-  //   }
-
-  //   // Create a new date object with the provided time for the current date in local time
-  //   currentDate.setHours(hours, minutes, 0, 0);
-
-  //   // Convert the current date with provided time to a UTC timestamp in milliseconds
-  //   const utcDate = new Date(Date.UTC(
-  //     currentDate.getFullYear(),
-  //     currentDate.getMonth(),
-  //     currentDate.getDate(),
-  //     currentDate.getHours(),
-  //     currentDate.getMinutes(),
-  //     currentDate.getSeconds(),
-  //     currentDate.getMilliseconds()
-  //   ));
-
-  //   // Return the timestamp in milliseconds
-  //   return utcDate.getTime();
-  // }
-
-  // program-details data
 
   programDetailData: any;
   programPlayable: boolean = false;
