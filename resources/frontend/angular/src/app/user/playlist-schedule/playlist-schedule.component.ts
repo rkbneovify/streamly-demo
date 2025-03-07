@@ -667,6 +667,7 @@ changeCategory(genre?: string){
   this.cacheService.clearCache();
   this.getScheduleData(genre);
   this.active_categories(genre);
+  this.scrollContent(0);
 }
 
 
