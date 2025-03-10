@@ -518,7 +518,7 @@ class NewChannelApiController extends Controller
         } else {
             $TMSId = $request->TMSId;
             $timezone = $request->timezone ?? 'UTC'; // Default to UTC if no timezone is provided
-            $program = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets', 'gracenote_schedule_program.start', 'gracenote_schedule_program.end')
+            $programs = GracenoteScheduleProgram::where('TMSId', $TMSId)->select('channels.id as channel_id', 'gracenote_schedule_program.prgSvcId', 'gracenote_sources.stationName', 'channels.url', 'dash_url', 'smooth_url', 'title', 'description', 'duration', 'quals', 'gracenote_schedule_program.assets', 'gracenote_schedule_program.start', 'gracenote_schedule_program.end')
                 ->selectRaw("CONCAT('[\"', REPLACE(GROUP_CONCAT(IFNULL(genre.name, 'Others')), ',', '\",\"'), '\"]') as genre")
                 ->leftJoin('channels', 'gracenote_schedule_program.prgSvcId', '=', 'channels.prgSvcId')
                 ->leftJoin('channels_genre', 'channels.id', '=', 'channels_genre.channels_id')
@@ -526,36 +526,41 @@ class NewChannelApiController extends Controller
                 ->leftJoin('gracenote_sources', 'gracenote_schedule_program.prgSvcId', '=', 'gracenote_sources.prgSvcId')
                 ->where('channels.id', $request->channel_id)
                 ->groupBy('gracenote_schedule_program.id')
-                ->first();
+                ->get();
 
-            if (!empty($program)) {
-                // Convert start and end timestamps to Carbon instances
-                $startTime = Carbon::parse($program->start, 'UTC')->setTimezone($timezone);
-                $endTime = Carbon::parse($program->end, 'UTC')->setTimezone($timezone);
+            if (!empty($programs)) {
+                foreach ($programs as $program) {
+                    // Convert start and end timestamps to Carbon instances
+                    $startTime = Carbon::parse($program->start, 'UTC')->setTimezone($timezone);
+                    $endTime = Carbon::parse($program->end, 'UTC')->setTimezone($timezone);
 
-                // Get the current timestamp in the requested timezone
-                $currentTimestamp = Carbon::now($timezone);
-
-                // Determine if play_icon should be true or false
-                $program->play_icon = $currentTimestamp->between($startTime, $endTime);
-
+                    // Get the current timestamp in the requested timezone
+                    $currentTimestamp = Carbon::now($timezone);
+                    // Determine if play_icon should be true or false
+                    $program_play_icon = $currentTimestamp->between($startTime, $endTime);
+                    if ($program_play_icon == true) {
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
                 $program_details = GracenoteScheduleProgram::select('date', 'time', 'duration', 'start')
                     ->where('title', 'like', "%{$program->title}%")
-                    ->where('gracenote_schedule_program.prgSvcId', $program->prgSvcId)
+                    ->where('gracenote_schedule_program.prgSvcId', $programs[0]->prgSvcId)
                     ->orderBy('start')
                     ->get();
                 $data = [
-                    'channel_id' => $program->channel_id,
-                    'play_icon' => $program->play_icon,
-                    'stationName' => $program->stationName,
-                    'url' => $program->url,
-                    'dash_url' => $program->dash_url,
-                    'smooth_url' => $program->smooth_url,
-                    "title" => $program->title,
-                    "description" => $program->description,
-                    "duration" => $program->duration,
-                    "quals" => $program->quals,
-                    "genre" =>  json_decode($program->genre),
+                    'channel_id' => $programs[0]->channel_id,
+                    'play_icon' => $program_play_icon,
+                    'stationName' => $programs[0]->stationName,
+                    'url' => $programs[0]->url,
+                    'dash_url' => $programs[0]->dash_url,
+                    'smooth_url' => $programs[0]->smooth_url,
+                    "title" => $programs[0]->title,
+                    "description" => $programs[0]->description,
+                    "duration" => $programs[0]->duration,
+                    "quals" => $programs[0]->quals,
+                    "genre" =>  json_decode($programs[0]->genre),
                     "image" => $this->getURIFromAssetForProgram($program->assets),
                     "schedule" => $program_details
                 ];
