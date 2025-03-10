@@ -535,6 +535,10 @@
             </div>
             <div class="col-lg-4 col-12 playstream_2 my-1 mt-2">
               <h1>{{ programDetailData?.stationName }}</h1>
+              <div (click)="setplayerData(programDetailData.dash_url,programDetailData.channel_id)" *ngIf="programDetailData.play_icon" class="history_ch-play-icon pointer">
+                <img loading="lazy" src="../../assets/dummy-img/play-circle.png" alt="play-icon" />
+              </div>
+
               <div class="play_btn_container_1">
                 <button class="playbtn_time text-nowrap">
                   {{ programDetailData?.duration | durationISOFormat }}

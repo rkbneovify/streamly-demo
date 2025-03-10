@@ -609,6 +609,10 @@ video::-webkit-media-controls-fullscreen-button {
   background: rgba(0, 0, 0, 0.7);
   color: white;
   z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .custom-controls button {
