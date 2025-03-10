@@ -27,7 +27,6 @@
         </ng-container>
         
         </select>
-      <!-- <div *ngIf="isNextDay" class="tom-style position-absolute">Tomorrow</div> -->
     </div>
     <div *ngIf="toggleLeftArrow" class="left-side-move position-absolute" (click)="scrollContent(-150)">
       <img loading="lazy" src="../../assets/dummy-img/chevron-left.svg" alt="" />
@@ -38,9 +37,9 @@
     </div>
     <div class="schedule_GoLive_container d-flex align-items-center">
       <div *ngIf="isTimePassed && !go_Live && selectedDay == 'Today'" class="schedule_Live pointer pointer">Live</div>
-      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live</div>
-      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live</div>
-      <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live</div>
+      <div *ngIf="go_Live && selectedDay == 'Today'" class="schedule_GoLive pointer" (click)="scrollContent(0)">Go Live T</div>
+      <div *ngIf="(!go_Live && !isTimePassed && selectedDay == 'Today')" class="schedule_GoLive pointer" (click)="refreshPage()">Go Live R</div>
+      <div *ngIf="selectedDay == 'Tomorrow'" class="schedule_GoLive pointer" (click)="changeDays('Today')">Go Live To</div>
       <div class="pointer righ-side-move" (click)="scrollContent(150)">
         <img loading="lazy" src="../../assets/dummy-img/chevron-right.svg" alt="" />
       </div>

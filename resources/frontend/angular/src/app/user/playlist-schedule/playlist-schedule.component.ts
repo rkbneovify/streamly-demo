@@ -575,7 +575,7 @@ export class PlaylistScheduleComponent
     }
   
     this.cdr.markForCheck();
-    console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
+    console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count],this.getCurrentTimeDate[this.totalScroll],this.checkIfNextDay(this.getCurrentTimeDate[this.totalScroll]));
   }
   
   // Extracted Method: Handle actions after scrolling
@@ -797,7 +797,6 @@ changeCategory(genre?: string){
 
     // Create a new date object with the provided time for the current date in local time
     currentDate.setHours(hours, minutes, 0, 0);
-    // console.log(currentDate);
     return currentDate;
   }
 
@@ -887,7 +886,6 @@ changeCategory(genre?: string){
   // filter according to today and tommorrow
   totalScroll:number = 0;
   changeDays(day: string, isDataChange = true) {
-    console.log(day);
     this.dayfilter = day != 'Tomorrow' ? 'today' : 'tomorrow';
     this.selectedDay = day != 'Tomorrow' ? 'Today' : 'Tomorrow';
     this.totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime));
@@ -902,15 +900,12 @@ changeCategory(genre?: string){
 
           if(this.count != 0){
             this.scrollContent((this.totalScroll - this.count)  * 150 );
-            console.log(this.count,this.totalScroll ,"===>",this.totalScroll - this.count,this.totalScroll - this.count  * 150)
           }
   
           if(this.count == 0){          
             this.count = (this.calculateIntervalsRemaining(this.getClosetTime)-1);
-            console.log(this.count);
             this.isNextDay = true;
             this.scrollContent(this.totalScroll * 150 )
-            console.log(this.totalScroll,'=====+==>',this.count ,+this.calculateIntervalsRemaining(this.getClosetTime)*150)
           }
         }
 
