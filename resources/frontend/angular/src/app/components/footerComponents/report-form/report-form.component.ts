@@ -22,6 +22,7 @@ export class ReportFormComponent implements OnInit {
   title: string;
   reportForm: FormGroup;
   bugReportService: any;
+  isLoading: boolean = false;
   constructor(
     private location: Location,
     private apiService: CrudService,
@@ -42,11 +43,6 @@ export class ReportFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPrivacyP();
-
-    // this.bugForm = this.fb.group({
-    //   email:[''],
-
-    // })
   }
 
   getPrivacyP() {
@@ -64,17 +60,20 @@ export class ReportFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.reportForm.valid) {
+      this.isLoading = true;
       this.apiService
         .postRequest('auth/bugReport', this.reportForm.value)
         .subscribe(
-          (response:any) => {
-      this.ts.success(response?.message)
+          (response: any) => {
+            this.ts.success(response?.message);
+            this.isLoading = false;
+            this.reportForm.reset();
             // Handle success response
           },
           (error) => {
             console.error('Error sending bug report:', error);
             this.ts.error(error.message);
-
+            this.isLoading = false;
             // Handle error response
           }
         );
