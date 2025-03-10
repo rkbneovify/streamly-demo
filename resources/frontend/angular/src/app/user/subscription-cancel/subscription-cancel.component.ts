@@ -3,7 +3,6 @@ import { Router, RouterLink } from '@angular/router';
 import { DataSharingService } from '../../services/data-sharing.service';
 import { NgIf } from '@angular/common';
 import { CrudService } from '../../services/crud.service';
-import { HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/authService/authservice.service';
 
 @Component({
@@ -35,7 +34,6 @@ export class SubscriptionCancelComponent implements OnInit {
     .subscribe({
       next:()=>{
         let info = JSON.parse(localStorage.getItem('deviceInfo'));
-        // console.log(info);
         info.subscribed = true;
         localStorage.setItem('deviceInfo', JSON.stringify(info));
         setTimeout(() => {

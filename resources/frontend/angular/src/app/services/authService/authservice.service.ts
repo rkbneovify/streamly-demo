@@ -49,12 +49,10 @@ export class AuthService {
 
   setAuthorizationToken(token: string) {
     this.local_Storage.setItem(this.tokenKey, token);
-    // localStorage.setItem(this.tokenKey, token);
   }
 
   setData(key:any,value: any) {
     this.local_Storage.setItem(key, value);
-    // localStorage.setItem(this.tokenKey, token);
   }
 
   getlocalData(key:string) {
