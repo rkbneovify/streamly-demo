@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CrudService } from '../../services/crud.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/authService/authservice.service';
-import { error } from 'node:console';
 
 interface QrCode{
   key:string;
