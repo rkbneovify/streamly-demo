@@ -258,14 +258,6 @@ export class PlaylistScheduleComponent
           data: this.getCurrentTimeDate,
           firstIndex: this.getCurrentTimeDataFirstIndex,
         });
-  
-    console.log(this.getCurrentTimeDataFirstIndex);
-    console.log(
-      'Get Date length ==>',
-      this.getCurrentTimeDate?.length,
-      this.getCurrentTimeDate?.length * 150
-    );
-
     this.totalTomNumber= (this.calculateIntervalsRemaining(this.getClosetTime)-1);
   }
 
@@ -293,8 +285,6 @@ export class PlaylistScheduleComponent
   ngOnInit(): void {
 
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
-    console.log('Previous Route:', this.previousRoute);
-
     if(this.previousRoute !== "/user/playstream"){
       this.cacheService.clearCache();
     }
@@ -333,7 +323,6 @@ export class PlaylistScheduleComponent
         .getScreenWidth()
         .subscribe((width) => {
           this.currentWidth = width;
-          console.log(`Screen width is: ${this.currentWidth}`);
         });
 
     // Subscribe to screen width changes
@@ -341,31 +330,23 @@ export class PlaylistScheduleComponent
     .getScreenWidth()
     .subscribe((width) => {
       this.currentWidth = width;
-      console.log(`Screen width is: ${this.currentWidth}`);
-
     });
 
      this.isMacChrome = navigator.userAgent.includes('Mac') && navigator.userAgent.includes('Chrome') ;
     if (this.isMacChrome) {
-      console.log('this is mac chrome');
     }else{
       if( navigator.userAgent.includes('Chrome') && this.currentWidth < 450 ){
-      console.log('This is isMobileChrom')
         this.isMobileChrom = true;
       }
     }
 
     this.utilsService.timeDifferenceInMinutes('02:00 PM')
-    console.log(this.getCurrentTimeDate[1]);
 
     setInterval(() => {
       this.isTimePassed = false;
     }, 1000*60*this.utilsService.timeDifferenceInMinutes(this.getCurrentTimeDate[1]));
 
     this.tabInactivityService.startTabInactivityCheck();
-
-    console.log('Data ==>',this.convertUtcToLocalTime(1736812800));
-    console.log("==>golive",!this.go_Live ,"==>timepass", !this.isTimePassed ,"==>today", this.selectedDay == 'Today',"===con==>",!this.go_Live && !this.isTimePassed && this.selectedDay == 'Today',this.getCurrentTimeDate);
   }
 
   convertUtcToLocalTime(utcTimestamp: number): string {
@@ -396,8 +377,6 @@ export class PlaylistScheduleComponent
 
     const savedScrollPos = localStorage.getItem('scrollPosition');
     if (savedScrollPos) {
-      console.log(savedScrollPos);
-      console.log(this.channelList1.nativeElement.scrollTop);
       this.channelList1.nativeElement.scrollTop = parseInt(savedScrollPos, 10);
     }
   }
@@ -433,85 +412,9 @@ export class PlaylistScheduleComponent
     // Store the current scroll position whenever the user scrolls
     localStorage.setItem('scrollPosition', this.channelList1.nativeElement.scrollTop.toString());
   }
-
-
-  // scrollContent(position: number) {
-  //   if (this.isProcessing) return; 
   
-  //   console.log("==inside==>", this.count, position);
-  
-  //   if (position === 0 && this.count === 0) {
-  //     this.resetScroll();
-  //     return;
-  //   }
-  
-  //   this.isProcessing = true; 
-  
-  //   try {
-  //     if (position !== 0) {
-  //       this.changeColorBackgroung = true;
-  //       this.toggleLeftArrow = true;
-  //       this.go_Live = true;
-  
-  //       if (this.scrollableContent.nativeElement && this.scrollableContent1.nativeElement) {
-  //         this.scrollableContent.nativeElement.scrollLeft += position;
-  //         this.scrollableContent1.nativeElement.scrollLeft += position;
-  
-  //         if (position > 0) {
-  //           this.count++;
-  //         } else {
-  //           this.count--;
-  //         }
-  
-  //         // Prevent negative count
-  //         if (this.count < 0) {
-  //           this.count = 0;
-  //         } else if (this.count >= this.getCurrentTimeDate.length) {
-  //           this.count = this.getCurrentTimeDate.length - 1;
-  //         }
-  
-  //         // Update isNextDay status
-  //         this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
-  
-  //         // ✅ Fix: Reset when scrolling back to "Today"
-  //         if (!this.isNextDay) {
-  //           this.isNextDay = false;
-  //           this.selectedDay = 'Today';
-            
-  //           setTimeout(() => {
-  //             this.changeDays('Today', false); //  Update UI binding
-  //             this.getCurrentTimeSlot('today'); //  Refresh data
-  //             this.cdr.markForCheck();  // Force UI update
-  //           }, 100);
-  //         }
-  
-  //         this.cdr.markForCheck();
-  //         console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count]);
-  //       }
-  //     } else {
-  //       this.resetScroll();
-  //     }
-  
-  //     if (this.count === 0) {
-  //       this.resetScroll();
-  //       if (!this.isTimePassed) {
-  //         this.refreshPage();
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during scrollContent execution:", error);
-  //   } finally {
-  //     setTimeout(() => {
-  //       this.isProcessing = false;
-  //     }, 500);
-  //   }
-  // }
-
   scrollContent(position: number) {
-    if (this.isProcessing) return; 
-  
-    console.log("==inside==>", this.count, position);
-    
+    if (this.isProcessing) return;     
     if (this.shouldResetScroll(position)) return;
     
     this.isProcessing = true; 
@@ -563,7 +466,7 @@ export class PlaylistScheduleComponent
   
   // Extracted Method: Handle isNextDay & UI updates
   private updateDayState() {
-    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count;
+    this.isNextDay = this.checkIfNextDay(this.getCurrentTimeDate[this.count]) || this.totalTomNumber < this.count || this.selectedDay == 'Tomorrow';
   
     if (!this.isNextDay) {
       this.selectedDay = 'Today';
@@ -572,10 +475,11 @@ export class PlaylistScheduleComponent
         this.getCurrentTimeSlot('today');
         this.cdr.markForCheck();
       }, 100);
+    }else{
+      this.changeDays('Tomorrow');
     }
   
     this.cdr.markForCheck();
-    console.log('isNextDay =>', this.isNextDay, this.getCurrentTimeDate[this.count],this.getCurrentTimeDate[this.totalScroll],this.checkIfNextDay(this.getCurrentTimeDate[this.totalScroll]));
   }
   
   // Extracted Method: Handle actions after scrolling
@@ -621,15 +525,10 @@ export class PlaylistScheduleComponent
   limit: number = 10;
 
 getScheduleData(genre?: string, dayFilter: string = this.dayfilter) {
-  console.log("SET TRUE",genre);
-  
-  setTimeout(() => {
+    setTimeout(() => {
     this.isLoading = true;
     this.cdr.markForCheck();  // Force UI update
-  }, 100);
-
-  console.log('hello',this.isLoading)
-  
+  }, 100);  
   this.cdr.markForCheck();
 
   const zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
@@ -891,7 +790,6 @@ changeCategory(genre?: string){
     this.totalScroll = (+this.calculateIntervalsRemaining(this.getClosetTime));
     if (isDataChange) {
       if (this.selectedDay != 'Tomorrow') {
-        // this.getScheduleData(this.selected_category);
         this.getCurrentTimeSlot(this.dayfilter);
         this.scrollContent(0);
       } else {
