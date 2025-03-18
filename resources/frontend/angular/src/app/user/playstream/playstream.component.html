@@ -26,17 +26,6 @@
               class="btn-prev-channel"
               title="Previous channel"
             >
-              <!-- <i class="fas fa-step-backward"></i> -->
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="white"
-                width="24px"
-                height="25px"
-              >
-                <path d="M0 0h24v24H0V0z" fill="none" />
-                <path d="M18 6l-8.5 6L18 18V6zm-9 0v12H7V6h2z" />
-              </svg> -->
               <img
                 width="30px"
                 height="30px"
@@ -59,17 +48,6 @@
               title="Next Channel"
               class="btn-next-channel"
             >
-              <!-- <i class="fas fa-step-forward"></i> -->
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="white"
-                width="24px"
-                height="25px"
-              >
-                <path d="M0 0h24v24H0V0z" fill="none" />
-                <path d="M6 18l8.5-6L6 6v12zm9-12v12h2V6h-2z" />
-              </svg> -->
               <img
                 width="30px"
                 height="30px"
@@ -157,7 +135,6 @@
     *ngIf="channelData?.program_details; else noProgram"
   >
     <h1 title="Channel Name">{{ channelData?.channel?.stationName }}</h1>
-    <!-- <p class="my-3">Dorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
     <div class="play_btn_container_1 mt-2">
       <button class="playbtn_time">
         {{ channelData?.program_details?.duration }}
@@ -179,14 +156,12 @@
         <span class="text-nowrap">Genre :</span
         ><span class="text-nowrap">{{ genre }}</span>
       </button>
-      <!-- <button class="plan_btn playbtn_aired"><span class="text-nowrap">Aired :</span><span class="text-nowrap">Starts in 15 mins</span></button> -->
     </div>
 
     <div class="playstream_onNow_container">
       <div>
         <h2 class="play_stream_now">On Now</h2>
         <p class="mt-3">
-          <!-- Dorem ipsum dolor sit amet, consectetur adipiscing elit. -->
           {{ channelData?.program_details?.description }}
         </p>
       </div>
@@ -260,61 +235,3 @@
 <div *ngIf="isLoading" class="loader-overlay">
   <div class="loader"></div>
 </div>
-
-<!-- controls  -->
-
-<!-- <video
-            *ngIf="isIOS()"
-            id="videoPlayeVjs"
-            class="video-js vjs-default-skin vjs-big-play-centered"
-            controls
-            preload="auto"
-          ></video> -->
-<!-- <div class="position-absolute live-indicator" [ngClass]="{'live-go':isAtLiveEdge,'not-live':!isAtLiveEdge}" (click)="goToLive()">LIVE</div> -->
-<!-- <div class="custom-controls" #customControls>
-                    <button class="custom-button" (click)="togglePlayPause()">{{ playPauseText }}</button>
-                    <button class="custom-button" (click)="toggleMute()">{{ muteText }}</button>
-                    <div class="progress-bar" (click)="seek($event)" #progressBar>
-                      <div class="progress" [style.width.%]="progress"></div>
-                    </div>
-                    <button class="custom-button" (click)="toggleFullscreen()">Fullscreen</button>
-                    <button class="custom-button" (click)="goLive()">{{ liveText }}</button>
-                  </div>
-                <div id="changeVideo">Live</div> -->
-<!-- Custom Controls
-                <div class="video-controls">
-                    <button (click)="togglePlayPause()">Play/Pause 
-                        <span id="iconPlayPause" class="icon-play"></span>
-                    </button>
-                    <button (click)="toggleMute()">Mute/Unmute</button>
-                    <button (click)="toggleFullscreen()">Fullscreen
-                        <span class="icon-fullscreen-enter"></span>
-                    </button>
-                    </div> -->
-
-<!-- <div id="videoController" class="video-controller unselectable">
-                    <div id="playPauseBtn" class="btn-play-pause" title="Play/Pause">
-                        <span id="iconPlayPause" class="icon-play"></span>
-                    </div>
-                    <span id="videoTime" class="time-display">00:00:00</span>
-                    <div id="fullscreenBtn" class="btn-fullscreen control-icon-layout" title="Fullscreen">
-                        <span class="icon-fullscreen-enter"></span>
-                    </div>
-                    <div id="bitrateListBtn" class="control-icon-layout" title="Bitrate List">
-                        <span class="icon-bitrate"></span>
-                    </div>
-                    <input type="range" id="volumebar" class="volumebar" value="1" min="0" max="1" step=".01"/>
-                    <div id="muteBtn" class="btn-mute control-icon-layout" title="Mute">
-                        <span id="iconMute" class="icon-mute-off"></span>
-                    </div>
-                    <div id="trackSwitchBtn" class="control-icon-layout" title="A/V Tracks">
-                        <span class="icon-tracks"></span>
-                    </div>
-                    <div id="captionBtn" class="btn-caption control-icon-layout" title="Closed Caption">
-                        <span class="icon-caption"></span>
-                    </div>
-                    <span id="videoDuration" class="duration-display">00:00:00</span>
-                    <div class="seekContainer">
-                        <input type="range" id="seekbar" value="0" class="seekbar" min="0" step="0.01"/>
-                    </div>
-                </div> -->
