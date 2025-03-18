@@ -283,7 +283,8 @@ export class PlaylistScheduleComponent
 
   ) {}
   ngOnInit(): void {
-
+    this.getCurrentTimeSlot();
+    this.getFavoriteList();
     this.previousRoute = this.routeTrackingService.getPreviousUrl();
     if(this.previousRoute !== "/user/playstream"){
       this.cacheService.clearCache();
@@ -306,8 +307,7 @@ export class PlaylistScheduleComponent
       this.getScheduleData('');    
     }
 
-    this.getFavoriteList();
-    this.getCurrentTimeSlot();
+
     this.setLiveMinWith();
     if (this.liveCurrentTime) {
       this.intervalLiveWidth = setInterval(() => {
@@ -566,6 +566,7 @@ changeCategory(genre?: string){
   this.cacheService.clearCache();
   this.getScheduleData(genre);
   this.active_categories(genre);
+  this.changeDays("Today");
   this.scrollContent(0);
 }
 
