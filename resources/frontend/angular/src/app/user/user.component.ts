@@ -55,15 +55,15 @@ import { environment } from '../../environments/environment';
     trigger('slideDown', [
       transition(':enter', [
         style({ top: '-100%', opacity: 0 }),
-        animate('300ms ease-in', style({ top: '0', opacity: 1 }))
+        animate('300ms ease-in', style({ top: '0', opacity: 1 })),
       ]),
       transition(':leave', [
-        animate('300ms ease-out', style({ top: '-100%', opacity: 0 }))
-      ])
-    ])
-  ]
+        animate('300ms ease-out', style({ top: '-100%', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
-export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
+export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   submenu: boolean = false;
   activeTab: string = 'home';
   access_Token!: any;
@@ -78,13 +78,12 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
   subscribed: boolean;
   private screenSizeSubscription!: Subscription;
   currentWidth: number = 0;
-  private isAdmin!:string;
+  private isAdmin!: string;
   navOpen: boolean = false;
-  setActivePlanId!:string;
+  setActivePlanId!: string;
   expandedCardIndex: number | null = null;
-  zipcode:any;
-  dash_board_link:string = environment.baseUrl;
-
+  zipcode: any;
+  dash_board_link: string = environment.baseUrl;
 
   private searchSubject: Subject<string> = new Subject();
   constructor(
@@ -101,30 +100,33 @@ export class UserComponent implements OnInit, AfterViewInit , OnDestroy {
       }
     });
 
-    this.isAdmin = JSON.parse(localStorage.getItem ('userDetails')).roles[0].name;
+    this.isAdmin = JSON.parse(
+      localStorage.getItem('userDetails')
+    ).roles[0].name;
   }
 
-  checkIsAdmin():string{
-    return this.isAdmin
+  checkIsAdmin(): string {
+    return this.isAdmin;
   }
 
   // Function to expand the last card
-expandLastCard(index: number) {
-  console.log('IsExpand',index);
-  this.expandedCardIndex = index;
-}
+  expandLastCard(index: number) {
+    console.log('IsExpand', index);
+    this.expandedCardIndex = index;
+  }
 
-// Function to close the expanded card when another card is clicked
-closeExpandedCard() {
-  console.log('IsClose');
+  // Function to close the expanded card when another card is clicked
+  closeExpandedCard() {
+    console.log('IsClose');
 
-  this.expandedCardIndex = null;
-}
+    this.expandedCardIndex = null;
+  }
 
   ngOnInit(): void {
-    this.zipcode = JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
+    this.zipcode =
+      JSON.parse(localStorage.getItem('userLocation'))?.zipcode || '';
     // Listen for route changes
-    if(!this.zipcode) return
+    if (!this.zipcode) return;
     this.setActiveTabBasedOnUrl();
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -159,8 +161,8 @@ closeExpandedCard() {
 
     this.setActivePlanId = localStorage.getItem('setActivePlanId');
 
-    if(!this.setActivePlanId){
-      this.getPlans()
+    if (!this.setActivePlanId) {
+      this.getPlans();
     }
   }
 
@@ -220,12 +222,18 @@ closeExpandedCard() {
       target.classList.contains('userProfileImage') ||
       target.classList.contains('nologout');
 
+    const isExpandable = target.classList.contains('isExpandable');
+
     const isInsideSearch =
       !target.closest('.card_page') &&
       !target.closest('.close-search img') &&
       !target.closest('.search_Bar') &&
       !target.closest('.schedule_details_container') &&
       !target.closest('.schedule_details_container1');
+
+      if (!isExpandable) {
+        this.isExpanded = false;
+      }
 
     // If clicked outside of search container and it's not the close button, hide search modal
     if (isInsideSearch) {
@@ -239,6 +247,7 @@ closeExpandedCard() {
       this.submenu = false;
       return;
     }
+
   }
 
   toggleSidebar(): void {
@@ -333,12 +342,10 @@ closeExpandedCard() {
       return;
     }
 
-    
-
     const term = {
       search: searchTerm,
       typeurl: 'mpd',
-      zipcode:this.zipcode
+      zipcode: this.zipcode,
     };
 
     this.crud.postRequest('auth/new-search', term).subscribe({
@@ -348,9 +355,9 @@ closeExpandedCard() {
           this.currentWidth / 190
         );
 
-        if(res.data.length == 0){
+        if (res.data.length == 0) {
           this.ts.error('No result found.');
-        }else{
+        } else {
           this.ts.success(res.message);
         }
       },
@@ -368,7 +375,7 @@ closeExpandedCard() {
     this.isLoading = true;
     const body = {
       typeurl: 'mpd',
-      zipcode:this.zipcode
+      zipcode: this.zipcode,
     };
     this.crud.postRequest('auth/all-channel-list', body).subscribe({
       next: (res: any) => {
@@ -396,10 +403,14 @@ closeExpandedCard() {
 
   // searchShow=!searchShow
   checkData() {
-      if (this.subscribed && !this.searchTerm && !this.allChannelDataList.length) {
-        this.get_All_Channels();
-        this.getFavoriteList();
-      }
+    if (
+      this.subscribed &&
+      !this.searchTerm &&
+      !this.allChannelDataList.length
+    ) {
+      this.get_All_Channels();
+      this.getFavoriteList();
+    }
   }
 
   // Check if a channel is marked as favorite
@@ -445,7 +456,6 @@ closeExpandedCard() {
           this.updateFavoriteChannels(); // Update local storage
           this.ts.success(res.message);
           this.cdr.detectChanges();
-
         }
       });
   }
@@ -463,7 +473,6 @@ closeExpandedCard() {
           this.updateFavoriteChannels(); // Update local storage
           this.ts.success(res.message);
           this.cdr.detectChanges();
-
         }
       });
   }
@@ -482,7 +491,7 @@ closeExpandedCard() {
     localStorage.setItem('playerChannelId', playerChannelId);
     this.router.navigateByUrl('/user/playstream');
     this.searchShow = !this.searchShow;
-    this.currentProgramDetail=false;
+    this.currentProgramDetail = false;
     this.playlist_details_show = false;
   }
 
@@ -505,7 +514,7 @@ closeExpandedCard() {
     const body = {
       TMSId: tmsId,
       channel_id: channelId,
-      timezone:this.getUserTimezone()
+      timezone: this.getUserTimezone(),
     };
     this.crud.postRequest('auth/program-details', body).subscribe({
       next: (res: any) => {
@@ -608,20 +617,31 @@ closeExpandedCard() {
   }
 
   getPlans() {
-    this.crud
-      .getRequest('auth/setting-details')
-      .subscribe({
-        next: (res: any) => {
-          try {
+    this.crud.getRequest('auth/setting-details').subscribe({
+      next: (res: any) => {
+        try {
           this.setActivePlanId = JSON.stringify(res.plan?.id);
-          localStorage.setItem('setActivePlanId',this.setActivePlanId);
-          } catch (error) {
-            console.log(error)
-          }
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+          localStorage.setItem('setActivePlanId', this.setActivePlanId);
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
   }
+
+  // change the tab when click
+  // @HostListener('document:click', ['$event'])
+  // onClick1(event: MouseEvent) {
+  //   const target = event.target as HTMLElement;
+  //   const isInsideMenu = target.classList.contains('isExpandable');
+  //   console.log('Hello', target, isInsideMenu);
+
+  //   if (!target) {
+  //     this.isExpanded = false;
+  //     console.log('Hello', target, isInsideMenu, this.isExpanded);
+  //   }
+  // }
 }
